@@ -25,7 +25,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <property name="dir.lib" value="${basedir}/ext/lib" />
   <property name="main.dir.src" value="${basedir}/src" />
   <property name="main.dir.src.java" value="${main.dir.src}/java" />
-  <property name="main.dir.src.parser" value="${main.dir.src.java}/de/hunsicker/jalopy/language" />
+  <property name="main.dir.src.parser" value="${main.dir.src.java}/de/hunsicker/jalopy/language/antlr" />
   <property name="main.dir.src.res" value="${main.dir.src}/resources" />
 
 
@@ -304,7 +304,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="main-uptodate-parser-java" >
     <uptodate property="parser.java.uptodate"
               targetfile="${main.dir.src.parser}/JavaParser.stamp" >
-      <srcfiles dir="${main.dir.src.parser}" includes="**/java.g" />
+      <srcfiles dir="${main.dir.src.parser}" includes="**/java15.g" />
     </uptodate>
   </target>
 
@@ -326,13 +326,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="main-parser-java"
           depends="main-init, main-uptodate-parser-java"
           unless="parser.java.uptodate" >
-    <java classname="de.hunsicker.antlr.Tool"
+    <java classname="antlr.Tool"
           classpathref="project.classpath"
           fork="yes"
           failonerror="yes" >
       <arg value="-o" />
       <arg value="${main.dir.src.parser}" />
-      <arg value="${main.dir.src.parser}/java.g" />
+      <arg value="${main.dir.src.parser}/java15.g" />
     </java>
 
     <!--
@@ -373,7 +373,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="main-parser-javadoc"
           depends="main-init, main-uptodate-parser-javadoc"
           unless="parser.javadoc.uptodate" >
-    <java classname="de.hunsicker.antlr.Tool"
+    <java classname="antlr.Tool"
           classpathref="project.classpath"
           fork="yes"
           failonerror="yes" >
