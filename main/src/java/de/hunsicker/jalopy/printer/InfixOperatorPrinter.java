@@ -264,17 +264,8 @@ ITERATE:
         {
             if (paddOperator)
             {
-                if (!wrapped)
-                {
-                    out.print(SPACE, JavaTokenTypes.WS);
-                }
-
+                out.print(SPACE, JavaTokenTypes.WS);
                 out.print(operator.getText(), operator.getType());
-
-                if (!wrapLines)
-                {
-                    out.print(SPACE, JavaTokenTypes.WS);
-                }
             }
             else
             {
@@ -334,24 +325,6 @@ ITERATE:
 
         if (wrapBeforeOperator)
         {
-
-            /** @todo */
-            /*
-            // check whether continuation indentation is appropriate
-            //if (wrapped && continuationIndent)
-            if (wrapped && out.continuation)
-            {
-                switch (operator.getType())
-                {
-                    case JavaTokenTypes.LAND :
-                    case JavaTokenTypes.LOR :
-                        out.print(out.getString(out.continuationIndentSize),
-                                  JavaTokenTypes.WS);
-
-                        break;
-                }
-            }*/
-
             if (paddOperator)
             {
                 if (!wrapped)
@@ -366,23 +339,9 @@ ITERATE:
                 out.print(operator.getText(), operator.getType());
             }
         }
-        else
+        else if (!wrapped)
         {
-            /** @todo */
-            /*
-            // check whether continuation indentation is appropriate
-            if (wrapped && out.continuation)
-            {
-                switch (operator.getType())
-                {
-                    case JavaTokenTypes.LAND :
-                    case JavaTokenTypes.LOR :
-                        out.print(out.getString(out.continuationIndentSize),
-                                  JavaTokenTypes.WS);
-
-                        break;
-                }
-            }*/
+            out.print(SPACE, JavaTokenTypes.WS);
         }
 
         if (insertRightParen)
