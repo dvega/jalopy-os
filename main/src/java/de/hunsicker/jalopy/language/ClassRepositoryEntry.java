@@ -116,7 +116,8 @@ public class ClassRepositoryEntry
     /**
      * Sets the data of the entry.
      *
-     * @param data data.
+     * @param data data (of type {@link
+     *         java.lang.String &lt;String&gt;}).
      */
     public void setData(Set data)
     {
@@ -127,7 +128,8 @@ public class ClassRepositoryEntry
     /**
      * Returns the current data.
      *
-     * @return data.
+     * @return data (of type {@link
+     *         java.lang.String &lt;String&gt;}).
      */
     public Set getData()
     {
@@ -147,11 +149,7 @@ public class ClassRepositoryEntry
 
 
     /**
-     * Indicates whether some other object is 'equal to' this one.
-     *
-     * @param o the reference object with which to compare.
-     *
-     * @return <code>true</code> if this object is the same as the <em>o</em> argument.
+     * {@inheritDoc}
      */
     public boolean equals(Object o)
     {
@@ -165,9 +163,7 @@ public class ClassRepositoryEntry
 
 
     /**
-     * Returns a hash code value for the object.
-     *
-     * @return a hash code value for this object.
+     * {@inheritDoc}
      */
     public int hashCode()
     {
@@ -176,9 +172,7 @@ public class ClassRepositoryEntry
 
 
     /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object.
+     * {@inheritDoc}
      */
     public String toString()
     {
@@ -345,7 +339,9 @@ public class ClassRepositoryEntry
             return false;
         }
 
-
+    /**
+     * {@inheritDoc}
+     */
         public int hashCode()
         {
             return this.location.hashCode();
@@ -353,9 +349,7 @@ public class ClassRepositoryEntry
 
 
         /**
-         * Returns a string representation of this object.
-         *
-         * @return a string representation of this object.
+         * {@inheritDoc}
          */
         public String toString()
         {
