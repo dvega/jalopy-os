@@ -36,8 +36,22 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <fileset dir="${DIR.LIB}" >
       <include name="*.jar" />
     </fileset>
-    <fileset dir="${dir.lib}" >
+<!--    <fileset dir="${dir.lib}" >
       <include name="*.jar" />
+    </fileset>
+-->
+    <fileset dir="D:/eclipse-M9/eclipse/plugins/">
+      <include name="org.eclipse.core.resources_3.0.0/*.jar" />
+      <include name="org.eclipse.core.runtime_3.0.0/*.jar" />
+      <include name="org.eclipse.jdt.core_3.0.0/*.jar" />
+      <include name="org.eclipse.jface.text_3.0.0/*.jar" />
+      <include name="org.eclipse.jface_3.0.0/*.jar" />
+      <include name="org.eclipse.osgi_3.0.0/*.jar" />
+      <include name="org.eclipse.swt.win32_3.0.0/ws/win32/*.jar" />
+      <include name="org.eclipse.text_3.0.0/*.jar" />
+      <include name="org.eclipse.ui.ide_3.0.0/*.jar" />
+      <include name="org.eclipse.ui.workbench.texteditor_3.0.0/*.jar" />
+      <include name="org.eclipse.ui.workbench_3.0.0/*.jar" />
     </fileset>
     <pathelement path="${DIR.COMPILE}" />
   </path>

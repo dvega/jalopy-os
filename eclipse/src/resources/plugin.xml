@@ -5,7 +5,7 @@
 <plugin id="de.hunsicker.jalopy.plugin.eclipse"
         name="Jalopy Java Source Code Formatter"
         version="@BUILD.VERSION.ECLIPSE@"
-        provider-name="Marco Hunsicker"
+        provider-name="jalopy.sourceforge.net"
         class="de.hunsicker.jalopy.plugin.eclipse.EclipsePlugin">
 
   <runtime>
@@ -22,9 +22,14 @@
     <import plugin="org.eclipse.jdt.core" />
     <import plugin="org.eclipse.swt" />
     <import plugin="org.eclipse.ui" />
-    <import plugin="org.apache.xerces" />
+    <import plugin="org.eclipse.jface.text" />
+    <import plugin="org.eclipse.jface" />
+    <import plugin="org.eclipse.osgi" />
+    <import plugin="org.eclipse.text" />
+    <import plugin="org.eclipse.ui.ide" />
+    <import plugin="org.eclipse.ui.workbench" />    
+    <import plugin="org.eclipse.ui.workbench.texteditor" />
   </requires>
-
 
   <!-- adds an action to the context menu of Java editors -->
   <extension point="org.eclipse.ui.popupMenus">

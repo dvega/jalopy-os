@@ -7,6 +7,8 @@
  * http://jalopy.sf.net/license-cpl.html
  *
  * Copyright (c) 2001-2002 Marco Hunsicker
+ * 
+ * 
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -33,23 +35,22 @@ import org.eclipse.core.runtime.Path;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-final class EclipseAppender
-    extends AbstractAppender
+final class EclipseAppender extends AbstractAppender
 {
-    //~ Static variables/initializers ----------------------------------------------------
+    //~ Static fields/initializers ---------------------------------------------
 
-    private static final String ID_MARKER = EclipsePlugin.ID + ".JalopyProblemMarker";
+    /** DOCUMENT ME! */
+    private static final String ID_MARKER = EclipsePlugin.ID +
+                                            ".JalopyProblemMarker";
 
-    //~ Constructors ---------------------------------------------------------------------
+    //~ Constructors -----------------------------------------------------------
 
     /**
      * Creates a new EclipseAppender object.
      */
-    public EclipseAppender()
-    {
-    }
+    public EclipseAppender() {}
 
-    //~ Methods --------------------------------------------------------------------------
+    //~ Methods ----------------------------------------------------------------
 
     /**
      * Returns the marker severity for the given logging event.
@@ -62,23 +63,24 @@ final class EclipseAppender
     {
         switch (ev.getLevel().toInt())
         {
-            case Level.ERROR_INT :
-            case Level.FATAL_INT :
+            case Level.ERROR_INT:
+            case Level.FATAL_INT:
                 return IMarker.SEVERITY_ERROR;
 
-            case Level.WARN_INT :
+            case Level.WARN_INT:
                 return IMarker.SEVERITY_WARNING;
 
-            default :
+            default:
                 return IMarker.SEVERITY_INFO;
         }
     }
-
 
     /**
      * DOCUMENT ME!
      *
      * @param ev DOCUMENT ME!
+     *
+     * @throws RuntimeException DOCUMENT ME!
      */
     public void append(LoggingEvent ev)
     {
@@ -109,43 +111,77 @@ final class EclipseAppender
         String text = result.group(POS_TEXT);
         IWorkspaceRoot workspace = ResourcesPlugin.getWorkspace().getRoot();
         IPath path = new Path(filename);
-        IFile file = workspace.getFileForLocation(path);
+        IFile file = null;
+        file = workspace.getFileForLocation(path);
 
-        try
+        /* Modifications for Eclipse 2.1 compatibility
+         * by Carl-Eric Menzel (cm.jalopy@users.bitforce.com)
+         */
+        // if file is null now, we most likely got one of the new
+        // linked paths. we will now try the new findFiles method
+        // to get the correct file.
+        if (file == null)
         {
-            int severity = getSeverity(ev);
-
-            switch (severity)
+            IFile files[] = workspace.findFilesForLocation(path);
+            
+            // i don't know under what circumstances there could be
+            // more than one result here, since we really should be
+            // dealing only with a single file. i'm doing it the
+            // dirty way and just check whether we have exactly one
+            // result or not. 
+            if (files.length == 1)
             {
-                case IMarker.SEVERITY_ERROR :
-                case IMarker.SEVERITY_WARNING :
-
-                    IMarker marker = file.createMarker(ID_MARKER);
-                    marker.setAttribute(IMarker.SEVERITY, severity);
-                    marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_NORMAL);
-                    marker.setAttribute(IMarker.MESSAGE, text);
-
-                    if (lineno > 0)
-                    {
-                        marker.setAttribute(IMarker.LINE_NUMBER, new Integer(lineno));
-                    }
-
-                    break;
-
-                default :
-
-                    /**
-                     * @todo where should the message go?
-                     */
-                    break;
+                file = files[0];
             }
         }
-        catch (CoreException ex)
+        
+        // if the file is null, proceed to do the logging
+        if (file != null)
         {
-            ex.printStackTrace();
+            try
+            {
+                int severity = getSeverity(ev);
+
+                switch (severity)
+                {
+                    case IMarker.SEVERITY_ERROR:
+                    case IMarker.SEVERITY_WARNING:
+
+                        IMarker marker = file.createMarker(ID_MARKER);
+                        marker.setAttribute(IMarker.SEVERITY, severity);
+                        marker.setAttribute(IMarker.PRIORITY,
+                                            IMarker.PRIORITY_NORMAL);
+                        marker.setAttribute(IMarker.MESSAGE, text);
+
+                        if (lineno > 0)
+                        {
+                            marker.setAttribute(IMarker.LINE_NUMBER,
+                                                new Integer(lineno));
+                        }
+
+                        break;
+
+                    default:
+
+                        /**
+                         * @todo where should the message go?
+                         */
+                        break;
+                }
+            }
+            catch (CoreException ex)
+            {
+                ex.printStackTrace();
+            }
+        }
+        else
+        {
+            // else if the file is null, we didn't find it, or we got more
+            // than one result from findFiles. I don't think this should 
+            // ever happen. 
+            throw new RuntimeException("couldn't find unique file resource");
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -154,8 +190,9 @@ final class EclipseAppender
     {
         try
         {
-            ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(
-                ID_MARKER, true, IResource.DEPTH_INFINITE);
+            ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(ID_MARKER,
+                                                                   true,
+                                                                   IResource.DEPTH_INFINITE);
         }
         catch (CoreException ignored)
         {
