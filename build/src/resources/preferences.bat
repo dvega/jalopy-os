@@ -48,7 +48,7 @@ ECHO   to the installation directory of Java.
 ECHO.
 
 :runJalopy
-"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" de.hunsicker.jalopy.ui.SettingsDialog %JALOPY_CMD_LINE_ARGS%
+"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" de.hunsicker.jalopy.swing.SettingsDialog %JALOPY_CMD_LINE_ARGS%
 GOTO end
 
 :end
