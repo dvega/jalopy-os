@@ -57,24 +57,17 @@ public class AntPlugin
 
     /** The .java file extension. */
     private static final String EXT_JAVA = ".java" /* NOI18N */;
-
-    /** Text to display if a run produced errors. */
-    private static final String FAIL_MSG =
-        "Run failed, messages should have been provided." /* NOI18N */;
     private static final ResourceBundle BUNDLE =
         ResourceBundle.getBundle(
             "de.hunsicker.jalopy.plugin.ant.Bundle" /* NOI18N */,
             Convention.getInstance().getLocale());
-
-    /** Did the user specified the &quot;history&quot; attribute? */
-    private static final int HISTORY_UNSPECIFIED = -1;
 
     //~ Instance variables ---------------------------------------------------------------
 
     /** Destination directory. */
     private File _destDir;
 
-    /** The file to format (if we're processing only a single file). */
+    /** The file to format (if we're processing only one single file). */
     private File _file;
 
     /** The file format to use. */
@@ -82,6 +75,9 @@ public class AntPlugin
 
     /** The filesets to format (if we're processing a fileset). */
     private List _filesets; // List of <FileSet>
+
+    /** The history policy to apply. */
+    private History.Method _historyMethod;
 
     /** Helper object to synchronize processes. */
     private final Object _lock = new Object();
@@ -367,6 +363,42 @@ public class AntPlugin
 
 
     /**
+     * Sets the history method to use.
+     *
+     * @param method Either<ul><li><code>timestamp</code> or</li> <li><code>crc32</code>
+     *        or</li> <li><code>adler32</code></li> </ul>
+     *
+     * @throws IllegalArgumentException if an invalid history method is specified.
+     *
+     * @since 0.5.5
+     */
+    public void setHistoryMethod(String method)
+    {
+        method = method.trim().toLowerCase();
+
+        if ("timestamp" /* NOI18N */.equals(method))
+        {
+            _historyMethod = History.Method.TIMESTAMP;
+        }
+        else if ("crc32" /* NOI18N */.equals(method))
+        {
+            _historyMethod = History.Method.CRC32;
+        }
+        else if ("adler32" /* NOI18N */.equals(method))
+        {
+            _historyMethod = History.Method.ADLER32;
+        }
+        else
+        {
+            Object[] args = { method };
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    BUNDLE.getString("INVALID_HISTORY_METHOD" /* NOI18N */), args));
+        }
+    }
+
+
+    /**
      * Sets whether Javadoc related messages should be displayed. Default is
      * <em>true</em>.
      * 
@@ -550,7 +582,8 @@ public class AntPlugin
 
                     if (exe.getExitValue() != 0)
                     {
-                        throw new BuildException(FAIL_MSG);
+                        throw new BuildException(
+                            BUNDLE.getString("RUN_FAILED" /* NOI18N */));
                     }
                 }
                 catch (Throwable ex)
@@ -710,6 +743,19 @@ public class AntPlugin
             jalopy.setHistoryPolicy(historyPolicy);
         }
 
+        if (_historyMethod != null)
+        {
+            jalopy.setHistoryMethod(_historyMethod);
+        }
+        else
+        {
+            History.Method historyMethod =
+                History.Method.valueOf(
+                    settings.get(
+                        ConventionKeys.HISTORY_METHOD, ConventionDefaults.HISTORY_METHOD));
+            jalopy.setHistoryMethod(historyMethod);
+        }
+
         if (_isBackup)
         {
             jalopy.setBackup(_backup);
@@ -831,7 +877,7 @@ public class AntPlugin
 
             if (error)
             {
-                throw new BuildException(FAIL_MSG);
+                throw new BuildException(BUNDLE.getString("RUN_FAILED" /* NOI18N */));
             }
         }
         catch (Throwable ex)
@@ -918,7 +964,7 @@ public class AntPlugin
 
                         if (_failOnError)
                         {
-                            Object[] args = { _file };
+                            Object[] args = { file };
 
                             throw new BuildException(
                                 MessageFormat.format(
@@ -936,7 +982,7 @@ public class AntPlugin
 
             if (error)
             {
-                throw new BuildException(FAIL_MSG);
+                throw new BuildException(BUNDLE.getString("RUN_FAILED" /* NOI18N */));
             }
 
             jalopy.cleanupBackupDirectory();
@@ -1049,8 +1095,7 @@ public class AntPlugin
         }
         catch (Throwable ex)
         {
-            log(
-                BUNDLE.getString("REPOSITORY_NOT_LOADED" /* NOI18N */), Project.MSG_WARN);
+            log(BUNDLE.getString("REPOSITORY_NOT_LOADED" /* NOI18N */), Project.MSG_WARN);
 
             // make sure the repository is empty so that import optimization
             // will be disabled
@@ -1115,8 +1160,8 @@ public class AntPlugin
             Object[] args = { new Integer(files) };
 
             log(
-                MessageFormat.format(
-                    BUNDLE.getString("FORMAT_FILES" /* NOI18N */), args), Project.MSG_INFO);
+                MessageFormat.format(BUNDLE.getString("FORMAT_FILES" /* NOI18N */), args),
+                Project.MSG_INFO);
         }
         else
         {
@@ -1268,7 +1313,7 @@ public class AntPlugin
 
                         if (_failOnError)
                         {
-                            Object[] args = { _file };
+                            Object[] args = { file };
 
                             throw new BuildException(
                                 MessageFormat.format(
