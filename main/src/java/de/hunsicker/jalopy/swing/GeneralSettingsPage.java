@@ -52,7 +52,6 @@ public class GeneralSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String URL_DELIMETER = "|" /* NOI18N */;
     private static final String JDK_1_3 = "JDK 1.3" /* NOI18N */;
     private static final String JDK_1_4 = "JDK 1.4" /* NOI18N */;
     private static final String FILENAME_IMPORT = "import.dat" /* NOI18N */;

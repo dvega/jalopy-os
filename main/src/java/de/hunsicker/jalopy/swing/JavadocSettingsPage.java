@@ -87,7 +87,6 @@ public class JavadocSettingsPage
     private static final String TPL_CTOR = "Constructor" /* NOI18N */;
     private static final String TPL_METHOD = "Method" /* NOI18N */;
     private static final String TPL_FIELD = "Field" /* NOI18N */;
-    private static final String DELIMETER = "|" /* NOI18N */;
     private static final String LINE_SEPARATOR = "\n" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------

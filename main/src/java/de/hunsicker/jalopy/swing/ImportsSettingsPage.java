@@ -58,8 +58,6 @@ public class ImportsSettingsPage
     /** The delimeter for the value pair of an entry. */
     private static final String DELIMETER_ENTRY_PAIR = ":" /* NOI18N */;
 
-    /** The delimeter for the different entries. */
-    private static final String DELIMETER_ENTRY = "|" /* NOI18N */;
     private static final String STAR = "*" /* NOI18N */;
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
@@ -142,17 +140,17 @@ public class ImportsSettingsPage
         if (_expandCheckBox.isSelected())
         {
             this.settings.put(
-                ConventionKeys.IMPORT_POLICY, ImportPolicy.EXPAND.toString());
+                ConventionKeys.IMPORT_POLICY, ImportPolicy.EXPAND.getName());
         }
         else if (_collapseCheckBox.isSelected())
         {
             this.settings.put(
-                ConventionKeys.IMPORT_POLICY, ImportPolicy.COLLAPSE.toString());
+                ConventionKeys.IMPORT_POLICY, ImportPolicy.COLLAPSE.getName());
         }
         else
         {
             this.settings.put(
-                ConventionKeys.IMPORT_POLICY, ImportPolicy.DISABLED.toString());
+                ConventionKeys.IMPORT_POLICY, ImportPolicy.DISABLED.getName());
         }
 
         this.settings.putBoolean(
@@ -472,7 +470,7 @@ public class ImportsSettingsPage
         List result = new ArrayList();
 
         for (
-            StringTokenizer tokens = new StringTokenizer(info, DELIMETER_ENTRY);
+            StringTokenizer tokens = new StringTokenizer(info, DELIMETER);
             tokens.hasMoreElements();)
         {
             String pair = tokens.nextToken();
@@ -505,7 +503,7 @@ public class ImportsSettingsPage
             result.append(entry.name);
             result.append(DELIMETER_ENTRY_PAIR);
             result.append(entry.depth);
-            result.append(DELIMETER_ENTRY);
+            result.append(DELIMETER);
         }
 
         if (result.length() > 1)

@@ -47,7 +47,6 @@ public class HeaderSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String DELIMETER = "|" /* NOI18N */;
     private static final String LINE_SEPARATOR = "\n" /* NOI18N */;
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 

@@ -70,8 +70,8 @@ class LocationDialog
     /** The empty string array. */
     protected static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    /** Delimeter string for tokenizing the history entries. */
-    protected static final String URL_DELIMETER = "|" /* NOI18N */;
+    private final static String DELIMETER = "|"/* NOI18N */;
+
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Instance variables ---------------------------------------------------------------
@@ -585,7 +585,7 @@ class LocationDialog
     {
         StringBuffer buf = new StringBuffer(300);
         buf.append(selectedUrl);
-        buf.append(URL_DELIMETER);
+        buf.append(DELIMETER);
 
         int maxItems = 10;
 
@@ -599,7 +599,7 @@ class LocationDialog
             }
 
             buf.append(urls[i]);
-            buf.append(URL_DELIMETER);
+            buf.append(DELIMETER);
         }
 
         buf.deleteCharAt(buf.length() - 1);
@@ -620,7 +620,7 @@ class LocationDialog
         List result = new ArrayList();
 
         for (
-            StringTokenizer tokens = new StringTokenizer(history, URL_DELIMETER);
+            StringTokenizer tokens = new StringTokenizer(history, DELIMETER);
             tokens.hasMoreElements();)
         {
             String token = tokens.nextToken().trim();

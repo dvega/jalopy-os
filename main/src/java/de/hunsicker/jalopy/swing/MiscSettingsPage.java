@@ -138,12 +138,12 @@ public class MiscSettingsPage
         if (_historyCommentCheckBox.isSelected())
         {
             this.settings.put(
-                ConventionKeys.HISTORY_POLICY, History.Policy.COMMENT.toString());
+                ConventionKeys.HISTORY_POLICY, History.Policy.COMMENT.getName());
         }
         else if (_historyFileCheckBox.isSelected())
         {
             this.settings.put(
-                ConventionKeys.HISTORY_POLICY, History.Policy.FILE.toString());
+                ConventionKeys.HISTORY_POLICY, History.Policy.FILE.getName());
 
             History.Method historyMethod =
                 (History.Method) _historyMethodComboBox.getSelectedItem();
@@ -152,7 +152,7 @@ public class MiscSettingsPage
         else
         {
             this.settings.put(
-                ConventionKeys.HISTORY_POLICY, History.Policy.DISABLED.toString());
+                ConventionKeys.HISTORY_POLICY, History.Policy.DISABLED.getName());
         }
     }
 

@@ -70,7 +70,6 @@ public class EnvironmentSettingsPage
     /** Indicates a removal from the list. */
     private static final Object ACTION_REMOVE = new Object();
     private static final char DELIM_PAIR = '^';
-    private static final String DELIM_VAR = "|"; /* NOI18N */
     private static final String EMPTY_STRING = "".intern(); /* NOI18N */
 
     /** The pattern to validate variables . */
@@ -145,7 +144,7 @@ public class EnvironmentSettingsPage
                 buf.append(items[i].variable);
                 buf.append(DELIM_PAIR);
                 buf.append(items[i].value);
-                buf.append(DELIM_VAR);
+                buf.append(DELIMETER);
             }
 
             buf.deleteCharAt(buf.length() - 1);
@@ -246,7 +245,7 @@ public class EnvironmentSettingsPage
 
             for (
                 StringTokenizer tokens = new StringTokenizer(
-                        variablesString, DELIM_VAR); tokens.hasMoreElements();)
+                        variablesString, DELIMETER); tokens.hasMoreElements();)
             {
                 String v = tokens.nextToken();
                 int offset = v.indexOf(DELIM_PAIR);

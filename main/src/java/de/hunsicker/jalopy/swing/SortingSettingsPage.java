@@ -45,10 +45,6 @@ import de.hunsicker.swing.util.SwingHelper;
 public class SortingSettingsPage
     extends AbstractSettingsPage
 {
-    //~ Static variables/initializers ----------------------------------------------------
-
-    private static final String COMMA = "," /* NOI18N */;
-
     //~ Instance variables ---------------------------------------------------------------
 
     private JCheckBox _sortCheckBox;
@@ -127,8 +123,8 @@ public class SortingSettingsPage
         {
             List rowData = (List) i.next();
             ModifierType type = (ModifierType) rowData.get(0);
-            buf.append(type);
-            buf.append(',');
+            buf.append(type.getName());
+            buf.append(DELIMETER);
         }
 
         // remove the last comma
@@ -146,8 +142,8 @@ public class SortingSettingsPage
         {
             List rowData = (List) i.next();
             DeclarationType type = (DeclarationType) rowData.get(0);
-            buf.append(type);
-            buf.append(',');
+            buf.append(type.getName());
+            buf.append(DELIMETER);
 
             if (type == DeclarationType.METHOD)
             {
@@ -178,7 +174,7 @@ public class SortingSettingsPage
             }
         }
 
-        // remove the last comma
+        // remove the last delimeter
         buf.deleteCharAt(buf.length() - 1);
 
         return buf.toString();
@@ -190,7 +186,7 @@ public class SortingSettingsPage
         StringTokenizer tokens =
             new StringTokenizer(
                 this.settings.get(ConventionKeys.SORT_ORDER, DeclarationType.getOrder()),
-                COMMA);
+                DELIMETER);
         Object[][] data = new Object[7][2];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)
@@ -354,7 +350,7 @@ public class SortingSettingsPage
         StringTokenizer tokens =
             new StringTokenizer(
                 this.settings.get(
-                    ConventionKeys.SORT_ORDER_MODIFIERS, ModifierType.getOrder()), COMMA);
+                    ConventionKeys.SORT_ORDER_MODIFIERS, ModifierType.getOrder()), DELIMETER);
         Object[][] data = new Object[11][1];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)
@@ -414,6 +410,7 @@ public class SortingSettingsPage
                 BorderFactory.createTitledBorder(
                     this.bundle.getString("BDR_GENERAL" /* NOI18N */)),
                 BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+
         _sortModifiersCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_SORT_MODIFIERS" /* NOI18N */),
@@ -421,6 +418,7 @@ public class SortingSettingsPage
                     ConventionKeys.SORT_MODIFIERS, ConventionDefaults.SORT_MODIFIERS));
         _sortModifiersCheckBox.addActionListener(this.trigger);
         general.add(_sortModifiersCheckBox);
+
         _sortModifiersCheckBox.addActionListener(
             new ActionListener()
             {
@@ -455,11 +453,13 @@ public class SortingSettingsPage
         _modifiersData = d.getDataVector();
 
         GridBagConstraints c = new GridBagConstraints();
+
         SwingHelper.setConstraints(
             c, 0, 0, 8, 8, 1.0, 1.0, GridBagConstraints.NORTHWEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         typesLayout.setConstraints(modifiersTable, c);
         typesPanel.add(modifiersTable);
+
         c.insets.top = 10;
         c.insets.bottom = 2;
         c.insets.left = 10;
@@ -483,6 +483,7 @@ public class SortingSettingsPage
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         panel.setLayout(layout);
+
         c.insets.left = 5;
         c.insets.right = 5;
         c.insets.top = 10;
@@ -492,6 +493,7 @@ public class SortingSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         layout.setConstraints(general, c);
         panel.add(general);
+
         c.insets.top = 0;
         SwingHelper.setConstraints(
             c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
@@ -552,18 +554,11 @@ public class SortingSettingsPage
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Holds the data do be display in the table.
+     * Provides the data do be displayed in the table.
      */
     private static class DataModel
         extends DefaultTableModel
     {
-        static final int TYPE_CLASS = 1;
-        static final int TYPE_CTOR = 3;
-        static final int TYPE_IFC = 2;
-        static final int TYPE_INIT = 6;
-        static final int TYPE_METHOD = 5;
-        static final int TYPE_VAR = 4;
-
         public DataModel(
             Object[][] data,
             Object[]   columnNames)

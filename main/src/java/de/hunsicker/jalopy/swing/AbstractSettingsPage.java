@@ -38,6 +38,8 @@ public abstract class AbstractSettingsPage
     /** The code convention to display/edit. */
     protected Convention settings;
 
+    protected final static String DELIMETER  = "|"/* NOI18N */;
+
     /** Listener used to trigger an update of the preview frame. */
     final ActionListener trigger = new UpdateTrigger();
 
@@ -157,7 +159,7 @@ public abstract class AbstractSettingsPage
     /**
      * Validates this page's settings. Pages that need their input validated should
      * override to provide the needed implementation.
-     * 
+     *
      * <p>
      * In case of any violation the implementation should simply display an error message
      * and throw a <code>ValidationException</code> to inform the caller about the
