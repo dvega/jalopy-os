@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jbuilder;
 
@@ -50,12 +50,7 @@ final class JbProjectFile
         Project      project,
         TextFileNode node)
     {
-        if (project == null)
-        {
-            throw new NullPointerException();
-        }
-
-        if (node == null)
+        if ((project == null) || (node == null))
         {
             throw new NullPointerException();
         }
@@ -71,7 +66,12 @@ final class JbProjectFile
      */
     public Editor getEditor()
     {
-        return new JbEditor(this, this.node);
+        if (isOpened())
+        {
+            return new JbEditor(this, this.node);
+        }
+
+        return null;
     }
 
 

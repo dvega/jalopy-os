@@ -455,10 +455,9 @@ final class JbAppender
         public void selectAction(Browser browser)
         {
             /**
-             * @todo I'd rather wanted to override messageAction() but it
-             *       doesn't work for multiple line messages as of JBuilder
-             *       5.0 (it only expands the parent node, but don't trigger
-             *       the message action)
+             * @todo I'd rather wanted to override messageAction() but it doesn't work
+             *       for multiple line messages as of JBuilder 5.0 (it only expands the
+             *       parent node, but don't trigger the message action)
              */
 
             // if there is no line number given, there is nothing to do
@@ -483,10 +482,9 @@ final class JbAppender
                 pane.setHighlight(_line);
 
                 /**
-                 * @todo if we don't add our listener the highlight will only
-                 *       be removed if the user collapses the message which
-                 *       caused the line to be highlighted. Is this a bug or
-                 *       a feature?
+                 * @todo if we don't add our listener the highlight will only be removed
+                 *       if the user collapses the message which caused the line to be
+                 *       highlighted. Is this a bug or a feature?
                  */
                 pane.addCaretListener(HIGHLIGHT_HANDLER);
             }

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jbuilder;
 
@@ -165,8 +165,8 @@ final class JbProject
         if (node instanceof PackageNode)
         {
             /**
-             * @todo is there a kind of 'special' node in the
-             *       Professional/Enterprise versions?
+             * @todo is there a kind of 'special' node in the Professional/Enterprise
+             *       versions?
              */
             if ("<Project Source>".equals(node.getDisplayName()))
             {

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jbuilder;
 
@@ -136,6 +136,18 @@ public final class JbPlugin
 
 
     /**
+     * Returns the version information of this OpenTool.
+     *
+     * @return version information of this OpenTool.
+     */
+    public static String getVersion()
+    {
+        return Package.getPackage("de.hunsicker.jalopy.plugin.jbuilder" /* NOI18N */)
+                      .getImplementationVersion();
+    }
+
+
+    /**
      * {@inheritDoc}
      */
     public void afterEnd()
@@ -181,12 +193,13 @@ public final class JbPlugin
             return;
         }
 
+        Browser.addStaticBrowserListener(new BrowserHandler());
+
         System.out.println(
             "Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion());
+        System.out.println("JBuilder OpenTool " /* NOI18N */ + getVersion());
         System.out.println(
-            "Copyright (c) 2001, 2002 Marco Hunsicker. All rights reserved." /* NOI18N */);
-
-        Browser.addStaticBrowserListener(new BrowserHandler());
+            "Copyright (c) 2001-2002 Marco Hunsicker. All rights reserved." /* NOI18N */);
     }
 
 
