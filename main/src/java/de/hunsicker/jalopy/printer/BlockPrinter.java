@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -179,12 +179,12 @@ class BlockPrinter
                     }
                     else
                     {
-                        lcurly.updateAnnotations(out.line + 1);
-
                         /**
                          * @todo handle class/ifc/method/ctor different
                          */
-                        out.printLeftBrace();
+                        int offset = out.printLeftBrace();
+
+                        trackPosition(lcurly, out.line - 1, offset, out);
 
                         if (out.state.newlineBeforeLeftBrace)
                         {
@@ -193,6 +193,11 @@ class BlockPrinter
 
                         out.printRightBrace(
                             JavaTokenTypes.RCURLY, !treatDifferent, NodeWriter.NEWLINE_YES);
+
+                        JavaNode rcurly = (JavaNode) lcurly.getFirstChild();
+
+                        trackPosition(rcurly, out.line - 1, offset + 1, out);
+
                         out.last = closeBraceType;
                     }
 
@@ -381,7 +386,12 @@ LOOP:
             boolean rightBraceNewline =
                 isCloseBraceNewline(lcurly, closeBraceType, freestanding);
 
-            out.printRightBrace(closeBraceType, !treatDifferent, rightBraceNewline);
+            int offset =
+                out.printRightBrace(closeBraceType, !treatDifferent, rightBraceNewline);
+
+            trackPosition(
+                rcurly, rightBraceNewline ? (out.line - 1)
+                                          : out.line, offset, out);
 
             printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, rightBraceNewline, out);
         }
@@ -688,7 +698,10 @@ LOOP:
         out.printNewline();
 
         boolean newLineAfterBrace = isCloseBraceNewline(lcurly, type, freestanding);
-        out.printRightBrace(type, NodeWriter.NEWLINE_NO);
+
+        int offset = out.printRightBrace(type, NodeWriter.NEWLINE_NO);
+
+        trackPosition(rcurly, out.line, offset, out);
 
         if (
             !printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, newLineAfterBrace, out)
@@ -730,35 +743,46 @@ LOOP:
 
         if (freestanding)
         {
-            lcurly.updateAnnotations(out.line);
+            int offset =
+                out.printLeftBrace(
+                    NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
 
-            out.printLeftBrace(
-                NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
+            trackPosition(lcurly, commentsAfter ? out.line
+                                                : (out.line - 1), offset, out);
         }
         else
         {
             if (forceNewlineBefore)
             {
-                lcurly.updateAnnotations(out.line + 1);
+                int offset =
+                    out.printLeftBrace(
+                        NodeWriter.NEWLINE_YES, !commentsAfter, NodeWriter.INDENT_NO);
 
-                out.printLeftBrace(
-                    NodeWriter.NEWLINE_YES, !commentsAfter, NodeWriter.INDENT_NO);
+                trackPosition(
+                    lcurly, commentsAfter ? out.line
+                                          : (out.line - 1), offset, out);
             }
             else
             {
                 if (out.newline)
                 {
-                    lcurly.updateAnnotations(out.line);
+                    int offset =
+                        out.printLeftBrace(
+                            NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
 
-                    out.printLeftBrace(
-                        NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
+                    trackPosition(
+                        lcurly, commentsAfter ? out.line
+                                              : (out.line - 1), offset, out);
                 }
                 else
                 {
-                    lcurly.updateAnnotations(out.line + (leftBraceNewline ? 1
-                                                                          : 0));
+                    int offset =
+                        out.printLeftBrace(
+                            leftBraceNewline, !commentsAfter, !freestanding);
 
-                    out.printLeftBrace(leftBraceNewline, !commentsAfter, !freestanding);
+                    trackPosition(
+                        lcurly, commentsAfter ? out.line
+                                              : (out.line - 1), offset, out);
                 }
             }
         }

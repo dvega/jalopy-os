@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -74,7 +74,7 @@ final class TestNodeWriter
     /**
      * {@inheritDoc}
      */
-    public void print(
+    public int print(
         String string,
         int    type)
       throws IOException
@@ -91,6 +91,8 @@ final class TestNodeWriter
         this.length += l;
         this.column += l;
         this.last = type;
+
+        return 1;
     }
 
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+
 
 /**
  * Printer for the Java modifiers [LITERAL_public, LITERAL_protected, LITERAL_private,
@@ -59,10 +60,9 @@ final class ModifierPrinter
     {
         printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
 
-        JavaNode n = (JavaNode)node;
-        n.updateAnnotations(out.line);
+        int offset = out.print(node.getText(), node.getType());
 
-        super.print(node, out);
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 

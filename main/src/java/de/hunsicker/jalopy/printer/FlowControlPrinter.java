@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 
 
@@ -75,7 +76,10 @@ final class FlowControlPrinter
       throws IOException
     {
         printCommentsBefore(node, out);
-        out.print(node.getText(), node.getType());
+
+        int offset = out.print(node.getText(), node.getType());
+
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         if (node.getFirstChild().getType() != JavaTokenTypes.SEMI)
         {

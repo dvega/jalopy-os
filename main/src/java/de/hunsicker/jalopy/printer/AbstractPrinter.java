@@ -30,7 +30,7 @@ import de.hunsicker.util.StringHelper;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-class AbstractPrinter
+abstract class AbstractPrinter
     implements Printer
 {
     //~ Static variables/initializers ----------------------------------------------------
@@ -133,30 +133,47 @@ class AbstractPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(
+    public abstract void print(
         AST        node,
         NodeWriter out)
-      throws IOException
-    {
-        out.print(node.getText(), node.getType());
-    }
+      throws IOException;
 
 
     /**
-     * Updates the line information of the annotations for the given node.
+     * Tracks the position of the given node by updating the position information
      *
-     * @param node a tree node.
+     * @param node the node that needs its position tracked.
      * @param out stream to write to.
      *
      * @since 1.0b9
      */
-    public void updateAnnotations(
+    public void trackPosition(
         JavaNode   node,
         NodeWriter out)
     {
-        if (out.annotations)
+        trackPosition(node, out.line, out.column, out);
+    }
+
+
+    /**
+     * Tracks the position of the given node by updating the position information.
+     *
+     * @param node the node that needs its position tracked.
+     * @param line the new line position.
+     * @param column the new column position.
+     * @param out stream to write to.
+     *
+     * @since 1.0b9
+     */
+    public void trackPosition(
+        JavaNode   node,
+        int        line,
+        int        column,
+        NodeWriter out)
+    {
+        if (out.tracking && (out.mode == NodeWriter.MODE_DEFAULT))
         {
-            node.updateAnnotations(out.line);
+            node.updatePosition(line, column);
         }
     }
 

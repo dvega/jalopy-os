@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -97,7 +97,9 @@ final class SwitchPrinter
     {
         printCommentsBefore(node, out);
 
-        out.print(SWITCH, JavaTokenTypes.LITERAL_switch);
+        int offset = out.print(SWITCH, JavaTokenTypes.LITERAL_switch);
+
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         if (
             this.settings.getBoolean(

@@ -58,10 +58,9 @@ class BasicPrinter
     {
         printCommentsBefore(node, out);
 
-        JavaNode n = (JavaNode) node;
-        n.updateAnnotations(out.line);
+        int offset = out.print(node.getText(), node.getType());
 
-        super.print(node, out);
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         if (out.state.arrayBrackets > 0)
         {

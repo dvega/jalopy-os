@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -90,14 +90,18 @@ final class IfElsePrinter
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN);
 
+        int offset = 1;
+
         if (spaceBefore)
         {
-            out.print(IF_SPACE, JavaTokenTypes.LITERAL_if);
+            offset = out.print(IF_SPACE, JavaTokenTypes.LITERAL_if);
         }
         else
         {
-            out.print(IF, JavaTokenTypes.LITERAL_if);
+            offset = out.print(IF, JavaTokenTypes.LITERAL_if);
         }
+
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         AST lparen = node.getFirstChild();
 
@@ -171,7 +175,9 @@ final class IfElsePrinter
                     JavaTokenTypes.WS);
             }
 
-            out.print(ELSE, JavaTokenTypes.LITERAL_else);
+            offset = out.print(ELSE, JavaTokenTypes.LITERAL_else);
+
+            trackPosition((JavaNode) next, out.line, offset, out);
 
             JavaNode block = (JavaNode) next.getNextSibling();
 

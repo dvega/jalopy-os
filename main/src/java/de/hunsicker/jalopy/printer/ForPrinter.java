@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -66,17 +67,21 @@ final class ForPrinter
     {
         super.print(node, out);
 
+        int offset = 1;
+
         if (
             this.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
-            out.print(FOR_SPACE, JavaTokenTypes.LITERAL_for);
+            offset = out.print(FOR_SPACE, JavaTokenTypes.LITERAL_for);
         }
         else
         {
-            out.print(FOR, JavaTokenTypes.LITERAL_for);
+            offset = out.print(FOR, JavaTokenTypes.LITERAL_for);
         }
+
+        trackPosition((JavaNode) node, out.line, offset, out);
 
         AST lparen = node.getFirstChild();
         PrinterFactory.create(lparen).print(lparen, out);

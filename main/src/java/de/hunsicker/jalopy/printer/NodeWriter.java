@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -132,8 +132,9 @@ public class NodeWriter
     WriterCache testers;
 
     /** Indicates whether a tree contains annotations. */
-    boolean annotations;
-    boolean groupingParentheses;
+    boolean tracking;
+
+    //boolean groupingParentheses;
 
     /** The number of blank lines that were printed before the last EXPR node. */
     int blankLines;
@@ -243,12 +244,6 @@ public class NodeWriter
     }
 
     //~ Methods --------------------------------------------------------------------------
-
-    public void setAnnotation(boolean annotations)
-    {
-        this.annotations = annotations;
-    }
-
 
     /**
      * Returns the line column position of the last written character.
@@ -413,6 +408,21 @@ public class NodeWriter
 
 
     /**
+     * Sets whether the tree that is to be printed contains nodes that needs their
+     * positions tracked.
+     *
+     * @param tracking <code>true</code> to indicate that certain nodes needs their
+     *        positions tracked.
+     *
+     * @since 1.0b9
+     */
+    public void setTracking(boolean tracking)
+    {
+        this.tracking = tracking;
+    }
+
+
+    /**
      * Sets the underlying writer to actually write to.
      *
      * @param out writer to write to.
@@ -466,13 +476,17 @@ public class NodeWriter
      * @param string string to write.
      * @param type type of the string.
      *
+     * @return the column offset were the string started.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void print(
+    public int print(
         String string,
         int    type)
       throws IOException
     {
+        int offset = 1;
+
         if (this.newline)
         {
             if (leadingIndentSize > 0)
@@ -527,6 +541,7 @@ public class NodeWriter
                 default :
                 {
                     String s = generateIndentString(length);
+                    offset += length;
                     this.column += (length + string.length());
 
                     if (this.useTabs)
@@ -586,6 +601,7 @@ public class NodeWriter
 
                 // fall through
                 default :
+                    offset = this.column;
                     this.column += string.length();
                     _out.write(string);
 
@@ -594,6 +610,8 @@ public class NodeWriter
         }
 
         this.last = type;
+
+        return offset;
     }
 
 
@@ -615,38 +633,42 @@ public class NodeWriter
 
 
     /**
-     * Outputs an opening curly brace.
+     * Outputs a left curly brace.
+     *
+     * @return the column offset where the brace was printed.
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printLeftBrace()
+    public int printLeftBrace()
       throws IOException
     {
-        printLeftBrace(NEWLINE_YES, NEWLINE_YES);
+        return printLeftBrace(NEWLINE_YES, NEWLINE_YES);
     }
 
 
     /**
-     * Outputs an opening curly brace.
+     * Outputs a leftcurly brace.
      *
      * @param newlineBefore <code>true</code> if a newline should be printed before the
      *        brace.
      * @param newlineAfter <code>true</code> if a newline should be printed after the
      *        brace.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printLeftBrace(
+    public int printLeftBrace(
         boolean newlineBefore,
         boolean newlineAfter)
       throws IOException
     {
-        printLeftBrace(newlineBefore, newlineAfter, NodeWriter.INDENT_YES);
+        return printLeftBrace(newlineBefore, newlineAfter, NodeWriter.INDENT_YES);
     }
 
 
     /**
-     * Outputs an opening curly brace.
+     * Outputs a left curly brace.
      *
      * @param newlineBefore <code>true</code> if a newline should be printed before the
      *        brace.
@@ -655,9 +677,11 @@ public class NodeWriter
      * @param indent if <code>true</code> the brace will be indented relative to the
      *        current indentation level.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printLeftBrace(
+    public int printLeftBrace(
         boolean newlineBefore,
         boolean newlineAfter,
         boolean indent)
@@ -673,7 +697,7 @@ public class NodeWriter
             print(generateIndentString(this.leftBraceIndent), JavaTokenTypes.WS);
         }
 
-        print(LCURLY, JavaTokenTypes.LCURLY);
+        int offset = print(LCURLY, JavaTokenTypes.LCURLY);
 
         if (newlineAfter)
         {
@@ -681,6 +705,8 @@ public class NodeWriter
         }
 
         indent();
+
+        return offset;
     }
 
 
@@ -702,12 +728,14 @@ public class NodeWriter
     /**
      * Outputs a closing curly brace. Prints a newline after the brace.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printRightBrace()
+    public int printRightBrace()
       throws IOException
     {
-        printRightBrace(NEWLINE_YES);
+        return printRightBrace(NEWLINE_YES);
     }
 
 
@@ -717,12 +745,14 @@ public class NodeWriter
      * @param newlineAfter <code>true</code> if a newline should be printed after the
      *        brace.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printRightBrace(boolean newlineAfter)
+    public int printRightBrace(boolean newlineAfter)
       throws IOException
     {
-        printRightBrace(JavaTokenTypes.RCURLY, newlineAfter);
+        return printRightBrace(JavaTokenTypes.RCURLY, newlineAfter);
     }
 
 
@@ -733,14 +763,16 @@ public class NodeWriter
      * @param newlineAfter if <code>true</code> a newline will be printed after the
      *        brace.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printRightBrace(
+    public int printRightBrace(
         int     type,
         boolean newlineAfter)
       throws IOException
     {
-        printRightBrace(type, true, newlineAfter);
+        return printRightBrace(type, true, newlineAfter);
     }
 
 
@@ -753,9 +785,11 @@ public class NodeWriter
      * @param newlineAfter if <code>true</code> a newline will be printed after the
      *        brace.
      *
+     * @return the column offset where the brace was printed.
+     *
      * @throws IOException if an I/O error occured.
      */
-    public void printRightBrace(
+    public int printRightBrace(
         int     type,
         boolean whitespaceBefore,
         boolean newlineAfter)
@@ -763,13 +797,15 @@ public class NodeWriter
     {
         unindent();
 
+        int offset = 1;
+
         if (whitespaceBefore)
         {
-            print(getRightBrace(), type);
+            offset = print(getRightBrace(), type);
         }
         else
         {
-            print(RCURLY, type);
+            offset = print(RCURLY, type);
         }
 
         // only issue line break if not the last curly brace
@@ -779,6 +815,8 @@ public class NodeWriter
         {
             printNewline();
         }
+
+        return offset;
     }
 
 

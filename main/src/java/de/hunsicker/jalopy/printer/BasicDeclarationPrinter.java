@@ -1,19 +1,17 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
-import de.hunsicker.jalopy.storage.Loggers;
-import org.apache.log4j.Level;
 
-import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
+import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.ExtendedToken;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeModifier;
@@ -24,6 +22,9 @@ import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.Loggers;
+
+import org.apache.log4j.Level;
 
 
 /**
@@ -173,38 +174,11 @@ abstract class BasicDeclarationPrinter
         }
     }
 
-    /**
-     * Adds the generated comment to the given node.
-     * @param node a declaration node.
-     * @param comment the generated node.
-     * @since 1.0b9
-     */
-    private void addComment(JavaNode node, ExtendedToken comment)
-    {
-        CommonHiddenStreamToken c = node.getFirstCommentBefore();
-
-        if (c == null)
-        {
-            node.setHiddenBefore(comment);
-        }
-        else
-        {
-            for (; c != null; c = c.getHiddenAfter())
-            {
-                if (c.getHiddenAfter() == null)
-                {
-                    c.setHiddenAfter(comment);
-                    break;
-                }
-            }
-        }
-    }
 
     /**
      * Adds a Javadoc comment to the given INTERFACE_DEF node.
      *
      * @param node a INTERFACE_DEF node.
-     * @param out stream to write to.
      *
      * @since 1.0b8
      */
@@ -336,12 +310,14 @@ abstract class BasicDeclarationPrinter
                 {
                     switch (comment.getType())
                     {
-                        case JavaTokenTypes.SEPARATOR_COMMENT:
+                        case JavaTokenTypes.SEPARATOR_COMMENT :
                             addComment(node, out);
+
                             break;
 
-                        case JavaTokenTypes.ML_COMMENT:
-                        case JavaTokenTypes.SL_COMMENT:
+                        case JavaTokenTypes.ML_COMMENT :
+                        case JavaTokenTypes.SL_COMMENT :
+
                             /**
                              * @todo transform the existing comment
                              */
@@ -353,8 +329,8 @@ abstract class BasicDeclarationPrinter
                             }
                             */
                             break;
-                        case JavaTokenTypes.SPECIAL_COMMENT:
 
+                        case JavaTokenTypes.SPECIAL_COMMENT :
                             break;
                     }
                 }
@@ -399,6 +375,39 @@ abstract class BasicDeclarationPrinter
         }
 
         return false;
+    }
+
+
+    /**
+     * Adds the generated comment to the given node.
+     *
+     * @param node a declaration node.
+     * @param comment the generated node.
+     *
+     * @since 1.0b9
+     */
+    private void addComment(
+        JavaNode      node,
+        ExtendedToken comment)
+    {
+        CommonHiddenStreamToken c = node.getFirstCommentBefore();
+
+        if (c == null)
+        {
+            node.setHiddenBefore(comment);
+        }
+        else
+        {
+            for (; c != null; c = c.getHiddenAfter())
+            {
+                if (c.getHiddenAfter() == null)
+                {
+                    c.setHiddenAfter(comment);
+
+                    break;
+                }
+            }
+        }
     }
 
 

@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -64,7 +65,10 @@ final class CasePrinter
             case JavaTokenTypes.LITERAL_case :
             {
                 printCommentsBefore(node, out);
-                out.print(CASE_SPACE, JavaTokenTypes.LITERAL_case);
+
+                int offset = out.print(CASE_SPACE, JavaTokenTypes.LITERAL_case);
+
+                trackPosition((JavaNode) node, out.line, offset, out);
 
                 AST expr = node.getFirstChild();
                 PrinterFactory.create(expr).print(expr, out);
@@ -159,16 +163,21 @@ LOOP:
             {
                 printCommentsBefore(node, out);
 
+                int offset = 1;
+
                 if (
                     this.settings.getBoolean(
                         ConventionKeys.SPACE_BEFORE_CASE_COLON, false))
                 {
-                    out.print(DEFAULT_SPACE_COLON, JavaTokenTypes.LITERAL_default);
+                    offset =
+                        out.print(DEFAULT_SPACE_COLON, JavaTokenTypes.LITERAL_default);
                 }
                 else
                 {
-                    out.print(DEFAULT_COLON, JavaTokenTypes.LITERAL_default);
+                    offset = out.print(DEFAULT_COLON, JavaTokenTypes.LITERAL_default);
                 }
+
+                trackPosition((JavaNode) node, out.line, offset, out);
 
                 out.last = JavaTokenTypes.LITERAL_default;
 
