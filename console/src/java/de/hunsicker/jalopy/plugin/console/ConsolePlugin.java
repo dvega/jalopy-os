@@ -796,9 +796,8 @@ public final class ConsolePlugin
     private void parseArgs(String[] argv)
     {
         _scanner = new DirectoryScanner();
-        _scanner.setFilterPolicy(Filters.POLICY_STRICT);
 
-        Getopt g = new Getopt("Jalopy", argv, getOptString(), getLongOptions());
+        Getopt g = new Getopt("Jalopy" /* NOI18N */, argv, getOptString(), getLongOptions());
         int c = -1;
 
         while ((c = g.getopt()) != -1)
