@@ -18,22 +18,25 @@ import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevBracesPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevCommentsPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevDummyPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevEnvironmentPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevFooterPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevGeneralPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevHeaderPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevImportsPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevIndentationPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevJavadocPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevMessagesPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevMiscPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevSeparationPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevSortingPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevWhitespacePanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.JDevWrappingPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.BracesPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.CodeInspectorPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.CommentsPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.DummyPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.EnvironmentPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.FooterPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.GeneralPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.HeaderPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.ImportsPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.IndentationPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.JavadocPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.MessagesPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.MiscPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.NamingPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.ProjectPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.SeparationPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.SortingPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.WhitespacePanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.WrappingPanel;
 import de.hunsicker.swing.util.SwingHelper;
 
 import oracle.ide.AddinManager;
@@ -332,28 +335,55 @@ public final class JDevPlugin
         Ide.getNavigatorManager().addContextMenuListener(this, null);
         Ide.getEditorManager().getContextMenu().addContextMenuListener(this, null);
 
-        IdeSettings settings = Ide.getSettings();
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
+
+        Navigable[] printerPanels =
+        {
+            new Navigable(bundle.getString("LBL_BRACES" /* NOI18N */), BracesPanel.class),
+            new Navigable(
+                bundle.getString("LBL_WHITESPACE" /* NOI18N */), WhitespacePanel.class),
+            new Navigable(
+                bundle.getString("LBL_INDENTATION" /* NOI18N */), IndentationPanel.class),
+            new Navigable(
+                bundle.getString("LBL_WRAPPING" /* NOI18N */), WrappingPanel.class),
+            new Navigable(
+                bundle.getString("LBL_SEPARATION" /* NOI18N */), SeparationPanel.class),
+            new Navigable(
+                bundle.getString("LBL_COMMENTS" /* NOI18N */), CommentsPanel.class),
+            new Navigable(
+                bundle.getString("LBL_IMPORTS" /* NOI18N */), ImportsPanel.class),
+            new Navigable(
+                bundle.getString("LBL_ENVIRONMENT" /* NOI18N */), EnvironmentPanel.class),
+            new Navigable(
+                bundle.getString("LBL_JAVADOC" /* NOI18N */), JavadocPanel.class),
+            new Navigable(bundle.getString("LBL_HEADER" /* NOI18N */), HeaderPanel.class),
+            new Navigable(bundle.getString("LBL_FOOTER" /* NOI18N */), FooterPanel.class),
+            new Navigable(
+                bundle.getString("LBL_SORTING" /* NOI18N */), SortingPanel.class),
+            new Navigable(bundle.getString("LBL_MISC" /* NOI18N */), MiscPanel.class)
+        };
+
+        Navigable[] inspectorPanels =
+        { new Navigable(bundle.getString("LBL_NAMING" /* NOI18N */), NamingPanel.class) };
 
         Navigable[] panels =
         {
-            new Navigable("General", JDevGeneralPanel.class),
-            new Navigable("Braces", JDevBracesPanel.class),
-            new Navigable("Whitespace", JDevWhitespacePanel.class),
-            new Navigable("Indentation", JDevIndentationPanel.class),
-            new Navigable("Wrapping", JDevWrappingPanel.class),
-            new Navigable("Separation", JDevSeparationPanel.class),
-            new Navigable("Comments", JDevCommentsPanel.class),
-            new Navigable("Imports", JDevImportsPanel.class),
-            new Navigable("Environment", JDevEnvironmentPanel.class),
-            new Navigable("Javadoc", JDevJavadocPanel.class),
-            new Navigable("Header", JDevHeaderPanel.class),
-            new Navigable("Footer", JDevFooterPanel.class),
-            new Navigable("Sorting", JDevSortingPanel.class),
-            new Navigable("Misc", JDevMiscPanel.class),
-            new Navigable("Messages", JDevMessagesPanel.class)
+            new Navigable(
+                bundle.getString("LBL_GENERAL" /* NOI18N */), GeneralPanel.class),
+            new Navigable(
+                bundle.getString("LBL_PROJECTS" /* NOI18N */), ProjectPanel.class),
+            new Navigable(
+                bundle.getString("LBL_PRINTER" /* NOI18N */), DummyPanel.class,
+                printerPanels),
+            new Navigable(
+                bundle.getString("LBL_INSPECTOR" /* NOI18N */), CodeInspectorPanel.class,
+                inspectorPanels),
+            new Navigable(
+                bundle.getString("LBL_MESSAGES" /* NOI18N */), MessagesPanel.class)
         };
 
-        IdeSettings.registerUI(new Navigable("Jalopy", JDevDummyPanel.class, panels));
+        IdeSettings.registerUI(
+            new Navigable("Jalopy" /* NOI18N */, DummyPanel.class, panels));
 
         System.out.println(
             "Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion());
@@ -562,21 +592,23 @@ public final class JDevPlugin
             if (multipleSelection)
             {
                 SwingHelper.setMenuText(
-                    _formatMenuItem, bundle.getString("LBL_FORMAT_SELECTED"), true);
+                    _formatMenuItem, bundle.getString("LBL_FORMAT_SELECTED" /* NOI18N */),
+                    true);
             }
             else
             {
                 _args[0] = element.getShortLabel();
                 SwingHelper.setMenuText(
                     _formatMenuItem,
-                    MessageFormat.format(bundle.getString("LBL_FORMAT_SELECTION"), _args),
+                    MessageFormat.format(
+                        bundle.getString("LBL_FORMAT_SELECTION" /* NOI18N */), _args),
                     true);
             }
         }
         else
         {
             SwingHelper.setMenuText(
-                _formatMenuItem, bundle.getString("LBL_FORMAT"), true);
+                _formatMenuItem, bundle.getString("LBL_FORMAT" /* NOI18N */), true);
         }
 
         return _formatMenuItem;
