@@ -72,8 +72,11 @@ final class JavadocPrinter
     private static final String KEY_TAG_ADD_MISSING = "TAG_ADD_MISSING" /* NOI18N */;
     private static final String KEY_TAG_MISSPELLED_NAME =
         "TAG_MISSPELLED_NAME" /* NOI18N */;
+    private static final String KEY_GENERATE_COMMENT = "GENERATE_COMMENT" /* NOI18N */;
+
     private static final String TAG_OPARA = "<p>" /* NOI18N */;
     private static final String TAG_CPARA = "</p>" /* NOI18N */;
+
     private static Pattern _pattern;
 
     static
@@ -177,6 +180,10 @@ final class JavadocPrinter
 
             if (lines.length > 0)
             {
+                out.state.args[0] = out.getFilename();
+                out.state.args[1] = new Integer(out.line);
+                out.state.args[2] = new Integer(out.getIndentLength() + 1);
+
                 for (int i = 0, size = lines.length - 1; i < size; i++)
                 {
                     out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
@@ -184,8 +191,13 @@ final class JavadocPrinter
                 }
 
                 out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
+
+                Loggers.PRINTER_JAVADOC.l7dlog(
+                    Level.INFO, KEY_GENERATE_COMMENT, out.state.args, null);
             }
         }
+
+        // output Javadoc comment as multi-comment
         else if (
             !this.settings.getBoolean(
                 ConventionKeys.COMMENT_JAVADOC_PARSE,

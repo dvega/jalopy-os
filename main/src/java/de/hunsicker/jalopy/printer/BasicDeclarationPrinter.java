@@ -9,6 +9,8 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import de.hunsicker.jalopy.storage.Loggers;
+import org.apache.log4j.Level;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
@@ -86,7 +88,6 @@ abstract class BasicDeclarationPrinter
 
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        //node.setHiddenBefore(token);
         addComment(node, token);
     }
 
@@ -193,7 +194,7 @@ abstract class BasicDeclarationPrinter
                 if (c.getHiddenAfter() == null)
                 {
                     c.setHiddenAfter(comment);
-                    return;
+                    break;
                 }
             }
         }
@@ -203,6 +204,7 @@ abstract class BasicDeclarationPrinter
      * Adds a Javadoc comment to the given INTERFACE_DEF node.
      *
      * @param node a INTERFACE_DEF node.
+     * @param out stream to write to.
      *
      * @since 1.0b8
      */
@@ -218,7 +220,6 @@ abstract class BasicDeclarationPrinter
 
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        //node.setHiddenBefore(token);
         addComment(node, token);
     }
 
@@ -299,7 +300,6 @@ abstract class BasicDeclarationPrinter
 
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        //node.setHiddenBefore(token);
         addComment(node, token);
     }
 
@@ -470,7 +470,6 @@ abstract class BasicDeclarationPrinter
 
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        //node.setHiddenBefore(token);
         addComment(node, token);
     }
 
@@ -557,7 +556,6 @@ abstract class BasicDeclarationPrinter
 
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        //node.setHiddenBefore(token);
         addComment(node, token);
     }
 }
