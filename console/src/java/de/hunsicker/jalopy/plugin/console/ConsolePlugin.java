@@ -1,8 +1,22 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ * Jalopy Java Source Code Formatter
  *
- * This software is distributable under the BSD license. See the terms of the
- * BSD license in the documentation provided with this software.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
  */
 package de.hunsicker.jalopy.plugin.console;
 
@@ -21,11 +35,9 @@ import java.util.StringTokenizer;
 import de.hunsicker.io.DirectoryScanner;
 import de.hunsicker.io.ExtensionFilter;
 import de.hunsicker.io.FileFormat;
-import de.hunsicker.io.Filters;
 import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.VersionMismatchException;
 import de.hunsicker.jalopy.language.ClassRepository;
-import de.hunsicker.jalopy.language.ClassRepositoryEntry;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -48,7 +60,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 
 /**
  * The console Plug-in provides a powerful command line interface for the Jalopy engine.
- *
+ * 
  * <p>
  * Refer to the online manual for the list of valid command line options. You can find
  * the most recent version of the manual on the official Jalopy homepage: <a
@@ -105,7 +117,8 @@ public final class ConsolePlugin
     private static final LongOpt[] LONG_OPTIONS =
     {
         new LongOpt("convention" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'c'),
-        new LongOpt("classpath" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, OPT_CLASSPATH),
+        new LongOpt(
+            "classpath" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, OPT_CLASSPATH),
         new LongOpt("destination" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'd'),
         new LongOpt("disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
         new LongOpt("encoding" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'e'),
@@ -748,6 +761,8 @@ public final class ConsolePlugin
 
     /**
      * Loads the repository
+     *
+     * @param files DOCUMENT ME!
      */
     private void loadRepository(List files)
     {
@@ -762,7 +777,6 @@ public final class ConsolePlugin
             files.add(infos[i].getLocation());
         }
         */
-
         try
         {
             repository.loadAll(files);
@@ -797,7 +811,8 @@ public final class ConsolePlugin
     {
         _scanner = new DirectoryScanner();
 
-        Getopt g = new Getopt("Jalopy" /* NOI18N */, argv, getOptString(), getLongOptions());
+        Getopt g =
+            new Getopt("Jalopy" /* NOI18N */, argv, getOptString(), getLongOptions());
         int c = -1;
 
         while ((c = g.getopt()) != -1)
@@ -915,11 +930,13 @@ public final class ConsolePlugin
 
                     break;
 
-                case OPT_CLASSPATH:
+                case OPT_CLASSPATH :
 
                     List files = new ArrayList();
 
-                    for (StringTokenizer tokens = new StringTokenizer(g.getOptarg(), ";"); tokens.hasMoreElements();)
+                    for (
+                        StringTokenizer tokens = new StringTokenizer(g.getOptarg(), ";");
+                        tokens.hasMoreElements();)
                     {
                         File file = new File(tokens.nextToken()).getAbsoluteFile();
 
@@ -928,7 +945,8 @@ public final class ConsolePlugin
                             Object[] args = { file };
                             System.out.println(
                                 MessageFormat.format(
-                                    BUNDLE.getString("INVALID_CLASSPATH" /* NOI18N */), args));
+                                    BUNDLE.getString("INVALID_CLASSPATH" /* NOI18N */),
+                                    args));
                             System.exit(1);
                         }
 

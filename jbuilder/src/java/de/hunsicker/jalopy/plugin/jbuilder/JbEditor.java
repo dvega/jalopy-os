@@ -76,10 +76,9 @@ final class JbEditor
      */
     public void setCaretPosition(int offset)
     {
-        if (offset < 0 || offset > getLength())
+        if ((offset < 0) || (offset > getLength()))
         {
-            throw new IllegalArgumentException(
-                "invalid range -- offset " + offset);
+            throw new IllegalArgumentException("invalid range -- offset " + offset);
         }
 
         getEditorPane().gotoOffset(offset);
@@ -167,7 +166,8 @@ final class JbEditor
         if ((startOffset < 0) || (endOffset < 0) || (endOffset < startOffset))
         {
             throw new IllegalArgumentException(
-                "invalid range -- startOffset " + startOffset + ", endOffset " + endOffset);
+                "invalid range -- startOffset " + startOffset + ", endOffset "
+                + endOffset);
         }
 
         getEditorPane().setSelectionStart(startOffset);
@@ -235,8 +235,9 @@ final class JbEditor
             }
             else
             {
-                Bookmark bookmark = (Bookmark)data;
-                BookmarkManager.addBookmark(pane.calcCaretPosition(annotation.getLine(), 1), bookmark.number, pane);
+                Bookmark bookmark = (Bookmark) data;
+                BookmarkManager.addBookmark(
+                    pane.calcCaretPosition(annotation.getLine(), 1), bookmark.number, pane);
             }
         }
 
@@ -282,8 +283,9 @@ final class JbEditor
                     }
                     else if (MARK_BOOK.equals(classname))
                     {
-                        GutterMark mark = (GutterMark)marks[j];
-                        result.add(new Annotation(i + 1, new Bookmark(getBookmarkNumber(mark))));
+                        GutterMark mark = (GutterMark) marks[j];
+                        result.add(
+                            new Annotation(i + 1, new Bookmark(getBookmarkNumber(mark))));
                     }
                 }
             }
@@ -294,48 +296,6 @@ final class JbEditor
         return result;
     }
 
-    private final static class Bookmark
-    {
-        int number;
-
-        public Bookmark(int number)
-        {
-            this.number = number;
-        }
-    }
-
-    /**
-     * Returns the mark number for the given bookmark.
-     *
-     * @param mark a bookmark.
-     *
-     * @return the mark number for the given bookmark.
-     */
-    private int getBookmarkNumber(GutterMark mark)
-    {
-        Icon icon = mark.getIcon();
-
-        if (icon == GutterIcons.ICON_BOOKMARK1)
-            return 1;
-        else if (icon == GutterIcons.ICON_BOOKMARK2)
-            return 2;
-        else if (icon == GutterIcons.ICON_BOOKMARK3)
-            return 3;
-        else if (icon == GutterIcons.ICON_BOOKMARK4)
-            return 4;
-        else if (icon == GutterIcons.ICON_BOOKMARK5)
-            return 5;
-        else if (icon == GutterIcons.ICON_BOOKMARK6)
-            return 6;
-        else if (icon == GutterIcons.ICON_BOOKMARK7)
-            return 7;
-        else if (icon == GutterIcons.ICON_BOOKMARK8)
-            return 8;
-        else if (icon == GutterIcons.ICON_BOOKMARK9)
-            return 9;
-        else
-            return 10; // returning invalid value causes bookmark to be ignored
-    }
 
     /**
      * {@inheritDoc}
@@ -361,6 +321,60 @@ final class JbEditor
     public void selectAll()
     {
         getEditorPane().selectAll();
+    }
+
+
+    /**
+     * Returns the mark number for the given bookmark.
+     *
+     * @param mark a bookmark.
+     *
+     * @return the mark number for the given bookmark.
+     */
+    private int getBookmarkNumber(GutterMark mark)
+    {
+        Icon icon = mark.getIcon();
+
+        if (icon == GutterIcons.ICON_BOOKMARK1)
+        {
+            return 1;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK2)
+        {
+            return 2;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK3)
+        {
+            return 3;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK4)
+        {
+            return 4;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK5)
+        {
+            return 5;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK6)
+        {
+            return 6;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK7)
+        {
+            return 7;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK8)
+        {
+            return 8;
+        }
+        else if (icon == GutterIcons.ICON_BOOKMARK9)
+        {
+            return 9;
+        }
+        else
+        {
+            return 10; // returning invalid value causes bookmark to be ignored
+        }
     }
 
 
@@ -393,5 +407,17 @@ final class JbEditor
         }
 
         return this.pane;
+    }
+
+    //~ Inner Classes --------------------------------------------------------------------
+
+    private static final class Bookmark
+    {
+        int number;
+
+        public Bookmark(int number)
+        {
+            this.number = number;
+        }
     }
 }

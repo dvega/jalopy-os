@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
@@ -97,8 +97,7 @@ public class Copy
             }
             else
             {
-                success = directory(
-                        files[i], new File(destination, files[i].getName()));
+                success = directory(files[i], new File(destination, files[i].getName()));
             }
 
             if (!success)

@@ -88,8 +88,7 @@ public class MessagePage
         super(id, icon, false);
 
         _rootNode =
-            new MessageTreeNode(
-                new Message("" /* NOI18N */), MessageTreeNode.Type.ROOT);
+            new MessageTreeNode(new Message("" /* NOI18N */), MessageTreeNode.Type.ROOT);
         _rootPath = new TreePath(_rootNode);
         _tree = new JTree(_rootNode);
 

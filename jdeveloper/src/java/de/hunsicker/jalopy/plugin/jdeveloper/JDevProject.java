@@ -113,8 +113,7 @@ final class JDevProject
                     if (this.selection[i] instanceof JavaSourceNode)
                     {
                         files.add(
-                            new JDevProjectFile(
-                                this, (JavaSourceNode) this.selection[i]));
+                            new JDevProjectFile(this, (JavaSourceNode) this.selection[i]));
                     }
                     else if (isJavaFolder(this.selection[i]))
                     {

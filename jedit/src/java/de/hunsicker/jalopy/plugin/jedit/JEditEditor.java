@@ -6,17 +6,12 @@
  */
 package de.hunsicker.jalopy.plugin.jedit;
 
-import org.gjt.sp.jedit.Buffer;
-import org.gjt.sp.jedit.Marker;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.textarea.Selection;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
-import de.hunsicker.jalopy.language.Annotation;
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 

@@ -18,8 +18,8 @@ import org.apache.log4j.spi.LoggingEvent;
 
 import org.apache.oro.text.regex.MatchResult;
 
-import oracle.ide.layout.ViewId;
 import oracle.ide.Ide;
+import oracle.ide.layout.ViewId;
 import oracle.ide.log.LogWindow;
 
 
@@ -127,7 +127,9 @@ final class JDevAppender
         LogWindow window = Ide.getLogWindow();
 
         if (!window.isVisible())
+        {
             window.show();
+        }
 
         if (result == null)
         {

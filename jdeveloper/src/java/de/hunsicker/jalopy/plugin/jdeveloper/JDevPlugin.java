@@ -8,10 +8,8 @@ package de.hunsicker.jalopy.plugin.jdeveloper;
 
 import java.awt.Container;
 import java.awt.Frame;
-import java.awt.Component;
-import java.util.ResourceBundle;
 import java.text.MessageFormat;
-
+import java.util.ResourceBundle;
 
 import javax.swing.JMenuItem;
 
@@ -121,6 +119,7 @@ public final class JDevPlugin
 
     /** Context id. */
     private static final int CONTEXT_BUSINESS = 8;
+    private static final Object[] _args = new Object[1];
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -393,7 +392,8 @@ public final class JDevPlugin
 
                 if (_contextId != JDevPlugin.CONTEXT_INVALID)
                 {
-                    insertFormatMenuItem(menu, _contextId, element, context.getSelection().length > 1);
+                    insertFormatMenuItem(
+                        menu, _contextId, element, context.getSelection().length > 1);
 
                     /*
                     System.err.println(element.getClass().getName());
@@ -426,7 +426,9 @@ public final class JDevPlugin
                 }
             }
             else
+            {
                 _contextId = CONTEXT_INVALID;
+            }
         }
     }
 
@@ -542,12 +544,16 @@ public final class JDevPlugin
      * Gets the appropriate <em>Format</em> menu item for the given context.
      *
      * @param contextId an integer that indicates the current context of the view.
-     * @param element the currently selected element (the first element if multiple elements are selected).
+     * @param element the currently selected element (the first element if multiple
+     *        elements are selected).
      * @param multipleSelection <code>true</code> if multiple elements are selected.
      *
      * @return <em>Format</em> menu item.
      */
-    private JMenuItem getFormatMenuItem(int contextId, Element element, boolean multipleSelection)
+    private JMenuItem getFormatMenuItem(
+        int     contextId,
+        Element element,
+        boolean multipleSelection)
     {
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -555,21 +561,26 @@ public final class JDevPlugin
         {
             if (multipleSelection)
             {
-                SwingHelper.setMenuText(_formatMenuItem, bundle.getString("LBL_FORMAT_SELECTED"), true);
+                SwingHelper.setMenuText(
+                    _formatMenuItem, bundle.getString("LBL_FORMAT_SELECTED"), true);
             }
             else
             {
                 _args[0] = element.getShortLabel();
-                SwingHelper.setMenuText(_formatMenuItem, MessageFormat.format(bundle.getString("LBL_FORMAT_SELECTION"), _args), true);
+                SwingHelper.setMenuText(
+                    _formatMenuItem,
+                    MessageFormat.format(bundle.getString("LBL_FORMAT_SELECTION"), _args),
+                    true);
             }
         }
         else
-            SwingHelper.setMenuText(_formatMenuItem, bundle.getString("LBL_FORMAT"), true);
+        {
+            SwingHelper.setMenuText(
+                _formatMenuItem, bundle.getString("LBL_FORMAT"), true);
+        }
 
         return _formatMenuItem;
     }
-
-    private final static Object[] _args = new Object[1];
 
 
     /**
@@ -580,44 +591,50 @@ public final class JDevPlugin
      * @return the index of the <em>Build</em> item, returns <code>-1</code> if no such
      *         item could be found.
      */
-private int getIndexOfBuildItem(ContextMenu menu)
-{
-    int result = -1;
-
-    Container container = menu.getGUI(false);
-
-    if (container != null)
+    private int getIndexOfBuildItem(ContextMenu menu)
     {
-        // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.3
-        result = menu.getIndexOfCommandId(container, 109); // Build
+        int result = -1;
 
-        if (result == -1)
-            // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.2
-            result = menu.getIndexOfCommandId(container, 215); // Build
+        Container container = menu.getGUI(false);
 
-        if (result == -1)
-            // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
-            result = menu.getIndexOfCommandId(container, 111); // Build Project
-
-        if (result == -1)
+        if (container != null)
         {
-            // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
-            result = menu.getIndexOfCommandId(container, 217); // Build Project
+            // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.3
+            result = menu.getIndexOfCommandId(container, 109); // Build
+
+            if (result == -1)
+            {
+                // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.2
+                result = menu.getIndexOfCommandId(container, 215); // Build
+            }
+
+            if (result == -1)
+            {
+                // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
+                result = menu.getIndexOfCommandId(container, 111); // Build Project
+            }
+
+            if (result == -1)
+            {
+                // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
+                result = menu.getIndexOfCommandId(container, 217); // Build Project
+            }
+
+            if (result == -1)
+            {
+                // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
+                result = menu.getIndexOfCommandId(container, 111); // Build Workspace
+            }
+
+            if (result == -1)
+            {
+                // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
+                result = menu.getIndexOfCommandId(container, 219); // Build Workspace
+            }
         }
 
-        if (result == -1)
-            // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
-            result = menu.getIndexOfCommandId(container, 111); // Build Workspace
-
-        if (result == -1)
-        {
-            // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
-            result = menu.getIndexOfCommandId(container, 219); // Build Workspace
-        }
+        return result;
     }
-
-    return result;
-}
 
 
     /**
@@ -631,15 +648,16 @@ private int getIndexOfBuildItem(ContextMenu menu)
     private void insertFormatMenuItem(
         ContextMenu menu,
         int         contextId,
-        Element element,
-        boolean multipleSelection)
+        Element     element,
+        boolean     multipleSelection)
     {
         // try to add the item behind the 'Build' item
         int index = getIndexOfBuildItem(menu);
 
         if (index != -1)
         {
-            menu.insert(getFormatMenuItem(contextId, element, multipleSelection), index + 1);
+            menu.insert(
+                getFormatMenuItem(contextId, element, multipleSelection), index + 1);
         }
         else
         {

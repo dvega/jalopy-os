@@ -16,7 +16,6 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.util.ChainingRuntimeException;
 
 import oracle.ide.Ide;
-import oracle.ide.editor.AbstractEditor;
 import oracle.ide.model.TextNode;
 import oracle.javatools.buffer.TextBuffer;
 import oracle.jdeveloper.ceditor.CodeEditor;
@@ -72,7 +71,7 @@ final class JDevEditor
         int column)
     {
         int offset = getEditor().getLineStartOffset(line);
-        getEditor().setCaretPosition(offset + column - 1);
+        getEditor().setCaretPosition((offset + column) - 1);
     }
 
 
@@ -91,9 +90,10 @@ final class JDevEditor
     public int getColumn()
     {
         int caret = getCaretPosition();
-        int lineOffset = getEditor().getLineStartOffset(getEditor().getLineFromOffset(caret));
+        int lineOffset =
+            getEditor().getLineStartOffset(getEditor().getLineFromOffset(caret));
 
-        return caret - lineOffset + 1 ;
+        return caret - lineOffset + 1;
     }
 
 
@@ -268,7 +268,8 @@ final class JDevEditor
 
             for (int i = 0, size = editors.size(); i < size; i++)
             {
-                oracle.ide.editor.Editor editor = (oracle.ide.editor.Editor) editors.get(i);
+                oracle.ide.editor.Editor editor =
+                    (oracle.ide.editor.Editor) editors.get(i);
 
                 if (editor instanceof CodeEditor)
                 {

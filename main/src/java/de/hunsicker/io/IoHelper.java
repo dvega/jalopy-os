@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
@@ -163,6 +163,22 @@ public final class IoHelper
 
 
     /**
+     * Deserializes the object stored in the given file.
+     *
+     * @param file a file.
+     *
+     * @return the deserialized object.
+     *
+     * @throws IOException if an I/O exception occured.
+     */
+    public static final Object deserialize(File file)
+      throws IOException
+    {
+        return deserialize(new BufferedInputStream(new FileInputStream(file)));
+    }
+
+
+    /**
      * Verifies the existence of the given directory and if that directory does not yet
      * exist, tries to create it.
      *
@@ -289,21 +305,5 @@ public final class IoHelper
       throws IOException
     {
         serialize(o, new BufferedOutputStream(new FileOutputStream(file)));
-    }
-
-
-    /**
-     * Deserializes the object stored in the given file.
-     *
-     * @param file a file.
-     *
-     * @return the deserialized object.
-     *
-     * @throws IOException if an I/O exception occured.
-     */
-    public static final Object deserialize(File file)
-      throws IOException
-    {
-        return deserialize(new BufferedInputStream(new FileInputStream(file)));
     }
 }

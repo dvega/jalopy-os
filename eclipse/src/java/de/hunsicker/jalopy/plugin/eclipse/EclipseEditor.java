@@ -1,13 +1,16 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the
- * BSD license in the documentation provided with this software.
+ * The contents of this file are subject to the Common Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://jalopy.sf.net/license-cpl.html
+ *
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import de.hunsicker.jalopy.plugin.Editor;
@@ -17,7 +20,6 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
-import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
