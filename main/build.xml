@@ -25,7 +25,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <property name="dir.lib" value="ext/lib" />
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
-  <property name="dir.src.parser" value="${dir.src.java}/de/hunsicker/jalopy/parser" />
+  <property name="dir.src.parser" value="${dir.src.java}/de/hunsicker/jalopy/language" />
   <property name="dir.src.res" value="${dir.src}/resources" />
 
 
@@ -50,6 +50,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           description="Creates the Jalopy core runtime .jar"
           depends="main-compile, main-uptodate-jar"
           unless="jar.uptodate" >
+
     <jar jarfile="${DIR.JARS}/jalopy-${BUILD.VERSION}.jar"
          duplicate="fail"
          index="false" >
@@ -61,18 +62,30 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <include name="**/History*.gif" />
           <include name="de/hunsicker/io/*" />
           <include name="de/hunsicker/jalopy/*" />
-          <include name="de/hunsicker/jalopy/parser/*" />
+          <include name="de/hunsicker/jalopy/language/*" />
           <include name="de/hunsicker/jalopy/plugin/*" />
           <include name="de/hunsicker/jalopy/prefs/*" />
           <include name="de/hunsicker/jalopy/storage/*" />
           <include name="de/hunsicker/jalopy/printer/*" />
-          <include name="de/hunsicker/jalopy/ui/*" />
-          <include name="de/hunsicker/jalopy/ui/syntax/*" />
-          <include name="de/hunsicker/ui/*" />
-          <include name="de/hunsicker/ui/util/*" />
+          <include name="de/hunsicker/jalopy/swing/*" />
+          <include name="de/hunsicker/jalopy/swing/syntax/*" />
+          <include name="de/hunsicker/swing/*" />
+          <include name="de/hunsicker/swing/util/*" />
           <include name="de/hunsicker/util/*" />
           <include name="de/hunsicker/util/concurrent/*" />
-          <include name="**/ui/resources/*.java.tpl" />
+          <include name="**/swing/resources/*.java.tpl" />
+          <include name="**/Bundle*.properties" />
+
+        <exclude name="**/*TestCase*" />
+        <exclude name="TestAll.*" />
+
+          <exclude name="**/ant/Bundle*.properties" />
+          <exclude name="**/console/Bundle*.properties" />
+          <exclude name="**/eclipse/Bundle*.properties" />
+          <exclude name="**/jbuilder/Bundle*.properties" />
+          <exclude name="**/jdev/Bundle*.properties" />
+          <exclude name="**/jedit/Bundle*.properties" />
+          <exclude name="**/netbeans/Bundle*.properties" />
         </patternset>
       </fileset>
       <zipfileset src="${dir.lib}/antlr-${LIB.VERSION.ANTLR}.jar" casesensitive="false">
@@ -102,6 +115,21 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   </target>
 
 
+    <target name="test">
+        <taskdef name="unitgen"
+             classpath="g:/java/programme/unittestsgen-2.0.1/jar/unittestsgen.jar;${dir.lib}/log4j-1.2.6.jar"
+             classname="testsgen.taskant.UnitTestsGen"/>
+
+
+    <unitgen update="true"
+             classpath="${DIR.COMPILE};${dir.lib}/junit-3.8.1.jar;${dir.lib}/antlr-2.7.2a2.jar;${dir.lib}/oro-2.0.6.jar;${dir.lib}/jdom-1.0b8.jar;"
+             recursive="true"
+             input="${dir.src.java}"
+             quiet="false"
+             debug="true"
+             output="/testcases" />
+    </target>
+
   <!-- ==================================================================== -->
   <!-- Creates all .jars                                                    -->
   <!-- ==================================================================== -->
@@ -122,7 +150,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
          parser, so we have to make sure it exists in the compile dir
     -->
     <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/parser/JavadocTokenTypes.txt"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/language/JavadocTokenTypes.txt"
           preservelastmodified="true" />
 
     <javac compiler="${BUILD.COMPILER}"
@@ -138,15 +166,15 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <include name="de/hunsicker/io/*" />
       <include name="de/hunsicker/jalopy/*" />
       <include name="de/hunsicker/jalopy/debug/*" />
-      <include name="de/hunsicker/jalopy/parser/*" />
+      <include name="de/hunsicker/jalopy/language/*" />
       <include name="de/hunsicker/jalopy/plugin/*" />
       <include name="de/hunsicker/jalopy/prefs/*" />
       <include name="de/hunsicker/jalopy/storage/*" />
       <include name="de/hunsicker/jalopy/printer/*" />
-      <include name="de/hunsicker/jalopy/ui/*" />
-      <include name="de/hunsicker/jalopy/ui/syntax/*" />
-      <include name="de/hunsicker/ui/*" />
-      <include name="de/hunsicker/ui/util/*" />
+      <include name="de/hunsicker/jalopy/swing/*" />
+      <include name="de/hunsicker/jalopy/swing/syntax/*" />
+      <include name="de/hunsicker/swing/*" />
+      <include name="de/hunsicker/swing/util/*" />
       <include name="de/hunsicker/util/*" />
       <include name="de/hunsicker/util/concurrent/*" />
     </javac>
@@ -178,10 +206,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="main-format" depends="main-compile">
 
-    <!-- we know the ant module is available -->
+    <!-- we know the Ant module is available -->
     <ant dir="../ant" target="ant-compile" inheritAll="false" />
 
-    <!-- declare the jalopy task -->
+    <!-- declare the Jalopy task -->
     <taskdef name="jalopy"
              classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
       <classpath refid="project.classpath" />
@@ -204,18 +232,21 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <mkdir dir="${DIR.JARS}" />
     <mkdir dir="${DIR.COMPILE}" />
 
-    <copy todir="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources">
+    <native2ascii
+        src="${dir.src.java}"
+        dest="${DIR.COMPILE}"
+        includes="**/Bundle*.properties" />
+
+    <copy todir="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources">
       <fileset dir="${dir.src.res}">
         <include name="*.java.tpl" />
       </fileset>
     </copy>
 
-    <copy file="${dir.src.res}/Bundle.properties"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/Bundle.properties" />
     <copy file="${dir.src.res}/Preferences16.gif"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources/Preferences16.gif" />
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources/Preferences16.gif" />
     <copy file="${dir.src.res}/History16.gif"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources/History16.gif" />
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources/History16.gif" />
   </target>
 
 
@@ -251,15 +282,15 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <srcfileset dir="${DIR.COMPILE}">
         <include name="de/hunsicker/io/*" />
         <include name="de/hunsicker/jalopy/*" />
-        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/language/*" />
         <include name="de/hunsicker/jalopy/plugin/*" />
         <include name="de/hunsicker/jalopy/prefs/*" />
         <include name="de/hunsicker/jalopy/storage/*" />
         <include name="de/hunsicker/jalopy/printer/*" />
-        <include name="de/hunsicker/jalopy/ui/*" />
-        <include name="de/hunsicker/jalopy/ui/syntax/*" />
-        <include name="de/hunsicker/ui/*" />
-        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/jalopy/swing/*" />
+        <include name="de/hunsicker/jalopy/swing/syntax/*" />
+        <include name="de/hunsicker/swing/*" />
+        <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
       </srcfileset>
@@ -363,10 +394,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <!--
          we need this file for the error recovery feature of the Javadoc
-         parser, so we have to make sure it exists in the compile dir
+         parser, so we have to make sure it exists in the compile directory
     -->
     <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/parser/JavadocTokenTypes.txt"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/language/JavadocTokenTypes.txt"
           overwrite="true" />
 
     <!-- touch the file to track build time -->
