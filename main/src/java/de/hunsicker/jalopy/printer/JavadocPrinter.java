@@ -466,11 +466,23 @@ final class JavadocPrinter
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
 
             case JavaTokenTypes.VARIABLE_DEF :
+            {
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE).trim();
 
-                /**
-                 * @todo parse user specified string
-                 */
-                return " */";
+                int offset = text.lastIndexOf(DELIMETER);
+
+                if (offset > -1)
+                {
+                    return text.substring(offset + 1);
+                }
+                else
+                {
+                    return " */";
+                }
+            }
 
             case JavaTokenTypes.CLASS_DEF :
             {
@@ -478,6 +490,7 @@ final class JavadocPrinter
                     this.settings.get(
                         ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                         ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).trim();
+
                 int offset = text.lastIndexOf(DELIMETER);
 
                 if (offset > -1)
@@ -812,11 +825,22 @@ final class JavadocPrinter
             }
 
             case JavaTokenTypes.VARIABLE_DEF :
+            {
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE).trim();
+                int offset = text.indexOf(DELIMETER);
 
-                /**
-                 * @todo parse user specified string
-                 */
-                return "/**";
+                if (offset > -1)
+                {
+                    return text.substring(0, offset);
+                }
+                else
+                {
+                    return "/**";
+                }
+            }
 
             case JavaTokenTypes.CLASS_DEF :
             {
@@ -972,18 +996,6 @@ LOOP:
         int        last,
         NodeWriter out)
     {
-        switch (node.getType())
-        {
-            case JavaTokenTypes.METHOD_DEF :
-
-                if (JavaNodeHelper.isAbstractMethod(node))
-                {
-                    return;
-                }
-
-                break;
-        }
-
         switch (type)
         {
             case JavaTokenTypes.LITERAL_throws :

@@ -340,6 +340,7 @@ abstract class BasicDeclarationPrinter
         }
     }
 
+    private int privacyMask = Modifier.PUBLIC | Modifier.PRIVATE | Modifier.PROTECTED;
 
     /**
      * Determines whether the auto-generation of Javadoc comments is enabled for the
@@ -355,17 +356,12 @@ abstract class BasicDeclarationPrinter
         int mask,
         AST node)
     {
-        /**
-         * @todo we currently don't calculate friendly access but rather misuse the FINAL
-         *       modifier to indicate it, so if we find it here we know we have to
-         *       handle it separately
+        /*
+         * to calculate friendly access we misuse the FINAL modifier to indicate it
          */
-        if (mask == Modifier.FINAL)
-        {
-            return (JavaNodeModifier.valueOf(node) == 0);
-        }
 
-        int value = JavaNodeModifier.valueOf(node);
+        /* Retrieves the privacy of the node */
+        int value = JavaNodeModifier.valueOf(node) & privacyMask;
 
         if (((mask & value) != 0) || ((value == 0) && ((Modifier.FINAL & mask) != 0)))
         {

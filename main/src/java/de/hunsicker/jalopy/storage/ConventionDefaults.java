@@ -238,7 +238,7 @@ public final class ConventionDefaults
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final String COMMENT_JAVADOC_TEMPLATE_VARIABLE =
-        "DOCUMENT ME!" /* NOI18N */;
+        "/**| * DOCUMENT ME!| */" /* NOI18N */;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_TOP =
