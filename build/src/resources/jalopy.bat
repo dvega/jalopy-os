@@ -27,13 +27,13 @@ SHIFT
 GOTO setupArgs
 
 :doneStart
-REM This label provides a place for the argument list loop to break out 
+REM This label provides a place for the argument list loop to break out
 REM and for NT handling to skip to.
 
 :checkJava
 SET _JAVACMD=%JAVACMD%
 SET LOCALCLASSPATH=
-FOR %%i IN (".\*.jar") do call ".\lcp.bat" %%i
+FOR %%i IN ("..\lib\*.jar") do call ".\lcp.bat" %%i
 
 IF "%JAVA_HOME%" == "" GOTO noJavaHome
 IF "%_JAVACMD%" == "" SET _JAVACMD=%JAVA_HOME%\bin\java

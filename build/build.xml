@@ -42,7 +42,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-all"
           description="Creates all binary distributions"
           depends="build-dist-ant, build-dist-console,
-                   build-dist-eclipse, build-dist-jbuilder,
+                   build-dist-eclipse, build-dist-jbuilder, build-dist-jdev,
                    build-dist-jedit, build-dist-main, build-dist-netbeans,
                    build-dist-src" />
 
@@ -57,9 +57,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.ant"
           unless="uptodate.ant">
 
+    <delete dir="${DIR.TMP}/ant/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/ant/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/ant/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/ant/docs" >
-        <fileset dir="${DIR.DOCS}/site" />
-        <fileset dir="${DIR.DOCS}/manual" />
+      <fileset dir="${DIR.DOCS}/site" />
+      <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
     <copy todir="${DIR.TMP}/ant/bin" >
@@ -68,6 +72,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="lcp.bat" />
         <include name="preferences.sh" />
       </fileset>
+    </copy>
+
+    <copy todir="${DIR.TMP}/ant/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="aelfred-*.jar" />
         <include name="jaxp-*.jar" />
@@ -100,6 +107,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.console"
           unless="uptodate.console">
 
+    <delete dir="${DIR.TMP}/console/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/console/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/console/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/console/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
@@ -113,6 +124,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy.sh" />
         <include name="jalopy.bat" />
       </fileset>
+    </copy>
+    <copy todir="${DIR.TMP}/console/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="aelfred-*.jar" />
         <include name="getopt-*.jar" />
@@ -147,29 +160,32 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           unless="uptodate.eclipse">
 
     <delete dir="${DIR.TMP}/eclipse/bin" quiet="true" />
+    <delete quiet="true">
+      <fileset dir="de.hunsicker.jalopy.plugin.eclipse*" />
+    </delete>
 
     <copy todir="${DIR.TMP}/eclipse/docs" >
-        <fileset dir="${DIR.DOCS}/site" />
-        <fileset dir="${DIR.DOCS}/manual" />
+      <fileset dir="${DIR.DOCS}/site" />
+      <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
     <tstamp>
-      <format property="content.date" pattern="d MMMM, yyyy" locale="en"/>
+      <format property="content.date" pattern="d MMMM, yyyy" locale="en" />
     </tstamp>
 
-    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}"
+    <copy todir="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}"
           filtering="true">
       <fileset dir="../eclipse/src/resources" >
         <include name="about.html" />
         <include name="plugin.*" />
       </fileset>
       <filterset>
-        <filtersfile file="build.properties"/>
-        <filter token="DATE" value="${content.date}"/>
+        <filtersfile file="build.properties" />
+        <filter token="DATE" value="${content.date}" />
       </filterset>
     </copy>
 
-    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" >
+    <copy todir="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" >
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
@@ -199,12 +215,16 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.jbuilder"
           unless="uptodate.jbuilder">
 
+    <delete dir="${DIR.TMP}/jbuilder/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/jbuilder/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/jbuilder/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/jbuilder/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
-    <copy todir="${DIR.TMP}/jbuilder/bin" >
+    <copy todir="${DIR.TMP}/jbuilder/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
@@ -234,12 +254,16 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.jdeveloper"
           unless="uptodate.jdeveloper">
 
+    <delete dir="${DIR.TMP}/jdeveloper/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/jdeveloper/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/jdeveloper/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/jdeveloper/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
-    <copy todir="${DIR.TMP}/jdeveloper/bin" >
+    <copy todir="${DIR.TMP}/jdeveloper/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
@@ -269,12 +293,16 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.jedit"
           unless="uptodate.jedit">
 
+    <delete dir="${DIR.TMP}/jedit/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/jedit/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/jedit/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/jedit/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
-    <copy todir="${DIR.TMP}/jedit/bin" >
+    <copy todir="${DIR.TMP}/jedit/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
@@ -305,6 +333,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.main"
           unless="uptodate.main">
 
+    <delete dir="${DIR.TMP}/main/bin" quiet="true" />
+    <delete dir="${DIR.TMP}/main/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/main/lib" quiet="true" />
+
     <copy todir="${DIR.TMP}/main/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
@@ -314,12 +346,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <fileset dir="${DIR.DOCS}/api" />
     </copy>
 
-    <!-- <copy todir="${DIR.TMP}/main/bin" >
-      <fileset dir="../main/ext/lib" >
-      </fileset>
-    </copy> -->
-
-    <copy todir="${DIR.TMP}/main/bin" >
+    <copy todir="${DIR.TMP}/main/lib" >
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-${BUILD.VERSION}.jar" />
       </fileset>
@@ -338,15 +365,23 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="build-dist-netbeans"
           description="Creates the NetBeans Plug-in distribution"
-          depends="build-check-netbeans, build-jar-netbeans,
+          depends="build-check-netbeans,
                    build-docu-netbeans, build-docu, build-uptodate-netbeans"
           if="present.netbeans"
           unless="uptodate.netbeans">
+
+    <delete dir="${DIR.TMP}/netbeans" quiet="true">
+      <fileset dir="bin" />
+      <fileset dir="docs" />
+      <fileset dir="lib" />
+    </delete>
 
     <copy todir="${DIR.TMP}/netbeans/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
+
+    <ant dir="../netbeans" target="netbeans-nbm" inheritAll="false" />
 
     <!-- <tar tarfile="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.tar.gz"
          basedir="${DIR.TMP}/netbeans"
@@ -391,6 +426,17 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-manual"
           depends="build-dist-all"
           description="Creates the manual distribution">
+
+    <delete dir="${DIR.TMP}/manual" quiet="true" />
+
+    <copy todir="${DIR.TMP}/manual" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/manual/api" >
+        <fileset dir="${DIR.DOCS}/api" />
+    </copy>
   </target>
 
 
@@ -447,11 +493,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <mkdir dir="${DIR.DOCS}" />
     <mkdir dir="${DIR.DIST}" />
 
-    <property name="build.init" value="true" />
-
     <fixcrlf eol="lf" eof="remove" srcDir="${dir.res}"
              includes="*.sh">
     </fixcrlf>
+
+    <property name="build.init" value="true" />
   </target>
 
 
@@ -587,7 +633,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the NetBeans Plug-in .jar                                    -->
   <!-- ==================================================================== -->
   <target name="build-jar-netbeans">
-    <ant dir="../netbeans" target="netbeans-nbm" inheritAll="false" />
+    <ant dir="../netbeans" target="netbeans-jar" inheritAll="false" />
   </target>
 
 
@@ -734,7 +780,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-ant-${BUILD.VERSION.ANT}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/ant/bin">
+      <targetfileset dir="${DIR.TMP}/ant/lib">
         <include name="jalopy-ant-${BUILD.VERSION.ANT}.jar" />
       </targetfileset>
     </dependset>
@@ -761,13 +807,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <!-- <available file="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.tar.gz" /> -->
         <available file="${DIR.TMP}/ant/docs/index.html" />
         <available file="${DIR.TMP}/ant/bin/preferences.bat" />
-        <available file="${DIR.TMP}/ant/bin/aelfred-${LIB.VERSION.AELFRED}.jar" />
-        <available file="${DIR.TMP}/ant/bin/jaxp-${LIB.VERSION.JAXP}.jar" />
-        <available file="${DIR.TMP}/ant/bin/jalopy-ant-${BUILD.VERSION.ANT}.jar" />
-        <available file="${DIR.TMP}/ant/bin/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/ant/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/ant/bin/oro-${LIB.VERSION.ORO}.jar" />
-        <available file="${DIR.TMP}/ant/bin/sax-${LIB.VERSION.SAX}.jar" />
+        <available file="${DIR.TMP}/ant/lib/aelfred-${LIB.VERSION.AELFRED}.jar" />
+        <available file="${DIR.TMP}/ant/lib/jaxp-${LIB.VERSION.JAXP}.jar" />
+        <available file="${DIR.TMP}/ant/lib/jalopy-ant-${BUILD.VERSION.ANT}.jar" />
+        <available file="${DIR.TMP}/ant/lib/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/ant/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/ant/lib/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/ant/lib/sax-${LIB.VERSION.SAX}.jar" />
       </and>
     </condition>
   </target>
@@ -791,7 +837,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-console-${BUILD.VERSION}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/console/bin">
+      <targetfileset dir="${DIR.TMP}/console/lib">
         <include name="jalopy-ant-${BUILD.VERSION}.jar" />
       </targetfileset>
     </dependset>
@@ -820,14 +866,14 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <!-- <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.tar.gz" /> -->
         <available file="${DIR.TMP}/console/docs/index.html" />
         <available file="${DIR.TMP}/console/bin/preferences.bat" />
-        <available file="${DIR.TMP}/console/bin/aelfred-${LIB.VERSION.AELFRED}.jar" />
-        <available file="${DIR.TMP}/console/bin/getopt-${LIB.VERSION.GETOPT}.jar" />
-        <available file="${DIR.TMP}/console/bin/jaxp-${LIB.VERSION.JAXP}.jar" />
-        <available file="${DIR.TMP}/console/bin/jalopy-console-${BUILD.VERSION}.jar" />
-        <available file="${DIR.TMP}/console/bin/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/console/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/console/bin/oro-${LIB.VERSION.ORO}.jar" />
-        <available file="${DIR.TMP}/console/bin/sax-${LIB.VERSION.SAX}.jar" />
+        <available file="${DIR.TMP}/console/lib/aelfred-${LIB.VERSION.AELFRED}.jar" />
+        <available file="${DIR.TMP}/console/lib/getopt-${LIB.VERSION.GETOPT}.jar" />
+        <available file="${DIR.TMP}/console/lib/jaxp-${LIB.VERSION.JAXP}.jar" />
+        <available file="${DIR.TMP}/console/lib/jalopy-console-${BUILD.VERSION}.jar" />
+        <available file="${DIR.TMP}/console/lib/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/console/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/console/lib/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/console/lib/sax-${LIB.VERSION.SAX}.jar" />
       </and>
     </condition>
   </target>
@@ -847,7 +893,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}">
+      <targetfileset dir="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}">
         <include name="jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
       </targetfileset>
     </dependset>
@@ -862,10 +908,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.tar.gz" /> -->
         <available file="${DIR.TMP}/eclipse/docs/index.html" />
-        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
-        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
+        <available file="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/oro-${LIB.VERSION.ORO}.jar" />
       </and>
     </condition>
   </target>
@@ -885,7 +931,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/jbuilder/bin">
+      <targetfileset dir="${DIR.TMP}/jbuilder/lib">
         <include name="jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
       </targetfileset>
     </dependset>
@@ -900,10 +946,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.tar.gz" /> -->
         <available file="${DIR.TMP}/jbuilder/docs/index.html" />
-        <available file="${DIR.TMP}/jbuilder/bin/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
-        <available file="${DIR.TMP}/jbuilder/bin/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/jbuilder/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/jbuilder/bin/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/jbuilder/lib/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+        <available file="${DIR.TMP}/jbuilder/lib/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jbuilder/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jbuilder/lib/oro-${LIB.VERSION.ORO}.jar" />
       </and>
     </condition>
   </target>
@@ -923,7 +969,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/jdeveloper/bin">
+      <targetfileset dir="${DIR.TMP}/jdeveloper/lib">
         <include name="jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
       </targetfileset>
     </dependset>
@@ -938,10 +984,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.tar.gz" /> -->
         <available file="${DIR.TMP}/jdeveloper/docs/index.html" />
-        <available file="${DIR.TMP}/jdeveloper/bin/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
-        <available file="${DIR.TMP}/jdeveloper/bin/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/jdeveloper/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/jdeveloper/bin/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/lib/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/lib/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/lib/oro-${LIB.VERSION.ORO}.jar" />
       </and>
     </condition>
   </target>
@@ -961,7 +1007,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/jedit/bin">
+      <targetfileset dir="${DIR.TMP}/jedit/lib">
         <include name="jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
       </targetfileset>
     </dependset>
@@ -976,10 +1022,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.tar.gz" /> -->
         <available file="${DIR.TMP}/jedit/docs/index.html" />
-        <available file="${DIR.TMP}/jedit/bin/jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
-        <available file="${DIR.TMP}/jedit/bin/jdom-${LIB.VERSION.JDOM}.jar" />
-        <available file="${DIR.TMP}/jedit/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
-        <available file="${DIR.TMP}/jedit/bin/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/jedit/lib/jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
+        <available file="${DIR.TMP}/jedit/lib/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jedit/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jedit/lib/oro-${LIB.VERSION.ORO}.jar" />
       </and>
     </condition>
   </target>
@@ -998,7 +1044,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="readme.html" />
       </srcfileset>
       <targetfileset dir="${DIR.DIST}"
-                     includes="jalopy-${BUILD.VERSION}.*"/>
+                     includes="jalopy-${BUILD.VERSION}.*" />
     </dependset>
     <available property="uptodate.main"
                file="${DIR.DIST}/jalopy-${BUILD.VERSION}.zip" />
@@ -1019,7 +1065,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="jalopy-${BUILD.VERSION}.jar" />
         <include name="jalopy-netbeans-${BUILD.VERSION.NETBEANS}.jar" />
       </srcfileset>
-      <targetfileset dir="${DIR.TMP}/netbeans/bin">
+      <targetfileset dir="${DIR.TMP}/netbeans/lib">
         <include name="jalopy-netbeans-${BUILD.VERSION.NETBEANS}.jar" />
       </targetfileset>
     </dependset>
@@ -1034,7 +1080,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.tar.gz" /> -->
         <available file="${DIR.TMP}/netbeans/docs/index.html" />
-        <available file="${DIR.TMP}/netbeans/bin/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.nbm" />
+        <available file="${DIR.TMP}/netbeans/lib/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.nbm" />
       </and>
     </condition>
   </target>
