@@ -250,7 +250,7 @@ Enabling this tip will cause warnings for all String literals without associated
 Internationalizing Java applications is often done with nifty tools that use marker
 comments to indicate that a given String literal should not be considered for localization.
 Most tools (at least the ones I know of) use trailing single-line comments which may not
-be very robust for processing with a formatting tool such as Jalopy. In contrast the authors
+be very robust for processing with a formatting tool such as Jalopy. In contrast the author
 uses a multi-line comment of the form <literal>/* NOI18N */</literal> that gets directly
 placed after a String literal and will therefore always stuck with it.
 </para>
