@@ -1,0 +1,56 @@
+<?xml version="1.0"
+      encoding="iso-8859-1" ?>
+
+<!-- $Id$ -->
+
+<preface id="acknowledge">
+<title>Acknowledgements</title>
+
+<para>
+First and foremost I wish to thank the creators of the free software libraries
+I use. Jalopy includes software developed by the following third parties:
+</para>
+
+<itemizedlist>
+<listitem>
+<ulink url="http://www.apache.org/">Apache Software Foundation</ulink>
+</listitem>
+<listitem>
+<ulink url="http://www.saxproject.org/">David Brownell</ulink>
+</listitem>
+<listitem>
+<ulink url="http://sf.net/projects/saxon/">Michael H. Kay</ulink>
+</listitem>
+<listitem>
+<ulink url="http://www.jdom.org">JDOM group</ulink>
+</listitem>
+<listitem>
+<ulink url="http://www.antlr.org/">jGuru.com (MageLang Institute)</ulink>
+</listitem>
+<listitem>
+<ulink url="http://www.saxproject.org/">David Megginson</ulink>
+</listitem>
+<listitem>
+Microstar Software Ltd
+</listitem>
+<listitem>
+Bogdan Mitu
+</listitem>
+<listitem>
+<ulink url="http://www.urbanophile.com/~arenn/hacking/download.html">Aaron M. Renn</ulink>
+</listitem>
+<listitem>
+<ulink url="http://java.sun.com/xml/">Sun Microsystems, Inc.</ulink>
+</listitem>
+</itemizedlist>
+
+<para>
+Please refer to <xref linkend="dependencies" /> for a detailed list
+and the licensing terms.
+</para>
+
+<para>
+Many thanks to all users and contributers who provided feedback, submitted bug
+reports, requested new features or even applied code.
+</para>
+</preface>
