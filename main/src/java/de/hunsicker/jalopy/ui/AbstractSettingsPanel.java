@@ -33,7 +33,7 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Convention;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,12 +43,12 @@ import javax.swing.Timer;
 
 
 /**
- * Base class to implement the different preferences pages.
+ * Base class to implement the different settings pages.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public abstract class AbstractPreferencesPanel
+public abstract class AbstractSettingsPanel
     extends JPanel
 {
     //~ Instance variables ····················································
@@ -56,14 +56,14 @@ public abstract class AbstractPreferencesPanel
     /** Listener used to trigger an update of the preview frame. */
     protected final ActionListener trigger = new UpdateTrigger();
 
-    /** The preferences to display/edit. */
-    protected Preferences prefs;
+    /** The code convention to display/edit. */
+    protected Convention settings;
 
     /**
-     * Our container. May be null if the preferences pages are directly
+     * Our container. May be <code>null</code> if the code convention pages are directly
      * embedded into a Java appplication.
      */
-    private PreferencesContainer _container;
+    private SettingsContainer _container;
 
     /** The category of the page. */
     private String _category;
@@ -74,20 +74,20 @@ public abstract class AbstractPreferencesPanel
     //~ Constructors ··························································
 
     /**
-     * Creates a new AbstractPreferencesPanel.
+     * Creates a new AbstractSettingsPanel.
      */
-    public AbstractPreferencesPanel()
+    public AbstractSettingsPanel()
     {
-        this.prefs = Preferences.getInstance();
+        this.settings = Convention.getInstance();
     }
 
 
     /**
-     * Creates a new AbstractPreferencesPanel.
+     * Creates a new AbstractSettingsPanel.
      *
      * @param container the parent container.
      */
-    AbstractPreferencesPanel(PreferencesContainer container)
+    AbstractSettingsPanel(SettingsContainer container)
     {
         this();
         _container = container;
@@ -122,31 +122,31 @@ public abstract class AbstractPreferencesPanel
      *
      * @return The parent container.
      */
-    public PreferencesContainer getContainer()
+    public SettingsContainer getContainer()
     {
         return _container;
     }
 
 
     /**
-     * Sets the preferences to display/edit.
+     * Sets the code convention to display/edit.
      *
-     * @param preferences preferences to display/edit.
+     * @param convention code convention to display/edit.
      */
-    public void setPreferences(Preferences preferences)
+    public void setConvention(Convention convention)
     {
-        this.prefs = preferences;
+        this.settings = convention;
     }
 
 
     /**
-     * Returns the current preferences.
+     * Returns the current convention.
      *
-     * @return The current preferences.
+     * @return the current convention.
      */
-    public Preferences getPreferences()
+    public Convention getConvention()
     {
-        return this.prefs;
+        return this.settings;
     }
 
 
@@ -197,7 +197,7 @@ public abstract class AbstractPreferencesPanel
 
 
     /**
-     * Validates the page's preferences settings. Pages that needs their input
+     * Validates this page's settings. Pages that needs their input
      * validated should override to provide the actually needed
      * implementation.
      *

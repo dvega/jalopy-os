@@ -33,8 +33,8 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.ui.ErrorDialog;
 import de.hunsicker.ui.util.SwingHelper;
 import de.hunsicker.util.Helper;
@@ -72,8 +72,8 @@ import org.apache.log4j.varia.NullAppender;
 
 
 /**
- * The Jalopy preferences dialog. Provides a graphical user interface to
- * display and interactively edit all preferences options.
+ * The Jalopy settings dialog. Provides a graphical user interface to
+ * display and interactively edit all code convention settings.
  *
  * <p>
  * The dialog can be used from other Java applications as usual, in which case
@@ -85,14 +85,14 @@ import org.apache.log4j.varia.NullAppender;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class PreferencesDialog
+public class SettingsDialog
     extends JDialog
 {
     //~ Static variables/initializers ·········································
 
     /**
-     * Command line option that indicates that the preferences dialog was
-     * called from within Eclipse. Used to prevent the call to System.exit
+     * Command line option that indicates that the settings dialog was
+     * called from within Eclipse. Used to prevent the call to System.exit()
      * upon closure.
      */
     public static final String ARG_ECLIPSE = "-eclipse";
@@ -114,7 +114,7 @@ public class PreferencesDialog
     private JButton _okButton;
 
     /** The container that contains the tree and page views. */
-    private PreferencesContainer _preferencesContainer;
+    private SettingsContainer _preferencesContainer;
 
     /** A frame that displays the contents of a Java source file. */
     private PreviewFrame _previewFrame;
@@ -122,13 +122,13 @@ public class PreferencesDialog
     //~ Constructors ··························································
 
     /**
-     * Creates a new PreferencesDialog object.
+     * Creates a new SettingsDialog object.
      *
      * @param owner the frame from which the dialog is displayed.
      */
-    public PreferencesDialog(Frame owner)
+    public SettingsDialog(Frame owner)
     {
-        super(owner, "Jalopy Preferences");
+        super(owner, "Jalopy Settings");
         initialize();
     }
 
@@ -142,9 +142,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            return ((PreferencesFrame)c).getHeight();
+            return ((SettingsFrame)c).getHeight();
         }
         else
         {
@@ -162,9 +162,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            ((PreferencesFrame)c).setLocation(x, y);
+            ((SettingsFrame)c).setLocation(x, y);
         }
         else
         {
@@ -181,9 +181,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            return ((PreferencesFrame)c).getLocation();
+            return ((SettingsFrame)c).getLocation();
         }
         else
         {
@@ -200,9 +200,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            return ((PreferencesFrame)c).getWidth();
+            return ((SettingsFrame)c).getWidth();
         }
         else
         {
@@ -219,9 +219,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            return ((PreferencesFrame)c).getX();
+            return ((SettingsFrame)c).getX();
         }
         else
         {
@@ -238,9 +238,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            return ((PreferencesFrame)c).getY();
+            return ((SettingsFrame)c).getY();
         }
         else
         {
@@ -250,8 +250,8 @@ public class PreferencesDialog
 
 
     /**
-     * Adds an action listener that will be notified if the user stores
-     * preferences.
+     * Adds an action listener that will be notified if the user stores the
+     * settings.
      *
      * @param listener listener to add.
      */
@@ -267,7 +267,7 @@ public class PreferencesDialog
 
 
     /**
-     * Displays the preferences dialog. The dialog then uses a {@link
+     * Displays the settings dialog. The dialog then uses a {@link
      * javax.swing.JFrame} as its top-level container.
      *
      * @param argv command line arguments.
@@ -275,7 +275,7 @@ public class PreferencesDialog
     public static void main(String[] argv)
     {
         if ((argv.length == 0) ||
-            (!argv[0].equals(PreferencesDialog.ARG_ECLIPSE)))
+            (!argv[0].equals(SettingsDialog.ARG_ECLIPSE)))
         {
             Loggers.initialize(new ConsoleAppender(
                                                    new PatternLayout("[%p] %m\n"),
@@ -293,9 +293,9 @@ public class PreferencesDialog
             }
         }
 
-        final PreferencesFrame frame = new PreferencesFrame("Jalopy Preferences",
+        final SettingsFrame frame = new SettingsFrame("Jalopy Settings",
                                                             argv);
-        final PreferencesDialog dialog = new PreferencesDialog(frame);
+        final SettingsDialog dialog = new SettingsDialog(frame);
         frame.getContentPane().add(dialog.getContentPane());
         frame.addWindowListener(new WindowAdapter()
             {
@@ -354,9 +354,9 @@ public class PreferencesDialog
     {
         Container c = getParent();
 
-        if (c instanceof PreferencesFrame)
+        if (c instanceof SettingsFrame)
         {
-            ((PreferencesFrame)c).toFront();
+            ((SettingsFrame)c).toFront();
         }
         else
         {
@@ -366,7 +366,7 @@ public class PreferencesDialog
 
 
     /**
-     * Initializes preferences for the Look &amp; Feel.
+     * Initializes settings for the Look &amp; Feel.
      */
     private static void initializeLookAndFeel(String clazz)
     {
@@ -437,13 +437,13 @@ public class PreferencesDialog
         //setModal(true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         _previewFrame = new PreviewFrame(this);
-        _preferencesContainer = new PreferencesContainer(_previewFrame);
+        _preferencesContainer = new SettingsContainer(_previewFrame);
 
         Container container = getParent();
         _okButton = new JButton("OK");
         _okButton.addActionListener(new OkActionHandler());
 
-        if (container instanceof PreferencesFrame)
+        if (container instanceof SettingsFrame)
         {
             ((JFrame)container).getRootPane().setDefaultButton(_okButton);
         }
@@ -504,7 +504,7 @@ public class PreferencesDialog
 
 
     /**
-     * Notifies all registered listeners that the preferences will be saved.
+     * Notifies all registered listeners that the settings will be saved.
      *
      * @param ev action event.
      */
@@ -525,11 +525,11 @@ public class PreferencesDialog
 
 
     /**
-     * Stores the preferences.
+     * Stores the settings.
      *
-     * @return <code>true</code> if the preferences were stored sucessfully.
+     * @return <code>true</code> if the settings were stored sucessfully.
      */
-    private boolean storePreferences()
+    private boolean storeSettings()
     {
         try
         {
@@ -562,8 +562,8 @@ public class PreferencesDialog
 
         try
         {
-            // save the preferences
-            Preferences.getInstance().flush();
+            // save the code convention
+            Convention.getInstance().flush();
         }
         catch (Throwable ex)
         {
@@ -584,7 +584,7 @@ public class PreferencesDialog
      * whether the dialog was invoked from within a Plug-in or from the
      * command line.
      */
-    private static class PreferencesFrame
+    private static class SettingsFrame
         extends JFrame
     {
         /**
@@ -593,7 +593,7 @@ public class PreferencesDialog
          */
         boolean isExitOnClose = true;
 
-        public PreferencesFrame(String   title,
+        public SettingsFrame(String   title,
                                 String[] argv)
         {
             super(title);
@@ -603,7 +603,7 @@ public class PreferencesDialog
 
             if (argv.length == 1)
             {
-                if (argv[0].equals(PreferencesDialog.ARG_ECLIPSE))
+                if (argv[0].equals(SettingsDialog.ARG_ECLIPSE))
                 {
                     this.isExitOnClose = false;
                 }
@@ -613,14 +613,14 @@ public class PreferencesDialog
 
 
     /**
-     * Handler for the Apply button. Stores the preferences.
+     * Handler for the Apply button. Stores the code convention.
      */
     private class ApplyActionHandler
         implements ActionListener
     {
         public void actionPerformed(ActionEvent ev)
         {
-            if (storePreferences())
+            if (storeSettings())
             {
                 notifyListeners(ev);
             }
@@ -643,9 +643,9 @@ public class PreferencesDialog
             Container c = getParent();
 
             // was the dialog invoked from the command line?
-            if (c instanceof PreferencesFrame)
+            if (c instanceof SettingsFrame)
             {
-                PreferencesFrame f = (PreferencesFrame)c;
+                SettingsFrame f = (SettingsFrame)c;
 
                 if (f.isExitOnClose)
                 {
@@ -661,7 +661,7 @@ public class PreferencesDialog
 
 
     /**
-     * Handler for the OK button. Stores the preferences and closes the
+     * Handler for the OK button. Stores the code convention and closes the
      * dialog.
      */
     private class OkActionHandler
@@ -669,7 +669,7 @@ public class PreferencesDialog
     {
         public void actionPerformed(ActionEvent ev)
         {
-            if (storePreferences())
+            if (storeSettings())
             {
                 notifyListeners(ev);
                 _previewFrame.dispose();
@@ -679,9 +679,9 @@ public class PreferencesDialog
                 Container c = getParent();
 
                 // was the dialog invoked from the command line?
-                if (c instanceof PreferencesFrame)
+                if (c instanceof SettingsFrame)
                 {
-                    PreferencesFrame f = (PreferencesFrame)c;
+                    SettingsFrame f = (SettingsFrame)c;
 
                     if (f.isExitOnClose)
                     {

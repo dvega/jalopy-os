@@ -34,7 +34,7 @@
 package de.hunsicker.jalopy.ui;
 
 import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.ui.util.PopupSupport;
 import de.hunsicker.util.Helper;
 import java.net.URL;
@@ -73,30 +73,30 @@ import javax.swing.tree.TreePath;
 
 
 /**
- * The main container that is used to display the preferences pages.
+ * The main container that is used to display the settings pages.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-final class PreferencesContainer
+final class SettingsContainer
     extends JPanel
 {
     //~ Instance variables ····················································
 
-    /** Holds the currently displayed preferences page. */
-    private AbstractPreferencesPanel _curPreferencesPanel;
+    /** Holds the currently displayed settings page. */
+    private AbstractSettingsPanel _curSettingsPanel;
 
-    /** Used to display the title of the current preferences page. */
+    /** Used to display the title of the current settings page. */
     private JLabel _titleLabel;
 
-    /** Panel to add the active preferences page. */
-    private JPanel _preferencesPanel;
+    /** Panel to add the active settings page. */
+    private JPanel _settingsPanel;
 
-    /** The used tree to select the different preferences pages. */
+    /** The used tree to select the different settings pages. */
     private JTree _tree;
 
     /** Holds all property pages that have been displayed. */
-    private Map _panels = new HashMap(10); // Map of <String>:<AbstractPreferencesPanel>
+    private Map _panels = new HashMap(10); // Map of <String>:<AbstractSettingsPanel>
 
     /** Associates preview file names and their contents. */
     private Map _previews = new HashMap(); // Map of <String>:<String>
@@ -104,8 +104,8 @@ final class PreferencesContainer
     /** Helper class to add popup menu support for text components. */
     private PopupSupport _popupSupport;
 
-    /** The Jalopy preferences. */
-    private Preferences _prefs;
+    /** The code convention settings. */
+    private Convention _settings;
 
     /** Displays a preview. */
     private PreviewFrame _previewFrame;
@@ -116,11 +116,11 @@ final class PreferencesContainer
     //~ Constructors ··························································
 
     /**
-     * Creates a new PreferencesContainer object.
+     * Creates a new SettingsContainer object.
      *
      * @param dialog frame to display a preview file
      */
-    public PreferencesContainer(PreviewFrame dialog)
+    public SettingsContainer(PreviewFrame dialog)
     {
         _previewFrame = dialog;
         initialize();
@@ -154,7 +154,7 @@ final class PreferencesContainer
 
 
     /**
-     * Stores the settings of all contained preferences pages.
+     * Stores the settings of all contained pages.
      *
      * @throws ValidationException if invalid settings were found.
      */
@@ -163,7 +163,7 @@ final class PreferencesContainer
     {
         for (Iterator i = _panels.values().iterator(); i.hasNext();)
         {
-            AbstractPreferencesPanel page = (AbstractPreferencesPanel)i.next();
+            AbstractSettingsPanel page = (AbstractSettingsPanel)i.next();
             page.validateSettings();
             page.store();
         }
@@ -171,71 +171,71 @@ final class PreferencesContainer
 
 
     /**
-     * Creates the different nodes to select the preferences pages.
+     * Creates the different nodes to select the settings pages.
      *
      * @return the root node of the created node tree.
      */
     protected DefaultMutableTreeNode createNodes()
     {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("ROOT");
-        DefaultMutableTreeNode general = new PreferencesNode(new PreferencesNodeInfo("general",
+        DefaultMutableTreeNode general = new SettingsNode(new SettingsNodeInfo("general",
                                                                                      "General",
                                                                                      "de.hunsicker.jalopy.ui.GeneralPanel"));
-        DefaultMutableTreeNode printer = new PreferencesNode(new PreferencesNodeInfo("printer",
+        DefaultMutableTreeNode printer = new SettingsNode(new SettingsNodeInfo("printer",
                                                                                      "Printer",
                                                                                      "de.hunsicker.jalopy.ui.DummyPanel"));
-        DefaultMutableTreeNode braces = new PreferencesNode(new PreferencesNodeInfo("braces",
+        DefaultMutableTreeNode braces = new SettingsNode(new SettingsNodeInfo("braces",
                                                                                     "Braces",
                                                                                     "de.hunsicker.jalopy.ui.BracesPanel"));
-        DefaultMutableTreeNode header = new PreferencesNode(new PreferencesNodeInfo("header",
+        DefaultMutableTreeNode header = new SettingsNode(new SettingsNodeInfo("header",
                                                                                     "Header",
                                                                                     "de.hunsicker.jalopy.ui.HeaderPanel"));
-        DefaultMutableTreeNode footer = new PreferencesNode(new PreferencesNodeInfo("footer",
+        DefaultMutableTreeNode footer = new SettingsNode(new SettingsNodeInfo("footer",
                                                                                     "Footer",
                                                                                     "de.hunsicker.jalopy.ui.FooterPanel"));
-        DefaultMutableTreeNode imports = new PreferencesNode(new PreferencesNodeInfo("imports",
+        DefaultMutableTreeNode imports = new SettingsNode(new SettingsNodeInfo("imports",
                                                                                      "Imports",
                                                                                      "de.hunsicker.jalopy.ui.ImportsPanel"));
-        DefaultMutableTreeNode indentation = new PreferencesNode(new PreferencesNodeInfo("indentation",
+        DefaultMutableTreeNode indentation = new SettingsNode(new SettingsNodeInfo("indentation",
                                                                                          "Indentation",
                                                                                          "de.hunsicker.jalopy.ui.IndentationPanel"));
-        DefaultMutableTreeNode separation = new PreferencesNode(new PreferencesNodeInfo("separation",
+        DefaultMutableTreeNode separation = new SettingsNode(new SettingsNodeInfo("separation",
                                                                                         "Separation",
                                                                                         "de.hunsicker.jalopy.ui.SeparationPanel"));
-        DefaultMutableTreeNode javadoc = new PreferencesNode(new PreferencesNodeInfo("javadoc",
+        DefaultMutableTreeNode javadoc = new SettingsNode(new SettingsNodeInfo("javadoc",
                                                                                      "Javadoc",
                                                                                      "de.hunsicker.jalopy.ui.JavadocPanel"));
-        DefaultMutableTreeNode messages = new PreferencesNode(new PreferencesNodeInfo("messages",
+        DefaultMutableTreeNode messages = new SettingsNode(new SettingsNodeInfo("messages",
                                                                                       "Messages",
                                                                                       "de.hunsicker.jalopy.ui.MessagesPanel"));
-        DefaultMutableTreeNode whitespace = new PreferencesNode(new PreferencesNodeInfo("whitespace",
+        DefaultMutableTreeNode whitespace = new SettingsNode(new SettingsNodeInfo("whitespace",
                                                                                         "Whitespace",
                                                                                         "de.hunsicker.jalopy.ui.WhitespacePanel"));
-        DefaultMutableTreeNode wrapping = new PreferencesNode(new PreferencesNodeInfo("wrapping",
+        DefaultMutableTreeNode wrapping = new SettingsNode(new SettingsNodeInfo("wrapping",
                                                                                       "Wrapping",
                                                                                       "de.hunsicker.jalopy.ui.LineWrappingPanel"));
-        DefaultMutableTreeNode comments = new PreferencesNode(new PreferencesNodeInfo("comments",
+        DefaultMutableTreeNode comments = new SettingsNode(new SettingsNodeInfo("comments",
                                                                                       "Comments",
                                                                                       "de.hunsicker.jalopy.ui.CommentsPanel"));
-        DefaultMutableTreeNode sort = new PreferencesNode(new PreferencesNodeInfo("sorting",
+        DefaultMutableTreeNode sort = new SettingsNode(new SettingsNodeInfo("sorting",
                                                                                   "Sorting",
                                                                                   "de.hunsicker.jalopy.ui.SortPanel"));
-        DefaultMutableTreeNode misc = new PreferencesNode(new PreferencesNodeInfo("misc",
+        DefaultMutableTreeNode misc = new SettingsNode(new SettingsNodeInfo("misc",
                                                                                   "Misc",
                                                                                   "de.hunsicker.jalopy.ui.MiscPanel"));
-        DefaultMutableTreeNode environment = new PreferencesNode(new PreferencesNodeInfo("environment",
+        DefaultMutableTreeNode environment = new SettingsNode(new SettingsNodeInfo("environment",
                                                                                          "Environment",
                                                                                          "de.hunsicker.jalopy.ui.EnvironmentPanel"));
-        DefaultMutableTreeNode inspector = new PreferencesNode(new PreferencesNodeInfo("inspector",
+        DefaultMutableTreeNode inspector = new SettingsNode(new SettingsNodeInfo("inspector",
                                                                                        "Code Inspector",
                                                                                        "de.hunsicker.jalopy.ui.DummyPanel"));
-        DefaultMutableTreeNode naming = new PreferencesNode(new PreferencesNodeInfo("naming",
+        DefaultMutableTreeNode naming = new SettingsNode(new SettingsNodeInfo("naming",
                                                                                     "Naming",
                                                                                     "de.hunsicker.jalopy.ui.NamingPanel"));
-        DefaultMutableTreeNode tips = new PreferencesNode(new PreferencesNodeInfo("tips",
+        DefaultMutableTreeNode tips = new SettingsNode(new SettingsNodeInfo("tips",
                                                                                   "Tips",
                                                                                   "de.hunsicker.jalopy.ui.TipsPanel"));
-        DefaultMutableTreeNode projects = new PreferencesNode(new PreferencesNodeInfo("projects",
+        DefaultMutableTreeNode projects = new SettingsNode(new SettingsNodeInfo("projects",
                                                                                       "Projects",
                                                                                       "de.hunsicker.jalopy.ui.ProjectPanel"));
         root.add(general);
@@ -263,9 +263,9 @@ final class PreferencesContainer
     }
 
 
-    AbstractPreferencesPanel getCurrentPage()
+    AbstractSettingsPanel getCurrentPage()
     {
-        return _curPreferencesPanel;
+        return _curSettingsPanel;
     }
 
 
@@ -284,7 +284,7 @@ final class PreferencesContainer
 
     void displayPreview()
     {
-        displayPreview((PreferencesNode)_tree.getLastSelectedPathComponent());
+        displayPreview((SettingsNode)_tree.getLastSelectedPathComponent());
     }
 
 
@@ -412,16 +412,16 @@ final class PreferencesContainer
     }
 
 
-    private PreferencesNodeInfo getLast()
+    private SettingsNodeInfo getLast()
     {
-        File file = new File(Preferences.getProjectSettingsDirectory(),
+        File file = new File(Convention.getProjectSettingsDirectory(),
                              "page.dat");
 
         if (file.exists() && file.isFile())
         {
             try
             {
-                return (PreferencesNodeInfo)IoHelper.deserialize(file);
+                return (SettingsNodeInfo)IoHelper.deserialize(file);
             }
             catch (Throwable ignored)
             {
@@ -429,7 +429,7 @@ final class PreferencesContainer
             }
         }
 
-        return new PreferencesNodeInfo("general", "General",
+        return new SettingsNodeInfo("general", "General",
                                        "de.hunsicker.jalopy.ui.GeneralPanel");
     }
 
@@ -454,12 +454,12 @@ final class PreferencesContainer
     }
 
 
-    private void displayPreview(PreferencesNode node)
+    private void displayPreview(SettingsNode node)
     {
         if (!((DefaultMutableTreeNode)node.getParent()).isRoot())
         {
             // only if the user did not choose to display a custom file, we
-            // display a different file for every preferences page
+            // display a different file for every settings page
             if (_previewFrame.customFile)
             {
                 if (!_previewFrame.isVisible())
@@ -470,13 +470,13 @@ final class PreferencesContainer
             else
             {
 
-            PreferencesNode parent = (PreferencesNode)node.getParent();
+            SettingsNode parent = (SettingsNode)node.getParent();
 
             if (parent.getInfo().key.equals("printer"))
             {
-                _previewFrame.setCurrentPage(_curPreferencesPanel);
+                _previewFrame.setCurrentPage(_curSettingsPanel);
 
-                String text = loadPreview(_curPreferencesPanel.getPreviewFileName());
+                String text = loadPreview(_curSettingsPanel.getPreviewFileName());
 
                 if (text != null)
                 {
@@ -510,7 +510,7 @@ final class PreferencesContainer
      */
     private void initialize()
     {
-        _prefs = Preferences.getInstance();
+        _settings = Convention.getInstance();
 
         List supported = new ArrayList(3);
         supported.add("javax.");
@@ -523,7 +523,7 @@ final class PreferencesContainer
         spacer.setMinimumSize(space);
         spacer.setPreferredSize(space);
 
-        PreferencesNodeInfo info = getLast();
+        SettingsNodeInfo info = getLast();
         _titleLabel = new JLabel(info.title);
         _titleLabel.setFont(new Font(_titleLabel.getFont().getName(), Font.BOLD,
                                      _titleLabel.getFont().getSize()));
@@ -543,13 +543,13 @@ final class PreferencesContainer
                                                                                                           130,
                                                                                                           132))));
 
-        // load the default preferences page
-        _curPreferencesPanel = loadPanel(info);
-        _panels.put(info.key, _curPreferencesPanel);
-        _preferencesPanel = new JPanel();
-        _preferencesPanel.setLayout(new BorderLayout());
-        _preferencesPanel.add(titlePanel, BorderLayout.NORTH);
-        _preferencesPanel.add(_curPreferencesPanel, BorderLayout.CENTER);
+        // load the default settings page
+        _curSettingsPanel = loadPanel(info);
+        _panels.put(info.key, _curSettingsPanel);
+        _settingsPanel = new JPanel();
+        _settingsPanel.setLayout(new BorderLayout());
+        _settingsPanel.add(titlePanel, BorderLayout.NORTH);
+        _settingsPanel.add(_curSettingsPanel, BorderLayout.CENTER);
 
         // init the tree view
         DefaultMutableTreeNode root = createNodes();
@@ -589,21 +589,21 @@ final class PreferencesContainer
         propertyView.setLayout(new BorderLayout());
         propertyView.setPreferredSize(new Dimension(430, 450));
         propertyView.add(spacer, BorderLayout.WEST);
-        propertyView.add(_preferencesPanel, BorderLayout.CENTER);
+        propertyView.add(_settingsPanel, BorderLayout.CENTER);
         setLayout(new BorderLayout());
         add(treeView, BorderLayout.WEST);
         add(propertyView, BorderLayout.CENTER);
     }
 
 
-    private AbstractPreferencesPanel loadPanel(PreferencesNodeInfo info)
+    private AbstractSettingsPanel loadPanel(SettingsNodeInfo info)
     {
         try
         {
-            Class[] params ={ PreferencesContainer.class };
+            Class[] params ={ SettingsContainer.class };
             Constructor c = info.getPanelClass().getDeclaredConstructor(params);
             Object[] args ={ this };
-            AbstractPreferencesPanel panel = (AbstractPreferencesPanel)c.newInstance(args);
+            AbstractSettingsPanel panel = (AbstractSettingsPanel)c.newInstance(args);
             panel.setTitle(info.title);
             panel.setCategory(info.key);
 
@@ -623,16 +623,16 @@ final class PreferencesContainer
      */
     private void trackPanel()
     {
-        File directory = Preferences.getProjectSettingsDirectory();
+        File directory = Convention.getProjectSettingsDirectory();
         File file = new File(directory, "page.dat");
 
         if (IoHelper.ensureDirectoryExists(directory))
         {
             try
             {
-                PreferencesNodeInfo info = new PreferencesNodeInfo(_curPreferencesPanel.getCategory(),
-                                                                   _curPreferencesPanel.getTitle(),
-                                                                   _curPreferencesPanel.getClass()
+                SettingsNodeInfo info = new SettingsNodeInfo(_curSettingsPanel.getCategory(),
+                                                                   _curSettingsPanel.getTitle(),
+                                                                   _curSettingsPanel.getClass()
                                                                                        .getName());
                 IoHelper.serialize(info, file);
             }
@@ -649,15 +649,15 @@ final class PreferencesContainer
     /**
      * Our customized tree node.
      */
-    private static class PreferencesNode
+    private static class SettingsNode
         extends DefaultMutableTreeNode
     {
         /**
-         * Creates a new PreferencesNode object.
+         * Creates a new SettingsNode object.
          *
          * @param userObj the node information
          */
-        public PreferencesNode(Object userObj)
+        public SettingsNode(Object userObj)
         {
             super(userObj);
         }
@@ -667,9 +667,9 @@ final class PreferencesContainer
          *
          * @return node information object.
          */
-        public PreferencesNodeInfo getInfo()
+        public SettingsNodeInfo getInfo()
         {
-            return (PreferencesNodeInfo)getUserObject();
+            return (SettingsNodeInfo)getUserObject();
         }
     }
 
@@ -678,7 +678,7 @@ final class PreferencesContainer
      * Helper class which provides the necessary information for every
      * property node. This is the user object for the JTree.
      */
-    private static class PreferencesNodeInfo
+    private static class SettingsNodeInfo
         implements Serializable
     {
         /** Use serialVersionUID for interoperability. */
@@ -689,7 +689,7 @@ final class PreferencesContainer
         String title;
         int hashCode;
 
-        public PreferencesNodeInfo(String key,
+        public SettingsNodeInfo(String key,
                                    String title,
                                    String className)
         {
@@ -700,9 +700,9 @@ final class PreferencesContainer
         }
 
         /**
-         * Returns the class to load for the preferences page.
+         * Returns the class to load for the settings page.
          *
-         * @return the class to load for the preferences page.
+         * @return the class to load for the settings page.
          */
         public Class getPanelClass()
         {
@@ -753,7 +753,7 @@ final class PreferencesContainer
 
 
     /**
-     * Handler for tree selection events. Displays the selected preferences
+     * Handler for tree selection events. Displays the selected settings
      * page.
      */
     private class TreeSelectionHandler
@@ -765,7 +765,7 @@ final class PreferencesContainer
         {
             if (this.armed)
             {
-                PreferencesNode node = (PreferencesNode)_tree.getLastSelectedPathComponent();
+                SettingsNode node = (SettingsNode)_tree.getLastSelectedPathComponent();
 
                 // do nothing if no node is selected
                 if (node == null)
@@ -775,7 +775,7 @@ final class PreferencesContainer
 
                 try
                 {
-                    _curPreferencesPanel.validateSettings();
+                    _curSettingsPanel.validateSettings();
                 }
                 catch (ValidationException ex)
                 {
@@ -790,26 +790,26 @@ final class PreferencesContainer
                 // update the title
                 String title = getTitle(node);
                 _titleLabel.setText(title);
-                _preferencesPanel.remove(_curPreferencesPanel);
+                _settingsPanel.remove(_curSettingsPanel);
 
-                PreferencesNodeInfo info = node.getInfo();
+                SettingsNodeInfo info = node.getInfo();
 
                 if (_panels.containsKey(info.key))
                 {
                     // load panel from cache
-                    _curPreferencesPanel = (AbstractPreferencesPanel)_panels.get(info.key);
+                    _curSettingsPanel = (AbstractSettingsPanel)_panels.get(info.key);
                 }
                 else
                 {
-                    _curPreferencesPanel = loadPanel(info);
+                    _curSettingsPanel = loadPanel(info);
 
                     // update cache
-                    _panels.put(info.key, _curPreferencesPanel);
+                    _panels.put(info.key, _curSettingsPanel);
                 }
 
                 displayPreview(node);
-                _preferencesPanel.add(_curPreferencesPanel, BorderLayout.CENTER);
-                _preferencesPanel.repaint();
+                _settingsPanel.add(_curSettingsPanel, BorderLayout.CENTER);
+                _settingsPanel.repaint();
             }
             else
             {
