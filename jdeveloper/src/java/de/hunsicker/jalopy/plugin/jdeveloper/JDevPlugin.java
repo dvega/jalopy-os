@@ -18,6 +18,7 @@ import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.BlankLinesPanelPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.BracesPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.CodeInspectorPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.CommentsPanel;
@@ -33,7 +34,6 @@ import de.hunsicker.jalopy.plugin.jdeveloper.swing.MessagesPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.MiscPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.NamingPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.ProjectPanel;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.SeparationPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.SortingPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.WhitespacePanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.WrappingPanel;
@@ -347,7 +347,8 @@ public final class JDevPlugin
             new Navigable(
                 bundle.getString("LBL_WRAPPING" /* NOI18N */), WrappingPanel.class),
             new Navigable(
-                bundle.getString("LBL_SEPARATION" /* NOI18N */), SeparationPanel.class),
+                bundle.getString("LBL_BLANK_LINES" /* NOI18N */),
+                BlankLinesPanelPanel.class),
             new Navigable(
                 bundle.getString("LBL_COMMENTS" /* NOI18N */), CommentsPanel.class),
             new Navigable(

@@ -6,26 +6,26 @@
  */
 package de.hunsicker.jalopy.plugin.jdeveloper.swing;
 
-import de.hunsicker.jalopy.swing.SeparationSettingsPage;
+import de.hunsicker.jalopy.swing.BlankLinesSettingsPage;
 
 
 /**
- * UI for the Jalopy Source Code Formatter Printer separation settings.
+ * UI for the Jalopy Source Code Formatter Printer blank lines settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class SeparationPanel
+public class BlankLinesPanel
     extends PreferencesPanel
 {
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new SeparationPanel object.
+     * Creates a new BlankLinesPanel object.
      */
-    public SeparationPanel()
+    public BlankLinesPanel()
     {
-        this.subPanel = new SeparationSettingsPage();
+        this.subPanel = new BlankLinesSettingsPage();
         this.add(this.subPanel);
     }
 }

@@ -6,27 +6,27 @@
  */
 package de.hunsicker.jalopy.plugin.jedit.option;
 
-import de.hunsicker.jalopy.swing.SeparationSettingsPage;
+import de.hunsicker.jalopy.swing.BlankLinesSettingsPage;
 
 
 /**
- * OptionPane to integrate the Jalopy separation options in JEdit's global options
+ * OptionPane to integrate the Jalopy blank lines options in JEdit's global options
  * dialog.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class SeparationOptionPane
+public class BlankLinesOptionPane
     extends JalopyOptionPane
 {
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new SeparationOptionPane object.
+     * Creates a new BlankLinesOptionPane object.
      */
-    public SeparationOptionPane()
+    public BlankLinesOptionPane()
     {
         super("jalopy.printer.separation" /* NOI18N */);
-        this.panel = new SeparationSettingsPage();
+        this.panel = new BlankLinesSettingsPage();
     }
 }

@@ -216,8 +216,8 @@ final class SettingsContainer
                 new SettingsNodeInfo(
                     "separation" /* NOI18N */,
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
-                        "LBL_SEPARATION" /* NOI18N */),
-                    "de.hunsicker.jalopy.swing.SeparationSettingsPage" /* NOI18N */));
+                        "LBL_BLANK_LINES" /* NOI18N */),
+                    "de.hunsicker.jalopy.swing.BlankLinesSettingsPage" /* NOI18N */));
         DefaultMutableTreeNode javadoc =
             new SettingsNode(
                 new SettingsNodeInfo(
@@ -523,7 +523,6 @@ final class SettingsContainer
             }
             catch (Throwable ignored)
             {
-                ;
             }
         }
 

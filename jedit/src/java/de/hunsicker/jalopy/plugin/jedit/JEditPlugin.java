@@ -46,7 +46,7 @@ import de.hunsicker.jalopy.plugin.jedit.option.MessagesOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.MiscOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.NamingOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.ProjectOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.SeparationOptionPane;
+import de.hunsicker.jalopy.plugin.jedit.option.BlankLinesOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.SortOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.WhitespaceOptionPane;
 import de.hunsicker.jalopy.swing.SettingsDialog;
@@ -207,7 +207,7 @@ public class JEditPlugin
         printerGroup.addOptionPane(new WhitespaceOptionPane());
         printerGroup.addOptionPane(new IndentationOptionPane());
         printerGroup.addOptionPane(new LineWrappingOptionPane());
-        printerGroup.addOptionPane(new SeparationOptionPane());
+        printerGroup.addOptionPane(new BlankLinesOptionPane());
         printerGroup.addOptionPane(new CommentsOptionPane());
         printerGroup.addOptionPane(new ImportsOptionPane());
         printerGroup.addOptionPane(new EnvironmentOptionPane());

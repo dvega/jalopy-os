@@ -30,12 +30,12 @@ import de.hunsicker.swing.util.SwingHelper;
 
 
 /**
- * Settings page for the Jalopy printer separation settings.
+ * Settings page for the Jalopy printer blank lines settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class SeparationSettingsPage
+public class BlankLinesSettingsPage
     extends AbstractSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
@@ -81,20 +81,20 @@ public class SeparationSettingsPage
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new SeparationSettingsPage object.
+     * Creates a new BlankLinesSettingsPage object.
      */
-    public SeparationSettingsPage()
+    public BlankLinesSettingsPage()
     {
         initialize();
     }
 
 
     /**
-     * Creates a new SeparationSettingsPage.
+     * Creates a new BlankLinesSettingsPage.
      *
      * @param container the parent container.
      */
-    SeparationSettingsPage(SettingsContainer container)
+    BlankLinesSettingsPage(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -232,7 +232,241 @@ public class SeparationSettingsPage
     }
 
 
-    private JPanel createBlankLinesPane()
+    private JPanel createCommentsPane()
+    {
+        JPanel separatorPanel = new JPanel();
+        GridBagLayout separatorPanelLayout = new GridBagLayout();
+        separatorPanel.setLayout(separatorPanelLayout);
+        separatorPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                    this.bundle.getString("BDR_GENERAL" /* NOI18N */)),
+                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+
+        GridBagConstraints c = new GridBagConstraints();
+
+        _separatorCheckBox =
+            new JCheckBox(
+                this.bundle.getString("CHK_ADD_SEPARATOR_COMMENTS" /* NOI18N */),
+                this.settings.getBoolean(
+                    ConventionKeys.COMMENT_INSERT_SEPARATOR,
+                    ConventionDefaults.COMMENT_INSERT_SEPARATOR));
+        _separatorCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        separatorPanelLayout.setConstraints(_separatorCheckBox, c);
+        separatorPanel.add(_separatorCheckBox);
+
+        _separatorRecursiveCheckBox =
+            new JCheckBox(
+                this.bundle.getString(
+                    "CHK_ADD_SEPARATOR_COMMENTS_FOR_INNER" /* NOI18N */),
+                this.settings.getBoolean(
+                    ConventionKeys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
+                    ConventionDefaults.COMMENT_INSERT_SEPARATOR_RECURSIVE));
+        _separatorRecursiveCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        separatorPanelLayout.setConstraints(_separatorRecursiveCheckBox, c);
+        separatorPanel.add(_separatorRecursiveCheckBox);
+
+        JPanel textPanel = new JPanel();
+        textPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                    this.bundle.getString("BDR_DESCRIPTIONS" /* NOI18N */)),
+                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+
+        GridBagLayout textPanelLayout = new GridBagLayout();
+        textPanel.setLayout(textPanelLayout);
+        c.insets.right = 10;
+
+        JLabel staticVarInitLabel =
+            new JLabel(this.bundle.getString("LBL_STATIC_VARS" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(staticVarInitLabel, c);
+        textPanel.add(staticVarInitLabel);
+        _staticVarInitTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_STATIC_VAR_INIT,
+                    ConventionDefaults.SEPARATOR_STATIC_VAR_INIT), 30);
+        c.insets.right = 0;
+        SwingHelper.setConstraints(
+            c, 1, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_staticVarInitTextField, c);
+        textPanel.add(_staticVarInitTextField);
+
+        JLabel instanceVarLabel =
+            new JLabel(this.bundle.getString("LBL_INSTANCE_VARS" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(instanceVarLabel, c);
+        textPanel.add(instanceVarLabel);
+        _instanceVarTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_INSTANCE_VAR,
+                    ConventionDefaults.SEPARATOR_INSTANCE_VAR), 30);
+        SwingHelper.setConstraints(
+            c, 1, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_instanceVarTextField, c);
+        textPanel.add(_instanceVarTextField);
+
+        JLabel instanceInitLabel =
+            new JLabel(this.bundle.getString("LBL_INSTANCE_INITS" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(instanceInitLabel, c);
+        textPanel.add(instanceInitLabel);
+        _instanceInitTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_INSTANCE_INIT,
+                    ConventionDefaults.SEPARATOR_INSTANCE_INIT), 30);
+        SwingHelper.setConstraints(
+            c, 1, 2, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_instanceInitTextField, c);
+        textPanel.add(_instanceInitTextField);
+
+        JLabel constructorLabel =
+            new JLabel(this.bundle.getString("LBL_CTORS" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(constructorLabel, c);
+        textPanel.add(constructorLabel);
+        _constructorTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_CTOR, ConventionDefaults.SEPARATOR_CTOR), 30);
+        SwingHelper.setConstraints(
+            c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_constructorTextField, c);
+        textPanel.add(_constructorTextField);
+
+        JLabel methodLabel =
+            new JLabel(this.bundle.getString("LBL_METHODS" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(methodLabel, c);
+        textPanel.add(methodLabel);
+        _methodTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_METHOD, ConventionDefaults.SEPARATOR_METHOD),
+                30);
+        SwingHelper.setConstraints(
+            c, 1, 4, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_methodTextField, c);
+        textPanel.add(_methodTextField);
+
+        JLabel interfaceLabel =
+            new JLabel(this.bundle.getString("LBL_INTERFACES" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(interfaceLabel, c);
+        textPanel.add(interfaceLabel);
+        _interfaceTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_INTERFACE,
+                    ConventionDefaults.SEPARATOR_INTERFACE), 30);
+        SwingHelper.setConstraints(
+            c, 1, 5, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_interfaceTextField, c);
+        textPanel.add(_interfaceTextField);
+
+        JLabel classLabel = new JLabel(this.bundle.getString("LBL_CLASSES" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(classLabel, c);
+        textPanel.add(classLabel);
+        _classTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_CLASS, ConventionDefaults.SEPARATOR_CLASS),
+                30);
+        SwingHelper.setConstraints(
+            c, 1, 6, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_classTextField, c);
+        textPanel.add(_classTextField);
+
+        JPanel characterPanel = new JPanel();
+        GridBagLayout characterPanelLayout = new GridBagLayout();
+        characterPanel.setLayout(characterPanelLayout);
+        characterPanel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createTitledBorder(
+                    this.bundle.getString("BDR_FILL_CHARACTER" /* NOI18N */)),
+                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+
+        Object[] items =
+        {
+            "\u00b7" /* NOI18N */, "." /* NOI18N */, "-" /* NOI18N */, "=" /* NOI18N */,
+            "*" /* NOI18N */, "/" /* NOI18N */
+        };
+        ComboBoxPanel fillCharacterComboBoxPanel =
+            new ComboBoxPanel(
+                this.bundle.getString("LBL_CHARACTER" /* NOI18N */), items,
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_FILL_CHARACTER,
+                    ConventionDefaults.SEPARATOR_FILL_CHARACTER));
+        _fillCharacterComboBox = fillCharacterComboBoxPanel.getComboBox();
+        _fillCharacterComboBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.NONE, c.insets, 0, 0);
+        characterPanelLayout.setConstraints(fillCharacterComboBoxPanel, c);
+        characterPanel.add(fillCharacterComboBoxPanel);
+
+        JPanel panel = new JPanel();
+        GridBagLayout layout = new GridBagLayout();
+        panel.setLayout(layout);
+
+        c.insets.top = 10;
+        c.insets.bottom = 0;
+        c.insets.left = 5;
+        c.insets.right = 5;
+        SwingHelper.setConstraints(
+            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        layout.setConstraints(separatorPanel, c);
+        panel.add(separatorPanel);
+
+        SwingHelper.setConstraints(
+            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        layout.setConstraints(textPanel, c);
+        panel.add(textPanel);
+        c.insets.bottom = 10;
+        SwingHelper.setConstraints(
+            c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        layout.setConstraints(characterPanel, c);
+        panel.add(characterPanel);
+
+        return panel;
+    }
+
+
+    private JPanel createGeneralPane()
     {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(10, 5, 5, 5));
@@ -546,240 +780,6 @@ public class SeparationSettingsPage
     }
 
 
-    private JPanel createCommentsPane()
-    {
-        JPanel separatorPanel = new JPanel();
-        GridBagLayout separatorPanelLayout = new GridBagLayout();
-        separatorPanel.setLayout(separatorPanelLayout);
-        separatorPanel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(
-                    this.bundle.getString("BDR_GENERAL" /* NOI18N */)),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
-
-        GridBagConstraints c = new GridBagConstraints();
-
-        _separatorCheckBox =
-            new JCheckBox(
-                this.bundle.getString("CHK_ADD_SEPARATOR_COMMENTS" /* NOI18N */),
-                this.settings.getBoolean(
-                    ConventionKeys.COMMENT_INSERT_SEPARATOR,
-                    ConventionDefaults.COMMENT_INSERT_SEPARATOR));
-        _separatorCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        separatorPanelLayout.setConstraints(_separatorCheckBox, c);
-        separatorPanel.add(_separatorCheckBox);
-
-        _separatorRecursiveCheckBox =
-            new JCheckBox(
-                this.bundle.getString(
-                    "CHK_ADD_SEPARATOR_COMMENTS_FOR_INNER" /* NOI18N */),
-                this.settings.getBoolean(
-                    ConventionKeys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
-                    ConventionDefaults.COMMENT_INSERT_SEPARATOR_RECURSIVE));
-        _separatorRecursiveCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(
-            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        separatorPanelLayout.setConstraints(_separatorRecursiveCheckBox, c);
-        separatorPanel.add(_separatorRecursiveCheckBox);
-
-        JPanel textPanel = new JPanel();
-        textPanel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(
-                    this.bundle.getString("BDR_DESCRIPTIONS" /* NOI18N */)),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
-
-        GridBagLayout textPanelLayout = new GridBagLayout();
-        textPanel.setLayout(textPanelLayout);
-        c.insets.right = 10;
-
-        JLabel staticVarInitLabel =
-            new JLabel(this.bundle.getString("LBL_STATIC_VARS" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(staticVarInitLabel, c);
-        textPanel.add(staticVarInitLabel);
-        _staticVarInitTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_STATIC_VAR_INIT,
-                    ConventionDefaults.SEPARATOR_STATIC_VAR_INIT), 30);
-        c.insets.right = 0;
-        SwingHelper.setConstraints(
-            c, 1, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_staticVarInitTextField, c);
-        textPanel.add(_staticVarInitTextField);
-
-        JLabel instanceVarLabel =
-            new JLabel(this.bundle.getString("LBL_INSTANCE_VARS" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(instanceVarLabel, c);
-        textPanel.add(instanceVarLabel);
-        _instanceVarTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_INSTANCE_VAR,
-                    ConventionDefaults.SEPARATOR_INSTANCE_VAR), 30);
-        SwingHelper.setConstraints(
-            c, 1, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_instanceVarTextField, c);
-        textPanel.add(_instanceVarTextField);
-
-        JLabel instanceInitLabel =
-            new JLabel(this.bundle.getString("LBL_INSTANCE_INITS" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(instanceInitLabel, c);
-        textPanel.add(instanceInitLabel);
-        _instanceInitTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_INSTANCE_INIT,
-                    ConventionDefaults.SEPARATOR_INSTANCE_INIT), 30);
-        SwingHelper.setConstraints(
-            c, 1, 2, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_instanceInitTextField, c);
-        textPanel.add(_instanceInitTextField);
-
-        JLabel constructorLabel =
-            new JLabel(this.bundle.getString("LBL_CTORS" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(constructorLabel, c);
-        textPanel.add(constructorLabel);
-        _constructorTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_CTOR, ConventionDefaults.SEPARATOR_CTOR), 30);
-        SwingHelper.setConstraints(
-            c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_constructorTextField, c);
-        textPanel.add(_constructorTextField);
-
-        JLabel methodLabel =
-            new JLabel(this.bundle.getString("LBL_METHODS" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(methodLabel, c);
-        textPanel.add(methodLabel);
-        _methodTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_METHOD, ConventionDefaults.SEPARATOR_METHOD),
-                30);
-        SwingHelper.setConstraints(
-            c, 1, 4, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_methodTextField, c);
-        textPanel.add(_methodTextField);
-
-        JLabel interfaceLabel =
-            new JLabel(this.bundle.getString("LBL_INTERFACES" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(interfaceLabel, c);
-        textPanel.add(interfaceLabel);
-        _interfaceTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_INTERFACE,
-                    ConventionDefaults.SEPARATOR_INTERFACE), 30);
-        SwingHelper.setConstraints(
-            c, 1, 5, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_interfaceTextField, c);
-        textPanel.add(_interfaceTextField);
-
-        JLabel classLabel = new JLabel(this.bundle.getString("LBL_CLASSES" /* NOI18N */));
-        SwingHelper.setConstraints(
-            c, 0, 6, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-            c.insets, 0, 0);
-        textPanelLayout.setConstraints(classLabel, c);
-        textPanel.add(classLabel);
-        _classTextField =
-            new JTextField(
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_CLASS, ConventionDefaults.SEPARATOR_CLASS),
-                30);
-        SwingHelper.setConstraints(
-            c, 1, 6, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        textPanelLayout.setConstraints(_classTextField, c);
-        textPanel.add(_classTextField);
-
-        JPanel characterPanel = new JPanel();
-        GridBagLayout characterPanelLayout = new GridBagLayout();
-        characterPanel.setLayout(characterPanelLayout);
-        characterPanel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(
-                    this.bundle.getString("BDR_FILL_CHARACTER" /* NOI18N */)),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
-
-        Object[] items =
-        {
-            "\u00b7" /* NOI18N */, "." /* NOI18N */, "-" /* NOI18N */, "=" /* NOI18N */,
-            "*" /* NOI18N */, "/" /* NOI18N */
-        };
-        ComboBoxPanel fillCharacterComboBoxPanel =
-            new ComboBoxPanel(
-                this.bundle.getString("LBL_CHARACTER" /* NOI18N */), items,
-                this.settings.get(
-                    ConventionKeys.SEPARATOR_FILL_CHARACTER,
-                    ConventionDefaults.SEPARATOR_FILL_CHARACTER));
-        _fillCharacterComboBox = fillCharacterComboBoxPanel.getComboBox();
-        _fillCharacterComboBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.NONE, c.insets, 0, 0);
-        characterPanelLayout.setConstraints(fillCharacterComboBoxPanel, c);
-        characterPanel.add(fillCharacterComboBoxPanel);
-
-        JPanel panel = new JPanel();
-        GridBagLayout layout = new GridBagLayout();
-        panel.setLayout(layout);
-
-        c.insets.top = 10;
-        c.insets.bottom = 0;
-        c.insets.left = 5;
-        c.insets.right = 5;
-        SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        layout.setConstraints(separatorPanel, c);
-        panel.add(separatorPanel);
-
-        SwingHelper.setConstraints(
-            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        layout.setConstraints(textPanel, c);
-        panel.add(textPanel);
-        c.insets.bottom = 10;
-        SwingHelper.setConstraints(
-            c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
-            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        layout.setConstraints(characterPanel, c);
-        panel.add(characterPanel);
-
-        return panel;
-    }
-
-
     private JPanel createMiscPane()
     {
         JPanel arrayPanel = new JPanel();
@@ -944,7 +944,7 @@ public class SeparationSettingsPage
     {
         _tabbedPane = new JTabbedPane();
         _tabbedPane.add(
-            createBlankLinesPane(), this.bundle.getString("TAB_BLANK_LINES" /* NOI18N */));
+            createGeneralPane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
         _tabbedPane.add(createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
         _tabbedPane.add(
             createCommentsPane(), this.bundle.getString("TAB_COMMENTS" /* NOI18N */));
