@@ -65,7 +65,9 @@ final class ReturnPrinter
 
         AST next = node.getFirstChild();
 
-        if (next.getType() != JavaTokenTypes.SEMI)
+        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
+        if (!out.newline && next.getType() != JavaTokenTypes.SEMI)
         {
             out.print(SPACE, JavaTokenTypes.WS);
         }
