@@ -1,45 +1,18 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -51,12 +24,12 @@ import java.io.IOException;
 final class ArrayTypePrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new ArrayTypePrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ArrayTypePrinter object.
@@ -65,7 +38,7 @@ final class ArrayTypePrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -81,14 +54,17 @@ final class ArrayTypePrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         AST child = node.getFirstChild();
 
-        boolean bracketsAfterIdentifier = this.settings.getBoolean(Keys.ARRAY_BRACKETS_AFTER_IDENT,
-                                                                Defaults.ARRAY_BRACKETS_AFTER_IDENT);
+        boolean bracketsAfterIdentifier =
+            this.settings.getBoolean(
+                ConventionKeys.ARRAY_BRACKETS_AFTER_IDENT,
+                ConventionDefaults.ARRAY_BRACKETS_AFTER_IDENT);
 
         if (child != null)
         {
@@ -98,20 +74,21 @@ final class ArrayTypePrinter
                 {
                     case JavaTokenTypes.EXPR :
 
-                        if (this.settings.getBoolean(Keys.PADDING_BRACKETS,
-                                                  Defaults.PADDING_BRACKETS))
+                        if (
+                            this.settings.getBoolean(
+                                ConventionKeys.PADDING_BRACKETS,
+                                ConventionDefaults.PADDING_BRACKETS))
                         {
                             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child.getFirstChild())
-                                          .print(child.getFirstChild(), out);
-                            out.print(SPACE_BRACKET_RIGHT,
-                                      JavaTokenTypes.RBRACK);
+                            PrinterFactory.create(child.getFirstChild()).print(
+                                child.getFirstChild(), out);
+                            out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
                         else
                         {
                             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child.getFirstChild())
-                                          .print(child.getFirstChild(), out);
+                            PrinterFactory.create(child.getFirstChild()).print(
+                                child.getFirstChild(), out);
                             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
 
@@ -122,8 +99,7 @@ final class ArrayTypePrinter
 
                         if (child.getNextSibling() == null)
                         {
-                            if (bracketsAfterIdentifier &&
-                                canMoveBrackets(node))
+                            if (bracketsAfterIdentifier && canMoveBrackets(node))
                             {
                                 out.state.arrayBrackets++;
                             }
@@ -144,12 +120,13 @@ final class ArrayTypePrinter
                         }
                         else
                         {
-                            if (this.settings.getBoolean(
-                                                      Keys.SPACE_BEFORE_BRACKETS_TYPES,
-                                                      Defaults.SPACE_BEFORE_BRACKETS_TYPES))
+                            if (
+                                this.settings.getBoolean(
+                                    ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
+                                    ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
                             {
-                                out.print(SPACE_BRACKETS,
-                                          JavaTokenTypes.ARRAY_DECLARATOR);
+                                out.print(
+                                    SPACE_BRACKETS, JavaTokenTypes.ARRAY_DECLARATOR);
                             }
                             else
                             {
@@ -163,8 +140,10 @@ final class ArrayTypePrinter
         }
         else // followed by an ARRAY_INIT
         {
-            if (this.settings.getBoolean(Keys.SPACE_BEFORE_BRACKETS_TYPES,
-                                      Defaults.SPACE_BEFORE_BRACKETS_TYPES))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
+                    ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
             {
                 out.print(SPACE_BRACKETS, JavaTokenTypes.ARRAY_DECLARATOR);
             }
@@ -173,8 +152,10 @@ final class ArrayTypePrinter
                 out.print(BRACKETS, JavaTokenTypes.RBRACK);
             }
 
-            if (this.settings.getBoolean(Keys.SPACE_BEFORE_BRACES,
-                                      Defaults.SPACE_BEFORE_BRACES))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.SPACE_BEFORE_BRACES,
+                    ConventionDefaults.SPACE_BEFORE_BRACES))
             {
                 out.print(SPACE, out.last);
             }
@@ -185,8 +166,8 @@ final class ArrayTypePrinter
 
 
     /**
-     * Determines whether the brackets for the given array type can be moved
-     * behind the identifier.
+     * Determines whether the brackets for the given array type can be moved behind the
+     * identifier.
      *
      * @param node a ARRAY_DECLARATOR node.
      *
@@ -196,7 +177,7 @@ final class ArrayTypePrinter
      */
     private boolean canMoveBrackets(AST node)
     {
-        JavaNode parent = ((JavaNode)node).getParent();
+        JavaNode parent = ((JavaNode) node).getParent();
 
         switch (parent.getType())
         {

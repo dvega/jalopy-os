@@ -1,58 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
-
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.storage.Environment;
-import de.hunsicker.jalopy.parser.ExtendedToken;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaNodeModifier;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.JavadocTokenTypes;
-import de.hunsicker.jalopy.parser.Node;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.antlr.CommonHiddenStreamToken;
+import de.hunsicker.jalopy.language.ExtendedToken;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeModifier;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.JavadocTokenTypes;
+import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.Environment;
+
 
 /**
- * Common superclass the main declarations elements of a Java source file
- * (class, interface declaration and the like).
+ * Common superclass the main declarations elements of a Java source file (class,
+ * interface declaration and the like).
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -60,13 +34,13 @@ import java.util.List;
 abstract class BasicDeclarationPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Root node text for generated Javadoc comments. */
-    static final String GENERATED_COMMENT = "<GENERATED_JAVADOC_COMMENT>";
-    private static final String DELIMETER = "|";
+    static final String GENERATED_COMMENT = "<GENERATED_JAVADOC_COMMENT>" /* NOI18N */;
+    private static final String DELIMETER = "|" /* NOI18N */;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new BasicDeclarationPrinter object.
@@ -75,14 +49,15 @@ abstract class BasicDeclarationPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         printCommentsBefore(node, out);
         logIssues(node, out);
@@ -93,22 +68,26 @@ abstract class BasicDeclarationPrinter
      * Adds a Javadoc comment to the given CLASS_DEF node.
      *
      * @param node a CLASS_DEF node.
+     * @param out stream to write to.
      *
      * @since 1.0b8
      */
-    protected void addClassComment(JavaNode node, NodeWriter out)
+    protected void addClassComment(
+        JavaNode   node,
+        NodeWriter out)
     {
-        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
-                                  Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS);
+        String t =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS);
         Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(t));
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
-                                GENERATED_COMMENT);
+        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT,
-                                                null);
+        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        node.setHiddenBefore(token);
+        //node.setHiddenBefore(token);
+        addComment(node, token);
     }
 
 
@@ -118,8 +97,9 @@ abstract class BasicDeclarationPrinter
      * @param node node to add a Javadoc comment.
      * @param out stream to write to.
      */
-    protected void addComment(JavaNode   node,
-                              NodeWriter out)
+    protected void addComment(
+        JavaNode   node,
+        NodeWriter out)
     {
         // check if the comment generation is enabled for the node type
         // and access level
@@ -127,10 +107,11 @@ abstract class BasicDeclarationPrinter
         {
             case JavaTokenTypes.METHOD_DEF :
 
-                if (isEnabled(this.settings.getInt(
-                                                Keys.COMMENT_JAVADOC_METHOD_MASK,
-                                                Defaults.COMMENT_JAVADOC_METHOD_MASK),
-                              node))
+                if (
+                    isEnabled(
+                        this.settings.getInt(
+                            ConventionKeys.COMMENT_JAVADOC_METHOD_MASK,
+                            ConventionDefaults.COMMENT_JAVADOC_METHOD_MASK), node))
                 {
                     addMethodComment(node, out);
                 }
@@ -139,9 +120,11 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.CTOR_DEF :
 
-                if (isEnabled(this.settings.getInt(Keys.COMMENT_JAVADOC_CTOR_MASK,
-                                                Defaults.COMMENT_JAVADOC_CTOR_MASK),
-                              node))
+                if (
+                    isEnabled(
+                        this.settings.getInt(
+                            ConventionKeys.COMMENT_JAVADOC_CTOR_MASK,
+                            ConventionDefaults.COMMENT_JAVADOC_CTOR_MASK), node))
                 {
                     addCtorComment(node, out);
                 }
@@ -150,10 +133,11 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.VARIABLE_DEF :
 
-                if (isEnabled(this.settings.getInt(
-                                                Keys.COMMENT_JAVADOC_VARIABLE_MASK,
-                                                Defaults.COMMENT_JAVADOC_VARIABLE_MASK),
-                              node))
+                if (
+                    isEnabled(
+                        this.settings.getInt(
+                            ConventionKeys.COMMENT_JAVADOC_VARIABLE_MASK,
+                            ConventionDefaults.COMMENT_JAVADOC_VARIABLE_MASK), node))
                 {
                     addVariableComment(node);
                 }
@@ -162,10 +146,11 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.CLASS_DEF :
 
-                if (isEnabled(this.settings.getInt(
-                                                Keys.COMMENT_JAVADOC_CLASS_MASK,
-                                                Defaults.COMMENT_JAVADOC_CLASS_MASK),
-                              node))
+                if (
+                    isEnabled(
+                        this.settings.getInt(
+                            ConventionKeys.COMMENT_JAVADOC_CLASS_MASK,
+                            ConventionDefaults.COMMENT_JAVADOC_CLASS_MASK), node))
                 {
                     addClassComment(node, out);
                 }
@@ -174,10 +159,11 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
 
-                if (isEnabled(this.settings.getInt(
-                                                Keys.COMMENT_JAVADOC_CLASS_MASK,
-                                                Defaults.COMMENT_JAVADOC_CLASS_MASK),
-                              node))
+                if (
+                    isEnabled(
+                        this.settings.getInt(
+                            ConventionKeys.COMMENT_JAVADOC_CLASS_MASK,
+                            ConventionDefaults.COMMENT_JAVADOC_CLASS_MASK), node))
                 {
                     addInterfaceComment(node);
                 }
@@ -186,6 +172,32 @@ abstract class BasicDeclarationPrinter
         }
     }
 
+    /**
+     * Adds the generated comment to the given node.
+     * @param node a declaration node.
+     * @param comment the generated node.
+     * @since 1.0b9
+     */
+    private void addComment(JavaNode node, ExtendedToken comment)
+    {
+        CommonHiddenStreamToken c = node.getFirstCommentBefore();
+
+        if (c == null)
+        {
+            node.setHiddenBefore(comment);
+        }
+        else
+        {
+            for (; c != null; c = c.getHiddenAfter())
+            {
+                if (c.getHiddenAfter() == null)
+                {
+                    c.setHiddenAfter(comment);
+                    return;
+                }
+            }
+        }
+    }
 
     /**
      * Adds a Javadoc comment to the given INTERFACE_DEF node.
@@ -196,17 +208,18 @@ abstract class BasicDeclarationPrinter
      */
     protected void addInterfaceComment(JavaNode node)
     {
-        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
-                                  Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE);
+        String t =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE);
         Node text = new Node(JavadocTokenTypes.PCDATA, t);
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
-                                GENERATED_COMMENT);
+        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT,
-                                                null);
+        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        node.setHiddenBefore(token);
+        //node.setHiddenBefore(token);
+        addComment(node, token);
     }
 
 
@@ -216,65 +229,67 @@ abstract class BasicDeclarationPrinter
      * @param node a METHOD_DEF node.
      * @param out stream to write to.
      */
-    protected void addMethodComment(JavaNode   node,
-                                    NodeWriter out)
+    protected void addMethodComment(
+        JavaNode   node,
+        NodeWriter out)
     {
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
-                                GENERATED_COMMENT);
+        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         StringBuffer buf = new StringBuffer(150);
-        String topText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
-                                        Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP)
-                                   .trim();
+        String topText =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP).trim();
         buf.append(topText);
         buf.append(DELIMETER);
 
-        AST parameters = NodeHelper.getFirstChild(node,
-                                                  JavaTokenTypes.PARAMETERS);
-        String bottomText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
-                                           Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
-        String leadingSeparator = bottomText.substring(0,
-                                                       bottomText.indexOf('*') +
-                                                       1);
+        AST parameters = NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        String bottomText =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
+        String leadingSeparator = bottomText.substring(0, bottomText.indexOf('*') + 1);
 
         if (parameters.getFirstChild() != null)
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
-            addParameters(buf, parameters,
-                          this.settings.get(
-                                         Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
-                                         Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM),
-                          out.environment);
+            addParameters(
+                buf, parameters,
+                this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM),
+                out.environment);
         }
 
-        AST returnType = NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE)
-                                   .getFirstChild();
+        AST returnType =
+            NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE).getFirstChild();
 
         if (!VOID.equals(returnType.getText()))
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
-            buf.append(this.settings.get(
-                                      Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
-                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN));
+            buf.append(
+                this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN));
             buf.append(DELIMETER);
         }
 
-        AST exceptions = NodeHelper.getFirstChild(node,
-                                                  JavaTokenTypes.LITERAL_throws);
+        AST exceptions = NodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
 
         if ((exceptions != null) && (exceptions.getFirstChild() != null))
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
 
-            List types = JavadocPrinter.getValidTypeNames(node,
-                                                          JavaTokenTypes.LITERAL_throws);
-            addExceptions(buf, types,
-                          this.settings.get(
-                                         Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
-                                         Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION),
-                          out.environment);
+            List types =
+                JavadocPrinter.getValidTypeNames(node, JavaTokenTypes.LITERAL_throws);
+            addExceptions(
+                buf, types,
+                this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION),
+                out.environment);
         }
 
         buf.append(bottomText);
@@ -282,10 +297,10 @@ abstract class BasicDeclarationPrinter
         Node text = new Node(JavadocTokenTypes.PCDATA, buf.toString());
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT,
-                                                null);
+        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        node.setHiddenBefore(token);
+        //node.setHiddenBefore(token);
+        addComment(node, token);
     }
 
 
@@ -295,30 +310,54 @@ abstract class BasicDeclarationPrinter
      * @param node a declaration node.
      * @param out stream to write to.
      */
-    void addCommentIfNeeded(JavaNode   node,
-                            NodeWriter out)
+    void addCommentIfNeeded(
+        JavaNode   node,
+        NodeWriter out)
     {
         if (out.mode != NodeWriter.MODE_DEFAULT)
         {
             return;
         }
 
-        if ((!out.state.anonymousInnerClass) &&
-            ((!out.state.innerClass) ||
-             this.settings.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
-                                   Defaults.COMMENT_JAVADOC_INNER_CLASS)))
+        if (
+            !out.state.anonymousInnerClass
+            && (!out.state.innerClass
+            || this.settings.getBoolean(
+                ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
+                ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS)))
         {
             boolean hasJavadoc = node.hasJavadocComment();
 
-            if ((!hasJavadoc) && node.hasCommentsBefore())
+            if (!hasJavadoc && node.hasCommentsBefore())
             {
-                /**
-                 * @todo transform the existing comment
-                 */
+                CommonHiddenStreamToken comment = node.getFirstCommentBefore();
 
-                /*if (this.settings.getBoolean(Keys.COMMENT_JAVADOC_TRANSFORM, Defaults.COMMENT_JAVADOC_TRANSFORM))
+                if (comment.getHiddenAfter() == null)
                 {
-                }*/
+                    switch (comment.getType())
+                    {
+                        case JavaTokenTypes.SEPARATOR_COMMENT:
+                            addComment(node, out);
+                            break;
+
+                        case JavaTokenTypes.ML_COMMENT:
+                        case JavaTokenTypes.SL_COMMENT:
+                            /**
+                             * @todo transform the existing comment
+                             */
+
+                            /*
+                              if (this.settings.getBoolean(ConventionKeys.COMMENT_JAVADOC_TRANSFORM,
+                                                           ConventionDefaults.COMMENT_JAVADOC_TRANSFORM))
+                            {
+                            }
+                            */
+                            break;
+                        case JavaTokenTypes.SPECIAL_COMMENT:
+
+                            break;
+                    }
+                }
             }
             else if (!hasJavadoc)
             {
@@ -329,23 +368,23 @@ abstract class BasicDeclarationPrinter
 
 
     /**
-     * Determines whether the auto-generation of Javadoc comments is enabled
-     * for the given node.
+     * Determines whether the auto-generation of Javadoc comments is enabled for the
+     * given node.
      *
-     * @param mask int mask that encodes the auto-generation settings for
-     *        the given node.
+     * @param mask int mask that encodes the auto-generation settings for the given node.
      * @param node declaration node.
      *
-     * @return <code>true</code> if the auto-generation feature is enabled for
-     *         the given node.
+     * @return <code>true</code> if the auto-generation feature is enabled for the given
+     *         node.
      */
-    private boolean isEnabled(int mask,
-                              AST node)
+    private boolean isEnabled(
+        int mask,
+        AST node)
     {
         /**
-         * @todo we currently don't calculate friendly access but rather
-         *       misuse the FINAL modifier to indicate it, so if we find it
-         *       here we know we have to handle it separately
+         * @todo we currently don't calculate friendly access but rather misuse the FINAL
+         *       modifier to indicate it, so if we find it here we know we have to
+         *       handle it separately
          */
         if (mask == Modifier.FINAL)
         {
@@ -354,8 +393,7 @@ abstract class BasicDeclarationPrinter
 
         int value = JavaNodeModifier.valueOf(node);
 
-        if (((mask & value) != 0) ||
-            ((value == 0) && ((Modifier.FINAL & mask) != 0)))
+        if (((mask & value) != 0) || ((value == 0) && ((Modifier.FINAL & mask) != 0)))
         {
             return true;
         }
@@ -370,58 +408,59 @@ abstract class BasicDeclarationPrinter
      * @param node a CTOR_DEF node.
      * @param out stream to write to.
      */
-    private void addCtorComment(JavaNode   node,
-                                NodeWriter out)
+    private void addCtorComment(
+        JavaNode   node,
+        NodeWriter out)
     {
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
-                                GENERATED_COMMENT);
-        String topText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
-                                        Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP)
-                                   .trim();
+        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        String topText =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP).trim();
         StringBuffer buf = new StringBuffer();
 
-        out.environment.set(Environment.Variable.TYPE_OBJECT.getName(),
-                            NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT)
-                                      .getText());
+        out.environment.set(
+            Environment.Variable.TYPE_OBJECT.getName(),
+            NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText());
         buf.append(out.environment.interpolate(topText));
         out.environment.unset(Environment.Variable.TYPE_OBJECT.getName());
 
         buf.append(DELIMETER);
 
-        AST parameters = NodeHelper.getFirstChild(node,
-                                                  JavaTokenTypes.PARAMETERS);
-        String bottomText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
-                                           Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
-        String leadingSeparator = bottomText.substring(0,
-                                                       bottomText.indexOf('*') +
-                                                       1);
+        AST parameters = NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        String bottomText =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
+        String leadingSeparator = bottomText.substring(0, bottomText.indexOf('*') + 1);
 
         if (parameters.getFirstChild() != null)
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
-            addParameters(buf, parameters,
-                          this.settings.get(
-                                         Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
-                                         Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
-                          out.environment);
+            addParameters(
+                buf, parameters,
+                this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
+                out.environment);
         }
 
-        AST exceptions = NodeHelper.getFirstChild(node,
-                                                  JavaTokenTypes.LITERAL_throws);
+        AST exceptions = NodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
 
         if ((exceptions != null) && (exceptions.getFirstChild() != null))
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
 
-            List types = JavadocPrinter.getValidTypeNames(node,
-                                                          JavaTokenTypes.LITERAL_throws);
-            addExceptions(buf, types,
-                          this.settings.get(
-                                         Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
-                                         Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION),
-                          out.environment);
+            List types =
+                JavadocPrinter.getValidTypeNames(node, JavaTokenTypes.LITERAL_throws);
+            addExceptions(
+                buf, types,
+                this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION),
+                out.environment);
         }
 
         buf.append(bottomText);
@@ -429,16 +468,16 @@ abstract class BasicDeclarationPrinter
         Node text = new Node(JavadocTokenTypes.PCDATA, buf.toString());
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT,
-                                                null);
+        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        node.setHiddenBefore(token);
+        //node.setHiddenBefore(token);
+        addComment(node, token);
     }
 
 
     /**
-     * Adds and interpolates the given expection template text for all
-     * exceptions of the given node to the given buffer.
+     * Adds and interpolates the given expection template text for all exceptions of the
+     * given node to the given buffer.
      *
      * @param buf buffer to add the interpolated text to.
      * @param types EXCEPTION node.
@@ -447,14 +486,15 @@ abstract class BasicDeclarationPrinter
      *
      * @since 1.0b8
      */
-    private void addExceptions(StringBuffer buf,
-                               List         types,
-                               String       text,
-                               Environment  environment)
+    private void addExceptions(
+        StringBuffer buf,
+        List         types,
+        String       text,
+        Environment  environment)
     {
         for (int i = 0, size = types.size(); i < size; i++)
         {
-            String type = (String)types.get(i);
+            String type = (String) types.get(i);
             environment.set(Environment.Variable.TYPE_EXCEPTION.getName(), type);
             buf.append(environment.interpolate(text));
             buf.append(DELIMETER);
@@ -464,8 +504,8 @@ abstract class BasicDeclarationPrinter
 
 
     /**
-     * Adds and interpolates the given parameters template text for all
-     * paramaeters of the given node to the given buffer.
+     * Adds and interpolates the given parameters template text for all paramaeters of
+     * the given node to the given buffer.
      *
      * @param buf buffer to add the interpolated text to.
      * @param node PARAMETERS node.
@@ -474,24 +514,22 @@ abstract class BasicDeclarationPrinter
      *
      * @since 1.0b8
      */
-    private void addParameters(StringBuffer buf,
-                               AST          node,
-                               String       text,
-                               Environment  environment)
+    private void addParameters(
+        StringBuffer buf,
+        AST          node,
+        String       text,
+        Environment  environment)
     {
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
                 case JavaTokenTypes.PARAMETER_DEF :
 
-                    String type = NodeHelper.getFirstChild(child,
-                                                           JavaTokenTypes.IDENT)
-                                            .getText();
-                    environment.set(Environment.Variable.TYPE_PARAM.getName(),
-                                    type);
+                    String type =
+                        NodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
+                    environment.set(Environment.Variable.TYPE_PARAM.getName(), type);
                     buf.append(environment.interpolate(text));
                     buf.append(DELIMETER);
                     environment.unset(Environment.Variable.TYPE_PARAM.getName());
@@ -509,16 +547,17 @@ abstract class BasicDeclarationPrinter
      */
     private void addVariableComment(JavaNode node)
     {
-        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
-                                  Defaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE);
+        String t =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE);
         Node text = new Node(JavadocTokenTypes.PCDATA, t);
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
-                                GENERATED_COMMENT);
+        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT,
-                                                null);
+        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
-        node.setHiddenBefore(token);
+        //node.setHiddenBefore(token);
+        addComment(node, token);
     }
 }

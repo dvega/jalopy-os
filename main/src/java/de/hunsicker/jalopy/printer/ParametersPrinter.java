@@ -1,46 +1,19 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,7 +25,7 @@ import java.io.IOException;
 final class ParametersPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** No alignment offset set. */
     static final int OFFSET_NONE = -1;
@@ -69,7 +42,7 @@ final class ParametersPrinter
     /** Perform line wrapping/alignment only if necessary. */
     private static final int MODE_AS_NEEDED = 2;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ParametersPrinter object.
@@ -78,7 +51,7 @@ final class ParametersPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -94,12 +67,14 @@ final class ParametersPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        boolean wrapped = false;
         int line = out.line;
+        boolean wrapped = false;
+
         Marker marker = out.state.markers.add();
 
         switch (node.getType())
@@ -107,16 +82,20 @@ final class ParametersPrinter
             // a method or ctor declaration
             case JavaTokenTypes.PARAMETERS :
 
-                boolean newlineAfter = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
-                                                             Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF);
+                boolean newlineAfter =
+                    this.settings.getBoolean(
+                        ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
+                        ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF);
 
                 /**
                  * @todo move the whole test into printImpl()?
                  */
                 if (out.mode == NodeWriter.MODE_DEFAULT)
                 {
-                    boolean align = this.settings.getBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
-                                                          Defaults.ALIGN_PARAMS_METHOD_DEF);
+                    boolean align =
+                        this.settings.getBoolean(
+                            ConventionKeys.ALIGN_PARAMS_METHOD_DEF,
+                            ConventionDefaults.ALIGN_PARAMS_METHOD_DEF);
 
                     // determine if all parameters will be wrapped:
                     if (align)
@@ -135,8 +114,10 @@ final class ParametersPrinter
                                 TestNodeWriter tester = out.testers.get();
                                 PrinterFactory.create(expr).print(expr, tester);
 
-                                int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                                                   Defaults.LINE_LENGTH);
+                                int lineLength =
+                                    this.settings.getInt(
+                                        ConventionKeys.LINE_LENGTH,
+                                        ConventionDefaults.LINE_LENGTH);
 
                                 // ... or necessary
                                 if ((out.column + tester.length) > lineLength)
@@ -150,45 +131,49 @@ final class ParametersPrinter
                     }
                 }
 
-                wrapped = printImpl(node,
-                                    newlineAfter ? MODE_ALWAYS
-                                                 : MODE_AS_NEEDED,
-                                    JavaTokenTypes.PARAMETERS, out);
+                wrapped =
+                    out.state.parametersWrapped =
+                        printImpl(
+                            node, newlineAfter ? MODE_ALWAYS
+                                               : MODE_AS_NEEDED,
+                            JavaTokenTypes.PARAMETERS, out);
                 out.state.paramOffset = OFFSET_NONE;
 
                 break;
 
             // a method call or creator
             case JavaTokenTypes.ELIST :
-                wrapped = printImpl(node, MODE_AS_NEEDED, JavaTokenTypes.ELIST,
-                                    out);
+                wrapped = printImpl(node, MODE_AS_NEEDED, JavaTokenTypes.ELIST, out);
 
                 break;
 
             default :
-                throw new IllegalArgumentException("unexpected node type -- " +
-                                                   node);
+                throw new IllegalArgumentException("unexpected node type -- " + node);
         }
 
         // printImpl() returns 'false' if only one parameter was found, but we
         // want to let the right parenthesis stand out if the parameter took
-        // more than one line to print
+        // more than one line to print anyway
         if (out.line > line)
         {
             wrapped = true;
         }
 
         // wrap and align, if necessary
-        if (wrapped &&
-            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
-                                  Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
+        if (
+            wrapped
+            && this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+                ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
             {
                 out.printNewline();
             }
 
-            if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
             }
@@ -210,16 +195,16 @@ final class ParametersPrinter
      *
      * @throws IOException if an I/O exception occured.
      */
-    private void setAlignOffset(AST        node,
-                                NodeWriter out)
-        throws IOException
+    private void setAlignOffset(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         int result = 0;
         TestNodeWriter tester = out.testers.get();
 
-        for (AST param = node.getFirstChild();
-             param != null;
-             param = param.getNextSibling())
+        for (AST param = node.getFirstChild(); param != null;
+            param = param.getNextSibling())
         {
             switch (param.getType())
             {
@@ -255,21 +240,19 @@ final class ParametersPrinter
 
 
     /**
-     * Determines whether the given EXPR node denotes a concatenated
-     * expression (either a string concatenation or addititive expression using the + operator).
+     * Determines whether the given EXPR node denotes a concatenated expression (either a
+     * string concatenation or addititive expression using the + operator).
      *
      * @param node an EXPR node.
      *
-     * @return <code>true</code> if the given node denotes a concatenated
-     *         expression.
+     * @return <code>true</code> if the given node denotes a concatenated expression.
      *
      * @since 1.0b8
      */
     private boolean isConcat(AST node)
     {
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getFirstChild())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getFirstChild())
         {
             switch (child.getType())
             {
@@ -294,10 +277,10 @@ final class ParametersPrinter
             case JavaTokenTypes.PLUS :
 
                 AST first = null;
-SEARCH:
-                for (AST next = expr.getFirstChild();
-                     next != null;
-                     next = next.getFirstChild())
+SEARCH: 
+                for (
+                    AST next = expr.getFirstChild(); next != null;
+                    next = next.getFirstChild())
                 {
                     switch (next.getType())
                     {
@@ -333,8 +316,7 @@ SEARCH:
      *
      * @throws IllegalArgumentException DOCUMENT ME!
      *
-     * @todo fully implement the method in AbstractPrinter.java and use that
-     *       method
+     * @todo fully implement the method in AbstractPrinter.java and use that method
      * @since 1.0b8
      */
     private AST getLastChild(AST node)
@@ -346,9 +328,7 @@ SEARCH:
             case JavaTokenTypes.EXPR :
                 result = node.getFirstChild();
 
-                for (AST child = result;
-                     child != null;
-                     child = child.getFirstChild())
+                for (AST child = result; child != null; child = child.getFirstChild())
                 {
                     result = child;
                 }
@@ -357,9 +337,9 @@ SEARCH:
 
             case JavaTokenTypes.PARAMETER_DEF :
 
-                for (AST child = node.getFirstChild();
-                     child != null;
-                     child = child.getNextSibling())
+                for (
+                    AST child = node.getFirstChild(); child != null;
+                    child = child.getNextSibling())
                 {
                     result = child;
                 }
@@ -377,15 +357,13 @@ SEARCH:
      *
      * @param node an EXPR node.
      *
-     * @return <code>true</code> if the given nodes denotes a single literal
-     *         string.
+     * @return <code>true</code> if the given nodes denotes a single literal string.
      *
      * @since 1.0b8
      */
     private boolean isSingleLiteral(AST node)
     {
-        if ((node.getNextSibling() == null) &&
-            (node.getType() != JavaTokenTypes.PLUS))
+        if ((node.getNextSibling() == null) && (node.getType() != JavaTokenTypes.PLUS))
         {
             switch (node.getFirstChild().getType())
             {
@@ -399,38 +377,38 @@ SEARCH:
 
 
     /**
-     * Adjusts the aligment offset. Called from {@link #wrapFirst} if the
-     * first parameter was actually wrapped.
+     * Adjusts the aligment offset. Called from {@link #wrapFirst} if the first parameter
+     * was actually wrapped.
      *
      * @param column column offset before the newline was issued.
      * @param out stream to write to.
      *
      * @since 1.0b9
      */
-    private void adjustAlignmentOffset(int        column,
-                                       NodeWriter out)
+    private void adjustAlignmentOffset(
+        int        column,
+        NodeWriter out)
     {
         if (out.state.paramOffset != OFFSET_NONE)
         {
-            out.state.paramOffset=out.state.paramOffset-column+out.column;
+            out.state.paramOffset = out.state.paramOffset - column + out.column;
         }
     }
 
 
     /**
-     * Indicates whether the given parameters node contains a METHOD_CALL node
-     * as a parameter.
+     * Indicates whether the given parameters node contains a METHOD_CALL node as a
+     * parameter.
      *
      * @param node a parameters node (either PARAMETERS or ELIST).
      *
-     * @return <code>true</code> if the given parameters node does contain a
-     *         METHOD_CALL node as a parameter.
+     * @return <code>true</code> if the given parameters node does contain a METHOD_CALL
+     *         node as a parameter.
      */
     private boolean containsMethodCall(AST node)
     {
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -459,21 +437,21 @@ SEARCH:
      *
      * @param node parameter list.
      * @param action action to perform.
-     * @param type the node type we print parameters for. Either PARAMETERS or
-     *        ELIST
+     * @param type the node type we print parameters for. Either PARAMETERS or ELIST
      * @param out stream to write to.
      *
      * @return <code>true</code> if line wrap.
      *
      * @throws IOException if an I/O error occured.
      */
-    private boolean printImpl(AST        node,
-                              int        action,
-                              int        type,
-                              NodeWriter out)
-        throws IOException
+    private boolean printImpl(
+        AST        node,
+        int        action,
+        int        type,
+        NodeWriter out)
+      throws IOException
     {
-        JavaNode parameter = (JavaNode)node.getFirstChild();
+        JavaNode parameter = (JavaNode) node.getFirstChild();
 
         if (parameter == null)
         {
@@ -481,28 +459,41 @@ SEARCH:
             return false;
         }
 
-        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                  Defaults.LINE_WRAP) &&
-                            (out.mode == NodeWriter.MODE_DEFAULT);
-        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                           Defaults.LINE_LENGTH);
-        boolean deepIndent = this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP);
-        int deepIndentSize = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
-                                           Defaults.INDENT_SIZE_DEEP);
-        boolean alignMethodCall = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
-                                                        Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL);
-        boolean alignMethodCallIfNested = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED,
-                                                                Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED);
-        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                        Defaults.SPACE_AFTER_COMMA);
-        boolean preferWrapAfterLeftParen = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
-                                                                 Defaults.LINE_WRAP_AFTER_LEFT_PAREN);
+        boolean wrapLines =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
+            && (out.mode == NodeWriter.MODE_DEFAULT);
+        int lineLength =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+        boolean indentDeep =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
+        int deepIndentSize =
+            this.settings.getInt(
+                ConventionKeys.INDENT_SIZE_DEEP, ConventionDefaults.INDENT_SIZE_DEEP);
+        boolean alignMethodCall =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
+                ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL);
+        boolean alignMethodCallIfNested =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED,
+                ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED);
+        boolean spaceAfterComma =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
+        boolean preferWrapAfterLeftParen =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
+                ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN);
+        boolean wrapIfFirst =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
+                ConventionDefaults.LINE_WRAP_PARAMS_EXCEED);
 
-        boolean wrapIfFirst = this.settings.getBoolean(Keys.LINE_WRAP_ALL,
-                                                    Defaults.LINE_WRAP_ALL);
-
-        /*int indentation = this.settings.getInt(Keys.INDENT_SIZE_PARAMETERS,
-                                            Defaults.INDENT_SIZE_PARAMETERS);*/
+        /*int indentation = this.settings.getInt(ConventionKeys.INDENT_SIZE_PARAMETERS,
+                                            ConventionDefaults.INDENT_SIZE_PARAMETERS);*/
         boolean result = false;
         int paramIndex = 0;
         boolean restoreAction = false;
@@ -518,7 +509,7 @@ SEARCH:
 
         while (parameter != null)
         {
-            JavaNode next = (JavaNode)parameter.getNextSibling();
+            JavaNode next = (JavaNode) parameter.getNextSibling();
 
             switch (parameter.getType())
             {
@@ -527,8 +518,8 @@ SEARCH:
                     if (parameter.hasCommentsAfter())
                     {
                         out.print(COMMA, JavaTokenTypes.COMMA);
-                        printCommentsAfter(parameter, NodeWriter.NEWLINE_NO,
-                                           action != MODE_ALWAYS, out);
+                        printCommentsAfter(
+                            parameter, NodeWriter.NEWLINE_NO, action != MODE_ALWAYS, out);
                     }
                     else
                     {
@@ -542,9 +533,10 @@ SEARCH:
                     if (out.mode == NodeWriter.MODE_DEFAULT)
                     {
                         // overwrite the mode for method calls
-                        if ((type == JavaTokenTypes.ELIST) &&
-                            (alignMethodCall ||
-                             (alignMethodCallIfNested && containsMethodCall(node))))
+                        if (
+                            (type == JavaTokenTypes.ELIST)
+                            && (alignMethodCall
+                            || (alignMethodCallIfNested && containsMethodCall(node))))
                         {
                             if (restoreAction)
                             {
@@ -587,40 +579,58 @@ SEARCH:
                                 {
                                     printIndentation(out);
 
-                                    if (preferWrapAfterLeftParen &&
-                                        (paramIndex == FIRST_PARAM))
+                                    if (
+                                        preferWrapAfterLeftParen
+                                        && (paramIndex == FIRST_PARAM))
                                     {
                                         TestNodeWriter tester = out.testers.get();
+
                                         // determine the exact space all
                                         // parameters would need
-                                        PrinterFactory.create(node)
-                                                      .print(node, tester);
+                                        PrinterFactory.create(node).print(node, tester);
 
-                                          if (out.column + tester.length > lineLength)
-                                          {
+                                        // +1 for the right parenthesis
+                                        if ((out.column + tester.length + 1) > lineLength)
+                                        {
                                             firstWrapped = true;
-                                          }
-                                          out.testers.release(tester);
+                                        }
+
+                                        out.testers.release(tester);
                                     }
                                 }
                                 else if (wrapLines)
                                 {
                                     TestNodeWriter tester = out.testers.get();
 
-                                    if (preferWrapAfterLeftParen &&
-                                        (paramIndex == FIRST_PARAM))
+                                    if (
+                                        preferWrapAfterLeftParen
+                                        && (paramIndex == FIRST_PARAM))
                                     {
                                         // determine the exact space all
                                         // parameters would need
-                                        PrinterFactory.create(node)
-                                                      .print(node, tester);
+                                        PrinterFactory.create(node).print(node, tester);
+
+                                        // (+1 for the right parenthesis)
+                                        tester.length += 1;
                                     }
                                     else
                                     {
                                         // determine the exact space this
                                         // parameter would need
-                                        PrinterFactory.create(parameter)
-                                                      .print(parameter, tester);
+                                        PrinterFactory.create(parameter).print(
+                                            parameter, tester);
+                                    }
+
+                                    if (next != null)
+                                    {
+                                        if (spaceAfterComma)
+                                        {
+                                            tester.length += 2;
+                                        }
+                                        else
+                                        {
+                                            tester.length += 1;
+                                        }
                                     }
 
                                     // space exceeds the line length but we
@@ -634,81 +644,92 @@ SEARCH:
                                         {
                                             if (preferWrapAfterLeftParen)
                                             {
-                                                result = wrapFirst(
-                                                type, true, next == null, out);
+                                                result =
+                                                    wrapFirst(
+                                                        type, true, next == null, out);
                                                 firstWrapped = result;
                                             }
-                                            else if (!deepIndent && !shouldWrapAtLowerLevel(
-                                                                             parameter.getFirstChild(),
-                                                                             lineLength,
-                                                                             deepIndentSize,
-                                                                             out))
+                                            else if (
+                                                !indentDeep
+                                                && !shouldWrapAtLowerLevel(
+                                                    parameter.getFirstChild(),
+                                                    lineLength, deepIndentSize, out))
                                             {
                                                 if ((type == JavaTokenTypes.PARAMETERS))
                                                 {
-                                                    result = wrapFirst(
-                                                    type, true, next == null,
-                                                    out);
+                                                    result =
+                                                        wrapFirst(
+                                                            type, true, next == null, out);
                                                     firstWrapped = result;
                                                 }
 
                                                 // for chained method calls prefer wrapping
                                                 // along the dots
-                                                else if (!NodeHelper.isChained(((JavaNode)node).getPreviousSibling()))
+                                                else if (
+                                                    !NodeHelper.isChained(
+                                                        ((JavaNode) node)
+                                                        .getPreviousSibling()))
                                                 {
                                                     if (isSingleLiteral(parameter))
                                                     {
                                                         /**
-                                                         * @todo add
-                                                         *       StringBreaker
+                                                         * @todo add StringBreaker
                                                          *       feature
                                                          */
-                                                        result = wrapFirst(
-                                                        type, true,
-                                                        next == null, out);
+                                                        result =
+                                                            wrapFirst(
+                                                                type, true, next == null,
+                                                                out);
                                                         firstWrapped = result;
                                                     }
                                                     else
                                                     {
-                                                        AST first = getFirstStringConcat(parameter);
+                                                        AST first =
+                                                            getFirstStringConcat(
+                                                                parameter);
 
                                                         if (first != null)
                                                         {
                                                             tester.reset();
                                                             PrinterFactory.create(first)
-                                                                          .print(first,
-                                                                                 tester);
+                                                                          .print(
+                                                                first, tester);
 
-                                                            if ((out.column + tester.length) > lineLength)
+                                                            if (
+                                                                (out.column
+                                                                + tester.length) > lineLength)
                                                             {
-                                                                result = wrapFirst(
-                                                                type, true,
-                                                                next == null,
-                                                                out);
+                                                                result =
+                                                                    wrapFirst(
+                                                                        type, true,
+                                                                        next == null, out);
                                                                 firstWrapped = result;
                                                             }
                                                             else
                                                             {
-                                                                result = wrapFirst(
-                                                                type,
-                                                                next == null,
-                                                                out);
+                                                                result =
+                                                                    wrapFirst(
+                                                                        type,
+                                                                        next == null, out);
                                                                 firstWrapped = result;
                                                             }
                                                         }
-                                                        else if (parameter.getFirstChild()
-                                                                          .getType() == JavaTokenTypes.STRING_LITERAL)
+                                                        else if (
+                                                            parameter.getFirstChild()
+                                                                     .getType() == JavaTokenTypes.STRING_LITERAL)
                                                         {
-                                                            result = wrapFirst(
-                                                            type, next == null,
-                                                            true, out);
+                                                            result =
+                                                                wrapFirst(
+                                                                    type, next == null,
+                                                                    true, out);
                                                             firstWrapped = result;
                                                         }
                                                         else
                                                         {
-                                                            result = wrapFirst(
-                                                            type, next == null,
-                                                            out);
+                                                            result =
+                                                                wrapFirst(
+                                                                    type, next == null,
+                                                                    out);
                                                             firstWrapped = result;
                                                         }
                                                     }
@@ -720,6 +741,7 @@ SEARCH:
                                             out.printNewline();
                                             printIndentation(out);
                                             result = true;
+
                                             /*int indentLength = out.getIndentLength();
                                             Marker m = out.state.markers.getLast();
                                             int length = (m.column > indentLength)
@@ -773,10 +795,10 @@ SEARCH:
                                          */
                                         int indentLength = out.getIndentLength();
                                         Marker m = out.state.markers.getLast();
-                                        int length = (m.column > indentLength)
-                                                         ? (m.column -
-                                                         indentLength)
-                                                         : m.column;
+                                        int length =
+                                            (m.column > indentLength)
+                                            ? (m.column - indentLength)
+                                            : m.column;
 
                                         if ((length + indentLength + 1) != out.column)
                                         {
@@ -790,13 +812,17 @@ SEARCH:
                                             out.print(SPACE, JavaTokenTypes.WS);
                                         }
                                     }
-                                    else if (spaceAfterComma &&
-                                             (paramIndex != FIRST_PARAM))
+                                    else if (
+                                        spaceAfterComma && (paramIndex != FIRST_PARAM))
                                     {
                                         out.print(SPACE, JavaTokenTypes.WS);
                                     }
 
                                     out.testers.release(tester);
+                                }
+                                else if (spaceAfterComma && (paramIndex != FIRST_PARAM))
+                                {
+                                    out.print(SPACE, JavaTokenTypes.WS);
                                 }
 
                                 break;
@@ -820,19 +846,21 @@ SEARCH:
                                         printIndentation(out);
                                         firstWrapped = true;
                                     }
-                                    else if (preferWrapAfterLeftParen)
+                                    else if (preferWrapAfterLeftParen || (!indentDeep))
                                     {
                                         if (next == null)
                                         {
                                             TestNodeWriter tester = out.testers.get();
-                                            PrinterFactory.create(parameter)
-                                                          .print(parameter,
-                                                                 tester);
+                                            PrinterFactory.create(parameter).print(
+                                                parameter, tester);
 
-                                            if ((out.column + tester.length) > lineLength)
+                                            // +1 for the right parenthesis
+                                            if (
+                                                (out.column + tester.length + 1) > lineLength)
                                             {
-                                                result = wrapFirst(
-                                                type, true, next == null, out);
+                                                result =
+                                                    wrapFirst(
+                                                        type, true, next == null, out);
                                                 firstWrapped = true;
                                             }
 
@@ -840,28 +868,35 @@ SEARCH:
                                         }
                                         else
                                         {
-                                            result = wrapFirst(
-                                            type, preferWrapAfterLeftParen,
-                                            next == null, out);
+                                            result =
+                                                wrapFirst(
+                                                    type,
+                                                    (preferWrapAfterLeftParen
+                                                    || !indentDeep), next == null, out);
                                             firstWrapped = result;
                                         }
                                     }
                                     else if (out.column > deepIndentSize)
                                     {
-                                        result = wrapFirst(
-                                        type, preferWrapAfterLeftParen,
-                                        next == null, out);
+                                        result =
+                                            wrapFirst(
+                                                type, preferWrapAfterLeftParen,
+                                                next == null, out);
                                         firstWrapped = result;
                                     }
                                 }
 
                                 break;
                         }
-
-                        paramIndex++;
+                    }
+                    else if (spaceAfterComma && (paramIndex != FIRST_PARAM))
+                    {
+                        out.print(SPACE, JavaTokenTypes.WS);
                     }
 
                     PrinterFactory.create(parameter).print(parameter, out);
+
+                    paramIndex++;
 
                     break;
             }
@@ -881,26 +916,25 @@ SEARCH:
 
 
     /**
-     * Determines whether line wrapping should occur at a lower level (i.e.
-     * one of the children will be wrapped).
+     * Determines whether line wrapping should occur at a lower level (i.e. one of the
+     * children will be wrapped).
      *
-     * @param node first child of an EXPR node (via
-     *        <code>expr.getFirstChild()</code>) to determine line wrapping
-     *        policy for.
+     * @param node first child of an EXPR node (via <code>expr.getFirstChild()</code>) to
+     *        determine line wrapping policy for.
      * @param lineLength the maximum line length setting.
      * @param deepIndent the deep indent setting.
      * @param out stream to write to.
      *
-     * @return <code>true</code> if line wrapping should be performed at a
-     *         lower level.
+     * @return <code>true</code> if line wrapping should be performed at a lower level.
      *
      * @throws IOException if an I/O error occured.
      */
-    private boolean shouldWrapAtLowerLevel(AST        node,
-                                           int        lineLength,
-                                           int        deepIndent,
-                                           NodeWriter out)
-        throws IOException
+    private boolean shouldWrapAtLowerLevel(
+        AST        node,
+        int        lineLength,
+        int        deepIndent,
+        NodeWriter out)
+      throws IOException
     {
         for (AST child = node; child != null; child = child.getNextSibling())
         {
@@ -911,10 +945,10 @@ SEARCH:
                 case JavaTokenTypes.PLUS :
 
                     AST first = child;
-SEARCH:
-                    for (AST next = node.getFirstChild();
-                         next != null;
-                         next = next.getFirstChild())
+SEARCH: 
+                    for (
+                        AST next = node.getFirstChild(); next != null;
+                        next = next.getFirstChild())
                     {
                         switch (next.getType())
                         {
@@ -968,9 +1002,9 @@ SEARCH:
                     AST elist = name.getNextSibling();
                     int paramNum = 0;
 
-                    for (AST param = elist.getFirstChild();
-                         param != null;
-                         param = param.getNextSibling())
+                    for (
+                        AST param = elist.getFirstChild(); param != null;
+                        param = param.getNextSibling())
                     {
                         paramNum++;
                     }
@@ -994,24 +1028,25 @@ SEARCH:
                         return false;
                     }
 
-                    for (AST c = child.getFirstChild(); c != null; c = c.getNextSibling())
+                    for (AST c = child.getFirstChild(); c != null;
+                        c = c.getNextSibling())
                     {
                         switch (c.getType())
                         {
-                            case JavaTokenTypes.ARRAY_INIT:
+                            case JavaTokenTypes.ARRAY_INIT :
                                 return false;
-                            case JavaTokenTypes.OBJBLOCK:
-                                return true;
 
+                            case JavaTokenTypes.OBJBLOCK :
+                                return true;
                         }
                     }
 
                     AST elist = name.getNextSibling();
                     int paramNum = 0;
 
-                    for (AST param = elist.getFirstChild();
-                         param != null;
-                         param = param.getNextSibling())
+                    for (
+                        AST param = elist.getFirstChild(); param != null;
+                        param = param.getNextSibling())
                     {
                         if (paramNum == 0)
                         {
@@ -1041,11 +1076,11 @@ SEARCH:
                 case JavaTokenTypes.LPAREN :
 
                     /**
-                     * @todo this advancing stuff should no longer be
-                     *       necessary
+                     * @todo this advancing stuff should no longer be necessary
                      */
-                    return shouldWrapAtLowerLevel(PrinterHelper.advanceToFirstNonParen(child),
-                                                  deepIndent, lineLength, out);
+                    return shouldWrapAtLowerLevel(
+                        PrinterHelper.advanceToFirstNonParen(child), deepIndent,
+                        lineLength, out);
             }
         }
 
@@ -1054,26 +1089,23 @@ SEARCH:
 
 
     /**
-     * Prints a newline before the first parameter of a parameter list, if
-     * necessary.
+     * Prints a newline before the first parameter of a parameter list, if necessary.
      *
      * @param type the type of the parameter list. Either ELIST or PARAMETER.
-     * @param last the amount of whitespace that is to print before the
-     *        parameter.
+     * @param last the amount of whitespace that is to print before the parameter.
      * @param out stream to write to.
      *
      * @return <code>true</code> if a newline was actually printed.
      *
      * @throws IOException DOCUMENT ME!
      */
-    private boolean wrapFirst( /*int        indentation, */
-    int    type,
-    boolean last, /*d */
-    NodeWriter out)
-        throws IOException
+    private boolean wrapFirst(
+        int        type,
+        boolean    last,
+        NodeWriter out)
+      throws IOException
     {
-        return wrapFirst( /*indentation,*/
-        type, false, last, out);
+        return wrapFirst(type, false, last, out);
     }
 
 
@@ -1082,7 +1114,8 @@ SEARCH:
      *
      * @param type the type of the parameter list. Either ELIST or PARAMETER.
      * @param force if <code>true</code> a newline will be forced.
-     * @param last <code>true</code> indicates that this parameter is the last parameter of the list.
+     * @param last <code>true</code> indicates that this parameter is the last parameter
+     *        of the list.
      * @param out stream to write to.
      *
      * @return <code>true</code> if a newline was actually printed.
@@ -1090,25 +1123,26 @@ SEARCH:
      * @throws IOException DOCUMENT ME!
      * @throws IllegalStateException DOCUMENT ME!
      */
-    private boolean wrapFirst( /*int        indentation, */
-    int    type,
-    boolean force,
-    boolean last,
-    NodeWriter out)
-        throws IOException
+    private boolean wrapFirst(
+        int        type,
+        boolean    force,
+        boolean    last,
+        NodeWriter out)
+      throws IOException
     {
         boolean result = false;
 
         /*if ((indentation == -1)
             || ((type == JavaTokenTypes.ELIST)
-                && !this.settings.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
-                                      Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
+                && !this.settings.getBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
+                                      ConventionDefaults.INDENT_USE_PARAMS_METHOD_CALL)))
         if (((type == JavaTokenTypes.ELIST)
-                && !this.settings.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
-                                      Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
+                && !this.settings.getBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
+                                      ConventionDefaults.INDENT_USE_PARAMS_METHOD_CALL)))
         {*/
-
-        if (!this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) || !last)
+        if (
+            !this.settings.getBoolean(
+                ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP) || !last)
         {
             switch (out.state.paramLevel)
             {
@@ -1116,7 +1150,8 @@ SEARCH:
 
                     if (!out.state.markers.isMarked())
                     {
-                        throw new IllegalStateException("not inside parentheses and no marker found");
+                        throw new IllegalStateException(
+                            "not inside parentheses and no marker found");
                     }
 
                 // parameters of the outmost parentheses are aligned relative
@@ -1132,9 +1167,10 @@ SEARCH:
 
                     // only wrap if the new column offset would be smaller than
                     // the current one and is between a certain tolerance area
-                    if (force ||
-                        (((length + out.getIndentLength()) < out.column) &&
-                         (length > (out.column - out.indentSize))))
+                    if (
+                        force
+                        || (((length + out.getIndentLength()) < out.column)
+                        && (length > (out.column - out.indentSize))))
                     {
                         int column = out.column;
 
@@ -1154,12 +1190,12 @@ SEARCH:
                 // level 2 or deeper
                 default :
                 {
-                    Marker marker = out.state.markers.get(out.state.markers.count -
-                                                          2);
+                    Marker marker = out.state.markers.get(out.state.markers.count - 2);
                     int indentLength = out.getIndentLength();
-                    int offset = ((marker.column > indentLength)
-                                      ? (marker.column - indentLength)
-                                      : marker.column) + (out.indentSize);
+                    int offset =
+                        ((marker.column > indentLength) ? (marker.column - indentLength)
+                                                        : marker.column)
+                        + (out.indentSize);
 
                     /*if (!force && (indentation == -1))
                     {
@@ -1168,9 +1204,10 @@ SEARCH:
 
                     // only wrap if the new column offset would be smaller than
                     // the current one and is between a certain tolerance area
-                    if (((offset + indentLength) < out.column) &&
-                        (((offset + indentLength) < (out.column - out.indentSize)) ||
-                         ((offset + indentLength) > (out.column + out.indentSize))))
+                    if (
+                        ((offset + indentLength) < out.column)
+                        && (((offset + indentLength) < (out.column - out.indentSize))
+                        || ((offset + indentLength) > (out.column + out.indentSize))))
                     {
                         int column = out.column;
 

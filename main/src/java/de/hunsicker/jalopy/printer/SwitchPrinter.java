@@ -1,50 +1,23 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
  * Printer for switch selection statements [<code>LITERAL_switch</code>].
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * <strong>switch</strong> (<em>integral-selector</em>)
  * {
  *    case <em>integral-value1</em>:
@@ -65,7 +38,7 @@ import java.io.IOException;
  * }
  * </pre>
  * which translates to:
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * LITERAL_switch
  *      + -- EXPR
  *      + ...
@@ -87,12 +60,12 @@ import java.io.IOException;
 final class SwitchPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new SwitchPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new SwitchPrinter object.
@@ -101,7 +74,7 @@ final class SwitchPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -117,16 +90,19 @@ final class SwitchPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         printCommentsBefore(node, out);
 
         out.print(SWITCH, JavaTokenTypes.LITERAL_switch);
 
-        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
-                                  Defaults.SPACE_BEFORE_STATEMENT_PAREN))
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
+                ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.LITERAL_switch);
         }
@@ -137,34 +113,36 @@ final class SwitchPrinter
         AST expr = lparen.getNextSibling();
         PrinterFactory.create(expr).print(expr, out);
 
-        JavaNode rparen = (JavaNode)expr.getNextSibling();
+        JavaNode rparen = (JavaNode) expr.getNextSibling();
         PrinterFactory.create(rparen).print(rparen, out);
 
         AST lcurly = rparen.getNextSibling();
-        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                                         Defaults.BRACE_NEWLINE_LEFT);
+        boolean leftBraceNewline =
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
 
-        boolean commentsAfter = ((JavaNode)lcurly).hasCommentsAfter();
+        boolean commentsAfter = ((JavaNode) lcurly).hasCommentsAfter();
 
         if (out.newline)
         {
-            out.printLeftBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
-                               NodeWriter.INDENT_NO);
+            out.printLeftBrace(
+                NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
         }
         else
         {
-            out.printLeftBrace(leftBraceNewline, !commentsAfter,
-                               NodeWriter.INDENT_YES);
+            out.printLeftBrace(leftBraceNewline, !commentsAfter, NodeWriter.INDENT_YES);
         }
 
         if (commentsAfter)
         {
-            printCommentsAfter(lcurly, NodeWriter.NEWLINE_YES,
-                               NodeWriter.NEWLINE_YES, out);
+            printCommentsAfter(
+                lcurly, NodeWriter.NEWLINE_YES, NodeWriter.NEWLINE_YES, out);
         }
 
-        boolean indentCaseFromSwitch = this.settings.getBoolean(Keys.INDENT_CASE_FROM_SWITCH,
-                                                             Defaults.INDENT_CASE_FROM_SWITCH);
+        boolean indentCaseFromSwitch =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_CASE_FROM_SWITCH,
+                ConventionDefaults.INDENT_CASE_FROM_SWITCH);
 
         if (!indentCaseFromSwitch)
         {
@@ -172,15 +150,15 @@ final class SwitchPrinter
         }
 
         JavaNode rcurly = null;
-LOOP:
-        for (AST child = lcurly.getNextSibling();
-             child != null;
-             child = child.getNextSibling())
+LOOP: 
+        for (
+            AST child = lcurly.getNextSibling(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
                 case JavaTokenTypes.RCURLY :
-                    rcurly = (JavaNode)child;
+                    rcurly = (JavaNode) child;
 
                     break LOOP;
 
@@ -197,8 +175,9 @@ LOOP:
         printCommentsBefore(rcurly, out);
         out.printRightBrace(NodeWriter.NEWLINE_NO);
 
-        if (!printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO,
-                                NodeWriter.NEWLINE_YES, out))
+        if (
+            !printCommentsAfter(
+                rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
         {
             out.printNewline();
         }

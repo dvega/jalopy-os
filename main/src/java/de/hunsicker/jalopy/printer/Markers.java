@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -44,7 +17,7 @@ import java.util.LinkedList;
  */
 final class Markers
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The current number of markers. */
     int count;
@@ -55,7 +28,7 @@ final class Markers
     /** The writer for which all markers are set. */
     private NodeWriter _writer;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new Markers object.
@@ -68,11 +41,10 @@ final class Markers
         _marks = new LinkedList();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the last marker. Equal to {@link #getMark(int) getMark(count()
-     * - 1)}.
+     * Returns the last marker. Equal to {@link #getMark(int) getMark(count() - 1)}.
      *
      * @return the last marker set.
      */
@@ -112,8 +84,9 @@ final class Markers
      *
      * @return the created marker.
      */
-    public Marker add(int line,
-                      int column)
+    public Marker add(
+        int line,
+        int column)
     {
         Marker m = new Marker(line, column);
         _marks.add(m);
@@ -143,13 +116,12 @@ final class Markers
      */
     public Marker get(int index)
     {
-        return (Marker)_marks.get(index);
+        return (Marker) _marks.get(index);
     }
 
 
     /**
-     * Removes the given mark. Removes all marks that were set after the given
-     * mark, too.
+     * Removes the given mark. Removes all marks that were set after the given mark, too.
      *
      * @param mark mark to remove.
      */

@@ -1,49 +1,22 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
  * Printer for labels.
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * <strong>LABEL1:</strong>
  * <em>outer-iteration</em>
  * {
@@ -67,12 +40,12 @@ import java.io.IOException;
 final class LabelStatementPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new LabelStatementPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new LabelStatementPrinter object.
@@ -81,7 +54,7 @@ final class LabelStatementPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -97,14 +70,18 @@ final class LabelStatementPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        boolean indentLabel = this.settings.getBoolean(Keys.INDENT_LABEL,
-                                                    Defaults.INDENT_LABEL);
-        boolean lineWrapLabel = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
-                                                      Defaults.LINE_WRAP_AFTER_LABEL);
+        boolean indentLabel =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_LABEL, ConventionDefaults.INDENT_LABEL);
+        boolean lineWrapLabel =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_LABEL,
+                ConventionDefaults.LINE_WRAP_AFTER_LABEL);
         AST identifier = node.getFirstChild();
         AST body = identifier.getNextSibling();
 
@@ -124,8 +101,8 @@ final class LabelStatementPrinter
             logIssues(node, out);
             PrinterFactory.create(identifier).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
-            commentAfter = printCommentsAfter(node, NodeWriter.NEWLINE_NO,
-                                              newlineAfter, out);
+            commentAfter =
+                printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out);
         }
         else
         {
@@ -138,17 +115,15 @@ final class LabelStatementPrinter
             PrinterFactory.create(identifier).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
 
-            if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter,
-                                    out))
+            if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out))
             {
                 // calculate the space between the printed label and the
                 // beginning of the loop statement
-                int diff = out.getIndentLength() -
-                           identifier.getText().length() - 2;
+                int diff = out.getIndentLength() - identifier.getText().length() - 2;
 
                 if (diff > 1)
                 {
-                    // we must print some whitespace between our label and the 
+                    // we must print some whitespace between our label and the
                     // block
                     out.print(out.getString(diff), JavaTokenTypes.WS);
                 }
@@ -161,7 +136,7 @@ final class LabelStatementPrinter
             out.setIndentLevel(oldLevel);
         }
 
-        if (newlineAfter && (!commentAfter))
+        if (newlineAfter && !commentAfter)
         {
             out.printNewline();
         }

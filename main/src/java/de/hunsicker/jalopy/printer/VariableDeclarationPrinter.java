@@ -1,46 +1,19 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,14 +25,14 @@ import java.io.IOException;
 final class VariableDeclarationPrinter
     extends BasicDeclarationPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     static final int OFFSET_NONE = -1;
 
     /** Singleton. */
     private static final Printer INSTANCE = new VariableDeclarationPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new VariableDeclarationPrinter object.
@@ -68,7 +41,7 @@ final class VariableDeclarationPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -84,18 +57,21 @@ final class VariableDeclarationPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        JavaNode n = (JavaNode)node;
+        JavaNode n = (JavaNode) node;
 
-        if ((!out.state.anonymousInnerClass) && (!n.hasJavadocComment()))
+        if (!out.state.anonymousInnerClass && !n.hasJavadocComment())
         {
-            if (((!out.state.innerClass) ||
-                 this.settings.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
-                                       Defaults.COMMENT_JAVADOC_INNER_CLASS)) &&
-                (!NodeHelper.isLocalVariable(node)))
+            if (
+                (!out.state.innerClass
+                || this.settings.getBoolean(
+                    ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
+                    ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS))
+                && !NodeHelper.isLocalVariable(node))
             {
                 addComment(n, out);
             }
@@ -115,8 +91,9 @@ final class VariableDeclarationPrinter
         // align if necessary
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            if (this.settings.getBoolean(Keys.ALIGN_VAR_IDENTS,
-                                      Defaults.ALIGN_VAR_IDENTS))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS))
             {
                 newChunk = alignVariable(node, last, out);
             }
@@ -124,9 +101,10 @@ final class VariableDeclarationPrinter
             {
                 AST next = node.getNextSibling();
 
-                if ((next == null) ||
-                    ((NodeHelper.getFirstChild(node, JavaTokenTypes.ASSIGN) == null) &&
-                     (next.getType() != JavaTokenTypes.VARIABLE_DEF)))
+                if (
+                    (next == null)
+                    || ((NodeHelper.getFirstChild(node, JavaTokenTypes.ASSIGN) == null)
+                    && (next.getType() != JavaTokenTypes.VARIABLE_DEF)))
                 {
                     newChunk = true;
                 }
@@ -152,8 +130,7 @@ final class VariableDeclarationPrinter
 
                         if (isLongStringLiteral(assign, out))
                         {
-                            AssignmentPrinter.getInstance()
-                                             .print(assign, true, out);
+                            AssignmentPrinter.getInstance().print(assign, true, out);
 
                             break;
                         }
@@ -208,13 +185,15 @@ final class VariableDeclarationPrinter
      *
      * @return <code>true</code> if the node starts a new chunk.
      */
-    boolean isNewChunk(AST node,
-                       int last)
+    boolean isNewChunk(
+        AST node,
+        int last)
     {
-        JavaNode n = (JavaNode)node;
+        JavaNode n = (JavaNode) node;
 
-        if (this.settings.getBoolean(Keys.CHUNKS_BY_COMMENTS,
-                                  Defaults.CHUNKS_BY_COMMENTS))
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.CHUNKS_BY_COMMENTS, ConventionDefaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
             {
@@ -226,18 +205,22 @@ final class VariableDeclarationPrinter
         {
             case JavaTokenTypes.VARIABLE_DEF :
 
-                int maxLinesBetween = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
-                                                        Defaults.BLANK_LINES_KEEP_UP_TO);
+                int maxLinesBetween =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_KEEP_UP_TO,
+                        ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
                 // it does not make sense to mark chunks by blank lines if no
                 // blank lines should be retained
                 if (maxLinesBetween > 0)
                 {
-                    if (this.settings.getBoolean(Keys.CHUNKS_BY_BLANK_LINES,
-                                              Defaults.CHUNKS_BY_BLANK_LINES))
+                    if (
+                        this.settings.getBoolean(
+                            ConventionKeys.CHUNKS_BY_BLANK_LINES,
+                            ConventionDefaults.CHUNKS_BY_BLANK_LINES))
                     {
-                        if ((n.getStartLine() - n.getPreviousSibling()
-                                                 .getStartLine() - 1) > maxLinesBetween)
+                        if (
+                            (n.getStartLine() - n.getPreviousSibling().getStartLine() - 1) > maxLinesBetween)
                         {
                             return true;
                         }
@@ -252,8 +235,8 @@ final class VariableDeclarationPrinter
 
 
     /**
-     * Determines whether the node needs special wrapping (for long string
-     * literal assignments).
+     * Determines whether the node needs special wrapping (for long string literal
+     * assignments).
      *
      * @param node node to check.
      * @param out stream to write to.
@@ -262,18 +245,19 @@ final class VariableDeclarationPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    private boolean isLongStringLiteral(AST        node,
-                                        NodeWriter out)
-        throws IOException
+    private boolean isLongStringLiteral(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         boolean result = false;
         boolean possible = false;
-        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                           Defaults.LINE_LENGTH);
+        int lineLength =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 LOOP: 
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getFirstChild())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getFirstChild())
         {
             switch (child.getType())
             {
@@ -284,8 +268,9 @@ LOOP:
 
                 case JavaTokenTypes.STRING_LITERAL :
 
-                    if (possible &&
-                        ((out.column + child.getText().length()) > lineLength))
+                    if (
+                        possible
+                        && ((out.column + child.getText().length()) > lineLength))
                     {
                         result = true;
                     }
@@ -299,8 +284,8 @@ LOOP:
 
 
     /**
-     * Outputs whitespace to align the identifier of the given VARIABLE_DEF
-     * under prior VARIABLE_DEF nodes.
+     * Outputs whitespace to align the identifier of the given VARIABLE_DEF under prior
+     * VARIABLE_DEF nodes.
      *
      * @param node the current VARIABLE_DEF to print.
      * @param last the type of the last node printed.
@@ -310,10 +295,11 @@ LOOP:
      *
      * @throws IOException if an I/O error occured.
      */
-    private boolean alignVariable(AST        node,
-                                  int        last,
-                                  NodeWriter out)
-        throws IOException
+    private boolean alignVariable(
+        AST        node,
+        int        last,
+        NodeWriter out)
+      throws IOException
     {
         boolean result = false;
 
@@ -321,8 +307,9 @@ LOOP:
         {
             AST next = node.getNextSibling();
 
-            if ((last != JavaTokenTypes.VARIABLE_DEF) ||
-                (out.state.variableOffset == OFFSET_NONE))
+            if (
+                (last != JavaTokenTypes.VARIABLE_DEF)
+                || (out.state.variableOffset == OFFSET_NONE))
             {
                 // first VARIABLE_DEF in a row, so we check for further
                 // variables
@@ -340,9 +327,8 @@ LOOP:
 SEARCH: 
 
                             // determine the longest VARIABLE_DEF
-                            for (AST def = node;
-                                 def != null;
-                                 def = def.getNextSibling())
+                            for (AST def = node; def != null;
+                                def = def.getNextSibling())
                             {
                                 switch (def.getType())
                                 {
@@ -351,23 +337,23 @@ SEARCH:
 
                                         AST defModifier = def.getFirstChild();
                                         AST defType = defModifier.getNextSibling();
-                                        PrinterFactory.create(defModifier)
-                                                      .print(defModifier,
-                                                             tester);
-                                        PrinterFactory.create(defType)
-                                                      .print(defType, tester);
+                                        PrinterFactory.create(defModifier).print(
+                                            defModifier, tester);
+                                        PrinterFactory.create(defType).print(
+                                            defType, tester);
 
                                         /**
-                                         * @todo add max length
+                                         * @todo add new max. length setting
                                          */
                                         if (tester.length > length)
                                         {
                                             length = tester.length;
                                         }
 
-                                        if (isNewChunk(
-                                                       (JavaNode)def.getNextSibling(),
-                                                       JavaTokenTypes.VARIABLE_DEF))
+                                        if (
+                                            isNewChunk(
+                                                (JavaNode) def.getNextSibling(),
+                                                JavaTokenTypes.VARIABLE_DEF))
                                         {
                                             break SEARCH;
                                         }
@@ -383,9 +369,7 @@ SEARCH:
 
                             // set the state variable, now the following
                             // VARIABLE_DEFs can be aligned
-                            out.state.variableOffset = length +
-                                                       out.getIndentLength() +
-                                                       1;
+                            out.state.variableOffset = length + out.getIndentLength() + 1;
 
                             break;
 
@@ -400,8 +384,9 @@ SEARCH:
                 // check if this variable needs to be indented
                 if (out.state.variableOffset > out.column)
                 {
-                    out.print(out.getString(out.state.variableOffset - out.column),
-                              JavaTokenTypes.WS);
+                    out.print(
+                        out.getString(out.state.variableOffset - out.column),
+                        JavaTokenTypes.WS);
                 }
 
                 // check if following variables needs to be indented
@@ -409,7 +394,7 @@ SEARCH:
                 {
                     case JavaTokenTypes.VARIABLE_DEF :
 
-                        if (isNewChunk((JavaNode)next, last))
+                        if (isNewChunk((JavaNode) next, last))
                         {
                             out.state.variableOffset = OFFSET_NONE;
                             result = true;

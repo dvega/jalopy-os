@@ -1,51 +1,23 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
- * Printer for dot separated stuff (like qualified identifiers, chained method
- * calls...) [<code>DOT</code>].
+ * Printer for dot separated stuff (like qualified identifiers, chained method calls...)
+ * [<code>DOT</code>].
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -53,12 +25,12 @@ import java.io.IOException;
 final class DotPrinter
     extends OperatorPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new DotPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new DotPrinter object.
@@ -67,7 +39,7 @@ final class DotPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -83,9 +55,10 @@ final class DotPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         AST rhs = printLeftHandSide(node, out);
 
@@ -94,10 +67,13 @@ final class DotPrinter
             /**
              * @todo add switch to disable wrapping along dots alltogether
              */
-            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                      Defaults.LINE_WRAP);
-            boolean forceWrappingForChainedCalls = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
-                                                                         Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
+            boolean wrapLines =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
+            boolean forceWrappingForChainedCalls =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+                    ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
             if (wrapLines || forceWrappingForChainedCalls)
             {
@@ -112,13 +88,12 @@ final class DotPrinter
 
 
     /**
-     * Determines the length of a single method call contained in a method
-     * call chain.
+     * Determines the length of a single method call contained in a method call chain.
      *
      * @param dot the DOT node.
      * @param call the parent of the DOT node, a METHOD_CALL node.
-     * @param lastCall the last METHOD_CALL node of the chain (but the first
-     *        METHOD_CALL code of the AST tree!).
+     * @param lastCall the last METHOD_CALL node of the chain (but the first METHOD_CALL
+     *        code of the AST tree!).
      * @param testers DOCUMENT ME!
      *
      * @return the length of the chained method call.
@@ -127,11 +102,12 @@ final class DotPrinter
      *
      * @since 1.0b8
      */
-    private int getLengthOfChainedCall(AST         dot,
-                                       JavaNode    call,
-                                       AST         lastCall,
-                                       WriterCache testers)
-        throws IOException
+    private int getLengthOfChainedCall(
+        AST         dot,
+        JavaNode    call,
+        AST         lastCall,
+        WriterCache testers)
+      throws IOException
     {
         TestNodeWriter tester = testers.get();
 
@@ -174,10 +150,9 @@ final class DotPrinter
 
 
     /**
-     * Aligns the rhs node, if necessary. This is currently only implemented
-     * for chained method calls like
-     * <code>scrollPane.getViewport().setBackground(Color.red)</code> or
-     * <code>resultSetRow[i].field[0].substring(0, 2)</code>.
+     * Aligns the rhs node, if necessary. This is currently only implemented for chained
+     * method calls like <code>scrollPane.getViewport().setBackground(Color.red)</code>
+     * or <code>resultSetRow[i].field[0].substring(0, 2)</code>.
      *
      * @param node a DOT node.
      * @param out stream to write to.
@@ -186,37 +161,41 @@ final class DotPrinter
      *
      * @since 1.0b7
      */
-    private void align(AST        node,
-                       NodeWriter out)
-        throws IOException
+    private void align(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        ParenthesesScope scope = (ParenthesesScope)out.state.parenScope.getFirst();
+        ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();
 
-        boolean continuationIndent = this.settings.getBoolean(
-                                                    Keys.INDENT_CONTINUATION_OPERATOR,
-                                                    Defaults.INDENT_CONTINUATION_OPERATOR);
-
-
+        boolean continuationIndent =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_CONTINUATION_OPERATOR,
+                ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
 
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
         if (scope.chainCall != null)
         {
-            JavaNode parent = ((JavaNode)node).getParent();
+            JavaNode parent = ((JavaNode) node).getParent();
 
             switch (parent.getType())
             {
                 //case JavaTokenTypes.INDEX_OP:
                 case JavaTokenTypes.METHOD_CALL :
-                    boolean align = this.settings.getBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
-                                                          Defaults.ALIGN_METHOD_CALL_CHAINS);
+
+                    boolean align =
+                        this.settings.getBoolean(
+                            ConventionKeys.ALIGN_METHOD_CALL_CHAINS,
+                            ConventionDefaults.ALIGN_METHOD_CALL_CHAINS);
 
                     if (parent != scope.chainCall)
                     {
                         // force wrap after each call?
-                        if (this.settings.getBoolean(
-                                                  Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
-                                                  Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL))
+                        if (
+                            this.settings.getBoolean(
+                                ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+                                ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL))
                         {
                             if (MethodCallPrinter.isOuterMethodCall(parent))
                             {
@@ -224,15 +203,15 @@ final class DotPrinter
                                 // under the first one
                                 out.printNewline();
 
-
                                 int indentLength = out.getIndentLength();
 
                                 if (align)
                                 {
-                                    out.print(out.getString((scope.chainOffset > indentLength)
-                                                                ? (scope.chainOffset - indentLength)
-                                                                : scope.chainOffset),
-                                              JavaTokenTypes.WS);
+                                    out.print(
+                                        out.getString(
+                                            (scope.chainOffset > indentLength)
+                                            ? (scope.chainOffset - indentLength)
+                                            : scope.chainOffset), JavaTokenTypes.WS);
                                 }
                                 else if (continuationIndent)
                                 {
@@ -249,8 +228,10 @@ final class DotPrinter
                         }
                         else
                         {
-                            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                                               Defaults.LINE_LENGTH);
+                            int lineLength =
+                                this.settings.getInt(
+                                    ConventionKeys.LINE_LENGTH,
+                                    ConventionDefaults.LINE_LENGTH);
 
                             // we're already beyond the maximal line length,
                             // time to wrap
@@ -258,9 +239,10 @@ final class DotPrinter
                             {
                                 out.printNewline();
 
-
                                 if (continuationIndent)
+                                {
                                     out.continuation = true;
+                                }
 
                                 indent(align, scope, out);
 
@@ -278,7 +260,7 @@ final class DotPrinter
                                 PrinterFactory.create(c).print(c, tester);
 
                                 // and it does not exceed the line length
-                                if (out.column + tester.length < lineLength)
+                                if ((out.column + tester.length) < lineLength)
                                 {
                                     out.testers.release(tester);
 
@@ -289,16 +271,18 @@ final class DotPrinter
                                 out.testers.release(tester);
                             }
 
-                            int length = getLengthOfChainedCall(node, parent,
-                                                                first,
-                                                                out.testers);
+                            int length =
+                                getLengthOfChainedCall(
+                                    node, parent, first, out.testers);
 
                             // if this chain element would exceed the maximal
                             // line length, perform wrapping
                             if ((out.column + length) > lineLength)
                             {
                                 if (continuationIndent)
+                                {
                                     out.continuation = true;
+                                }
 
                                 out.printNewline();
 
@@ -310,24 +294,30 @@ final class DotPrinter
                     break;
             }
         }
-        else  if (this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR, Defaults.LINE_WRAP_BEFORE_OPERATOR))
+        else if (
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
+                ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR))
         {
-            switch (((JavaNode)node).getParent().getType())
+            switch (((JavaNode) node).getParent().getType())
             {
-                case JavaTokenTypes.DOT:
+                case JavaTokenTypes.DOT :
                     break;
 
-                case JavaTokenTypes.METHOD_CALL: // last link of the chain (first in the tree)
+                case JavaTokenTypes.METHOD_CALL : // last link of the chain (first in the tree)
 
-                    int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                                                   Defaults.LINE_LENGTH);
-                    if (out.column  + 1 > lineLength)
+                    int lineLength =
+                        this.settings.getInt(
+                            ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+
+                    if ((out.column + 1) > lineLength)
                     {
                         out.printNewline();
 
-
                         if (continuationIndent)
+                        {
                             out.continuation = true;
+                        }
 
                         printIndentation(out);
                     }
@@ -337,36 +327,39 @@ final class DotPrinter
 
                         switch (n.getType())
                         {
-                            case JavaTokenTypes.LPAREN:
-
-                            SEEK_FORWARD:
-                            for (AST child = n; n != null; n = n.getNextSibling())
-                            {
-                                switch (n.getType())
+                            case JavaTokenTypes.LPAREN :
+SEEK_FORWARD: 
+                                for (AST child = n; n != null; n = n.getNextSibling())
                                 {
-                                    case JavaTokenTypes.RPAREN:
-                                        n = n.getNextSibling();
-                                        break SEEK_FORWARD;
+                                    switch (n.getType())
+                                    {
+                                        case JavaTokenTypes.RPAREN :
+                                            n = n.getNextSibling();
+
+                                            break SEEK_FORWARD;
+                                    }
                                 }
-                            }
-                            break;
-                            default:
-                                n = n.getNextSibling();
+
                                 break;
 
-                        }
+                            default :
+                                n = n.getNextSibling();
 
+                                break;
+                        }
 
                         TestNodeWriter tester = out.testers.get();
 
                         PrinterFactory.create(n).print(n, tester);
 
-                        if (out.column + 1 + tester.length > lineLength)
+                        if ((out.column + 1 + tester.length) > lineLength)
                         {
                             out.printNewline();
 
-                        if (continuationIndent)
-                            out.continuation = true;
+                            if (continuationIndent)
+                            {
+                                out.continuation = true;
+                            }
 
                             printIndentation(out);
                         }
@@ -374,7 +367,7 @@ final class DotPrinter
                         out.testers.release(tester);
                     }
 
-                break;
+                    break;
             }
         }
     }
@@ -383,8 +376,8 @@ final class DotPrinter
     /**
      * Prints the indenation whitespace for wrapped lines.
      *
-     * @param align if <code>true</code> enough whitespace will be printed to
-     *        align under the '.' of the previous chain member.
+     * @param align if <code>true</code> enough whitespace will be printed to align under
+     *        the '.' of the previous chain member.
      * @param scope curent scope info.
      * @param out stream to write to.
      *
@@ -392,24 +385,28 @@ final class DotPrinter
      *
      * @since 1.0b9
      */
-    private void indent(boolean          align,
-                        ParenthesesScope scope,
-                        NodeWriter       out)
-        throws IOException
+    private void indent(
+        boolean          align,
+        ParenthesesScope scope,
+        NodeWriter       out)
+      throws IOException
     {
         if (align)
         {
             int indentLength = out.getIndentLength();
 
-            out.print(out.getString(((scope.chainOffset > indentLength)
-                                         ? (scope.chainOffset - indentLength)
-                                         : scope.chainOffset)),
-                      JavaTokenTypes.WS);
+            out.print(
+                out.getString(
+                    ((scope.chainOffset > indentLength)
+                    ? (scope.chainOffset - indentLength)
+                    : scope.chainOffset)), JavaTokenTypes.WS);
         }
-        else if (out.continuation ||
-                 ((!out.continuation) &&
-                  this.settings.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
-                                        Defaults.INDENT_CONTINUATION_OPERATOR)))
+        else if (
+            out.continuation
+            || (!out.continuation
+            && this.settings.getBoolean(
+                ConventionKeys.INDENT_CONTINUATION_OPERATOR,
+                ConventionDefaults.INDENT_CONTINUATION_OPERATOR)))
         {
             printIndentation(out);
         }

@@ -1,41 +1,14 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
 
 
 /**
@@ -46,7 +19,7 @@ import de.hunsicker.jalopy.parser.JavaTokenTypes;
  */
 final class PrinterHelper
 {
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new PrinterHelper object.
@@ -55,17 +28,16 @@ final class PrinterHelper
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Advance to the first non-LPAREN node for the rare case where both
-     * operands are enclosed by several parenthesis groups, e.g. ((LA(4) >=
-     * '\u0003')), so we skip unnecessary parenthesis
+     * Advance to the first non-LPAREN node for the rare case where both operands are
+     * enclosed by several parenthesis groups, e.g. ((LA(4) >= '\u0003')), so we skip
+     * unnecessary parenthesis
      *
      * @param lparen the first LPAREN child of an expression node.
      *
-     * @return the first non parentheses ast or <code>null</code> if no such
-     *         node exists.
+     * @return the first non parentheses ast or <code>null</code> if no such node exists.
      *
      * @throws IllegalArgumentException if <code>lparen.getType() !=
      *         JavaTokenTypes.LPAREN</code>
@@ -78,9 +50,8 @@ final class PrinterHelper
         }
 
 LOOP: 
-        for (AST next = lparen.getNextSibling();
-             next != null;
-             next = next.getNextSibling())
+        for (AST next = lparen.getNextSibling(); next != null;
+            next = next.getNextSibling())
         {
             switch (next.getType())
             {
@@ -98,8 +69,8 @@ LOOP:
 
 
     /**
-     * Removes the <code>abstract</code> modifier from the given modifiers
-     * list, if found.
+     * Removes the <code>abstract</code> modifier from the given modifiers list, if
+     * found.
      *
      * @param node a MODIFIERS node.
      *
@@ -114,8 +85,8 @@ LOOP:
                 break;
 
             default :
-                throw new IllegalArgumentException("MODIFIERS node expected, was " +
-                                                   node);
+                throw new IllegalArgumentException(
+                    "MODIFIERS node expected, was " + node);
         }
 
         /*for (AST modifier = node.getFirstChild();
@@ -181,8 +152,7 @@ LOOP:
                     case JavaTokenTypes.GE :
                     case JavaTokenTypes.EQUAL :
                     case JavaTokenTypes.NOT_EQUAL :
-                        return isMultipleExpression(node.getFirstChild()
-                                                        .getFirstChild());
+                        return isMultipleExpression(node.getFirstChild().getFirstChild());
                 }
 
                 break;
@@ -200,7 +170,7 @@ LOOP:
                     case JavaTokenTypes.EQUAL :
                     case JavaTokenTypes.NOT_EQUAL :
 
-                        JavaNode parent = ((JavaNode)node).getParent();
+                        JavaNode parent = ((JavaNode) node).getParent();
 
                         switch (parent.getType())
                         {

@@ -1,74 +1,42 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.CommonAST;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.storage.Environment;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.JavadocTokenTypes;
-import de.hunsicker.jalopy.parser.Node;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.parser.TreeWalker;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.jalopy.storage.Loggers;
-import de.hunsicker.util.Lcs;
-import de.hunsicker.util.StringHelper;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import de.hunsicker.antlr.CommonAST;
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.JavadocTokenTypes;
+import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.language.TreeWalker;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.util.Lcs;
+import de.hunsicker.util.StringHelper;
+
 import org.apache.log4j.Level;
+
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
 import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.PatternMatcherInput;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.StringSubstitution;
-import org.apache.oro.text.regex.Substitution;
-import org.apache.oro.text.regex.Util;
 
 
 /**
@@ -80,13 +48,13 @@ import org.apache.oro.text.regex.Util;
 final class JavadocPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new JavadocPrinter();
 
     /** The delimeter we use to separate token chunks of strings. */
-    private static final String DELIMETER = "|";
+    private static final String DELIMETER = "|" /* NOI18N */;
 
     /** The empty node. */
     private static final AST EMPTY_NODE = new CommonAST();
@@ -99,20 +67,23 @@ final class JavadocPrinter
 
     /** The empty String array. */
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
-    private static final String KEY_TAG_REMOVE_OBSOLETE = "TAG_REMOVE_OBSOLETE";
-    private static final String KEY_TAG_ADD_MISSING = "TAG_ADD_MISSING";
-    private static final String KEY_TAG_MISSPELLED_NAME = "TAG_MISSPELLED_NAME";
-    private static final String TAG_OPARA = "<p>";
-    private static final String TAG_CPARA = "</p>";
+    private static final String KEY_TAG_REMOVE_OBSOLETE =
+        "TAG_REMOVE_OBSOLETE" /* NOI18N */;
+    private static final String KEY_TAG_ADD_MISSING = "TAG_ADD_MISSING" /* NOI18N */;
+    private static final String KEY_TAG_MISSPELLED_NAME =
+        "TAG_MISSPELLED_NAME" /* NOI18N */;
+    private static final String TAG_OPARA = "<p>" /* NOI18N */;
+    private static final String TAG_CPARA = "</p>" /* NOI18N */;
     private static Pattern _pattern;
-    private static final PatternMatcher _matcher = new Perl5Matcher();
 
     static
     {
         try
         {
-            _pattern = new Perl5Compiler().compile("(?: )*([a-zA-z0-9_.]*)\\s*(.*)",
-                                                   Perl5Compiler.READ_ONLY_MASK);
+            _pattern =
+                new Perl5Compiler().compile(
+                    "(?: )*([a-zA-z0-9_.]*)\\s*(.*)" /* NOI18N */,
+                    Perl5Compiler.READ_ONLY_MASK);
         }
         catch (MalformedPatternException ex)
         {
@@ -120,19 +91,30 @@ final class JavadocPrinter
         }
     }
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
+
+    /** Our matcher for regular expression matching. */
+    private ThreadLocal _matcher =
+        new ThreadLocal()
+        {
+            protected Object initialValue()
+            {
+                return new Perl5Matcher();
+            }
+        };
 
     /** The break iterator to use for realigning the comment texts. */
-    private ThreadLocal _stringBreaker = new ThreadLocal()
-    {
-        protected Object initialValue()
+    private ThreadLocal _stringBreaker =
+        new ThreadLocal()
         {
-            return new BreakIterator();
-        }
-    };
+            protected Object initialValue()
+            {
+                return new BreakIterator();
+            }
+        };
 
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JavadocPrinter object.
@@ -141,7 +123,7 @@ final class JavadocPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -163,10 +145,12 @@ final class JavadocPrinter
      *
      * @throws UnsupportedOperationException as this method is not supported.
      */
-    public void print(AST        node,
-                      NodeWriter out)
+    public void print(
+        AST        node,
+        NodeWriter out)
     {
-        throw new UnsupportedOperationException("use print(AST, AST, NodeWriter) instead");
+        throw new UnsupportedOperationException(
+            "use print(AST, AST, NodeWriter) instead");
     }
 
 
@@ -179,15 +163,17 @@ final class JavadocPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void print(AST        node,
-                      AST        comment,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        AST        comment,
+        NodeWriter out)
+      throws IOException
     {
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText()))
         {
-            String[] lines = StringHelper.split(comment.getFirstChild().getText(), DELIMETER);
+            String[] lines =
+                StringHelper.split(comment.getFirstChild().getText(), DELIMETER);
 
             if (lines.length > 0)
             {
@@ -197,14 +183,16 @@ final class JavadocPrinter
                     out.printNewline();
                 }
 
-                out.print(lines[lines.length - 1],
-                          JavadocTokenTypes.JAVADOC_COMMENT);
+                out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
             }
         }
-        else if (!this.settings.getBoolean(Keys.COMMENT_JAVADOC_PARSE,
-                                        Defaults.COMMENT_JAVADOC_PARSE))
+        else if (
+            !this.settings.getBoolean(
+                ConventionKeys.COMMENT_JAVADOC_PARSE,
+                ConventionDefaults.COMMENT_JAVADOC_PARSE))
         {
-            String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
+            String[] lines =
+                StringHelper.split(comment.getText(), out.originalLineSeparator);
 
             for (int i = 0, size = lines.length - 1; i < size; i++)
             {
@@ -212,25 +200,24 @@ final class JavadocPrinter
                 out.printNewline();
             }
 
-            out.print(lines[lines.length - 1],
-                      JavadocTokenTypes.JAVADOC_COMMENT);
+            out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
         }
         else
         {
-            out.print(getTopString(node.getType()),
-                      JavadocTokenTypes.JAVADOC_COMMENT);
+            out.print(getTopString(node.getType()), JavadocTokenTypes.JAVADOC_COMMENT);
 
             String bottomText = getBottomString(node.getType());
-            String asterix = bottomText.substring(0,
-                                                  bottomText.indexOf('*') + 1);
+            String asterix = bottomText.substring(0, bottomText.indexOf('*') + 1);
             asterix = getAsterix();
 
             AST firstTag = printDescriptionSection(node, comment, asterix, out);
 
             // any tags to print or check needed?
-            if ((firstTag != EMPTY_NODE) ||
-                this.settings.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
-                                      Defaults.COMMENT_JAVADOC_CHECK_TAG))
+            if (
+                (firstTag != EMPTY_NODE)
+                || this.settings.getBoolean(
+                    ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS,
+                    ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS))
             {
                 printTagSection(node, comment, firstTag, asterix, out);
             }
@@ -241,19 +228,19 @@ final class JavadocPrinter
 
 
     /**
-     * Returns all valid type names for the given node found as a sibling of
-     * the given node (i.e. all exception or parameter types depending on the
-     * node).
+     * Returns all valid type names for the given node found as a sibling of the given
+     * node (i.e. all exception or parameter types depending on the node).
      *
      * @param node node to search. Either of type METHOD_DEF or CTOR_DEF.
-     * @param type type of the node to return the identifiers for. Either
-     *        PARAMETERS or LITERAL_throws.
+     * @param type type of the node to return the identifiers for. Either PARAMETERS or
+     *        LITERAL_throws.
      *
-     * @return the valid types names. Returns an empty list if no names were
-     *         found for the given type.
+     * @return the valid types names. Returns an empty list if no names were found for
+     *         the given type.
      */
-    static List getValidTypeNames(AST node,
-                                  int type)
+    static List getValidTypeNames(
+        AST node,
+        int type)
     {
         switch (type)
         {
@@ -271,17 +258,16 @@ final class JavadocPrinter
 
                 List names = new ArrayList(4);
 
-                for (AST child = NodeHelper.getFirstChild(node, type)
-                                           .getFirstChild();
-                     child != null;
-                     child = child.getNextSibling())
+                for (
+                    AST child = NodeHelper.getFirstChild(node, type).getFirstChild();
+                    child != null; child = child.getNextSibling())
                 {
                     switch (child.getType())
                     {
                         case JavaTokenTypes.PARAMETER_DEF :
-                            names.add(NodeHelper.getFirstChild(child,
-                                                               JavaTokenTypes.IDENT)
-                                                .getText());
+                            names.add(
+                                NodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
+                                          .getText());
 
                             break;
                     }
@@ -298,9 +284,9 @@ final class JavadocPrinter
                 if (exceptions != null)
                 {
                     // add all clauses of the exception specification
-                    for (AST child = exceptions.getFirstChild();
-                         child != null;
-                         child = child.getNextSibling())
+                    for (
+                        AST child = exceptions.getFirstChild(); child != null;
+                        child = child.getNextSibling())
                     {
                         switch (child.getType())
                         {
@@ -317,44 +303,44 @@ final class JavadocPrinter
                  */
 
                 // add all exceptions actually thrown within the method body
-                TreeWalker walker = new TreeWalker()
-                {
-                    public void visit(AST node)
+                TreeWalker walker =
+                    new TreeWalker()
                     {
-                        switch (node.getType())
+                        public void visit(AST node)
                         {
-                            case JavaTokenTypes.LITERAL_throw :
+                            switch (node.getType())
+                            {
+                                case JavaTokenTypes.LITERAL_throw :
 
-                                switch (node.getFirstChild().getFirstChild()
-                                            .getType())
-                                {
-                                    case JavaTokenTypes.LITERAL_new :
+                                    switch (node.getFirstChild().getFirstChild().getType())
+                                    {
+                                        case JavaTokenTypes.LITERAL_new :
 
-                                        String name = node.getFirstChild()
-                                                          .getFirstChild()
-                                                          .getFirstChild()
-                                                          .getText();
-                                        JavaNode slist = ((JavaNode)node).getParent();
+                                            String name =
+                                                node.getFirstChild().getFirstChild()
+                                                    .getFirstChild().getText();
+                                            JavaNode slist =
+                                                ((JavaNode) node).getParent();
 
-                                        // only add if the exception is not
-                                        // enclosed within a try/catch block
-                                        if (isEnclosedWithTry((JavaNode)node))
-                                        {
+                                            // only add if the exception is not
+                                            // enclosed within a try/catch block
+                                            if (isEnclosedWithTry((JavaNode) node))
+                                            {
+                                                break;
+                                            }
+
+                                            if (!names.contains(name))
+                                            {
+                                                names.add(name);
+                                            }
+
                                             break;
-                                        }
+                                    }
 
-                                        if (!names.contains(name))
-                                        {
-                                            names.add(name);
-                                        }
-
-                                        break;
-                                }
-
-                                break;
+                                    break;
+                            }
                         }
-                    }
-                };
+                    };
 
                 walker.walk(node);
 
@@ -371,8 +357,7 @@ final class JavadocPrinter
      *
      * @param node a LITERAL_throw node.
      *
-     * @return <code>true</code> if the node is enclosed with a try/catch
-     *         block.
+     * @return <code>true</code> if the node is enclosed with a try/catch block.
      *
      * @since 1.0b9
      */
@@ -413,8 +398,10 @@ final class JavadocPrinter
      */
     private String getAsterix()
     {
-        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
-                                     Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
+        String text =
+            this.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
         int asterix = text.indexOf('*');
         int description = StringHelper.indexOfNonWhitespace(text, asterix + 1);
 
@@ -438,8 +425,7 @@ final class JavadocPrinter
      *
      * @param type type of the node to get the ending comment string for.
      *
-     * @return the string to end a Javadoc comment with (usually <code>
-     *         &#42;/</code>).
+     * @return the string to end a Javadoc comment with (usually <code> &#42;/</code>).
      *
      * @since 1.0b8
      */
@@ -448,12 +434,14 @@ final class JavadocPrinter
         switch (type)
         {
             case JavaTokenTypes.METHOD_DEF :
-                return this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
-                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
+                return this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
 
             case JavaTokenTypes.CTOR_DEF :
-                return this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
-                                      Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
+                return this.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
 
             case JavaTokenTypes.VARIABLE_DEF :
 
@@ -464,9 +452,10 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CLASS_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS)
-                                        .trim();
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).trim();
                 int offset = text.lastIndexOf(DELIMETER);
 
                 if (offset > -1)
@@ -481,9 +470,10 @@ final class JavadocPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE)
-                                        .trim();
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).trim();
                 int offset = text.lastIndexOf(DELIMETER);
 
                 if (offset > -1)
@@ -507,8 +497,8 @@ final class JavadocPrinter
      *
      * @param list list to search.
      *
-     * @return the number of empty slots. Returns <code>0</code> if no empty
-     *         slots were found.
+     * @return the number of empty slots. Returns <code>0</code> if no empty slots were
+     *         found.
      */
     private int getEmptySlotCount(List list)
     {
@@ -527,16 +517,17 @@ final class JavadocPrinter
 
 
     /**
-     * Searchs the given list for a string similiar to the given string. The
-     * match is kind of 'fuzzy' as the strings must not be exactly similar.
+     * Searchs the given list for a string similiar to the given string. The match is
+     * kind of 'fuzzy' as the strings must not be exactly similar.
      *
      * @param string the string to match.
      * @param list list with strings to match against.
      *
      * @return Returns <code>null</code> if no match could be found.
      */
-    private String getMatch(String string,
-                            List   list)
+    private String getMatch(
+        String string,
+        List   list)
     {
         if (string == null)
         {
@@ -552,7 +543,7 @@ final class JavadocPrinter
 
         for (int i = 0, size = list.size(); i < size; i++)
         {
-            String tag = (String)list.get(i);
+            String tag = (String) list.get(i);
             lcs.init(string, tag);
 
             double similarity = lcs.getPercentage();
@@ -571,13 +562,13 @@ final class JavadocPrinter
 
 
     /**
-     * Returns the index of the next empty slot in the given list. An empty
-     * slot has a value of <code>null</code>.
+     * Returns the index of the next empty slot in the given list. An empty slot has a
+     * value of <code>null</code>.
      *
      * @param list list to search.
      *
-     * @return index position of the next empty slot. Returns <code>-1</code>
-     *         if the list contains no empty slots.
+     * @return index position of the next empty slot. Returns <code>-1</code> if the list
+     *         contains no empty slots.
      */
     private int getNextEmptySlot(List list)
     {
@@ -600,18 +591,16 @@ final class JavadocPrinter
      *
      * @param node either a METHOD_DEF or CTOR_DEF node.
      *
-     * @return the number of parameters in the parameter list of the given
-     *         node.
+     * @return the number of parameters in the parameter list of the given node.
      */
     private int getParamCount(AST node)
     {
         int count = 0;
 
-        for (AST param = NodeHelper.getFirstChild(node,
-                                                  JavaTokenTypes.PARAMETERS)
-                                   .getFirstChild();
-             param != null;
-             param = param.getNextSibling())
+        for (
+            AST param =
+                NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS).getFirstChild();
+            param != null; param = param.getNextSibling())
         {
             count++;
         }
@@ -624,23 +613,23 @@ final class JavadocPrinter
      * Returns the template text for the given parameter type.
      *
      * @param node the node to return the template text for.
-     * @param typeName the type name of the node. Given the TAG_PARAM type,
-     *        this is the type name of the parameter. For
-     *        TAG_EXCEPTION/TAG_THROWS, this is the type name of the
-     *        exception. May be <code>null</code> for TAG_RETURN.
+     * @param typeName the type name of the node. Given the TAG_PARAM type, this is the
+     *        type name of the parameter. For TAG_EXCEPTION/TAG_THROWS, this is the type
+     *        name of the exception. May be <code>null</code> for TAG_RETURN.
      * @param type parameter type. Either TAG_PARAM, TAG_RETURN or
      *        TAG_EXCEPTION/TAG_THROWS.
      * @param environment the environment.
      *
      * @return template text for the given param type.
      *
-     * @throws IllegalArgumentException if <em>node</em> is no valid node to
-     *         add a tag of type <em>type</em> to.
+     * @throws IllegalArgumentException if <em>node</em> is no valid node to add a tag of
+     *         type <em>type</em> to.
      */
-    private String getTagTemplateText(AST         node,
-                                      String      typeName,
-                                      int         type,
-                                      Environment environment)
+    private String getTagTemplateText(
+        AST         node,
+        String      typeName,
+        int         type,
+        Environment environment)
     {
         switch (type)
         {
@@ -650,17 +639,21 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
-                                                     Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
+                        String text =
+                            this.settings.get(
+                                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+                                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
 
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
-                        text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
-                                              Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM);
+                        text =
+                            this.settings.get(
+                                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+                                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM);
 
                         int offset = text.indexOf('*');
-                        environment.set(Environment.Variable.TYPE_PARAM.getName(),
-                                        typeName);
+                        environment.set(
+                            Environment.Variable.TYPE_PARAM.getName(), typeName);
 
                         if (offset > -1)
                         {
@@ -673,8 +666,8 @@ final class JavadocPrinter
                         return text;
 
                     default :
-                        throw new IllegalArgumentException("invalid node type to add @param tag -- " +
-                                                           node);
+                        throw new IllegalArgumentException(
+                            "invalid node type to add @param tag -- " + node);
                 }
 
             case JavadocTokenTypes.TAG_THROWS :
@@ -684,17 +677,21 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
-                                                     Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION);
+                        String text =
+                            this.settings.get(
+                                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
+                                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION);
 
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
-                        text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
-                                              Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION);
+                        text =
+                            this.settings.get(
+                                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
+                                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION);
 
                         int offset = text.indexOf('*');
-                        environment.set(Environment.Variable.TYPE_EXCEPTION.getName(),
-                                        typeName);
+                        environment.set(
+                            Environment.Variable.TYPE_EXCEPTION.getName(), typeName);
 
                         if (offset > -1)
                         {
@@ -707,8 +704,8 @@ final class JavadocPrinter
                         return text;
 
                     default :
-                        throw new IllegalArgumentException("invalid node type to add @throws tag -- " +
-                                                           node);
+                        throw new IllegalArgumentException(
+                            "invalid node type to add @throws tag -- " + node);
                 }
 
             case JavadocTokenTypes.TAG_RETURN :
@@ -717,8 +714,10 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
-                                                     Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN);
+                        String text =
+                            this.settings.get(
+                                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
+                                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN);
                         int offset = text.indexOf('*');
 
                         if (offset > -1)
@@ -729,8 +728,8 @@ final class JavadocPrinter
                         return text;
 
                     default :
-                        throw new IllegalArgumentException("invalid node type to add @return tag -- " +
-                                                           node);
+                        throw new IllegalArgumentException(
+                            "invalid node type to add @return tag -- " + node);
                 }
 
             default :
@@ -755,8 +754,10 @@ final class JavadocPrinter
         {
             case JavaTokenTypes.METHOD_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP);
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP);
                 int offset = text.indexOf(DELIMETER);
 
                 if (offset > -1)
@@ -771,8 +772,10 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CTOR_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP);
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP);
                 int offset = text.indexOf(DELIMETER);
 
                 if (offset > -1)
@@ -794,9 +797,10 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CLASS_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS)
-                                        .trim();
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).trim();
                 int offset = text.indexOf(DELIMETER);
 
                 if (offset > -1)
@@ -811,9 +815,10 @@ final class JavadocPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
             {
-                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
-                                             Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE)
-                                        .trim();
+                String text =
+                    this.settings.get(
+                        ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                        ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).trim();
                 int offset = text.indexOf(DELIMETER);
 
                 if (offset > -1)
@@ -837,9 +842,9 @@ final class JavadocPrinter
      *
      * @param node a node.
      *
-     * @return <code>true</code> if the given node can have a Javadoc comment
-     *         as per the Javadoc specification. These are CLASS_DEF,
-     *         INTERFACE_DEF, CTOR_DEF, METHOD_DEF and VARIABLE_DEF nodes.
+     * @return <code>true</code> if the given node can have a Javadoc comment as per the
+     *         Javadoc specification. These are CLASS_DEF, INTERFACE_DEF, CTOR_DEF,
+     *         METHOD_DEF and VARIABLE_DEF nodes.
      *
      * @since 1.0b8
      */
@@ -863,25 +868,25 @@ final class JavadocPrinter
 
 
     /**
-     * Checks whether the given METHOD_DEF node contains a return tag or not
-     * and adds or removes one if necessary.
+     * Checks whether the given METHOD_DEF node contains a return tag or not and adds one
+     * if necessary.
      *
      * @param node a METHOD_DEF node.
      * @param returnNode the found returnNode, may be <code>null</code>.
      * @param out current writer.
      *
-     * @return the return tag, returns <code>null</code> if the method does
-     *         not need a return tag.
+     * @return the return tag, returns <code>null</code> if the method does not need a
+     *         return tag.
      */
-    private AST checkReturnTag(AST        node,
-                               AST        returnNode,
-                               NodeWriter out)
+    private AST checkReturnTag(
+        AST        node,
+        AST        returnNode,
+        NodeWriter out)
     {
         boolean needTag = false; // need @return tag?
 LOOP:
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -905,20 +910,20 @@ LOOP:
                 out.state.args[0] = out.getFilename();
                 out.state.args[1] = new Integer(out.line);
                 out.state.args[2] = new Integer(out.column);
-                out.state.args[3] = "@return";
-                out.state.args[4] = new Integer(((Node)returnNode).getStartLine());
+                out.state.args[3] = "@return" /* NOI18N */;
+                out.state.args[4] = new Integer(((Node) returnNode).getStartLine());
                 returnNode = null;
-                Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN,
-                                               KEY_TAG_REMOVE_OBSOLETE,
-                                               out.state.args, null);
+                Loggers.PRINTER_JAVADOC.l7dlog(
+                    Level.WARN, KEY_TAG_REMOVE_OBSOLETE, out.state.args, null);
             }
         }
         else
         {
             if (needTag)
             {
-                returnNode = createTag(node, JavadocTokenTypes.TAG_RETURN, null,
-                                       out.environment);
+                returnNode =
+                    createTag(
+                        node, JavadocTokenTypes.TAG_RETURN, null, out.environment);
             }
         }
 
@@ -927,28 +932,44 @@ LOOP:
 
 
     /**
-     * Makes sure that the tag names matches the parameter names of the node.
-     * Updates the given list as it adds missing or removes obsolete tags.
+     * Makes sure that the tag names matches the parameter names of the node. Updates the
+     * given list as it adds missing or removes obsolete tags.
      *
      * @param node node the comment belongs to.
      * @param tags tags to print.
-     * @param type tag type.
+     * @param type tag type. Either LITERAL_throws or PARAMETERS.
      * @param asterix string to use as leading asterix.
      * @param last type of the tag that was printed last.
      * @param out stream to write to.
      */
-    private void checkTags(AST        node,
-                           List       tags,
-                           int        type,
-                           String     asterix,
-                           int        last,
-                           NodeWriter out)
+    private void checkTags(
+        AST        node,
+        List       tags,
+        int        type,
+        String     asterix,
+        int        last,
+        NodeWriter out)
     {
+        switch (type)
+        {
+            case JavaTokenTypes.LITERAL_throws :
+
+                if (
+                    !this.settings.getBoolean(
+                        ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS_THROWS,
+                        ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS_THROWS))
+                {
+                    return;
+                }
+
+                break;
+        }
+
         // get the actual names of the parameters or exceptions
         List validNames = getValidTypeNames(node, type);
         List validNamesCopy = new ArrayList(validNames);
 
-        int capacity = (int)(tags.size() * 1.3);
+        int capacity = (int) (tags.size() * 1.3);
 
         // will contain the correct tags
         Map correct = new HashMap(capacity);
@@ -959,7 +980,7 @@ LOOP:
         // split the tag list in correct tags and wrong/obsolete ones
         for (int i = 0, size = tags.size(); i < size; i++)
         {
-            AST tag = (AST)tags.get(i);
+            AST tag = (AST) tags.get(i);
 
             if (tag.getFirstChild() != null)
             {
@@ -1009,7 +1030,7 @@ LOOP:
         // add all correct tags at the correct position
         for (Iterator i = correct.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)i.next();
+            Map.Entry entry = (Map.Entry) i.next();
             result.set(validNames.indexOf(entry.getKey()), entry.getValue());
         }
 
@@ -1017,13 +1038,12 @@ LOOP:
         if (validNames.size() != tags.size())
         {
             /**
-             * @todo the situation here can be ambigious if we have an
-             *       obsolete tag AND a misspelled or missing name in which
-             *       case we could end up renaming an obsolete tag name but
-             *       deleting the misspelled or missing name tag Maybe we
-             *       should change this routine to only add missing params
-             *       and spit out warnings if we possibly found obsolete tags
-             *       or add a switch to disable the removal
+             * @todo the situation here can be ambigious if we have an obsolete tag AND a
+             *       misspelled or missing name in which case we could end up renaming
+             *       an obsolete tag name but deleting the misspelled or missing name
+             *       tag Maybe we should change this routine to only add missing params
+             *       and spit out warnings if we possibly found obsolete tags or add a
+             *       switch to disable the removal
              */
 
             // fill gaps with wrong or obsolete tags until no more slots left
@@ -1037,25 +1057,24 @@ LOOP:
                 {
                     for (int j = i, s = wrongOrObsolete.size(); j < s; j++)
                     {
-                        AST tag = (AST)wrongOrObsolete.get(j);
+                        AST tag = (AST) wrongOrObsolete.get(j);
                         out.state.args[0] = out.getFilename();
                         out.state.args[1] = new Integer(out.line);
                         out.state.args[2] = new Integer(out.column);
                         out.state.args[3] = tag.getText();
-                        out.state.args[4] = new Integer(((Node)tag).getStartLine());
+                        out.state.args[4] = new Integer(((Node) tag).getStartLine());
                         out.state.args[5] = tag;
 
-                        Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN,
-                                                       KEY_TAG_REMOVE_OBSOLETE,
-                                                       out.state.args, null);
+                        Loggers.PRINTER_JAVADOC.l7dlog(
+                            Level.WARN, KEY_TAG_REMOVE_OBSOLETE, out.state.args, null);
                     }
 
                     break;
                 }
 
-                AST tag = (AST)wrongOrObsolete.get(i);
+                AST tag = (AST) wrongOrObsolete.get(i);
 
-                // if the tag name was mispelled, it has been corrected so add
+                // if the tag name was mispelled, it has been corrected, so add
                 // it to the list
                 correctTagName(tag, validNames, next, asterix, last, out);
                 result.set(next, tag);
@@ -1066,49 +1085,47 @@ LOOP:
             if (emptySlots < validNames.size())
             {
                 // create missing tags
-                for (int i = emptySlots, size = validNames.size();
-                     i < size;
-                     i++)
+                for (int i = emptySlots, size = validNames.size(); i < size; i++)
                 {
                     int next = getNextEmptySlot(result);
-                    String name = (String)validNames.get(next);
+                    String name = (String) validNames.get(next);
                     AST tag = null;
                     String tagName = null;
 
                     switch (type)
                     {
                         case JavaTokenTypes.PARAMETERS :
-                            tag = createTag(node, JavadocTokenTypes.TAG_PARAM,
-                                            name, out.environment);
+                            tag = createTag(
+                                    node, JavadocTokenTypes.TAG_PARAM, name,
+                                    out.environment);
                             result.set(next, tag);
-                            tagName = "@param";
+                            tagName = "@param" /* NOI18N */;
 
                             break;
 
                         case JavaTokenTypes.LITERAL_throws :
-                            result.set(next,
-                                       tag = createTag(node,
-                                                       JavadocTokenTypes.TAG_EXCEPTION,
-                                                       name, out.environment));
-                            tagName = "@throws";
+                            result.set(
+                                next,
+                                tag =
+                                    createTag(
+                                        node, JavadocTokenTypes.TAG_EXCEPTION, name,
+                                        out.environment));
+                            tagName = "@throws" /* NOI18N */;
 
                             break;
                     }
 
                     out.state.args[0] = out.getFilename();
-                    out.state.args[1] = new Integer(out.line + next +
-                                                    (shouldHaveNewlineBefore(
-                                                                             tag,
-                                                                             last)
-                                                         ? 1
-                                                         : 0));
-                    out.state.args[2] = new Integer(out.getIndentLength() +
-                                                    asterix.length() + 1);
+                    out.state.args[1] =
+                        new Integer(
+                            out.line + next + (shouldHaveNewlineBefore(tag, last) ? 1
+                                                                                  : 0));
+                    out.state.args[2] =
+                        new Integer(out.getIndentLength() + asterix.length() + 1);
                     out.state.args[3] = tagName;
                     out.state.args[4] = name;
-                    Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN,
-                                                   KEY_TAG_ADD_MISSING,
-                                                   out.state.args, null);
+                    Loggers.PRINTER_JAVADOC.l7dlog(
+                        Level.WARN, KEY_TAG_ADD_MISSING, out.state.args, null);
                 }
             }
 
@@ -1124,27 +1141,27 @@ LOOP:
             List c = new ArrayList(correct.values());
 
             /*for (int i = 0, size = tags.size(); i < size; i++)
-{
-    AST tag = (AST)tags.get(i);
-    // we're only interested in the missing/wrong tags
-    if (c.contains(tag))
-    {
-        System.err.println("correct " + tag);
-        //result.set(i, tag);
-        System.err.println(i + " " + c.indexOf(tag));
-        continue;
-    }
-    int next = getNextEmptySlot(result);
-    result.set(next, tags.get(i));
-}*/
+            {
+            AST tag = (AST)tags.get(i);
+            // we're only interested in the missing/wrong tags
+            if (c.contains(tag))
+            {
+            System.err.println("correct " + tag);
+            //result.set(i, tag);
+            System.err.println(i + " " + c.indexOf(tag));
+            continue;
+            }
+            int next = getNextEmptySlot(result);
+            result.set(next, tags.get(i));
+            }*/
             for (int i = 0, size = result.size(); i < size; i++)
             {
-                AST tag = (AST)result.get(i);
+                AST tag = (AST) result.get(i);
 
                 // missing or mispelled tag
                 if ((tag == null) || (tag.getFirstChild() == null))
                 {
-                    AST wrongTag = (AST)wrongOrObsolete.remove(0);
+                    AST wrongTag = (AST) wrongOrObsolete.remove(0);
                     correctTagName(wrongTag, validNames, i, asterix, last, out);
                     tag = wrongTag;
                 }
@@ -1155,39 +1172,39 @@ LOOP:
                 AST child = tag.getFirstChild();
 
                 /*if (child != null)
-{
-    String text = child.getText().trim();
-    String name = null;
-    int offset = -1;
-    // determine the first word of the description: the
-    // parameter name
-    if ((offset = text.indexOf(' ')) > -1)
-    {
-        name = text.substring(0, offset);
-    }
-    else
-    {
-        name = text;
-        offset = text.length();
-    }
-    int pos = validNames.indexOf(name);
-    // if we can't find the name in our list or if it does not
-    // appear at the correct position, we rename it
-    if ((pos == -1) || (pos != i))
-    {
-        String validName = (String)validNames.get(i);
-        out.state.args[0] = out.getFilename();
-        out.state.args[1] = new Integer(out.line + i);
-        out.state.args[2] = new Integer(out.getIndentLength()
+                {
+                String text = child.getText().trim();
+                String name = null;
+                int offset = -1;
+                // determine the first word of the description: the
+                // parameter name
+                if ((offset = text.indexOf(' ')) > -1)
+                {
+                name = text.substring(0, offset);
+                }
+                else
+                {
+                name = text;
+                offset = text.length();
+                }
+                int pos = validNames.indexOf(name);
+                // if we can't find the name in our list or if it does not
+                // appear at the correct position, we rename it
+                if ((pos == -1) || (pos != i))
+                {
+                String validName = (String)validNames.get(i);
+                out.state.args[0] = out.getFilename();
+                out.state.args[1] = new Integer(out.line + i);
+                out.state.args[2] = new Integer(out.getIndentLength()
                                + asterix.length() + 1);
-        out.state.args[3] = name;
-        out.state.args[4] = validName;
-        Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN,
+                out.state.args[3] = name;
+                out.state.args[4] = validName;
+                Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN,
                                        KEY_TAG_MISSPELLED_NAME,
                                        out.state.args, null);
-        child.setText(SPACE + validName + text.substring(offset));
-    }
-}*/
+                child.setText(SPACE + validName + text.substring(offset));
+                }
+                }*/
             }
         }
     }
@@ -1205,12 +1222,13 @@ LOOP:
      *
      * @return index of the corrected tag in the list with valid names.
      */
-    private int correctTagName(AST        wrongTag,
-                               List       validNames,
-                               int        index,
-                               String     asterix,
-                               int        last,
-                               NodeWriter out)
+    private int correctTagName(
+        AST        wrongTag,
+        List       validNames,
+        int        index,
+        String     asterix,
+        int        last,
+        NodeWriter out)
     {
         AST child = wrongTag.getFirstChild();
 
@@ -1242,30 +1260,28 @@ LOOP:
             }
             else
             {
-                newName = (String)validNames.get(index);
+                newName = (String) validNames.get(index);
             }
 
             out.state.args[0] = out.getFilename();
 
-            out.state.args[1] = new Integer(out.line + index +
-                                            (shouldHaveNewlineBefore(wrongTag,
-                                                                     last)
-                                                 ? 1
-                                                 : 0));
-            out.state.args[2] = new Integer(out.getIndentLength() +
-                                            asterix.length() + 1);
+            out.state.args[1] =
+                new Integer(
+                    out.line + index + (shouldHaveNewlineBefore(wrongTag, last) ? 1
+                                                                                : 0));
+            out.state.args[2] = new Integer(out.getIndentLength() + asterix.length() + 1);
             out.state.args[3] = oldName;
             out.state.args[4] = newName;
 
-            Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN, KEY_TAG_MISSPELLED_NAME,
-                                           out.state.args, null);
+            Loggers.PRINTER_JAVADOC.l7dlog(
+                Level.WARN, KEY_TAG_MISSPELLED_NAME, out.state.args, null);
 
             text = SPACE + newName + text.substring(offset);
             child.setText(text);
         }
         else
         {
-            String newName = (String)validNames.get(index);
+            String newName = (String) validNames.get(index);
             String text = SPACE + newName;
             Node c = new Node(JavadocTokenTypes.PCDATA, text);
 
@@ -1286,25 +1302,28 @@ LOOP:
      *
      * @return the created standard tag.
      */
-    private AST createTag(AST         node,
-                          int         type,
-                          String      typeName,
-                          Environment environment)
+    private AST createTag(
+        AST         node,
+        int         type,
+        String      typeName,
+        Environment environment)
     {
         AST tag = new Node(type, EMPTY_STRING);
 
         if (typeName != null)
         {
-            AST para = new Node(JavadocTokenTypes.PCDATA,
-                                getTagTemplateText(node, typeName, type,
-                                                   environment));
+            AST para =
+                new Node(
+                    JavadocTokenTypes.PCDATA,
+                    getTagTemplateText(node, typeName, type, environment));
             tag.setFirstChild(para);
         }
         else
         {
-            AST description = new Node(JavadocTokenTypes.PCDATA,
-                                       getTagTemplateText(node, null, type,
-                                                          environment));
+            AST description =
+                new Node(
+                    JavadocTokenTypes.PCDATA,
+                    getTagTemplateText(node, null, type, environment));
             tag.setFirstChild(description);
         }
 
@@ -1313,8 +1332,8 @@ LOOP:
 
 
     /**
-     * Determines whether the description for the given Javadoc comment starts
-     * with the inheritDoc in-line tag.
+     * Determines whether the description for the given Javadoc comment starts with the
+     * inheritDoc in-line tag.
      *
      * @param comment a Javadoc comment.
      *
@@ -1322,28 +1341,16 @@ LOOP:
      */
     private boolean hasInheritDoc(AST comment)
     {
-        for (AST child = comment.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (
+            AST child = comment.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
                 case JavadocTokenTypes.TAG_INLINE_INHERITDOC :
                     return true;
 
-                case JavadocTokenTypes.TAG_CUSTOM :
-                case JavadocTokenTypes.TAG_AUTHOR :
-                case JavadocTokenTypes.TAG_DEPRECATED :
-                case JavadocTokenTypes.TAG_EXCEPTION :
-                case JavadocTokenTypes.TAG_THROWS :
-                case JavadocTokenTypes.TAG_PARAM :
-                case JavadocTokenTypes.TAG_RETURN :
-                case JavadocTokenTypes.TAG_SEE :
-                case JavadocTokenTypes.TAG_SINCE :
-                case JavadocTokenTypes.TAG_SERIAL :
-                case JavadocTokenTypes.TAG_SERIAL_DATA :
-                case JavadocTokenTypes.TAG_SERIAL_FIELD :
-                case JavadocTokenTypes.TAG_VERSION :
+                default :
                     return false;
             }
         }
@@ -1398,7 +1405,7 @@ LOOP:
 
                 case JavadocTokenTypes.OLITEM :
                 case JavadocTokenTypes.ODTERM :
-                case JavadocTokenTypes.ODDEF:
+                case JavadocTokenTypes.ODDEF :
                     buf.append(child.getText());
                     buf.append(mergeChildren(child.getFirstChild()));
                     buf.append(SPACE);
@@ -1418,6 +1425,9 @@ LOOP:
 
                     break;
 
+                case JavadocTokenTypes.PRE:
+                    throw new IllegalStateException("<pre> tag not supported within tag description");
+
                 default :
                     buf.append(child.getText());
             }
@@ -1436,10 +1446,11 @@ LOOP:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printBlockquote(AST        node,
-                                 String     asterix,
-                                 NodeWriter out)
-        throws IOException
+    private void printBlockquote(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         out.print(asterix, JavadocTokenTypes.PCDATA);
         out.print(node.getText(), JavadocTokenTypes.OBQUOTE);
@@ -1460,10 +1471,11 @@ LOOP:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printComment(AST        node,
-                              String     asterix,
-                              NodeWriter out)
-        throws IOException
+    private void printComment(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         String[] lines = split(node.getText(), Integer.MAX_VALUE, true);
         printCommentLines(lines, asterix, out, true);
@@ -1471,8 +1483,7 @@ LOOP:
 
 
     /**
-     * Prints the given lines. Prepends a leading asterix in front of each
-     * line.
+     * Prints the given lines. Prepends a leading asterix in front of each line.
      *
      * @param lines lines to print.
      * @param asterix the leading asterix.
@@ -1480,10 +1491,11 @@ LOOP:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printCommentLines(String[]   lines,
-                                   String     asterix,
-                                   NodeWriter out)
-        throws IOException
+    private void printCommentLines(
+        String[]   lines,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         printCommentLines(lines, asterix, out, false);
     }
@@ -1499,11 +1511,12 @@ LOOP:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printCommentLines(String[]   lines,
-                                   String     asterix,
-                                   NodeWriter out,
-                                   boolean    trim)
-        throws IOException
+    private void printCommentLines(
+        String[]   lines,
+        String     asterix,
+        NodeWriter out,
+        boolean    trim)
+      throws IOException
     {
         if (trim)
         {
@@ -1541,16 +1554,17 @@ LOOP:
      * @param asterix leading asterix.
      * @param out stream to write to.
      *
-     * @return the next node to print. Either a node representing a standard
-     *         Javadoc tag or the {@link #EMPTY_NODE} to indicate that no
-     *         standard tags are available.
+     * @return the next node to print. Either a node representing a standard Javadoc tag
+     *         or the {@link #EMPTY_NODE} to indicate that no standard tags are
+     *         available.
      *
      * @throws IOException if an I/O error occured.
      */
-    private AST printContent(AST        node,
-                             String     asterix,
-                             NodeWriter out)
-        throws IOException
+    private AST printContent(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         AST next = EMPTY_NODE;
 ITERATION:
@@ -1673,24 +1687,27 @@ SELECTION:
      * @param asterix the leading asterix.
      * @param out stream to write to.
      *
-     * @return the first node of the tag section or the {@link #EMPTY_NODE} if
-     *         no tag nodes exist.
+     * @return the first node of the tag section or the {@link #EMPTY_NODE} if no tag
+     *         nodes exist.
      *
      * @throws IOException if an I/O error occured.
      */
-    private AST printDescriptionSection(AST        node,
-                                        AST        comment,
-                                        String     asterix,
-                                        NodeWriter out)
-        throws IOException
+    private AST printDescriptionSection(
+        AST        node,
+        AST        comment,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         // check if we only have a description that fits in one line
         switch (node.getType())
         {
             case JavaTokenTypes.VARIABLE_DEF :
 
-                if (this.settings.getBoolean(Keys.COMMENT_JAVADOC_FIELDS_SHORT,
-                                          Defaults.COMMENT_JAVADOC_FIELDS_SHORT))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.COMMENT_JAVADOC_FIELDS_SHORT,
+                        ConventionDefaults.COMMENT_JAVADOC_FIELDS_SHORT))
                 {
                     if (printSingleLineDescription(node, comment, out))
                     {
@@ -1718,10 +1735,11 @@ SELECTION:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printHeading(AST        node,
-                              String     asterix,
-                              NodeWriter out)
-        throws IOException
+    private void printHeading(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         String[] lines = split(node.getText(), Integer.MAX_VALUE, false);
         printCommentLines(lines, asterix, out);
@@ -1730,8 +1748,7 @@ SELECTION:
 
 
     /**
-     * Prints out the given list (either a definition, ordered or unordered
-     * list).
+     * Prints out the given list (either a definition, ordered or unordered list).
      *
      * @param node node to print
      * @param asterix leading asterix.
@@ -1739,10 +1756,11 @@ SELECTION:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printList(AST        node,
-                           String     asterix,
-                           NodeWriter out)
-        throws IOException
+    private void printList(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         out.print(asterix, JavadocTokenTypes.PCDATA);
         out.printNewline();
@@ -1750,9 +1768,8 @@ SELECTION:
         out.print(node.getText(), node.getType());
         out.printNewline();
 
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             printListItem(child, asterix, out);
 
@@ -1802,10 +1819,11 @@ SELECTION:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printListItem(AST        node,
-                               String     asterix,
-                               NodeWriter out)
-        throws IOException
+    private void printListItem(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         switch (node.getType())
         {
@@ -1854,11 +1872,12 @@ SELECTION:
      *
      * @since 1.0b9
      */
-    private void printNewlineBefore(AST        tag,
-                                    int        last,
-                                    String     asterix,
-                                    NodeWriter out)
-        throws IOException
+    private void printNewlineBefore(
+        AST        tag,
+        int        last,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         if (shouldHaveNewlineBefore(tag, last))
         {
@@ -1867,14 +1886,14 @@ SELECTION:
         }
 
         /*switch (last)
-{
-    case DESCRIPTION:
+        {
+        case DESCRIPTION:
         out.print(asterix, JavadocTokenTypes.PCDATA);
         out.printNewline();
         break;
-    case NONE:
+        case NONE:
         break;
-    default:
+        default:
         switch (tag.getType())
         {
             case JavadocTokenTypes.TAG_EXCEPTION:
@@ -1928,7 +1947,7 @@ SELECTION:
                 break;
         }
         break;
-}*/
+        }*/
     }
 
 
@@ -1941,10 +1960,11 @@ SELECTION:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printParagraph(AST        node,
-                                String     asterix,
-                                NodeWriter out)
-        throws IOException
+    private void printParagraph(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         switch (out.last)
         {
@@ -1969,9 +1989,9 @@ SELECTION:
         {
             out.printNewline();
 ITERATION:
-            for (AST child = node.getFirstChild();
-                 child != null;
-                 child = child.getNextSibling())
+            for (
+                AST child = node.getFirstChild(); child != null;
+                child = child.getNextSibling())
             {
 SELECTION:
                 for (;;)
@@ -2064,47 +2084,13 @@ SELECTION:
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printPreformatted(AST        node,
-                                   String     asterix,
-                                   NodeWriter out)
-        throws IOException
+    private void printPreformatted(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         String[] lines = split(node.getText(), out.originalLineSeparator, '*');
-
-        /* int offset = asterix.indexOf('*');
-
-
-if (offset > -1)
-{
-    if (lines.length > 0)
-    {
-        // add the whitespace that should be added after the asterix
-        // before the first line (containing the <pre> tag)
-        String whitespaceAfterAsterix = asterix.substring(offset + 1);
-        lines[0] = whitespaceAfterAsterix + lines[0];
-        // and strip whitespace after asterix to avoid unwanted
-        // increasing indentation for all other lines
-        //asterix = asterix.substring(0, offset + 1);
-        String lastLine = lines[lines.length - 1];
-        // add (or remove) the whitespace after the asterix
-        // before the last line (containing the </pre> tag)
-        if (new String(lines[lines.length - 1]).trim()
-                                               .startsWith("</pre>"))
-        {
-            if ((whitespaceAfterAsterix.length() > 0) &&
-                (lastLine.charAt(0) == '<'))
-            {
-                lines[lines.length - 1] = whitespaceAfterAsterix +
-                                          lastLine;
-            }
-            else if ((whitespaceAfterAsterix.length() == 0) &&
-                     lastLine.startsWith(" "))
-            {
-                lines[lines.length - 1] = lastLine.trim();
-            }
-        }
-    }
-}*/
         printCommentLines(lines, asterix, out);
         out.last = JavadocTokenTypes.PRE;
     }
@@ -2116,8 +2102,8 @@ if (offset > -1)
      * @param tag tag to print.
      * @param asterix the leading asterix.
      * @param maxWidth maximal width one line can consume.
-     * @param added if <code>true</code> a warning message will be added that
-     *        the tag was added.
+     * @param added if <code>true</code> a warning message will be added that the tag was
+     *        added.
      * @param last the type of the last printed tag.
      * @param out stream to write to.
      *
@@ -2127,30 +2113,29 @@ if (offset > -1)
      *
      * @since 1.0b8
      */
-    private int printReturnTag(AST        tag,
-                               String     asterix,
-                               int        maxWidth,
-                               boolean    added,
-                               int        last,
-                               NodeWriter out)
-        throws IOException
+    private int printReturnTag(
+        AST        tag,
+        String     asterix,
+        int        maxWidth,
+        boolean    added,
+        int        last,
+        NodeWriter out)
+      throws IOException
     {
         if (tag != null)
         {
             if (added)
             {
                 out.state.args[0] = out.getFilename();
-                out.state.args[1] = new Integer(out.line +
-                                                (shouldHaveNewlineBefore(tag,
-                                                                         last)
-                                                     ? 1
-                                                     : 0));
-                out.state.args[2] = new Integer(out.getIndentLength() +
-                                                asterix.length() + 1);
-                out.state.args[3] = "@return";
+                out.state.args[1] =
+                    new Integer(out.line + (shouldHaveNewlineBefore(tag, last) ? 1
+                                                                               : 0));
+                out.state.args[2] =
+                    new Integer(out.getIndentLength() + asterix.length() + 1);
+                out.state.args[3] = "@return" /* NOI18N */;
                 out.state.args[4] = EMPTY_STRING;
-                Loggers.PRINTER_JAVADOC.l7dlog(Level.WARN, KEY_TAG_ADD_MISSING,
-                                               out.state.args, null);
+                Loggers.PRINTER_JAVADOC.l7dlog(
+                    Level.WARN, KEY_TAG_ADD_MISSING, out.state.args, null);
             }
 
             return printTag(tag, asterix, maxWidth, last, out);
@@ -2173,18 +2158,21 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private boolean printSingleLineDescription(AST        node,
-                                               AST        comment,
-                                               NodeWriter out)
-        throws IOException
+    private boolean printSingleLineDescription(
+        AST        node,
+        AST        comment,
+        NodeWriter out)
+      throws IOException
     {
         StringBuffer buf = new StringBuffer();
-        int maxwidth = this.settings.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
-                       3 - out.getIndentLength();
+        int maxwidth =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH) - 3
+            - out.getIndentLength();
 
-        for (AST child = comment.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (
+            AST child = comment.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -2198,6 +2186,7 @@ if (offset > -1)
                 case JavadocTokenTypes.TAG_THROWS :
                 case JavadocTokenTypes.TAG_EXCEPTION :
                 case JavadocTokenTypes.TAG_CUSTOM :
+                case JavadocTokenTypes.TAG_TODO :
                 case JavadocTokenTypes.TAG_AUTHOR :
                 case JavadocTokenTypes.TAG_SEE :
                 case JavadocTokenTypes.TAG_VERSION :
@@ -2255,9 +2244,9 @@ if (offset > -1)
                     buf.append(LCURLY);
                     buf.append(child.getText());
 
-                    for (AST part = child.getFirstChild();
-                         part != null;
-                         part = part.getNextSibling())
+                    for (
+                        AST part = child.getFirstChild(); part != null;
+                        part = part.getNextSibling())
                     {
                         buf.append(part.getText());
                     }
@@ -2294,10 +2283,11 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printTable(AST        node,
-                            String     asterix,
-                            NodeWriter out)
-        throws IOException
+    private void printTable(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         out.print(asterix, JavadocTokenTypes.PCDATA);
         out.printNewline();
@@ -2305,9 +2295,7 @@ if (offset > -1)
         out.print(node.getText(), JavadocTokenTypes.OTABLE);
         out.printNewline();
 
-        for (AST row = node.getFirstChild();
-             row != null;
-             row = row.getNextSibling())
+        for (AST row = node.getFirstChild(); row != null; row = row.getNextSibling())
         {
             printTableRow(row, asterix, out);
         }
@@ -2327,10 +2315,11 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printTableData(AST        node,
-                                String     asterix,
-                                NodeWriter out)
-        throws IOException
+    private void printTableData(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         out.print(node.getText(), JavadocTokenTypes.OTD);
         out.printNewline();
@@ -2366,18 +2355,18 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printTableRow(AST        node,
-                               String     asterix,
-                               NodeWriter out)
-        throws IOException
+    private void printTableRow(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         out.print(asterix, JavadocTokenTypes.PCDATA);
         out.print(node.getText(), JavadocTokenTypes.O_TR);
 
         // out.printNewline();
-        for (AST cell = node.getFirstChild();
-             cell != null;
-             cell = cell.getNextSibling())
+        for (AST cell = node.getFirstChild(); cell != null;
+            cell = cell.getNextSibling())
         {
             printTableData(cell, asterix, out);
         }
@@ -2400,12 +2389,13 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private int printTag(AST        tag,
-                         String     asterix,
-                         int        maxwidth,
-                         int        last,
-                         NodeWriter out)
-        throws IOException
+    private int printTag(
+        AST        tag,
+        String     asterix,
+        int        maxwidth,
+        int        last,
+        NodeWriter out)
+      throws IOException
     {
         if (tag != null)
         {
@@ -2426,36 +2416,36 @@ if (offset > -1)
 
                     // we trim the text so we have to take care to print a
                     // blank between tag name and description
-                    if (child.getText().startsWith(SPACE) ||
-                        child.getText().startsWith("<"))
+                    if (
+                        child.getText().startsWith(SPACE)
+                        || child.getText().startsWith("<"))
                     {
                         out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
                     }
 
                     String description = mergeChildren(child);
-                    out.print(description.trim(),
-                              JavadocTokenTypes.JAVADOC_COMMENT);
+                    out.print(description.trim(), JavadocTokenTypes.JAVADOC_COMMENT);
 
                     break;
                 }
 
                 // @tag name type description
                 case JavadocTokenTypes.TAG_SERIAL_FIELD :
-
                 // @tag name description
                 case JavadocTokenTypes.TAG_PARAM :
                 case JavadocTokenTypes.TAG_THROWS :
                 case JavadocTokenTypes.TAG_EXCEPTION :
-                    printTagDescription(tag.getFirstChild(), ident, asterix,
-                                        maxwidth, true, out);
+                    printTagDescription(
+                        tag.getFirstChild(), ident, asterix, maxwidth, true, out);
 
                     break;
 
                 // @tag description
                 case JavadocTokenTypes.TAG_CUSTOM :
+                case JavadocTokenTypes.TAG_TODO :
                 default :
-                    printTagDescription(tag.getFirstChild(), ident, asterix,
-                                        maxwidth, false, out);
+                    printTagDescription(
+                        tag.getFirstChild(), ident, asterix, maxwidth, false, out);
 
                     break;
             }
@@ -2476,29 +2466,28 @@ if (offset > -1)
      * @param name the tag name.
      * @param asterix string to print as leading asterix.
      * @param maxwidth maximal width one line can consume.
-     * @param normalize if <code>true</code> the method tries to strip any
-     *        whitespace between the first word and second word of the
-     *        description.
+     * @param normalize if <code>true</code> the method tries to strip any whitespace
+     *        between the first word and second word of the description.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b9
      */
-    private void printTagDescription(AST        child,
-                                     String     name,
-                                     String     asterix,
-                                     int        maxwidth,
-                                     boolean    normalize,
-                                     NodeWriter out)
-        throws IOException
+    private void printTagDescription(
+        AST        child,
+        String     name,
+        String     asterix,
+        int        maxwidth,
+        boolean    normalize,
+        NodeWriter out)
+      throws IOException
     {
         if (child != null)
         {
             // we trim the text so we have to take care to print a
             // blank between tag name and description
-            if (child.getText().startsWith(SPACE) ||
-                child.getText().startsWith("<"))
+            if (child.getText().startsWith(SPACE) || child.getText().startsWith("<"))
             {
                 out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
             }
@@ -2506,11 +2495,13 @@ if (offset > -1)
             String description = mergeChildren(child);
 
             // normalize the description if this is not an auto-generated tag
-            if (normalize && (!description.startsWith("@")))
+            if (normalize && !description.startsWith("@"))
             {
-                if (_matcher.matches(description, _pattern))
+                PatternMatcher matcher = (PatternMatcher) _matcher.get();
+
+                if (matcher.matches(description, _pattern))
                 {
-                    MatchResult result = _matcher.getMatch();
+                    MatchResult result = matcher.getMatch();
 
                     if (result.group(1) != null)
                     {
@@ -2535,8 +2526,7 @@ if (offset > -1)
                 out.print(out.getString(length + 1), JavaTokenTypes.WS);
             }
 
-            out.print(lines[lines.length - 1],
-                      JavadocTokenTypes.JAVADOC_COMMENT);
+            out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
         }
 
         /**
@@ -2556,12 +2546,13 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printTagSection(AST        node,
-                                 AST        comment,
-                                 AST        firstTag,
-                                 String     asterix,
-                                 NodeWriter out)
-        throws IOException
+    private void printTagSection(
+        AST        node,
+        AST        comment,
+        AST        firstTag,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         List parameterTags = Collections.EMPTY_LIST;
         AST serialTag = null;
@@ -2576,8 +2567,10 @@ if (offset > -1)
         AST returnTag = null;
         List exceptionTags = Collections.EMPTY_LIST;
 
-        boolean checkTags = this.settings.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
-                                                  Defaults.COMMENT_JAVADOC_CHECK_TAG);
+        boolean checkTags =
+            this.settings.getBoolean(
+                ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS,
+                ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS);
 
         if (checkTags)
         {
@@ -2634,8 +2627,7 @@ if (offset > -1)
 
                     seesTags.add(tag);
 
-                    if (checkTags && (tag.getNextSibling() == null) &&
-                        (tag == firstTag))
+                    if (checkTags && (tag.getNextSibling() == null) && (tag == firstTag))
                     {
                         // checking only needed if no single @see tag found
                         // in description
@@ -2683,6 +2675,7 @@ if (offset > -1)
                     break;
 
                 case JavadocTokenTypes.TAG_CUSTOM :
+                case JavadocTokenTypes.TAG_TODO :
 
                     if (customTags.isEmpty())
                     {
@@ -2695,8 +2688,10 @@ if (offset > -1)
             }
         }
 
-        int maxwidth = this.settings.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
-                       out.getIndentLength() - 3;
+        int maxwidth =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH)
+            - out.getIndentLength() - 3;
 
         int last = NONE;
 
@@ -2755,7 +2750,7 @@ if (offset > -1)
                 {
                     boolean tagPresent = returnTag != null;
                     returnTag = checkReturnTag(node, returnTag, out);
-                    returnTagAdded = (!tagPresent) && (returnTag != null);
+                    returnTagAdded = !tagPresent && (returnTag != null);
                 }
 
             // fall through
@@ -2777,21 +2772,23 @@ if (offset > -1)
 
                     if (checkParameterTags)
                     {
-                        last = printTags(parameterTags, asterix, maxwidth, node,
-                                         JavaTokenTypes.PARAMETERS, last, out);
+                        last =
+                            printTags(
+                                parameterTags, asterix, maxwidth, node,
+                                JavaTokenTypes.PARAMETERS, last, out);
                     }
                     else
                     {
-                        last = printTags(parameterTags, asterix, maxwidth, last,
-                                         out);
+                        last = printTags(parameterTags, asterix, maxwidth, last, out);
                     }
                 }
 
                 switch (node.getType())
                 {
                     case JavaTokenTypes.METHOD_DEF :
-                        last = printReturnTag(returnTag, asterix, maxwidth,
-                                              returnTagAdded, last, out);
+                        last =
+                            printReturnTag(
+                                returnTag, asterix, maxwidth, returnTagAdded, last, out);
 
                         break;
                 }
@@ -2808,13 +2805,14 @@ if (offset > -1)
 
                 if (checkThrowsTags)
                 {
-                    last = printTags(exceptionTags, asterix, maxwidth, node,
-                                     JavaTokenTypes.LITERAL_throws, last, out);
+                    last =
+                        printTags(
+                            exceptionTags, asterix, maxwidth, node,
+                            JavaTokenTypes.LITERAL_throws, last, out);
                 }
                 else
                 {
-                    last = printTags(exceptionTags, asterix, maxwidth, last,
-                                     out);
+                    last = printTags(exceptionTags, asterix, maxwidth, last, out);
                 }
 
                 break;
@@ -2838,8 +2836,7 @@ if (offset > -1)
      * @param maxwidth maximal width one line can consume.
      * @param node associated node.
      * @param tagType the token type of the tags.
-     * @param last if<code>true</code> an empty line will be printed before
-     *        the tags.
+     * @param last if <code>true</code> an empty line will be printed before the tags.
      * @param out stream to write to.
      *
      * @return the type of the last tag printed.
@@ -2848,16 +2845,17 @@ if (offset > -1)
      *
      * @since 1.0b8
      */
-    private int printTags(List       tags,
-                          String     asterix,
-                          int        maxwidth,
-                          AST        node,
-                          int        tagType,
-                          int        last,
-                          NodeWriter out)
-        throws IOException
+    private int printTags(
+        List       tags,
+        String     asterix,
+        int        maxwidth,
+        AST        node,
+        int        tagType,
+        int        last,
+        NodeWriter out)
+      throws IOException
     {
-        if ((tagType != -1) && (!tags.isEmpty()))
+        if ((tagType != -1))
         {
             checkTags(node, tags, tagType, asterix, last, out);
         }
@@ -2879,16 +2877,17 @@ if (offset > -1)
      *
      * @throws IOException if an I/O error occured.
      */
-    private int printTags(List       tags,
-                          String     asterix,
-                          int        maxwidth,
-                          int        last,
-                          NodeWriter out)
-        throws IOException
+    private int printTags(
+        List       tags,
+        String     asterix,
+        int        maxwidth,
+        int        last,
+        NodeWriter out)
+      throws IOException
     {
         for (int i = 0, size = tags.size(); i < size; i++)
         {
-            last = printTag((AST)tags.get(i), asterix, maxwidth, last, out);
+            last = printTag((AST) tags.get(i), asterix, maxwidth, last, out);
         }
 
         return last;
@@ -2896,23 +2895,22 @@ if (offset > -1)
 
 
     /**
-     * Prints out all text and text level tags (&lt;tt&gt;, &lt;strong&gt;
-     * etc.)
+     * Prints out all text and text level tags (&lt;tt&gt;, &lt;strong&gt; etc.)
      *
      * @param node first node to print
      * @param asterix the leading asterix.
      * @param out stream to print to.
      *
-     * @return the first non-text level node found (i.e the first node not
-     *         printed) or the {@link #EMPTY_NODE} if all or none nodes have
-     *         been printed.
+     * @return the first non-text level node found (i.e the first node not printed) or
+     *         the {@link #EMPTY_NODE} if all or none nodes have been printed.
      *
      * @throws IOException if an I/O error occured.
      */
-    private AST printText(AST        node,
-                          String     asterix,
-                          NodeWriter out)
-        throws IOException
+    private AST printText(
+        AST        node,
+        String     asterix,
+        NodeWriter out)
+      throws IOException
     {
         StringBuffer buf = new StringBuffer(200);
         AST next = EMPTY_NODE;
@@ -2928,7 +2926,6 @@ LOOP:
 
                 // text
                 case JavadocTokenTypes.PCDATA :
-
                 // special characters
                 case JavadocTokenTypes.AT :
                 case JavadocTokenTypes.RCURLY :
@@ -2979,9 +2976,9 @@ LOOP:
                     buf.append(LCURLY);
                     buf.append(child.getText());
 
-                    for (AST part = child.getFirstChild();
-                         part != null;
-                         part = part.getNextSibling())
+                    for (
+                        AST part = child.getFirstChild(); part != null;
+                        part = part.getNextSibling())
                     {
                         // BUGFIX #581299
                         switch (part.getType())
@@ -3010,11 +3007,12 @@ LOOP:
 
         if (buf.length() > 0)
         {
-            int maxwidth = this.settings.getInt(Keys.LINE_LENGTH,
-                                             Defaults.LINE_LENGTH);
-            printCommentLines(split(buf.toString().trim(),
-                                    maxwidth - out.getIndentLength() - 3, true),
-                              asterix, out);
+            int maxwidth =
+                this.settings.getInt(
+                    ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+            printCommentLines(
+                split(buf.toString().trim(), maxwidth - out.getIndentLength() - 3, true),
+                asterix, out);
         }
 
         return next;
@@ -3027,15 +3025,16 @@ LOOP:
      * @param node the node that the Javadoc comment belongs to.
      * @param comment the Javadoc comment.
      *
-     * @return <code>true</code> if <em>node</em> is a valid Javadoc node and
-     *         the comment does start with the inheritDoc in-line tag.
+     * @return <code>true</code> if <em>node</em> is a valid Javadoc node and the comment
+     *         does start with the inheritDoc in-line tag.
      *
      * @since 1.0b8
      */
-    private boolean shouldCheckTags(AST node,
-                                    AST comment)
+    private boolean shouldCheckTags(
+        AST node,
+        AST comment)
     {
-        return isValidNode(node) && (!hasInheritDoc(comment));
+        return isValidNode(node) && !hasInheritDoc(comment);
     }
 
 
@@ -3049,8 +3048,9 @@ LOOP:
      *
      * @since 1.0b9
      */
-    private boolean shouldHaveNewlineBefore(AST tag,
-                                            int last)
+    private boolean shouldHaveNewlineBefore(
+        AST tag,
+        int last)
     {
         boolean result = false;
 
@@ -3090,6 +3090,7 @@ LOOP:
 
                     case JavadocTokenTypes.TAG_PARAM :
                     case JavadocTokenTypes.TAG_CUSTOM :
+                    case JavadocTokenTypes.TAG_TODO :
                     case JavadocTokenTypes.TAG_AUTHOR :
 
                         if (last != tag.getType())
@@ -3148,9 +3149,10 @@ LOOP:
      *
      * @return 1.0b8
      */
-    private String[] split(String str,
-                           String delim,
-                           char   character)
+    private String[] split(
+        String str,
+        String delim,
+        char   character)
     {
         if (character > -1)
         {
@@ -3168,8 +3170,8 @@ LOOP:
 
             if (startOffset > 0)
             {
-                String line = trimLeadingWhitespace(str.substring(startOffset),
-                                                    character);
+                String line =
+                    trimLeadingWhitespace(str.substring(startOffset), character);
                 lines.add(line);
             }
             else
@@ -3177,7 +3179,7 @@ LOOP:
                 lines.add(trimLeadingWhitespace(str, character));
             }
 
-            return (String[])lines.toArray(EMPTY_STRING_ARRAY);
+            return (String[]) lines.toArray(EMPTY_STRING_ARRAY);
         }
         else
         {
@@ -3197,9 +3199,10 @@ LOOP:
      *
      * @since 1.0b8
      */
-    private String[] split(String  str,
-                           int     width,
-                           boolean trim)
+    private String[] split(
+        String  str,
+        int     width,
+        boolean trim)
     {
         List lines = new ArrayList();
 
@@ -3214,7 +3217,7 @@ LOOP:
         }
         else
         {
-            BreakIterator iterator = (BreakIterator)_stringBreaker.get();
+            BreakIterator iterator = (BreakIterator) _stringBreaker.get();
 
             try
             {
@@ -3227,8 +3230,9 @@ LOOP:
                 do
                 {
 MOVE_FORWARD:
-                    while (((nextStart - lineStart) < width) &&
-                           (nextStart != BreakIterator.DONE))
+                    while (
+                        ((nextStart - lineStart) < width)
+                        && (nextStart != BreakIterator.DONE))
                     {
                         prevStart = nextStart;
                         nextStart = iterator.next();
@@ -3251,26 +3255,23 @@ MOVE_FORWARD:
                     {
                         // if the text before and after the last space fits
                         // into the max width, just print it on one line
-                        if (((prevStart - lineStart) + (str.length() - prevStart)) < width)
+                        if (
+                            ((prevStart - lineStart) + (str.length() - prevStart)) < width)
                         {
-                            lines.add(str.substring(lineStart, str.length())
-                                         .trim());
+                            lines.add(str.substring(lineStart, str.length()).trim());
                         }
                         else
                         {
-                            if ((prevStart > 0) &&
-                                (prevStart != BreakIterator.DONE))
+                            if ((prevStart > 0) && (prevStart != BreakIterator.DONE))
                             {
                                 if (trim)
                                 {
-                                    lines.add(str.substring(lineStart,
-                                                            prevStart).trim());
+                                    lines.add(str.substring(lineStart, prevStart).trim());
                                     lines.add(str.substring(prevStart).trim());
                                 }
                                 else
                                 {
-                                    lines.add(str.substring(lineStart,
-                                                            prevStart));
+                                    lines.add(str.substring(lineStart, prevStart));
                                     lines.add(str.substring(prevStart));
                                 }
                             }
@@ -3312,12 +3313,13 @@ MOVE_FORWARD:
             }
         }
 
-        return (String[])lines.toArray(new String[0]);
+        return (String[]) lines.toArray(new String[0]);
     }
 
 
-    private String trimLeadingWhitespace(String str,
-                                         char   character)
+    private String trimLeadingWhitespace(
+        String str,
+        char   character)
     {
         int off = StringHelper.indexOfNonWhitespace(str);
 
@@ -3329,15 +3331,15 @@ MOVE_FORWARD:
         return str;
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     private static class BreakIterator
     {
         private static final int WHITESPACE = 1;
         private static final int BREAK = 2;
         public static final int DONE = -10;
-        private static final String TAG_BREAK = "<br>";
-        private static final String TAG_BREAK_WELL = "<br/>";
+        private static final String TAG_BREAK = "<br>" /* NOI18N */;
+        private static final String TAG_BREAK_WELL = "<br/>" /* NOI18N */;
         private String _text;
         private int _end = -1;
         private int _pos = -1;
@@ -3350,8 +3352,8 @@ MOVE_FORWARD:
         /**
          * Returns the boundary following the current boundary.
          *
-         * @return the character index of the next text boundary or {@link
-         *         #DONE} if all boundaries have been returned.
+         * @return the character index of the next text boundary or {@link #DONE} if all
+         *         boundaries have been returned.
          */
         public int getBreakType()
         {

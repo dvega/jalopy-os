@@ -1,46 +1,19 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.*;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.CommonHiddenStreamToken;
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,7 +25,7 @@ import java.io.IOException;
 abstract class BlockStatementPrinter
     extends AbstractPrinter
 {
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new BlockStatementPrinter object.
@@ -61,25 +34,28 @@ abstract class BlockStatementPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         // special handling if we encounter a label
         if (out.last == JavaTokenTypes.LABELED_STAT)
         {
             // if no newline will be printed after labels
-            if (!this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
-                                       Defaults.LINE_WRAP_AFTER_LABEL))
+            if (
+                !this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_LABEL,
+                    ConventionDefaults.LINE_WRAP_AFTER_LABEL))
             {
                 // and we find comments before we have to issue one extra so
                 // that the right amount of blank lines is printed
-                if (((JavaNode)node).hasCommentsBefore())
+                if (((JavaNode) node).hasCommentsBefore())
                 {
                     out.printNewline();
                 }
@@ -89,9 +65,9 @@ abstract class BlockStatementPrinter
         printCommentsBefore(node, out);
     }
 
+
     /**
-     * Prints the expression list starting with the given node; the left
-     * parenthesis.
+     * Prints the expression list starting with the given node; the left parenthesis.
      *
      * @param lparen a LPAREN node.
      * @param insertBraces DOCUMENT ME!
@@ -103,10 +79,11 @@ abstract class BlockStatementPrinter
      *
      * @since 1.0b9
      */
-    JavaNode printExpressionList(AST        lparen,
-                                 boolean    insertBraces,
-                                 NodeWriter out)
-        throws IOException
+    JavaNode printExpressionList(
+        AST        lparen,
+        boolean    insertBraces,
+        NodeWriter out)
+      throws IOException
     {
         PrinterFactory.create(lparen).print(lparen, out);
 
@@ -118,15 +95,20 @@ abstract class BlockStatementPrinter
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
+            ParenthesesScope scope = new ParenthesesScope(out.state.paramLevel);
+
             out.state.expressionList = true;
             out.state.paramLevel++;
-            out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
+            out.state.parenScope.addFirst(scope);
 
-            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                               Defaults.LINE_LENGTH);
+            int lineLength =
+                this.settings.getInt(
+                    ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
-            if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
-                                      Defaults.LINE_WRAP_AFTER_LEFT_PAREN))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
+                    ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
                 if (!out.newline)
                 {
@@ -139,10 +121,13 @@ abstract class BlockStatementPrinter
                         printIndentation(out);
                         wrapped = true;
 
-                        if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
-                                                  Defaults.LINE_WRAP_ALL))
+                        if (
+                            this.settings.getBoolean(
+                                ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
+                                ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                         {
-                            out.state.wrap = true;
+                            //out.state.wrap = true;
+                            scope.wrap = true;
                         }
                     }
 
@@ -153,10 +138,13 @@ abstract class BlockStatementPrinter
                     printIndentation(out);
                     wrapped = true;
 
-                    if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
-                                              Defaults.LINE_WRAP_ALL))
+                    if (
+                        this.settings.getBoolean(
+                            ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
+                            ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                     {
-                        out.state.wrap = true;
+                        //out.state.wrap = true;
+                        scope.wrap = true;
                     }
                 }
 
@@ -170,12 +158,15 @@ abstract class BlockStatementPrinter
                 PrinterFactory.create(expr).print(expr, tester);
             }
 
-            if ((!wrapped) && ((tester.length + out.column) > lineLength))
+            if (!wrapped && ((tester.length + out.column) > lineLength))
             {
-                if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
-                                          Defaults.LINE_WRAP_ALL))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
+                        ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                 {
-                    out.state.wrap = true;
+                    //out.state.wrap = true;
+                    scope.wrap = true;
                 }
 
                 wrapped = true;
@@ -185,24 +176,30 @@ abstract class BlockStatementPrinter
         }
 
         // use continuation indentation within the parentheses?
-        out.continuation = this.settings.getBoolean(Keys.INDENT_CONTINUATION_IF,
-                                                 Defaults.INDENT_CONTINUATION_IF);
+        out.continuation =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_CONTINUATION_IF,
+                ConventionDefaults.INDENT_CONTINUATION_IF);
 
         PrinterFactory.create(expr).print(expr, out);
 
         out.continuation = false;
         out.state.wrap = false;
 
-        if (wrapped &&
-            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
-                                  Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
+        if (
+            wrapped
+            && this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+                ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
             {
                 out.printNewline();
             }
 
-            if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
             }
@@ -212,17 +209,18 @@ abstract class BlockStatementPrinter
             }
         }
 
-        JavaNode rparen = (JavaNode)expr.getNextSibling();
+        JavaNode rparen = (JavaNode) expr.getNextSibling();
 
         AST body = rparen.getNextSibling();
 
         boolean hasBraces = (body.getType() == JavaTokenTypes.SLIST);
-        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                                         Defaults.BRACE_NEWLINE_LEFT);
+        boolean leftBraceNewline =
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
 
         CommonHiddenStreamToken pendingComment = null;
 
-        if ((!hasBraces) && insertBraces && (!leftBraceNewline))
+        if (!hasBraces && insertBraces && !leftBraceNewline)
         {
             out.pendingComment = rparen.getCommentAfter();
 

@@ -1,52 +1,23 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
- * Printer for if-else statements [<code>LITERAL_if</code>,
- * <code>LITERAL_else</code>].
- * <pre style="background:lightgrey">
+ * Printer for if-else statements [<code>LITERAL_if</code>, <code>LITERAL_else</code>].
+ * <pre class="snippet">
  * <strong>if</strong> (<em>Boolean-expression</em>)
  * {
  *     <em>statement</em>
@@ -67,12 +38,12 @@ import java.io.IOException;
 final class IfElsePrinter
     extends BlockStatementPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new IfElsePrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new IfElsePrinter object.
@@ -81,7 +52,7 @@ final class IfElsePrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -97,9 +68,10 @@ final class IfElsePrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         printCommentsBefore(node, out);
 
@@ -113,8 +85,10 @@ final class IfElsePrinter
                 break;
         }
 
-        boolean spaceBefore = this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
-                                                    Defaults.SPACE_BEFORE_STATEMENT_PAREN);
+        boolean spaceBefore =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
+                ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN);
 
         if (spaceBefore)
         {
@@ -127,21 +101,25 @@ final class IfElsePrinter
 
         AST lparen = node.getFirstChild();
 
-        boolean insertBraces = this.settings.getBoolean(Keys.BRACE_INSERT_IF_ELSE,
-                                                     Defaults.BRACE_INSERT_IF_ELSE);
+        boolean insertBraces =
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_INSERT_IF_ELSE,
+                ConventionDefaults.BRACE_INSERT_IF_ELSE);
 
         JavaNode rparen = printExpressionList(lparen, insertBraces, out);
         AST body = rparen.getNextSibling();
 
-        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                                         Defaults.BRACE_NEWLINE_LEFT);
-        boolean rightBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
-                                                          Defaults.BRACE_NEWLINE_RIGHT);
+        boolean leftBraceNewline =
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
+        boolean rightBraceNewline =
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_NEWLINE_RIGHT, ConventionDefaults.BRACE_NEWLINE_RIGHT);
         boolean hasBraces = body.getType() == JavaTokenTypes.SLIST;
 
         out.last = JavaTokenTypes.LITERAL_if;
 
-        JavaNode next = (JavaNode)body.getNextSibling();
+        JavaNode next = (JavaNode) body.getNextSibling();
 
         if (hasBraces)
         {
@@ -153,17 +131,16 @@ final class IfElsePrinter
             {
                 if (out.pendingComment == null)
                 {
-                    out.printLeftBrace(leftBraceNewline && (!out.newline),
-                                       NodeWriter.NEWLINE_YES,
-                                       (!leftBraceNewline) && (!out.newline));
+                    out.printLeftBrace(
+                        leftBraceNewline && !out.newline, NodeWriter.NEWLINE_YES,
+                        !leftBraceNewline && !out.newline);
                 }
                 else
                 {
-                    out.printLeftBrace(NodeWriter.NEWLINE_NO,
-                                       NodeWriter.NEWLINE_NO);
+                    out.printLeftBrace(NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO);
                     rparen.setHiddenAfter(out.pendingComment);
-                    printCommentsAfter(rparen, NodeWriter.NEWLINE_NO,
-                                       NodeWriter.NEWLINE_YES, out);
+                    printCommentsAfter(
+                        rparen, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
                     out.pendingComment = null;
                 }
 
@@ -184,26 +161,26 @@ final class IfElsePrinter
         {
             printCommentsBefore(next, out);
 
-            if ((!out.newline) && (out.last == JavaTokenTypes.RCURLY))
+            if (!out.newline && (out.last == JavaTokenTypes.RCURLY))
             {
-                out.print(out.getString(this.settings.getInt(
-                                                          Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
-                                                          Defaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
-                          JavaTokenTypes.WS);
+                out.print(
+                    out.getString(
+                        this.settings.getInt(
+                            ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
+                            ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
+                    JavaTokenTypes.WS);
             }
 
             out.print(ELSE, JavaTokenTypes.LITERAL_else);
 
-            JavaNode block = (JavaNode)next.getNextSibling();
+            JavaNode block = (JavaNode) next.getNextSibling();
 
             switch (block.getType())
             {
                 case JavaTokenTypes.SLIST : // block
-
                     // print the endline comment for the else
-                    printCommentsAfter(next, NodeWriter.NEWLINE_NO,
-                                       !leftBraceNewline, out);
-
+                    printCommentsAfter(
+                        next, NodeWriter.NEWLINE_NO, !leftBraceNewline, out);
                     // either we print a LITERAL_if or LITERAL_else but
                     // we don't care as both will lead to the same result
                     out.last = JavaTokenTypes.LITERAL_if;
@@ -225,20 +202,19 @@ final class IfElsePrinter
 
                         if (out.pendingComment == null)
                         {
-                            printCommentsAfter(next, NodeWriter.NEWLINE_NO,
-                                               !leftBraceNewline, out);
-                            out.printLeftBrace(rightBraceNewline,
-                                               NodeWriter.NEWLINE_NO,
-                                               (!rightBraceNewline) &&
-                                               (!out.newline));
+                            printCommentsAfter(
+                                next, NodeWriter.NEWLINE_NO, !leftBraceNewline, out);
+                            out.printLeftBrace(
+                                rightBraceNewline, NodeWriter.NEWLINE_NO,
+                                !rightBraceNewline && !out.newline);
                             out.printNewline();
                         }
                         else
                         {
-                            out.printLeftBrace(NodeWriter.NEWLINE_NO,
-                                               NodeWriter.NEWLINE_NO);
-                            printCommentsAfter(next, NodeWriter.NEWLINE_NO,
-                                               NodeWriter.NEWLINE_YES, out);
+                            out.printLeftBrace(
+                                NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO);
+                            printCommentsAfter(
+                                next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
                         }
 
                         PrinterFactory.create(block).print(block, out);
@@ -246,8 +222,8 @@ final class IfElsePrinter
                     }
                     else
                     {
-                        printCommentsAfter(next, NodeWriter.NEWLINE_NO,
-                                           NodeWriter.NEWLINE_NO, out);
+                        printCommentsAfter(
+                            next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
                         out.printNewline();
                         out.indent();
                         PrinterFactory.create(block).print(block, out);
@@ -262,22 +238,20 @@ final class IfElsePrinter
 
 
     /**
-     * Determines if an endline comment will be printed before the given else
-     * node.
+     * Determines if an endline comment will be printed before the given else node.
      *
      * @param elseNode else node to check for endline comments before.
      *
-     * @return <code>true</code> if an endline comment will be printed before
-     *         the given else node.
+     * @return <code>true</code> if an endline comment will be printed before the given
+     *         else node.
      */
     private boolean isCommentBefore(JavaNode elseNode)
     {
         JavaNode slist = elseNode.getPreviousSibling();
         JavaNode rcurly = null;
 
-        for (AST child = slist.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = slist.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -285,7 +259,7 @@ final class IfElsePrinter
 
                     if (child.getNextSibling() == null)
                     {
-                        rcurly = (JavaNode)child;
+                        rcurly = (JavaNode) child;
                     }
 
                     break;

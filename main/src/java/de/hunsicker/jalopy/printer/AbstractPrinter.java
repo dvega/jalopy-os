@@ -1,59 +1,31 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
+import java.io.IOException;
+import java.util.List;
+
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.ExtendedToken;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.Node;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.language.ExtendedToken;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.StringHelper;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
- * Skeleton implementation of the printer interface. Provides comment printing
- * and blank lines support.
+ * Skeleton implementation of the printer interface. Provides comment printing and blank
+ * lines support.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -61,77 +33,77 @@ import java.util.List;
 class AbstractPrinter
     implements Printer
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
-    static final String ASSERT_SPACE = "assert ";
-    static final String ASSIGN = "=";
-    static final String ASSIGN_PADDED = " = ";
-    static final String SPACE_ASSIGN = " =";
-    static final String BRACES = "{}";
-    static final String BRACKETS = "[]";
-    static final String BRACKET_LEFT = "[";
-    static final String BRACKET_LEFT_SPACE = "[ ";
-    static final String BRACKET_RIGHT = "]";
-    static final String CASE_SPACE = "case ";
-    static final String CATCH = "catch";
-    static final String CLASS_SPACE = "class ";
-    static final String COMMA = ",";
-    static final String COMMA_SPACE = ", ";
-    static final String COLON = ":";
-    static final String COLON_SPACE = ": ";
-    static final String DEFAULT_COLON = "default:";
-    static final String DEFAULT_SPACE_COLON = "default :";
-    static final String DO = "do";
-    static final String DOT = ".";
-    static final String ELSE = "else";
-    static final String EMPTY_STRING = "";
-    static final String EXTENDS_SPACE = "extends ";
-    static final String FINALLY = "finally";
-    static final String FOR = "for";
-    static final String FOR_SPACE = "for ";
-    static final String IF = "if";
-    static final String IF_SPACE = "if ";
-    static final String IMPLEMENTS_SPACE = "implements ";
-    static final String IMPORT_SPACE = "import ";
-    static final String INTERFACE_SPACE = "interface ";
-    static final String L = "L";
-    static final String LCURLY = "{";
-    static final String LCURLY_SPACE = "{ ";
-    static final String LPAREN = "(";
-    static final String LPAREN_SPACE = "( ";
-    static final String NEW_SPACE = "new ";
-    static final String PACKAGE_SPACE = "package ";
-    static final String PARENTHESES = "()";
-    static final String QUESTION_SPACE = "? ";
-    static final String RCURLY = "}";
-    static final String RCURLY_SPACE = " }";
-    static final String RETURN = "return";
-    static final String RPAREN = ")";
-    static final String SEMI = ";";
-    static final String SPACE = " ";
-    static final String SPACE_BRACKET_RIGHT = " ]";
-    static final String SPACE_BRACKETS = " []";
-    static final String SPACE_COLON_SPACE = " : ";
-    static final String SPACE_EXTENDS_SPACE = " extends ";
-    static final String SPACE_LCURLY = " {";
-    static final String SPACE_IMPLEMENTS_SPACE = " implements ";
-    static final String SPACE_QUESTION = " ?";
-    static final String SPACE_QUESTION_SPACE = " ? ";
-    static final String SPACE_RPAREN = " )";
-    static final String SPACE_THROWS_SPACE = " throws ";
-    static final String STATIC = "static";
-    static final String STRING = "String";
-    static final String SUPER = "super";
-    static final String SWITCH = "switch";
-    static final String SYNCHRONIZED = "synchronized";
-    static final String THIS = "this";
-    static final String THROW_SPACE = "throw ";
-    static final String THROWS_SPACE = "throws ";
-    static final String TRY = "try";
-    static final String VOID = "void";
-    static final String WHILE = "while";
-    static final String WHILE_SPACE = "while ";
-    static final String QUESTION = "?";
+    static final String ASSERT_SPACE = "assert " /* NOI18N */;
+    static final String ASSIGN = "=" /* NOI18N */;
+    static final String ASSIGN_PADDED = " = " /* NOI18N */;
+    static final String SPACE_ASSIGN = " =" /* NOI18N */;
+    static final String BRACES = "{}" /* NOI18N */;
+    static final String BRACKETS = "[]" /* NOI18N */;
+    static final String BRACKET_LEFT = "[" /* NOI18N */;
+    static final String BRACKET_LEFT_SPACE = "[ " /* NOI18N */;
+    static final String BRACKET_RIGHT = "]" /* NOI18N */;
+    static final String CASE_SPACE = "case " /* NOI18N */;
+    static final String CATCH = "catch" /* NOI18N */;
+    static final String CLASS_SPACE = "class " /* NOI18N */;
+    static final String COMMA = "," /* NOI18N */;
+    static final String COMMA_SPACE = ", " /* NOI18N */;
+    static final String COLON = ":" /* NOI18N */;
+    static final String COLON_SPACE = ": " /* NOI18N */;
+    static final String DEFAULT_COLON = "default:" /* NOI18N */;
+    static final String DEFAULT_SPACE_COLON = "default :" /* NOI18N */;
+    static final String DO = "do" /* NOI18N */;
+    static final String DOT = "." /* NOI18N */;
+    static final String ELSE = "else" /* NOI18N */;
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EXTENDS_SPACE = "extends " /* NOI18N */;
+    static final String FINALLY = "finally" /* NOI18N */;
+    static final String FOR = "for" /* NOI18N */;
+    static final String FOR_SPACE = "for " /* NOI18N */;
+    static final String IF = "if" /* NOI18N */;
+    static final String IF_SPACE = "if " /* NOI18N */;
+    static final String IMPLEMENTS_SPACE = "implements " /* NOI18N */;
+    static final String IMPORT_SPACE = "import " /* NOI18N */;
+    static final String INTERFACE_SPACE = "interface " /* NOI18N */;
+    static final String L = "L" /* NOI18N */;
+    static final String LCURLY = "{" /* NOI18N */;
+    static final String LCURLY_SPACE = "{ " /* NOI18N */;
+    static final String LPAREN = "(" /* NOI18N */;
+    static final String LPAREN_SPACE = "( " /* NOI18N */;
+    static final String NEW_SPACE = "new " /* NOI18N */;
+    static final String PACKAGE_SPACE = "package " /* NOI18N */;
+    static final String PARENTHESES = "()" /* NOI18N */;
+    static final String QUESTION_SPACE = "? " /* NOI18N */;
+    static final String RCURLY = "}" /* NOI18N */;
+    static final String RCURLY_SPACE = " }" /* NOI18N */;
+    static final String RETURN = "return" /* NOI18N */;
+    static final String RPAREN = ")" /* NOI18N */;
+    static final String SEMI = ";" /* NOI18N */;
+    static final String SPACE = " " /* NOI18N */;
+    static final String SPACE_BRACKET_RIGHT = " ]" /* NOI18N */;
+    static final String SPACE_BRACKETS = " []" /* NOI18N */;
+    static final String SPACE_COLON_SPACE = " : " /* NOI18N */;
+    static final String SPACE_EXTENDS_SPACE = " extends " /* NOI18N */;
+    static final String SPACE_LCURLY = " {" /* NOI18N */;
+    static final String SPACE_IMPLEMENTS_SPACE = " implements " /* NOI18N */;
+    static final String SPACE_QUESTION = " ?" /* NOI18N */;
+    static final String SPACE_QUESTION_SPACE = " ? " /* NOI18N */;
+    static final String SPACE_RPAREN = " )" /* NOI18N */;
+    static final String SPACE_THROWS_SPACE = " throws " /* NOI18N */;
+    static final String STATIC = "static" /* NOI18N */;
+    static final String STRING = "String" /* NOI18N */;
+    static final String SUPER = "super" /* NOI18N */;
+    static final String SWITCH = "switch" /* NOI18N */;
+    static final String SYNCHRONIZED = "synchronized" /* NOI18N */;
+    static final String THIS = "this" /* NOI18N */;
+    static final String THROW_SPACE = "throw " /* NOI18N */;
+    static final String THROWS_SPACE = "throws " /* NOI18N */;
+    static final String TRY = "try" /* NOI18N */;
+    static final String VOID = "void" /* NOI18N */;
+    static final String WHILE = "while" /* NOI18N */;
+    static final String WHILE_SPACE = "while " /* NOI18N */;
+    static final String QUESTION = "?" /* NOI18N */;
 
     /** The code convention settings. */
     protected static final Convention settings = Convention.getInstance();
@@ -142,12 +114,12 @@ class AbstractPrinter
     /** Indicates that whitespace should be printed. */
     private static final boolean WHITESPACE_YES = true;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Helper object that holds arguments for message formatting. */
     private final Object[] _args = new Object[2];
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new AbstractPrinter object.
@@ -156,22 +128,42 @@ class AbstractPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         out.print(node.getText(), node.getType());
     }
 
 
     /**
-     * Outputs indentation whitespace according to the current marker offset.
-     * If no marker is set, this method does nothing.
+     * Updates the line information of the annotations for the given node.
+     *
+     * @param node a tree node.
+     * @param out stream to write to.
+     *
+     * @since 1.0b9
+     */
+    public void updateAnnotations(
+        JavaNode   node,
+        NodeWriter out)
+    {
+        if (out.annotations)
+        {
+            node.updateAnnotations(out.line);
+        }
+    }
+
+
+    /**
+     * Outputs indentation whitespace according to the current marker offset. If no
+     * marker is set, this method does nothing.
      *
      * @param out stream to write to.
      *
@@ -180,55 +172,67 @@ class AbstractPrinter
      * @since 1.0b8
      */
     protected void printIndentation(NodeWriter out)
-        throws IOException
+      throws IOException
     {
         printIndentation(0, out);
     }
 
+
     /**
      * Outputs indentation whitespace.
      *
-     * @param marker if not <code>null</code> this marker will be used to calculate the right amount of indentation whitespace. Otherwise indentation depends on the general indentation policy.
+     * @param marker if not <code>null</code> this marker will be used to calculate the
+     *        right amount of indentation whitespace. Otherwise indentation depends on
+     *        the general indentation policy.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b9
      */
-    protected void printIndentation(Marker marker, NodeWriter out)
-        throws IOException
+    protected void printIndentation(
+        Marker     marker,
+        NodeWriter out)
+      throws IOException
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (marker != null) // custom indentation
             {
                 int indentLength = out.getIndentLength();
-                int length = (marker.column >= indentLength)
-                                 ? (marker.column - indentLength)
-                                 : marker.column;
+                int length =
+                    (marker.column >= indentLength) ? (marker.column - indentLength)
+                                                    : marker.column;
 
                 out.print(out.getString(length), JavaTokenTypes.WS);
             }
-            else if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) && out.state.markers.isMarked()) // deep indentation
+            else if (
+                this.settings.getBoolean(
+                    ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP)
+                && out.state.markers.isMarked()) // deep indentation
             {
                 int indentLength = out.getIndentLength();
                 marker = out.state.markers.getLast();
-                int length = (marker.column > indentLength)
-                                 ? (marker.column - indentLength)
-                                 : marker.column;
+
+                int length =
+                    (marker.column > indentLength) ? (marker.column - indentLength)
+                                                   : marker.column;
 
                 out.print(out.getString(length), JavaTokenTypes.WS);
             }
             else // standard indentation
             {
-                out.print(out.getString((out.state.paramLevel * out.indentSize)), JavaTokenTypes.WS);
+                out.print(
+                    out.getString((out.state.paramLevel * out.indentSize)),
+                    JavaTokenTypes.WS);
             }
         }
     }
 
+
     /**
-     * Outputs indentation whitespace according to the current marker offset.
-     * If no marker is set, this method does nothing.
+     * Outputs indentation whitespace according to the current marker offset. If no
+     * marker is set, this method does nothing.
      *
      * @param diff DOCUMENT ME!
      * @param out stream to write to.
@@ -237,19 +241,23 @@ class AbstractPrinter
      *
      * @since 1.0b8
      */
-    protected void printIndentation(int        diff,
-                                    NodeWriter out)
-        throws IOException
+    protected void printIndentation(
+        int        diff,
+        NodeWriter out)
+      throws IOException
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            if (!this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (
+                !this.settings.getBoolean(
+                    ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 /**
                  * @todo implement custom indentation
                  */
-                out.print(out.getString((out.state.paramLevel * out.indentSize) +
-                                        diff), JavaTokenTypes.WS);
+                out.print(
+                    out.getString((out.state.paramLevel * out.indentSize) + diff),
+                    JavaTokenTypes.WS);
             }
             else if (out.state.markers.isMarked())
             {
@@ -265,9 +273,9 @@ class AbstractPrinter
                 }*/
 
                 //offset += out.state.paramLevel * out.indentSize;
-                int length = (marker.column > indentLength)
-                                 ? (marker.column - indentLength)
-                                 : marker.column;
+                int length =
+                    (marker.column > indentLength) ? (marker.column - indentLength)
+                                                   : marker.column;
 
                 if ((length + diff) >= 0)
                 {
@@ -285,12 +293,16 @@ class AbstractPrinter
     /**
      * DOCUMENT ME!
      *
+     * @param node DOCUMENT ME!
+     * @param child DOCUMENT ME!
+     *
      * @return DOCUMENT ME!
      *
      * @since 1.0b9
      */
-    final boolean isChildOf(JavaNode node,
-                            JavaNode child)
+    final boolean isChildOf(
+        JavaNode node,
+        JavaNode child)
     {
         JavaNode parent = child.getParent();
 
@@ -329,18 +341,20 @@ class AbstractPrinter
 
 
     /**
-     * Determines the number of blank lines before the given node as found in
-     * the parsed source file.
+     * Determines the number of blank lines before the given node as found in the parsed
+     * source file.
      *
      * @param node a node.
      *
-     * @return number of blank lines before the given node as found in the
-     *         parsed source file.
+     * @return number of blank lines before the given node as found in the parsed source
+     *         file.
      */
     int getOriginalBlankLines(JavaNode node)
     {
-        int keepLinesUpTo = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
-                                              Defaults.BLANK_LINES_KEEP_UP_TO);
+        int keepLinesUpTo =
+            this.settings.getInt(
+                ConventionKeys.BLANK_LINES_KEEP_UP_TO,
+                ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
         if (keepLinesUpTo <= 0)
         {
@@ -349,10 +363,10 @@ class AbstractPrinter
         }
 
         /**
-         * @todo it is currently not possible to determine the original blank
-         *       lines for the class declarations because of the sorting
-         *       transformation; we need to implement the preserving logic
-         *       via stream splitting and deal with hidden tokens
+         * @todo it is currently not possible to determine the original blank lines for
+         *       the class declarations because of the sorting transformation; we need
+         *       to implement the preserving logic via stream splitting and deal with
+         *       hidden tokens
          */
         switch (node.getPreviousSibling().getType())
         {
@@ -379,9 +393,9 @@ class AbstractPrinter
         {
             case JavaTokenTypes.EXPR :
 
-                for (JavaNode child = (JavaNode)node.getFirstChild();
-                     child != null;
-                     child = (JavaNode)child.getFirstChild())
+                for (
+                    JavaNode child = (JavaNode) node.getFirstChild(); child != null;
+                    child = (JavaNode) child.getFirstChild())
                 {
                     if (child.hasCommentsBefore())
                     {
@@ -389,8 +403,8 @@ class AbstractPrinter
 
                         if (t != null)
                         {
-                            int l = t.getLine() -
-                                    node.getPreviousSibling().getEndLine() - 1;
+                            int l =
+                                t.getLine() - node.getPreviousSibling().getEndLine() - 1;
 
                             if (l > keepLinesUpTo)
                             {
@@ -415,8 +429,10 @@ class AbstractPrinter
 
             case JavaTokenTypes.RCURLY :
 
-                int blankLinesBeforeRcurly = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
-                                                               Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
+                int blankLinesBeforeRcurly =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                        ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                 if (blankLinesBeforeRcurly != -1)
                 {
@@ -428,8 +444,7 @@ class AbstractPrinter
         int result = 0;
 
         /**
-         * @todo currently import nodes have no prevSibling after
-         *       transformation
+         * @todo currently import nodes have no prevSibling after transformation
          */
         if (prev != null)
         {
@@ -456,8 +471,7 @@ class AbstractPrinter
                 }
                 else
                 {
-                    result = node.getHiddenBefore().getLine() -
-                             prev.getEndLine() - 1;
+                    result = node.getHiddenBefore().getLine() - prev.getEndLine() - 1;
                 }
             }
         }
@@ -477,8 +491,9 @@ class AbstractPrinter
      * @param node a node.
      * @param out stream to write to.
      */
-    void logIssues(AST        node,
-                   NodeWriter out)
+    void logIssues(
+        AST        node,
+        NodeWriter out)
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
@@ -492,16 +507,16 @@ class AbstractPrinter
 
                 if (value instanceof List)
                 {
-                    List issues = (List)value;
+                    List issues = (List) value;
 
                     for (int i = 0, size = issues.size(); i < size; i++)
                     {
-                        JavaNode n = (JavaNode)node;
+                        JavaNode n = (JavaNode) node;
                         buf.append(out.filename);
                         buf.append(':');
                         buf.append(out.line);
                         buf.append(':');
-                        buf.append((String)issues.get(i));
+                        buf.append((String) issues.get(i));
 
                         Loggers.IO.warn(buf.toString());
                         buf.setLength(0);
@@ -513,7 +528,7 @@ class AbstractPrinter
                     buf.append(':');
                     buf.append(out.line);
                     buf.append(':');
-                    buf.append((String)value);
+                    buf.append((String) value);
 
                     Loggers.IO.warn(buf.toString());
                 }
@@ -530,9 +545,10 @@ class AbstractPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    void printBlankLinesBefore(JavaNode   node,
-                               NodeWriter out)
-        throws IOException
+    void printBlankLinesBefore(
+        JavaNode   node,
+        NodeWriter out)
+      throws IOException
     {
         int blankLines = getBlankLinesBefore(node, out);
         out.printBlankLines(blankLines);
@@ -540,7 +556,6 @@ class AbstractPrinter
         switch (node.getType())
         {
             case JavaTokenTypes.EXPR :
-
                 // we need to store this information in order to be able to
                 // print the right amout of blank lines before the node. This is
                 // because we print out blank lines for the EXPR node
@@ -555,8 +570,8 @@ class AbstractPrinter
 
 
     /**
-     * Prints all comments after the given node. The handling of newlines
-     * before and after depends on the type of the given node.
+     * Prints all comments after the given node. The handling of newlines before and
+     * after depends on the type of the given node.
      *
      * @param node node that have its comments printed.
      * @param out stream to write to.
@@ -567,16 +582,17 @@ class AbstractPrinter
      *
      * @see #printCommentsAfter(AST, boolean, boolean, NodeWriter)
      */
-    boolean printCommentsAfter(AST        node,
-                               NodeWriter out)
-        throws IOException
+    boolean printCommentsAfter(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         if (out.mode != NodeWriter.MODE_DEFAULT)
         {
             return false;
         }
 
-        JavaNode n = (JavaNode)node;
+        JavaNode n = (JavaNode) node;
 
         if (n.getHiddenAfter() == null)
         {
@@ -609,13 +625,16 @@ class AbstractPrinter
                 /**
                  * @todo does this stuff still work in 1.0b9?
                  */
-                if (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                          Defaults.BRACE_NEWLINE_LEFT))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.BRACE_NEWLINE_LEFT,
+                        ConventionDefaults.BRACE_NEWLINE_LEFT))
                 {
                     // print directly after, newlines are
                     // handled by BlockPrinter.java
-                    result = printCommentsAfter(node, NodeWriter.NEWLINE_NO,
-                                                NodeWriter.NEWLINE_NO, out);
+                    result =
+                        printCommentsAfter(
+                            node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
                 }
                 else
                 {
@@ -647,8 +666,9 @@ class AbstractPrinter
                 break;
 
             default :
-                result = printCommentsAfter(node, NodeWriter.NEWLINE_NO,
-                                            NodeWriter.NEWLINE_NO, out);
+                result =
+                    printCommentsAfter(
+                        node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 
                 break;
         }
@@ -661,28 +681,24 @@ class AbstractPrinter
      * Prints all comments after the given node.
      *
      * @param node node that have its comments printed.
-     * @param newlineBefore if <code>true</code>, a line break will be added
-     *        before each comment.
-     * @param newlineAfter if <code>true</code>, a line break will be added
-     *        after each comment.
+     * @param newlineBefore if <code>true</code>, a line break will be added before each
+     *        comment.
+     * @param newlineAfter if <code>true</code>, a line break will be added after each
+     *        comment.
      * @param out stream to write to.
      *
      * @return <code>true</code> if comments were printed.
      *
      * @throws IOException if an I/O error occured.
      */
-    boolean printCommentsAfter(AST        node,
-                               boolean    newlineBefore,
-                               boolean    newlineAfter,
-                               NodeWriter out)
-        throws IOException
+    boolean printCommentsAfter(
+        AST        node,
+        boolean    newlineBefore,
+        boolean    newlineAfter,
+        NodeWriter out)
+      throws IOException
     {
-        if (out.mode == NodeWriter.MODE_TEST)
-        {
-            return false;
-        }
-
-        JavaNode n = (JavaNode)node;
+        JavaNode n = (JavaNode) node;
 
         if (n.getHiddenAfter() == null)
         {
@@ -690,28 +706,37 @@ class AbstractPrinter
         }
 
         // if this is not the last right curly brace
-        if ((node.getType() != JavaTokenTypes.RCURLY) ||
-            (out.getIndentLevel() != 0))
+        if ((node.getType() != JavaTokenTypes.RCURLY) || (out.getIndentLevel() != 0))
         {
             // store the position where the first comment starts
-            int offset = out.column - 1 +
-                         this.settings.getInt(Keys.INDENT_SIZE_COMMENT_ENDLINE,
-                                           Defaults.INDENT_SIZE_COMMENT_ENDLINE);
-            CommonHiddenStreamToken firstComment = (CommonHiddenStreamToken)n.getHiddenAfter();
+            int offset =
+                out.column - 1
+                + this.settings.getInt(
+                    ConventionKeys.INDENT_SIZE_COMMENT_ENDLINE,
+                    ConventionDefaults.INDENT_SIZE_COMMENT_ENDLINE);
+
+            CommonHiddenStreamToken firstComment =
+                (CommonHiddenStreamToken) n.getHiddenAfter();
 
             // if we have more than one comment
             if (firstComment.getHiddenAfter() != null)
             {
                 // print the first comment directly after the node
-                printCommentAfter(n, firstComment, newlineBefore,
-                                  NodeWriter.NEWLINE_YES, WHITESPACE_YES, out);
+                printCommentAfter(
+                    n, firstComment, newlineBefore, NodeWriter.NEWLINE_YES,
+                    WHITESPACE_YES, true, out);
+
+                if (out.mode != NodeWriter.MODE_DEFAULT)
+                {
+                    return false;
+                }
 
                 int indentLength = out.getIndentLength();
 
                 // and align all other under the first
-                for (CommonHiddenStreamToken comment = firstComment.getHiddenAfter();
-                     comment != null;
-                     comment = comment.getHiddenAfter())
+                for (
+                    CommonHiddenStreamToken comment = firstComment.getHiddenAfter();
+                    comment != null; comment = comment.getHiddenAfter())
                 {
                     if (offset < indentLength)
                     {
@@ -722,18 +747,19 @@ class AbstractPrinter
                     }
                     else
                     {
-                        out.print(out.getString(offset - indentLength),
-                                  JavaTokenTypes.WS);
+                        out.print(
+                            out.getString(offset - indentLength), JavaTokenTypes.WS);
                     }
 
-                    printCommentAfter(n, comment, newlineBefore, newlineAfter,
-                                      WHITESPACE_NO, out);
+                    printCommentAfter(
+                        n, comment, newlineBefore, newlineAfter, WHITESPACE_NO, false, out);
                 }
             }
             else
             {
-                printCommentAfter(n, firstComment, newlineBefore, newlineAfter,
-                                  WHITESPACE_YES, out);
+                printCommentAfter(
+                    n, firstComment, newlineBefore, newlineAfter, WHITESPACE_YES, true,
+                    out);
             }
         }
         else
@@ -749,20 +775,26 @@ class AbstractPrinter
                 out.printNewline();
             }
 
-            printCommentAfter(node, firstComment, NodeWriter.NEWLINE_NO,
-                              NodeWriter.NEWLINE_YES,
-                              endlineComment ? WHITESPACE_YES
-                                             : WHITESPACE_NO, out);
+            printCommentAfter(
+                node, firstComment, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES,
+                endlineComment ? WHITESPACE_YES
+                               : WHITESPACE_NO, true, out);
+
+            if (out.mode != NodeWriter.MODE_DEFAULT)
+            {
+                return false;
+            }
 
             // the Java Language Specification requires every single-line
             // comment to be terminated by an end-of-line sequence, for the
             // sake of simplicity we print one for all comment types
-            for (CommonHiddenStreamToken comment = firstComment.getHiddenAfter();
-                 comment != null;
-                 comment = comment.getHiddenAfter())
+            for (
+                CommonHiddenStreamToken comment = firstComment.getHiddenAfter();
+                comment != null; comment = comment.getHiddenAfter())
             {
-                printCommentAfter(n, comment, newlineBefore,
-                                  NodeWriter.NEWLINE_YES, WHITESPACE_NO, out);
+                printCommentAfter(
+                    n, comment, newlineBefore, NodeWriter.NEWLINE_YES, WHITESPACE_NO,
+                    false, out);
             }
         }
 
@@ -782,9 +814,10 @@ class AbstractPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    boolean printCommentsBefore(AST        node,
-                                NodeWriter out)
-        throws IOException
+    boolean printCommentsBefore(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         return printCommentsBefore(node, true, out);
     }
@@ -794,8 +827,8 @@ class AbstractPrinter
      * Prints all comments before the given node.
      *
      * @param node node that have its comments printed.
-     * @param newlineBefore if <code>true</code> a line break will be printed
-     *        before the comment.
+     * @param newlineBefore if <code>true</code> a line break will be printed before the
+     *        comment.
      * @param out stream to write to.
      *
      * @return <code>true</code> if comments were printed.
@@ -803,17 +836,18 @@ class AbstractPrinter
      * @throws IOException if an I/O error occured.
      * @throws RuntimeException DOCUMENT ME!
      */
-    boolean printCommentsBefore(AST        node,
-                                boolean    newlineBefore,
-                                NodeWriter out)
-        throws IOException
+    boolean printCommentsBefore(
+        AST        node,
+        boolean    newlineBefore,
+        NodeWriter out)
+      throws IOException
     {
         if (out.mode == NodeWriter.MODE_TEST)
         {
             return false;
         }
 
-        JavaNode n = (JavaNode)node;
+        JavaNode n = (JavaNode) node;
 
         if (!n.hasCommentsBefore())
         {
@@ -823,23 +857,25 @@ class AbstractPrinter
             return false;
         }
 
-        int linesToKeep = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
-                                            Defaults.BLANK_LINES_KEEP_UP_TO);
+        int linesToKeep =
+            this.settings.getInt(
+                ConventionKeys.BLANK_LINES_KEEP_UP_TO,
+                ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
         boolean keepLines = linesToKeep > -1;
 
         CommonHiddenStreamToken previousComment = null;
 
         // the first hidden token is actually the last token found, so we
         // have to traverse the chain first
-        for (CommonHiddenStreamToken token = ((JavaNode)node).getHiddenBefore();
-             token != null;
-             token = token.getHiddenBefore())
+        for (
+            CommonHiddenStreamToken token = ((JavaNode) node).getHiddenBefore();
+            token != null; token = token.getHiddenBefore())
         {
             if (token.getHiddenBefore() == null)
             {
-                for (CommonHiddenStreamToken comment = token;
-                     comment != null;
-                     comment = comment.getHiddenAfter())
+                for (
+                    CommonHiddenStreamToken comment = token; comment != null;
+                    comment = comment.getHiddenAfter())
                 {
                     switch (comment.getType())
                     {
@@ -868,15 +904,15 @@ class AbstractPrinter
                                         break;
                                 }
 
-                                printCommentBefore(n, comment, comment == token,
-                                                   newlineBefore,
-                                                   NodeWriter.NEWLINE_YES, out);
+                                printCommentBefore(
+                                    n, comment, comment == token, newlineBefore,
+                                    NodeWriter.NEWLINE_YES, out);
                             }
                             else // print in same line
                             {
-                                printCommentBefore(n, comment, comment == token,
-                                                   newlineBefore,
-                                                   NodeWriter.NEWLINE_NO, out);
+                                printCommentBefore(
+                                    n, comment, comment == token, newlineBefore,
+                                    NodeWriter.NEWLINE_NO, out);
                                 out.print(SPACE, out.last);
 
                                 // change the column offset as we don't
@@ -903,16 +939,16 @@ class AbstractPrinter
 
 
     /**
-     * Returns the number of blank lines that should be printed before the
-     * given node.
+     * Returns the number of blank lines that should be printed before the given node.
      *
      * @param node a node.
      * @param out stream to write to.
      *
      * @return the number of blank lines to be printed before the node.
      */
-    private int getBlankLinesBefore(JavaNode   node,
-                                    NodeWriter out)
+    private int getBlankLinesBefore(
+        JavaNode   node,
+        NodeWriter out)
     {
         int result = 0;
 
@@ -962,8 +998,10 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_DECLARATION,
-                                                       Defaults.BLANK_LINES_BEFORE_DECLARATION);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_BEFORE_DECLARATION,
+                                    ConventionDefaults.BLANK_LINES_BEFORE_DECLARATION);
 
                             break;
                     }
@@ -983,12 +1021,15 @@ class AbstractPrinter
                             case JavaTokenTypes.CTOR_DEF :
                             case JavaTokenTypes.INSTANCE_INIT :
                             case JavaTokenTypes.STATIC_INIT :
-                                return this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
-                                                         Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
+                                return this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                                    ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                             default :
-                                result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
-                                                           Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
+                                result =
+                                    this.settings.getInt(
+                                        ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                                        ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                                 break;
                         }
@@ -1005,8 +1046,10 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
-                                                       Defaults.BLANK_LINES_BEFORE_BLOCK);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
+                                    ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
 
                             break;
                     }
@@ -1033,8 +1076,10 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
-                                                       Defaults.BLANK_LINES_BEFORE_BLOCK);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
+                                    ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
 
                             break;
                     }
@@ -1043,16 +1088,20 @@ class AbstractPrinter
 
                 case JavaTokenTypes.LITERAL_case :
                 case JavaTokenTypes.LITERAL_default :
-                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
-                                               Defaults.BLANK_LINES_BEFORE_CASE_BLOCK);
+                    result =
+                        this.settings.getInt(
+                            ConventionKeys.BLANK_LINES_BEFORE_CASE_BLOCK,
+                            ConventionDefaults.BLANK_LINES_BEFORE_CASE_BLOCK);
 
                     break;
 
                 case JavaTokenTypes.LITERAL_return :
                 case JavaTokenTypes.LITERAL_break :
                 case JavaTokenTypes.LITERAL_continue :
-                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_CONTROL,
-                                               Defaults.BLANK_LINES_BEFORE_CONTROL);
+                    result =
+                        this.settings.getInt(
+                            ConventionKeys.BLANK_LINES_BEFORE_CONTROL,
+                            ConventionDefaults.BLANK_LINES_BEFORE_CONTROL);
 
                     break;
 
@@ -1076,8 +1125,10 @@ class AbstractPrinter
                                     break;
 
                                 default : // means freestanding block
-                                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
-                                                               Defaults.BLANK_LINES_BEFORE_BLOCK);
+                                    result =
+                                        this.settings.getInt(
+                                            ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
+                                            ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
 
                                     break;
                             }
@@ -1091,8 +1142,10 @@ class AbstractPrinter
                 case JavaTokenTypes.LITERAL_catch :
                 case JavaTokenTypes.LITERAL_finally :
 
-                    if (!this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
-                                               Defaults.BRACE_NEWLINE_RIGHT))
+                    if (
+                        !this.settings.getBoolean(
+                            ConventionKeys.BRACE_NEWLINE_RIGHT,
+                            ConventionDefaults.BRACE_NEWLINE_RIGHT))
                     {
                         result--;
                     }
@@ -1128,8 +1181,10 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.METHOD_DEF :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_METHOD,
-                                                       Defaults.BLANK_LINES_AFTER_METHOD);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_METHOD,
+                                    ConventionDefaults.BLANK_LINES_AFTER_METHOD);
 
                             break;
 
@@ -1157,8 +1212,10 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.CTOR_DEF :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_METHOD,
-                                                       Defaults.BLANK_LINES_AFTER_METHOD);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_METHOD,
+                                    ConventionDefaults.BLANK_LINES_AFTER_METHOD);
 
                             break;
 
@@ -1198,12 +1255,13 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.CLASS_DEF :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_CLASS,
-                                                       Defaults.BLANK_LINES_AFTER_CLASS);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_CLASS,
+                                    ConventionDefaults.BLANK_LINES_AFTER_CLASS);
 
                             /**
-                             * @todo see NodeWriter.printRightBrace(int,
-                             *       boolean)
+                             * @todo see NodeWriter.printRightBrace(int, boolean)
                              */
                             if (out.indentLevel == 0)
                             {
@@ -1213,8 +1271,10 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.IMPORT :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
-                                                       Defaults.BLANK_LINES_AFTER_IMPORT);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_IMPORT,
+                                    ConventionDefaults.BLANK_LINES_AFTER_IMPORT);
 
                             break;
 
@@ -1254,12 +1314,13 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.INTERFACE_DEF :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_INTERFACE,
-                                                       Defaults.BLANK_LINES_AFTER_INTERFACE);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_INTERFACE,
+                                    ConventionDefaults.BLANK_LINES_AFTER_INTERFACE);
 
                             /**
-                             * @todo see NodeWriter.printRightBrace(int,
-                             *       boolean)
+                             * @todo see NodeWriter.printRightBrace(int, boolean)
                              */
                             if (out.indentLevel == 0)
                             {
@@ -1269,8 +1330,10 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.IMPORT :
-                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
-                                                       Defaults.BLANK_LINES_AFTER_IMPORT);
+                            result =
+                                this.settings.getInt(
+                                    ConventionKeys.BLANK_LINES_AFTER_IMPORT,
+                                    ConventionDefaults.BLANK_LINES_AFTER_IMPORT);
 
                             break;
 
@@ -1294,9 +1357,9 @@ class AbstractPrinter
                 default :
 
                     /**
-                     * @todo do we need to determine whether this node is part
-                     *       of an imaginary node and thus the blank line
-                     *       setting was already determined?
+                     * @todo do we need to determine whether this node is part of an
+                     *       imaginary node and thus the blank line setting was already
+                     *       determined?
                      */
                     return 0;
             }
@@ -1337,8 +1400,10 @@ class AbstractPrinter
 
                     default :
 
-                        int blankLinesAfterBlock = this.settings.getInt(Keys.BLANK_LINES_AFTER_BLOCK,
-                                                                     Defaults.BLANK_LINES_AFTER_BLOCK);
+                        int blankLinesAfterBlock =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_AFTER_BLOCK,
+                                ConventionDefaults.BLANK_LINES_AFTER_BLOCK);
 
                         if (blankLinesAfterBlock > result)
                         {
@@ -1346,8 +1411,8 @@ class AbstractPrinter
                         }
 
                         /*
-                           if (!this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
-                                                      Defaults.BRACE_NEWLINE_RIGHT))
+                           if (!this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_RIGHT,
+                                                      ConventionDefaults.BRACE_NEWLINE_RIGHT))
                            {
                                switch (node.getPreviousSibling().getType())
                                {
@@ -1399,8 +1464,10 @@ class AbstractPrinter
 
                     default :
 
-                        int blankLinesAfterDeclaration = this.settings.getInt(Keys.BLANK_LINES_AFTER_DECLARATION,
-                                                                           Defaults.BLANK_LINES_AFTER_DECLARATION);
+                        int blankLinesAfterDeclaration =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_AFTER_DECLARATION,
+                                ConventionDefaults.BLANK_LINES_AFTER_DECLARATION);
 
                         if (blankLinesAfterDeclaration > result)
                         {
@@ -1418,8 +1485,10 @@ class AbstractPrinter
             case JavaTokenTypes.LITERAL_do :
             case JavaTokenTypes.LCURLY :
 
-                int blankLinesAfterOpenCurly = this.settings.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
-                                                                 Defaults.BLANK_LINES_AFTER_BRACE_LEFT);
+                int blankLinesAfterOpenCurly =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_AFTER_BRACE_LEFT,
+                        ConventionDefaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
                 if (blankLinesAfterOpenCurly > -1)
                 {
@@ -1463,19 +1532,19 @@ class AbstractPrinter
 
 
     /**
-     * Returns the number of blank lines that should be printed before a node
-     * because of the given comment (the first comment of the given node).
+     * Returns the number of blank lines that should be printed before a node because of
+     * the given comment (the first comment of the given node).
      *
      * @param comment the first comment of a node.
      * @param previous DOCUMENT ME!
      * @param out stream to write to.
      *
-     * @return the number of blank lines to be printed before the given
-     *         comment.
+     * @return the number of blank lines to be printed before the given comment.
      */
-    private int getCommentBlankLines(CommonHiddenStreamToken comment,
-                                     JavaNode                previous,
-                                     NodeWriter              out)
+    private int getCommentBlankLines(
+        CommonHiddenStreamToken comment,
+        JavaNode                previous,
+        NodeWriter              out)
     {
         switch (out.last)
         {
@@ -1484,8 +1553,10 @@ class AbstractPrinter
 
             case JavaTokenTypes.LCURLY :
 
-                int blankLinesAfterOpenCurly = this.settings.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
-                                                                 Defaults.BLANK_LINES_AFTER_BRACE_LEFT);
+                int blankLinesAfterOpenCurly =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_AFTER_BRACE_LEFT,
+                        ConventionDefaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
                 if (blankLinesAfterOpenCurly > -1)
                 {
@@ -1510,8 +1581,10 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
-                                                   Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
+                        result =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
+                                ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
                         break;
                 }
@@ -1519,8 +1592,10 @@ class AbstractPrinter
                 break;
 
             case JavaTokenTypes.SPECIAL_COMMENT :
-                result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
-                                           Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
+                result =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
+                        ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
                 break;
 
@@ -1534,8 +1609,10 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
-                                                   Defaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE);
+                        result =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
+                                ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE);
 
                         break;
                 }
@@ -1552,8 +1629,10 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
-                                                   Defaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC);
+                        result =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
+                                ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC);
 
                         break;
                 }
@@ -1582,8 +1661,10 @@ class AbstractPrinter
         {
             case JavaTokenTypes.PACKAGE_DEF :
 
-                int linesAfterPackage = this.settings.getInt(Keys.BLANK_LINES_AFTER_PACKAGE,
-                                                          Defaults.BLANK_LINES_AFTER_PACKAGE);
+                int linesAfterPackage =
+                    this.settings.getInt(
+                        ConventionKeys.BLANK_LINES_AFTER_PACKAGE,
+                        ConventionDefaults.BLANK_LINES_AFTER_PACKAGE);
 
                 if (result > linesAfterPackage)
                 {
@@ -1597,8 +1678,10 @@ class AbstractPrinter
                 break;
         }
 
-        int keepLinesUpTo = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
-                                              Defaults.BLANK_LINES_KEEP_UP_TO);
+        int keepLinesUpTo =
+            this.settings.getInt(
+                ConventionKeys.BLANK_LINES_KEEP_UP_TO,
+                ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
         int l = comment.getLine() - previous.getEndLine() - 1;
 
@@ -1612,9 +1695,8 @@ class AbstractPrinter
 
 
     /**
-     * Determines whether the given VARIABLE_DEF node denotes a local variable
-     * (those immediately contained by a method, constructor or initializer
-     * block).
+     * Determines whether the given VARIABLE_DEF node denotes a local variable (those
+     * immediately contained by a method, constructor or initializer block).
      *
      * @param node VARIABLE_DEF node.
      *
@@ -1638,8 +1720,7 @@ class AbstractPrinter
      *
      * @param node node to check.
      *
-     * @return <code>true</code> if the given node can have blank lines
-     *         before.
+     * @return <code>true</code> if the given node can have blank lines before.
      */
     private boolean canHaveBlankLinesBefore(JavaNode node)
     {
@@ -1683,22 +1764,23 @@ class AbstractPrinter
 
 
     /**
-     * Outputs a number of blank lines before the given comment (according to
-     * the code convention).
+     * Outputs a number of blank lines before the given comment (according to the code
+     * convention).
      *
      * @param node node to print blank lines for.
      * @param comment the first comment of the given node.
-     * @param first <code>true</code> indicates that <em>comment</em> is the
-     *        first comment (in case of multiple comments in a row)
+     * @param first <code>true</code> indicates that <em>comment</em> is the first
+     *        comment (in case of multiple comments in a row)
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printBlankLinesBefore(JavaNode                node,
-                                       CommonHiddenStreamToken comment,
-                                       boolean                 first,
-                                       NodeWriter              out)
-        throws IOException
+    private void printBlankLinesBefore(
+        JavaNode                node,
+        CommonHiddenStreamToken comment,
+        boolean                 first,
+        NodeWriter              out)
+      throws IOException
     {
         int blankLines = 0;
         int blankLinesForComment = 0;
@@ -1740,9 +1822,9 @@ class AbstractPrinter
                             blankLines = getBlankLinesBefore(node, out);
                         }
 
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1774,9 +1856,9 @@ class AbstractPrinter
                         }
 
                         //blankLinesForComment = 1;
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
 
@@ -1787,9 +1869,9 @@ class AbstractPrinter
                             blankLines = getBlankLinesBefore(node, out);
                         }
 
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1825,9 +1907,9 @@ class AbstractPrinter
                             blankLines = getBlankLinesBefore(node, out);
                         }
 
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1863,9 +1945,9 @@ class AbstractPrinter
                             blankLines = getBlankLinesBefore(node, out);
                         }
 
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1901,9 +1983,9 @@ class AbstractPrinter
                             blankLines = getBlankLinesBefore(node, out);
                         }
 
-                        blankLinesForComment = getCommentBlankLines(comment,
-                                                                    node.getPreviousSibling(),
-                                                                    out);
+                        blankLinesForComment =
+                            getCommentBlankLines(
+                                comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1933,8 +2015,7 @@ class AbstractPrinter
 
 
     /**
-     * Prints the original amout of blank lines between the two given
-     * comments.
+     * Prints the original amout of blank lines between the two given comments.
      *
      * @param comment the comment.
      * @param previousComment the previous comment.
@@ -1943,11 +2024,12 @@ class AbstractPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printBlankLinesBetweenComments(CommonHiddenStreamToken comment,
-                                                CommonHiddenStreamToken previousComment,
-                                                int                     keepLines,
-                                                NodeWriter              out)
-        throws IOException
+    private void printBlankLinesBetweenComments(
+        CommonHiddenStreamToken comment,
+        CommonHiddenStreamToken previousComment,
+        int                     keepLines,
+        NodeWriter              out)
+      throws IOException
     {
         int lines = 0;
 
@@ -1978,32 +2060,37 @@ class AbstractPrinter
      *
      * @param node the node the comment is attached to.
      * @param comment the comment to print.
-     * @param newlineBefore if <code>true</code> a newline will be printed
-     *        before the comment.
-     * @param newlineAfter if <code>true</code> a newline will be printed
-     *        after the comment.
-     * @param whitespaceBefore if <code>true</code> the comment will be
-     *        indented.
+     * @param newlineBefore if <code>true</code> a newline will be printed before the
+     *        comment.
+     * @param newlineAfter if <code>true</code> a newline will be printed after the
+     *        comment.
+     * @param whitespaceBefore if <code>true</code> the comment will be indented.
+     * @param first <code>true</code> indicates that this comment is the first in case
+     *        multiple comments are found in a row.
      * @param out the stream to write to.
      *
      * @throws IOException if an I/O error occured.
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    private void printCommentAfter(AST                     node,
-                                   CommonHiddenStreamToken comment,
-                                   boolean                 newlineBefore,
-                                   boolean                 newlineAfter,
-                                   boolean                 whitespaceBefore,
-                                   NodeWriter              out)
-        throws IOException
+    private void printCommentAfter(
+        AST                     node,
+        CommonHiddenStreamToken comment,
+        boolean                 newlineBefore,
+        boolean                 newlineAfter,
+        boolean                 whitespaceBefore,
+        boolean                 first,
+        NodeWriter              out)
+      throws IOException
     {
         int last = out.last;
         boolean restore = false;
         int indent = 0;
 
-        if ((comment.getColumn() == 1) &&
-            (!this.settings.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
-                                    Defaults.INDENT_FIRST_COLUMN_COMMENT)))
+        if (
+            (comment.getColumn() == 1)
+            && (!this.settings.getBoolean(
+                ConventionKeys.INDENT_FIRST_COLUMN_COMMENT,
+                ConventionDefaults.INDENT_FIRST_COLUMN_COMMENT)))
         {
             // we should retain first column comments, so we have to
             // change the indentation level
@@ -2014,26 +2101,27 @@ class AbstractPrinter
 
         if (whitespaceBefore)
         {
-            out.print(out.getString(this.settings.getInt(
-                                                      Keys.INDENT_SIZE_COMMENT_ENDLINE,
-                                                      Defaults.INDENT_SIZE_COMMENT_ENDLINE)),
-                      JavaTokenTypes.WS);
+            out.print(
+                out.getString(
+                    this.settings.getInt(
+                        ConventionKeys.INDENT_SIZE_COMMENT_ENDLINE,
+                        ConventionDefaults.INDENT_SIZE_COMMENT_ENDLINE)),
+                JavaTokenTypes.WS);
         }
 
         switch (comment.getType())
         {
             case JavaTokenTypes.JAVADOC_COMMENT :
-
-                // Javadoc endline comment may indicate bad
+                // Javadoc endline comment may indicate badly
                 // formatted input source, issue an error here
 
                 /**
-                 * @todo allow Javadoc endline comment if it is the first
-                 *       comment, and only throw error otherwise
+                 * @todo allow Javadoc endline comment if it is the first comment, and
+                 *       only throw error otherwise
                  */
-                throw new IllegalArgumentException("no valid endline comment -- " +
-                                                   comment + "(attached to " +
-                                                   node + ")");
+                throw new IllegalArgumentException(
+                    "no valid endline comment -- " + comment + "(attached to " + node
+                    + ")");
 
             case JavaTokenTypes.SL_COMMENT :
                 out.print(comment.getText(), comment.getType());
@@ -2080,32 +2168,35 @@ class AbstractPrinter
      * @param node node the comment belongs to.
      * @param comment the comment to print.
      * @param first DOCUMENT ME!
-     * @param newlineBefore if <code>true</code>, a line break will be added
-     *        before each comment, if appropriate.
-     * @param newlineAfter if <code>true</code>, a line break will be added
-     *        after each comment, if appropriate.
+     * @param newlineBefore if <code>true</code>, a line break will be added before each
+     *        comment, if appropriate.
+     * @param newlineAfter if <code>true</code>, a line break will be added after each
+     *        comment, if appropriate.
      * @param out the stream to print to.
      *
      * @throws IOException if an I/O error occured.
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    private void printCommentBefore(JavaNode                node,
-                                    CommonHiddenStreamToken comment,
-                                    boolean                 first,
-                                    boolean                 newlineBefore,
-                                    boolean                 newlineAfter,
-                                    NodeWriter              out)
-        throws IOException
+    private void printCommentBefore(
+        JavaNode                node,
+        CommonHiddenStreamToken comment,
+        boolean                 first,
+        boolean                 newlineBefore,
+        boolean                 newlineAfter,
+        NodeWriter              out)
+      throws IOException
     {
         printBlankLinesBefore(node, comment, first, out);
 
         boolean retain = false;
         int indent = 0;
 
-        if ((comment.getType() == JavaTokenTypes.SPECIAL_COMMENT) ||
-            ((comment.getColumn() == 1) &&
-             (!this.settings.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
-                                     Defaults.INDENT_FIRST_COLUMN_COMMENT))))
+        if (
+            (comment.getType() == JavaTokenTypes.SPECIAL_COMMENT)
+            || ((comment.getColumn() == 1)
+            && (!this.settings.getBoolean(
+                ConventionKeys.INDENT_FIRST_COLUMN_COMMENT,
+                ConventionDefaults.INDENT_FIRST_COLUMN_COMMENT))))
         {
             // we should retain indentation, so we have to change the
             // indentation level
@@ -2125,18 +2216,16 @@ class AbstractPrinter
 
             case JavaTokenTypes.JAVADOC_COMMENT :
 
-                ExtendedToken t = (ExtendedToken)comment;
+                ExtendedToken t = (ExtendedToken) comment;
                 Node c = t.getComment();
 
                 if (c != null)
                 {
-                    ((JavadocPrinter)PrinterFactory.create(c)).print(node, c,
-                                                                     out);
+                    ((JavadocPrinter) PrinterFactory.create(c)).print(node, c, out);
                 }
                 else
                 {
-                    printMultiLineComment(comment,
-                                          JavaTokenTypes.JAVADOC_COMMENT, out);
+                    printMultiLineComment(comment, JavaTokenTypes.JAVADOC_COMMENT, out);
                 }
 
                 break;
@@ -2191,23 +2280,26 @@ class AbstractPrinter
      *
      * @since 1.0b8
      */
-    private void printMultiLineComment(CommonHiddenStreamToken comment,
-                                       int                     type,
-                                       NodeWriter              out)
-        throws IOException
+    private void printMultiLineComment(
+        CommonHiddenStreamToken comment,
+        int                     type,
+        NodeWriter              out)
+      throws IOException
     {
         String[] lines = null;
-        boolean format = this.settings.getBoolean(Keys.COMMENT_FORMAT_MULTI_LINE,
-                                               Defaults.COMMENT_FORMAT_MULTI_LINE);
+        boolean format =
+            this.settings.getBoolean(
+                ConventionKeys.COMMENT_FORMAT_MULTI_LINE,
+                ConventionDefaults.COMMENT_FORMAT_MULTI_LINE);
 
         // we always split the comment into several lines in order to indent
         // the text correctly (and the proper eol characters are used)
         if (format)
         {
-            lines = StringHelper.wrapStringToArray(comment.getText(),
-                                                   Integer.MAX_VALUE,
-                                                   out.lineSeparator, false,
-                                                   StringHelper.TRIM_LEADING);
+            lines =
+                StringHelper.wrapStringToArray(
+                    comment.getText(), Integer.MAX_VALUE, out.lineSeparator, false,
+                    StringHelper.TRIM_LEADING);
         }
         else
         {
@@ -2241,11 +2333,13 @@ class AbstractPrinter
      *
      * @since 1.0b8
      */
-    private void printSpecialComment(CommonHiddenStreamToken comment,
-                                     NodeWriter              out)
-        throws IOException
+    private void printSpecialComment(
+        CommonHiddenStreamToken comment,
+        NodeWriter              out)
+      throws IOException
     {
-        String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
+        String[] lines = StringHelper.split(
+                comment.getText(), out.originalLineSeparator);
 
         int lastLine = lines.length - 1;
 
@@ -2253,7 +2347,8 @@ class AbstractPrinter
         {
             if (lines[i].length() > 0)
             {
-                out.print(StringHelper.trimTrailing(lines[i]), JavaTokenTypes.SPECIAL_COMMENT);
+                out.print(
+                    StringHelper.trimTrailing(lines[i]), JavaTokenTypes.SPECIAL_COMMENT);
             }
 
             if (i < lastLine)
@@ -2265,17 +2360,18 @@ class AbstractPrinter
 
 
     /**
-     * Determines wether the given comment makes a line break necessary after
-     * the given node.
+     * Determines wether the given comment makes a line break necessary after the given
+     * node.
      *
      * @param node a node.
      * @param comment a comment.
      *
-     * @return <code>true</code> if the given comment makes a line break
-     *         necessary after the given node.
+     * @return <code>true</code> if the given comment makes a line break necessary after
+     *         the given node.
      */
-    private boolean shouldForceNewline(AST                     node,
-                                       CommonHiddenStreamToken comment)
+    private boolean shouldForceNewline(
+        AST                     node,
+        CommonHiddenStreamToken comment)
     {
         switch (comment.getType())
         {
@@ -2283,8 +2379,10 @@ class AbstractPrinter
             case JavaTokenTypes.SPECIAL_COMMENT :
             case JavaTokenTypes.SEPARATOR_COMMENT :
 
-                if (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                          Defaults.BRACE_NEWLINE_LEFT))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.BRACE_NEWLINE_LEFT,
+                        ConventionDefaults.BRACE_NEWLINE_LEFT))
                 {
                     return (!NodeHelper.isBlockNext(node));
                 }

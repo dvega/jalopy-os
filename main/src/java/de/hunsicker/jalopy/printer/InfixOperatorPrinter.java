@@ -1,46 +1,18 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.*;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,7 +24,7 @@ import java.io.IOException;
 class InfixOperatorPrinter
     extends OperatorPrinter
 {
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new InfixOperatorPrinter object.
@@ -61,14 +33,15 @@ class InfixOperatorPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         print(node, true, out);
     }
@@ -78,117 +51,189 @@ class InfixOperatorPrinter
      * Outputs the given node to the given stream.
      *
      * @param node node to print.
-     * @param paddOperator if <code>true</code> a space will be printed before
-     *        and after the operator.
+     * @param paddOperator if <code>true</code> a space will be printed before and after
+     *        the operator.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      */
-    public void print(AST        node,
-                      boolean    paddOperator,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        boolean    paddOperator,
+        NodeWriter out)
+      throws IOException
     {
-        boolean shouldWrap = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                   Defaults.LINE_WRAP);
-        boolean wrapLines = false; // actually perform line wrapping
-        boolean insertLeft = false; // insert parentheses for the lhs expression
-        boolean insertRight = false; // insert parentheses for the rhs expression
+        AST lhsLeftParen = null;
+        AST lhsRightParen = null;
 
-        AST lhs = null;
-        AST next = null;
+        JavaNode lhs = null;
+        JavaNode rhs = null; // rhs, maybe another left parenthesis
 
-ITERATE:
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        int count = 0; // number of brace pairs
+
+ITERATE: 
+
+        // determine whether the operands already have or need parentheses
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
                 case JavaTokenTypes.LPAREN :
 
-                    // grouping parentheses already present, to simplify
-                    // printing we treat this case equal to manual insertion
-                    insertLeft = true;
+                    if (count == 0) // first left parenthesis
+                    {
+                        lhsLeftParen = child;
+                    }
+
+                    count++;
+
+                    break;
+
+                case JavaTokenTypes.RPAREN :
+                    count--;
+
+                    if (count == 0) // last right parenthesis
+                    {
+                        lhsRightParen = child;
+
+                        rhs = (JavaNode) child.getNextSibling();
+
+                        break ITERATE;
+                    }
 
                     break;
 
                 default :
-                    lhs = child;
+                    lhs = (JavaNode) child;
 
-                    for (AST c = child.getNextSibling();
-                         c != null;
-                         c = c.getNextSibling())
+                    if (count == 0) // no parentheses
                     {
-                        switch (c.getType())
-                        {
-                            case JavaTokenTypes.RPAREN :
-                                break;
+                        rhs = (JavaNode) child.getNextSibling();
 
-                            default :
-                                next = c;
-
-                                break ITERATE;
-                        }
+                        break ITERATE;
                     }
 
                     break;
             }
         }
 
-        AST rhs = null;
+        AST rhsLeftParen = null;
+        AST rhsRightParen = null;
 
-        for (AST child = next; child != null; child = child.getNextSibling())
+        count = 0;
+
+        for (AST child = rhs; child != null; child = child.getNextSibling())
         {
             switch (child.getType())
             {
                 case JavaTokenTypes.LPAREN :
-                    insertRight = true;
+
+                    if (count == 0) // first left parenthesis
+                    {
+                        rhsLeftParen = child;
+                    }
+
+                    count++;
 
                     break;
 
                 case JavaTokenTypes.RPAREN :
+                    count--;
+
+                    if (count == 0) // last right parenthesis
+                    {
+                        rhsRightParen = child;
+                    }
+
                     break;
 
                 default :
-                    rhs = child;
+                    rhs = (JavaNode) child;
 
                     break;
             }
         }
 
-        if (insertLeft && insertRight)
+        boolean wrapLines =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
+        boolean wrap = false; // actually perform line wrapping
+
+        // both operands have parentheses
+        if ((lhsLeftParen != null) && (rhsLeftParen != null))
         {
             // only perform line wrapping for certain operators
-            wrapLines = canWrap(node, out);
+            wrap = canWrap(node, out);
 
-            print((JavaNode)node, (JavaNode)lhs, (JavaNode)rhs,
-                  shouldWrap && wrapLines, paddOperator, true, true, out);
+            printImpl(
+                (JavaNode) node, lhs, rhs, lhsLeftParen, lhsRightParen, rhsLeftParen,
+                rhsRightParen, wrapLines && wrap, paddOperator, out);
         }
         else
         {
-            boolean insertExpressionParentheses = this.settings.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
-                                                                        Defaults.INSERT_EXPRESSION_PARENTHESIS);
+            boolean insertParentheses =
+                this.settings.getBoolean(
+                    ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
+                    ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS);
 
             // should we add parentheses to make precedence obvious?
-            if (insertExpressionParentheses)
+            if (insertParentheses)
             {
-                if (!insertLeft)
+                if (lhsLeftParen == null)
                 {
-                    insertLeft = getPrecedence(lhs) > getPrecedence(node);
+                    if (getPrecedence(lhs) > getPrecedence(node))
+                    {
+                        if (out.mode == NodeWriter.MODE_DEFAULT)
+                        {
+                            addParentheses(lhs);
+                            lhsLeftParen = lhs.getPreviousSibling();
+                            lhsRightParen = lhs.getNextSibling();
+                        }
+                        else
+                        {
+                            // we can't add the parentheses if in test mode
+                            // because the node would then be wrongly treated in
+                            // default mode, just spit out two chars to get the
+                            // length right
+                            out.print(LPAREN, out.last);
+                            out.print(RPAREN, out.last);
+                        }
+                    }
                 }
 
-                if (!insertRight)
+                if (rhsLeftParen == null)
                 {
-                    insertRight = getPrecedence(rhs) > getPrecedence(node);
+                    if (getPrecedence(rhs) > getPrecedence(node))
+                    {
+                        if (out.mode == NodeWriter.MODE_DEFAULT)
+                        {
+                            addParentheses(rhs);
+                            rhsLeftParen = rhs.getPreviousSibling();
+                            rhsRightParen = rhs.getNextSibling();
+                        }
+                        else
+                        {
+                            // we can't add the parentheses if in test mode
+                            // because the node would then be wrongly treated in
+                            // default mode, just spit out two chars to get the
+                            // length right
+                            out.print(LPAREN, out.last);
+                            out.print(RPAREN, out.last);
+                        }
+                    }
                 }
             }
 
             // only perform line wrapping for certain operators
-            wrapLines = canWrap(node, out);
-            print((JavaNode)node, (JavaNode)lhs, (JavaNode)rhs,
-                  shouldWrap && wrapLines, paddOperator, insertLeft,
-                  insertRight, out);
+            if (wrapLines)
+            {
+                wrap = canWrap(node, out);
+            }
+
+            printImpl(
+                (JavaNode) node, lhs, rhs, lhsLeftParen, lhsRightParen, rhsLeftParen,
+                rhsRightParen, wrapLines && wrap, paddOperator, out);
         }
     }
 
@@ -199,49 +244,57 @@ ITERATE:
      * @param operator operator node to print.
      * @param lhs left hand side expression.
      * @param rhs right hand side expression.
-     * @param wrapLines if <code>true</code> performs line wrapping, if
-     *        necessary.
-     * @param paddOperator if <code>true</code> adds padding whitespace around
-     *        the operator.
-     * @param insertLeftParen if <code>true</code> inserts parentheses for the
-     *        lhs expression.
-     * @param insertRightParen if <code>true</code> inserts parentheses for
-     *        the rhs expression.
+     * @param lhsLeftParen DOCUMENT ME!
+     * @param lhsRightParen DOCUMENT ME!
+     * @param rhsLeftParen DOCUMENT ME!
+     * @param rhsRightParen DOCUMENT ME!
+     * @param wrapLines if <code>true</code> performs line wrapping, if necessary.
+     * @param paddOperator if <code>true</code> adds padding whitespace around the
+     *        operator.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      */
-    private void print(JavaNode   operator,
-                       JavaNode   lhs,
-                       JavaNode   rhs,
-                       boolean    wrapLines,
-                       boolean    paddOperator,
-                       boolean    insertLeftParen,
-                       boolean    insertRightParen,
-                       NodeWriter out)
-        throws IOException
+    private void printImpl(
+        JavaNode   operator,
+        JavaNode   lhs,
+        JavaNode   rhs,
+        AST        lhsLeftParen,
+        AST        lhsRightParen,
+        AST        rhsLeftParen,
+        AST        rhsRightParen,
+        boolean    wrapLines,
+        boolean    paddOperator,
+        NodeWriter out)
+      throws IOException
     {
-        if (insertLeftParen)
-        {
-            printWithParentheses(lhs, out);
-        }
-        else
+        if (lhsLeftParen == null)
         {
             PrinterFactory.create(lhs).print(lhs, out);
         }
+        else
+        {
+            printWithParentheses(lhs, lhsLeftParen, lhsRightParen, out);
+        }
 
         boolean continuation = out.continuation;
-        boolean continuationIndent = this.settings.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
-                                                           Defaults.INDENT_CONTINUATION_OPERATOR);
+        boolean continuationIndent =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_CONTINUATION_OPERATOR,
+                ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
+
         if (continuationIndent && !continuation)
         {
             switch (operator.getType())
             {
-                case JavaTokenTypes.PLUS:
-                case JavaTokenTypes.MINUS:
+                case JavaTokenTypes.PLUS :
+                case JavaTokenTypes.MINUS :
                     break;
-                    default:
+
+                default :
                     out.continuation = true;
+
+                    break;
             }
         }
 
@@ -254,8 +307,10 @@ ITERATE:
             printIndentation(out);
         }
 
-        boolean wrapBeforeOperator = this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR,
-                                                           Defaults.LINE_WRAP_BEFORE_OPERATOR);
+        boolean wrapBeforeOperator =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
+                ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR);
         boolean commentAfter = operator.hasCommentsAfter();
 
         // no line wrap before operator means that we maybe have to add
@@ -275,15 +330,24 @@ ITERATE:
 
         if (commentAfter)
         {
-            printCommentsAfter(operator, NodeWriter.NEWLINE_NO,
-                               NodeWriter.NEWLINE_YES, out);
+            printCommentsAfter(
+                operator, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
             wrapped = true;
 
             printIndentation(out);
         }
         else if (wrapLines)
         {
-            if (out.state.wrap) // force wrapping for all operators
+            boolean wrapAll = false;
+
+            if (!out.state.parenScope.isEmpty())
+            {
+                ParenthesesScope scope =
+                    (ParenthesesScope) out.state.parenScope.getFirst();
+                wrapAll = scope.wrap;
+            }
+
+            if (wrapAll) // force wrapping for all operators
             {
                 switch (operator.getType())
                 {
@@ -294,9 +358,11 @@ ITERATE:
                         {
                             TestNodeWriter tester = out.testers.get();
                             PrinterFactory.create(rhs).print(rhs, tester);
-                            wrapped = performWrap(tester.length, operator,
-                                                  wrapBeforeOperator,
-                                                  paddOperator, out);
+                            wrapped =
+                                performWrap(
+                                    tester.length + ((rhsLeftParen != null) ? 2
+                                                                            : 0),
+                                    operator, wrapBeforeOperator, paddOperator, out);
                             out.testers.release(tester);
                         }
 
@@ -316,8 +382,11 @@ ITERATE:
                 {
                     TestNodeWriter tester = out.testers.get();
                     PrinterFactory.create(rhs).print(rhs, tester);
-                    wrapped = performWrap(tester.length, operator,
-                                          wrapBeforeOperator, paddOperator, out);
+                    wrapped =
+                        performWrap(
+                            tester.length + ((rhsLeftParen != null) ? 2
+                                                                    : 0), operator,
+                            wrapBeforeOperator, paddOperator, out);
                     out.testers.release(tester);
                 }
             }
@@ -328,10 +397,11 @@ ITERATE:
             if (paddOperator)
             {
                 if (!wrapped)
+                {
                     out.print(SPACE, JavaTokenTypes.WS);
+                }
 
-                out.print(operator.getText(),
-                          operator.getType());
+                out.print(operator.getText(), operator.getType());
                 out.print(SPACE, JavaTokenTypes.WS);
             }
             else
@@ -339,22 +409,22 @@ ITERATE:
                 out.print(operator.getText(), operator.getType());
             }
         }
-        else if (!wrapped)
+        else if (paddOperator && !wrapped)
         {
             out.print(SPACE, JavaTokenTypes.WS);
         }
 
-        if (insertRightParen)
-        {
-            printWithParentheses(rhs, out);
-        }
-        else
+        if (rhsLeftParen == null)
         {
             PrinterFactory.create(rhs).print(rhs, out);
         }
+        else
+        {
+            printWithParentheses(rhs, rhsLeftParen, rhsRightParen, out);
+        }
 
         // if the rhs expression is followed by an enline comment, we have to
-        // take care that the any non-operator element that follows, will be
+        // take care that any non-operator element that follows, will be
         // correctly indented, e.g.
         //
         // String test = "multi" + // comment 1

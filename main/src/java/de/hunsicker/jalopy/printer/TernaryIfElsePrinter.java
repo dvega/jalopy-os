@@ -1,45 +1,18 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -51,12 +24,12 @@ import java.io.IOException;
 final class TernaryIfElsePrinter
     extends OperatorPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new TernaryIfElsePrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new TernaryIfPrinter object.
@@ -65,7 +38,7 @@ final class TernaryIfElsePrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -81,9 +54,10 @@ final class TernaryIfElsePrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         Marker marker = out.state.markers.add();
 
@@ -93,7 +67,7 @@ final class TernaryIfElsePrinter
         Marker m = printQuestionMark(node, secondOperand, out);
 
         // print the second operand
-        JavaNode colon = (JavaNode)printOperand(secondOperand, marker, out);
+        JavaNode colon = (JavaNode) printOperand(secondOperand, marker, out);
 
         printColon(colon, m, out);
 
@@ -107,8 +81,8 @@ final class TernaryIfElsePrinter
     /**
      * Gets the next operand of the ternary expression.
      *
-     * @param node the node of the ternary expression. Either LPAREN, EXPR or
-     *        an operator.
+     * @param node the node of the ternary expression. Either LPAREN, EXPR or an
+     *        operator.
      *
      * @return the next operand of the ternary expression.
      *
@@ -126,7 +100,7 @@ final class TernaryIfElsePrinter
                     break;
 
                 default :
-                    return (JavaNode)child;
+                    return (JavaNode) child;
             }
         }
 
@@ -135,8 +109,8 @@ final class TernaryIfElsePrinter
 
 
     /**
-     * Determines whether the given node needs parentheses to make expression
-     * precedence clear.
+     * Determines whether the given node needs parentheses to make expression precedence
+     * clear.
      *
      * @param node operand node to check.
      *
@@ -197,23 +171,29 @@ final class TernaryIfElsePrinter
      * Prints the colon.
      *
      * @param colon COLON node.
-     * @param marker marks the position before the question mark. If this value is not <code>null</code> the colon will alignment under the question mark is forced; otherwise the current indentation scheme will be used.
+     * @param marker marks the position before the question mark. If this value is not
+     *        <code>null</code> the colon will alignment under the question mark is
+     *        forced; otherwise the current indentation scheme will be used.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b9
      */
-    private void printColon(JavaNode   colon,
-                            Marker marker,
-                            NodeWriter out)
-        throws IOException
+    private void printColon(
+        JavaNode   colon,
+        Marker     marker,
+        NodeWriter out)
+      throws IOException
     {
-        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                  Defaults.LINE_WRAP) &&
-                            (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean wrapBeforeColon = this.settings.getBoolean(Keys.ALIGN_TERNARY_VALUES,
-                                                   Defaults.ALIGN_TERNARY_VALUES);
+        boolean wrapLines =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
+            && (out.mode == NodeWriter.MODE_DEFAULT);
+        boolean wrapBeforeColon =
+            this.settings.getBoolean(
+                ConventionKeys.ALIGN_TERNARY_VALUES,
+                ConventionDefaults.ALIGN_TERNARY_VALUES);
 
         if (out.newline) // line already wrapped, just indent
         {
@@ -222,7 +202,15 @@ final class TernaryIfElsePrinter
         else if (wrapBeforeColon) // force line wrap/align
         {
             out.printNewline();
-            printIndentation(marker, out);
+
+            if (marker == null)
+            {
+                printIndentation(out);
+            }
+            else
+            {
+                printIndentation(marker, out);
+            }
         }
         else if (wrapLines) // check whether wrap/align necessary
         {
@@ -232,12 +220,20 @@ final class TernaryIfElsePrinter
             PrinterFactory.create(thirdOp).print(thirdOp, tester);
 
             // only wrap and align if necessary
-            if ((tester.length + out.column) > this.settings.getInt(
-                                                                 Keys.LINE_LENGTH,
-                                                                 Defaults.LINE_LENGTH))
+            if (
+                (tester.length + out.column) > this.settings.getInt(
+                    ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
-                printIndentation(marker, out);
+
+                if (marker == null)
+                {
+                    printIndentation(out);
+                }
+                else
+                {
+                    printIndentation(marker, out);
+                }
             }
             else
             {
@@ -253,15 +249,17 @@ final class TernaryIfElsePrinter
 
         out.print(COLON, JavaTokenTypes.COLON);
 
-        if ((!printCommentsAfter(colon, NodeWriter.NEWLINE_NO,
-                                 NodeWriter.NEWLINE_YES, out)) &&
-            !out.newline)
+        if (
+            !printCommentsAfter(
+                colon, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out)
+            && !out.newline)
         {
             out.print(SPACE, JavaTokenTypes.COLON);
         }
         else
         {
             // add +2 to align the third operand under the second
+
             /*out.print(out.getString(((marker.column > indentLength)
                                          ? (marker.column - indentLength)
                                          : marker.column) + 2),
@@ -273,23 +271,24 @@ final class TernaryIfElsePrinter
     /**
      * Prints an operand of the ternary expression.
      *
-     * @param node the first node of the ternary expression. Either a LPAREN,
-     *        EXPR or an operator.
+     * @param node the first node of the ternary expression. Either a LPAREN, EXPR or an
+     *        operator.
      * @param marker marker that marks the position before the first operand.
      * @param out stream to write to.
      *
-     * @return the next operand of the ternary expression. Returns
-     *         <code>null</code> if the third operand was printed.
+     * @return the next operand of the ternary expression. Returns <code>null</code> if
+     *         the third operand was printed.
      *
      * @throws IOException if an I/O error occured.
      * @throws IllegalStateException DOCUMENT ME!
      *
      * @since 1.0b9
      */
-    private AST printOperand(AST        node,
-                             Marker     marker,
-                             NodeWriter out)
-        throws IOException
+    private AST printOperand(
+        AST        node,
+        Marker     marker,
+        NodeWriter out)
+      throws IOException
     {
         // does the operand already contain enclosing parentheses?
         boolean parentheses = false;
@@ -310,20 +309,42 @@ final class TernaryIfElsePrinter
                     {
                         PrinterFactory.create(child).print(child, out);
                     }
-                    else if (this.settings.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
-                                                   Defaults.INSERT_EXPRESSION_PARENTHESIS) &&
-                             needParentheses((JavaNode)child))
+                    else if (
+                        this.settings.getBoolean(
+                            ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
+                            ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS)
+                        && needParentheses((JavaNode) child))
                     {
-                        printWithParentheses((JavaNode)child, out);
+                        JavaNode operator = (JavaNode) child;
+
+                        if (out.mode == NodeWriter.MODE_DEFAULT)
+                        {
+                            addParentheses(operator);
+
+                            AST leftParen = operator.getPreviousSibling();
+                            PrinterFactory.create(leftParen).print(leftParen, out);
+
+                            //AST rightParen = operator.getNextSibling();
+                            PrinterFactory.create(child).print(child, out);
+
+                            //printWithParentheses(operator,leftParen, rightParen, out);
+                        }
+                        else
+                        {
+                            out.print(LPAREN, out.last);
+                            PrinterFactory.create(child).print(child, out);
+
+                            //out.print(RPAREN, out.last);
+                        }
                     }
                     else
                     {
                         PrinterFactory.create(child).print(child, out);
                     }
 
-                    for (child = child.getNextSibling();
-                         child != null;
-                         child = child.getNextSibling())
+                    for (
+                        child = child.getNextSibling(); child != null;
+                        child = child.getNextSibling())
                     {
                         switch (child.getType())
                         {
@@ -352,23 +373,29 @@ final class TernaryIfElsePrinter
      *
      * @param node QUESTION node.
      * @param secondOperand the second operand of the ternary expression.
-     * @param marker marker that marks the position before the first operand.
      * @param out stream to write to.
-     * @return marker that marks the position before the question mark, <code>null</code> if ternary operator aligning is disabled.
+     *
+     * @return marker that marks the position before the question mark, <code>null</code>
+     *         if ternary operator aligning is disabled.
+     *
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b9
      */
-    private Marker printQuestionMark(AST        node,
-                                   AST        secondOperand,
-                                   NodeWriter out)
-        throws IOException
+    private Marker printQuestionMark(
+        AST        node,
+        AST        secondOperand,
+        NodeWriter out)
+      throws IOException
     {
-        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                  Defaults.LINE_WRAP) &&
-                            (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean wrapBeforeQuestion = this.settings.getBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
-                                                        Defaults.ALIGN_TERNARY_EXPRESSION);
+        boolean wrapLines =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
+            && (out.mode == NodeWriter.MODE_DEFAULT);
+        boolean wrapBeforeQuestion =
+            this.settings.getBoolean(
+                ConventionKeys.ALIGN_TERNARY_EXPRESSION,
+                ConventionDefaults.ALIGN_TERNARY_EXPRESSION);
 
         if (out.newline) // line already wrapped, just indent
         {
@@ -388,9 +415,9 @@ final class TernaryIfElsePrinter
 
             // wrap and align if necessary (+3 for the colon between the
             // second and third operator)
-            if ((tester.length + out.column + 3) > this.settings.getInt(
-                                                                     Keys.LINE_LENGTH,
-                                                                     Defaults.LINE_LENGTH))
+            if (
+                (tester.length + out.column + 3) > this.settings.getInt(
+                    ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
                 printIndentation(out);
@@ -409,14 +436,20 @@ final class TernaryIfElsePrinter
 
         Marker marker = null;
 
-        if (this.settings.getBoolean(Keys.ALIGN_TERNARY_OPERATOR, Defaults.ALIGN_TERNARY_OPERATOR) && (wrapLines || wrapBeforeQuestion))
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.ALIGN_TERNARY_OPERATOR,
+                ConventionDefaults.ALIGN_TERNARY_OPERATOR)
+            && (wrapLines || wrapBeforeQuestion))
+        {
             marker = out.state.markers.add();
+        }
 
         out.print(QUESTION, JavaTokenTypes.QUESTION);
 
-        if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO,
-                                 NodeWriter.NEWLINE_YES, out) &&
-            !out.newline)
+        if (
+            !printCommentsAfter(
+                node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out) && !out.newline)
         {
             out.print(SPACE, JavaTokenTypes.COLON);
         }

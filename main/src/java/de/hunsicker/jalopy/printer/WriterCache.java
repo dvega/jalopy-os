@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -38,31 +11,35 @@ import java.util.List;
 
 
 /**
- * A simple cache to avoid continually creating and destroying new
- * TestNodeWriter objects.
+ * A simple cache to avoid continually creating and destroying new TestNodeWriter
+ * objects.
  *
  * @since 1.0b9
  */
 final class WriterCache
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The cached writers. */
     private final List _writers = new ArrayList();
+    private final String _originalLineSeparator;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
-    public WriterCache()
+    public WriterCache(NodeWriter writer)
     {
-        _writers.add(new TestNodeWriter());
+        _originalLineSeparator = writer.originalLineSeparator;
+
+        TestNodeWriter tester = new TestNodeWriter();
+        tester.originalLineSeparator = _originalLineSeparator;
+        _writers.add(tester);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns a TestNodeWriter object. If the cache is not empty, an element
-     * from the cache will be returned; otherwise a new object will be
-     * created.
+     * Returns a TestNodeWriter object. If the cache is not empty, an element from the
+     * cache will be returned; otherwise a new object will be created.
      *
      * @return a TestNodeWriter object.
      */
@@ -72,11 +49,14 @@ final class WriterCache
         {
             if (_writers.size() > 0)
             {
-                return (TestNodeWriter)_writers.remove(0);
+                return (TestNodeWriter) _writers.remove(0);
             }
         }
 
-        return new TestNodeWriter();
+        TestNodeWriter tester = new TestNodeWriter();
+        tester.originalLineSeparator = _originalLineSeparator;
+
+        return tester;
     }
 
 

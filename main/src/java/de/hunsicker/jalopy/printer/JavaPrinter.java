@@ -1,53 +1,27 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.storage.Environment;
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Key;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.util.StringHelper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import de.hunsicker.antlr.CommonHiddenStreamToken;
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.util.StringHelper;
 
 
 /**
@@ -59,15 +33,16 @@ import java.util.StringTokenizer;
 final class JavaPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The empty string array. */
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /** Singleton. */
     private static final Printer INSTANCE = new JavaPrinter();
+    private static final String DELIMETER = "|" /* NOI18N */;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JavaPrinter object.
@@ -76,7 +51,7 @@ final class JavaPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -92,20 +67,24 @@ final class JavaPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        out.environment.set(Environment.Variable.CONVENTION.getName(),
-                            this.settings.get(Keys.CONVENTION_NAME, Defaults.CONVENTION_NAME));
+        out.environment.set(
+            Environment.Variable.CONVENTION.getName(),
+            this.settings.get(
+                ConventionKeys.CONVENTION_NAME, ConventionDefaults.CONVENTION_NAME));
 
         try
         {
-            History.Policy historyPolicy = History.Policy.valueOf(this.settings.get(
-                                                                                 Keys.HISTORY_POLICY,
-                                                                                 Defaults.HISTORY_POLICY));
+            History.Policy historyPolicy =
+                History.Policy.valueOf(
+                    this.settings.get(
+                        ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
             boolean useCommentHistory = (historyPolicy == History.Policy.COMMENT);
-            boolean useHeader = this.settings.getBoolean(Keys.HEADER, false);
+            boolean useHeader = this.settings.getBoolean(ConventionKeys.HEADER, false);
 
             if (useHeader || useCommentHistory)
             {
@@ -117,17 +96,18 @@ final class JavaPrinter
                 printHeader(out);
             }
 
-            boolean useFooter = this.settings.getBoolean(Keys.FOOTER,
-                                                      Defaults.FOOTER);
+            boolean useFooter =
+                this.settings.getBoolean(
+                    ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
 
             if (useFooter)
             {
                 removeFooter(node);
             }
 
-            for (AST child = node.getFirstChild();
-                 child != null;
-                 child = child.getNextSibling())
+            for (
+                AST child = node.getFirstChild(); child != null;
+                child = child.getNextSibling())
             {
                 PrinterFactory.create(child).print(child, out);
             }
@@ -149,22 +129,22 @@ final class JavaPrinter
      *
      * @param key code convention key.
      *
-     * @return identify keys. If no keys are stored, an empty array will be
-     *         returned.
+     * @return identify keys. If no keys are stored, an empty array will be returned.
      */
-    private String[] getKeys(Key key)
+    private String[] getConventionKeys(Convention.Key key)
     {
         List keys = new ArrayList();
         String str = this.settings.get(key, EMPTY_STRING);
-        String delim = "|";
+        String delim = "|" /* NOI18N */;
 
-        for (StringTokenizer tokens = new StringTokenizer(str, delim);
-             tokens.hasMoreElements();)
+        for (
+            StringTokenizer tokens = new StringTokenizer(str, delim);
+            tokens.hasMoreElements();)
         {
             keys.add(tokens.nextElement());
         }
 
-        return (String[])keys.toArray(EMPTY_STRING_ARRAY);
+        return (String[]) keys.toArray(EMPTY_STRING_ARRAY);
     }
 
 
@@ -175,13 +155,15 @@ final class JavaPrinter
      *
      * @return the last node of the AST.
      *
+     * @throws IllegalStateException DOCUMENT ME!
+     *
      * @since 1.0b9
      */
     private JavaNode getLastElement(AST root)
     {
-        for (AST declaration = root.getFirstChild();
-             declaration != null;
-             declaration = declaration.getNextSibling())
+        for (
+            AST declaration = root.getFirstChild(); declaration != null;
+            declaration = declaration.getNextSibling())
         {
             // last top-level declaration
             if (declaration.getNextSibling() == null)
@@ -191,12 +173,13 @@ final class JavaPrinter
                     case JavaTokenTypes.CLASS_DEF :
                     case JavaTokenTypes.INTERFACE_DEF :
 
-                        AST block = NodeHelper.getFirstChild(declaration,
-                                                             JavaTokenTypes.OBJBLOCK);
+                        AST block =
+                            NodeHelper.getFirstChild(
+                                declaration, JavaTokenTypes.OBJBLOCK);
 
-                        for (AST element = block.getFirstChild();
-                             element != null;
-                             element = element.getNextSibling())
+                        for (
+                            AST element = block.getFirstChild(); element != null;
+                            element = element.getNextSibling())
                         {
                             // last RCURLY
                             if (element.getNextSibling() == null)
@@ -204,7 +187,7 @@ final class JavaPrinter
                                 switch (element.getType())
                                 {
                                     case JavaTokenTypes.RCURLY :
-                                        return (JavaNode)element;
+                                        return (JavaNode) element;
                                 }
                             }
                         }
@@ -212,7 +195,7 @@ final class JavaPrinter
                         break;
 
                     case JavaTokenTypes.SEMI :
-                        return (JavaNode)declaration;
+                        return (JavaNode) declaration;
 
                     case JavaTokenTypes.PACKAGE_DEF :
                     case JavaTokenTypes.IMPORT :
@@ -220,7 +203,7 @@ final class JavaPrinter
                         /**
                          * @todo implement
                          */
-                        return (JavaNode)declaration;
+                        return (JavaNode) declaration;
                 }
             }
         }
@@ -240,7 +223,7 @@ final class JavaPrinter
     {
         // we cannot use StringTokenizer because then empty lines would
         // disappear
-        return StringHelper.split(text, "|");
+        return StringHelper.split(text, DELIMETER);
     }
 
 
@@ -252,11 +235,11 @@ final class JavaPrinter
      * @throws IOException if an I/O error occured.
      */
     private void printFooter(NodeWriter out)
-        throws IOException
+      throws IOException
     {
-        String text = out.environment.interpolate(this.settings.get(
-                                                                 Keys.FOOTER_TEXT,
-                                                                 EMPTY_STRING));
+        String text =
+            out.environment.interpolate(
+                this.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
         String[] footer = getLines(text);
 
         if (footer.length > 0)
@@ -267,16 +250,16 @@ final class JavaPrinter
                 case JavaTokenTypes.OBJBLOCK :
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
-
                     // print one extra after the last curly brace of a file
                     out.printNewline();
 
                     break;
             }
 
-            out.printBlankLines(this.settings.getInt(
-                                                  Keys.BLANK_LINES_BEFORE_FOOTER,
-                                                  Defaults.BLANK_LINES_BEFORE_FOOTER));
+            out.printBlankLines(
+                this.settings.getInt(
+                    ConventionKeys.BLANK_LINES_BEFORE_FOOTER,
+                    ConventionDefaults.BLANK_LINES_BEFORE_FOOTER));
 
             for (int i = 0; i < footer.length; i++)
             {
@@ -288,15 +271,18 @@ final class JavaPrinter
                 }
             }
 
-            int blankLinesAfter = this.settings.getInt(
-                                                  Keys.BLANK_LINES_AFTER_FOOTER,
-                                                  Defaults.BLANK_LINES_AFTER_FOOTER);
+            int blankLinesAfter =
+                this.settings.getInt(
+                    ConventionKeys.BLANK_LINES_AFTER_FOOTER,
+                    ConventionDefaults.BLANK_LINES_AFTER_FOOTER);
 
             // always print at least one empty line to be in sync with the
             // Java specs in case the footer consists of several single-line
             // comments
             if (blankLinesAfter == 0)
+            {
                 blankLinesAfter = 1;
+            }
 
             out.printBlankLines(blankLinesAfter);
         }
@@ -311,18 +297,19 @@ final class JavaPrinter
      * @throws IOException if an I/O error occured.
      */
     private void printHeader(NodeWriter out)
-        throws IOException
+      throws IOException
     {
-        String text = out.environment.interpolate(this.settings.get(
-                                                                 Keys.HEADER_TEXT,
-                                                                 EMPTY_STRING));
+        String text =
+            out.environment.interpolate(
+                this.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
         String[] header = getLines(text);
 
         if (header.length > 0)
         {
-            out.printBlankLines(this.settings.getInt(
-                                                  Keys.BLANK_LINES_BEFORE_HEADER,
-                                                  Defaults.BLANK_LINES_BEFORE_HEADER));
+            out.printBlankLines(
+                this.settings.getInt(
+                    ConventionKeys.BLANK_LINES_BEFORE_HEADER,
+                    ConventionDefaults.BLANK_LINES_BEFORE_HEADER));
 
             for (int i = 0; i < header.length; i++)
             {
@@ -330,9 +317,10 @@ final class JavaPrinter
                 out.printNewline();
             }
 
-            out.printBlankLines(this.settings.getInt(
-                                                  Keys.BLANK_LINES_AFTER_HEADER,
-                                                  Defaults.BLANK_LINES_AFTER_HEADER));
+            out.printBlankLines(
+                this.settings.getInt(
+                    ConventionKeys.BLANK_LINES_AFTER_HEADER,
+                    ConventionDefaults.BLANK_LINES_AFTER_HEADER));
             out.last = JavaTokenTypes.ML_COMMENT;
         }
     }
@@ -351,14 +339,15 @@ final class JavaPrinter
 
         if (rcurly.hasCommentsAfter())
         {
-            String[] keys = getKeys(Keys.FOOTER_KEYS);
+            String[] keys = getConventionKeys(ConventionKeys.FOOTER_KEYS);
             int count = 0;
-            int smartModeLines = this.settings.getInt(Keys.FOOTER_SMART_MODE_LINES, 0);
+            int smartModeLines =
+                this.settings.getInt(ConventionKeys.FOOTER_SMART_MODE_LINES, 0);
             boolean smartMode = smartModeLines > 0;
 
-            for (CommonHiddenStreamToken comment = rcurly.getHiddenAfter();
-                 comment != null;
-                 comment = comment.getHiddenAfter())
+            for (
+                CommonHiddenStreamToken comment = rcurly.getHiddenAfter();
+                comment != null; comment = comment.getHiddenAfter())
             {
                 switch (comment.getType())
                 {
@@ -392,8 +381,9 @@ final class JavaPrinter
     }
 
 
-    private void removeFooterComment(CommonHiddenStreamToken comment,
-                                     JavaNode                node)
+    private void removeFooterComment(
+        CommonHiddenStreamToken comment,
+        JavaNode                node)
     {
         CommonHiddenStreamToken before = comment.getHiddenBefore();
         CommonHiddenStreamToken after = comment.getHiddenAfter();
@@ -433,8 +423,8 @@ final class JavaPrinter
 
 
     /**
-     * Removes the header. This method removes both our 'magic' header and the
-     * user header, if any.
+     * Removes the header. This method removes both our 'magic' header and the user
+     * header, if any.
      *
      * @param node the root node of the tree.
      *
@@ -442,31 +432,35 @@ final class JavaPrinter
      */
     private void removeHeader(AST node)
     {
-        History.Policy historyPolicy = History.Policy.valueOf(this.settings.get(
-                                                                             Keys.HISTORY_POLICY,
-                                                                             Defaults.HISTORY_POLICY));
-        JavaNode first = (JavaNode)node.getFirstChild();
-        String[] keys = getKeys(Keys.HEADER_KEYS);
-        int smartModeLines = this.settings.getInt(Keys.HEADER_SMART_MODE_LINES,
-                                               Defaults.HEADER_SMART_MODE_LINES);
+        History.Policy historyPolicy =
+            History.Policy.valueOf(
+                this.settings.get(
+                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
+        JavaNode first = (JavaNode) node.getFirstChild();
+        String[] keys = getConventionKeys(ConventionKeys.HEADER_KEYS);
+        int smartModeLines =
+            this.settings.getInt(
+                ConventionKeys.HEADER_SMART_MODE_LINES,
+                ConventionDefaults.HEADER_SMART_MODE_LINES);
         boolean smartMode = (smartModeLines > 0);
         int line = 0;
 
-        for (CommonHiddenStreamToken token = first.getHiddenBefore();
-             token != null;
-             token = token.getHiddenBefore())
+        for (
+            CommonHiddenStreamToken token = first.getHiddenBefore(); token != null;
+            token = token.getHiddenBefore())
         {
             if (token.getHiddenBefore() == null)
             {
-                for (CommonHiddenStreamToken comment = token;
-                     (comment != null) && (line <= smartModeLines);
-                     comment = comment.getHiddenAfter())
+                for (
+                    CommonHiddenStreamToken comment = token;
+                    (comment != null) && (line <= smartModeLines);
+                    comment = comment.getHiddenAfter())
                 {
                     switch (comment.getType())
                     {
                         case JavaTokenTypes.ML_COMMENT :
                         case JavaTokenTypes.JAVADOC_COMMENT :
-KEY_SEARCH:
+KEY_SEARCH: 
                             for (int j = 0; j < keys.length; j++)
                             {
                                 if (comment.getText().indexOf(keys[j]) > -1)
@@ -505,8 +499,9 @@ KEY_SEARCH:
     }
 
 
-    private void removeHeaderComment(CommonHiddenStreamToken comment,
-                                     JavaNode                node)
+    private void removeHeaderComment(
+        CommonHiddenStreamToken comment,
+        JavaNode                node)
     {
         CommonHiddenStreamToken before = comment.getHiddenBefore();
         CommonHiddenStreamToken after = comment.getHiddenAfter();

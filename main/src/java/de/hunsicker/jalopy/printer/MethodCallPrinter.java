@@ -1,46 +1,19 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.NodeHelper;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,12 +25,12 @@ import java.io.IOException;
 final class MethodCallPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new MethodCallPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new MethodCallPrinter object.
@@ -66,7 +39,7 @@ final class MethodCallPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -106,9 +79,10 @@ final class MethodCallPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         // we need to keep track of the current continuation indentation state
         boolean continuation = out.continuation;
@@ -120,16 +94,20 @@ final class MethodCallPrinter
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                      Defaults.LINE_WRAP);
-            boolean forceWrappingForChainedCalls = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
-                                                                         Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
+            boolean wrapLines =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
+            boolean forceWrappingForChainedCalls =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+                    ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
-            if ((wrapLines || forceWrappingForChainedCalls) &&
-                NodeHelper.isChained(first))
+            if (
+                (wrapLines || forceWrappingForChainedCalls)
+                && NodeHelper.isChained(first))
             {
                 AST firstLink = NodeHelper.getFirstChainLink(node);
-                scope = (ParenthesesScope)out.state.parenScope.getFirst();
+                scope = (ParenthesesScope) out.state.parenScope.getFirst();
 
                 // if no chained call for the current parentheses scope exists,
                 // determine the offset of the first 'dot' and store it
@@ -148,8 +126,7 @@ final class MethodCallPrinter
                         {
                             TestNodeWriter tester = out.testers.get();
                             AST identifier = child.getFirstChild();
-                            PrinterFactory.create(identifier)
-                                          .print(identifier, tester);
+                            PrinterFactory.create(identifier).print(identifier, tester);
                             scope.chainOffset = out.column - 1 + tester.length;
                             out.testers.release(tester);
 
@@ -168,8 +145,7 @@ final class MethodCallPrinter
                     if (out.newline)
                     {
                         /**
-                         * @todo maybe we need to take care of the markers
-                         *       here?
+                         * @todo maybe we need to take care of the markers here?
                          */
                         scope.chainOffset += out.getIndentLength();
                     }
@@ -183,7 +159,7 @@ final class MethodCallPrinter
         boolean innerClass = false;
         Marker marker = null;
 
-        JavaNode parent = ((JavaNode)node).getParent();
+        JavaNode parent = ((JavaNode) node).getParent();
 
         switch (parent.getType())
         {
@@ -238,9 +214,10 @@ final class MethodCallPrinter
                     case JavaTokenTypes.ARRAY_DECLARATOR :
                         length = identifier.getFirstChild().getText().length();
 
-                        if (this.settings.getBoolean(
-                                                  Keys.SPACE_BEFORE_BRACKETS_TYPES,
-                                                  Defaults.SPACE_BEFORE_BRACKETS_TYPES))
+                        if (
+                            this.settings.getBoolean(
+                                ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
+                                ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
                         {
                             length += 1;
                         }
@@ -276,26 +253,27 @@ final class MethodCallPrinter
                         break;
 
                     default :
-                        throw new RuntimeException("unexpected TYPE, was " +
-                                                   type);
+                        throw new RuntimeException("unexpected TYPE, was " + type);
                 }
 
-                if (this.settings.getBoolean(Keys.PADDING_CAST,
-                                          Defaults.PADDING_CAST))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
                 {
                     length += 2;
                 }
 
-                if (this.settings.getBoolean(Keys.SPACE_AFTER_CAST,
-                                          Defaults.SPACE_AFTER_CAST))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.SPACE_AFTER_CAST,
+                        ConventionDefaults.SPACE_AFTER_CAST))
                 {
                     length += 1;
                 }
 
                 // -3 because 1 for the usual 'step one back'
                 //            2 for the parentheses
-                marker = out.state.markers.add(out.line,
-                                               (out.column - 3) - length);
+                marker = out.state.markers.add(out.line, (out.column - 3) - length);
 
                 break;
         }
@@ -304,15 +282,17 @@ final class MethodCallPrinter
 
         PrinterFactory.create(first).print(first, out);
 
-        LeftParenthesisPrinter.getInstance().print(node, out);
-
-        AST elist = first.getNextSibling();
-
-        if (this.settings.getBoolean(Keys.SPACE_BEFORE_METHOD_CALL_PAREN,
-                                  Defaults.SPACE_BEFORE_METHOD_CALL_PAREN))
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_BEFORE_METHOD_CALL_PAREN,
+                ConventionDefaults.SPACE_BEFORE_METHOD_CALL_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.WS);
         }
+
+        LeftParenthesisPrinter.getInstance().print(node, out);
+
+        AST elist = first.getNextSibling();
 
         PrinterFactory.create(elist).print(elist, out);
 
@@ -349,8 +329,8 @@ final class MethodCallPrinter
 
 
     /**
-     * Determines the topmost parent of the given expression node (contained
-     * in a chained method call).
+     * Determines the topmost parent of the given expression node (contained in a chained
+     * method call).
      *
      * @param node an EXPR node.
      *
@@ -370,7 +350,6 @@ final class MethodCallPrinter
              * @todo maybe more operators make sense?
              */
             case JavaTokenTypes.PLUS :
-
                 //case JavaTokenTypes.NOT_EQUAL:
                 //case JavaTokenTypes.EQUAL:
                 return getChainParent(parent);
@@ -382,19 +361,18 @@ final class MethodCallPrinter
 
 
     /**
-     * Determines wether the given method call is the outmost method call or
-     * contained within another method call chain.
+     * Determines wether the given method call is the outmost method call or contained
+     * within another method call chain.
      *
      * @param node a METHOD_CALL node.
      *
-     * @return <code>true</code> if the given method call is the outmost
-     *         method call.
+     * @return <code>true</code> if the given method call is the outmost method call.
      *
      * @since 1.0b7
      */
     static boolean isOuterMethodCall(AST node)
     {
-        JavaNode call = getLastMethodCall((JavaNode)node);
+        JavaNode call = getLastMethodCall((JavaNode) node);
 
         if (call.getPreviousSibling().getType() == JavaTokenTypes.LPAREN)
         {

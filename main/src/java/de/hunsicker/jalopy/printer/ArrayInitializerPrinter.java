@@ -1,46 +1,19 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
+import java.io.IOException;
+
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
-import java.io.IOException;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -52,12 +25,12 @@ import java.io.IOException;
 final class ArrayInitializerPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new ArrayInitializerPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ArrayInitializerPrinter object.
@@ -66,7 +39,7 @@ final class ArrayInitializerPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -82,9 +55,10 @@ final class ArrayInitializerPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         // Options for wrapping:
         //
@@ -92,15 +66,20 @@ final class ArrayInitializerPrinter
         //   - Integer.MAX_VALUE : never wrap
         //   - custom user value : wrap if more than 'value' elements
         //
-        int maxElementsPerLine = this.settings.getInt(Keys.LINE_WRAP_ARRAY_ELEMENTS,
-                                                   Defaults.LINE_WRAP_ARRAY_ELEMENTS);
+        int maxElementsPerLine =
+            this.settings.getInt(
+                ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,
+                ConventionDefaults.LINE_WRAP_ARRAY_ELEMENTS);
         boolean wrapAsNeeded = maxElementsPerLine == 0;
-        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                           Defaults.LINE_LENGTH);
-        boolean bracesPadding = this.settings.getBoolean(Keys.PADDING_BRACES,
-                                                      Defaults.PADDING_BRACES);
-        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                        Defaults.SPACE_AFTER_COMMA);
+        int lineLength =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+        boolean bracesPadding =
+            this.settings.getBoolean(
+                ConventionKeys.PADDING_BRACES, ConventionDefaults.PADDING_BRACES);
+        boolean spaceAfterComma =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         int numElements = 0; // number of array elements
 
         boolean multiArray = hasArrayChild(node);
@@ -112,25 +91,27 @@ final class ArrayInitializerPrinter
         }
 
         // force newline before the left curly brace of a new array dimension
-        if (isFirstOfMultiArray((JavaNode)node))
+        if (isFirstOfMultiArray((JavaNode) node))
         {
             if (!out.newline)
+            {
                 out.printNewline();
+            }
 
             printIndentation(out);
         }
 
-        JavaNode firstElement = (JavaNode)node.getFirstChild();
+        JavaNode firstElement = (JavaNode) node.getFirstChild();
 
         // should we check whether wrapping/aligning is necessary?
-        if ((maxElementsPerLine != Integer.MAX_VALUE) &&
-            (out.mode == NodeWriter.MODE_DEFAULT))
+        if (
+            (maxElementsPerLine != Integer.MAX_VALUE)
+            && (out.mode == NodeWriter.MODE_DEFAULT))
         {
             TestNodeWriter tester = out.testers.get();
 
-            for (AST child = firstElement;
-                 child != null;
-                 child = child.getNextSibling())
+            for (AST child = firstElement; child != null;
+                child = child.getNextSibling())
             {
                 switch (child.getType())
                 {
@@ -155,14 +136,14 @@ final class ArrayInitializerPrinter
             if (numElements > maxElementsPerLine)
             {
                 // but only if the elements don't fit in one line
-                if ((!wrapAsNeeded) ||
-                    ((out.column + tester.length) > lineLength))
+                if (!wrapAsNeeded || ((out.column + tester.length) > lineLength))
                 {
-                    if ((!out.newline) &&
-                        (
-                         (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
-                                                Defaults.BRACE_NEWLINE_LEFT) &&
-                          (((JavaNode)node).getParent().getType() != JavaTokenTypes.ARRAY_INIT))))
+                    if (
+                        (!out.newline) && (out.getIndentLength() != (out.column - 1))
+                        && (this.settings.getBoolean(
+                            ConventionKeys.BRACE_NEWLINE_LEFT,
+                            ConventionDefaults.BRACE_NEWLINE_LEFT)
+                        && (((JavaNode) node).getParent().getType() != JavaTokenTypes.ARRAY_INIT)))
                     {
                         out.printNewline();
                         printIndentation(out);
@@ -172,28 +153,49 @@ final class ArrayInitializerPrinter
 
                     Marker marker = null;
 
-                    if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
-                        marker = out.state.markers.add(out.line, out.state.markers.getLast().column + out.indentSize);
+                    if (
+                        this.settings.getBoolean(
+                            ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
+                    {
+                        if (!out.state.markers.isMarked())
+                        {
+                            marker = out.state.markers.add(out.line, out.column - 2);
+                            out.state.markers.add(
+                                out.line,
+                                out.state.markers.getLast().column + out.indentSize);
+                        }
+                        else
+                        {
+                            marker =
+                                out.state.markers.add(
+                                    out.line,
+                                    out.state.markers.getLast().column + out.indentSize);
+                        }
+                    }
                     else
+                    {
                         out.indent();
+                    }
+
+                    boolean wrapped = false;
 
                     //printCommentsAfter(node, out);
                     if (firstElement.getType() != JavaTokenTypes.ARRAY_INIT)
                     {
-                        if (!multiArray ||  hasArrayParent(node))
+                        if (!multiArray || hasArrayParent(node))
                         {
                             out.printNewline();
                             printIndentation(out);
+                            wrapped = true;
                         }
                     }
 
                     int count = 0;
-                    boolean wrapped = false;
 
                     // print the elements
-                    for (JavaNode child = firstElement;
-                         child != null;
-                         child = (JavaNode)child.getNextSibling())
+                    for (
+                        JavaNode child = firstElement; child != null;
+                        child = (JavaNode) child.getNextSibling())
                     {
                         switch (child.getType())
                         {
@@ -206,10 +208,10 @@ final class ArrayInitializerPrinter
                                 else
                                 {
                                     out.print(COMMA, JavaTokenTypes.COMMA);
-                                    wrapped = printCommentsAfter(child,
-                                                                 NodeWriter.NEWLINE_NO,
-                                                                 !isLastElement(child),
-                                                                 out);
+                                    wrapped =
+                                        printCommentsAfter(
+                                            child, NodeWriter.NEWLINE_NO,
+                                            !isLastElement(child), out);
                                     count = 0;
                                 }
 
@@ -225,18 +227,20 @@ final class ArrayInitializerPrinter
                                 {
                                     // check if we exceed the line length
                                     tester.reset();
-                                    PrinterFactory.create(child)
-                                                  .print(child, tester);
+                                    PrinterFactory.create(child).print(child, tester);
 
-                                    if (((!wrapAsNeeded) &&
-                                         (count > maxElementsPerLine)) ||
-                                        (wrapAsNeeded &&
-                                         ((out.column + tester.length) > lineLength)))
+                                    if (
+                                        (!wrapAsNeeded && (count > maxElementsPerLine))
+                                        || (wrapAsNeeded
+                                        && ((out.column + tester.length) > lineLength)))
                                     {
-                                        JavaNode n = (JavaNode)child;
+                                        JavaNode n = (JavaNode) child;
 
-                                        if (n.hasCommentsBefore() &&
-                                            (((CommonHiddenStreamToken)n.getHiddenBefore()).getLine() == n.getStartLine()))
+                                        if (
+                                            n.hasCommentsBefore()
+                                            && (((CommonHiddenStreamToken) n
+                                            .getHiddenBefore()).getLine() == n
+                                            .getStartLine()))
                                         {
                                             ;
                                         }
@@ -269,7 +273,7 @@ final class ArrayInitializerPrinter
                                             count = 1;
                                             out.printBlankLines(blankLines);
                                         }
-                                        else if (spaceAfterComma && (count > 1))
+                                        else if ((spaceAfterComma && (count > 1)))
                                         {
                                             out.print(SPACE, JavaTokenTypes.WS);
                                         }
@@ -280,29 +284,35 @@ final class ArrayInitializerPrinter
 
                                 PrinterFactory.create(child).print(child, out);
 
-                                switch (child.getType())
+                                /*switch (child.getType())
                                 {
                                     case JavaTokenTypes.EXPR :
 
-                                        if ((!wrapped) && (!isLastElement(child)))
+                                        if (!wrapped && !isLastElement(child))
                                         {
                                             JavaNode c = (JavaNode)child.getFirstChild();
                                         }
 
                                         break;
-                                }
-
+                                }*/
                                 break;
                         }
                     }
 
                     if (marker != null)
+                    {
                         out.state.markers.remove(marker);
+                    }
                     else
+                    {
                         out.unindent();
+                    }
 
                     if (!out.newline)
+                    {
                         out.printNewline();
+                    }
+
                     printIndentation(out);
 
                     out.print(RCURLY, JavaTokenTypes.ARRAY_INIT);
@@ -326,17 +336,16 @@ final class ArrayInitializerPrinter
             out.print(LCURLY, JavaTokenTypes.LCURLY);
         }
 
-        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO,
-                           out);
+        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 
         out.indent();
 
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
 
-        for (JavaNode child = (JavaNode)node.getFirstChild();
-             child != null;
-             child = (JavaNode)child.getNextSibling())
+        for (
+            JavaNode child = (JavaNode) node.getFirstChild(); child != null;
+            child = (JavaNode) child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -345,13 +354,20 @@ final class ArrayInitializerPrinter
 
                     if (!child.hasCommentsAfter())
                     {
-                        out.print(comma, JavaTokenTypes.COMMA);
+                        if (isLast(child))
+                        {
+                            out.print(COMMA, JavaTokenTypes.COMMA);
+                        }
+                        else
+                        {
+                            out.print(comma, JavaTokenTypes.COMMA);
+                        }
                     }
                     else
                     {
                         out.print(COMMA, JavaTokenTypes.COMMA);
-                        printCommentsAfter(child, NodeWriter.NEWLINE_NO,
-                                           NodeWriter.NEWLINE_YES, out);
+                        printCommentsAfter(
+                            child, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
                     }
 
                     break;
@@ -362,7 +378,7 @@ final class ArrayInitializerPrinter
                     {
                         case JavaTokenTypes.EXPR :
 
-                            JavaNode c = (JavaNode)child.getFirstChild();
+                            JavaNode c = (JavaNode) child.getFirstChild();
 
                             if (c.hasCommentsBefore())
                             {
@@ -413,8 +429,7 @@ final class ArrayInitializerPrinter
      *
      * @param node an element of an array initializer.
      *
-     * @return <code>true</code> if the node is part of a multi-dimensional
-     *         array.
+     * @return <code>true</code> if the node is part of a multi-dimensional array.
      *
      * @since 1.0b8
      */
@@ -422,13 +437,31 @@ final class ArrayInitializerPrinter
     {
         JavaNode parent = node.getParent();
 
-        if ((parent.getType() == JavaTokenTypes.ARRAY_INIT) &&
-            (node.getPreviousSibling() == parent))
+        if (
+            (parent.getType() == JavaTokenTypes.ARRAY_INIT)
+            && (node.getPreviousSibling() == parent))
         {
             return true;
         }
 
         return false;
+    }
+
+
+    /**
+     * Determines whether the given element (either an expression or comma operator) is
+     * the last element of the array initializer.
+     *
+     * @param node either an EXPR or COMMA node.
+     *
+     * @return <code>true</code> if the given node is the last element of the array
+     *         initializer.
+     *
+     * @since 1.b09
+     */
+    private boolean isLast(AST node)
+    {
+        return node.getNextSibling().getType() == JavaTokenTypes.RCURLY;
     }
 
 
@@ -459,8 +492,7 @@ final class ArrayInitializerPrinter
      *
      * @param node an element of an array initializer.
      *
-     * @return <code>true</code> if the node is part of a multi-dimensional
-     *         array.
+     * @return <code>true</code> if the node is part of a multi-dimensional array.
      *
      * @since 1.0b8
      */
@@ -476,52 +508,64 @@ final class ArrayInitializerPrinter
         /*JavaNode n = (JavaNode)node;
 
         return n.getParent().getType() == JavaTokenTypes.ARRAY_INIT;*/
-
-            return false;
+        return false;
     }
 
-    private boolean hasArrayParent(AST node)
+
+    /**
+     * Determines whether the given array initializer has another array initializer as a
+     * child (which makes it part of a multi-array thingy).
+     *
+     * @param node ARRAY_INIT node or LITERAl_NEW.
+     *
+     * @return <code>true</code> if another ARRAY_INIT could be found as a child of the
+     *         given initializer or creator.
+     *
+     * @since 1.0b9
+     */
+    private boolean hasArrayChild(AST node)
     {
-        JavaNode parent =  ((JavaNode)node).getParent();
-        switch (parent.getType())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
-            case JavaTokenTypes.ARRAY_INIT:
-                return true;
+            switch (child.getType())
+            {
+                case JavaTokenTypes.ARRAY_INIT :
+                    return true;
 
-            case JavaTokenTypes.LITERAL_new:
-                return parent.getParent().getParent().getType() == JavaTokenTypes.ARRAY_INIT;
+                case JavaTokenTypes.EXPR :
 
+                    AST child1 = child.getFirstChild();
+
+                    switch (child1.getType())
+                    {
+                        case JavaTokenTypes.LITERAL_new :
+
+                            if (hasArrayChild(child1.getFirstChild()))
+                            {
+                                return true;
+                            }
+                    }
+
+                    break;
+            }
         }
 
         return false;
     }
 
-    /**
-     * Determines whether the given array initializer has another array initializer as a child (which makes it part of a multi-array thingy).
-     * @param node ARRAY_INIT node or LITERAl_NEW.
-     * @return <code>true</code> if another ARRAY_INIT could be found as a child of the given initializer or creator.
-     * @since 1.0b9
-     */
-    private boolean hasArrayChild(AST node)
+
+    private boolean hasArrayParent(AST node)
     {
-        for (AST child = node.getFirstChild(); child != null; child = child.getNextSibling())
+        JavaNode parent = ((JavaNode) node).getParent();
+
+        switch (parent.getType())
         {
-            switch (child.getType())
-            {
-                case JavaTokenTypes.ARRAY_INIT:
-                    return true;
+            case JavaTokenTypes.ARRAY_INIT :
+                return true;
 
-                case JavaTokenTypes.EXPR:
-                    AST child1 = child.getFirstChild();
-
-                    switch (child1.getType())
-                    {
-                        case JavaTokenTypes.LITERAL_new:
-                            if( hasArrayChild(child1.getFirstChild()))
-                                return true;
-                    }
-                    break;
-            }
+            case JavaTokenTypes.LITERAL_new :
+                return parent.getParent().getParent().getType() == JavaTokenTypes.ARRAY_INIT;
         }
 
         return false;

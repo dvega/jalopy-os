@@ -1,44 +1,17 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -50,12 +23,12 @@ import java.io.IOException;
 final class ExtendsPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new ExtendsPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ExtendsPrinter object.
@@ -64,7 +37,7 @@ final class ExtendsPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -80,35 +53,47 @@ final class ExtendsPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         AST first = node.getFirstChild();
 
         if (first != null)
         {
-            boolean newlineBefore = this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
-                                                          Defaults.LINE_WRAP_BEFORE_EXTENDS);
-            int deepIndent = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
-                                               Defaults.INDENT_SIZE_DEEP);
-            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                      Defaults.LINE_WRAP) &&
-                                (out.mode == NodeWriter.MODE_DEFAULT);
-            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                               Defaults.LINE_LENGTH);
+            boolean wrapLines =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
+                && (out.mode == NodeWriter.MODE_DEFAULT);
+            int lineLength =
+                this.settings.getInt(
+                    ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+            boolean newlineBefore =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_BEFORE_EXTENDS,
+                    ConventionDefaults.LINE_WRAP_BEFORE_EXTENDS);
+            int indentSize =
+                this.settings.getInt(
+                    ConventionKeys.INDENT_SIZE_EXTENDS,
+                    ConventionDefaults.INDENT_SIZE_EXTENDS);
+            boolean indentCustom = indentSize > -1;
+            boolean wrappedBefore = false;
 
-            if (out.newline || newlineBefore ||
-                (wrapLines &&
-                 (((out.column + 1) > deepIndent) ||
-                  ((out.column + 11 + first.getText().length()) > lineLength))))
+            if (
+                out.newline || newlineBefore
+                || (wrapLines
+                && ((out.column + 8 + first.getText().length()) > lineLength)))
             {
-                out.printNewline();
+                wrappedBefore = true;
+                out.state.extendsWrappedBefore = true;
 
-                int indentSize = this.settings.getInt(Keys.INDENT_SIZE_EXTENDS,
-                                                   Defaults.INDENT_SIZE_EXTENDS);
+                if (!out.newline)
+                {
+                    out.printNewline();
+                }
 
-                if (indentSize > -1) // use custom indentation
+                if (indentCustom)
                 {
                     out.print(out.getString(indentSize), JavaTokenTypes.WS);
                     out.print(EXTENDS_SPACE, JavaTokenTypes.LITERAL_extends);
@@ -117,7 +102,6 @@ final class ExtendsPrinter
                 {
                     out.indent();
                     out.print(EXTENDS_SPACE, JavaTokenTypes.LITERAL_extends);
-                    out.unindent();
                 }
             }
             else
@@ -125,24 +109,57 @@ final class ExtendsPrinter
                 out.print(SPACE_EXTENDS_SPACE, JavaTokenTypes.LITERAL_extends);
             }
 
-            Marker marker = out.state.markers.add();
-            boolean forceWrapping = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_EXTENDS,
-                                                          Defaults.LINE_WRAP_AFTER_TYPES_EXTENDS);
             TestNodeWriter tester = null;
 
-            if (wrapLines)
+            boolean wrapAll =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_TYPES_EXTENDS_EXCEED,
+                    ConventionDefaults.LINE_WRAP_AFTER_TYPES_EXTENDS_EXCEED)
+                && (out.mode == NodeWriter.MODE_DEFAULT);
+
+            if (wrapLines || wrapAll)
             {
                 tester = out.testers.get();
             }
 
-            String comma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                 Defaults.SPACE_AFTER_COMMA)
-                               ? COMMA_SPACE
-                               : COMMA;
+            boolean forceWrapping =
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_TYPES_EXTENDS,
+                    ConventionDefaults.LINE_WRAP_AFTER_TYPES_EXTENDS);
 
-            for (AST child = first;
-                 child != null;
-                 child = child.getNextSibling())
+            if (!forceWrapping && wrapAll)
+            {
+                if (wrappedBefore)
+                {
+                    forceWrapping = true;
+                }
+                else
+                {
+                    PrinterFactory.create(node).print(node, tester);
+
+                    if ((tester.length - 8 + out.column) > lineLength)
+                    {
+                        forceWrapping = true;
+                    }
+
+                    tester.reset();
+                }
+            }
+
+            boolean indentDeep =
+                this.settings.getBoolean(
+                    ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
+            String comma =
+                this.settings.getBoolean(
+                    ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA)
+                ? COMMA_SPACE
+                : COMMA;
+
+            boolean wrappedAfter = false;
+
+            Marker marker = out.state.markers.add();
+
+            for (AST child = first; child != null; child = child.getNextSibling())
             {
                 PrinterFactory.create(child).print(child, out);
 
@@ -154,8 +171,25 @@ final class ExtendsPrinter
                     {
                         out.print(COMMA, JavaTokenTypes.COMMA);
                         out.printNewline();
-                        out.print(out.getString(marker.column - out.getIndentLength()),
-                                  JavaTokenTypes.WS);
+
+                        if (!wrappedAfter)
+                        {
+                            wrappedAfter = true;
+
+                            if (!indentDeep)
+                            {
+                                out.indent();
+                            }
+                        }
+
+                        if (indentCustom && wrappedBefore)
+                        {
+                            printIndentation(indentSize, out);
+                        }
+                        else
+                        {
+                            printIndentation(out);
+                        }
                     }
                     else if (wrapLines)
                     {
@@ -165,8 +199,25 @@ final class ExtendsPrinter
                         {
                             out.print(COMMA, JavaTokenTypes.COMMA);
                             out.printNewline();
-                            out.print(out.getString(marker.column - out.getIndentLength()),
-                                      JavaTokenTypes.WS);
+
+                            if (!wrappedAfter)
+                            {
+                                wrappedAfter = true;
+
+                                if (!indentDeep)
+                                {
+                                    out.indent();
+                                }
+                            }
+
+                            if (indentCustom && wrappedBefore)
+                            {
+                                printIndentation(indentSize, out);
+                            }
+                            else
+                            {
+                                printIndentation(out);
+                            }
                         }
                         else
                         {
@@ -188,6 +239,25 @@ final class ExtendsPrinter
             }
 
             out.state.markers.remove(marker);
+
+            if (wrappedBefore && !indentCustom)
+            {
+                out.unindent();
+            }
+
+            if (wrappedAfter && !indentDeep)
+            {
+                out.unindent();
+            }
+
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.BRACE_TREAT_DIFFERENT_IF_WRAPPED,
+                    ConventionDefaults.BRACE_TREAT_DIFFERENT_IF_WRAPPED)
+                && (wrappedBefore || wrappedAfter))
+            {
+                out.state.newlineBeforeLeftBrace = true;
+            }
         }
     }
 }

@@ -1,44 +1,17 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -51,12 +24,12 @@ import java.io.IOException;
 final class ThrowsPrinter
     extends AbstractPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new ThrowsPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ThrowsPrinter object.
@@ -65,7 +38,7 @@ final class ThrowsPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -81,190 +54,243 @@ final class ThrowsPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
-        AST firstClause = node.getFirstChild();
+        AST firstType = node.getFirstChild();
 
-        boolean wrapBeforeKeyword = false;
-        boolean wrapAfterType = false;
+        boolean wrappedBefore = false;
+        boolean wrappedAfter = false;
 
-        // null means empty imaginary node
-        if (firstClause != null)
+        Marker marker = null;
+
+        boolean wrapLines =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
+            && (out.mode == NodeWriter.MODE_DEFAULT);
+        int lineLength =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+        boolean indentDeep =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
+        int indentLength = out.getIndentLength();
+        int deepIndent =
+            this.settings.getInt(
+                ConventionKeys.INDENT_SIZE_DEEP, ConventionDefaults.INDENT_SIZE_DEEP);
+        int indentSize =
+            this.settings.getInt(
+                ConventionKeys.INDENT_SIZE_THROWS, ConventionDefaults.INDENT_SIZE_THROWS);
+        boolean indentCustom = indentSize > -1;
+
+        if (
+            (out.mode == NodeWriter.MODE_DEFAULT)
+            && (out.newline
+            || this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_THROWS,
+                ConventionDefaults.LINE_WRAP_BEFORE_THROWS)
+            || (wrapLines
+            && exceedsBarriers(node, firstType, lineLength, deepIndent, out))))
         {
-            Marker marker = null;
+            wrappedBefore = true;
 
-            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
-                                                      Defaults.LINE_WRAP) &&
-                                (out.mode == NodeWriter.MODE_DEFAULT);
-            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                               Defaults.LINE_LENGTH);
-            int deepIndent = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
-                                               Defaults.INDENT_SIZE_DEEP);
-            int indentLength = out.getIndentLength();
-
-            if ((out.mode == NodeWriter.MODE_DEFAULT) &&
-                (out.newline || this.settings.getBoolean(
-                                                      Keys.LINE_WRAP_BEFORE_THROWS,
-                                                      Defaults.LINE_WRAP_BEFORE_THROWS) ||
-                 (wrapLines && exceedsBarriers(firstClause, lineLength,
-                                               deepIndent, out))))
+            if (!out.newline)
             {
-                if (!out.newline)
+                out.printNewline();
+            }
+
+            if (indentCustom)
+            {
+                out.print(out.getString(indentSize), JavaTokenTypes.WS);
+                out.print(THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
+                marker = out.state.markers.add();
+            }
+            else
+            {
+                if (indentDeep && canAlign(firstType, lineLength, deepIndent, out))
                 {
-                    out.printNewline();
+                    marker = out.state.markers.getLast();
+
+                    // shift the throws to the left so that the
+                    // exception type(s) align with the parameter(s)
+                    out.print(
+                        out.getString((marker.column - indentLength) - 7),
+                        JavaTokenTypes.WS);
+                    out.print(THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
                 }
-
-                int indentSize = this.settings.getInt(Keys.INDENT_SIZE_THROWS,
-                                                   Defaults.INDENT_SIZE_THROWS);
-
-                if (indentSize > -1) // use custom indentation
+                else // use standard indentation
                 {
-                    out.print(out.getString(indentSize), JavaTokenTypes.WS);
+                    indentDeep = false;
+                    out.indent();
                     out.print(THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
                     marker = out.state.markers.add();
                 }
-                else
-                {
-                    if (this.settings.getBoolean(Keys.INDENT_DEEP,
-                                              Defaults.INDENT_DEEP) &&
-                        canAlign(firstClause, lineLength, deepIndent, out))
+            }
+        }
+        else // print directly after parameters
+        {
+            out.print(SPACE_THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
+            marker = out.state.markers.add();
+        }
+
+        boolean spaceAfterComma =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
+        boolean forceWrapping =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS,
+                ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS);
+        boolean wrapAll =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED,
+                ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED)
+            && (out.mode == NodeWriter.MODE_DEFAULT);
+
+        TestNodeWriter tester = null;
+
+        if (wrapLines || wrapAll)
+        {
+            tester = out.testers.get();
+        }
+
+        if (!forceWrapping && wrapAll)
+        {
+            PrinterFactory.create(node).print(node, tester);
+
+            if ((tester.length - 7 + out.column) > lineLength)
+            {
+                forceWrapping = true;
+            }
+
+            tester.reset();
+        }
+
+        for (AST child = firstType; child != null; child = child.getNextSibling())
+        {
+            switch (child.getType())
+            {
+                case JavaTokenTypes.COMMA :
+                    out.print(COMMA, JavaTokenTypes.COMMA);
+
+                    if (spaceAfterComma)
                     {
-                        marker = out.state.markers.getLast();
-
-                        // shift the throws to the left so that the
-                        // exception type(s) align with the param expressions
-                        out.print(out.getString((marker.column - indentLength) -
-                                                7), JavaTokenTypes.WS);
-                        out.print(THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
+                        out.print(SPACE, JavaTokenTypes.WS);
                     }
-                    else // use standard indentation
+
+                    if (forceWrapping)
                     {
-                        out.indent();
-                        out.print(THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
-                        marker = out.state.markers.add();
-                        out.indent();
-                        wrapBeforeKeyword = true;
-                    }
-                }
-            }
-            else // print directly after parameters
-            {
-                out.print(SPACE_THROWS_SPACE, JavaTokenTypes.LITERAL_throws);
-                marker = out.state.markers.add();
-            }
+                        out.printNewline();
 
-            String indentation = out.getString(marker.column - indentLength);
-            boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                            Defaults.SPACE_AFTER_COMMA);
-            boolean forceWrapping = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
-                                                          Defaults.LINE_WRAP_AFTER_TYPES_THROWS);
-            TestNodeWriter tester = null;
-
-            if (wrapLines)
-            {
-                tester = out.testers.get();
-            }
-
-            for (AST child = firstClause;
-                 child != null;
-                 child = child.getNextSibling())
-            {
-                switch (child.getType())
-                {
-                    case JavaTokenTypes.COMMA :
-                        out.print(COMMA, JavaTokenTypes.COMMA);
-
-                        if (spaceAfterComma)
+                        if (!wrappedAfter)
                         {
-                            out.print(SPACE, JavaTokenTypes.WS);
-                        }
+                            wrappedAfter = true;
 
-                        if (forceWrapping)
-                        {
-                            out.printNewline();
-
-                            if (!wrapBeforeKeyword && !wrapAfterType)
+                            if (!indentDeep)
                             {
-                                wrapAfterType = true;
                                 out.indent();
                             }
-
-                            printIndentation(out);
-
-                            /*if (newlineAfterThrows)
-                            {
-                                out.state.extraWrap = true;
-                            }*/
                         }
-                        else if (wrapLines)
+
+                        if (indentCustom && wrappedBefore)
                         {
-                            AST next = child.getNextSibling();
+                            printIndentation(indentSize, out);
+                        }
+                        else
+                        {
+                            printIndentation(out);
+                        }
 
-                            if (next != null)
+                        /*if (newlineAfterThrows)
+                        {
+                            out.state.newlineBeforeLeftBrace = true;
+                        }*/
+                    }
+                    else if (wrapLines)
+                    {
+                        AST next = child.getNextSibling();
+
+                        if (next != null)
+                        {
+                            PrinterFactory.create(next).print(next, tester);
+
+                            if ((tester.length + out.column) > lineLength)
                             {
-                                PrinterFactory.create(next).print(next, tester);
+                                out.printNewline();
 
-                                if ((tester.length + out.column) > lineLength)
+                                if (!wrappedAfter)
                                 {
-                                    out.printNewline();
+                                    wrappedAfter = true;
 
-                                    if (!wrapBeforeKeyword && !wrapAfterType)
+                                    if (!indentDeep)
                                     {
-                                        wrapAfterType = true;
                                         out.indent();
                                     }
-
-                                    printIndentation(out);
-
-                                    /*if (newlineAfterThrows)
-                                    {
-                                        out.state.extraWrap = true;
-                                    }*/
                                 }
 
-                                tester.reset();
+                                if (indentCustom && wrappedBefore)
+                                {
+                                    printIndentation(indentSize, out);
+                                }
+                                else
+                                {
+                                    printIndentation(out);
+                                }
+
+                                /*if (newlineAfterThrows)
+                                {
+                                    out.state.newlineBeforeLeftBrace = true;
+                                }*/
                             }
+
+                            tester.reset();
                         }
+                    }
 
-                        break;
+                    break;
 
-                    default :
-                        PrinterFactory.create(child).print(child, out);
+                default :
+                    PrinterFactory.create(child).print(child, out);
 
-                        break;
-                }
+                    break;
             }
+        }
 
-            if (tester != null)
+        if (tester != null)
+        {
+            out.testers.release(tester);
+        }
+
+        if (!indentDeep)
+        {
+            if (!indentCustom && wrappedBefore)
             {
-                out.testers.release(tester);
+                out.unindent();
+            }
+
+            if (wrappedAfter)
+            {
+                out.unindent();
             }
         }
 
-        if (wrapBeforeKeyword)
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.BRACE_TREAT_DIFFERENT_IF_WRAPPED,
+                ConventionDefaults.BRACE_TREAT_DIFFERENT_IF_WRAPPED)
+            && (wrappedBefore || wrappedAfter || out.state.parametersWrapped))
         {
-            out.unindent();
-            out.unindent();
-        }
-        else if (wrapAfterType)
-            out.unindent();
-
-        if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
-                                                           Defaults.LINE_WRAP_AFTER_THROWS))
-        {
-            out.state.extraWrap = true;
+            out.state.newlineBeforeLeftBrace = true;
         }
     }
 
 
     /**
-     * Determines whether the given node (denoting the first type name of the
-     * throws clause) can be aligned with the parameter list of the method
-     * declaration.
+     * Determines whether the given node (denoting the first type name of the throws
+     * clause) can be aligned with the parameter list of the method declaration.
      *
-     * @param node the first type.
+     * @param node the first type the throws clause.
      * @param lineLength the maximum line length.
      * @param deepIndent deep indent setting.
      * @param out stream to write to.
@@ -275,20 +301,22 @@ final class ThrowsPrinter
      *
      * @since 1.0b7
      */
-    private boolean canAlign(AST        node,
-                             int        lineLength,
-                             int        deepIndent,
-                             NodeWriter out)
-        throws IOException
+    private boolean canAlign(
+        AST        node,
+        int        lineLength,
+        int        deepIndent,
+        NodeWriter out)
+      throws IOException
     {
         TestNodeWriter tester = out.testers.get();
         PrinterFactory.create(node).print(node, tester);
 
         Marker marker = out.state.markers.getLast();
 
-        if (((marker.column - 7) < deepIndent) &&
-            ((marker.column + tester.length) < lineLength) &&
-            ((marker.column - out.getIndentLength() - 7) > 0))
+        if (
+            ((marker.column - 7) < deepIndent)
+            && ((marker.column + tester.length) < lineLength)
+            && ((marker.column - out.getIndentLength() - 7) > 0))
         {
             out.testers.release(tester);
 
@@ -302,27 +330,28 @@ final class ThrowsPrinter
 
 
     /**
-     * Determines whether the given node (denoting the first type name of the
-     * throws clause) would exceed one of the wrapping barriers without
-     * wrapping.
+     * Determines whether the given node (denoting the first type name of the throws
+     * clause) would exceed one of the wrapping barriers without wrapping.
      *
-     * @param node a type.
+     * @param node a LITERAL_throws node.
+     * @param firstType a LITERAL_String node (the first type of the throws clause).
      * @param lineLength the maximal line length.
      * @param deepIndent the deepIndent size.
      * @param out stream to write to.
      *
-     * @return <code>true</code> if the node would exceed either one of the
-     *         barriers.
+     * @return <code>true</code> if the node would exceed either one of the barriers.
      *
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b7
      */
-    private boolean exceedsBarriers(AST        node,
-                                    int        lineLength,
-                                    int        deepIndent,
-                                    NodeWriter out)
-        throws IOException
+    private boolean exceedsBarriers(
+        AST        node,
+        AST        firstType,
+        int        lineLength,
+        int        deepIndent,
+        NodeWriter out)
+      throws IOException
     {
         if ((out.column + 1) > deepIndent)
         {
@@ -330,17 +359,30 @@ final class ThrowsPrinter
         }
 
         TestNodeWriter tester = out.testers.get();
-        PrinterFactory.create(node).print(node, tester);
 
-        if ((out.column + 7 + tester.length) > lineLength)
+        try
+        {
+            PrinterFactory.create(node).print(node, tester);
+
+            if ((out.column + tester.length) > lineLength)
+            {
+                return true;
+            }
+
+            tester.reset();
+
+            PrinterFactory.create(firstType).print(firstType, tester);
+
+            if ((out.column + 7 + tester.length) > lineLength)
+            {
+                return true;
+            }
+
+            return false;
+        }
+        finally
         {
             out.testers.release(tester);
-
-            return true;
         }
-
-        out.testers.release(tester);
-
-        return false;
     }
 }

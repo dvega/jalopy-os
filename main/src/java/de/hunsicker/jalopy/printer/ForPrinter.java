@@ -1,49 +1,22 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-
 import java.io.IOException;
+
+import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
  * Printer for <code>for</code> loops [<code>LITERAL_for</code>].
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * <strong>for </strong>(<em>initialization</em>; <em>Boolean-expression</em>; <em>step</em>;)
  * {
  *    <em>statement</em>
@@ -56,12 +29,12 @@ import java.io.IOException;
 final class ForPrinter
     extends BlockStatementPrinter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Singleton. */
     private static final Printer INSTANCE = new ForPrinter();
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ForPrinter object.
@@ -70,7 +43,7 @@ final class ForPrinter
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -86,14 +59,17 @@ final class ForPrinter
     /**
      * {@inheritDoc}
      */
-    public void print(AST        node,
-                      NodeWriter out)
-        throws IOException
+    public void print(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         super.print(node, out);
 
-        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
-                                  Defaults.SPACE_BEFORE_STATEMENT_PAREN))
+        if (
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
+                ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(FOR_SPACE, JavaTokenTypes.LITERAL_for);
         }
@@ -116,10 +92,12 @@ final class ForPrinter
         AST secondSemi = forCond.getNextSibling();
         AST forIter = secondSemi.getNextSibling();
 
-        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
-                                           Defaults.LINE_LENGTH);
-        boolean deepIndent = this.settings.getBoolean(Keys.INDENT_DEEP,
-                                                   Defaults.INDENT_DEEP);
+        int lineLength =
+            this.settings.getInt(
+                ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
+        boolean indentDeep =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
         boolean firstWrap = false;
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
@@ -127,8 +105,10 @@ final class ForPrinter
             out.state.paramLevel++;
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
 
-            if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
-                                      Defaults.LINE_WRAP_AFTER_LEFT_PAREN))
+            if (
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
+                    ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
                 TestNodeWriter tester = out.testers.get();
 
@@ -164,26 +144,41 @@ final class ForPrinter
 
         printForInit(forInit, firstWrap, out);
 
-        boolean wrapAll = this.settings.getBoolean(Keys.LINE_WRAP_ALL, Defaults.LINE_WRAP_ALL);
+        boolean wrapAll =
+            this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
+                ConventionDefaults.LINE_WRAP_PARAMS_EXCEED);
+        boolean spaceAfterSemi =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_SEMICOLON,
+                ConventionDefaults.SPACE_AFTER_SEMICOLON);
 
-        out.continuation = this.settings.getBoolean(Keys.INDENT_CONTINUATION_IF,
-                                         Defaults.INDENT_CONTINUATION_IF);
+        out.continuation =
+            this.settings.getBoolean(
+                ConventionKeys.INDENT_CONTINUATION_IF,
+                ConventionDefaults.INDENT_CONTINUATION_IF);
 
         boolean secondWrap = false;
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (firstWrap && wrapAll)
+            {
                 secondWrap = true;
+            }
             else
             {
                 TestNodeWriter tester = out.testers.get();
 
-                AST child = forIter.getFirstChild();
+                AST child = forCond.getFirstChild();
 
                 if (child != null)
                 {
                     PrinterFactory.create(child).print(child, tester);
+
+                    // add enough space for semis before and after
+                    tester.length += (spaceAfterSemi ? 3
+                                                     : 2);
                 }
 
                 if ((out.column + tester.length) > lineLength)
@@ -195,14 +190,16 @@ final class ForPrinter
             }
         }
 
-        printForCond(forCond, secondWrap , out);
+        printForCond(forCond, secondWrap, out);
 
         boolean thirdWrap = false;
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (firstWrap && wrapAll)
+            {
                 thirdWrap = true;
+            }
             else
             {
                 TestNodeWriter tester = out.testers.get();
@@ -212,6 +209,10 @@ final class ForPrinter
                 if (child != null)
                 {
                     PrinterFactory.create(child).print(child, tester);
+
+                    // add enough space for semis before and parenthesis after
+                    tester.length += (spaceAfterSemi ? 5
+                                                     : 3);
                 }
 
                 if ((out.column + tester.length) > lineLength)
@@ -227,18 +228,21 @@ final class ForPrinter
 
         out.continuation = false;
 
-        if ((firstWrap || secondWrap || thirdWrap)  &&
-            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
-                                  Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
+        if (
+            (firstWrap || secondWrap || thirdWrap)
+            && this.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+                ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
             {
                 out.printNewline();
 
-                if (deepIndent)
+                if (indentDeep)
                 {
-                    out.print(out.getString(marker.column - 1 - out.getIndentLength()),
-                              JavaTokenTypes.WS);
+                    out.print(
+                        out.getString(marker.column - 1 - out.getIndentLength()),
+                        JavaTokenTypes.WS);
                 }
             }
 
@@ -271,13 +275,15 @@ final class ForPrinter
             default :
 
                 // insert braces manually
-                if (this.settings.getBoolean(Keys.BRACE_INSERT_FOR,
-                                          Defaults.BRACE_INSERT_FOR))
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.BRACE_INSERT_FOR,
+                        ConventionDefaults.BRACE_INSERT_FOR))
                 {
-                    out.printLeftBrace(this.settings.getBoolean(
-                                                             Keys.BRACE_NEWLINE_LEFT,
-                                                             Defaults.BRACE_NEWLINE_LEFT),
-                                       NodeWriter.NEWLINE_YES);
+                    out.printLeftBrace(
+                        this.settings.getBoolean(
+                            ConventionKeys.BRACE_NEWLINE_LEFT,
+                            ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
                     PrinterFactory.create(body).print(body, out);
                     out.printRightBrace();
                 }
@@ -304,10 +310,11 @@ final class ForPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printForCond(AST        node,
-                              boolean wrap,
-                              NodeWriter out)
-        throws IOException
+    private void printForCond(
+        AST        node,
+        boolean    wrap,
+        NodeWriter out)
+      throws IOException
     {
         out.print(SEMI, JavaTokenTypes.FOR_INIT);
 
@@ -322,15 +329,15 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-                 this.settings.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
-                                       Defaults.SPACE_AFTER_SEMICOLON))
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_SEMICOLON,
+                ConventionDefaults.SPACE_AFTER_SEMICOLON))
         {
             out.print(SPACE, JavaTokenTypes.FOR_INIT);
         }
 
-        for (AST child = node.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+        for (AST child = node.getFirstChild(); child != null;
+            child = child.getNextSibling())
         {
             PrinterFactory.create(child).print(child, out);
         }
@@ -341,14 +348,16 @@ final class ForPrinter
      * Prints the initialization part of the for loop.
      *
      * @param node the initialization part node of the loop.
+     * @param wrap DOCUMENT ME!
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printForInit(AST        node,
-                                boolean wrap,
-                              NodeWriter out)
-        throws IOException
+    private void printForInit(
+        AST        node,
+        boolean    wrap,
+        NodeWriter out)
+      throws IOException
     {
         if (wrap)
         {
@@ -374,10 +383,11 @@ final class ForPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printForIter(AST        node,
-                boolean wrap,
-                              NodeWriter out)
-        throws IOException
+    private void printForIter(
+        AST        node,
+        boolean    wrap,
+        NodeWriter out)
+      throws IOException
     {
         out.print(SEMI, JavaTokenTypes.FOR_INIT);
 
@@ -394,23 +404,25 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-                 this.settings.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
-                                       Defaults.SPACE_AFTER_SEMICOLON))
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_SEMICOLON,
+                ConventionDefaults.SPACE_AFTER_SEMICOLON))
         {
             out.print(SPACE, JavaTokenTypes.FOR_INIT);
         }
 
-        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                        Defaults.SPACE_AFTER_SEMICOLON);
+        boolean spaceAfterComma =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_SEMICOLON);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
 
         // we don't use ParametersPrinter.java because of the
         // automated added parentheses, which would lead to compile
         // errors here
-        for (AST element = elist.getFirstChild();
-             element != null;
-             element = element.getNextSibling())
+        for (
+            AST element = elist.getFirstChild(); element != null;
+            element = element.getNextSibling())
         {
             switch (element.getType())
             {
@@ -429,8 +441,7 @@ final class ForPrinter
 
 
     /**
-     * Outputs a single variable definition of the initialization part of the
-     * for loop.
+     * Outputs a single variable definition of the initialization part of the for loop.
      *
      * @param node a node.
      * @param out the output stream to write to.
@@ -438,10 +449,11 @@ final class ForPrinter
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printVariableDef(AST        node,
-                                  NodeWriter out,
-                                  boolean    printType)
-        throws IOException
+    private void printVariableDef(
+        AST        node,
+        NodeWriter out,
+        boolean    printType)
+      throws IOException
     {
         // the initialization part of the loop can either consist of variable
         // definitions or assignment expressions
@@ -451,17 +463,22 @@ final class ForPrinter
             // one or more assignment expressions
             case JavaTokenTypes.ELIST :
 
-                boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                                Defaults.SPACE_AFTER_COMMA);
+                boolean spaceAfterComma =
+                    this.settings.getBoolean(
+                        ConventionKeys.SPACE_AFTER_COMMA,
+                        ConventionDefaults.SPACE_AFTER_COMMA);
                 String comma = spaceAfterComma ? COMMA_SPACE
                                                : COMMA;
 
-                /** @todo is this still valid? */
+                /**
+                 * @todo is this still valid?
+                 */
+
                 // don't use ParametersPrinter.java because of the added
                 // parenthesis
-                for (AST param = node.getFirstChild();
-                     param != null;
-                     param = param.getNextSibling())
+                for (
+                    AST param = node.getFirstChild(); param != null;
+                    param = param.getNextSibling())
                 {
                     PrinterFactory.create(param).print(param, out);
 
@@ -518,21 +535,23 @@ final class ForPrinter
 
 
     /**
-     * Outputs all variable definitions/initializations of the initialization
-     * part of the for loop.
+     * Outputs all variable definitions/initializations of the initialization part of the
+     * for loop.
      *
      * @param node a VARIABLE_DEF node.
      * @param out the output stream to write to.
      *
      * @throws IOException if an I/O error occured.
      */
-    private void printVariableDefs(AST        node,
-                                   NodeWriter out)
-        throws IOException
+    private void printVariableDefs(
+        AST        node,
+        NodeWriter out)
+      throws IOException
     {
         AST child = node.getFirstChild();
-        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
-                                                        Defaults.SPACE_AFTER_COMMA);
+        boolean spaceAfterComma =
+            this.settings.getBoolean(
+                ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
 
@@ -541,9 +560,9 @@ final class ForPrinter
             case JavaTokenTypes.VARIABLE_DEF :
                 printVariableDef(child, out, true);
 
-                for (child = child.getNextSibling();
-                     child != null;
-                     child = child.getNextSibling())
+                for (
+                    child = child.getNextSibling(); child != null;
+                    child = child.getNextSibling())
                 {
                     out.print(comma, JavaTokenTypes.COMMA);
                     printVariableDef(child, out, false);
@@ -553,9 +572,8 @@ final class ForPrinter
 
             case JavaTokenTypes.ELIST :
 
-                for (AST var = child.getFirstChild();
-                     var != null;
-                     var = var.getNextSibling())
+                for (AST var = child.getFirstChild(); var != null;
+                    var = var.getNextSibling())
                 {
                     switch (child.getType())
                     {
