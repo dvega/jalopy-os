@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -81,7 +81,7 @@ final class ArrayInitializerPrinter
             this.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         int numElements = 0; // number of array elements
-
+        int last = out.last;
         boolean multiArray = hasArrayChild(node);
 
         if (multiArray)
@@ -138,15 +138,36 @@ final class ArrayInitializerPrinter
                 // but only if the elements don't fit in one line
                 if (!wrapAsNeeded || ((out.column + tester.length) > lineLength))
                 {
-                    if (
-                        (!out.newline) && (out.getIndentLength() != (out.column - 1))
-                        && (this.settings.getBoolean(
-                            ConventionKeys.BRACE_NEWLINE_LEFT,
-                            ConventionDefaults.BRACE_NEWLINE_LEFT)
-                        && (((JavaNode) node).getParent().getType() != JavaTokenTypes.ARRAY_INIT)))
+                    if (!out.newline)
                     {
-                        out.printNewline();
-                        printIndentation(out);
+                        if (
+                            (out.getIndentLength() != (out.column - 1))
+                            && (this.settings.getBoolean(
+                                ConventionKeys.BRACE_NEWLINE_LEFT,
+                                ConventionDefaults.BRACE_NEWLINE_LEFT)
+                            && (((JavaNode) node).getParent().getType() != JavaTokenTypes.ARRAY_INIT)))
+                        {
+                            out.printNewline();
+                            printIndentation(out);
+                        }
+
+                        else
+                        {
+                            switch (last)
+                            {
+                                case JavaTokenTypes.ARRAY_DECLARATOR :
+
+                                    if (
+                                        this.settings.getBoolean(
+                                            ConventionKeys.SPACE_BEFORE_BRACES,
+                                            ConventionDefaults.SPACE_BEFORE_BRACES))
+                                    {
+                                        out.print(SPACE, out.last);
+                                    }
+
+                                    break;
+                            }
+                        }
                     }
 
                     out.print(LCURLY, JavaTokenTypes.LCURLY);
@@ -324,6 +345,21 @@ final class ArrayInitializerPrinter
             }
 
             out.testers.release(tester);
+        }
+
+        switch (last)
+        {
+            case JavaTokenTypes.ARRAY_DECLARATOR :
+
+                if (
+                    this.settings.getBoolean(
+                        ConventionKeys.SPACE_BEFORE_BRACES,
+                        ConventionDefaults.SPACE_BEFORE_BRACES))
+                {
+                    out.print(SPACE, out.last);
+                }
+
+                break;
         }
 
         // print everything on one line

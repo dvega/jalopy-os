@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -150,14 +150,6 @@ final class ArrayTypePrinter
             else
             {
                 out.print(BRACKETS, JavaTokenTypes.RBRACK);
-            }
-
-            if (
-                this.settings.getBoolean(
-                    ConventionKeys.SPACE_BEFORE_BRACES,
-                    ConventionDefaults.SPACE_BEFORE_BRACES))
-            {
-                out.print(SPACE, out.last);
             }
         }
 
