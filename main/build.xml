@@ -75,17 +75,15 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <include name="de/hunsicker/util/concurrent/*" />
           <include name="**/swing/resources/*.java.tpl" />
           <include name="**/Bundle*.properties" />
-
-        <exclude name="**/*TestCase*" />
-        <exclude name="TestAll.*" />
-
-          <exclude name="**/ant/Bundle*.properties" />
-          <exclude name="**/console/Bundle*.properties" />
-          <exclude name="**/eclipse/Bundle*.properties" />
-          <exclude name="**/jbuilder/Bundle*.properties" />
-          <exclude name="**/jdev/Bundle*.properties" />
-          <exclude name="**/jedit/Bundle*.properties" />
-          <exclude name="**/netbeans/Bundle*.properties" />
+          <exclude name="**/*TestCase*" />
+          <exclude name="TestAll.*" />
+          <exclude name="**/ant/**/Bundle*.properties" />
+          <exclude name="**/console/**/Bundle*.properties" />
+          <exclude name="**/eclipse/**/Bundle*.properties" />
+          <exclude name="**/jbuilder/**/Bundle*.properties" />
+          <exclude name="**/jdeveloper/**/Bundle*.properties" />
+          <exclude name="**/jedit/**/Bundle*.properties" />
+          <exclude name="**/netbeans/**/Bundle*.properties" />
         </patternset>
       </fileset>
       <zipfileset src="${dir.lib}/antlr-${LIB.VERSION.ANTLR}.jar" casesensitive="false">
