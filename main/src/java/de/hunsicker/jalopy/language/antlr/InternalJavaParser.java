@@ -2288,6 +2288,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop85:
 		do {
 			if ((LA(1)==COMMA)) {
+				JavaNode tmp64_AST = null;
+				tmp64_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp64_AST);
 				match(COMMA);
 				typeParameter();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -4006,6 +4009,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 					inputState.guessing--;
 				}
 				if ( synPredMatched181 ) {
+					JavaNode tmp101_AST = null;
+					tmp101_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp101_AST);
 					match(COMMA);
 					parameterDeclaration();
 					astFactory.addASTChild(currentAST, returnAST);
@@ -4020,6 +4026,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case COMMA:
 			{
+				JavaNode tmp102_AST = null;
+				tmp102_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp102_AST);
 				match(COMMA);
 				variableLengthParameterDeclaration();
 				astFactory.addASTChild(currentAST, returnAST);

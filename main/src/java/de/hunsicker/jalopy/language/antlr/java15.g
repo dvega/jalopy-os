@@ -607,7 +607,7 @@ typeParameters
 	:
 		{currentLtLevel = ltCounter;}
 		LT {ltCounter++;}
-		typeParameter (COMMA! typeParameter)*
+		typeParameter (COMMA typeParameter)*
 		(typeArgumentsOrParametersEnd)?
 
 		// make sure we have gobbled up enough '>' characters
@@ -1045,8 +1045,8 @@ parameterDeclarationList
 	// The semantic check in ( .... )* block is flagged as superfluous, and seems superfluous but
 	// is the only way I could make this work. If my understanding is correct this is a known bug
 	:	(	( parameterDeclaration )=> parameterDeclaration
-			( options {warnWhenFollowAmbig=false;} : ( COMMA! parameterDeclaration ) => COMMA! parameterDeclaration )*
-			( COMMA! variableLengthParameterDeclaration )?
+			( options {warnWhenFollowAmbig=false;} : ( COMMA parameterDeclaration ) => COMMA parameterDeclaration )*
+			( COMMA variableLengthParameterDeclaration )?
 		|
 			variableLengthParameterDeclaration
 		)?
