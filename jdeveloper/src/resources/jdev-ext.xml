@@ -1,0 +1,11 @@
+<!-- This file is extensionman.xml and is located in the root of the jar file -->
+<extensions>
+  <feature>
+    <group name="Jalopy Java Sourfce Code Formatter">
+      <description>See http://jalopy.sourceforge.net/ for more information</description>
+      <extension>
+        <addin>de.hunsicker.jalopy.plugin.jdeveloper.JDevPlugin</addin>
+      </extension>
+    </group>
+  </feature>
+</extensions>  

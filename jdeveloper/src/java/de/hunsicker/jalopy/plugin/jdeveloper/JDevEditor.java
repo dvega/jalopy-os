@@ -16,6 +16,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.util.ChainingRuntimeException;
 
 import oracle.ide.Ide;
+import oracle.ide.cmd.buffer.EditProcessor;
 import oracle.ide.model.TextNode;
 import oracle.javatools.buffer.TextBuffer;
 import oracle.jdeveloper.ceditor.CodeEditor;
@@ -180,6 +181,10 @@ final class JDevEditor
      */
     public void setText(String text)
     {
+        String editName = "Format Source Code"; // %%TODO: Change this to be I18N savy.
+        EditProcessor.doReplaceAll( text.toCharArray(), _node, true, editName, this );
+
+        /*                                    
         TextBuffer buffer = _node.acquireTextBuffer();
 
         try
@@ -196,6 +201,7 @@ final class JDevEditor
                 _node.releaseTextBuffer();
             }
         }
+        */
     }
 
 

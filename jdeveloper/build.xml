@@ -28,6 +28,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
   <property name="dir.src.res" value="${dir.src}/resources" />
+  <property name="dir.compile.metainf" value="${DIR.COMPILE}/META-INF" />
 
   <!-- ==================================================================== -->
   <!-- Defines the project classpath                                        -->
@@ -51,6 +52,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           depends="jdev-compile, jdev-uptodate-jar"
           unless="jar.jdev.uptodate">
     <property name="jar.name" value="jalopy-jdeveloper" />
+    <mkdir dir="${dir.compile.metainf}" />
+    <copy file="${dir.src.res}/jdev-ext.xml"
+          tofile="${dir.compile.metainf}/jdev-ext.xml" />
 
     <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION.JDEVELOPER}.jar"
          duplicate="fail"
@@ -58,6 +62,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <fileset dir="${DIR.COMPILE}" >
         <patternset>
           <include name="de/**/plugin/jdeveloper/**" />
+          <include name="META-INF/jdev-ext.xml" />
         </patternset>
       </fileset>
       <manifest>
@@ -74,6 +79,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         </section>
       </manifest>
     </jar>
+    <delete includeEmptyDirs="true" verbose="true" >
+      <fileset dir="${dir.compile.metainf}" >
+        <include name="jdev-ext.xml" />
+      </fileset>
+    </delete>
   </target>
 
 
