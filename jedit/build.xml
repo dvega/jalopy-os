@@ -51,6 +51,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <!-- create the user's guide -->
     <mkdir dir="${DIR.TMP}/tmp~/docs" />
+
     <copy tofile="../docu/src/xdocs/jedit/jedit.xsl"
           file="../docu/src/xdocs/jedit/jedit.src.xsl" filtering="true"
           overwrite="true" preservelastmodified="true">
@@ -58,6 +59,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <filtersfile file="../build/build.properties" />
       </filterset>
     </copy>
+
     <xslt basedir="../docu/src/xdocs/jedit"
            destdir="${DIR.TMP}/tmp~/docs"
            style="../docu/src/xdocs/jedit/jedit.xsl"

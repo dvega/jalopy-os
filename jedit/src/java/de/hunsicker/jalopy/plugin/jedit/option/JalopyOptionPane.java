@@ -23,30 +23,37 @@ import de.hunsicker.swing.util.SwingHelper;
 
 
 /**
- * Abstract class to make embedding a Jalopy settings panel into the jEdit Global Options
- * dialog easy.
+ * Serves as wrapper for a Jalopy settings page in order to embedd it into the jEdit Global Options
+ * dialog.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-abstract class JalopyOptionPane
+public final class JalopyOptionPane
     extends AbstractOptionPane
 {
     //~ Instance variables ---------------------------------------------------------------
 
-    /** The actual settings panel to embed. */
-    protected AbstractSettingsPage panel;
+    /** The actual settings page to embedd. */
+    private AbstractSettingsPage _page;
+
+    /** The classname of the settings page to embedd. */
+    private String _panelClass;
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JalopyOptionPane object.
      *
-     * @param name the name of the option pane.
+     * @param labelname the name of the option pane.
+     * @param classname the name of the settings page class.
      */
-    protected JalopyOptionPane(String name)
+    public JalopyOptionPane(String labelName, String className)
     {
-        super(name);
+        super(labelName);
+
+        _panelClass = className;
+
         setPreferredSize(new Dimension(450, 450));
         setMaximumSize(new Dimension(500, 500));
     }
@@ -58,6 +65,18 @@ abstract class JalopyOptionPane
      */
     protected void _init()
     {
+        try
+        {
+            Class clazz = Class.forName(_panelClass);
+            _page = (AbstractSettingsPage)clazz.newInstance();
+        }
+        catch (Throwable ex)
+        {
+            ex.printStackTrace();
+
+            return;
+        }
+
         GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
 
@@ -65,8 +84,9 @@ abstract class JalopyOptionPane
         SwingHelper.setConstraints(
             c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, c.insets, 0, 0);
-        layout.setConstraints(this.panel, c);
-        add(this.panel);
+        layout.setConstraints(_page, c);
+        add(_page);
+
         this.initialized = true;
     }
 
@@ -78,8 +98,8 @@ abstract class JalopyOptionPane
     {
         try
         {
-            this.panel.validateSettings();
-            this.panel.updateSettings();
+            _page.validateSettings();
+            _page.updateSettings();
         }
         catch (ValidationException ex)
         {
@@ -96,7 +116,7 @@ abstract class JalopyOptionPane
              *       method so that the convention will only be saved if indeed
              *       something changed
              */
-            Convention.getInstance().flush();
+             Convention.getInstance().flush();
         }
         catch (Throwable ex)
         {

@@ -31,24 +31,7 @@ import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.plugin.jedit.option.BracesOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.CodeInspectorOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.CommentsOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.EnvironmentOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.FooterOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.GeneralOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.HeaderOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.ImportsOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.IndentationOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.JavadocOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.LineWrappingOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.MessagesOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.MiscOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.NamingOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.ProjectOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.BlankLinesOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.SortOptionPane;
-import de.hunsicker.jalopy.plugin.jedit.option.WhitespaceOptionPane;
+import de.hunsicker.jalopy.plugin.jedit.option.JalopyOptionPane;
 import de.hunsicker.jalopy.swing.SettingsDialog;
 
 
@@ -199,32 +182,32 @@ public class JEditPlugin
     public void createOptionPanes(OptionsDialog dialog)
     {
         OptionGroup jalopyGroup = new OptionGroup("jalopy" /* NOI18N */);
-        jalopyGroup.addOptionPane(new GeneralOptionPane());
-        jalopyGroup.addOptionPane(new ProjectOptionPane());
+        jalopyGroup.addOptionPane(new JalopyOptionPane("jalopy.general"/* NOI18N */, "de.hunsicker.jalopy.swing.GeneralSettingsPage"/* NOI18N */));
+        jalopyGroup.addOptionPane(new JalopyOptionPane("jalopy.project"/* NOI18N */, "de.hunsicker.jalopy.swing.ProjectSettingsPage"/* NOI18N */));
 
         OptionGroup printerGroup = new OptionGroup("jalopy.printer" /* NOI18N */);
-        printerGroup.addOptionPane(new BracesOptionPane());
-        printerGroup.addOptionPane(new WhitespaceOptionPane());
-        printerGroup.addOptionPane(new IndentationOptionPane());
-        printerGroup.addOptionPane(new LineWrappingOptionPane());
-        printerGroup.addOptionPane(new BlankLinesOptionPane());
-        printerGroup.addOptionPane(new CommentsOptionPane());
-        printerGroup.addOptionPane(new ImportsOptionPane());
-        printerGroup.addOptionPane(new EnvironmentOptionPane());
-        printerGroup.addOptionPane(new JavadocOptionPane());
-        printerGroup.addOptionPane(new HeaderOptionPane());
-        printerGroup.addOptionPane(new FooterOptionPane());
-        printerGroup.addOptionPane(new SortOptionPane());
-        printerGroup.addOptionPane(new MiscOptionPane());
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.braces"/* NOI18N */, "de.hunsicker.jalopy.swing.BracesSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.whitespace"/* NOI18N */, "de.hunsicker.jalopy.swing.WhitespaceSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.indentation"/* NOI18N */, "de.hunsicker.jalopy.swing.IndentationSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.wrapping"/* NOI18N */, "de.hunsicker.jalopy.swing.WrappingSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.blanklines"/* NOI18N */, "de.hunsicker.jalopy.swing.BlankLinesSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.comments"/* NOI18N */, "de.hunsicker.jalopy.swing.CommentsSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.imports"/* NOI18N */, "de.hunsicker.jalopy.swing.ImportsSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.environment"/* NOI18N */, "de.hunsicker.jalopy.swing.EnvironmentSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.javadoc"/* NOI18N */, "de.hunsicker.jalopy.swing.JavadocSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.header"/* NOI18N */, "de.hunsicker.jalopy.swing.HeaderSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.footer"/* NOI18N */, "de.hunsicker.jalopy.swing.FooterSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.sort"/* NOI18N */, "de.hunsicker.jalopy.swing.SortingSettingsPage"/* NOI18N */));
+        printerGroup.addOptionPane(new JalopyOptionPane("jalopy.printer.misc"/* NOI18N */, "de.hunsicker.jalopy.swing.MiscSettingsPage"/* NOI18N */));
 
         jalopyGroup.addOptionGroup(printerGroup);
 
         OptionGroup inspectorGroup = new OptionGroup("jalopy.inspector" /* NOI18N */);
-        inspectorGroup.addOptionPane(new CodeInspectorOptionPane());
-        inspectorGroup.addOptionPane(new NamingOptionPane());
+        inspectorGroup.addOptionPane(new JalopyOptionPane("jalopy.inspector.general"/* NOI18N */, "de.hunsicker.jalopy.swing.CodeInspectorSettingsPage"/* NOI18N */));
+        inspectorGroup.addOptionPane(new JalopyOptionPane("jalopy.inspector.naming"/* NOI18N */, "de.hunsicker.jalopy.swing.NamingSettingsPage"/* NOI18N */));
         jalopyGroup.addOptionGroup(inspectorGroup);
 
-        jalopyGroup.addOptionPane(new MessagesOptionPane());
+        jalopyGroup.addOptionPane(new JalopyOptionPane("jalopy.messages"/* NOI18N */, "de.hunsicker.jalopy.swing.MessagesSettingsPage"/* NOI18N */));
 
         dialog.addOptionGroup(jalopyGroup);
     }
@@ -428,9 +411,9 @@ public class JEditPlugin
         }
 
 
-        public Jalopy getEngine()
+        protected Jalopy getEngine()
         {
-            return getEngine();
+            return super.getEngine();
         }
 
 
