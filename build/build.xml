@@ -19,7 +19,6 @@ The main targets are:
  build-dist-main      Creates the Jalopy runtime distribution
  build-dist-netbeans  Creates the NetBeans Plug-in distribution
  build-dist-src       Creates the Jalopy source distribution
- build-dist-upload    Uploads the distributions to SourceForge
 
 For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
@@ -37,14 +36,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <property name="dir.res" value="src/resources" />
 
   <!-- ==================================================================== -->
-  <!-- Creates all binary distributions                                     -->
+  <!-- Creates all distributions                                            -->
   <!-- ==================================================================== -->
   <target name="build-dist-all"
           description="Creates all binary distributions"
-          depends="build-dist-ant, build-dist-console,
-                   build-dist-eclipse, build-dist-jbuilder, build-dist-jdev,
-                   build-dist-jedit, build-dist-main, build-dist-netbeans,
-                   build-dist-src" />
+          depends="build-dist-docu" />
 
 
   <!-- ==================================================================== -->
@@ -141,10 +137,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </fileset>
     </copy>
 
-    <tar tarfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.tar.gz"
+    <tar tarfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION.CONSOLE}.tar.gz"
          basedir="${DIR.TMP}/console"
          compression="gzip" />
-    <zip zipfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip"
+    <zip zipfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION.CONSOLE}.zip"
          basedir="${DIR.TMP}/console" />
   </target>
 
@@ -303,6 +299,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </copy>
 
     <copy todir="${DIR.TMP}/jedit/lib" >
+      <fileset dir="G:/Java/Programme/jEdit4.1pre5/jars">
+        <include name="messageview-*.jar" />
+      </fileset>
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
@@ -421,22 +420,31 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
 
   <!-- ==================================================================== -->
-
+  <!-- Creates the documentation distribution                               -->
   <!-- ==================================================================== -->
-  <target name="build-dist-manual"
-          depends="build-dist-all"
-          description="Creates the manual distribution">
+  <target name="build-dist-docu"
+          description="Creates the documention distribution"
+          depends="build-dist-ant, build-dist-console,
+                   build-dist-eclipse, build-dist-jbuilder, build-dist-jdev,
+                   build-dist-jedit, build-dist-main, build-dist-netbeans,
+                   build-dist-src">
+
+    <ant dir="../docu" target="docu-website" inheritAll="false" />
 
     <delete dir="${DIR.TMP}/manual" quiet="true" />
 
     <copy todir="${DIR.TMP}/manual" >
-        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/website" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
     <copy todir="${DIR.TMP}/manual/api" >
         <fileset dir="${DIR.DOCS}/api" />
     </copy>
+
+    <zip zipfile="${DIR.DIST}/jalopy-docu-${BUILD.VERSION}.zip"
+         basedir="${DIR.TMP}/manual" >
+    </zip>
   </target>
 
 
@@ -835,10 +843,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </srcfileset>
       <srcfileset dir="${DIR.JARS}/">
         <include name="jalopy-${BUILD.VERSION}.jar" />
-        <include name="jalopy-console-${BUILD.VERSION}.jar" />
+        <include name="jalopy-console-${BUILD.VERSION.CONSOLE}.jar" />
       </srcfileset>
       <targetfileset dir="${DIR.TMP}/console/lib">
-        <include name="jalopy-ant-${BUILD.VERSION}.jar" />
+        <include name="jalopy-console-${BUILD.VERSION.CONSOLE}.jar" />
       </targetfileset>
     </dependset>
 
@@ -862,14 +870,14 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <condition property="uptodate.console">
       <and>
-        <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip" />
-        <!-- <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.tar.gz" /> -->
+        <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION.CONSOLE}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION.CONSOLE}.tar.gz" /> -->
         <available file="${DIR.TMP}/console/docs/index.html" />
         <available file="${DIR.TMP}/console/bin/preferences.bat" />
         <available file="${DIR.TMP}/console/lib/aelfred-${LIB.VERSION.AELFRED}.jar" />
         <available file="${DIR.TMP}/console/lib/getopt-${LIB.VERSION.GETOPT}.jar" />
         <available file="${DIR.TMP}/console/lib/jaxp-${LIB.VERSION.JAXP}.jar" />
-        <available file="${DIR.TMP}/console/lib/jalopy-console-${BUILD.VERSION}.jar" />
+        <available file="${DIR.TMP}/console/lib/jalopy-console-${BUILD.VERSION.CONSOLE}.jar" />
         <available file="${DIR.TMP}/console/lib/jdom-${LIB.VERSION.JDOM}.jar" />
         <available file="${DIR.TMP}/console/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
         <available file="${DIR.TMP}/console/lib/oro-${LIB.VERSION.ORO}.jar" />
@@ -984,7 +992,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip" />
         <!-- <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.tar.gz" /> -->
         <available file="${DIR.TMP}/jdeveloper/docs/index.html" />
-        <available file="${DIR.TMP}/jdeveloper/lib/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/lib/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
         <available file="${DIR.TMP}/jdeveloper/lib/jdom-${LIB.VERSION.JDOM}.jar" />
         <available file="${DIR.TMP}/jdeveloper/lib/log4j-${LIB.VERSION.LOG4J}.jar" />
         <available file="${DIR.TMP}/jdeveloper/lib/oro-${LIB.VERSION.ORO}.jar" />
