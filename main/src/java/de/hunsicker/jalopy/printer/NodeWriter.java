@@ -112,6 +112,9 @@ public class NodeWriter
     /** Print left curly braces on a new line? */
     protected boolean leftBraceNewline;
 
+    /** Should a footer be inserted at the end of every file? */
+    protected boolean footer;
+
     /**
      * Indicates whether we're at the beginning of a new line (<code>column ==
      * 1</code>).
@@ -234,7 +237,7 @@ public class NodeWriter
                                              Defaults.INDENT_WITH_TABS);
         this.useLeadingTabs = this.prefs.getBoolean(Keys.INDENT_WITH_TABS_ONLY_LEADING,
                                                     Defaults.INDENT_WITH_TABS_ONLY_LEADING);
-
+        this.footer = this.prefs.getBoolean(Keys.FOOTER, Defaults.FOOTER);
         _indentChars = new char[150];
 
         for (int i = 0; i < _indentChars.length; i++)
@@ -489,6 +492,11 @@ public class NodeWriter
 
             int length = this.indentLevel * this.indentSize;
 
+            if (continuation) // use continuation indentation
+            {
+                length += continuationIndentSize;
+            }
+
             switch (type)
             {
                 case JavaTokenTypes.WS :
@@ -687,39 +695,7 @@ public class NodeWriter
             print(RCURLY, type);
 
         // only issue line break if not the last curly brace
-        if (newlineAfter && (insertTrailingEmpty || (this.indentLevel > 0)))
-        {
-            printNewline();
-        }
-    }
-
-    /**
-     * Outputs a Java statement delimeter (<code>;</code>) followed by a
-     * newline.
-     *
-     * @throws IOException if an I/O error occured.
-     */
-    public void printEndStatement()
-        throws IOException
-    {
-        printEndStatement(true);
-    }
-
-
-    /**
-     * Outputs a Java statement delimeter (<code>;</code>).
-     *
-     * @param newlineAfter <code>true</code> prints a newline after the
-     *        statement.
-     *
-     * @throws IOException if an I/O error occured.
-     */
-    public void printEndStatement(boolean newlineAfter)
-        throws IOException
-    {
-        print(SEMI, JavaTokenTypes.EXPR);
-
-        if (newlineAfter)
+        if (newlineAfter && !this.footer && (insertTrailingEmpty || (this.indentLevel > 0)))
         {
             printNewline();
         }
@@ -876,7 +852,7 @@ public class NodeWriter
         // make sure the char buffer is big enough
         if (length > _indentChars.length)
         {
-            char[] buf = new char[(int)(1.5 * length)];
+            char[] buf = new char[(int)(1.4 * length)];
 
             for (int i = 0;; i++)
             {
