@@ -1,37 +1,14 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
-package de.hunsicker.ui.util;
+package de.hunsicker.swing.util;
+
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
 
 import de.hunsicker.util.concurrent.Callable;
 import de.hunsicker.util.concurrent.FutureResult;
@@ -40,42 +17,36 @@ import de.hunsicker.util.concurrent.ThreadFactoryUser;
 import de.hunsicker.util.concurrent.TimedCallable;
 import de.hunsicker.util.concurrent.TimeoutException;
 
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.SwingUtilities;
-
 
 //J- needed only as a workaround for a Javadoc bug
 import java.lang.Long;
 //J+
 
 /**
- * An abstract class that you subclass to perform GUI-related work in a
- * dedicated thread.
+ * An abstract class that you subclass to perform GUI-related work in a dedicated thread.
  * 
  * <p>
- * This class was adapted from the SwingWorker written by Hans Muller and
- * presented in "Using a Swing Worker Thread" in the Swing Connection - <a
+ * This class was adapted from the SwingWorker written by Hans Muller and presented in
+ * "Using a Swing Worker Thread" in the Swing Connection - <a
  * href="http://java.sun.com/products/jfc/tsc/articles/threads/threads2.html">http://java.sun.com/products/jfc/tsc/articles/threads/threads2.html</a>
  * </p>
  * 
  * <p>
- * A closely related version of this class is described in "The Last Word in
- * Swing Threads" in the Swing Connection - <a
+ * A closely related version of this class is described in "The Last Word in Swing
+ * Threads" in the Swing Connection - <a
  * href="http://java.sun.com/products/jfc/tsc/articles/threads/threads3.html">http://java.sun.com/products/jfc/tsc/articles/threads/threads3.html</a>
  * </p>
  * 
  * <p>
- * This SwingWorker is a ThreadFactoryUser and implements Runnable. The
- * default thread factory creates low-priority worker threads. A special
- * constructor is provided for enabling a timeout. When the timeout expires,
- * the worker thread is interrupted.
+ * This SwingWorker is a ThreadFactoryUser and implements Runnable. The default thread
+ * factory creates low-priority worker threads. A special constructor is provided for
+ * enabling a timeout. When the timeout expires, the worker thread is interrupted.
  * </p>
  * 
  * <p>
- * Note: Using a timeout of {@link Long#MAX_VALUE} will not impose a timeout
- * but will create an additional thread of control that will respond to an
- * interrupt even if the {@link #construct} implementation ignores them.
+ * Note: Using a timeout of {@link Long#MAX_VALUE} will not impose a timeout but will
+ * create an additional thread of control that will respond to an interrupt even if the
+ * {@link #construct} implementation ignores them.
  * </p>
  * 
  * <p>
@@ -83,10 +54,10 @@ import java.lang.Long;
  * </p>
  * 
  * <p>
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * import EDU.oswego.cs.dl.util.concurrent.TimeoutException;
  * import EDU.oswego.cs.dl.util.concurrent.misc.SwingWorker;
- *      
+ * 
  * public class SwingWorkerDemo
  *     extends javax.swing.JApplet
  * {
@@ -94,13 +65,13 @@ import java.lang.Long;
  *     private javax.swing.JButton start;
  *     private javax.swing.JLabel status;
  *     private SwingWorker worker;
- *      
+ * 
  *     public SwingWorkerDemo()
  *     {
  *         status = new javax.swing.JLabel("Ready");
  *         status.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
  *         getContentPane().add(status, java.awt.BorderLayout.CENTER);
- *      
+ * 
  *         start = new javax.swing.JButton("Start");
  *         getContentPane().add(start, java.awt.BorderLayout.SOUTH);
  *         start.addActionListener(new java.awt.event.ActionListener() {
@@ -120,30 +91,30 @@ import java.lang.Long;
  *             }
  *         });
  *     }
- *      
+ * 
  *     private class DemoSwingWorker
  *         extends SwingWorker
  *     {
  *         private static final java.util.Random RAND = new java.util.Random();
- *      
+ * 
  *         public DemoSwingWorker(long msecs)
  *         {
  *             super(msecs);
  *         }
- *      
+ * 
  *         protected Object construct()
  *             throws InterruptedException
  *         {
  *             // Take a random nap. If we oversleep, the worker times out.
  *             Thread.sleep(RAND.nextInt(2 * TIMEOUT));
- *      
+ * 
  *             return "Success";
  *         }
- *      
+ * 
  *         protected void finished()
  *         {
  *             start.setText("Start");
- *      
+ * 
  *             try
  *             {
  *                 Object result = get();
@@ -152,7 +123,7 @@ import java.lang.Long;
  *             catch (java.lang.reflect.InvocationTargetException e)
  *             {
  *                 Throwable ex = e.getTargetException();
- *      
+ * 
  *                 if (ex instanceof TimeoutException)
  *                 {
  *                     status.setText("Timed out.");
@@ -185,22 +156,23 @@ public abstract class SwingWorker
     extends ThreadFactoryUser
     implements Runnable
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Default thread factory. Creates low priority worker threads. */
-    private static final ThreadFactory FACTORY = new ThreadFactory()
-    {
-        public Thread newThread(Runnable command)
+    private static final ThreadFactory FACTORY =
+        new ThreadFactory()
         {
-            Thread t = new Thread(command);
-            t.setPriority(Thread.MIN_PRIORITY + 1);
+            public Thread newThread(Runnable command)
+            {
+                Thread t = new Thread(command);
+                t.setPriority(Thread.MIN_PRIORITY + 1);
 
-            return t;
-        }
-    };
+                return t;
+            }
+        };
 
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Holds the value to be returned by the <code>get</code> method. */
     private final FutureResult result = new FutureResult();
@@ -211,7 +183,7 @@ public abstract class SwingWorker
     /** Maximum time to wait for worker to complete. */
     private final long timeout;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates new SwingWorker with no timeout.
@@ -225,8 +197,7 @@ public abstract class SwingWorker
     /**
      * Creates new SwingWorker with specified timeout.
      *
-     * @param msecs timeout in milliseconds, or <code>0</code> for no time
-     *        limit.
+     * @param msecs timeout in milliseconds, or <code>0</code> for no time limit.
      */
     public SwingWorker(long msecs)
     {
@@ -238,13 +209,13 @@ public abstract class SwingWorker
      * Creates new SwingWorker with specified thread factory and timeout.
      *
      * @param factory factory for worker threads.
-     * @param msecs timeout in milliseconds, or <code>0</code> for no time
-     *        limit.
+     * @param msecs timeout in milliseconds, or <code>0</code> for no time limit.
      *
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    protected SwingWorker(ThreadFactory factory,
-                          long          msecs)
+    protected SwingWorker(
+        ThreadFactory factory,
+        long          msecs)
     {
         setThreadFactory(factory);
 
@@ -256,15 +227,15 @@ public abstract class SwingWorker
         timeout = msecs;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Get the exception, or <code>null</code> if there isn't one (yet). This
-     * does not wait until the worker is ready, so should ordinarily only be
-     * called if you know it is.
+     * Get the exception, or <code>null</code> if there isn't one (yet). This does not
+     * wait until the worker is ready, so should ordinarily only be called if you know
+     * it is.
      *
-     * @return the exception encountered by the {@link #construct} method
-     *         wrapped in an InvocationTargetException.
+     * @return the exception encountered by the {@link #construct} method wrapped in an
+     *         InvocationTargetException.
      */
     public InvocationTargetException getException()
     {
@@ -284,9 +255,9 @@ public abstract class SwingWorker
 
 
     /**
-     * Returns timeout period in milliseconds. Timeout is the maximum time to
-     * wait for worker to complete. There is no time limit if timeout is
-     * <code>0</code> (default).
+     * Returns timeout period in milliseconds. Timeout is the maximum time to wait for
+     * worker to complete. There is no time limit if timeout is <code>0</code>
+     * (default).
      *
      * @return DOCUMENT ME!
      */
@@ -297,18 +268,17 @@ public abstract class SwingWorker
 
 
     /**
-     * Return the value created by the {@link #construct} method, waiting if
-     * necessary until it is ready.
+     * Return the value created by the {@link #construct} method, waiting if necessary
+     * until it is ready.
      *
      * @return the value created by the {@link #construct} method
      *
      * @exception InterruptedException if current thread was interrupted
-     * @exception InvocationTargetException if the constructing thread
-     *            encountered an exception or was interrupted.
+     * @exception InvocationTargetException if the constructing thread encountered an
+     *            exception or was interrupted.
      */
     public Object get()
-        throws InterruptedException, 
-               InvocationTargetException
+      throws InterruptedException, InvocationTargetException
     {
         return result.get();
     }
@@ -339,27 +309,29 @@ public abstract class SwingWorker
 
 
     /**
-     * Calls the {@link #construct} method to compute the result, and then
-     * invokes the {@link #finished} method on the event dispatch thread.
+     * Calls the {@link #construct} method to compute the result, and then invokes the
+     * {@link #finished} method on the event dispatch thread.
      */
     public void run()
     {
-        Callable function = new Callable()
-        {
-            public Object call()
-                throws Exception
+        Callable function =
+            new Callable()
             {
-                return construct();
-            }
-        };
+                public Object call()
+                  throws Exception
+                {
+                    return construct();
+                }
+            };
 
-        Runnable doFinished = new Runnable()
-        {
-            public void run()
+        Runnable doFinished =
+            new Runnable()
             {
-                finished();
-            }
-        };
+                public void run()
+                {
+                    finished();
+                }
+            };
 
         /* Convert to TimedCallable if timeout is specified. */
         long msecs = getTimeout();
@@ -399,13 +371,11 @@ public abstract class SwingWorker
      *
      * @exception TimeoutException if not ready after msecs
      * @exception InterruptedException if current thread has been interrupted
-     * @exception InvocationTargetException if the constructing thread
-     *            encountered an exception or was interrupted.
+     * @exception InvocationTargetException if the constructing thread encountered an
+     *            exception or was interrupted.
      */
     public Object timedGet(long msecs)
-        throws TimeoutException, 
-               InterruptedException, 
-               InvocationTargetException
+      throws TimeoutException, InterruptedException, InvocationTargetException
     {
         return result.timedGet(msecs);
     }
@@ -419,12 +389,12 @@ public abstract class SwingWorker
      * @throws Exception DOCUMENT ME!
      */
     protected abstract Object construct()
-        throws Exception;
+      throws Exception;
 
 
     /**
-     * Called on the event dispatching thread (not on the worker thread) after
-     * the {@link #construct} method has returned.
+     * Called on the event dispatching thread (not on the worker thread) after the {@link
+     * #construct} method has returned.
      */
     protected void finished()
     {

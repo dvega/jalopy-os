@@ -1,37 +1,10 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
-package de.hunsicker.ui.util;
+package de.hunsicker.swing.util;
 
 import java.awt.AWTEvent;
 import java.awt.Rectangle;
@@ -67,21 +40,28 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.TextAction;
 
+import de.hunsicker.util.ResourceBundleFactory;
+
 
 /**
- * Helper class which adds popup menu support for {@link
- * javax.swing.text.JTextComponent text components}.
+ * Helper class which adds popup menu support for {@link javax.swing.text.JTextComponent
+ * text components}.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class PopupSupport
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     private static final Comparator COMPARATOR = new PartialStringComparator();
+    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
-    //~ Instance variables ····················································
+    /** The name for ResourceBundle lookup. */
+    private static final String BUNDLE_NAME =
+        "de.hunsicker.swing.util.Bundle" /* NOI18N */;
+
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The copy action. */
     private Action _copy;
@@ -107,16 +87,14 @@ public class PopupSupport
     /** Holds a list of all text components that have popup support. */
     private List _registeredComponents; // List of <ListenerSupport>
 
-    /**
-     * List with the package names for which popup support should be enabled.
-     */
+    /** List with the package names for which popup support should be enabled. */
     private final List _supported; // List of <String>
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new PopupSuppport object. The popup menu support is initially
-     * enabled. The popup support will only be added for components of the
+     * Creates a new PopupSuppport object. The popup menu support is initially enabled.
+     * The popup support will only be added for components of the
      * <code>javax.swing</code> hierachy.
      */
     public PopupSupport()
@@ -126,8 +104,8 @@ public class PopupSupport
 
 
     /**
-     * Creates a new PopupSuppport object. The popup menu support is initially
-     * enabled for the given hierachies or classes.
+     * Creates a new PopupSuppport object. The popup menu support is initially enabled
+     * for the given hierachies or classes.
      *
      * @param supported supported package hierarchies or classes.
      */
@@ -140,12 +118,13 @@ public class PopupSupport
     /**
      * Creates a new PopupSuppport object.
      *
-     * @param enable if <code>true</code> the popup menu support will be
-     *        initially enabled.
+     * @param enable if <code>true</code> the popup menu support will be initially
+     *        enabled.
      * @param supported supported package hierarchies or classes.
      */
-    public PopupSupport(boolean    enable,
-                        final List supported)
+    public PopupSupport(
+        boolean    enable,
+        final List supported)
     {
         if (enable)
         {
@@ -160,8 +139,8 @@ public class PopupSupport
     /**
      * Creates a new PopupSuppport object.
      *
-     * @param enable if <code>true</code> the popup menu support will be
-     *        initially enabled.
+     * @param enable if <code>true</code> the popup menu support will be initially
+     *        enabled.
      */
     public PopupSupport(boolean enable)
     {
@@ -171,16 +150,15 @@ public class PopupSupport
         }
 
         _supported = new ArrayList(3);
-        _supported.add("javax.");
+        _supported.add("javax." /* NOI18N */);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Sets the status of the popup menu support.
      *
-     * @param enable if <code>true</code> the popup menu support will be
-     *        enabled.
+     * @param enable if <code>true</code> the popup menu support will be enabled.
      */
     public void setEnabled(boolean enable)
     {
@@ -189,9 +167,8 @@ public class PopupSupport
             if (_interceptor == null)
             {
                 _interceptor = new FocusInterceptor();
-                Toolkit.getDefaultToolkit()
-                       .addAWTEventListener(_interceptor,
-                                            AWTEvent.FOCUS_EVENT_MASK);
+                Toolkit.getDefaultToolkit().addAWTEventListener(
+                    _interceptor, AWTEvent.FOCUS_EVENT_MASK);
             }
         }
         else
@@ -203,11 +180,10 @@ public class PopupSupport
             // added, so we have to check
             if (_registeredComponents != null)
             {
-                for (int i = 0, size = _registeredComponents.size();
-                     i < size;
-                     i++)
+                for (int i = 0, size = _registeredComponents.size(); i < size; i++)
                 {
-                    ListenerSupport support = (ListenerSupport)_registeredComponents.get(i);
+                    ListenerSupport support =
+                        (ListenerSupport) _registeredComponents.get(i);
                     support.remove();
                 }
             }
@@ -242,11 +218,10 @@ public class PopupSupport
 
         if (!_registeredComponents.contains(new ListenerSupport(component)))
         {
-            ListenerSupport support = new ListenerSupport(component,
-                                                          new MouseHandler(),
-                                                          new KeyHandler(),
-                                                          new CaretHandler(),
-                                                          new DocumentHandler());
+            ListenerSupport support =
+                new ListenerSupport(
+                    component, new MouseHandler(), new KeyHandler(), new CaretHandler(),
+                    new DocumentHandler());
             _registeredComponents.add(support);
         }
         else
@@ -260,16 +235,14 @@ public class PopupSupport
     /**
      * Indicates whether the system clipboard contains text content.
      *
-     * @return <code>true</code> if the system clipboard contains no text
-     *         content.
+     * @return <code>true</code> if the system clipboard contains no text content.
      */
     protected boolean isClipboardEmpty()
     {
-        Transferable data = Toolkit.getDefaultToolkit().getSystemClipboard()
-                                   .getContents(this);
+        Transferable data =
+            Toolkit.getDefaultToolkit().getSystemClipboard().getContents(this);
 
-        if ((data == null) ||
-            (!data.isDataFlavorSupported(DataFlavor.stringFlavor)))
+        if ((data == null) || !data.isDataFlavorSupported(DataFlavor.stringFlavor))
         {
             return true;
         }
@@ -279,8 +252,8 @@ public class PopupSupport
 
 
     /**
-     * Returns the popup menu for the given component. The default
-     * implementation returns the same default popup menu for all components.
+     * Returns the popup menu for the given component. The default implementation returns
+     * the same default popup menu for all components.
      * 
      * <p>
      * This popup menu consists of five actions:
@@ -337,21 +310,27 @@ public class PopupSupport
             if (_cut != null)
             {
                 JMenuItem item = new JMenuItem(_cut);
-                item.setText("Cut");
+                item.setText(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MNU_CUT" /* NOI18N */));
                 _menu.add(item);
             }
 
             if (_copy != null)
             {
                 JMenuItem item = new JMenuItem(_copy);
-                item.setText("Copy");
+                item.setText(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MNU_COPY" /* NOI18N */));
                 _menu.add(item);
             }
 
             if (_paste != null)
             {
                 JMenuItem item = new JMenuItem(_paste);
-                item.setText("Paste");
+                item.setText(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MNU_PASTE" /* NOI18N */));
                 _menu.add(item);
             }
 
@@ -364,7 +343,9 @@ public class PopupSupport
                 _menu.add(new JPopupMenu.Separator());
 
                 JMenuItem item = new JMenuItem(_selectAll);
-                item.setText("Select all");
+                item.setText(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MNU_SELECT_ALL" /* NOI18N */));
                 _menu.add(item);
             }
         }
@@ -381,8 +362,9 @@ public class PopupSupport
      *
      * @return <code>true</code> if <code>start &gt; end</code>.
      */
-    protected boolean isTextSelected(int start,
-                                     int end)
+    protected boolean isTextSelected(
+        int start,
+        int end)
     {
         if (start == end)
         {
@@ -487,7 +469,7 @@ public class PopupSupport
     {
         if (_paste != null)
         {
-            if ((!isClipboardEmpty()) && component.isEditable())
+            if (!isClipboardEmpty() && component.isEditable())
             {
                 _paste.setEnabled(true);
             }
@@ -500,8 +482,8 @@ public class PopupSupport
 
 
     /**
-     * Updates the state of the select-all text action depending on the state
-     * of the given document.
+     * Updates the state of the select-all text action depending on the state of the
+     * given document.
      *
      * @param document document of a text component.
      */
@@ -523,11 +505,11 @@ public class PopupSupport
         }
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Helper class to bundle a component and associated listeners so we are
-     * able to correctly remove listenes after we're done.
+     * Helper class to bundle a component and associated listeners so we are able to
+     * correctly remove listenes after we're done.
      */
     private static class ListenerSupport
     {
@@ -557,11 +539,12 @@ public class PopupSupport
          * @param caretListener caret listener to add.
          * @param documentListener document listener to add.
          */
-        public ListenerSupport(JTextComponent   component,
-                               MouseListener    mouseListener,
-                               KeyListener      keyListener,
-                               CaretListener    caretListener,
-                               DocumentListener documentListener)
+        public ListenerSupport(
+            JTextComponent   component,
+            MouseListener    mouseListener,
+            KeyListener      keyListener,
+            CaretListener    caretListener,
+            DocumentListener documentListener)
         {
             this(component);
             this.mouseHandler = mouseListener;
@@ -575,8 +558,7 @@ public class PopupSupport
         {
             this.component.addMouseListener(this.mouseHandler);
             this.component.addKeyListener(this.keyHandler);
-            this.component.getDocument()
-                          .addDocumentListener(this.documentHandler);
+            this.component.getDocument().addDocumentListener(this.documentHandler);
             this.component.addCaretListener(this.caretHandler);
         }
 
@@ -589,7 +571,7 @@ public class PopupSupport
             }
             else if (o instanceof ListenerSupport)
             {
-                return this.component.equals(((ListenerSupport)o).component);
+                return this.component.equals(((ListenerSupport) o).component);
             }
 
             return false;
@@ -606,8 +588,7 @@ public class PopupSupport
         {
             this.component.removeMouseListener(this.mouseHandler);
             this.component.removeKeyListener(this.keyHandler);
-            this.component.getDocument()
-                          .removeDocumentListener(this.documentHandler);
+            this.component.getDocument().removeDocumentListener(this.documentHandler);
             this.component.removeCaretListener(this.caretHandler);
         }
     }
@@ -616,11 +597,12 @@ public class PopupSupport
     private static class PartialStringComparator
         implements Comparator
     {
-        public int compare(Object o1,
-                           Object o2)
+        public int compare(
+            Object o1,
+            Object o2)
         {
-            String s1 = (String)o1;
-            String s2 = (String)o1;
+            String s1 = (String) o1;
+            String s2 = (String) o1;
 
             if (s2.startsWith(s1))
             {
@@ -647,7 +629,7 @@ public class PopupSupport
 
         public void caretUpdate(CaretEvent ev)
         {
-            JTextComponent component = (JTextComponent)ev.getSource();
+            JTextComponent component = (JTextComponent) ev.getSource();
             updatePasteAction(component);
             updateCopyCutAction(component); // ,ev.getDot(), ev.getMark()
         }
@@ -655,8 +637,8 @@ public class PopupSupport
 
 
     /**
-     * Actions which depending on the selection state of a text component
-     * either deletes the selection or the whole text.
+     * Action which - depending on the selection state of a text component - either
+     * deletes the selection or the whole text.
      */
     private static class DeleteAction
         extends TextAction
@@ -666,8 +648,11 @@ public class PopupSupport
          */
         public DeleteAction()
         {
-            super("clear-action");
-            putValue(Action.NAME, "Delete");
+            super("clear-action" /* NOI18N */);
+            putValue(
+                Action.NAME,
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "MNU_DELETE" /* NOI18N */));
             this.setEnabled(false);
         }
 
@@ -706,7 +691,7 @@ public class PopupSupport
             }
             else
             {
-                target.setText("");
+                target.setText(EMPTY_STRING);
             }
         }
     }
@@ -741,9 +726,9 @@ public class PopupSupport
 
 
     /**
-     * Handler which 'spies' on the AWT event dispatching thread and
-     * intercepts focus events in order to add a popup menu to a text
-     * component which just gained the input focus.
+     * Handler which 'spies' on the AWT event dispatching thread and intercepts focus
+     * events in order to add a popup menu to a text component which just gained the
+     * input focus.
      */
     private class FocusInterceptor
         implements AWTEventListener
@@ -754,11 +739,11 @@ public class PopupSupport
             {
                 if (ev.getSource() instanceof JTextComponent)
                 {
-                    if (Collections.binarySearch(_supported,
-                                                 ev.getSource().getClass()
-                                                   .getName(), COMPARATOR) > -1)
+                    if (
+                        Collections.binarySearch(
+                            _supported, ev.getSource().getClass().getName(), COMPARATOR) > -1)
                     {
-                        addSupport((JTextComponent)ev.getSource());
+                        addSupport((JTextComponent) ev.getSource());
                     }
                 }
             }
@@ -776,7 +761,7 @@ public class PopupSupport
         {
             if (ev.isShiftDown() && (ev.getKeyCode() == KeyEvent.VK_F10))
             {
-                JTextComponent component = (JTextComponent)ev.getSource();
+                JTextComponent component = (JTextComponent) ev.getSource();
 
                 if (component.isShowing())
                 {
@@ -803,7 +788,7 @@ public class PopupSupport
     {
         public void mousePressed(MouseEvent ev)
         {
-            ((JComponent)ev.getSource()).requestFocus();
+            ((JComponent) ev.getSource()).requestFocus();
         }
 
 
@@ -811,7 +796,7 @@ public class PopupSupport
         {
             if (ev.isPopupTrigger())
             {
-                JTextComponent component = (JTextComponent)ev.getSource();
+                JTextComponent component = (JTextComponent) ev.getSource();
                 getPopup(component).show(component, ev.getX(), ev.getY());
             }
         }

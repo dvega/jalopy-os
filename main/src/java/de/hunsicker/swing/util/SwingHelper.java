@@ -1,37 +1,10 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
-package de.hunsicker.ui.util;
+package de.hunsicker.swing.util;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -43,6 +16,8 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
@@ -57,7 +32,7 @@ import javax.swing.SwingUtilities;
  */
 public final class SwingHelper
 {
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new SwingHelper object.
@@ -66,11 +41,11 @@ public final class SwingHelper
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Sets the constraints for the given constraints object. Helper function
-     * to be able to reuse a constraints object.
+     * Sets the constraints for the given constraints object. Helper function to be able
+     * to reuse a constraints object.
      *
      * @param constraints the constraints object to initialize.
      * @param gridx the initial gridx value.
@@ -87,18 +62,19 @@ public final class SwingHelper
      *
      * @return the initialized constraints object.
      */
-    public static GridBagConstraints setConstraints(GridBagConstraints constraints,
-                                                    int                gridx,
-                                                    int                gridy,
-                                                    int                gridwidth,
-                                                    int                gridheight,
-                                                    double             weightx,
-                                                    double             weighty,
-                                                    int                anchor,
-                                                    int                fill,
-                                                    Insets             insets,
-                                                    int                ipadx,
-                                                    int                ipady)
+    public static GridBagConstraints setConstraints(
+        GridBagConstraints constraints,
+        int                gridx,
+        int                gridy,
+        int                gridwidth,
+        int                gridheight,
+        double             weightx,
+        double             weighty,
+        int                anchor,
+        int                fill,
+        Insets             insets,
+        int                ipadx,
+        int                ipady)
     {
         constraints.gridx = gridx;
         constraints.gridy = gridy;
@@ -120,12 +96,42 @@ public final class SwingHelper
 
 
     /**
+     * DOCUMENT ME!
+     *
+     * @param item DOCUMENT ME!
+     * @param text DOCUMENT ME!
+     * @param useMnemonic DOCUMENT ME!
+     */
+    public static void setMenuText(
+        AbstractButton item,
+        String         text,
+        boolean        useMnemonic)
+    {
+        int i = text.indexOf('&');
+
+        if (i < 0)
+        {
+            item.setText(text);
+        }
+        else
+        {
+            item.setText(text.substring(0, i) + text.substring(i + 1));
+
+            if (useMnemonic)
+            {
+                item.setMnemonic(text.charAt(i + 1));
+            }
+        }
+    }
+
+
+    /**
      * Returns the frame that contains the given component.
      *
      * @param component component.
      *
-     * @return frame that contains the given component or <code>null</code> if
-     *         there is no parent frame.
+     * @return frame that contains the given component or <code>null</code> if there is
+     *         no parent frame.
      */
     public static Frame getOwnerFrame(Component component)
     {
@@ -138,7 +144,7 @@ public final class SwingHelper
 
             if ((owner != null) && owner instanceof Frame)
             {
-                mother = (Frame)owner;
+                mother = (Frame) owner;
             }
         }
 
@@ -174,8 +180,52 @@ public final class SwingHelper
 
 
     /**
-     * Displays the given file chooser. Utility method for avoiding of memory
-     * leak in JDK 1.3 {@link javax.swing.JFileChooser#showDialog}.
+     * Creates a new button with the given text.
+     *
+     * @param text DOCUMENT ME!
+     * @param parse DOCUMENT ME!
+     *
+     * @return new button with the given text.
+     *
+     * @since 1.0b9
+     */
+    public static JButton createButton(
+        String  text,
+        boolean parse)
+    {
+        JButton button = new JButton();
+
+        if (parse)
+        {
+            setMenuText(button, text, true);
+        }
+        else
+        {
+            button.setText(text);
+        }
+
+        return button;
+    }
+
+
+    /**
+     * Creates a new button with the given text.
+     *
+     * @param text DOCUMENT ME!
+     *
+     * @return new button with the given text.
+     *
+     * @since 1.0b9
+     */
+    public static JButton createButton(String text)
+    {
+        return createButton(text, true);
+    }
+
+
+    /**
+     * Displays the given file chooser. Utility method for avoiding of memory leak in JDK
+     * 1.3 {@link javax.swing.JFileChooser#showDialog}.
      *
      * @param chooser the file chooser to display.
      * @param parent the parent window.
@@ -183,9 +233,10 @@ public final class SwingHelper
      *
      * @return the return code of the chooser.
      */
-    public static final int showJFileChooser(JFileChooser chooser,
-                                             Component    parent,
-                                             String       approveButtonText)
+    public static final int showJFileChooser(
+        JFileChooser chooser,
+        Component    parent,
+        String       approveButtonText)
     {
         if (approveButtonText != null)
         {
@@ -193,9 +244,10 @@ public final class SwingHelper
             chooser.setDialogType(javax.swing.JFileChooser.CUSTOM_DIALOG);
         }
 
-        Frame frame = (parent instanceof Frame) ? (Frame)parent
-                                                : (Frame)javax.swing.SwingUtilities.getAncestorOfClass(java.awt.Frame.class,
-                                                                                                       parent);
+        Frame frame =
+            (parent instanceof Frame) ? (Frame) parent
+                                      : (Frame) javax.swing.SwingUtilities
+            .getAncestorOfClass(java.awt.Frame.class, parent);
         String title = chooser.getDialogTitle();
 
         if (title == null)
@@ -213,23 +265,22 @@ public final class SwingHelper
         dialog.setLocationRelativeTo(parent);
         chooser.rescanCurrentDirectory();
 
-        final int[] retValue = new int[] 
-        {
-            javax.swing.JFileChooser.CANCEL_OPTION
-        };
-        ActionListener l = new ActionListener()
-        {
-            public void actionPerformed(ActionEvent ev)
-            {
-                if (ev.getActionCommand() == JFileChooser.APPROVE_SELECTION)
-                {
-                    retValue[0] = JFileChooser.APPROVE_OPTION;
-                }
+        final int[] retValue = new int[] { javax.swing.JFileChooser.CANCEL_OPTION };
 
-                dialog.setVisible(false);
-                dialog.dispose();
-            }
-        };
+        ActionListener l =
+            new ActionListener()
+            {
+                public void actionPerformed(ActionEvent ev)
+                {
+                    if (ev.getActionCommand() == JFileChooser.APPROVE_SELECTION)
+                    {
+                        retValue[0] = JFileChooser.APPROVE_OPTION;
+                    }
+
+                    dialog.setVisible(false);
+                    dialog.dispose();
+                }
+            };
 
         chooser.addActionListener(l);
         dialog.show();
