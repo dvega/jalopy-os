@@ -906,7 +906,7 @@ final class JavadocPrinter
         NodeWriter out)
     {
         boolean needTag = false; // need @return tag?
-LOOP:
+LOOP: 
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
@@ -971,6 +971,18 @@ LOOP:
         int        last,
         NodeWriter out)
     {
+        switch (node.getType())
+        {
+            case JavaTokenTypes.METHOD_DEF :
+
+                if (NodeHelper.isAbstractMethod(node))
+                {
+                    return;
+                }
+
+                break;
+        }
+
         switch (type)
         {
             case JavaTokenTypes.LITERAL_throws :
@@ -1592,10 +1604,10 @@ LOOP:
       throws IOException
     {
         AST next = EMPTY_NODE;
-ITERATION:
+ITERATION: 
         for (AST child = node; child != null; child = child.getNextSibling())
         {
-SELECTION:
+SELECTION: 
             for (;;)
             {
                 switch (child.getType())
@@ -2013,12 +2025,12 @@ SELECTION:
         if (node.getFirstChild() != null)
         {
             out.printNewline();
-ITERATION:
+ITERATION: 
             for (
                 AST child = node.getFirstChild(); child != null;
                 child = child.getNextSibling())
             {
-SELECTION:
+SELECTION: 
                 for (;;)
                 {
                     switch (child.getType())
@@ -2439,17 +2451,20 @@ SELECTION:
                 {
                     AST child = tag.getFirstChild();
 
-                    // we trim the text so we have to take care to print a
-                    // blank between tag name and description
-                    if (
-                        child.getText().startsWith(SPACE)
-                        || child.getText().startsWith("<"))
+                    if (child != null)
                     {
-                        out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
-                    }
+                        String text = child.getText();
 
-                    String description = mergeChildren(child);
-                    out.print(description.trim(), JavadocTokenTypes.JAVADOC_COMMENT);
+                        // we trim the text so we have to take care to print a
+                        // blank between tag name and description
+                        if (text.startsWith(SPACE) || text.startsWith("<"))
+                        {
+                            out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
+                        }
+
+                        String description = mergeChildren(child);
+                        out.print(description.trim(), JavadocTokenTypes.JAVADOC_COMMENT);
+                    }
 
                     break;
                 }
@@ -2939,7 +2954,7 @@ SELECTION:
     {
         StringBuffer buf = new StringBuffer(200);
         AST next = EMPTY_NODE;
-LOOP:
+LOOP: 
         for (AST child = node; child != null; child = child.getNextSibling())
         {
             switch (child.getType())
@@ -3254,7 +3269,7 @@ LOOP:
 
                 do
                 {
-MOVE_FORWARD:
+MOVE_FORWARD: 
                     while (
                         ((nextStart - lineStart) < width)
                         && (nextStart != BreakIterator.DONE))
