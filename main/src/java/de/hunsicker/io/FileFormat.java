@@ -99,32 +99,35 @@ public final class FileFormat
      */
     public static FileFormat valueOf(String format)
     {
-        String n = format.toUpperCase().intern();
+        FileFormat result = FileFormat.DEFAULT;
 
-        if ((DOS._name == n) || (DOS._separator == n))
+        if (format != null)
         {
-            return DOS;
+            format = format.toUpperCase().intern();
+
+            if ((DOS._name == format) || (DOS._separator == format))
+            {
+                result = DOS;
+            }
+            else if ((UNIX._name == format) || (UNIX._separator == format))
+            {
+                result = UNIX;
+            }
+            else if ((MAC._name == format) || (MAC._separator == format))
+            {
+                result = MAC;
+            }
+            else if (AUTO._name == format)
+            {
+                result = AUTO;
+            }
+            else if (UNKNOWN._name == format)
+            {
+                result = UNKNOWN;
+            }
         }
-        else if ((UNIX._name == n) || (UNIX._separator == n))
-        {
-            return UNIX;
-        }
-        else if ((MAC._name == n) || (MAC._separator == n))
-        {
-            return MAC;
-        }
-        else if (AUTO._name == n)
-        {
-            return AUTO;
-        }
-        else if (UNKNOWN._name == n)
-        {
-            return UNKNOWN;
-        }
-        else
-        {
-            return DEFAULT;
-        }
+
+        return result;
     }
 
 
