@@ -7,8 +7,8 @@
 This is the master build script for the Jalopy project.
 
 The main targets are:
- 
- build-clean-all      Removes all temporary build files
+
+ build-clean          Removes all temporary build files
  build-dist-all       Creates all binary distributions
  build-dist-ant       Creates the Ant Plug-in distribution
  build-dist-console   Creates the Console Plug-in distribution
@@ -19,9 +19,9 @@ The main targets are:
  build-dist-main      Creates the Jalopy runtime distribution
  build-dist-netbeans  Creates the NetBeans Plug-in distribution
  build-dist-src       Creates the Jalopy source distribution
- build-dist-upload    Uploads the distributions to SourceForge 
+ build-dist-upload    Uploads the distributions to SourceForge
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -53,7 +53,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-ant"
           description="Creates the Ant Plug-in distribution"
           depends="build-check-ant, build-jar-ant, build-docu-ant,
-                   build-docu, build-uptodate-ant" 
+                   build-docu, build-uptodate-ant"
           if="present.ant"
           unless="uptodate.ant">
 
@@ -96,7 +96,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-console"
           description="Creates the Console Plug-in distribution"
           depends="build-check-console, build-jar-console, build-docu-console,
-                   build-docu, build-uptodate-console" 
+                   build-docu, build-uptodate-console"
           if="present.console"
           unless="uptodate.console">
 
@@ -142,7 +142,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-eclipse"
           description="Creates the Eclipse Plug-in distribution"
           depends="build-check-eclipse, build-jar-eclipse,
-                   build-docu-eclipse, build-docu, build-uptodate-eclipse" 
+                   build-docu-eclipse, build-docu, build-uptodate-eclipse"
           if="present.eclipse"
           unless="uptodate.eclipse">
 
@@ -157,7 +157,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <format property="content.date" pattern="d MMMM, yyyy" locale="en"/>
     </tstamp>
 
-    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" 
+    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}"
           filtering="true">
       <fileset dir="../eclipse/src/resources" >
         <include name="about.html" />
@@ -195,7 +195,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-jbuilder"
           description="Creates the JBuilder Plug-in distribution"
           depends="build-check-jbuilder, build-jar-jbuilder,
-                   build-docu-jbuilder, build-docu, build-uptodate-jbuilder" 
+                   build-docu-jbuilder, build-docu, build-uptodate-jbuilder"
           if="present.jbuilder"
           unless="uptodate.jbuilder">
 
@@ -230,7 +230,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-jdev"
           description="Creates the JDeveloper Plug-in distribution"
           depends="build-check-jdev, build-jar-jdev,
-                   build-docu-jdev, build-docu, build-uptodate-jdev" 
+                   build-docu-jdev, build-docu, build-uptodate-jdev"
           if="present.jdeveloper"
           unless="uptodate.jdeveloper">
 
@@ -265,7 +265,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-jedit"
           description="Creates the jEdit Plug-in distribution"
           depends="build-check-jedit, build-jar-jedit, build-docu-jedit,
-                   build-docu, build-uptodate-jedit" 
+                   build-docu, build-uptodate-jedit"
           if="present.jedit"
           unless="uptodate.jedit">
 
@@ -301,7 +301,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-dist-main"
           description="Creates the Jalopy runtime distribution"
           depends="build-check-main, build-jar-main, build-docu-main,
-                   build-docu, build-uptodate-main" 
+                   build-docu, build-uptodate-main"
           if="present.main"
           unless="uptodate.main">
 
@@ -338,8 +338,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="build-dist-netbeans"
           description="Creates the NetBeans Plug-in distribution"
-          depends="build-check-netbeans, build-jar-netbeans, 
-                   build-docu-netbeans, build-docu, build-uptodate-netbeans" 
+          depends="build-check-netbeans, build-jar-netbeans,
+                   build-docu-netbeans, build-docu, build-uptodate-netbeans"
           if="present.netbeans"
           unless="uptodate.netbeans">
 
@@ -359,7 +359,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <!-- Creates the Jalopy source distribution                               -->
   <!-- ==================================================================== -->
-  <target name="build-dist-src"
+  <target name="build-dist-src" depends="build-init"
           description="Creates the Jalopy source distribution">
 
     <zip zipfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.zip"
@@ -370,7 +370,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <exclude name="**/*.tar" />
       <exclude name="**/tmp~/**" />
     </zip>
-    
+
     <tar tarfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.tar.gz"
          basedir=".."
          compression="gzip" >
@@ -386,9 +386,18 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
 
   <!-- ==================================================================== -->
+
+  <!-- ==================================================================== -->
+  <target name="build-dist-manual"
+          depends="build-dist-all"
+          description="Creates the manual distribution">
+  </target>
+
+
+  <!-- ==================================================================== -->
   <!-- Cleans the build directories                                         -->
   <!-- ==================================================================== -->
-  <target name="build-clean-all"
+  <target name="build-clean"
           description="Removes all temporary build files">
     <delete dir="${DIR.TMP}" includeEmptyDirs="true" >
     </delete>
@@ -437,8 +446,12 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <mkdir dir="${DIR.JARS}" />
     <mkdir dir="${DIR.DOCS}" />
     <mkdir dir="${DIR.DIST}" />
-    
+
     <property name="build.init" value="true" />
+
+    <fixcrlf eol="lf" eof="remove" srcDir="${dir.res}"
+             includes="*.sh">
+    </fixcrlf>
   </target>
 
 
@@ -552,14 +565,14 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="build-jar-jbuilder">
     <ant dir="../jbuilder" target="jbuilder-jar" inheritAll="false" />
   </target>
-  
-  
+
+
   <!-- ==================================================================== -->
   <!-- Creates the JDeveloper Plug-in .jar                                  -->
   <!-- ==================================================================== -->
   <target name="build-jar-jdev">
     <ant dir="../jdeveloper" target="jdev-jar" inheritAll="false" />
-  </target>  
+  </target>
 
 
   <!-- ==================================================================== -->
@@ -590,8 +603,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <echo message="on how to obtain the needed module." />
     <fail message="Module 'ant' not found" />
   </target>
-  
-  
+
+
   <!-- ==================================================================== -->
   <!-- Checks whether the module 'console' exists                           -->
   <!-- ==================================================================== -->
@@ -603,9 +616,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <echo message="Please refer to ${ant.file}" />
     <echo message="on how to obtain the needed module." />
     <fail message="Module 'console' not found" />
-  </target>  
-  
-  
+  </target>
+
+
   <!-- ==================================================================== -->
   <!-- Checks whether the module 'main' exists                              -->
   <!-- ==================================================================== -->
