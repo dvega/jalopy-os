@@ -907,7 +907,7 @@ final class JavadocPrinter
         NodeWriter out)
     {
         boolean needTag = false; // need @return tag?
-LOOP: 
+LOOP:
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
@@ -1605,10 +1605,10 @@ LOOP:
       throws IOException
     {
         AST next = EMPTY_NODE;
-ITERATION: 
+ITERATION:
         for (AST child = node; child != null; child = child.getNextSibling())
         {
-SELECTION: 
+SELECTION:
             for (;;)
             {
                 switch (child.getType())
@@ -2026,12 +2026,12 @@ SELECTION:
         if (node.getFirstChild() != null)
         {
             out.printNewline();
-ITERATION: 
+ITERATION:
             for (
                 AST child = node.getFirstChild(); child != null;
                 child = child.getNextSibling())
             {
-SELECTION: 
+SELECTION:
                 for (;;)
                 {
                     switch (child.getType())
@@ -2454,16 +2454,19 @@ SELECTION:
 
                     if (child != null)
                     {
-                        String text = child.getText();
+                        String description = mergeChildren(child);
 
                         // we trim the text so we have to take care to print a
                         // blank between tag name and description
-                        if (text.startsWith(SPACE) || text.startsWith("<"))
+                        switch (description.charAt(0))
                         {
-                            out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
+                            case ' ':
+                            case '<':
+                            case '{':
+                                out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
+                                break;
                         }
 
-                        String description = mergeChildren(child);
                         out.print(description.trim(), JavadocTokenTypes.JAVADOC_COMMENT);
                     }
 
@@ -2483,7 +2486,8 @@ SELECTION:
 
                 // @tag description
                 case JavadocTokenTypes.TAG_CUSTOM :
-                case JavadocTokenTypes.TAG_TODO :default :
+                case JavadocTokenTypes.TAG_TODO :
+                default :
                     printTagDescription(
                         tag.getFirstChild(), ident, asterix, maxwidth, false, out);
 
@@ -2525,17 +2529,21 @@ SELECTION:
     {
         if (child != null)
         {
-            // we trim the text so we have to take care to print a
-            // blank between tag name and description
-            if (child.getText().startsWith(SPACE) || child.getText().startsWith("<"))
-            {
-                out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
-            }
-
             String description = mergeChildren(child);
 
+            // we trim the text so we have to take care to print a
+            // blank between tag name and description
+            switch (description.charAt(0))
+            {
+                case ' ':
+                case '<':
+                case '{':
+                    out.print(SPACE, JavadocTokenTypes.JAVADOC_COMMENT);
+                    break;
+            }
+
             // normalize the description if this is not an auto-generated tag
-            if (normalize && !description.startsWith("@"))
+            if (normalize && description.charAt(0) != '@')
             {
                 PatternMatcher matcher = (PatternMatcher) _matcher.get();
 
@@ -2556,7 +2564,7 @@ SELECTION:
             }
 
             int length = name.length();
-            String[] lines = split(description, maxwidth - length - 1, true);
+            String[] lines = split(description.trim(), maxwidth - length - 1, true);
 
             for (int i = 0, size = lines.length - 1; i < size; i++)
             {
@@ -2954,7 +2962,7 @@ SELECTION:
     {
         StringBuffer buf = new StringBuffer(200);
         AST next = EMPTY_NODE;
-LOOP: 
+LOOP:
         for (AST child = node; child != null; child = child.getNextSibling())
         {
             switch (child.getType())
@@ -3269,7 +3277,7 @@ LOOP:
 
                 do
                 {
-MOVE_FORWARD: 
+MOVE_FORWARD:
                     while (
                         ((nextStart - lineStart) < width)
                         && (nextStart != BreakIterator.DONE))
@@ -3353,7 +3361,7 @@ MOVE_FORWARD:
             }
         }
 
-        return (String[]) lines.toArray(new String[0]);
+        return (String[]) lines.toArray(EMPTY_STRING_ARRAY);
     }
 
 
