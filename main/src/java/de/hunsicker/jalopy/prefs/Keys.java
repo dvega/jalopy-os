@@ -68,7 +68,9 @@ public final class Keys
     /** Force alignment of indiviual method call chains? (<em>boolean</em>) */
     public static final Key ALIGN_METHOD_CALL_CHAINS = new Key("printer/alignment/methodCallChains");
 
-    /** Align the indiviual parts of the ternar operator? (<em>boolean</em>) */
+    /** Align the indiviual parts of the ternar operator? (<em>boolean</em>)
+    * @since 1.0b9
+    */
     public static final Key ALIGN_TERNARY_OPERATOR = new Key("printer/alignment/ternaryOperator");
 
     /**
@@ -86,6 +88,7 @@ public final class Keys
     /**
      * Should the brackets for array type be printed after the type or after
      * the identifier? (<em>boolean</em>)
+     * @since 1.0b9
      */
     public static final Key ARRAY_BRACKETS_AFTER_IDENT = new Key("printer/misc/arrayBracketsAfterIdent");
 
@@ -251,6 +254,7 @@ public final class Keys
     /**
      * Print Javadoc comments for fields in one line, if possible?
      * (<em>boolean</em>)
+     * @since 1.0b9
      */
     public static final Key COMMENT_JAVADOC_FIELDS_SHORT = new Key("printer/comments/javadoc/fieldsShort");
 
