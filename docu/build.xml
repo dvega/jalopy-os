@@ -59,6 +59,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
            target="${BUILD.TARGET.VM}"
            verbose="${BUILD.VERBOSE}">
       <src path="${dir.src.java}" />
+      <classpath location="${ant.home}/lib/ant.jar" />
     </javac>
 
     <taskdef name="filesize" classname="org.apache.tools.ant.taskdefs.FileSize">
