@@ -43,12 +43,12 @@ options {
 }
 
 tokens {
-        BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF; 
-        INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF; 
+        BLOCK; MODIFIERS; OBJBLOCK; SLIST; CTOR_DEF; METHOD_DEF; VARIABLE_DEF;
+        INSTANCE_INIT; STATIC_INIT; TYPE; CLASS_DEF; INTERFACE_DEF;
         PACKAGE_DEF; ARRAY_DECLARATOR; EXTENDS_CLAUSE; IMPLEMENTS_CLAUSE;
-        PARAMETERS; PARAMETER_DEF; LABELED_STAT; TYPECAST; INDEX_OP; 
-        POST_INC; POST_DEC; METHOD_CALL; EXPR; ARRAY_INIT; 
-        IMPORT; UNARY_MINUS; UNARY_PLUS; CASE_GROUP; ELIST; FOR_INIT; FOR_CONDITION; 
+        PARAMETERS; PARAMETER_DEF; LABELED_STAT; TYPECAST; INDEX_OP;
+        POST_INC; POST_DEC; METHOD_CALL; EXPR; ARRAY_INIT;
+        IMPORT; UNARY_MINUS; UNARY_PLUS; CASE_GROUP; ELIST; FOR_INIT; FOR_CONDITION;
         FOR_ITERATOR; EMPTY_STAT; FINAL="final"; ABSTRACT="abstract";
         STRICTFP="strictfp"; SUPER_CTOR_CALL; CTOR_CALL;
         BOF; ROOT; CASESLIST; BLOCK_STATEMENT; SEPARATOR_COMMENT; SYNBLOCK;
@@ -93,7 +93,7 @@ tokens {
 
     /** Unqualified (wildcard) imports. */
     private Set _unqualImports = new HashSet(10); // Set of <String>
-    
+
     /** Logging. */
     private final Logger _logger = Logger.getLogger("de.hunsicker.jalopy.parser.java");
 
@@ -225,71 +225,29 @@ tokens {
     }
 
     /**
-     * Attaches the hidden tokens from the specified compound statement to its 
+     * Attaches the hidden tokens from the specified compound statement to its
      * imaginary node.
      *
      * @param node a INSTANCE_INIT node.
      * @param statement a SLIST node.
      */
-    private void attachStuffBefore(JavaNode node, JavaNode statement)
+    private void attachStuffBeforeCompoundStatement(JavaNode node, JavaNode statement)
     {
         node.setHiddenBefore(statement.getHiddenBefore());
         statement.setHiddenBefore(null);
     }
 
     /**
-     * Attaches the hidden tokens to the imaginary node.
+     * Attaches the hidden tokens associated to either the modifiers or keyword to the imaginary node.
      *
-     * @param node a node.
-     * @param modifiers a VARIABLE_DEF node.
-     * @param type an IDENT node.
-     * @param identifier the token representing the name.
-     */
-    private void attachStuffBefore(JavaNode node, JavaNode modifiers,
-                                   JavaNode type, ExtendedToken identifier)
-    {
-        JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
-        if (modifier != null)
-        {
-            node.setHiddenBefore(modifier.getHiddenBefore());
-            modifier.setHiddenBefore(null);
-        }
-        else
-        {
-            JavaNode name = (JavaNode)type.getFirstChild();
-
-            if (name != null)
-            {
-                for (AST child = name; child != null; child = child.getFirstChild())
-                {
-                    if (child.getFirstChild() == null)
-                    {
-                        JavaNode t = (JavaNode)child;
-                        node.setHiddenBefore(t.getHiddenBefore());
-                        t.setHiddenBefore(null);
-                    }
-                }
-            }
-            else if (identifier.getHiddenBefore() != null)
-            {
-                node.setHiddenBefore(identifier.getHiddenBefore());
-                identifier.setHiddenBefore(null);
-            }
-        }
-    }
-
-    /**
-     * Attaches the hidden tokens to the imaginary node.
-     *
-     * @param node a node.
+     * @param node a CTOR_DEF node.
      * @param modifiers a MODIFIRES node.
      * @param keyword a IDENT node.
      */
-    private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode keyword)
+    private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode keyword)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -305,10 +263,17 @@ tokens {
         }
     }
 
-    private void attachStuffBeforeVariable(JavaNode node, JavaNode modifiers, JavaNode type)
+    /**
+     * Attaches the hidden tokens associated to either the modifiers or type to the imaginary node.
+     *
+     * @param node a METHOD_DEF or VARIABLE_DEF node.
+     * @param modifiers a MODIFIERS node.
+     * @param type a TYPE node.
+     */
+    private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode type)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -321,13 +286,13 @@ tokens {
                 if (child.getFirstChild() == null)
                 {
                     JavaNode t = (JavaNode)child;
-                    
+
                     if (t.getHiddenBefore() != null)
                     {
                         node.setHiddenBefore(t.getHiddenBefore());
                         t.setHiddenBefore(null);
                     }
-                    
+
                     break;
                 }
             }
@@ -389,7 +354,7 @@ tokens {
         {
             super(initialSize);
         }
-    
+
         public boolean add(Object element)
         {
             if (element == null)
@@ -422,12 +387,12 @@ tokens {
 
             return super.set(index, element);
         }
-        
+
         // XXX implement addAll
     }
 
 }
-        
+
 // Compilation Unit: In Java, this is a single file.  This is the start
 //   rule for this parser
 parse
@@ -437,7 +402,7 @@ parse
             root.setText(getFilename());
             currentAST.root = root;
         }
-        
+
         :       // A compilation unit starts with an optional package definition
                 (       packageDefinition
                 |       /* nothing */
@@ -542,7 +507,7 @@ builtInType
 //   and expand its name by adding dots and following IDENTS
 identifier!
         {
-            _buf.setLength(0);        
+            _buf.setLength(0);
         }
 
         :       id1:IDENT  { _buf.append(id1.getText()); }
@@ -550,7 +515,7 @@ identifier!
                   {
                       _buf.append('.');
                       _buf.append(id2.getText());
-                      
+
                   }
                 )*
 
@@ -558,7 +523,7 @@ identifier!
             #identifier = #([JavaTokenTypes.IDENT, _buf.toString()]);
             String text = #identifier.getText().intern();
             addIdentifier(text);
-            
+
             #identifier.setHiddenBefore(#id1.getHiddenBefore());
             #identifier.setHiddenAfter(#id1.getHiddenAfter());
             #identifier.startLine = #id1.startLine;
@@ -574,7 +539,7 @@ identifier!
  */
 identifierPackage
         {
-            _buf.setLength(0);        
+            _buf.setLength(0);
         }
         : id1:IDENT { _buf.append(#id1.getText()); }
           ( DOT^
@@ -645,19 +610,19 @@ classDefinition![JavaNode modifiers]
                 cb:classBlock
                 { #classDefinition = #(#[JavaTokenTypes.CLASS_DEF,"CLASS_DEF"],
                                                            modifiers,id,sc,ic,cb);
-                
+
                   #classDefinition.setHiddenBefore(#c.getHiddenBefore());
                   #classDefinition.setHiddenAfter(#c.getHiddenAfter());
                   attachStuffBefore(#classDefinition, modifiers, #c);
                 }
-                
+
         ;
 
 superClassClause!
         :       ( e:"extends"! id:identifier )?
                 { #superClassClause = #(#[JavaTokenTypes.EXTENDS_CLAUSE,STR_EXTENDS_CLAUSE],id);
                   if (#e != null)
-                  #superClassClause.setHiddenBefore(#e.getHiddenBefore());  
+                  #superClassClause.setHiddenBefore(#e.getHiddenBefore());
                 }
         ;
 
@@ -678,11 +643,11 @@ interfaceDefinition![JavaNode modifiers]
 // This is the body of a class.  You can have fields and extra semicolons,
 // That's about it (until you see what a field is...)
 classBlock
-        :       
+        :
                 lc:LCURLY^
                 {_references.enterScope(References.SCOPE_CLASS);}
                         ( field | SEMI )*
-                
+
                 rc:RCURLY{_references.leaveScope();}
                 { #lc.setType(JavaTokenTypes.OBJBLOCK);}
                 //{#classBlock = #([JavaTokenTypes.OBJBLOCK, STR_OBJBLOCK], #classBlock);}
@@ -706,7 +671,7 @@ implementsClause
                 { #implementsClause = #(#[JavaTokenTypes.IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE"],
                                                                  #implementsClause);
                   if (#i != null)
-                                   #implementsClause.setHiddenBefore(#i.getHiddenBefore());                              
+                                   #implementsClause.setHiddenBefore(#i.getHiddenBefore());
                                                                  }
         ;
 
@@ -720,21 +685,21 @@ field!
                 (       { _references.enterScope(); }h:ctorHead s:constructorBody // constructor
                         { _references.leaveScope(); }
                         {#field = #(#[JavaTokenTypes.CTOR_DEF,"CTOR_DEF"], mods, h, s);
-                        attachStuffBefore(#field, #mods, #h);
+                        attachStuffBeforeCtor(#field, #mods, #h);
                         }
-                        
+
 
                 |       cd:classDefinition[#mods]       // inner class
                         {#field = #cd;}
-                        
+
                 |       id:interfaceDefinition[#mods]   // inner interface
                         {#field = #id;}
 
                 |       t:typeSpec[false]  // method or variable declaration(s)
                         (       idd:IDENT  // the name of the method
-                                
+
                                 { _references.enterScope(); }
-                                
+
                                 // parse the formal parameter declarations.
                                 lp:LPAREN param:parameterDeclarationList rp:RPAREN
 
@@ -761,29 +726,29 @@ field!
                                 {
                                     #field = #v;
                                     #field.addChild(#semi);
-                                    
+
                                     AST next = #field.getNextSibling();
-                                    // HACK for multiple variable declaration in one statement 
+                                    // HACK for multiple variable declaration in one statement
                                     //      e.g float  x, y, z;
                                     // the semicolon will only be added to the first statement so
                                     // we have to add it manually to all others
                                     if (next != null)
                                     {
                                         AST ssemi = NodeHelper.getFirstChild(#field, JavaTokenTypes.SEMI);
-                                    
+
                                         for (AST var = next; var != null; var = var.getNextSibling())
                                         {
                                             var.addChild(astFactory.create(ssemi));
                                         }
                                     }
-                                
+
                                 }
                         )
                 )
 
     // "static { ... }" class initializer
         |       stat:"static"^ { _references.enterScope(); } s3:compoundStatement
-                {  
+                {
                   #field = #(#stat, s3);
                   #field.setType(STATIC_INIT);
                 }
@@ -791,7 +756,7 @@ field!
     // "{ ... }" instance initializer
         |       { _references.enterScope(); } s4:compoundStatement
                 { #field = #(#[JavaTokenTypes.INSTANCE_INIT,STR_INSTANCE_INIT], s4);
-                    attachStuffBefore(#field, #s4);
+                    attachStuffBeforeCompoundStatement(#field, #s4);
                 }
         ;
 
@@ -843,9 +808,9 @@ variableDefinitions[JavaNode mods, JavaNode t]
  */
 variableDeclarator![JavaNode mods, JavaNode t]
         :       id:IDENT d:declaratorBrackets[t] v:varInitializer
-                { 
+                {
                   #variableDeclarator = #(#[JavaTokenTypes.VARIABLE_DEF,"VARIABLE_DEF"], mods, #(#[JavaTokenTypes.TYPE,STR_TYPE],d), id, v);
-                  attachStuffBeforeVariable(#variableDeclarator, mods, t);
+                  attachStuffBefore(#variableDeclarator, mods, t);
                   _references.defineVariable(id.getText().intern(), #variableDeclarator);
                 }
         ;
@@ -961,15 +926,15 @@ statement
                     #decl.addChild(#semi1);
 
                     AST next = currentAST.root.getNextSibling();
-                    
-                    // HACK for multiple variable declaration in one statement 
+
+                    // HACK for multiple variable declaration in one statement
                     //      e.g float x, y, z;
                     // the semicolon will only be added to the first statement so
                     // we have to add it manually to all others
                     if (next != null)
                     {
                         AST semi = NodeHelper.getFirstChild(currentAST.root, JavaTokenTypes.SEMI);
-                    
+
                         for (AST var = next; var != null; var = var.getNextSibling())
                         {
                             var.addChild(astFactory.create(semi));
@@ -1017,7 +982,7 @@ statement
         |       "while"^ LPAREN expression RPAREN { _references.enterScope(); } statement { _references.leaveScope(); }
 
         // do-while statement
-        |       "do"^ { _references.enterScope(); } statement { _references.leaveScope(); } 
+        |       "do"^ { _references.enterScope(); } statement { _references.leaveScope(); }
                 "while" LPAREN expression RPAREN SEMI
 
         // get out of a loop (or switch)
@@ -1049,7 +1014,7 @@ statement
                 { #synBlock.setType(JavaTokenTypes.SYNBLOCK);
                 _references.enterScope(); }
                 compoundStatement
-                                                           
+
 
         // empty statement
         |       emptyStat:SEMI {#emptyStat.setType(JavaTokenTypes.EMPTY_STAT);}
@@ -1146,7 +1111,7 @@ finallyBlock
 // to point out that new has a higher precedence than '.', so you
 // can validy use
 //     new Frame().show()
-// 
+//
 // Note that the above precedence levels map to the rules below...
 // Once you have a precedence chart, writing the appropriate rules as below
 //   is usually very straightfoward
@@ -1300,18 +1265,18 @@ unaryExpressionNotPlusMinus
 
 // qualified names, array expressions, method invocation, post inc/dec
 postfixExpression
-{Token t; _buildList.clear(); 
+{Token t; _buildList.clear();
  StringBuffer buf = new StringBuffer(50);
  }
         :      t=primaryExpression // start with a primary
-                { 
+                {
                   if (t != null)
                   {
                      buf.append(t.getText().intern());
                   }
                 }
 
-                (       
+                (
                         // qualified id (id.id.id.id...) -- build the name
                         DOT^
                         {
@@ -1324,7 +1289,7 @@ postfixExpression
                             }
                         }
                                 ( id:IDENT { _buildList.add(id.getText().intern());
-                                             
+
                                              if (t != null)
                                              {
                                                 buf.append(".".intern());
@@ -1365,17 +1330,17 @@ postfixExpression
                 |       de:DEC^ {#de.setType(JavaTokenTypes.POST_DEC);if (!_buildList.isEmpty())_buildList.remove(_buildList.size() - 1);}
                 |       // nothing
                 )
-                
+
                 {
                     if (t != null)
                     {
                         _references.addReference(buf.toString().intern(), (JavaNode)currentAST.root);
                     }
-                
+
                     if (!_buildList.isEmpty())
                     {
                         _buf.setLength(0);
-                    
+
                         for (int i = 0, size = _buildList.size(); i < size; i++)
                         {
                             _buf.append((String)_buildList.get(i));
@@ -1400,7 +1365,7 @@ primaryExpression  returns [Token t]
         |       lp:LPAREN a:assignmentExpression rp:RPAREN
         |       "super"
                 // look for int.class and int[].class
-        |       builtInType 
+        |       builtInType
                 ( lbt:LBRACK^ {#lbt.setType(JavaTokenTypes.ARRAY_DECLARATOR);} RBRACK! )*
                 DOT^ "class"
         ;
@@ -1410,19 +1375,19 @@ primaryExpression  returns [Token t]
  *  Trees are built as illustrated by the following input/tree pairs:
  *  <pre>
  *  new T()
- *  
+ *
  *  new
  *   |
  *   T --  ELIST
  *           |
  *          arg1 -- arg2 -- .. -- argn
- *  
+ *
  *  new int[]
  *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR
- *  
+ *
  *  new int[] {1,2}
  *
  *  new
@@ -1432,7 +1397,7 @@ primaryExpression  returns [Token t]
  *                                EXPR -- EXPR
  *                                  |      |
  *                                  1      2
- *  
+ *
  *  new int[3]
  *  new
  *   |
@@ -1441,9 +1406,9 @@ primaryExpression  returns [Token t]
  *              EXPR
  *                |
  *                3
- *  
+ *
  *  new int[1][2]
- *  
+ *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR
@@ -1556,23 +1521,23 @@ options {
 {
     /** Indicates JDK version 1.3. */
     public final static int JDK_1_3 = 13;
-    
+
     /** Indicates JDK version 1.4. */
     public final static int JDK_1_4 = 14;
-    
+
     private final static String SPACE = " ";
-    
+
     /** The empty string array. */
     private final static String[] EMPTY_STRING_ARRAY = new String[0];
-    
+
     private final static String EMPTY_STRING = "";
-    
+
     /** The detected file format. */
     private FileFormat _fileFormat = FileFormat.UNKNOWN;
-    
+
     /** The file separator for the file format. */
     private String _lineSeparator = System.getProperty("line.separator");
-    
+
     /** The Javadoc recognizer. */
     private Recognizer _recognizer;
 
@@ -1599,10 +1564,10 @@ options {
 
     /** The use Java parser. */
     private JavaParser _parser;
-    
+
     /** The used Javadoc parser. */
     private JavadocParser _javadocParser;
-    
+
     /**
      * Creates a new JavaLexer object. Use {@link #setInputBuffer(Reader)} to
      * set up the input buffer.
@@ -1703,7 +1668,7 @@ options {
 
     /**
      * Sets whether Javadoc comments should be removed during processing.
-     * 
+     *
      * @param remove if <code>true</code> Javadoc comments will be removed during
      *        processing.
      */
@@ -1765,7 +1730,7 @@ options {
         return this.sourceVersion;
     }
 
-    /** 
+    /**
      * Test the token type against the literals table.
      *
      * @param ttype recognized token type.
@@ -1866,7 +1831,7 @@ options {
 
    /**
     * Reports the given error.
-    * 
+    *
     * @param ex exception which caused the error.
     */
    public void reportError(RecognitionException ex)
@@ -1877,7 +1842,7 @@ options {
 
    /**
     * Reports the given error.
-    * 
+    *
     * @param message error message.
     */
    public void reportError(String message)
@@ -1888,7 +1853,7 @@ options {
 
    /**
     * Reports the given warning.
-    * 
+    *
     * @param message warning message.
     */
    public void reportWarning(String message)
@@ -1920,7 +1885,7 @@ options {
      */
     public void setTokenObjectClass(String clazz)
     {
-        
+
         // necessary because our ctor calls this method with the default ANTLR
         // token object class during instantiation. If the ANTLR guys ever
         // change the class name, instantiating our lexer will fail until we've
@@ -1959,7 +1924,7 @@ options {
     {
         return _fileFormat;
     }
-    
+
     /**
      * Sets the input buffer to use.
      * @param buf buffer.
@@ -1979,7 +1944,7 @@ options {
     {
         setInputBuffer(new CharBuffer(in));
     }
-    
+
     /**
      * Resets the lexer.
      *
@@ -2001,16 +1966,16 @@ options {
 
     /**
      * Returns the individual lines of the given multi-line comment.
-     * 
+     *
      * @param str a multi-line comment.
      * @param beginOffset the column offset of the line where the comment
      *         starts.
      * @param separator the line separator.
-     * 
+     *
      * @return the individual lines of the comment.
      */
-    private String[] split(String str, 
-                               int    beginOffset, 
+    private String[] split(String str,
+                               int    beginOffset,
                                String separator)
     {
         List lines = new ArrayList();
@@ -2063,13 +2028,13 @@ options {
     /**
      * Removes the leading whitespace from each line of the given multi-line
      * comment.
-     * 
+     *
      * @param comment a multi-line comment.
      * @param column the column offset of the line where the comment starts.
      * @param lineSeparator the line separator.
      * @return comment without leading whitespace.
      */
-    private String removeLeadingWhitespace(String comment, int column, 
+    private String removeLeadingWhitespace(String comment, int column,
                                            String lineSeparator)
     {
         String[] lines = split(comment, column, lineSeparator);
@@ -2166,10 +2131,10 @@ WS      :       (       ' '
 
 protected SPECIAL_COMMENT
 { int column = getColumn()-1; }
-: 
+:
 
 "//J-"
-  
+
 (
         options {
             generateAmbigWarnings=false;
@@ -2182,11 +2147,11 @@ protected SPECIAL_COMMENT
 
 
   "//J+"
-  
-  { 
+
+  {
     String t = $getText;
     Token tok = new ExtendedToken(JavaTokenTypes.SPECIAL_COMMENT, StringHelper.leftPad(t, t.length()+column));
-  
+
     $setToken(tok);
   }
 ;
@@ -2204,14 +2169,14 @@ protected SL_COMMENT
 ;
 
 COMMENT
-: 
+:
     (
         options {
             // ANTLR does it right by consuming input as soon as possible
             generateAmbigWarnings=false;
         }:
-    
-        spec:SPECIAL_COMMENT {$setToken(spec);} | 
+
+        spec:SPECIAL_COMMENT {$setToken(spec);} |
         sep:SEPARATOR_COMMENT {$setToken(sep); } |
         sl:SL_COMMENT {$setToken(sl); }
     )
@@ -2227,7 +2192,7 @@ ML_COMMENT
     boolean javadoc = false;
 }
         :       "/*" { if (LA(1)=='*') javadoc = true; }
-        
+
                 (       /*      '\r' '\n' can be matched in one alternative or by matching
                                 '\r' in one iteration and '\n' in another.  I am trying to
                                 handle any flavor of newline that comes in, but the language
@@ -2264,7 +2229,7 @@ ML_COMMENT
                             _recognizer.setColumn(column);
                             _recognizer.parse(t, getFilename());
                             Node comment = (Node)_recognizer.getAST();
-                
+
                             // ignore empty comments
                             if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
                             {
@@ -2282,14 +2247,14 @@ ML_COMMENT
                     {
                         // XXX only if not in tab mode
                         // replace tabs
-                        
+
                         String t = $getText;
-                        
+
                         if (t.indexOf('\t') > -1)
                         {
                             t = StringHelper.replace(t, "\t", StringHelper.repeat(SPACE, getTabSize()));
                         }
-                        
+
                         t = removeLeadingWhitespace(t, column -1, _lineSeparator);
 
                         $setText(t);
@@ -2359,14 +2324,14 @@ ESC
                 |       '"'
                 |       '\''
                 |       '\\'
-                |       ('u')+ HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT 
+                |       ('u')+ HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
                 |       ('0'..'3')
                         (
                                 options {
                                         warnWhenFollowAmbig = false;
                                 }
                         :       ('0'..'7')
-                                (       
+                                (
                                         options {
                                                 warnWhenFollowAmbig = false;
                                         }
@@ -2404,7 +2369,7 @@ VOCAB
 // if it's a literal or really an identifer
 IDENT
         options {testLiterals=true;}
-        :       ('a'..'z'|'A'..'Z'|'_'|'$'|'\u00C0'..'\u00D6'|'\u00D8'..'\u00F6'|'\u00F8'..'\u00FF') 
+        :       ('a'..'z'|'A'..'Z'|'_'|'$'|'\u00C0'..'\u00D6'|'\u00D8'..'\u00F6'|'\u00F8'..'\u00FF')
                 ('a'..'z'|'A'..'Z'|'_'|'0'..'9'|'$'|'\u00C0'..'\u00D6'|'\u00D8'..'\u00F6'|'\u00F8'..'\u00FF')*
         ;
 
@@ -2442,7 +2407,7 @@ NUM_INT
                 |       ('1'..'9') ('0'..'9')*  {isDecimal=true;}               // non-zero decimal
                 )
                 (       ('l'|'L') { _ttype = JavaTokenTypes.NUM_LONG; }
-                
+
                 // only check to see if it's a float if looks like decimal so far
                 |       {isDecimal}?
             (   '.' ('0'..'9')* (EXPONENT)? (f2:FLOAT_SUFFIX {t=f2;})?

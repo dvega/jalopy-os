@@ -87,7 +87,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
 
     /** Unqualified (wildcard) imports. */
     private Set _unqualImports = new HashSet(10); // Set of <String>
-    
+
     /** Logging. */
     private final Logger _logger = Logger.getLogger("de.hunsicker.jalopy.parser.java");
 
@@ -219,71 +219,29 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
     }
 
     /**
-     * Attaches the hidden tokens from the specified compound statement to its 
+     * Attaches the hidden tokens from the specified compound statement to its
      * imaginary node.
      *
      * @param node a INSTANCE_INIT node.
      * @param statement a SLIST node.
      */
-    private void attachStuffBefore(JavaNode node, JavaNode statement)
+    private void attachStuffBeforeCompoundStatement(JavaNode node, JavaNode statement)
     {
         node.setHiddenBefore(statement.getHiddenBefore());
         statement.setHiddenBefore(null);
     }
 
     /**
-     * Attaches the hidden tokens to the imaginary node.
+     * Attaches the hidden tokens associated to either the modifiers or keyword to the imaginary node.
      *
-     * @param node a node.
-     * @param modifiers a VARIABLE_DEF node.
-     * @param type an IDENT node.
-     * @param identifier the token representing the name.
-     */
-    private void attachStuffBefore(JavaNode node, JavaNode modifiers,
-                                   JavaNode type, ExtendedToken identifier)
-    {
-        JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
-        if (modifier != null)
-        {
-            node.setHiddenBefore(modifier.getHiddenBefore());
-            modifier.setHiddenBefore(null);
-        }
-        else
-        {
-            JavaNode name = (JavaNode)type.getFirstChild();
-
-            if (name != null)
-            {
-                for (AST child = name; child != null; child = child.getFirstChild())
-                {
-                    if (child.getFirstChild() == null)
-                    {
-                        JavaNode t = (JavaNode)child;
-                        node.setHiddenBefore(t.getHiddenBefore());
-                        t.setHiddenBefore(null);
-                    }
-                }
-            }
-            else if (identifier.getHiddenBefore() != null)
-            {
-                node.setHiddenBefore(identifier.getHiddenBefore());
-                identifier.setHiddenBefore(null);
-            }
-        }
-    }
-
-    /**
-     * Attaches the hidden tokens to the imaginary node.
-     *
-     * @param node a node.
+     * @param node a CTOR_DEF node.
      * @param modifiers a MODIFIRES node.
      * @param keyword a IDENT node.
      */
-    private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode keyword)
+    private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode keyword)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -299,10 +257,17 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
         }
     }
 
-    private void attachStuffBeforeVariable(JavaNode node, JavaNode modifiers, JavaNode type)
+    /**
+     * Attaches the hidden tokens associated to either the modifiers or type to the imaginary node.
+     *
+     * @param node a METHOD_DEF or VARIABLE_DEF node.
+     * @param modifiers a MODIFIERS node.
+     * @param type a TYPE node.
+     */
+    private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode type)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -315,13 +280,13 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
                 if (child.getFirstChild() == null)
                 {
                     JavaNode t = (JavaNode)child;
-                    
+
                     if (t.getHiddenBefore() != null)
                     {
                         node.setHiddenBefore(t.getHiddenBefore());
                         t.setHiddenBefore(null);
                     }
-                    
+
                     break;
                 }
             }
@@ -383,7 +348,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
         {
             super(initialSize);
         }
-    
+
         public boolean add(Object element)
         {
             if (element == null)
@@ -416,7 +381,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
 
             return super.set(index, element);
         }
-        
+
         // XXX implement addAll
     }
 
@@ -696,7 +661,7 @@ public JavaParser(ParserSharedInputState state) {
 		Token  id2 = null;
 		JavaNode id2_AST = null;
 		
-		_buf.setLength(0);        
+		_buf.setLength(0);
 		
 		
 		try {      // for error handling
@@ -1249,7 +1214,7 @@ public JavaParser(ParserSharedInputState state) {
 		Token  id2 = null;
 		JavaNode id2_AST = null;
 		
-		_buf.setLength(0);        
+		_buf.setLength(0);
 		
 		
 		try {      // for error handling
@@ -1631,7 +1596,7 @@ public JavaParser(ParserSharedInputState state) {
 				superClassClause_AST = (JavaNode)currentAST.root;
 				superClassClause_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.EXTENDS_CLAUSE,STR_EXTENDS_CLAUSE)).add(id_AST));
 				if (e_AST != null)
-				superClassClause_AST.setHiddenBefore(e_AST.getHiddenBefore());  
+				superClassClause_AST.setHiddenBefore(e_AST.getHiddenBefore());
 				
 				currentAST.root = superClassClause_AST;
 				currentAST.child = superClassClause_AST!=null &&superClassClause_AST.getFirstChild()!=null ?
@@ -1699,7 +1664,7 @@ public JavaParser(ParserSharedInputState state) {
 				implementsClause_AST = (JavaNode)currentAST.root;
 				implementsClause_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE")).add(implementsClause_AST));
 				if (i_AST != null)
-				implementsClause_AST.setHiddenBefore(i_AST.getHiddenBefore());                              
+				implementsClause_AST.setHiddenBefore(i_AST.getHiddenBefore());
 				
 				currentAST.root = implementsClause_AST;
 				currentAST.child = implementsClause_AST!=null &&implementsClause_AST.getFirstChild()!=null ?
@@ -1956,7 +1921,7 @@ public JavaParser(ParserSharedInputState state) {
 						if ( inputState.guessing==0 ) {
 							field_AST = (JavaNode)currentAST.root;
 							field_AST = (JavaNode)astFactory.make( (new ASTArray(4)).add((JavaNode)astFactory.create(JavaTokenTypes.CTOR_DEF,"CTOR_DEF")).add(mods_AST).add(h_AST).add(s_AST));
-							attachStuffBefore(field_AST, mods_AST, h_AST);
+							attachStuffBeforeCtor(field_AST, mods_AST, h_AST);
 							
 							currentAST.root = field_AST;
 							currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
@@ -2052,7 +2017,7 @@ public JavaParser(ParserSharedInputState state) {
 								field_AST.addChild(semi_AST);
 								
 								AST next = field_AST.getNextSibling();
-								// HACK for multiple variable declaration in one statement 
+								// HACK for multiple variable declaration in one statement
 								//      e.g float  x, y, z;
 								// the semicolon will only be added to the first statement so
 								// we have to add it manually to all others
@@ -2115,7 +2080,7 @@ public JavaParser(ParserSharedInputState state) {
 				if ( inputState.guessing==0 ) {
 					field_AST = (JavaNode)currentAST.root;
 					field_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.INSTANCE_INIT,STR_INSTANCE_INIT)).add(s4_AST));
-					attachStuffBefore(field_AST, s4_AST);
+					attachStuffBeforeCompoundStatement(field_AST, s4_AST);
 					
 					currentAST.root = field_AST;
 					currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
@@ -3055,7 +3020,7 @@ public JavaParser(ParserSharedInputState state) {
 						
 						AST next = currentAST.root.getNextSibling();
 						
-						// HACK for multiple variable declaration in one statement 
+						// HACK for multiple variable declaration in one statement
 						//      e.g float x, y, z;
 						// the semicolon will only be added to the first statement so
 						// we have to add it manually to all others
@@ -3427,7 +3392,7 @@ public JavaParser(ParserSharedInputState state) {
 				variableDeclarator_AST = (JavaNode)currentAST.root;
 				
 				variableDeclarator_AST = (JavaNode)astFactory.make( (new ASTArray(5)).add((JavaNode)astFactory.create(JavaTokenTypes.VARIABLE_DEF,"VARIABLE_DEF")).add(mods).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(d_AST))).add(id_AST).add(v_AST));
-				attachStuffBeforeVariable(variableDeclarator_AST, mods, t);
+				attachStuffBefore(variableDeclarator_AST, mods, t);
 				_references.defineVariable(id.getText().intern(), variableDeclarator_AST);
 				
 				currentAST.root = variableDeclarator_AST;
@@ -5494,7 +5459,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode in_AST = null;
 		Token  de = null;
 		JavaNode de_AST = null;
-		Token t; _buildList.clear(); 
+		Token t; _buildList.clear();
 		StringBuffer buf = new StringBuffer(50);
 		
 		
@@ -5775,19 +5740,19 @@ public JavaParser(ParserSharedInputState state) {
  *  Trees are built as illustrated by the following input/tree pairs:
  *  <pre>
  *  new T()
- *  
+ *
  *  new
  *   |
  *   T --  ELIST
  *           |
  *          arg1 -- arg2 -- .. -- argn
- *  
+ *
  *  new int[]
  *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR
- *  
+ *
  *  new int[] {1,2}
  *
  *  new
@@ -5797,7 +5762,7 @@ public JavaParser(ParserSharedInputState state) {
  *                                EXPR -- EXPR
  *                                  |      |
  *                                  1      2
- *  
+ *
  *  new int[3]
  *  new
  *   |
@@ -5806,9 +5771,9 @@ public JavaParser(ParserSharedInputState state) {
  *              EXPR
  *                |
  *                3
- *  
+ *
  *  new int[1][2]
- *  
+ *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR

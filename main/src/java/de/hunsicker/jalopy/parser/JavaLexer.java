@@ -60,23 +60,23 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
     /** Indicates JDK version 1.3. */
     public final static int JDK_1_3 = 13;
-    
+
     /** Indicates JDK version 1.4. */
     public final static int JDK_1_4 = 14;
-    
+
     private final static String SPACE = " ";
-    
+
     /** The empty string array. */
     private final static String[] EMPTY_STRING_ARRAY = new String[0];
-    
+
     private final static String EMPTY_STRING = "";
-    
+
     /** The detected file format. */
     private FileFormat _fileFormat = FileFormat.UNKNOWN;
-    
+
     /** The file separator for the file format. */
     private String _lineSeparator = System.getProperty("line.separator");
-    
+
     /** The Javadoc recognizer. */
     private Recognizer _recognizer;
 
@@ -103,10 +103,10 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
     /** The use Java parser. */
     private JavaParser _parser;
-    
+
     /** The used Javadoc parser. */
     private JavadocParser _javadocParser;
-    
+
     /**
      * Creates a new JavaLexer object. Use {@link #setInputBuffer(Reader)} to
      * set up the input buffer.
@@ -207,7 +207,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
     /**
      * Sets whether Javadoc comments should be removed during processing.
-     * 
+     *
      * @param remove if <code>true</code> Javadoc comments will be removed during
      *        processing.
      */
@@ -269,7 +269,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
         return this.sourceVersion;
     }
 
-    /** 
+    /**
      * Test the token type against the literals table.
      *
      * @param ttype recognized token type.
@@ -370,7 +370,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
    /**
     * Reports the given error.
-    * 
+    *
     * @param ex exception which caused the error.
     */
    public void reportError(RecognitionException ex)
@@ -381,7 +381,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
    /**
     * Reports the given error.
-    * 
+    *
     * @param message error message.
     */
    public void reportError(String message)
@@ -392,7 +392,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
    /**
     * Reports the given warning.
-    * 
+    *
     * @param message warning message.
     */
    public void reportWarning(String message)
@@ -424,7 +424,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
      */
     public void setTokenObjectClass(String clazz)
     {
-        
+
         // necessary because our ctor calls this method with the default ANTLR
         // token object class during instantiation. If the ANTLR guys ever
         // change the class name, instantiating our lexer will fail until we've
@@ -463,7 +463,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
     {
         return _fileFormat;
     }
-    
+
     /**
      * Sets the input buffer to use.
      * @param buf buffer.
@@ -483,7 +483,7 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
     {
         setInputBuffer(new CharBuffer(in));
     }
-    
+
     /**
      * Resets the lexer.
      *
@@ -505,16 +505,16 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
 
     /**
      * Returns the individual lines of the given multi-line comment.
-     * 
+     *
      * @param str a multi-line comment.
      * @param beginOffset the column offset of the line where the comment
      *         starts.
      * @param separator the line separator.
-     * 
+     *
      * @return the individual lines of the comment.
      */
-    private String[] split(String str, 
-                               int    beginOffset, 
+    private String[] split(String str,
+                               int    beginOffset,
                                String separator)
     {
         List lines = new ArrayList();
@@ -567,13 +567,13 @@ public final class JavaLexer extends de.hunsicker.antlr.CharScanner implements J
     /**
      * Removes the leading whitespace from each line of the given multi-line
      * comment.
-     * 
+     *
      * @param comment a multi-line comment.
      * @param column the column offset of the line where the comment starts.
      * @param lineSeparator the line separator.
      * @return comment without leading whitespace.
      */
-    private String removeLeadingWhitespace(String comment, int column, 
+    private String removeLeadingWhitespace(String comment, int column,
                                            String lineSeparator)
     {
         String[] lines = split(comment, column, lineSeparator);
