@@ -71,80 +71,108 @@ public final class CodeInspector
     private static final String STR_Throwable = "Throwable" /* NOI18N */;
     private static final String STR_STRING_LITERAL_I18N =
         "STRING_LITERAL_I18N" /* NOI18N */;
+
+    private static final String STR_OBEY_CONTRACT_EQUALS =
+        "OBEY_CONTRACT_EQUALS" /* NOI18N */;
+
+    private static final String STR_DONT_SUBSTITUTE_OBJECT_EQUALS =
+        "DONT_SUBSTITUTE_OBJECT_EQUALS" /* NOI18N */;
+    private static final String STR_OVERRIDE_HASHCODE = "OVERRIDE_HASHCODE" /* NOI18N */;
+
+    private static final String STR_OVERRIDE_TO_STRING =
+        "OVERRIDE_TO_STRING" /* NOI18N */;
+
+
     private static final String STR_RETURN_ZERO_ARRAY = "RETURN_ZERO_ARRAY" /* NOI18N */;
+
+    private static final String STR_INTERFACE_ONLY_FOR_TYPE =
+        "INTERFACE_ONLY_FOR_TYPE" /* NOI18N */;
+
+    private static final String STR_REPLACE_STRUCTURE_WITH_CLASS =
+        "REPLACE_STRUCTURE_WITH_CLASS" /* NOI18N */;
+    private static final String STR_ADHERE_TO_NAMING_CONVENTION =
+        "ADHERE_TO_NAMING_CONVENTION" /* NOI18N */;
+
     private static final String STR_REFER_BY_INTERFACE =
         "REFER_BY_INTERFACE" /* NOI18N */;
     private static final String STR_VARIABLE_SHADOW = "VARIABLE_SHADOW" /* NOI18N */;
     private static final String STR_DONT_IGNORE_EXCEPTION =
         "DONT_IGNORE_EXCEPTION" /* NOI18N */;
-    private static final String STR_REPLACE_STRUCTURE_WITH_CLASS =
-        "REPLACE_STRUCTURE_WITH_CLASS" /* NOI18N */;
-    private static final String STR_OVERRIDE_HASHCODE = "OVERRIDE_HASHCODE" /* NOI18N */;
-    private static final String STR_OVERRIDE_EQUALS = "OVERRIDE_EQUALS" /* NOI18N */;
-    private static final String STR_OVERRIDE_TO_STRING =
-        "OVERRIDE_TO_STRING" /* NOI18N */;
-    private static final String STR_ADHERE_TO_NAMING_CONVENTION =
-        "ADHERE_TO_NAMING_CONVENTION" /* NOI18N */;
-    private static final String STR_DECLARE_COLLECTION_COMMENT =
-        "DECLARE_COLLECTION_COMMENT" /* NOI18N */;
-    private static final String STR_WRONG_COLLECTION_COMMENT =
-        "WRONG_COLLECTION_COMMENT" /* NOI18N */;
-    private static final String STR_OBEY_CONTRACT_EQUALS =
-        "OBEY_CONTRACT_EQUALS" /* NOI18N */;
-    private static final String STR_EMPTY_FINALLY = "EMPTY_FINALLY" /* NOI18N */;
-    private static final String STR_INTERFACE_ONLY_FOR_TYPE =
-        "INTERFACE_ONLY_FOR_TYPE" /* NOI18N */;
-    private static final String STR_NEVER_WAIT_OUTSIDE_LOOP =
-        "NEVER_WAIT_OUTSIDE_LOOP" /* NOI18N */;
-    private static final String STR_DONT_SUBSTITUTE_OBJECT_EQUALS =
-        "DONT_SUBSTITUTE_OBJECT_EQUALS" /* NOI18N */;
+
     private static final String STR_NEVER_THROW_EXCEPTION =
         "NEVER_THROW_EXCEPTION" /* NOI18N */;
     private static final String STR_NEVER_THROW_THROWABLE =
         "NEVER_THROW_THROWABLE" /* NOI18N */;
+
+    private static final String STR_DECLARE_COLLECTION_COMMENT =
+        "DECLARE_COLLECTION_COMMENT" /* NOI18N */;
+    private static final String STR_WRONG_COLLECTION_COMMENT =
+        "WRONG_COLLECTION_COMMENT" /* NOI18N */;
+
+    private static final String STR_EMPTY_FINALLY = "EMPTY_FINALLY" /* NOI18N */;
+
+    private static final String STR_NEVER_WAIT_OUTSIDE_LOOP =
+        "NEVER_WAIT_OUTSIDE_LOOP" /* NOI18N */;
     private static final String STR_NAMING_CONVENTION = "NAMING_CONVENTION" /* NOI18N */;
     private static final String EMPTY_STRING = "" /* NOI18N */;
 
     static
     {
-        _favorableTypes.add("HashMap" /* NOI18N */);
-        _favorableTypes.add("Hashtable" /* NOI18N */);
         _favorableTypes.add("Vector" /* NOI18N */);
-        _favorableTypes.add("TreeMap" /* NOI18N */);
-        _favorableTypes.add("HashSet" /* NOI18N */);
-        _favorableTypes.add("IdentityHashMap" /* NOI18N */);
         _favorableTypes.add("ArrayList" /* NOI18N */);
+        _favorableTypes.add("HashSet" /* NOI18N */);
+        _favorableTypes.add("TreeSet" /* NOI18N */);
+        _favorableTypes.add("HashMap" /* NOI18N */);
+        _favorableTypes.add("TreeMap" /* NOI18N */);
+        _favorableTypes.add("IdentityHashMap" /* NOI18N */);
         _favorableTypes.add("WeakHashMap" /* NOI18N */);
-        _favorableTypes.add("java.util.HashMap" /* NOI18N */);
-        _favorableTypes.add("java.util.Hashtable" /* NOI18N */);
-        _favorableTypes.add("java.util.Vector" /* NOI18N */);
-        _favorableTypes.add("java.util.TreeMap" /* NOI18N */);
-        _favorableTypes.add("java.util.HashSet" /* NOI18N */);
-        _favorableTypes.add("java.util.IdentityHashMap" /* NOI18N */);
+        _favorableTypes.add("Hashtable" /* NOI18N */);
         _favorableTypes.add("java.util.ArrayList" /* NOI18N */);
+        _favorableTypes.add("java.util.Vector" /* NOI18N */);
+        _favorableTypes.add("java.util.HashSet" /* NOI18N */);
+        _favorableTypes.add("java.util.TreeSet" /* NOI18N */);
+        _favorableTypes.add("java.util.HashMap" /* NOI18N */);
+        _favorableTypes.add("java.util.TreeMap" /* NOI18N */);
+        _favorableTypes.add("java.util.IdentityHashMap" /* NOI18N */);
         _favorableTypes.add("java.util.WeakHashMap" /* NOI18N */);
+        _favorableTypes.add("java.util.Hashtable" /* NOI18N */);
 
         _collectionTypes.add("Collection" /* NOI18N */);
-        _collectionTypes.add("Set" /* NOI18N */);
         _collectionTypes.add("List" /* NOI18N */);
+        _collectionTypes.add("ArrayList" /* NOI18N */);
+        _collectionTypes.add("LinkedList" /* NOI18N */);
+        _collectionTypes.add("Vector" /* NOI18N */);
+        _collectionTypes.add("Set" /* NOI18N */);
+        _collectionTypes.add("ArraySet" /* NOI18N */);
+        _collectionTypes.add("HashSet" /* NOI18N */);
+        _collectionTypes.add("LinkedHashSet" /* NOI18N */);
         _collectionTypes.add("SortedSet" /* NOI18N */);
+        _collectionTypes.add("TreeSet" /* NOI18N */);
         _collectionTypes.add("Map" /* NOI18N */);
         _collectionTypes.add("SortedMap" /* NOI18N */);
         _collectionTypes.add("HashMap" /* NOI18N */);
         _collectionTypes.add("Hashtable" /* NOI18N */);
-        _collectionTypes.add("Vector" /* NOI18N */);
         _collectionTypes.add("TreeMap" /* NOI18N */);
-        _collectionTypes.add("HashSet" /* NOI18N */);
         _collectionTypes.add("IdentityHashMap" /* NOI18N */);
-        _collectionTypes.add("ArrayList" /* NOI18N */);
         _collectionTypes.add("WeakHashMap" /* NOI18N */);
+
+        _collectionTypes.add("java.util.Collection" /* NOI18N */);
+        _collectionTypes.add("java.util.List" /* NOI18N */);
+        _collectionTypes.add("java.util.ArrayList" /* NOI18N */);
+        _collectionTypes.add("java.util.LinkedList" /* NOI18N */);
+        _collectionTypes.add("java.util.Vector" /* NOI18N */);
+        _collectionTypes.add("java.util.Set" /* NOI18N */);
+        _collectionTypes.add("java.util.ArraySet" /* NOI18N */);
+        _collectionTypes.add("java.util.HashSet" /* NOI18N */);
+        _collectionTypes.add("java.util.LinkedHashSet" /* NOI18N */);
+        _collectionTypes.add("java.util.SortedSet" /* NOI18N */);
+        _collectionTypes.add("java.util.TreeSet" /* NOI18N */);
+        _collectionTypes.add("java.util.Map" /* NOI18N */);
+        _collectionTypes.add("java.util.SortedMap" /* NOI18N */);
         _collectionTypes.add("java.util.HashMap" /* NOI18N */);
         _collectionTypes.add("java.util.Hashtable" /* NOI18N */);
-        _collectionTypes.add("java.util.Vector" /* NOI18N */);
         _collectionTypes.add("java.util.TreeMap" /* NOI18N */);
-        _collectionTypes.add("java.util.HashSet" /* NOI18N */);
         _collectionTypes.add("java.util.IdentityHashMap" /* NOI18N */);
-        _collectionTypes.add("java.util.ArrayList" /* NOI18N */);
         _collectionTypes.add("java.util.WeakHashMap" /* NOI18N */);
     }
 
@@ -518,12 +546,7 @@ public final class CodeInspector
             return false;
         }
 
-        if (!STR_toString.equals(method.name))
-        {
-            return false;
-        }
-
-        return true;
+        return STR_toString.equals(method.name);
     }
 
 
@@ -584,183 +607,173 @@ public final class CodeInspector
         AST    node,
         Method method)
     {
-        if (!_settings.getBoolean(ConventionKeys.TIP_RETURN_ZERO_ARRAY, false))
+        if (_settings.getBoolean(ConventionKeys.TIP_RETURN_ZERO_ARRAY, false))
         {
-            return;
-        }
+            String returnType = method.returnType;
 
-        String returnType = method.returnType;
-
-        if (returnType.indexOf('[') > -1) // it's an array thingy
-        {
-            TreeWalker walker =
-                new TreeWalker()
-                {
-                    public void visit(AST node)
+            if (returnType.indexOf('[') > -1) // it's an array thingy
+            {
+                TreeWalker walker =
+                    new TreeWalker()
                     {
-                        switch (node.getType())
+                        public void visit(AST node)
                         {
-                            case JavaTokenTypes.LITERAL_return :
+                            switch (node.getType())
+                            {
+                                case JavaTokenTypes.LITERAL_return :
 
-                                AST child = node.getFirstChild();
-                                int retType = 0;
+                                    AST child = node.getFirstChild();
+                                    int retType = 0;
 
-                                switch (child.getType())
-                                {
-                                    case JavaTokenTypes.EXPR :
-                                        retType = child.getFirstChild().getType();
+                                    switch (child.getType())
+                                    {
+                                        case JavaTokenTypes.EXPR :
+                                            retType = child.getFirstChild().getType();
 
-                                        break;
+                                            break;
 
-                                    case JavaTokenTypes.LPAREN :
+                                        case JavaTokenTypes.LPAREN :
 
-                                        AST expr =
-                                            JavaNodeHelper.advanceToFirstNonParen(child);
+                                            AST expr =
+                                                JavaNodeHelper.advanceToFirstNonParen(child);
 
-                                        switch (expr.getType())
-                                        {
-                                            case JavaTokenTypes.EXPR :
-                                                retType = expr.getFirstChild().getType();
+                                            switch (expr.getType())
+                                            {
+                                                case JavaTokenTypes.EXPR :
+                                                    retType = expr.getFirstChild().getType();
 
-                                                break;
-                                        }
+                                                    break;
+                                            }
 
-                                        break;
-                                }
+                                            break;
+                                    }
 
-                                switch (retType)
-                                {
-                                    case JavaTokenTypes.LITERAL_null :
+                                    switch (retType)
+                                    {
+                                        case JavaTokenTypes.LITERAL_null :
 
-                                        if (
-                                            _settings.getBoolean(
-                                                ConventionKeys.TIP_RETURN_ZERO_ARRAY,
-                                                false))
-                                        {
-                                            addIssue(node, STR_RETURN_ZERO_ARRAY, _args);
-                                        }
+                                            if (
+                                                _settings.getBoolean(
+                                                    ConventionKeys.TIP_RETURN_ZERO_ARRAY,
+                                                    false))
+                                            {
+                                                addIssue(node, STR_RETURN_ZERO_ARRAY, _args);
+                                            }
 
-                                        stop();
+                                            stop();
 
-                                        break;
-                                }
+                                            break;
+                                    }
 
-                                break;
+                                    break;
+                            }
                         }
-                    }
-                };
+                    };
 
-            walker.walk(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
+                walker.walk(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
+            }
         }
     }
 
 
     private void checkAssignment(AST node)
     {
-        if (!_settings.getBoolean(ConventionKeys.TIP_VARIABLE_SHADOW, false))
+        if (_settings.getBoolean(ConventionKeys.TIP_VARIABLE_SHADOW, false))
         {
-            return;
-        }
+            AST lhs = node.getFirstChild();
 
-        AST lhs = node.getFirstChild();
+            switch (lhs.getType())
+            {
+                case JavaTokenTypes.IDENT :
 
-        switch (lhs.getType())
-        {
-            case JavaTokenTypes.IDENT :
+                    AST rhs = lhs.getNextSibling();
 
-                AST rhs = lhs.getNextSibling();
-
-                if (rhs != null)
-                {
-                    switch (rhs.getType())
+                    if (rhs != null)
                     {
-                        case JavaTokenTypes.IDENT :
+                        switch (rhs.getType())
+                        {
+                            case JavaTokenTypes.IDENT :
 
-                            // possible shadowing found,
-                            if (lhs.getText().equals(rhs.getText()))
-                            {
-                                JavaNode objBlock = getObjectBlock((JavaNode) node);
-                                boolean foundReference = false;
-
-                                for (
-                                    AST child = objBlock.getFirstChild(); child != null;
-                                    child = child.getNextSibling())
+                                // possible shadowing found,
+                                if (lhs.getText().equals(rhs.getText()))
                                 {
-                                    switch (child.getType())
+                                    JavaNode objBlock = getObjectBlock((JavaNode) node);
+                                    boolean foundReference = false;
+
+                                    for (
+                                        AST child = objBlock.getFirstChild(); child != null;
+                                        child = child.getNextSibling())
                                     {
-                                        case JavaTokenTypes.VARIABLE_DEF :
+                                        switch (child.getType())
+                                        {
+                                            case JavaTokenTypes.VARIABLE_DEF :
 
-                                            String name =
-                                                JavaNodeHelper.getFirstChild(
-                                                    child, JavaTokenTypes.IDENT).getText();
+                                                String name =
+                                                    JavaNodeHelper.getFirstChild(
+                                                        child, JavaTokenTypes.IDENT).getText();
 
-                                            if (name.equals(lhs.getText()))
-                                            {
-                                                StringBuffer buf = new StringBuffer(100);
-                                                buf.append("this." /* NOI18N */);
-                                                buf.append(name);
-                                                buf.append(" == " /* NOI18N */);
-                                                buf.append(name);
-
-                                                _args[2] = buf.toString();
-
-                                                if (
-                                                    _settings.getBoolean(
-                                                        ConventionKeys.TIP_VARIABLE_SHADOW,
-                                                        false))
+                                                if (name.equals(lhs.getText()))
                                                 {
-                                                    addIssue(
-                                                        node, STR_VARIABLE_SHADOW, _args);
+                                                    StringBuffer buf = new StringBuffer(100);
+                                                    buf.append("this." /* NOI18N */);
+                                                    buf.append(name);
+                                                    buf.append(" == " /* NOI18N */);
+                                                    buf.append(name);
+
+                                                    _args[2] = buf.toString();
+
+                                                    if (
+                                                        _settings.getBoolean(
+                                                            ConventionKeys.TIP_VARIABLE_SHADOW,
+                                                            false))
+                                                    {
+                                                        addIssue(
+                                                            node, STR_VARIABLE_SHADOW, _args);
+                                                    }
+
+                                                    foundReference = true;
                                                 }
 
-                                                foundReference = true;
-                                            }
+                                                break;
+                                        }
+                                    }
 
-                                            break;
+                                    if (!foundReference)
+                                    {
+                                        /**
+                                         * @todo
+                                         */
+
+                                        // 1. if inner class and non-static, search parents
+                                        // 2. if anonymous inner class, search parents
+                                        // 3. if dereived class, print message about possible shadowing
                                     }
                                 }
 
-                                if (!foundReference)
-                                {
-                                    /**
-                                     * @todo
-                                     */
-
-                                    // 1. if inner class and non-static, search parents
-                                    // 2. if anonymous inner class, search parents
-                                    // 3. if dereived class, print message about possible shadowing
-                                }
-                            }
-
-                            break;
+                                break;
+                        }
                     }
-                }
 
-                break;
+                    break;
+            }
         }
     }
 
 
     /**
-     * Checks the given catch clause is not empty.
+     * Checks whether the given catch clause is not empty.
      *
      * @param node a LITERAL_catch node.
      */
     private void checkCatch(AST node)
     {
-        if (!_settings.getBoolean(ConventionKeys.TIP_DONT_IGNORE_EXCEPTION, false))
+        if (_settings.getBoolean(ConventionKeys.TIP_DONT_IGNORE_EXCEPTION, false))
         {
-            return;
-        }
+            JavaNode lcurly = (JavaNode) JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST);
+            JavaNode child = (JavaNode)lcurly.getFirstChild();
 
-        JavaNode next = (JavaNode) node.getFirstChild().getNextSibling().getFirstChild();
-
-        if (next.getType() == JavaTokenTypes.RCURLY)
-        {
-            // if the user does not document why the catch is ignored
-            if (
-                !next.hasCommentsBefore()
-                && _settings.getBoolean(ConventionKeys.TIP_DONT_IGNORE_EXCEPTION, false))
+            // if this is an empty catch and the user does not document why it is empty
+            if (child.getType() == JavaTokenTypes.RCURLY && !child.hasCommentsBefore())
             {
                 addIssue(node, STR_DONT_IGNORE_EXCEPTION, _args);
             }
@@ -769,9 +782,9 @@ public final class CodeInspector
 
 
     /**
-     * Checks whether the given class represents a structure and in case equals is
-     * overriden that hashCode is also overriden (or vice versa). Also checks whether
-     * the toSting method is overriden.
+     * Checks whether the given class represents a structure and, in case equals is
+     * overriden, that hashCode is also overriden (or vice versa). Also checks whether
+     * the toString method is overriden.
      *
      * @param node a CLASS_DEF node.
      */
@@ -781,14 +794,12 @@ public final class CodeInspector
             _settings.getBoolean(ConventionKeys.TIP_REPLACE_STRUCTURE_WITH_CLASS, false);
         boolean checkOverrideHashCode =
             _settings.getBoolean(ConventionKeys.TIP_OVERRIDE_HASHCODE, false);
-        boolean checkOverrideEquals =
-            _settings.getBoolean(ConventionKeys.TIP_OVERRIDE_EQUALS, false);
         boolean checkOverrideToString =
             _settings.getBoolean(ConventionKeys.TIP_OVERRIDE_TO_STRING, false);
 
         if (
-            !checkReplaceStructure && !checkOverrideHashCode && !checkOverrideEquals
-            && !checkOverrideHashCode)
+            !checkReplaceStructure && !checkOverrideHashCode
+            && !checkOverrideToString)
         {
             return;
         }
@@ -832,17 +843,17 @@ public final class CodeInspector
                 case JavaTokenTypes.METHOD_DEF :
                     violate = false;
 
-                    Method method = new Method(child);
+                    Method method = null;
 
-                    if (checkOverrideEquals && !foundEquals && isEqualsMethod(method))
+                    if (checkOverrideHashCode &&
+                        !foundEquals && isEqualsMethod(method == null ? (method = new Method(child)): method))
                     {
                         equalsNode = child;
                         foundEquals = true;
                     }
 
-                    if (
-                        checkOverrideHashCode && !foundHashCode
-                        && isHashCodeMethod(method))
+                    if (checkOverrideHashCode &&
+                        !foundHashCode && isHashCodeMethod(method == null ? (method = new Method(child)): method))
                     {
                         hashCodeNode = child;
                         foundHashCode = true;
@@ -850,7 +861,7 @@ public final class CodeInspector
 
                     if (
                         checkOverrideToString && !foundToString
-                        && isToStringMethod(method))
+                        && isToStringMethod(method == null ? (method = new Method(child)): method))
                     {
                         foundToString = true;
                     }
@@ -864,38 +875,19 @@ public final class CodeInspector
             }
         }
 
-        if (checkReplaceStructure && isPublicClass && violate)
+        if (checkReplaceStructure && isPublicClass && violate && checkReplaceStructure)
         {
-            if (
-                _settings.getBoolean(
-                    ConventionKeys.TIP_REPLACE_STRUCTURE_WITH_CLASS, false))
-            {
-                addIssue(node, STR_REPLACE_STRUCTURE_WITH_CLASS, _args);
-            }
+            addIssue(node, STR_REPLACE_STRUCTURE_WITH_CLASS, _args);
         }
 
-        if (foundEquals && !foundHashCode)
+        if (checkOverrideHashCode && foundEquals && !foundHashCode )
         {
-            if (_settings.getBoolean(ConventionKeys.TIP_OVERRIDE_HASHCODE, false))
-            {
-                addIssue(equalsNode, STR_OVERRIDE_HASHCODE, _args);
-            }
+            addIssue(equalsNode, STR_OVERRIDE_HASHCODE, _args);
         }
 
-        if (foundHashCode && !foundEquals)
+        if (checkOverrideToString && !foundToString)
         {
-            if (_settings.getBoolean(ConventionKeys.TIP_OVERRIDE_EQUALS, false))
-            {
-                addIssue(hashCodeNode, STR_OVERRIDE_EQUALS, _args);
-            }
-        }
-
-        if (!foundToString)
-        {
-            if (_settings.getBoolean(ConventionKeys.TIP_OVERRIDE_TO_STRING, false))
-            {
-                addIssue(node, STR_OVERRIDE_TO_STRING, _args);
-            }
+            addIssue(node, STR_OVERRIDE_TO_STRING, _args);
         }
     }
 
@@ -907,22 +899,22 @@ public final class CodeInspector
      */
     private void checkClassName(AST node)
     {
-        String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
-
-        if (!JavaNodeModifier.isAbstract(node))
+        if (
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            Pattern pattern =
-                _patterns.getPattern(
-                    _settings.get(
-                        ConventionKeys.REGEXP_CLASS, ConventionDefaults.REGEXP_CLASS));
+            String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
 
-            if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+            if (!JavaNodeModifier.isAbstract(node))
             {
+                Pattern pattern =
+                    _patterns.getPattern(
+                        _settings.get(
+                            ConventionKeys.REGEXP_CLASS, ConventionDefaults.REGEXP_CLASS));
+
                 if (
-                    _settings.getBoolean(
-                        ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
+                    !pattern.getPattern().equals(EMPTY_STRING)
+                    && !_matcher.matches(name, pattern))
                 {
                     _args[0] = "Class" /* NOI18N */;
                     _args[1] = name;
@@ -930,22 +922,17 @@ public final class CodeInspector
                     addIssue(node, STR_NAMING_CONVENTION, _args);
                 }
             }
-        }
-        else
-        {
-            Pattern pattern =
-                _patterns.getPattern(
-                    _settings.get(
-                        ConventionKeys.REGEXP_CLASS_ABSTRACT,
-                        ConventionDefaults.REGEXP_CLASS_ABSTRACT));
-
-            if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+            else
             {
+                Pattern pattern =
+                    _patterns.getPattern(
+                        _settings.get(
+                            ConventionKeys.REGEXP_CLASS_ABSTRACT,
+                            ConventionDefaults.REGEXP_CLASS_ABSTRACT));
+
                 if (
-                    _settings.getBoolean(
-                        ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
+                    !pattern.getPattern().equals(EMPTY_STRING)
+                    && !_matcher.matches(name, pattern))
                 {
                     _args[0] = "Abstract class" /* NOI18N */;
                     _args[1] = name;
@@ -1023,30 +1010,42 @@ public final class CodeInspector
         AST    node,
         Method method)
     {
-        TreeWalker walker =
-            new TreeWalker()
+        if (
+            _settings.getBoolean(
+                ConventionKeys.TIP_OBEY_CONTRACT_EQUALS, false))
+        {
+            AST slist = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST);
+
+            // no body for abstract methods!
+            if (slist != null)
             {
-                public void visit(AST node)
+                AST child = slist.getFirstChild();
+
+                // if the method body does not soley consist of a throw statement
+                if (child.getType() != JavaTokenTypes.LITERAL_throw ||
+                    child.getNextSibling().getType() != JavaTokenTypes.RCURLY)
                 {
-                    switch (node.getType())
-                    {
-                        case JavaTokenTypes.LITERAL_throw :
-
-                            if (
-                                _settings.getBoolean(
-                                    ConventionKeys.TIP_OBEY_CONTRACT_EQUALS, false))
+                    TreeWalker walker =
+                        new TreeWalker()
+                        {
+                            public void visit(AST node)
                             {
-                                addIssue(node, STR_OBEY_CONTRACT_EQUALS, _args);
+                                switch (node.getType())
+                                {
+                                    case JavaTokenTypes.LITERAL_throw :
+
+                                        addIssue(node, STR_OBEY_CONTRACT_EQUALS, _args);
+                                        stop();
+
+                                        break;
+                                }
                             }
+                        };
 
-                            stop();
-
-                            break;
-                    }
+                    walker.walk(slist);
                 }
-            };
-
-        walker.walk(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
+            }
+        }
     }
 
 
@@ -1057,16 +1056,14 @@ public final class CodeInspector
      */
     private void checkFinally(AST node)
     {
-        if (!_settings.getBoolean(ConventionKeys.TIP_EMPTY_FINALLY, false))
+        if (_settings.getBoolean(ConventionKeys.TIP_EMPTY_FINALLY, false))
         {
-            return;
-        }
-
-        if (
-            (node.getFirstChild().getFirstChild().getType() == JavaTokenTypes.RCURLY)
-            && _settings.getBoolean(ConventionKeys.TIP_EMPTY_FINALLY, false))
-        {
-            addIssue(node, STR_EMPTY_FINALLY, _args);
+            if (
+                (node.getFirstChild().getFirstChild().getType() == JavaTokenTypes.RCURLY)
+                )
+            {
+                addIssue(node, STR_EMPTY_FINALLY, _args);
+            }
         }
     }
 
@@ -1082,27 +1079,20 @@ public final class CodeInspector
         {
             AST body = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
             boolean violate = true;
-SEARCH: 
+SEARCH:
             for (
                 AST child = body.getFirstChild(); child != null;
                 child = child.getNextSibling())
             {
                 switch (child.getType())
                 {
-                    case JavaTokenTypes.LCURLY :
-
-                        switch (child.getNextSibling().getType())
-                        {
-                            // we've found a 'tagging interface', it's ok
-                            case JavaTokenTypes.RCURLY :
-                                violate = false;
-
-                                break SEARCH;
-                        }
-
-                        break;
-
                     case JavaTokenTypes.RCURLY :
+
+                        if (violate)
+                        {
+                            // tagging interfaces are just fine
+                            violate = body.getFirstChild() != child;
+                        }
                         break;
 
                     case JavaTokenTypes.VARIABLE_DEF :
@@ -1111,6 +1101,8 @@ SEARCH:
                         break;
 
                     default :
+                        // if we find something other than a VARIABLE_DEF than we know
+                        // this can't be a constant interface
                         violate = false;
 
                         break SEARCH;
@@ -1132,20 +1124,25 @@ SEARCH:
      */
     private void checkInterfaceName(AST node)
     {
-        String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
-        Pattern pattern =
-            _patterns.getPattern(
-                _settings.get(
-                    ConventionKeys.REGEXP_INTERFACE, ConventionDefaults.REGEXP_INTERFACE));
-
         if (
-            !pattern.getPattern().equals(EMPTY_STRING)
-            && !_matcher.matches(name, pattern))
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            _args[0] = "Interface" /* NOI18N */;
-            _args[1] = name;
-            _args[2] = pattern.getPattern();
-            addIssue(node, STR_NAMING_CONVENTION, _args);
+            String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
+            Pattern pattern =
+                _patterns.getPattern(
+                    _settings.get(
+                        ConventionKeys.REGEXP_INTERFACE, ConventionDefaults.REGEXP_INTERFACE));
+
+            if (
+                !pattern.getPattern().equals(EMPTY_STRING)
+                && !_matcher.matches(name, pattern))
+            {
+                _args[0] = "Interface" /* NOI18N */;
+                _args[1] = name;
+                _args[2] = pattern.getPattern();
+                addIssue(node, STR_NAMING_CONVENTION, _args);
+            }
         }
     }
 
@@ -1157,20 +1154,25 @@ SEARCH:
      */
     private void checkLabelName(AST node)
     {
-        String name = node.getFirstChild().getText();
-        Pattern pattern =
-            _patterns.getPattern(
-                _settings.get(
-                    ConventionKeys.REGEXP_LABEL, ConventionDefaults.REGEXP_LABEL));
-
         if (
-            !pattern.getPattern().equals(EMPTY_STRING)
-            && !_matcher.matches(name, pattern))
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            _args[0] = "Label" /* NOI18N */;
-            _args[1] = name;
-            _args[2] = pattern.getPattern();
-            addIssue(node, STR_NAMING_CONVENTION, _args);
+            String name = node.getFirstChild().getText();
+            Pattern pattern =
+                _patterns.getPattern(
+                    _settings.get(
+                        ConventionKeys.REGEXP_LABEL, ConventionDefaults.REGEXP_LABEL));
+
+            if (
+                !pattern.getPattern().equals(EMPTY_STRING)
+                && !_matcher.matches(name, pattern))
+            {
+                _args[0] = "Label" /* NOI18N */;
+                _args[1] = name;
+                _args[2] = pattern.getPattern();
+                addIssue(node, STR_NAMING_CONVENTION, _args);
+            }
         }
     }
 
@@ -1261,28 +1263,183 @@ SEARCH:
         AST    node,
         Method method)
     {
-        AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
-        int modifierMask = JavaNodeModifier.valueOf(modifiers);
-
-        String name = method.name;
-
-        if (Modifier.isStatic(modifierMask)) // static methods
+        if (
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            if (Modifier.isFinal(modifierMask)) // static final
+            AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
+            int modifierMask = JavaNodeModifier.valueOf(modifiers);
+
+            String name = method.name;
+
+            if (Modifier.isStatic(modifierMask)) // static methods
+            {
+                if (Modifier.isFinal(modifierMask)) // static final
+                {
+                    if (Modifier.isPublic(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC_FINAL,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "public static final method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else if (Modifier.isProtected(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC_FINAL,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "protected static final method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else if (Modifier.isPrivate(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC_FINAL,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "private static final method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC_FINAL,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "static final method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                }
+                else // static
+                {
+                    if (Modifier.isPublic(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "public static method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else if (Modifier.isProtected(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "protected static method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else if (Modifier.isPrivate(modifierMask))
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "private static method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                    else
+                    {
+                        Pattern pattern =
+                            _patterns.getPattern(
+                                _settings.get(
+                                    ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC,
+                                    ConventionDefaults.REGEXP_METHOD));
+
+                        if (
+                            !pattern.getPattern().equals(EMPTY_STRING)
+                            && !_matcher.matches(name, pattern))
+                        {
+                            _args[0] = "static method" /* NOI18N */;
+                            _args[1] = name;
+                            _args[2] = pattern.getPattern();
+                            addIssue(node, STR_NAMING_CONVENTION, _args);
+                        }
+                    }
+                }
+            }
+            else // instance methods
             {
                 if (Modifier.isPublic(modifierMask))
                 {
                     Pattern pattern =
                         _patterns.getPattern(
                             _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC_FINAL,
+                                ConventionKeys.REGEXP_METHOD_PUBLIC,
                                 ConventionDefaults.REGEXP_METHOD));
 
                     if (
                         !pattern.getPattern().equals(EMPTY_STRING)
                         && !_matcher.matches(name, pattern))
                     {
-                        _args[0] = "public static final method" /* NOI18N */;
+                        _args[0] = "public method" /* NOI18N */;
                         _args[1] = name;
                         _args[2] = pattern.getPattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1293,14 +1450,14 @@ SEARCH:
                     Pattern pattern =
                         _patterns.getPattern(
                             _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC_FINAL,
+                                ConventionKeys.REGEXP_METHOD_PROTECTED,
                                 ConventionDefaults.REGEXP_METHOD));
 
                     if (
                         !pattern.getPattern().equals(EMPTY_STRING)
                         && !_matcher.matches(name, pattern))
                     {
-                        _args[0] = "protected static final method" /* NOI18N */;
+                        _args[0] = "protected method" /* NOI18N */;
                         _args[1] = name;
                         _args[2] = pattern.getPattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1311,14 +1468,14 @@ SEARCH:
                     Pattern pattern =
                         _patterns.getPattern(
                             _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC_FINAL,
+                                ConventionKeys.REGEXP_METHOD_PRIVATE,
                                 ConventionDefaults.REGEXP_METHOD));
 
                     if (
                         !pattern.getPattern().equals(EMPTY_STRING)
                         && !_matcher.matches(name, pattern))
                     {
-                        _args[0] = "private static final method" /* NOI18N */;
+                        _args[0] = "private method" /* NOI18N */;
                         _args[1] = name;
                         _args[2] = pattern.getPattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1329,168 +1486,18 @@ SEARCH:
                     Pattern pattern =
                         _patterns.getPattern(
                             _settings.get(
-                                ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC_FINAL,
+                                ConventionKeys.REGEXP_METHOD_DEFAULT,
                                 ConventionDefaults.REGEXP_METHOD));
 
                     if (
                         !pattern.getPattern().equals(EMPTY_STRING)
                         && !_matcher.matches(name, pattern))
                     {
-                        _args[0] = "static final method" /* NOI18N */;
+                        _args[0] = "method" /* NOI18N */;
                         _args[1] = name;
                         _args[2] = pattern.getPattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
-                }
-            }
-            else // static
-            {
-                if (Modifier.isPublic(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC,
-                                ConventionDefaults.REGEXP_METHOD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "public static method" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else if (Modifier.isProtected(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC,
-                                ConventionDefaults.REGEXP_METHOD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "protected static method" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else if (Modifier.isPrivate(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC,
-                                ConventionDefaults.REGEXP_METHOD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "private static method" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC,
-                                ConventionDefaults.REGEXP_METHOD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "static method" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-            }
-        }
-        else // instance methods
-        {
-            if (Modifier.isPublic(modifierMask))
-            {
-                Pattern pattern =
-                    _patterns.getPattern(
-                        _settings.get(
-                            ConventionKeys.REGEXP_METHOD_PUBLIC,
-                            ConventionDefaults.REGEXP_METHOD));
-
-                if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
-                {
-                    _args[0] = "public method" /* NOI18N */;
-                    _args[1] = name;
-                    _args[2] = pattern.getPattern();
-                    addIssue(node, STR_NAMING_CONVENTION, _args);
-                }
-            }
-            else if (Modifier.isProtected(modifierMask))
-            {
-                Pattern pattern =
-                    _patterns.getPattern(
-                        _settings.get(
-                            ConventionKeys.REGEXP_METHOD_PROTECTED,
-                            ConventionDefaults.REGEXP_METHOD));
-
-                if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
-                {
-                    _args[0] = "protected method" /* NOI18N */;
-                    _args[1] = name;
-                    _args[2] = pattern.getPattern();
-                    addIssue(node, STR_NAMING_CONVENTION, _args);
-                }
-            }
-            else if (Modifier.isPrivate(modifierMask))
-            {
-                Pattern pattern =
-                    _patterns.getPattern(
-                        _settings.get(
-                            ConventionKeys.REGEXP_METHOD_PRIVATE,
-                            ConventionDefaults.REGEXP_METHOD));
-
-                if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
-                {
-                    _args[0] = "private method" /* NOI18N */;
-                    _args[1] = name;
-                    _args[2] = pattern.getPattern();
-                    addIssue(node, STR_NAMING_CONVENTION, _args);
-                }
-            }
-            else
-            {
-                Pattern pattern =
-                    _patterns.getPattern(
-                        _settings.get(
-                            ConventionKeys.REGEXP_METHOD_DEFAULT,
-                            ConventionDefaults.REGEXP_METHOD));
-
-                if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
-                {
-                    _args[0] = "method" /* NOI18N */;
-                    _args[1] = name;
-                    _args[2] = pattern.getPattern();
-                    addIssue(node, STR_NAMING_CONVENTION, _args);
                 }
             }
         }
@@ -1499,7 +1506,7 @@ SEARCH:
 
     /**
      * Checks, in case the given method node represents an overriden equals method,
-     * whether it substitutes object.
+     * whether it substitutes an object.
      *
      * @param node a METHOD_DEF node.
      * @param method the method object.
@@ -1508,13 +1515,6 @@ SEARCH:
         AST    node,
         Method method)
     {
-        if (
-            !_settings.getBoolean(
-                ConventionKeys.TIP_DONT_SUBSTITUTE_OBJECT_EQUALS, false))
-        {
-            return;
-        }
-
         if (isSubstituteEqualsMethod(method))
         {
             addIssue(node, STR_DONT_SUBSTITUTE_OBJECT_EQUALS, _args);
@@ -1533,20 +1533,25 @@ SEARCH:
      */
     private void checkPackageName(AST node)
     {
-        String name = JavaNodeHelper.getDottedName(node.getFirstChild());
-        Pattern pattern =
-            _patterns.getPattern(
-                _settings.get(
-                    ConventionKeys.REGEXP_PACKAGE, ConventionDefaults.REGEXP_PACKAGE));
-
         if (
-            !pattern.getPattern().equals(EMPTY_STRING)
-            && !_matcher.matches(name, pattern))
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            _args[0] = "Package" /* NOI18N */;
-            _args[1] = name;
-            _args[2] = pattern.getPattern();
-            addIssue(node, STR_NAMING_CONVENTION, _args);
+            String name = JavaNodeHelper.getDottedName(node.getFirstChild());
+            Pattern pattern =
+                _patterns.getPattern(
+                    _settings.get(
+                        ConventionKeys.REGEXP_PACKAGE, ConventionDefaults.REGEXP_PACKAGE));
+
+            if (
+                !pattern.getPattern().equals(EMPTY_STRING)
+                && !_matcher.matches(name, pattern))
+            {
+                _args[0] = "Package" /* NOI18N */;
+                _args[1] = name;
+                _args[2] = pattern.getPattern();
+                addIssue(node, STR_NAMING_CONVENTION, _args);
+            }
         }
     }
 
@@ -1718,46 +1723,201 @@ SEARCH:
         AST    node,
         String name)
     {
-        if (JavaNodeHelper.isLocalVariable(node))
+        if (
+            _settings.getBoolean(
+                ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            Pattern pattern =
-                _patterns.getPattern(
-                    _settings.get(
-                        ConventionKeys.REGEXP_LOCAL_VARIABLE,
-                        ConventionDefaults.REGEXP_LOCAL_VARIABLE));
-
-            if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+            if (JavaNodeHelper.isLocalVariable(node))
             {
-                _args[0] = "local variable" /* NOI18N */;
-                _args[1] = name;
-                _args[2] = pattern.getPattern();
-                addIssue(node, STR_NAMING_CONVENTION, _args);
+                Pattern pattern =
+                    _patterns.getPattern(
+                        _settings.get(
+                            ConventionKeys.REGEXP_LOCAL_VARIABLE,
+                            ConventionDefaults.REGEXP_LOCAL_VARIABLE));
+
+                if (
+                    !pattern.getPattern().equals(EMPTY_STRING)
+                    && !_matcher.matches(name, pattern))
+                {
+                    _args[0] = "local variable" /* NOI18N */;
+                    _args[1] = name;
+                    _args[2] = pattern.getPattern();
+                    addIssue(node, STR_NAMING_CONVENTION, _args);
+                }
             }
-        }
-        else
-        {
-            AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
-            int modifierMask = JavaNodeModifier.valueOf(modifiers);
-
-            if (Modifier.isStatic(modifierMask)) // static fields
+            else
             {
-                if (Modifier.isFinal(modifierMask)) // static final
+                AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
+                int modifierMask = JavaNodeModifier.valueOf(modifiers);
+
+                if (Modifier.isStatic(modifierMask)) // static fields
+                {
+                    if (Modifier.isFinal(modifierMask)) // static final
+                    {
+                        if (Modifier.isPublic(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
+                                        ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "public static final field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else if (Modifier.isProtected(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
+                                        ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "protected static final field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else if (Modifier.isPrivate(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
+                                        ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "private static final field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
+                                        ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "static final field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                    }
+                    else // static
+                    {
+                        if (Modifier.isPublic(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC,
+                                        ConventionDefaults.REGEXP_FIELD));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "public static field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else if (Modifier.isProtected(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC,
+                                        ConventionDefaults.REGEXP_FIELD));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "protected static field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else if (Modifier.isPrivate(modifierMask))
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC,
+                                        ConventionDefaults.REGEXP_FIELD));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "private static field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                        else
+                        {
+                            Pattern pattern =
+                                _patterns.getPattern(
+                                    _settings.get(
+                                        ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC,
+                                        ConventionDefaults.REGEXP_FIELD));
+
+                            if (
+                                !pattern.getPattern().equals(EMPTY_STRING)
+                                && !_matcher.matches(name, pattern))
+                            {
+                                _args[0] = "static field" /* NOI18N */;
+                                _args[1] = name;
+                                _args[2] = pattern.getPattern();
+                                addIssue(node, STR_NAMING_CONVENTION, _args);
+                            }
+                        }
+                    }
+                }
+                else // instance fields
                 {
                     if (Modifier.isPublic(modifierMask))
                     {
                         Pattern pattern =
                             _patterns.getPattern(
                                 _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
-                                    ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+                                    ConventionKeys.REGEXP_FIELD_PUBLIC,
+                                    ConventionDefaults.REGEXP_FIELD));
 
                         if (
                             !pattern.getPattern().equals(EMPTY_STRING)
                             && !_matcher.matches(name, pattern))
                         {
-                            _args[0] = "public static final field" /* NOI18N */;
+                            _args[0] = "public field" /* NOI18N */;
                             _args[1] = name;
                             _args[2] = pattern.getPattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1768,14 +1928,14 @@ SEARCH:
                         Pattern pattern =
                             _patterns.getPattern(
                                 _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
-                                    ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+                                    ConventionKeys.REGEXP_FIELD_PROTECTED,
+                                    ConventionDefaults.REGEXP_FIELD));
 
                         if (
                             !pattern.getPattern().equals(EMPTY_STRING)
                             && !_matcher.matches(name, pattern))
                         {
-                            _args[0] = "protected static final field" /* NOI18N */;
+                            _args[0] = "protected field" /* NOI18N */;
                             _args[1] = name;
                             _args[2] = pattern.getPattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1786,14 +1946,14 @@ SEARCH:
                         Pattern pattern =
                             _patterns.getPattern(
                                 _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
-                                    ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
+                                    ConventionKeys.REGEXP_FIELD_PRIVATE,
+                                    ConventionDefaults.REGEXP_FIELD));
 
                         if (
                             !pattern.getPattern().equals(EMPTY_STRING)
                             && !_matcher.matches(name, pattern))
                         {
-                            _args[0] = "private static final field" /* NOI18N */;
+                            _args[0] = "private field" /* NOI18N */;
                             _args[1] = name;
                             _args[2] = pattern.getPattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
@@ -1804,168 +1964,18 @@ SEARCH:
                         Pattern pattern =
                             _patterns.getPattern(
                                 _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
-                                    ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
-
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
-                        {
-                            _args[0] = "static final field" /* NOI18N */;
-                            _args[1] = name;
-                            _args[2] = pattern.getPattern();
-                            addIssue(node, STR_NAMING_CONVENTION, _args);
-                        }
-                    }
-                }
-                else // static
-                {
-                    if (Modifier.isPublic(modifierMask))
-                    {
-                        Pattern pattern =
-                            _patterns.getPattern(
-                                _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC,
+                                    ConventionKeys.REGEXP_FIELD_DEFAULT,
                                     ConventionDefaults.REGEXP_FIELD));
 
                         if (
                             !pattern.getPattern().equals(EMPTY_STRING)
                             && !_matcher.matches(name, pattern))
                         {
-                            _args[0] = "public static field" /* NOI18N */;
+                            _args[0] = "field" /* NOI18N */;
                             _args[1] = name;
                             _args[2] = pattern.getPattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
-                    }
-                    else if (Modifier.isProtected(modifierMask))
-                    {
-                        Pattern pattern =
-                            _patterns.getPattern(
-                                _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC,
-                                    ConventionDefaults.REGEXP_FIELD));
-
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
-                        {
-                            _args[0] = "protected static field" /* NOI18N */;
-                            _args[1] = name;
-                            _args[2] = pattern.getPattern();
-                            addIssue(node, STR_NAMING_CONVENTION, _args);
-                        }
-                    }
-                    else if (Modifier.isPrivate(modifierMask))
-                    {
-                        Pattern pattern =
-                            _patterns.getPattern(
-                                _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC,
-                                    ConventionDefaults.REGEXP_FIELD));
-
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
-                        {
-                            _args[0] = "private static field" /* NOI18N */;
-                            _args[1] = name;
-                            _args[2] = pattern.getPattern();
-                            addIssue(node, STR_NAMING_CONVENTION, _args);
-                        }
-                    }
-                    else
-                    {
-                        Pattern pattern =
-                            _patterns.getPattern(
-                                _settings.get(
-                                    ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC,
-                                    ConventionDefaults.REGEXP_FIELD));
-
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
-                        {
-                            _args[0] = "static field" /* NOI18N */;
-                            _args[1] = name;
-                            _args[2] = pattern.getPattern();
-                            addIssue(node, STR_NAMING_CONVENTION, _args);
-                        }
-                    }
-                }
-            }
-            else // instance fields
-            {
-                if (Modifier.isPublic(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_FIELD_PUBLIC,
-                                ConventionDefaults.REGEXP_FIELD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "public field" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else if (Modifier.isProtected(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_FIELD_PROTECTED,
-                                ConventionDefaults.REGEXP_FIELD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "protected field" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else if (Modifier.isPrivate(modifierMask))
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_FIELD_PRIVATE,
-                                ConventionDefaults.REGEXP_FIELD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "private field" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
-                    }
-                }
-                else
-                {
-                    Pattern pattern =
-                        _patterns.getPattern(
-                            _settings.get(
-                                ConventionKeys.REGEXP_FIELD_DEFAULT,
-                                ConventionDefaults.REGEXP_FIELD));
-
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
-                    {
-                        _args[0] = "field" /* NOI18N */;
-                        _args[1] = name;
-                        _args[2] = pattern.getPattern();
-                        addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
                 }
             }
@@ -2222,7 +2232,7 @@ SEARCH:
 
         public String toString()
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuffer buf = new StringBuffer(50);
             buf.append(Modifier.toString(this.modifierMask));
             buf.append(' ');
             buf.append(typeName);
