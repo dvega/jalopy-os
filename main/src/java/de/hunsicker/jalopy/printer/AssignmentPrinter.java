@@ -131,10 +131,9 @@ final class AssignmentPrinter
                     alignAssignment(node, true, out);
                 }
 
-                boolean canIndent = canIndent(node);
                 boolean indent =
                     (indentStandard || wrapAfterAssign || preferWrapAfterAssign
-                    || preferWrapAfterLeftParen) && canIndent;
+                    || preferWrapAfterLeftParen);
 
                 if (indent)
                 {
@@ -154,7 +153,9 @@ final class AssignmentPrinter
                         out.print(ASSIGN, JavaTokenTypes.ASSIGN);
                     }
 
-                    out.printNewline();
+                    if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
+                        out.printNewline();
+
                     printIndentation(out);
 
                     marker = out.state.markers.add();
@@ -180,7 +181,9 @@ final class AssignmentPrinter
                             out.print(ASSIGN, JavaTokenTypes.ASSIGN);
                         }
 
-                        out.printNewline();
+                        if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
+                            out.printNewline();
+
                         printIndentation(out);
                     }
                     else if (indentStandard)
@@ -198,7 +201,9 @@ final class AssignmentPrinter
                             }
 
                             //out.state.markers.add();
-                            out.printNewline();
+                            if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
+                                out.printNewline();
+
                             printIndentation(out);
                         }
                         else
@@ -215,17 +220,33 @@ final class AssignmentPrinter
 
                                 //out.state.markers.add();
                             }
+
+                            printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
+                            if (out.newline)
+                                printIndentation(out);
+
                         }
                     }
                     else if (padding)
                     {
                         marker = out.state.markers.add(out.line, out.column + 2);
                         out.print(ASSIGN_PADDED, JavaTokenTypes.ASSIGN);
+
+                        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
+                        if (out.newline)
+                            printIndentation(out);
                     }
                     else
                     {
                         out.print(ASSIGN, JavaTokenTypes.ASSIGN);
                         out.state.markers.add();
+
+                        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
+                        if (out.newline)
+                            printIndentation(out);
                     }
 
                     PrinterFactory.create(expr).print(expr, out);
@@ -899,33 +920,5 @@ SEARCH:
         {
             return false;
         }
-    }
-
-
-    /**
-     * Determines whether the given assignment allows an indenation increase in case a
-     * line wrap is necessary.
-     *
-     * @param node an ASSIGN node.
-     *
-     * @return <code>true</code> if the first child of the given assignment is no
-     *         ARRAY_INIT node.
-     *
-     * @since 1.0b9
-     */
-    private boolean canIndent(AST node)
-    {
-        AST child = node.getFirstChild();
-
-        if (child != null)
-        {
-            switch (child.getType())
-            {
-                case JavaTokenTypes.ARRAY_INIT :
-                    return false;
-            }
-        }
-
-        return true;
     }
 }
