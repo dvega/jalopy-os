@@ -62,7 +62,7 @@ final class TryCatchFinallyPrinter
     {
         printCommentsBefore(node, out);
         out.print(TRY, JavaTokenTypes.LITERAL_try);
-        printCommentsAfter(node, out);
+        printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
@@ -92,76 +92,6 @@ final class TryCatchFinallyPrinter
         out.last = JavaTokenTypes.RCURLY;
     }
 
-
-    private boolean isEolCommentBefore(AST node)
-    {
-        switch (node.getType())
-        {
-            case JavaTokenTypes.LITERAL_catch :
-
-                AST lcurly = ((JavaNode) node).getPreviousSibling();
-
-                for (
-                    AST child = lcurly.getFirstChild(); child != null;
-                    child = child.getNextSibling())
-                {
-                    if (child.getNextSibling() == null)
-                    {
-                        JavaNode rcurly = (JavaNode) child;
-
-                        return rcurly.hasCommentsAfter();
-                    }
-                }
-
-                break;
-
-            case JavaTokenTypes.LITERAL_finally :
-
-                AST previous = ((JavaNode) node).getPreviousSibling();
-
-                switch (previous.getType())
-                {
-                    case JavaTokenTypes.LITERAL_catch :
-
-                        for (
-                            AST child =
-                                previous.getFirstChild().getNextSibling().getFirstChild();
-                            child != null; child = child.getNextSibling())
-                        {
-                            if (child.getNextSibling() == null)
-                            {
-                                JavaNode rcurly = (JavaNode) child;
-
-                                return rcurly.hasCommentsAfter();
-                            }
-                        }
-
-                        break;
-
-                    case JavaTokenTypes.LITERAL_try :
-
-                        for (
-                            AST child = previous.getFirstChild(); child != null;
-                            child = child.getNextSibling())
-                        {
-                            if (child.getNextSibling() == null)
-                            {
-                                JavaNode rcurly = (JavaNode) child;
-
-                                return rcurly.hasCommentsAfter();
-                            }
-                        }
-
-                        break;
-                }
-
-                break;
-        }
-
-        return false;
-    }
-
-
     /**
      * Prints the catch part of the catch clause.
      *
@@ -178,11 +108,8 @@ final class TryCatchFinallyPrinter
         printCommentsBefore(node, out);
         logIssues(node, out);
 
-        if (isEolCommentBefore(node))
-        {
-            ;
-        }
-        else
+        // if no comment was printed before us, print extra indentation
+        if (!out.newline)
         {
             out.print(
                 out.getString(
@@ -232,11 +159,8 @@ final class TryCatchFinallyPrinter
         printCommentsBefore(node, out);
         logIssues(node, out);
 
-        if (isEolCommentBefore(node))
-        {
-            ;
-        }
-        else
+        // if no comment was printed before us, print extra indentation
+        if (!out.newline)
         {
             out.print(
                 out.getString(
