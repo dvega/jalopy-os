@@ -8,6 +8,7 @@ package de.hunsicker.jalopy.plugin.jdeveloper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.text.BadLocationException;
 
@@ -181,27 +182,10 @@ final class JDevEditor
      */
     public void setText(String text)
     {
-        String editName = "Format Source Code"; // %%TODO: Change this to be I18N savy.
+        ResourceBundle bundle = ResourceBundle.getBundle(JDevPlugin.BUNDLE_NAME);
+        String editName = bundle.getString( "LBL_UNDOTEXT" );
+
         EditProcessor.doReplaceAll( text.toCharArray(), _node, true, editName, this );
-
-        /*                                    
-        TextBuffer buffer = _node.acquireTextBuffer();
-
-        try
-        {
-            buffer.beginEdit();
-            buffer.removeToEnd(0);
-            buffer.insert(0, text.toCharArray());
-        }
-        finally
-        {
-            if (buffer != null)
-            {
-                buffer.endEdit();
-                _node.releaseTextBuffer();
-            }
-        }
-        */
     }
 
 

@@ -76,7 +76,7 @@ public final class JDevPlugin
     //~ Static variables/initializers ----------------------------------------------------
 
     /** The name for ResourceBundle lookup. */
-    private static final String BUNDLE_NAME =
+    static final String BUNDLE_NAME =
         "de.hunsicker.jalopy.plugin.jdeveloper.Bundle" /* NOI18N */;
 
     /** The id for the Format command. */
