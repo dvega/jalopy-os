@@ -9,6 +9,7 @@ package de.hunsicker.jalopy.plugin.ant;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -391,6 +392,7 @@ public class AntPlugin
         else
         {
             Object[] args = { method };
+
             throw new IllegalArgumentException(
                 MessageFormat.format(
                     BUNDLE.getString("INVALID_HISTORY_METHOD" /* NOI18N */), args));
@@ -547,7 +549,7 @@ public class AntPlugin
      * @throws BuildException if someting goes wrong with the build.
      */
     public void execute()
-      throws BuildException
+            throws BuildException
     {
         if (_fork)
         {
@@ -665,7 +667,7 @@ public class AntPlugin
      * @throws BuildException if the initialization failed.
      */
     public void init()
-      throws BuildException
+            throws BuildException
     {
         _filesets = new ArrayList(4);
     }
@@ -720,7 +722,16 @@ public class AntPlugin
         }
 
         Convention settings = Convention.getInstance();
-        jalopy.setEncoding(_encoding);
+
+        try
+        {
+            jalopy.setEncoding(_encoding);
+        }
+        catch (UnsupportedEncodingException ex)
+        {
+            throw new BuildException(ex);
+        }
+
         jalopy.setFileFormat(_fileFormat);
         jalopy.setInspect(
             settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
@@ -864,7 +875,7 @@ public class AntPlugin
 
                 if (!error)
                 {
-                    error = thread.isError;
+                    error = thread.error;
                 }
             }
 
@@ -895,6 +906,7 @@ public class AntPlugin
     private void formatSingleThreaded()
     {
         Jalopy jalopy = createJalopy();
+
         boolean error = false;
 
         // format single file
@@ -903,7 +915,27 @@ public class AntPlugin
             try
             {
                 jalopy.setInput(_file);
-                jalopy.setOutput(_file);
+
+                try
+                {
+                    jalopy.setOutput(_file);
+                }
+                catch (IllegalArgumentException ex)
+                {
+                    error = true;
+
+                    Object[] args = { _file, _destDir };
+
+                    Loggers.IO.l7dlog(
+                        Level.ERROR, "INVALID_OUTPUT_TARGET" /* NOI18N */, args, null);
+
+                    if (_failOnError)
+                    {
+                        throw new BuildException(
+                            BUNDLE.getString("INVALID_OUTPUT_TARGET" /* NOI18N */));
+                    }
+                }
+
                 jalopy.format();
 
                 if (jalopy.getState() == Jalopy.State.ERROR)
@@ -912,11 +944,8 @@ public class AntPlugin
 
                     if (_failOnError)
                     {
-                        Object[] args = { _file };
-
                         throw new BuildException(
-                            MessageFormat.format(
-                                BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
+                            BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */));
                     }
                 }
             }
@@ -955,7 +984,26 @@ public class AntPlugin
                 {
                     File file = new File(fromDir, srcFiles[j]);
                     jalopy.setInput(file);
-                    jalopy.setOutput(file);
+
+                    try
+                    {
+                        jalopy.setOutput(file);
+                    }
+                    catch (IllegalArgumentException ex)
+                    {
+                        error = true;
+
+                        Object[] args = { file, _destDir };
+
+                        Loggers.IO.l7dlog(
+                            Level.ERROR, "INVALID_OUTPUT_TARGET" /* NOI18N */, args, null);
+
+                        if (_failOnError)
+                        {
+                            throw new BuildException(
+                                BUNDLE.getString("INVALID_OUTPUT_TARGET" /* NOI18N */));
+                        }
+                    }
 
                     boolean success = jalopy.format();
 
@@ -965,11 +1013,8 @@ public class AntPlugin
 
                         if (_failOnError)
                         {
-                            Object[] args = { file };
-
                             throw new BuildException(
-                                MessageFormat.format(
-                                    BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
+                                BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */));
                         }
                     }
                     else if (success)
@@ -1161,7 +1206,8 @@ public class AntPlugin
             Object[] args = { new Integer(files) };
 
             log(
-                MessageFormat.format(BUNDLE.getString("FORMAT_FILES" /* NOI18N */), args),
+                MessageFormat.format(
+                    BUNDLE.getString("FORMAT_FILES" /* NOI18N */), args),
                 Project.MSG_INFO);
         }
         else
@@ -1256,7 +1302,7 @@ public class AntPlugin
         List files; // List of <File>
 
         /** Error found during formatting? */
-        boolean isError;
+        boolean error;
 
         /** Is the thread currently running? */
         volatile boolean running;
@@ -1305,21 +1351,36 @@ public class AntPlugin
                         throw new BuildException(ex);
                     }
 
-                    this.jalopy.setOutput(file);
+                    try
+                    {
+                        this.jalopy.setOutput(file);
+                    }
+                    catch (IllegalArgumentException ex)
+                    {
+                        this.error = true;
+
+                        Object[] args = { file, _destDir };
+
+                        Loggers.IO.l7dlog(
+                            Level.ERROR, "INVALID_OUTPUT_TARGET" /* NOI18N */, args, null);
+
+                        if (_failOnError)
+                        {
+                            throw new BuildException(
+                                BUNDLE.getString("INVALID_OUTPUT_TARGET" /* NOI18N */));
+                        }
+                    }
 
                     boolean success = this.jalopy.format();
 
                     if (jalopy.getState() == Jalopy.State.ERROR)
                     {
-                        this.isError = true;
+                        this.error = true;
 
                         if (_failOnError)
                         {
-                            Object[] args = { file };
-
                             throw new BuildException(
-                                MessageFormat.format(
-                                    BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
+                                BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */));
                         }
                     }
                     else if (success)
