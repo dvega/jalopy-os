@@ -486,7 +486,8 @@ SEARCH:
                             (out.mode == NodeWriter.MODE_DEFAULT);
         int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
-        int deepIndent = this.prefs.getInt(Keys.INDENT_SIZE_DEEP,
+        boolean deepIndent = this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP);
+        int deepIndentSize = this.prefs.getInt(Keys.INDENT_SIZE_DEEP,
                                            Defaults.INDENT_SIZE_DEEP);
         boolean alignMethodCall = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
                                                         Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL);
@@ -624,8 +625,7 @@ SEARCH:
 
                                     // space exceeds the line length but we
                                     // have to apply further checks
-                                    if ((tester.length > 1) &&
-                                        ((out.column + tester.length) > lineLength))
+                                    if ((out.column + tester.length) > lineLength)
                                     {
                                         // for the first parameter we need to determine
                                         // whether we should print it directly after
@@ -634,16 +634,14 @@ SEARCH:
                                         {
                                             if (preferWrapAfterLeftParen)
                                             {
-
-
                                                 result = wrapFirst(
                                                 type, true, next == null, out);
                                                 firstWrapped = result;
                                             }
-                                            else if (!shouldWrapAtLowerLevel(
+                                            else if (!deepIndent && !shouldWrapAtLowerLevel(
                                                                              parameter.getFirstChild(),
                                                                              lineLength,
-                                                                             deepIndent,
+                                                                             deepIndentSize,
                                                                              out))
                                             {
                                                 if ((type == JavaTokenTypes.PARAMETERS))
@@ -717,9 +715,12 @@ SEARCH:
                                                 }
                                             }
                                         }
-                                        else // for successive params align
+                                        else // for successive params wrap/align
                                         {
-                                            int indentLength = out.getIndentLength();
+                                            out.printNewline();
+                                            printIndentation(out);
+                                            result = true;
+                                            /*int indentLength = out.getIndentLength();
                                             Marker m = out.state.markers.getLast();
                                             int length = (m.column > indentLength)
                                                              ? (m.column -
@@ -738,7 +739,7 @@ SEARCH:
                                             {
                                                 out.print(SPACE,
                                                           JavaTokenTypes.WS);
-                                            }
+                                            }*/
                                         }
 
                                         /*
@@ -845,7 +846,7 @@ SEARCH:
                                             firstWrapped = result;
                                         }
                                     }
-                                    else if (out.column > deepIndent)
+                                    else if (out.column > deepIndentSize)
                                     {
                                         result = wrapFirst(
                                         type, preferWrapAfterLeftParen,
@@ -993,12 +994,16 @@ SEARCH:
                         return false;
                     }
 
-                    AST objblock = NodeHelper.getFirstChild(child,
-                                                            JavaTokenTypes.OBJBLOCK);
-
-                    if (objblock != null)
+                    for (AST c = child.getFirstChild(); c != null; c = c.getNextSibling())
                     {
-                        return true;
+                        switch (c.getType())
+                        {
+                            case JavaTokenTypes.ARRAY_INIT:
+                                return false;
+                            case JavaTokenTypes.OBJBLOCK:
+                                return true;
+
+                        }
                     }
 
                     AST elist = name.getNextSibling();

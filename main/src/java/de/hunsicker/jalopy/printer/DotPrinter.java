@@ -304,7 +304,7 @@ final class DotPrinter
                     break;
             }
         }
-        else
+        else  if (this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR, Defaults.LINE_WRAP_BEFORE_OPERATOR))
         {
             switch (((JavaNode)node).getParent().getType())
             {
@@ -347,9 +347,6 @@ final class DotPrinter
                 break;
             }
         }
-
-        /*if (indent && !continuation )
-            out.continuation = false;*/
     }
 
 

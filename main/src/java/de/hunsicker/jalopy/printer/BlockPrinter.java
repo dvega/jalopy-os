@@ -162,7 +162,6 @@ class BlockPrinter
                                                   forceNewlineBefore,
                                                   freestanding, closeBraceType,
                                                   out);
-
                         return;
                 }
             }
@@ -207,6 +206,10 @@ class BlockPrinter
                          * @todo handle class/ifc/method/ctor different
                          */
                         out.printLeftBrace();
+
+                        if (out.state.extraWrap)
+                            out.state.extraWrap = false;
+
                         out.printRightBrace(JavaTokenTypes.RCURLY, !treatDifferent, NodeWriter.NEWLINE_YES);
                         out.last = closeBraceType;
                     }
@@ -646,6 +649,9 @@ LOOP:
                   JavaTokenTypes.WS);
         out.print(BRACES, type);
 
+        if (out.state.extraWrap)
+            out.state.extraWrap = false;
+
         JavaNode rcurly = (JavaNode)lcurly.getFirstChild();
 
         if ((!printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, newlineAfter,
@@ -680,6 +686,10 @@ LOOP:
 
         printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore,
                        freestanding, out);
+
+        if (out.state.extraWrap)
+                out.state.extraWrap = false;
+
         out.print(SEMI, out.last);
         out.printNewline();
 
@@ -775,6 +785,9 @@ LOOP:
                 }
             }
         }
+
+        if (out.state.extraWrap)
+            out.state.extraWrap = false;
 
         if (commentsAfter)
         {

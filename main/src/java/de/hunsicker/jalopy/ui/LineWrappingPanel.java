@@ -610,8 +610,7 @@ public class LineWrappingPanel
                 {
                     public void stateChanged(ChangeEvent ev)
                     {
-                        String text = getContainer()
-                                          .loadPreview(getPreviewFileName());
+                        String text = getContainer().loadPreview(getPreviewFileName());
                         getContainer().getPreview().setText(text);
                     }
                 });
