@@ -4,7 +4,6 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-
 // $ANTLR 2.7.2a2 (20020112-1): "main/src/java/de/hunsicker/jalopy/language/java.g" -> "JavaParser.java"$
 package de.hunsicker.jalopy.language;
 
@@ -66,34 +65,36 @@ public final class JavaParser
 
     /** DOCUMENT ME! */
     public static final String[] _tokenNames =
-    {
-        "<0>", "EOF", "<2>", "NULL_TREE_LOOKAHEAD", "<4>", "<5>", "JAVADOC_COMMENT",
-        "LCURLY", "RCURLY", "MODIFIERS", "OBJBLOCK", "SLIST", "CTOR_DEF", "METHOD_DEF",
-        "VARIABLE_DEF", "INSTANCE_INIT", "STATIC_INIT", "TYPE", "CLASS_DEF",
-        "INTERFACE_DEF", "PACKAGE_DEF", "ARRAY_DECLARATOR", "EXTENDS_CLAUSE",
-        "IMPLEMENTS_CLAUSE", "PARAMETERS", "PARAMETER_DEF", "LABELED_STAT", "TYPECAST",
-        "INDEX_OP", "POST_INC", "POST_DEC", "METHOD_CALL", "EXPR", "ARRAY_INIT", "IMPORT",
-        "UNARY_MINUS", "UNARY_PLUS", "CASE_GROUP", "ELIST", "FOR_INIT", "FOR_CONDITION",
-        "FOR_ITERATOR", "EMPTY_STAT", "\"final\"", "\"abstract\"", "\"strictfp\"",
-        "SUPER_CTOR_CALL", "CTOR_CALL", "BOF", "ROOT", "CASESLIST", "BLOCK_STATEMENT",
-        "SEPARATOR_COMMENT", "SYNBLOCK", "\"package\"", "SEMI", "\"import\"", "LBRACK",
-        "RBRACK", "\"void\"", "\"boolean\"", "\"byte\"", "\"char\"", "\"short\"",
-        "\"int\"", "\"float\"", "\"long\"", "\"double\"", "IDENT", "DOT", "STAR",
-        "\"private\"", "\"public\"", "\"protected\"", "\"static\"", "\"transient\"",
-        "\"native\"", "\"synchronized\"", "\"volatile\"", "\"class\"", "\"extends\"",
-        "\"interface\"", "COMMA", "\"implements\"", "LPAREN", "RPAREN", "\"this\"",
-        "\"super\"", "STR_supper", "ASSIGN", "\"throws\"", "COLON", "\"if\"", "\"else\"",
-        "\"for\"", "\"while\"", "\"do\"", "\"break\"", "\"assert\"", "\"continue\"",
-        "\"return\"", "\"switch\"", "\"throw\"", "\"case\"", "\"default\"", "\"try\"",
-        "\"catch\"", "\"finally\"", "PLUS_ASSIGN", "MINUS_ASSIGN", "STAR_ASSIGN",
-        "DIV_ASSIGN", "MOD_ASSIGN", "SR_ASSIGN", "BSR_ASSIGN", "SL_ASSIGN", "BAND_ASSIGN",
-        "BXOR_ASSIGN", "BOR_ASSIGN", "QUESTION", "LOR", "LAND", "BOR", "BXOR", "BAND",
-        "NOT_EQUAL", "EQUAL", "LT", "GT", "LE", "GE", "\"instanceof\"", "SL", "SR", "BSR",
-        "PLUS", "MINUS", "DIV", "MOD", "INC", "DEC", "BNOT", "LNOT", "\"true\"",
-        "\"false\"", "\"null\"", "\"new\"", "NUM_INT", "CHAR_LITERAL", "STRING_LITERAL",
-        "NUM_FLOAT", "NUM_LONG", "NUM_DOUBLE", "WS", "SPECIAL_COMMENT", "SL_COMMENT",
-        "COMMENT", "ML_COMMENT", "ESC", "HEX_DIGIT", "VOCAB", "EXPONENT", "FLOAT_SUFFIX"
-    };
+        {
+            "<0>", "EOF", "<2>", "NULL_TREE_LOOKAHEAD", "<4>", "<5>", "JAVADOC_COMMENT",
+            "LCURLY", "RCURLY", "MODIFIERS", "OBJBLOCK", "SLIST", "CTOR_DEF", "METHOD_DEF",
+            "VARIABLE_DEF", "INSTANCE_INIT", "STATIC_INIT", "TYPE", "CLASS_DEF",
+            "INTERFACE_DEF", "PACKAGE_DEF", "ARRAY_DECLARATOR", "EXTENDS_CLAUSE",
+            "IMPLEMENTS_CLAUSE", "PARAMETERS", "PARAMETER_DEF", "LABELED_STAT", "TYPECAST",
+            "INDEX_OP", "POST_INC", "POST_DEC", "METHOD_CALL", "EXPR", "ARRAY_INIT",
+            "IMPORT", "UNARY_MINUS", "UNARY_PLUS", "CASE_GROUP", "ELIST", "FOR_INIT",
+            "FOR_CONDITION", "FOR_ITERATOR", "EMPTY_STAT", "\"final\"", "\"abstract\"",
+            "\"strictfp\"", "SUPER_CTOR_CALL", "CTOR_CALL", "BOF", "ROOT", "CASESLIST",
+            "BLOCK_STATEMENT", "SEPARATOR_COMMENT", "SYNBLOCK", "\"package\"", "SEMI",
+            "\"import\"", "LBRACK", "RBRACK", "\"void\"", "\"boolean\"", "\"byte\"",
+            "\"char\"", "\"short\"", "\"int\"", "\"float\"", "\"long\"", "\"double\"",
+            "IDENT", "DOT", "STAR", "\"private\"", "\"public\"", "\"protected\"",
+            "\"static\"", "\"transient\"", "\"native\"", "\"synchronized\"",
+            "\"volatile\"", "\"class\"", "\"extends\"", "\"interface\"", "COMMA",
+            "\"implements\"", "LPAREN", "RPAREN", "\"this\"", "\"super\"", "STR_supper",
+            "ASSIGN", "\"throws\"", "COLON", "\"if\"", "\"else\"", "\"for\"", "\"while\"",
+            "\"do\"", "\"break\"", "\"assert\"", "\"continue\"", "\"return\"",
+            "\"switch\"", "\"throw\"", "\"case\"", "\"default\"", "\"try\"", "\"catch\"",
+            "\"finally\"", "PLUS_ASSIGN", "MINUS_ASSIGN", "STAR_ASSIGN", "DIV_ASSIGN",
+            "MOD_ASSIGN", "SR_ASSIGN", "BSR_ASSIGN", "SL_ASSIGN", "BAND_ASSIGN",
+            "BXOR_ASSIGN", "BOR_ASSIGN", "QUESTION", "LOR", "LAND", "BOR", "BXOR", "BAND",
+            "NOT_EQUAL", "EQUAL", "LT", "GT", "LE", "GE", "\"instanceof\"", "SL", "SR",
+            "BSR", "PLUS", "MINUS", "DIV", "MOD", "INC", "DEC", "BNOT", "LNOT", "\"true\"",
+            "\"false\"", "\"null\"", "\"new\"", "NUM_INT", "CHAR_LITERAL",
+            "STRING_LITERAL", "NUM_FLOAT", "NUM_LONG", "NUM_DOUBLE", "WS",
+            "SPECIAL_COMMENT", "SL_COMMENT", "COMMENT", "ML_COMMENT", "ESC", "HEX_DIGIT",
+            "VOCAB", "EXPONENT", "FLOAT_SUFFIX"
+        };
     private static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
     private static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
     private static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
@@ -378,7 +379,7 @@ public final class JavaParser
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void aCase()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -447,7 +448,7 @@ public final class JavaParser
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void additiveExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -526,7 +527,7 @@ _loop165:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void andExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -583,7 +584,7 @@ _loop148:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void argList()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -681,7 +682,7 @@ _loop148:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void arrayInitializer()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -818,7 +819,7 @@ _loop75:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void assignmentExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1016,7 +1017,7 @@ _loop75:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void builtInType()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1158,7 +1159,7 @@ _loop75:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void builtInTypeSpec(boolean addImagNode)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1245,7 +1246,7 @@ _loop18:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void caseSList()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1313,7 +1314,7 @@ _loop110:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void casesGroup()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1322,6 +1323,7 @@ _loop110:
 
         try
         { // for error handling
+
             {
                 int _cnt105 = 0;
 _loop105: 
@@ -1399,7 +1401,7 @@ _loop105:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void classBlock()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1518,7 +1520,7 @@ _loop41:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void classDefinition(JavaNode modifiers)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1552,13 +1554,10 @@ _loop41:
                 classDefinition_AST = (JavaNode) currentAST.root;
                 classDefinition_AST =
                     (JavaNode) astFactory.make(
-                        (new ASTArray(6)).add(
+                        (new ASTArray(7)).add(
                             (JavaNode) astFactory.create(
                                 JavaTokenTypes.CLASS_DEF, "CLASS_DEF")).add(modifiers)
-                         .add(id_AST).add(sc_AST).add(ic_AST).add(cb_AST));
-
-                classDefinition_AST.setHiddenBefore(c_AST.getHiddenBefore());
-                classDefinition_AST.setHiddenAfter(c_AST.getHiddenAfter());
+                         .add(c_AST).add(id_AST).add(sc_AST).add(ic_AST).add(cb_AST));
                 attachStuffBefore(classDefinition_AST, modifiers, c_AST);
 
                 currentAST.root = classDefinition_AST;
@@ -1597,7 +1596,7 @@ _loop41:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void classTypeSpec(boolean addImagNode)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1688,7 +1687,7 @@ _loop15:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void compoundStatement()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1761,7 +1760,7 @@ _loop92:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void conditionalExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1845,7 +1844,7 @@ _loop92:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void constant()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1952,7 +1951,7 @@ _loop92:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void constructorBody()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -1972,6 +1971,7 @@ _loop92:
             {
                 lc_AST.setType(JavaTokenTypes.SLIST);
             }
+
             {
                 boolean synPredMatched58 = false;
 
@@ -2055,7 +2055,7 @@ _loop60:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void ctorHead()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2127,7 +2127,7 @@ _loop60:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void declaration()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2186,7 +2186,7 @@ _loop60:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void declaratorBrackets(JavaNode typ)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2262,7 +2262,7 @@ _loop69:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void equalityExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2343,7 +2343,7 @@ _loop152:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void exclusiveOrExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2400,7 +2400,7 @@ _loop145:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void explicitConstructorInvocation()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2546,7 +2546,7 @@ _loop145:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void expression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2601,7 +2601,7 @@ _loop145:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void expressionList()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -2675,7 +2675,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void field()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3056,7 +3056,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void finallyBlock()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3105,7 +3105,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void forCond()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3204,7 +3204,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void forInit()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3213,6 +3213,7 @@ _loop128:
 
         try
         { // for error handling
+
             {
                 boolean synPredMatched114 = false;
 
@@ -3298,7 +3299,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void forIter()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3397,7 +3398,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void handler()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3458,7 +3459,7 @@ _loop128:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void identifier()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3561,7 +3562,7 @@ _loop23:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void identifierPackage()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3645,7 +3646,7 @@ _loop26:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void identifierStar()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3767,7 +3768,7 @@ _loop29:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void implementsClause()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3865,7 +3866,7 @@ _loop49:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void importDefinition()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3921,7 +3922,7 @@ _loop49:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void inclusiveOrExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -3978,7 +3979,7 @@ _loop142:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void initializer()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4067,7 +4068,7 @@ _loop142:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void interfaceDefinition(JavaNode modifiers)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4098,10 +4099,10 @@ _loop142:
                 interfaceDefinition_AST = (JavaNode) currentAST.root;
                 interfaceDefinition_AST =
                     (JavaNode) astFactory.make(
-                        (new ASTArray(5)).add(
+                        (new ASTArray(6)).add(
                             (JavaNode) astFactory.create(
                                 JavaTokenTypes.INTERFACE_DEF, "INTERFACE_DEF"))
-                         .add(modifiers).add(id_AST).add(ie_AST).add(cb_AST));
+                         .add(modifiers).add(i_AST).add(id_AST).add(ie_AST).add(cb_AST));
                 attachStuffBefore(interfaceDefinition_AST, modifiers, i_AST);
 
                 currentAST.root = interfaceDefinition_AST;
@@ -4138,7 +4139,7 @@ _loop142:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void interfaceExtends()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4230,7 +4231,7 @@ _loop45:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void logicalAndExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4287,7 +4288,7 @@ _loop139:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void logicalOrExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4344,7 +4345,7 @@ _loop136:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void modifier()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4506,7 +4507,7 @@ _loop136:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void modifiers()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4574,7 +4575,7 @@ _loop33:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void multiplicativeExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4663,7 +4664,7 @@ _loop169:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void newArrayDeclarator()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -4674,6 +4675,7 @@ _loop169:
 
         try
         { // for error handling
+
             {
                 int _cnt196 = 0;
 _loop196: 
@@ -4829,7 +4831,7 @@ _loop196:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void newExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5024,7 +5026,7 @@ _loop196:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void packageDefinition()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5080,7 +5082,7 @@ _loop196:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void parameterDeclaration()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5156,7 +5158,7 @@ _loop196:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void parameterDeclarationList()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5256,7 +5258,7 @@ _loop86:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void parameterModifier()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5340,7 +5342,7 @@ _loop86:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void parse()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5445,7 +5447,7 @@ _loop6:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void postfixExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -5842,7 +5844,7 @@ _loop181:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final Token primaryExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         Token t;
 
@@ -6068,7 +6070,7 @@ _loop186:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void relationalExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -6223,7 +6225,7 @@ _loop157:
     public void reportError(RecognitionException ex)
     {
         Object[] args =
-        { getFilename(), new Integer(ex.line), new Integer(ex.column), ex.getMessage() };
+            { getFilename(), new Integer(ex.line), new Integer(ex.column), ex.getMessage() };
         _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
     }
 
@@ -6285,7 +6287,7 @@ _loop157:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void shiftExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -6374,7 +6376,7 @@ _loop161:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void statement()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7066,7 +7068,7 @@ _loop102:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void superClassClause()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7149,7 +7151,7 @@ _loop102:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void throwsClause()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7211,7 +7213,7 @@ _loop82:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void tryBlock()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7349,7 +7351,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void type()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7416,7 +7418,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void typeDefinition()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7515,7 +7517,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void typeSpec(boolean addImagNode)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7582,7 +7584,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void unaryExpression()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7720,7 +7722,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void unaryExpressionNotPlusMinus()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7926,7 +7928,7 @@ _loop121:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void varInitializer()
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -7991,7 +7993,7 @@ _loop121:
     public final void variableDeclarator(
         JavaNode mods,
         JavaNode t)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 
@@ -8068,7 +8070,7 @@ _loop121:
     public final void variableDefinitions(
         JavaNode mods,
         JavaNode t)
-      throws RecognitionException, TokenStreamException
+            throws RecognitionException, TokenStreamException
     {
         returnAST = null;
 

@@ -4,7 +4,6 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-
 // $ANTLR 2.7.2a2 (20020112-1): "main/src/java/de/hunsicker/jalopy/language/java.g" -> "JavaLexer.java"$
 package de.hunsicker.jalopy.language;
 
@@ -486,7 +485,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -526,7 +525,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBAND(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -566,7 +565,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBAND_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -606,7 +605,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBNOT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -646,7 +645,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBOR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -686,7 +685,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBOR_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -726,7 +725,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBSR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -766,7 +765,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBSR_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -806,7 +805,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBXOR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -846,7 +845,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mBXOR_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -886,7 +885,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mCHAR_LITERAL(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -942,7 +941,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mCOLON(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -982,7 +981,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mCOMMA(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1022,7 +1021,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mCOMMENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1088,7 +1087,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mDEC(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1128,7 +1127,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mDIV(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1168,7 +1167,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mDIV_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1208,7 +1207,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mEQUAL(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1248,7 +1247,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mGE(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1288,7 +1287,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mGT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1328,7 +1327,7 @@ public final class JavaLexer
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mIDENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1719,7 +1718,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mINC(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1759,7 +1758,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLAND(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1799,7 +1798,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLBRACK(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1839,7 +1838,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLCURLY(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1879,7 +1878,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLE(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1919,7 +1918,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLNOT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1959,7 +1958,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLOR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -1999,7 +1998,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLPAREN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2039,7 +2038,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mLT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2079,7 +2078,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mMINUS(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2119,7 +2118,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mMINUS_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2159,7 +2158,7 @@ _loop292:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mML_COMMENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2341,7 +2340,7 @@ _loop268:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mMOD(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2381,7 +2380,7 @@ _loop268:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mMOD_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2421,7 +2420,7 @@ _loop268:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mNOT_EQUAL(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2461,7 +2460,7 @@ _loop268:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mNUM_INT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2597,6 +2596,7 @@ _loop296:
                                                 (char) LA(1), getFilename(), getLine(),
                                                 getColumn());
                                     }
+
                                     {
                                         int _cnt303 = 0;
 _loop303: 
@@ -2866,7 +2866,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mPLUS(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2906,7 +2906,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mPLUS_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2946,7 +2946,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mQUESTION(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -2986,7 +2986,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mRBRACK(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3026,7 +3026,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mRCURLY(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3066,7 +3066,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mRPAREN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3106,7 +3106,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSEMI(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3146,7 +3146,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSL(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3186,7 +3186,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSL_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3226,7 +3226,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3266,7 +3266,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSR_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3306,7 +3306,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSTAR(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3346,7 +3346,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSTAR_ASSIGN(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3386,7 +3386,7 @@ _loop313:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mSTRING_LITERAL(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3445,7 +3445,7 @@ _loop274:
      * @throws TokenStreamException DOCUMENT ME!
      */
     public final void mWS(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -3456,6 +3456,7 @@ _loop274:
 
         try
         { // for error handling
+
             {
                 int _cnt246 = 0;
 _loop246: 
@@ -3576,7 +3577,7 @@ _loop246:
      * @throws TokenStreamIOException DOCUMENT ME!
      */
     public Token nextToken()
-      throws TokenStreamException
+            throws TokenStreamException
     {
         Token theRetToken = null;
 tryAgain: 
@@ -4090,10 +4091,10 @@ tryAgain:
         if (this.inputState != null)
         {
             Object[] args =
-            {
-                getFilename(), new Integer(getLine()), new Integer(getColumn()),
-                "JavaLexer: panic"
-            };
+                {
+                    getFilename(), new Integer(getLine()), new Integer(getColumn()),
+                    "JavaLexer: panic"
+                };
             _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
         }
         else
@@ -4119,7 +4120,7 @@ tryAgain:
         if (this.inputState != null)
         {
             Object[] args =
-            { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
+                { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
             _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
         }
         else
@@ -4143,7 +4144,10 @@ tryAgain:
     public void reportError(RecognitionException ex)
     {
         Object[] args =
-        { getFilename(), new Integer(getLine()), new Integer(getColumn()), ex.getMessage() };
+            {
+                getFilename(), new Integer(getLine()), new Integer(getColumn()),
+                ex.getMessage()
+            };
         _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
     }
 
@@ -4156,7 +4160,7 @@ tryAgain:
     public void reportError(String message)
     {
         Object[] args =
-        { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
+            { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
         _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, null);
     }
 
@@ -4169,7 +4173,7 @@ tryAgain:
     public void reportWarning(String message)
     {
         Object[] args =
-        { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
+            { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
         _logger.l7dlog(Level.WARN, "PARSER_ERROR", args, null);
     }
 
@@ -4280,7 +4284,7 @@ tryAgain:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mESC(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4489,7 +4493,7 @@ _loop278:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mEXPONENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4554,6 +4558,7 @@ _loop278:
                     throw new NoViableAltForCharException(
                         (char) LA(1), getFilename(), getLine(), getColumn());
             }
+
             {
                 int _cnt321 = 0;
 _loop321: 
@@ -4608,7 +4613,7 @@ _loop321:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mFLOAT_SUFFIX(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4682,7 +4687,7 @@ _loop321:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mHEX_DIGIT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4768,7 +4773,7 @@ _loop321:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mSEPARATOR_COMMENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4865,7 +4870,7 @@ _loop254:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mSL_COMMENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -4962,7 +4967,7 @@ _loop260:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mSPECIAL_COMMENT(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -5074,7 +5079,7 @@ _loop250:
      * @throws TokenStreamException DOCUMENT ME!
      */
     protected final void mVOCAB(boolean _createToken)
-      throws RecognitionException, CharStreamException, TokenStreamException
+            throws RecognitionException, CharStreamException, TokenStreamException
     {
         int _ttype;
         Token _token = null;
@@ -5116,6 +5121,43 @@ _loop250:
         return new ExtendedToken(
             t, this.inputState.tokenStartLine, this.inputState.tokenStartColumn,
             this.inputState.line, this.inputState.column);
+    }
+
+
+    /**
+     * Returns the index within this string of the first occurrence of any of the line
+     * separator characters (quot;\nquot;, quot;\r\nquot; or quot;\rquot;).
+     *
+     * @param result DOCUMENT ME!
+     * @param str a string.
+     */
+    private void getNextSeparator(
+        SeparatorInfo result,
+        String        str)
+    {
+        int offset = offset = str.indexOf("\r\n" /* NOI18N */); // DOS
+
+        if (offset > -1)
+        {
+            result.offset = offset;
+            result.length = 2;
+        }
+        else
+        {
+            result.length = 1;
+
+            offset = str.indexOf('\n'); // UNIX
+
+            if (offset > -1)
+            {
+                result.offset = offset;
+            }
+            else
+            {
+                offset = str.indexOf('\r'); // MAC
+                result.offset = offset;
+            }
+        }
     }
 
 
@@ -5297,7 +5339,7 @@ _loop250:
         int    column,
         String lineSeparator)
     {
-        String[] lines = split(comment, column, lineSeparator);
+        String[] lines = split(comment, column);
         StringBuffer buf = new StringBuffer(comment.length());
 
         for (int i = 0, size = lines.length; i < size; i++)
@@ -5317,23 +5359,22 @@ _loop250:
      *
      * @param str a multi-line comment.
      * @param beginOffset the column offset of the line where the comment starts.
-     * @param separator the line separator.
      *
      * @return the individual lines of the comment.
      */
     private String[] split(
         String str,
-        int    beginOffset,
-        String separator)
+        int    beginOffset)
     {
-        List lines = new ArrayList();
-        int sepOffset = -1;
-        int sepLength = separator.length();
+        List lines = new ArrayList(15);
 
-        while ((sepOffset = str.indexOf(separator)) > -1)
+        SeparatorInfo info = new SeparatorInfo();
+
+        for (getNextSeparator(info, str); info.offset > -1;
+            getNextSeparator(info, str))
         {
-            String line = str.substring(0, sepOffset);
-            str = str.substring(sepOffset + sepLength);
+            String line = str.substring(0, info.offset);
+            str = str.substring(info.offset + info.length);
 
             int charOffset = StringHelper.indexOfNonWhitespace(line);
 
@@ -5371,5 +5412,13 @@ _loop250:
         lines.add(str);
 
         return (String[]) lines.toArray(EMPTY_STRING_ARRAY);
+    }
+
+    //~ Inner Classes --------------------------------------------------------------------
+
+    private static final class SeparatorInfo
+    {
+        int length = 1;
+        int offset = -1;
     }
 }

@@ -608,10 +608,7 @@ classDefinition![JavaNode modifiers]
                 // now parse the body of the class
                 cb:classBlock
                 { #classDefinition = #(#[JavaTokenTypes.CLASS_DEF,"CLASS_DEF"],
-                                                           modifiers,id,sc,ic,cb);
-
-                  #classDefinition.setHiddenBefore(#c.getHiddenBefore());
-                  #classDefinition.setHiddenAfter(#c.getHiddenAfter());
+                                                           modifiers,c,id,sc,ic,cb);
                   attachStuffBefore(#classDefinition, modifiers, #c);
                 }
 
@@ -633,7 +630,7 @@ interfaceDefinition![JavaNode modifiers]
                 // now parse the body of the interface (looks like a class...)
                 cb:classBlock
                 { #interfaceDefinition = #(#[JavaTokenTypes.INTERFACE_DEF,"INTERFACE_DEF"],
-                                                                        modifiers,id,ie,cb);
+                                                                        modifiers,i,id,ie,cb);
                   attachStuffBefore(#interfaceDefinition, modifiers, #i);
                 }
         ;
@@ -1963,29 +1960,97 @@ options {
         setFilename(Recognizer.UNKNOWN_FILE);
     }
 
+    /**
+     * Returns the index within this string of the first occurrence of any of the line
+     * separator characters (quot;\nquot;, quot;\r\nquot; or quot;\rquot;).
+     *
+     * @param str a string.
+     *
+     * @return the index of the first character of a newline string; otherwise
+     *         <code>-1</code> is returned.
+     */
+    private void getNextSeparator(SeparatorInfo result, String str)
+    {
+        int offset = offset = str.indexOf("\r\n" /* NOI18N */); // DOS
+
+        if (offset > -1)
+        {
+            result.offset = offset;
+            result.length = 2;
+        }
+        else
+        {
+            result.length = 1;
+
+            offset = str.indexOf('\n'); // UNIX
+
+            if (offset > -1)
+            {
+                result.offset = offset;
+            }
+            else
+            {
+                offset = str.indexOf('\r'); // MAC
+                result.offset = offset;
+            }
+        }
+    }
+
+    private final static class SeparatorInfo
+    {
+        int length = 1;
+        int offset = -1;
+    }
+
+    /**
+     * Removes the leading whitespace from each line of the given multi-line comment.
+     *
+     * @param comment a multi-line comment.
+     * @param column the column offset of the line where the comment starts.
+     * @param lineSeparator the line separator.
+     *
+     * @return comment without leading whitespace.
+     */
+    private String removeLeadingWhitespace(
+        String comment,
+        int    column,
+        String lineSeparator)
+    {
+        String[] lines = split(comment, column);
+        StringBuffer buf = new StringBuffer(comment.length());
+
+        for (int i = 0, size = lines.length; i < size; i++)
+        {
+            buf.append(lines[i]);
+            buf.append(_lineSeparator);
+        }
+
+        buf.setLength(buf.length() - _lineSeparator.length());
+
+        return buf.toString();
+    }
+
 
     /**
      * Returns the individual lines of the given multi-line comment.
      *
      * @param str a multi-line comment.
-     * @param beginOffset the column offset of the line where the comment
-     *         starts.
-     * @param separator the line separator.
+     * @param beginOffset the column offset of the line where the comment starts.
      *
      * @return the individual lines of the comment.
      */
-    private String[] split(String str,
-                               int    beginOffset,
-                               String separator)
+    private String[] split(
+        String str,
+        int    beginOffset)
     {
-        List lines = new ArrayList();
-        int sepOffset = -1;
-        int sepLength = separator.length();
+        List lines = new ArrayList(15);
 
-        while ((sepOffset = str.indexOf(separator)) > -1)
+        SeparatorInfo info = new SeparatorInfo();
+
+        for (getNextSeparator(info, str); info.offset > -1; getNextSeparator(info, str))
         {
-            String line = str.substring(0, sepOffset);
-            str = str.substring(sepOffset + sepLength);
+            String line = str.substring(0, info.offset);
+            str = str.substring(info.offset + info.length);
 
             int charOffset = StringHelper.indexOfNonWhitespace(line);
 
@@ -2022,33 +2087,7 @@ options {
 
         lines.add(str);
 
-        return (String[])lines.toArray(EMPTY_STRING_ARRAY);
-    }
-
-    /**
-     * Removes the leading whitespace from each line of the given multi-line
-     * comment.
-     *
-     * @param comment a multi-line comment.
-     * @param column the column offset of the line where the comment starts.
-     * @param lineSeparator the line separator.
-     * @return comment without leading whitespace.
-     */
-    private String removeLeadingWhitespace(String comment, int column,
-                                           String lineSeparator)
-    {
-        String[] lines = split(comment, column, lineSeparator);
-        StringBuffer buf = new StringBuffer(comment.length());
-
-        for (int i = 0, size = lines.length; i < size; i++)
-        {
-            buf.append(lines[i]);
-            buf.append(_lineSeparator);
-        }
-
-        buf.setLength(buf.length() - _lineSeparator.length());
-
-        return buf.toString();
+        return (String[]) lines.toArray(EMPTY_STRING_ARRAY);
     }
 }
 

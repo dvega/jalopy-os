@@ -122,7 +122,7 @@ public final class JavaRecognizer
      * Returns the root node of the generated parse tree. Note that every call to this
      * method triggers the tree transformations, which could be quite expensive. So make
      * sure to avoid unnecessary calls.
-     * 
+     *
      * <p>
      * As we don't use checked exceptions to indicate runtime failures, one may check
      * successful execution of the transformations prior to perform further processing:
