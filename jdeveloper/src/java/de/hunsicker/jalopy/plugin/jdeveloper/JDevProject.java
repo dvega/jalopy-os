@@ -20,6 +20,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 import oracle.ide.Ide;
 import oracle.ide.editor.Editor;
 import oracle.ide.model.DirectoryFolder;
+import oracle.ide.model.Document;
 import oracle.ide.model.Element;
 import oracle.ide.model.PackageFolder;
 import oracle.ide.model.Workspace;
@@ -68,9 +69,9 @@ final class JDevProject
 
         if (editor != null)
         {
-            Element element = editor.getContext().getElement();
+            Document document = editor.getContext().getDocument();
 
-            return new JDevProjectFile(this, (JavaSourceNode) element);
+            return new JDevProjectFile(this, (JavaSourceNode) document);
         }
 
         return null;
@@ -113,7 +114,8 @@ final class JDevProject
                     if (this.selection[i] instanceof JavaSourceNode)
                     {
                         files.add(
-                            new JDevProjectFile(this, (JavaSourceNode) this.selection[i]));
+                            new JDevProjectFile(
+                                this, (JavaSourceNode) this.selection[i]));
                     }
                     else if (isJavaFolder(this.selection[i]))
                     {

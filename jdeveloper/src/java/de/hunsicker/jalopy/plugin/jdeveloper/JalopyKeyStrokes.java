@@ -26,7 +26,7 @@ public final class JalopyKeyStrokes
 
     /** DOCUMENT ME! */
     public static final String KEY_SETTINGS =
-        "de.hunsicker.jalopy.plugin.jdeveloper.JalopyKeyStrokes";
+        "de.hunsicker.jalopy.plugin.jdeveloper.JalopyKeyStrokes" /* NOI18N */;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -49,12 +49,10 @@ public final class JalopyKeyStrokes
      */
     public Set getAllActions(boolean global)
     {
-        System.err.println("getAll");
-
         if (global)
         {
             Set actions = new HashSet(5);
-            System.err.println(IdeAction.find(JDevPlugin.FORMAT_CMD_ID));
+
             actions.add(IdeAction.find(JDevPlugin.FORMAT_CMD_ID));
 
             return actions;

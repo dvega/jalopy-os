@@ -72,8 +72,7 @@ final class JDevAppender
 
                 break;
 
-            case Level.INFO_INT :
-            default :
+            case Level.INFO_INT :default :
                 append(ev, MessageType.INFO);
 
                 break;

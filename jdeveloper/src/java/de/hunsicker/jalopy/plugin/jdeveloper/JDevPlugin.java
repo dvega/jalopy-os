@@ -49,11 +49,13 @@ import oracle.ide.addin.ContextMenuListener;
 import oracle.ide.addin.Controller;
 import oracle.ide.config.IdeSettings;
 import oracle.ide.model.DirectoryFolder;
+import oracle.ide.model.Document;
 import oracle.ide.model.Element;
 import oracle.ide.model.PackageFolder;
 import oracle.ide.model.Workspace;
 import oracle.ide.model.Workspaces;
 import oracle.ide.panels.Navigable;
+import oracle.jdeveloper.compiler.JCompiler;
 import oracle.jdeveloper.model.BusinessComponents;
 import oracle.jdeveloper.model.EnterpriseJavaBeans;
 import oracle.jdeveloper.model.JProject;
@@ -324,10 +326,12 @@ public final class JDevPlugin
     {
         AddinManager addinManager = Ide.getAddinManager();
         String command = addinManager.getCommand(FORMAT_CMD_ID, FORMAT_CMD);
+        String category = "Jalopy" /* NOI18N */;
 
         IdeAction action =
             IdeAction.get(
-                FORMAT_CMD_ID, command, null, (Integer) null, null, null, null, true);
+                FORMAT_CMD_ID, command, "Format" /* NOI18N */, category, (Integer) null,
+                null, null, true);
         action.setController(this);
 
         _formatMenuItem = Ide.getMenubar().createMenuItem(action);
@@ -338,59 +342,72 @@ public final class JDevPlugin
         ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE_NAME);
 
         Navigable[] printerPanels =
-        {
-            new Navigable(bundle.getString("LBL_BRACES" /* NOI18N */), BracesPanel.class),
-            new Navigable(
-                bundle.getString("LBL_WHITESPACE" /* NOI18N */), WhitespacePanel.class),
-            new Navigable(
-                bundle.getString("LBL_INDENTATION" /* NOI18N */), IndentationPanel.class),
-            new Navigable(
-                bundle.getString("LBL_WRAPPING" /* NOI18N */), WrappingPanel.class),
-            new Navigable(
-                bundle.getString("LBL_BLANK_LINES" /* NOI18N */),
-                BlankLinesPanel.class),
-            new Navigable(
-                bundle.getString("LBL_COMMENTS" /* NOI18N */), CommentsPanel.class),
-            new Navigable(
-                bundle.getString("LBL_IMPORTS" /* NOI18N */), ImportsPanel.class),
-            new Navigable(
-                bundle.getString("LBL_ENVIRONMENT" /* NOI18N */), EnvironmentPanel.class),
-            new Navigable(
-                bundle.getString("LBL_JAVADOC" /* NOI18N */), JavadocPanel.class),
-            new Navigable(bundle.getString("LBL_HEADER" /* NOI18N */), HeaderPanel.class),
-            new Navigable(bundle.getString("LBL_FOOTER" /* NOI18N */), FooterPanel.class),
-            new Navigable(
-                bundle.getString("LBL_SORTING" /* NOI18N */), SortingPanel.class),
-            new Navigable(bundle.getString("LBL_MISC" /* NOI18N */), MiscPanel.class)
-        };
+            {
+                new Navigable(
+                    bundle.getString("LBL_BRACES" /* NOI18N */), BracesPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_WHITESPACE" /* NOI18N */),
+                    WhitespacePanel.class),
+                new Navigable(
+                    bundle.getString("LBL_INDENTATION" /* NOI18N */),
+                    IndentationPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_WRAPPING" /* NOI18N */), WrappingPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_BLANK_LINES" /* NOI18N */),
+                    BlankLinesPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_COMMENTS" /* NOI18N */), CommentsPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_IMPORTS" /* NOI18N */), ImportsPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_ENVIRONMENT" /* NOI18N */),
+                    EnvironmentPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_JAVADOC" /* NOI18N */), JavadocPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_HEADER" /* NOI18N */), HeaderPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_FOOTER" /* NOI18N */), FooterPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_SORTING" /* NOI18N */), SortingPanel.class),
+                new Navigable(bundle.getString("LBL_MISC" /* NOI18N */), MiscPanel.class)
+            };
 
         Navigable[] inspectorPanels =
-        { new Navigable(bundle.getString("LBL_NAMING" /* NOI18N */), NamingPanel.class) };
+            { new Navigable(
+                    bundle.getString("LBL_NAMING" /* NOI18N */), NamingPanel.class) };
 
         Navigable[] panels =
-        {
-            new Navigable(
-                bundle.getString("LBL_GENERAL" /* NOI18N */), GeneralPanel.class),
-            new Navigable(
-                bundle.getString("LBL_PROJECTS" /* NOI18N */), ProjectPanel.class),
-            new Navigable(
-                bundle.getString("LBL_PRINTER" /* NOI18N */), DummyPanel.class,
-                printerPanels),
-            new Navigable(
-                bundle.getString("LBL_INSPECTOR" /* NOI18N */), CodeInspectorPanel.class,
-                inspectorPanels),
-            new Navigable(
-                bundle.getString("LBL_MESSAGES" /* NOI18N */), MessagesPanel.class)
-        };
+            {
+                new Navigable(
+                    bundle.getString("LBL_GENERAL" /* NOI18N */), GeneralPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_PROJECTS" /* NOI18N */), ProjectPanel.class),
+                new Navigable(
+                    bundle.getString("LBL_PRINTER" /* NOI18N */), DummyPanel.class,
+                    printerPanels),
+                new Navigable(
+                    bundle.getString("LBL_INSPECTOR" /* NOI18N */),
+                    CodeInspectorPanel.class, inspectorPanels),
+                new Navigable(
+                    bundle.getString("LBL_MESSAGES" /* NOI18N */), MessagesPanel.class)
+            };
 
         IdeSettings.registerUI(
             new Navigable("Jalopy" /* NOI18N */, DummyPanel.class, panels));
 
         System.out.println(
-            "Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion());
-        System.out.println("JDeveloper Extension " /* NOI18N */ + getVersion());
+            "Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion()
+            + " JDeveloper Extension " /* NOI18N */ + getVersion());
         System.out.println(
             "Copyright (c) 2001-2002 Marco Hunsicker. All rights reserved." /* NOI18N */);
+
+        Ide.getVersionInfo().addComponent(
+            "Jalopy Java Source Code Formatter" /* NOI18N */,
+            getVersion() + " / " /* NOI18N */ + Jalopy.getVersion().toString());
+
+        Ide.getKeyStrokeContextRegistry().addContext(new JalopyKeyStrokes());
     }
 
 
@@ -417,17 +434,17 @@ public final class JDevPlugin
 
             if (context != null)
             {
-                Element element = context.getElement();
+                Document document = context.getDocument();
 
-                _contextId = getContextId(element);
+                _contextId = getContextId(document);
 
                 if (_contextId != JDevPlugin.CONTEXT_INVALID)
                 {
                     insertFormatMenuItem(
-                        menu, _contextId, element, context.getSelection().length > 1);
+                        menu, _contextId, document, context.getSelection().length > 1);
 
                     /*
-                    System.err.println(element.getClass().getName());
+                    System.err.println(document.getClass().getName());
 
                     Container m = menu.getGUI(true);
                     Component[] c = m.getComponents();
@@ -516,58 +533,52 @@ public final class JDevPlugin
      * Determines whether the <em>Format</em> menu item should be displayed for the given
      * element.
      *
-     * @param element the selected element.
+     * @param element the selected Document.
      *
      * @return <code>true</code> if the <em>Format</em> menu item should be displayed.
      */
     private int getContextId(Element element)
     {
+        int result = JDevPlugin.CONTEXT_INVALID;
+
         if (element instanceof JavaSourceNode)
         {
-            return JDevPlugin.CONTEXT_SOURCE;
+            result = JDevPlugin.CONTEXT_SOURCE;
         }
-
-        if (element instanceof JavaSources)
+        else if (element instanceof JavaSources)
         {
-            return JDevPlugin.CONTEXT_SOURCES;
+            result = JDevPlugin.CONTEXT_SOURCES;
         }
-
-        if (element instanceof JProject)
+        else if (element instanceof JProject)
         {
-            return JDevPlugin.CONTEXT_PROJECT;
+            result = JDevPlugin.CONTEXT_PROJECT;
         }
-
-        if (element instanceof PackageFolder)
+        else if (element instanceof PackageFolder)
         {
-            return JDevPlugin.CONTEXT_PACKAGE;
+            result = JDevPlugin.CONTEXT_PACKAGE;
         }
-
-        if (element instanceof DirectoryFolder)
+        else if (element instanceof DirectoryFolder)
         {
-            return JDevPlugin.CONTEXT_DIRECTORY;
+            result = JDevPlugin.CONTEXT_DIRECTORY;
         }
-
-        if (element instanceof BusinessComponents)
+        else if (element instanceof BusinessComponents)
         {
-            return JDevPlugin.CONTEXT_BUSINESS;
+            result = JDevPlugin.CONTEXT_BUSINESS;
         }
-
-        if (element instanceof EnterpriseJavaBeans)
+        else if (element instanceof EnterpriseJavaBeans)
         {
-            return JDevPlugin.CONTEXT_EJB;
+            result = JDevPlugin.CONTEXT_EJB;
         }
-
-        if (element instanceof Workspace)
+        else if (element instanceof Workspace)
         {
-            return JDevPlugin.CONTEXT_WORKSPACE;
+            result = JDevPlugin.CONTEXT_WORKSPACE;
         }
-
-        if (element instanceof Workspaces)
+        else if (element instanceof Workspaces)
         {
-            return JDevPlugin.CONTEXT_WORKSPACES;
+            result = JDevPlugin.CONTEXT_WORKSPACES;
         }
 
-        return JDevPlugin.CONTEXT_INVALID;
+        return result;
     }
 
 
@@ -593,8 +604,8 @@ public final class JDevPlugin
             if (multipleSelection)
             {
                 SwingHelper.setMenuText(
-                    _formatMenuItem, bundle.getString("LBL_FORMAT_SELECTED" /* NOI18N */),
-                    true);
+                    _formatMenuItem, bundle.getString(
+                        "LBL_FORMAT_SELECTED" /* NOI18N */), true);
             }
             else
             {
@@ -632,37 +643,18 @@ public final class JDevPlugin
 
         if (container != null)
         {
-            // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.3
-            result = menu.getIndexOfCommandId(container, 109); // Build
+            result = menu.getIndexOfCommandId(container, JCompiler.BUILD_PROJECT_CMD_ID);
 
             if (result == -1)
             {
-                // oracle.jdeveloper.compiler.BuildSelectedCommand 9.0.2
-                result = menu.getIndexOfCommandId(container, 215); // Build
+                result =
+                    menu.getIndexOfCommandId(container, JCompiler.BUILD_SELECTED_CMD_ID);
             }
 
             if (result == -1)
             {
-                // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
-                result = menu.getIndexOfCommandId(container, 111); // Build Project
-            }
-
-            if (result == -1)
-            {
-                // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
-                result = menu.getIndexOfCommandId(container, 217); // Build Project
-            }
-
-            if (result == -1)
-            {
-                // // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.3
-                result = menu.getIndexOfCommandId(container, 111); // Build Workspace
-            }
-
-            if (result == -1)
-            {
-                // oracle.jdeveloper.compiler.BuildProjectCommand 9.0.2
-                result = menu.getIndexOfCommandId(container, 219); // Build Workspace
+                result =
+                    menu.getIndexOfCommandId(container, JCompiler.BUILD_WORKSPACE_CMD_ID);
             }
         }
 
@@ -675,13 +667,13 @@ public final class JDevPlugin
      *
      * @param menu a context menu.
      * @param contextId an integer that describes the current context.
-     * @param element the currently selected element.
+     * @param document the currently selected element.
      * @param multipleSelection <code>true</code> if multiple elements are selected.
      */
     private void insertFormatMenuItem(
         ContextMenu menu,
         int         contextId,
-        Element     element,
+        Document    document,
         boolean     multipleSelection)
     {
         // try to add the item behind the 'Build' item
@@ -690,12 +682,12 @@ public final class JDevPlugin
         if (index != -1)
         {
             menu.insert(
-                getFormatMenuItem(contextId, element, multipleSelection), index + 1);
+                getFormatMenuItem(contextId, document, multipleSelection), index + 1);
         }
         else
         {
             // add the item to the end of the menu
-            menu.add(getFormatMenuItem(contextId, element, multipleSelection));
+            menu.add(getFormatMenuItem(contextId, document, multipleSelection));
         }
     }
 }

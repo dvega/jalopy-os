@@ -273,7 +273,7 @@ final class JDevEditor
 
                 if (editor instanceof CodeEditor)
                 {
-                    if (_node.equals(editor.getContext().getElement()))
+                    if (_node.equals(editor.getContext().getDocument()))
                     {
                         _editor = (CodeEditor) editor;
 
@@ -289,6 +289,7 @@ final class JDevEditor
         }
         else
         {
+            // should never happen
             throw new IllegalStateException("could not find an editor for " + _node);
         }
     }
