@@ -179,8 +179,8 @@ abstract class AbstractPrinter
 
 
     /**
-     * Outputs indentation whitespace according to the current marker offset. If no
-     * marker is set, this method does nothing.
+     * Outputs indentation whitespace according to the current marker offset or indentation
+     * level (depends on the used indentation policy).
      *
      * @param out stream to write to.
      *
@@ -488,7 +488,7 @@ abstract class AbstractPrinter
                 }
                 else
                 {
-                    result = node.getHiddenBefore().getLine() - prev.getEndLine() - 1;
+                    result = node.getCommentBefore().getLine() - prev.getEndLine() - 1;
                 }
             }
         }
@@ -880,78 +880,67 @@ abstract class AbstractPrinter
                 ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
         boolean keepLines = linesToKeep > -1;
 
+
         CommonHiddenStreamToken previousComment = null;
+        CommonHiddenStreamToken firstComment = n.getCommentBefore();
 
-        // the first hidden token is actually the last token found, so we
-        // have to traverse the chain first
         for (
-            CommonHiddenStreamToken token = ((JavaNode) node).getHiddenBefore();
-            token != null; token = token.getHiddenBefore())
+            CommonHiddenStreamToken comment = firstComment; comment != null;
+            comment = comment.getHiddenAfter())
         {
-            if (token.getHiddenBefore() == null)
+            switch (comment.getType())
             {
-                for (
-                    CommonHiddenStreamToken comment = token; comment != null;
-                    comment = comment.getHiddenAfter())
-                {
-                    switch (comment.getType())
+                case JavaTokenTypes.SL_COMMENT :
+                case JavaTokenTypes.ML_COMMENT :
+                case JavaTokenTypes.JAVADOC_COMMENT :
+                case JavaTokenTypes.SPECIAL_COMMENT :
+                case JavaTokenTypes.SEPARATOR_COMMENT :
+
+                    if (n.getStartLine() != comment.getLine())
                     {
-                        case JavaTokenTypes.SL_COMMENT :
-                        case JavaTokenTypes.ML_COMMENT :
-                        case JavaTokenTypes.JAVADOC_COMMENT :
-                        case JavaTokenTypes.SPECIAL_COMMENT :
-                        case JavaTokenTypes.SEPARATOR_COMMENT :
+                        switch (out.last)
+                        {
+                            case JavaTokenTypes.SEPARATOR_COMMENT :
+                                break;
 
-                            if (n.getStartLine() != comment.getLine())
-                            {
-                                switch (out.last)
+                            default :
+
+                                /*if (keepLines && (previousComment != null))
                                 {
-                                    case JavaTokenTypes.SEPARATOR_COMMENT :
-                                        break;
+                                    printBlankLinesBetweenComments(comment,
+                                                                   previousComment,
+                                                                   linesToKeep,
+                                                                   out);
+                                }*/
+                                break;
+                        }
 
-                                    default :
+                        printCommentBefore(
+                            n, comment, comment == firstComment, newlineBefore,
+                            NodeWriter.NEWLINE_YES, out);
+                    }
+                    else // print in same line
+                    {
+                        printCommentBefore(
+                            n, comment, comment == firstComment, newlineBefore,
+                            NodeWriter.NEWLINE_NO, out);
+                        out.print(SPACE, out.last);
 
-                                        /*if (keepLines && (previousComment != null))
-                                        {
-                                            printBlankLinesBetweenComments(comment,
-                                                                           previousComment,
-                                                                           linesToKeep,
-                                                                           out);
-                                        }*/
-                                        break;
-                                }
-
-                                printCommentBefore(
-                                    n, comment, comment == token, newlineBefore,
-                                    NodeWriter.NEWLINE_YES, out);
-                            }
-                            else // print in same line
-                            {
-                                printCommentBefore(
-                                    n, comment, comment == token, newlineBefore,
-                                    NodeWriter.NEWLINE_NO, out);
-                                out.print(SPACE, out.last);
-
-                                // change the column offset as we don't
-                                // want line wrapping occuring because of the
-                                // comment
-                                out.column -= (comment.getText().length() - 1);
-                            }
-
-                            break;
-
-                        default :
-                            throw new RuntimeException("" + comment);
+                        // change the column offset as we don't want line wrapping
+                        // happen because of the comment
+                        out.column -= (comment.getText().length() - 1);
                     }
 
-                    previousComment = comment;
-                }
+                    break;
 
-                return true;
+                default :
+                    throw new RuntimeException("" + comment);
             }
+
+            previousComment = comment;
         }
 
-        return false;
+        return true;
     }
 
 
@@ -1227,7 +1216,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.CLASS_DEF :
                 {
                     JavaNode prev = node.getPreviousSibling();
-OUTER: 
+OUTER:
                     switch (prev.getType())
                     {
                         case JavaTokenTypes.METHOD_DEF :
