@@ -24,15 +24,15 @@ public interface Parser
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the AST tree.
+     * Returns the root node of the generated parse tree.
      *
-     * @return resulting AST tree.
+     * @return root node of the generated parse tree.
      */
-    public AST getAST();
+    public AST getParseTree();
 
 
     /**
-     * Sets the factory used to create AST nodes.
+     * Sets the factory used to create tree nodes.
      *
      * @param factory factory to use.
      */
@@ -40,9 +40,9 @@ public interface Parser
 
 
     /**
-     * Sets the factory used to create the nodes of the AST.
+     * Sets the factory used to create the nodes of the parse tree.
      *
-     * @return The used AST factory.
+     * @return the used node factory.
      */
     public ASTFactory getASTFactory();
 

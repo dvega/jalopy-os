@@ -29,7 +29,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
- * Inspects a Java AST for convention violations and possible code weaknesses.
+ * Inspects a Java parse tree for convention violations and possible code weaknesses.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -201,9 +201,9 @@ public class CodeInspector
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Inspects the given Java AST for code convention violations and coding weaknesses.
+     * Inspects the given Java parse tree for code convention violations and coding weaknesses.
      *
-     * @param tree root node of the AST.
+     * @param tree root node of the parse tree.
      * @param file the file that is inspected.
      */
     public void inspect(
@@ -1098,7 +1098,7 @@ public class CodeInspector
         {
             AST body = NodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
             boolean violate = true;
-SEARCH: 
+SEARCH:
             for (
                 AST child = body.getFirstChild(); child != null;
                 child = child.getNextSibling())

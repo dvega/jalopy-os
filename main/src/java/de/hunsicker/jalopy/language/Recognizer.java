@@ -78,13 +78,13 @@ public class Recognizer
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the AST tree.
+     * Returns the root node of the generated parse tree.
      *
-     * @return resulting AST tree.
+     * @return root node of the generated parse tree.
      */
-    public AST getAST()
+    public AST getParseTree()
     {
-        return this.parser.getAST();
+        return this.parser.getParseTree();
     }
 
 
@@ -322,7 +322,7 @@ public class Recognizer
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Indicates an error during parsing of an input file or stream.
+     * Indicates an error during the parsing of an input file or stream.
      */
     public static class ParseException
         extends ChainingRuntimeException

@@ -30,7 +30,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * A component that can be used to display progress information to the user.
- * 
+ *
  * <p>
  * The panel displays the number of errors, warnings and processed files, along with a
  * short text message and an optional progress bar.
@@ -44,7 +44,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * |  |XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   |  |
  * +---------------------------------------------------------------&#043;
  * </pre>
- * 
+ *
  * <p>
  * The panel reflects the state of all logger channels as it increases its counters as
  * warnings or errors occurs.
@@ -334,7 +334,7 @@ public class ProgressPanel
     /**
      * Increases the warning/error count as these messages occur.
      */
-    private class ProgressAppender
+    private final class ProgressAppender
         extends AppenderSkeleton
     {
         public ProgressAppender()

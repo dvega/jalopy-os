@@ -73,7 +73,7 @@ public abstract class AbstractPlugin
         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 
     /** The name for ResourceBundle lookup. */
-    protected static final String BUNDLE_NAME =
+    private static final String BUNDLE_NAME =
         "de.hunsicker.jalopy.plugin.Bundle" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -223,7 +223,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread after an action was performed.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work after the formatting process
      * finished.
@@ -236,7 +236,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread before an action will be started.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work before the formatting process
      * starts.
@@ -429,91 +429,6 @@ public abstract class AbstractPlugin
     }
 
 
-    private void action(Action action)
-    {
-        beforeStart();
-        _start = System.currentTimeMillis();
-
-        try
-        {
-            if (action == Action.FORMAT_ACTIVE)
-            {
-                // wait cursor indicates running operation
-                showWaitCursor();
-
-                ProjectFile activeFile = getActiveProject().getActiveFile();
-                final Editor editor = activeFile.getEditor();
-
-                // store the current offset to reposition the caret
-                execSync(
-                    new Runnable()
-                    {
-                        public void run()
-                        {
-                            offset = editor.getCaretPosition();
-                        }
-                    });
-
-                Jalopy jalopy = getJalopy();
-                format(activeFile, jalopy);
-
-                // only change if no errors showed up
-                if (getState() != Jalopy.State.ERROR)
-                {
-                    // move the cursor. Only provides expected results if
-                    // we're not in sorting mode
-                    //
-
-                    /**
-                                                                                                                         */
-                    execSync(
-                        new Runnable()
-                        {
-                            public void run()
-                            {
-                                editor.requestFocus();
-
-                                if (editor.getLength() > offset)
-                                {
-                                    editor.setCaretPosition(offset);
-                                }
-                            }
-                        });
-                }
-            }
-            else if (action == Action.FORMAT_ALL)
-            {
-                Jalopy jalopy = getJalopy();
-                formatSeveral(jalopy, getActiveProject().getAllFiles());
-            }
-            else if (action == Action.FORMAT_SELECTED)
-            {
-                Jalopy jalopy = getJalopy();
-                formatSeveral(jalopy, getActiveProject().getSelectedFiles());
-            }
-            else if (action == Action.FORMAT_OPEN)
-            {
-                Jalopy jalopy = getJalopy();
-                formatSeveral(jalopy, getActiveProject().getOpenedFiles());
-            }
-
-            jalopy.cleanupBackupDirectory();
-            hideProgressMonitor();
-        }
-        catch (InterruptedException ex)
-        {
-            hideProgressMonitor();
-            notifyAll();
-        }
-        catch (Throwable ex)
-        {
-            hideProgressMonitor();
-            displayError(ex, getMainWindow());
-            notifyAll();
-        }
-    }
-
-
     /**
      * Configures the given Jalopy instance to meet the current code convention.
      *
@@ -588,41 +503,44 @@ public abstract class AbstractPlugin
 
                 String content = editor.getText();
 
-                jalopy.setInput(content, file.getFile().getAbsolutePath());
-
-                List annotations = editor.detachAnnotations();
-                jalopy.attachAnnotations(annotations);
-
-                final StringBuffer textBuf = new StringBuffer(content.length());
-                jalopy.setOutput(textBuf);
-                jalopy.format();
-
-                if ((_progressMonitor != null) && _progressMonitor.isCanceled())
+                if (content != null && content.length() > 0)
                 {
-                    jalopy.detachAnnotations();
+                    jalopy.setInput(content, file.getFile().getAbsolutePath());
 
-                    return;
-                }
+                    List annotations = editor.detachAnnotations();
+                    jalopy.getRecognizer().attachAnnotations(annotations);
 
-                // only update the editor view if no errors showed up
-                if (getState() != Jalopy.State.ERROR)
-                {
-                    try
+                    final StringBuffer textBuf = new StringBuffer(content.length());
+                    jalopy.setOutput(textBuf);
+                    jalopy.format();
+
+                    if ((_progressMonitor != null) && _progressMonitor.isCanceled())
                     {
-                        execSync(
-                            new Runnable()
-                            {
-                                public void run()
-                                {
-                                    editor.setText(textBuf.toString());
-                                    editor.attachAnnotations(jalopy.detachAnnotations());
-                                }
-                            });
+                        jalopy.getRecognizer().detachAnnotations();
+
+                        return;
                     }
-                    catch (InterruptedException ex)
+
+                    // only update the editor view if no errors showed up
+                    if (getState() != Jalopy.State.ERROR)
                     {
-                        editor.setText(content);
-                        editor.attachAnnotations(annotations);
+                        try
+                        {
+                            execSync(
+                                new Runnable()
+                                {
+                                    public void run()
+                                    {
+                                        editor.setText(textBuf.toString());
+                                        editor.attachAnnotations(jalopy.getRecognizer().detachAnnotations());
+                                    }
+                                });
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            editor.setText(content);
+                            editor.attachAnnotations(annotations);
+                        }
                     }
                 }
             }
@@ -873,6 +791,7 @@ public abstract class AbstractPlugin
         {
             super(
                 new PatternLayout("[%p] %m\n" /* NOI18N */), "System.out" /* NOI18N */);
+
         }
 
         public void clear()
@@ -917,7 +836,6 @@ public abstract class AbstractPlugin
 
         public Object construct()
         {
-            beforeStart();
             _start = System.currentTimeMillis();
 
             try
@@ -926,6 +844,7 @@ public abstract class AbstractPlugin
                 {
                     // wait cursor indicates running operation
                     showWaitCursor();
+                    beforeStart();
 
                     ProjectFile activeFile = getActiveProject().getActiveFile();
                     final Editor editor = activeFile.getEditor();
@@ -947,9 +866,7 @@ public abstract class AbstractPlugin
                     // only change if no errors showed up
                     if (getState() != Jalopy.State.ERROR)
                     {
-                        // move the cursor. Only provides expected results if
-                        // we're not in sorting mode
-                        //
+                        // move the cursor
 
                         /**
                          * @todo this could be improved. Determine the location prior
@@ -977,18 +894,21 @@ public abstract class AbstractPlugin
                 }
                 else if (this.action == Action.FORMAT_ALL)
                 {
+                    beforeStart();
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getAllFiles());
                     jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_SELECTED)
                 {
+                    beforeStart();
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getSelectedFiles());
                     jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_OPEN)
                 {
+                    beforeStart();
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getOpenedFiles());
                     jalopy.cleanupBackupDirectory();

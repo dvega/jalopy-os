@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * @since 1.0b8
  */
-public class References
+final class References
 {
     //~ Static variables/initializers ----------------------------------------------------
 
@@ -328,7 +328,7 @@ public class References
                                     }
                                 }
 
-LOOP: 
+LOOP:
                                 for (int j = 0, size = references.size(); j < size;
                                     j++)
                                 {
@@ -467,7 +467,7 @@ LOOP:
             {
                 if ((scope.variables != null) && !scope.variables.isEmpty())
                 {
-LOOKUP: 
+LOOKUP:
                     for (Iterator i = this.references.entrySet().iterator(); i.hasNext();)
                     {
                         Map.Entry reference = (Map.Entry) i.next();

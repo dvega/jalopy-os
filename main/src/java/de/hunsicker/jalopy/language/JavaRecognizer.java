@@ -72,6 +72,20 @@ public final class JavaRecognizer
     //~ Constructors ---------------------------------------------------------------------
 
     /**
+     * Marks a position in the given input source.
+     *
+     * @param line a valid line number (<code>&gt;= 1</code>).
+     * @param line a valid column offset (<code>&gt;= 1</code>).
+     *
+     * @since 1.0b9
+     */
+    public void markPosition(int line, int column)
+    {
+        if (line < 1 || column < 1)
+            throw new IllegalArgumentException();
+    }
+
+    /**
      * Creates a new JavaRecognizer object.
      */
     public JavaRecognizer()
@@ -94,7 +108,7 @@ public final class JavaRecognizer
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the AST tree. Note that every call to this method triggers the AST
+     * Returns the root node of the generated parse tree. Note that every call to this method triggers the tree
      * transformations, which could be quite expensive. So make sure to avoid
      * unnecessary calls.
      *
@@ -121,7 +135,7 @@ public final class JavaRecognizer
      *
      * @see de.hunsicker.jalopy.Jalopy#getState
      */
-    public AST getAST()
+    public AST getParseTree()
     {
         if (!this.finished)
         {
@@ -132,26 +146,28 @@ public final class JavaRecognizer
         {
             if (!_annotations.isEmpty())
             {
-                System.err.println(_annotations);
-
                 Searcher walker = new Searcher();
                 walker.annotation = (Annotation) _annotations.get(0);
-                walker.walk(super.getAST());
+                walker.walk(super.getParseTree());
             }
 
             transform();
             _transformed = true;
         }
 
-        return super.getAST();
+        return super.getParseTree();
     }
 
 
     /**
-     * Sets the list with the annotations that are to be attached to the tree nodes.
+     * Attaches the given annotations to the current input source. All annotations will
+     * be associated with the parse tree node that matches their locations.
      *
-     * @param annotations list with annotations.
+     * @param annotations list with annotations (of type {@link
+     *        de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}).
      *
+     * @see de.hunsicker.jalopy.plugin.Annotation
+     * @see #detachAnnotations
      * @since 1.0b9
      */
     public void attachAnnotations(List annotations)
@@ -161,10 +177,13 @@ public final class JavaRecognizer
 
 
     /**
-     * Returns and clears the annotation list.
+     * Detaches all annotations.
      *
-     * @return annotation list. Returns an empty list in case no annotations were set.
+     * @return list with annotations (of type &lt;{@link
+     *         de.hunsicker.jalopy.plugin.Annotation}&gt;). Returns an empty list in
+     *         case no annotations were attached for the input source.
      *
+     * @see #attachAnnotations
      * @since 1.0b9
      */
     public List detachAnnotations()
@@ -349,7 +368,7 @@ public final class JavaRecognizer
      */
     private void transform()
     {
-        AST tree = this.parser.getAST();
+        AST tree = this.parser.getParseTree();
 
         if (tree != null)
         {

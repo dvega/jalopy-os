@@ -30,7 +30,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 
 /**
- * Java Parser. Heavily based on the public domain grammar written by
+ * Parser for the Sun Java language. Heavily based on the public domain grammar written by
  * <a href="mailto:parrt@jguru.com">Terence Parr
  * </a> et al. See <a href="http://www.antlr.org/resources.html">
  * http://www.antlr.org/resources.html</a> for more infos.
@@ -136,12 +136,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
         }
     }
 
-    /**
-     * Returns the root node of the AST tree.
-     *
-     * @return root node of the AST tree.
-     */
-    public AST getAST()
+    public AST getParseTree()
     {
         // insert the import nodes of the stripped identifiers to the tree
         // if not already added

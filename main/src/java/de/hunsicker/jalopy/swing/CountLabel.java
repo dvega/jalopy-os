@@ -9,7 +9,7 @@ package de.hunsicker.jalopy.swing;
 import javax.swing.JLabel;
 
 import de.hunsicker.util.ResourceBundleFactory;
-
+import java.text.MessageFormat;
 
 /**
  * A label which displays its label text along with an integer count.
@@ -32,14 +32,11 @@ class CountLabel
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new CountLabel object with the text 'Counter' and an initial count of
-     * zero.
+     * Creates a new CountLabel object and an initial count of zero.
      */
     public CountLabel()
     {
-        this(EMPTY_STRING);
-
-        super.setText(
+        this(
             ResourceBundleFactory.getBundle(
                 "de.hunsicker.jalopy.swing.Bundle" /* NOI18N */).getString(
                 "LBL_COUNT" /* NOI18N */));
@@ -67,9 +64,14 @@ class CountLabel
         String text,
         int    initialCount)
     {
-        super(text + ':' + initialCount);
+        super(text + ": " + initialCount);
         _count = initialCount;
+        _index = text.length() + 2;
+        _buffer.append(getText());
     }
+
+    /** The index in the buffer where this counter's count number starts. */
+    private int _index;
 
     //~ Methods --------------------------------------------------------------------------
 
@@ -81,11 +83,20 @@ class CountLabel
     public void setCount(int count)
     {
         _count = count;
+        _buffer.delete(_index, _buffer.length());
+        _buffer.append(count);
 
-        String text = getText();
-        setText(text.substring(0, text.indexOf(':')).intern() + ':' + count);
+        super.setText(_buffer.toString());
     }
 
+    /** Used to construct the label text.*/
+    private StringBuffer _buffer = new StringBuffer(20);
+
+    public final void setText(String text)
+    {
+        if (_index == 0)
+            super.setText(text);
+    }
 
     /**
      * Returns the current count.

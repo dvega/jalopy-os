@@ -219,8 +219,8 @@ tokens {
             _standardTags.add("@serialField");
             _standardTags.add("@since");
             _standardTags.add("@throws");
-            _standardTags.add("@version");
             _standardTags.add("@todo");
+            _standardTags.add("@version");
             //loadCustomTagInfo(STANDARD_TAGS, _standardTags);
             //_standardStamp = STANDARD_TAGS.lastModified();
         }
@@ -398,12 +398,7 @@ tokens {
         this.returnAST = null;
     }
 
-    /**
-     * Returns the root node of the AST.
-     *
-     * @return root node of the AST.
-     */
-    public AST getAST()
+    public AST getParseTree()
     {
         // can be null for empty comments. The empty node indicates that this
         // comment can be savely ignored. It is up to the caller to handle

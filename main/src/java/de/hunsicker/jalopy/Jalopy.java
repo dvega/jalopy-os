@@ -212,7 +212,7 @@ public final class Jalopy
     private JavaNode _tree;
 
     /** Our recognizer. */
-    private JavaRecognizer _recognizer;
+    private final JavaRecognizer _recognizer;
 
     /**
      * Holds the issues found during inspection. Maps one node to either exactly one
@@ -227,7 +227,7 @@ public final class Jalopy
     private Reader _inputReader;
 
     /** Appender which <em>spies</em> for logging events. */
-    private SpyAppender _spy;
+    private final SpyAppender _spy;
 
     /** Run status. */
     private State _state = State.UNDEFINED;
@@ -577,22 +577,17 @@ public final class Jalopy
         return _state;
     }
 
-
     /**
-     * Attaches the given annotations to the current input source.
+     * Returns the used Java recognizer.
      *
-     * @param annotations list with annotations (of type {@link
-     *        de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}).
+     * @return the recognizer that is used for the language processing.
      *
-     * @see de.hunsicker.jalopy.plugin.Annotation
-     * @see #detachAnnotations
      * @since 1.0b9
      */
-    public void attachAnnotations(List annotations)
+    public JavaRecognizer getRecognizer()
     {
-        _recognizer.attachAnnotations(annotations);
+        return _recognizer;
     }
-
 
     /**
      * Checks whether the specification version of the given Plug-in is compatible with
@@ -1001,22 +996,6 @@ public final class Jalopy
 
 
     /**
-     * Detaches all annotations.
-     *
-     * @return list with annotations (of type &lt;{@link
-     *         de.hunsicker.jalopy.plugin.Annotation}&gt;). Returns an empty list in
-     *         case no annotations were attached for the input source.
-     *
-     * @see #attachAnnotations
-     * @since 1.0b9
-     */
-    public List detachAnnotations()
-    {
-        return _recognizer.detachAnnotations();
-    }
-
-
-    /**
      * Formats the (via {@link #setInput(File)}) specified input source and writes the
      * formatted result to the specified target.
      *
@@ -1269,7 +1248,7 @@ public final class Jalopy
                     ((_outputFile != null) ? _outputFile
                                            : _inputFile) + ":0:0:transform");
                 start = System.currentTimeMillis();
-                tree = (JavaNode) _recognizer.getAST();
+                tree = (JavaNode) _recognizer.getParseTree();
 
                 long stop = System.currentTimeMillis();
                 _timeTransforming += (stop - start);
@@ -1280,7 +1259,7 @@ public final class Jalopy
             }
             else
             {
-                tree = (JavaNode) _recognizer.getAST();
+                tree = (JavaNode) _recognizer.getParseTree();
             }
 
             _tree = tree;

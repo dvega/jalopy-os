@@ -344,23 +344,7 @@ public class JavadocSettingsPage
                     ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS,
                     ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS));
         _checkTagsCheckBox.addActionListener(this.trigger);
-        _parseCheckBox.addActionListener(
-            new ActionListener()
-            {
-                public void actionPerformed(ActionEvent ev)
-                {
-                    if (_parseCheckBox.isSelected())
-                    {
-                        _checkTagsCheckBox.setEnabled(true);
-                        _singleLineFieldCommentsCheckBox.setEnabled(true);
-                    }
-                    else
-                    {
-                        _checkTagsCheckBox.setEnabled(false);
-                        _singleLineFieldCommentsCheckBox.setEnabled(false);
-                    }
-                }
-            });
+
         SwingHelper.setConstraints(
             c, 0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -378,6 +362,27 @@ public class JavadocSettingsPage
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         generalLayout.setConstraints(_checkThrowsTagsCheckBox, c);
         generalPanel.add(_checkThrowsTagsCheckBox);
+
+        _parseCheckBox.addActionListener(
+            new ActionListener()
+            {
+                public void actionPerformed(ActionEvent ev)
+                {
+                    if (_parseCheckBox.isSelected())
+                    {
+                        _checkTagsCheckBox.setEnabled(true);
+                        _checkThrowsTagsCheckBox.setEnabled(true);
+                        _singleLineFieldCommentsCheckBox.setEnabled(true);
+                    }
+                    else
+                    {
+                        _checkTagsCheckBox.setEnabled(false);
+                        _checkThrowsTagsCheckBox.setEnabled(false);
+                        _singleLineFieldCommentsCheckBox.setEnabled(false);
+                    }
+                }
+            });
+
 
         _tableModel = new DataModel();
 
@@ -600,6 +605,7 @@ public class JavadocSettingsPage
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         inlinePanelLayout.setConstraints(inlineTagsRemoveButton, c);
         inlineTagsPanel.add(inlineTagsRemoveButton);
+
         c.insets.top = 10;
         c.insets.bottom = 10;
         c.insets.left = 5;
@@ -609,6 +615,7 @@ public class JavadocSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, c.insets, 0, 0);
         tagsPanelLayout.setConstraints(standardTagsPanel, c);
         tagsPanel.add(standardTagsPanel);
+
         c.insets.top = 0;
         SwingHelper.setConstraints(
             c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
@@ -648,8 +655,9 @@ public class JavadocSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         templatesLayout.setConstraints(chooseTemplateComboBoxPanel, c);
         templatesPanel.add(chooseTemplateComboBoxPanel);
-        c.insets.top = 5;
+
         _templatesContainer = new TemplateContainer(TPL_METHOD);
+        c.insets.top = 5;
         SwingHelper.setConstraints(
             c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, c.insets, 0, 0);
@@ -697,6 +705,7 @@ public class JavadocSettingsPage
                     }
                 }
             });
+
         chooseTemplateComboBox.setSelectedIndex(3);
 
         return templatesPanel;
@@ -845,13 +854,13 @@ public class JavadocSettingsPage
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, c.insets, 0, 0);
             layout.setConstraints(paramLabel, c);
             add(paramLabel);
+
             this.parameterTextArea = new JTextArea(getParameterTemplate());
+            JScrollPane parameterScrollPane = new JScrollPane(this.parameterTextArea);
             c.insets.top = 0;
             SwingHelper.setConstraints(
                 c, 0, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.1,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH, c.insets, 0, 0);
-
-            JScrollPane parameterScrollPane = new JScrollPane(this.parameterTextArea);
             layout.setConstraints(parameterScrollPane, c);
             add(parameterScrollPane);
 
@@ -864,6 +873,7 @@ public class JavadocSettingsPage
                 0);
             layout.setConstraints(exceptionLabel, c);
             add(exceptionLabel);
+
             this.exceptionTextArea = new JTextArea(getExceptionTemplate());
             c.insets.top = 0;
             SwingHelper.setConstraints(
@@ -882,6 +892,7 @@ public class JavadocSettingsPage
                 0);
             layout.setConstraints(bottomLabel, c);
             add(bottomLabel);
+
             this.bottomTextArea = new JTextArea(getBottomTemplate());
             c.insets.top = 0;
             SwingHelper.setConstraints(
@@ -1164,8 +1175,6 @@ public class JavadocSettingsPage
         {
             if (this.data[0][col] instanceof Integer)
             {
-                // if we don't do something like this, the column
-                // switches to contain
                 try
                 {
                     this.data[row][col] = new Integer((String) value);
@@ -1237,15 +1246,16 @@ public class JavadocSettingsPage
             GridBagConstraints c = new GridBagConstraints();
             JLabel returnLabel =
                 new JLabel(this.bundle.getString("LBL_RETURN" /* NOI18N */));
-            c.insets.top = 3;
 
             GridBagLayout layout = (GridBagLayout) getLayout();
+            c.insets.top = 3;
             SwingHelper.setConstraints(
                 c, 0, 6, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0,
                 0);
             layout.setConstraints(returnLabel, c);
             add(returnLabel);
+
             this.returnTextArea =
                 new JTextArea(
                     StringHelper.replace(

@@ -306,8 +306,6 @@ public class JavaNode
             _annotations = new ArrayList(10);
         }
 
-        System.err.println(this + " attach " + annotation);
-
         _annotations.add(annotation);
     }
 
@@ -461,15 +459,13 @@ public class JavaNode
      * @param line the new line information for the annotations.
      *
      * @since 1.0b9
+     * @see #attachAnnotation
      */
     public void updateAnnotations(int line)
     {
         for (int i = 0, size = _annotations.size(); i < size; i++)
         {
             Annotation annotation = (Annotation) _annotations.get(i);
-
-            System.err.println(this + " " + annotation.getLine()  + " --> " +line);
-
             annotation.setLine(line);
         }
     }

@@ -9,6 +9,7 @@ package de.hunsicker.jalopy.swing.syntax;
 import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.text.Highlighter;
 import javax.swing.JTextArea;
 
 

@@ -15,7 +15,7 @@ import org.apache.log4j.Level;
 }
 
 /**
- * Java Parser. Heavily based on the public domain grammar written by
+ * Parser for the Sun Java language. Heavily based on the public domain grammar written by
  * <a href="mailto:parrt@jguru.com">Terence Parr
  * </a> et al. See <a href="http://www.antlr.org/resources.html">
  * http://www.antlr.org/resources.html</a> for more infos.
@@ -142,12 +142,7 @@ tokens {
         }
     }
 
-    /**
-     * Returns the root node of the AST tree.
-     *
-     * @return root node of the AST tree.
-     */
-    public AST getAST()
+    public AST getParseTree()
     {
         // insert the import nodes of the stripped identifiers to the tree
         // if not already added
@@ -1477,6 +1472,7 @@ constant
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.util.StringHelper;
 import de.hunsicker.io.FileFormat;
+import de.hunsicker.util.Version;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -2228,7 +2224,7 @@ ML_COMMENT
                             _recognizer.setLine(line);
                             _recognizer.setColumn(column);
                             _recognizer.parse(t, getFilename());
-                            Node comment = (Node)_recognizer.getAST();
+                            Node comment = (Node)_recognizer.getParseTree();
 
                             // ignore empty comments
                             if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)

@@ -29,6 +29,7 @@ import de.hunsicker.antlr.SemanticException;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.util.StringHelper;
 import de.hunsicker.io.FileFormat;
+import de.hunsicker.util.Version;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -2242,7 +2243,7 @@ tryAgain:
 			_recognizer.setLine(line);
 			_recognizer.setColumn(column);
 			_recognizer.parse(t, getFilename());
-			Node comment = (Node)_recognizer.getAST();
+			Node comment = (Node)_recognizer.getParseTree();
 			
 			// ignore empty comments
 			if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)

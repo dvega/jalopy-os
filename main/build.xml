@@ -320,7 +320,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="main-uptodate-parser-java" >
     <uptodate property="parser.java.uptodate"
-              targetfile="${DIR.TMP}/JavaParser.inf" >
+              targetfile="${dir.src.parser}/JavaParser.stamp" >
       <srcfiles dir="${dir.src.parser}" includes="**/java.g" />
     </uptodate>
   </target>
@@ -331,7 +331,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="main-uptodate-parser-javadoc" >
     <uptodate property="parser.javadoc.uptodate"
-              targetfile="${DIR.TMP}/JavadocParser.inf" >
+              targetfile="${dir.src.parser}/JavadocParser.stamp" >
       <srcfiles dir="${dir.src.parser}" includes="**/java.doc.g" />
     </uptodate>
   </target>
@@ -363,7 +363,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </delete>
 
     <!-- touch the file to track build time -->
-    <touch file="${DIR.TMP}/JavaParser.inf" />
+    <touch file="${dir.src.parser}/JavaParser.stamp" />
   </target>
 
 
@@ -401,6 +401,6 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           overwrite="true" />
 
     <!-- touch the file to track build time -->
-    <touch file="${DIR.TMP}/JavadocParser.inf" />
+    <touch file="${dir.src.parser}/JavadocParser.stamp" />
   </target>
 </project>

@@ -184,7 +184,7 @@ public final class Tree
             long stop = System.currentTimeMillis();
             System.err.println(stop - start);
 
-            AST tree = r.getAST();
+            AST tree = r.getParseTree();
 
             new TestWalker().walk(tree);
 
@@ -206,7 +206,7 @@ public final class Tree
                parser.setASTFactory(new NodeFactory());
                Recognizer recognizer = new JavaRecognizer(parser, lexer);
                recognizer.parse(file);
-               AST tree = recognizer.getAST();*/
+               AST tree = recognizer.getParseTree();*/
             // Show the tree
             doTreeAction(f, tree, r.getParser().getTokenNames());
         }

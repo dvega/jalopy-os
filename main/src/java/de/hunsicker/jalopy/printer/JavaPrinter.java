@@ -135,10 +135,9 @@ final class JavaPrinter
     {
         List keys = new ArrayList();
         String str = this.settings.get(key, EMPTY_STRING);
-        String delim = "|" /* NOI18N */;
 
         for (
-            StringTokenizer tokens = new StringTokenizer(str, delim);
+            StringTokenizer tokens = new StringTokenizer(str, DELIMETER);
             tokens.hasMoreElements();)
         {
             keys.add(tokens.nextElement());
@@ -213,21 +212,6 @@ final class JavaPrinter
 
 
     /**
-     * Returns the text (as individual lines) as stored in the code convention.
-     *
-     * @param text header text.
-     *
-     * @return lines of the header or footer.
-     */
-    private String[] getLines(String text)
-    {
-        // we cannot use StringTokenizer because then empty lines would
-        // disappear
-        return StringHelper.split(text, DELIMETER);
-    }
-
-
-    /**
      * Prints the footer.
      *
      * @param out stream to write to.
@@ -240,7 +224,7 @@ final class JavaPrinter
         String text =
             out.environment.interpolate(
                 this.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
-        String[] footer = getLines(text);
+        String[] footer = StringHelper.split(text, DELIMETER);
 
         if (footer.length > 0)
         {
@@ -302,7 +286,7 @@ final class JavaPrinter
         String text =
             out.environment.interpolate(
                 this.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
-        String[] header = getLines(text);
+        String[] header = StringHelper.split(text, DELIMETER);
 
         if (header.length > 0)
         {
@@ -321,6 +305,7 @@ final class JavaPrinter
                 this.settings.getInt(
                     ConventionKeys.BLANK_LINES_AFTER_HEADER,
                     ConventionDefaults.BLANK_LINES_AFTER_HEADER));
+
             out.last = JavaTokenTypes.ML_COMMENT;
         }
     }
@@ -380,7 +365,12 @@ final class JavaPrinter
         }
     }
 
-
+    /**
+     * Removes the given footer comment from the given node.
+     *
+     * @param comment a comment token.
+     * @param node a tree node.
+     */
     private void removeFooterComment(
         CommonHiddenStreamToken comment,
         JavaNode                node)
@@ -443,7 +433,8 @@ final class JavaPrinter
                 ConventionKeys.HEADER_SMART_MODE_LINES,
                 ConventionDefaults.HEADER_SMART_MODE_LINES);
         boolean smartMode = (smartModeLines > 0);
-        int line = 0;
+
+        int count = 0;
 
         for (
             CommonHiddenStreamToken token = first.getHiddenBefore(); token != null;
@@ -453,21 +444,19 @@ final class JavaPrinter
             {
                 for (
                     CommonHiddenStreamToken comment = token;
-                    (comment != null) && (line <= smartModeLines);
+                    (comment != null) && (count <= smartModeLines);
                     comment = comment.getHiddenAfter())
                 {
                     switch (comment.getType())
                     {
                         case JavaTokenTypes.ML_COMMENT :
                         case JavaTokenTypes.JAVADOC_COMMENT :
-KEY_SEARCH: 
+
                             for (int j = 0; j < keys.length; j++)
                             {
                                 if (comment.getText().indexOf(keys[j]) > -1)
                                 {
                                     removeHeaderComment(comment, first);
-
-                                    break KEY_SEARCH;
                                 }
                             }
 
@@ -482,7 +471,7 @@ KEY_SEARCH:
                             {
                                 removeHeaderComment(comment, first);
                             }
-                            else if (smartMode && (line < smartModeLines))
+                            else if (smartMode && (count < smartModeLines))
                             {
                                 removeHeaderComment(comment, first);
                             }
@@ -490,7 +479,7 @@ KEY_SEARCH:
                             break;
                     }
 
-                    line++;
+                    count++;
                 }
 
                 break;
@@ -499,6 +488,12 @@ KEY_SEARCH:
     }
 
 
+    /**
+     * Removes the given header comment from the given node.
+     *
+     * @param comment a comment token.
+     * @param node a tree node.
+     */
     private void removeHeaderComment(
         CommonHiddenStreamToken comment,
         JavaNode                node)
@@ -526,7 +521,7 @@ KEY_SEARCH:
         }
         else
         {
-            // if this is the first comment
+            // it was the first comment
             if (comment == node.getHiddenBefore())
             {
                 node.setHiddenBefore(null);

@@ -14,7 +14,7 @@ import de.hunsicker.jalopy.storage.Loggers;
 
 
 /**
- * Central facility to create the nodes for the Java AST.
+ * Central facility to create the nodes for the Java parse tree.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -24,7 +24,7 @@ public class JavaNodeFactory
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = "".intern() /* NOI18N */;
+    private static final String EMPTY_STRING = ""/* NOI18N */.intern() ;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ public class JavaNodeFactory
      */
     public JavaNodeFactory()
     {
-        this.theASTNodeType = "JavaNode";
+        this.theASTNodeType = "JavaNode"/* NOI18N */;
         this.theASTNodeTypeClass = JavaNode.class;
     }
 
@@ -194,9 +194,9 @@ public class JavaNodeFactory
     /**
      * Duplicate the given tree (including all siblings of root).
      *
-     * @param t DOCUMENT ME!
+     * @param t the root node of the tree (or tree portion)
      *
-     * @return DOCUMENT ME!
+     * @return the copy of the tree.
      */
     public AST dupList(AST t)
     {
@@ -232,12 +232,12 @@ public class JavaNodeFactory
 
 
     /**
-     * Duplicate a tree, assuming this is a root node of a tree-- duplicate that node and
+     * Duplicate a tree, assuming this is a root node of a tree -- duplicates that node and
      * what's below; ignore siblings of root node.
      *
-     * @param t DOCUMENT ME!
+     * @param t the root node of the tree (or tree portion)
      *
-     * @return DOCUMENT ME!
+     * @return the copy of the tree.
      */
     public AST dupTree(AST t)
     {
@@ -261,9 +261,9 @@ public class JavaNodeFactory
 
 
     /**
-     * DOCUMENT ME!
+     * Logs the given error message.
      *
-     * @param message DOCUMENT ME!
+     * @param message an error message.
      */
     public void error(String message)
     {
@@ -277,7 +277,7 @@ public class JavaNodeFactory
      * tree. Handles <code>null</code> children nodes correctly. For example,
      * <code>build(a, b,  null, c)</code> yields <code>tree (a b c)</code>.
      * <code>build(null,a,b)</code> yields tree <code>(nil a b)</code>.
-     * 
+     *
      * <p>
      * Sets also the line/column info of the root node.
      * </p>

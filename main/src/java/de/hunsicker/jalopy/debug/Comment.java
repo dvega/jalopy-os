@@ -40,7 +40,7 @@ public class Comment
         Recognizer r = new Recognizer(p, l);
         r.parse(new File(argv[0]));
 
-        AST tree = p.getAST();
+        AST tree = p.getParseTree();
         ((BaseAST)tree).setVerboseStringConversion(true, p.getTokenNames());
 
         final ASTFrame frame = new ASTFrame("Java AST", tree);
