@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.util.concurrent;
 
@@ -37,15 +10,15 @@ import java.lang.reflect.InvocationTargetException;
 
 
 /**
- * A class maintaining a single reference variable serving as the result of an
- * operation. The result cannot be accessed until it has been set.
+ * A class maintaining a single reference variable serving as the result of an operation.
+ * The result cannot be accessed until it has been set.
  * 
  * <p>
  * <b>Sample Usage</b>
  * </p>
  * 
  * <p>
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * class ImageRenderer {
  *     Image render(byte[] raw);
  * }
@@ -62,9 +35,9 @@ import java.lang.reflect.InvocationTargetException;
  *             drawBorders();             // do other things while executing
  *             drawCaption();
  *             drawImage((Image)(futureImage.get())); // use future
- *         } catch (InterruptedException ex) { 
+ *         } catch (InterruptedException ex) {
  *             return;
- *         } catch (InvocationTargetException ex) { 
+ *         } catch (InvocationTargetException ex) {
  *             cleanup();
  *             return;
  *         }
@@ -74,8 +47,7 @@ import java.lang.reflect.InvocationTargetException;
  * </p>
  * 
  * <p>
- * This class was taken from the util.concurrent package written by Doug Lea.
- * See <a
+ * This class was taken from the util.concurrent package written by Doug Lea. See <a
  * href="http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html">http://gee.cs.oswego.edu/dl/classes/EDU/oswego/cs/dl/util/concurrent/intro.html</a>
  * for an introduction to this package.
  * </p>
@@ -86,7 +58,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class FutureResult
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** the exception encountered by operation producing result */
     protected InvocationTargetException exception_ = null;
@@ -97,7 +69,7 @@ public class FutureResult
     /** Status -- true after first set */
     protected boolean ready_ = false;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Create an initially unset FutureResult
@@ -106,7 +78,7 @@ public class FutureResult
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Set the exception field, also setting ready status.
@@ -123,12 +95,11 @@ public class FutureResult
 
 
     /**
-     * Get the exception, or null if there isn't one (yet). This does not wait
-     * until the future is ready, so should ordinarily only be called if you
-     * know it is.
+     * Get the exception, or null if there isn't one (yet). This does not wait until the
+     * future is ready, so should ordinarily only be called if you know it is.
      *
-     * @return the exception encountered by the operation setting the future,
-     *         wrapped in an InvocationTargetException
+     * @return the exception encountered by the operation setting the future, wrapped in
+     *         an InvocationTargetException
      */
     public synchronized InvocationTargetException getException()
     {
@@ -148,10 +119,9 @@ public class FutureResult
 
 
     /**
-     * Clear the value and exception and set to not-ready, allowing this
-     * FutureResult to be reused. This is not particularly recommended and
-     * must be done only when you know that no other object is depending on
-     * the properties of this FutureResult.
+     * Clear the value and exception and set to not-ready, allowing this FutureResult to
+     * be reused. This is not particularly recommended and must be done only when you
+     * know that no other object is depending on the properties of this FutureResult.
      */
     public synchronized void clear()
     {
@@ -167,12 +137,11 @@ public class FutureResult
      * @return current value
      *
      * @exception InterruptedException if current thread has been interrupted
-     * @exception InvocationTargetException if the operation producing the
-     *            value encountered an exception.
+     * @exception InvocationTargetException if the operation producing the value
+     *            encountered an exception.
      */
     public synchronized Object get()
-        throws InterruptedException, 
-               InvocationTargetException
+      throws InterruptedException, InvocationTargetException
     {
         while (!ready_)
         {
@@ -195,9 +164,9 @@ public class FutureResult
 
 
     /**
-     * Set the reference, and signal that it is ready. It is not considered an
-     * error to set the value more than once, but it is not something you
-     * would normally want to do.
+     * Set the reference, and signal that it is ready. It is not considered an error to
+     * set the value more than once, but it is not something you would normally want to
+     * do.
      *
      * @param newValue The value that will be returned by a subsequent get();
      */
@@ -215,8 +184,8 @@ public class FutureResult
      * @param function - a Callable object whose result will be held by this
      *        FutureResult.
      *
-     * @return A Runnable object that, when run, will call the function and
-     *         (eventually) set the result.
+     * @return A Runnable object that, when run, will call the function and (eventually)
+     *         set the result.
      */
     public Runnable setter(final Callable function)
     {
@@ -246,13 +215,11 @@ public class FutureResult
      *
      * @exception TimeoutException if not ready after msecs
      * @exception InterruptedException if current thread has been interrupted
-     * @exception InvocationTargetException if the operation producing the
-     *            value encountered an exception.
+     * @exception InvocationTargetException if the operation producing the value
+     *            encountered an exception.
      */
     public synchronized Object timedGet(long msecs)
-        throws TimeoutException, 
-               InterruptedException, 
-               InvocationTargetException
+      throws TimeoutException, InterruptedException, InvocationTargetException
     {
         long startTime = (msecs <= 0) ? 0
                                       : System.currentTimeMillis();
@@ -298,7 +265,7 @@ public class FutureResult
      * @throws InvocationTargetException DOCUMENT ME!
      */
     protected Object doGet()
-        throws InvocationTargetException
+      throws InvocationTargetException
     {
         if (exception_ != null)
         {

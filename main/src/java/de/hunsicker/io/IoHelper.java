@@ -1,49 +1,27 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.text.MessageFormat;
+
+import de.hunsicker.util.ResourceBundleFactory;
 
 
 /**
@@ -54,7 +32,11 @@ import java.io.OutputStream;
  */
 public final class IoHelper
 {
-    //~ Constructors ··························································
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String BUNDLE_NAME = "de.hunsicker.io.Bundle" /* NOI18N */;
+
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new IoHelper object.
@@ -63,20 +45,19 @@ public final class IoHelper
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Deletes the given file or directory.
      *
      * @param file a file or directory.
-     * @param recursive if <code>true</code> directories will be deleted
-     *        recursively.
+     * @param recursive if <code>true</code> directories will be deleted recursively.
      *
-     * @return <code>true</code> if the file or directory could be deleted
-     *         successfully.
+     * @return <code>true</code> if the file or directory could be deleted successfully.
      */
-    public static boolean delete(File    file,
-                                 boolean recursive)
+    public static boolean delete(
+        File    file,
+        boolean recursive)
     {
         if (file.exists())
         {
@@ -93,8 +74,7 @@ public final class IoHelper
 
                     for (int i = 0; i < files.length; i++)
                     {
-                        if (files[i].isDirectory() &&
-                            (files[i].list().length != 0))
+                        if (files[i].isDirectory() && (files[i].list().length != 0))
                         {
                             success = delete(files[i], true);
                         }
@@ -136,7 +116,7 @@ public final class IoHelper
      * @see #serialize
      */
     public static Object deserialize(byte[] data)
-        throws IOException
+      throws IOException
     {
         if (data.length == 0)
         {
@@ -157,7 +137,7 @@ public final class IoHelper
      * @throws IOException if an I/O exception occured.
      */
     public static Object deserialize(InputStream in)
-        throws IOException
+      throws IOException
     {
         ObjectInputStream oin = new ObjectInputStream(in);
 
@@ -183,32 +163,16 @@ public final class IoHelper
 
 
     /**
-     * Deserializes the object stored in the given file.
-     *
-     * @param file a file.
-     *
-     * @return the deserialized object.
-     *
-     * @throws IOException if an I/O exception occured.
-     */
-    public static final Object deserialize(File file)
-        throws IOException
-    {
-        return deserialize(new BufferedInputStream(new FileInputStream(file)));
-    }
-
-
-    /**
-     * Verifies the existence of the given directory and if that directory
-     * does not yet exist, tries to create it.
+     * Verifies the existence of the given directory and if that directory does not yet
+     * exist, tries to create it.
      *
      * @param directory directory to check for existence.
      *
-     * @return <code>true</code> if the directory already exists or was
-     *         successfully created.
+     * @return <code>true</code> if the directory already exists or was successfully
+     *         created.
      *
-     * @throws IllegalArgumentException if <em>directory</em> does exist but
-     *         does not denote a valid directory.
+     * @throws IllegalArgumentException if <em>directory</em> does exist but does not
+     *         denote a valid directory.
      */
     public static boolean ensureDirectoryExists(File directory)
     {
@@ -218,39 +182,16 @@ public final class IoHelper
         }
         else if (!directory.isDirectory())
         {
-            throw new IllegalArgumentException("no directory -- " + directory);
+            Object[] args = { directory };
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "NOT_DIRECTORY" /* NOI18N */), args));
         }
 
         return true;
     }
 
-
-    /**
-     * Serializes the given object to the given output stream.
-     *
-     * @param o a serializable object.
-     * @param out the stream to write the object to.
-     *
-     * @throws IOException if an I/O exception occured.
-     */
-    public static void serialize(Object       o,
-                                 OutputStream out)
-        throws IOException
-    {
-        ObjectOutputStream oout = new ObjectOutputStream(out);
-
-        try
-        {
-            oout.writeObject(o);
-        }
-        finally
-        {
-            if (oout != null)
-            {
-                oout.close();
-            }
-        }
-    }
 
     /**
      * Returns the contents of the given text file.
@@ -262,19 +203,26 @@ public final class IoHelper
      * @throws IOException if an I/O error occured.
      */
     public static String readTextFile(File file)
-                              throws IOException
+      throws IOException
     {
         BufferedReader in = null;
+
         try
         {
             if (!file.exists())
             {
-                throw new IOException(file + " does not exist");
+                Object[] args = { file };
+                throw new IOException(
+                    MessageFormat.format(
+                        ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            "FILE_DOES_NOT_EXIST" /* NOI18N */), args));
             }
 
-            in = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+            in = new BufferedReader(
+                    new InputStreamReader(
+                        new FileInputStream(file), "UTF-8" /* NOI18N */));
 
-            int fileSize = (int)file.length();
+            int fileSize = (int) file.length();
 
             char[] buf = new char[fileSize];
             in.read(buf, 0, fileSize);
@@ -291,7 +239,37 @@ public final class IoHelper
                 }
                 catch (IOException ignored)
                 {
+                    ;
                 }
+            }
+        }
+    }
+
+
+    /**
+     * Serializes the given object to the given output stream.
+     *
+     * @param o a serializable object.
+     * @param out the stream to write the object to.
+     *
+     * @throws IOException if an I/O exception occured.
+     */
+    public static void serialize(
+        Object       o,
+        OutputStream out)
+      throws IOException
+    {
+        ObjectOutputStream oout = new ObjectOutputStream(out);
+
+        try
+        {
+            oout.writeObject(o);
+        }
+        finally
+        {
+            if (oout != null)
+            {
+                oout.close();
             }
         }
     }
@@ -305,10 +283,27 @@ public final class IoHelper
      *
      * @throws IOException if an I/O exception occured.
      */
-    public static void serialize(Object o,
-                                 File   file)
-        throws IOException
+    public static void serialize(
+        Object o,
+        File   file)
+      throws IOException
     {
         serialize(o, new BufferedOutputStream(new FileOutputStream(file)));
+    }
+
+
+    /**
+     * Deserializes the object stored in the given file.
+     *
+     * @param file a file.
+     *
+     * @return the deserialized object.
+     *
+     * @throws IOException if an I/O exception occured.
+     */
+    public static final Object deserialize(File file)
+      throws IOException
+    {
+        return deserialize(new BufferedInputStream(new FileInputStream(file)));
     }
 }

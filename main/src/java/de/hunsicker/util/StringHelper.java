@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.util;
 
@@ -48,7 +21,7 @@ import java.util.StringTokenizer;
  */
 public final class StringHelper
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Trim both leading and trailing whitespace. */
     public static final int TRIM_ALL = 1;
@@ -58,11 +31,12 @@ public final class StringHelper
 
     /** No trimming. */
     public static final int TRIM_NONE = 0;
-    private static final String EMPTY_STRING = "";
-    private static final String NEWLINE = "\n";
-    private static final String SPACE = " ";
+    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    private static final String LINE_SEPARATOR = "\n" /* NOI18N */;
+    private static final String SPACE = " " /* NOI18N */;
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new StringHelper object.
@@ -71,15 +45,15 @@ public final class StringHelper
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the name part of the given qualified java class name.
      *
      * @param qualifiedName name for which the name part should be returned.
      *
-     * @return name part of the given name. Returns <code>null</code> if the
-     *         given name was <code>null</code> itself.
+     * @return name part of the given name. Returns <code>null</code> if the given name
+     *         was <code>null</code> itself.
      *
      * @see #getPackageName
      */
@@ -136,9 +110,8 @@ public final class StringHelper
      *
      * @param name class name for which the package name should be returned.
      *
-     * @return package name of the given class name. Returns the empty string
-     *         if the given name contains no package name (the default
-     *         package).
+     * @return package name of the given class name. Returns the empty string if the
+     *         given name contains no package name (the default package).
      *
      * @see #getClassName
      */
@@ -174,13 +147,13 @@ public final class StringHelper
 
 
     /**
-     * Returns <code>true</code> if the given string contains at least one
-     * uppercase letter.
+     * Returns <code>true</code> if the given string contains at least one uppercase
+     * letter.
      *
      * @param str string to check for uppercase letters.
      *
-     * @return <code>true</code> if the given string contains at least one
-     *         uppercase letter.
+     * @return <code>true</code> if the given string contains at least one uppercase
+     *         letter.
      */
     public static boolean containsUppercase(String str)
     {
@@ -202,25 +175,24 @@ public final class StringHelper
 
 
     /**
-     * Returns the index within the given string of the <em>x.</em> occurrence
-     * of the specified character.
+     * Returns the index within the given string of the <em>x.</em> occurrence of the
+     * specified character.
      *
      * @param character character to search.
      * @param str the string to search.
      * @param x <em>x.</em> occurrence of the character to search for.
      *
-     * @return s the index within the given string of the <em>x.</em>
-     *         occurrence of the given character. Returns <code>-1</code> if
-     *         the specified character is not contained in the given string
-     *         or it occurs less than the specified occurrence to look for.
+     * @return s the index within the given string of the <em>x.</em> occurrence of the
+     *         given character. Returns <code>-1</code> if the specified character is
+     *         not contained in the given string or it occurs less than the specified
+     *         occurrence to look for.
      */
-    public static int indexOf(char   character,
-                              String str,
-                              int    x)
+    public static int indexOf(
+        char   character,
+        String str,
+        int    x)
     {
-        for (int i = 1, pos = -1;
-             (pos = str.indexOf(character, pos + 1)) > -1;
-             i++)
+        for (int i = 1, pos = -1; (pos = str.indexOf(character, pos + 1)) > -1; i++)
         {
             if (i == x)
             {
@@ -233,14 +205,12 @@ public final class StringHelper
 
 
     /**
-     * Returns the offset of the first non-whitespace character of the given
-     * string.
+     * Returns the offset of the first non-whitespace character of the given string.
      *
      * @param str a string.
      *
-     * @return the offset of the first non-whitespace character in the given
-     *         string. Returns <code>-1</code> if no non-whitespace character
-     *         could be found.
+     * @return the offset of the first non-whitespace character in the given string.
+     *         Returns <code>-1</code> if no non-whitespace character could be found.
      */
     public static int indexOfNonWhitespace(String str)
     {
@@ -249,25 +219,23 @@ public final class StringHelper
 
 
     /**
-     * Returns the offset of the first non-whitespace character of the given
-     * string.
+     * Returns the offset of the first non-whitespace character of the given string.
      *
      * @param str a string.
      * @param beginOffset DOCUMENT ME!
      *
-     * @return the offset of the first non-whitespace character in the given
-     *         string. Returns <code>-1</code> if no non-whitespace character
-     *         could be found.
+     * @return the offset of the first non-whitespace character in the given string.
+     *         Returns <code>-1</code> if no non-whitespace character could be found.
      *
      * @throws IllegalArgumentException DOCUMENT ME!
      */
-    public static int indexOfNonWhitespace(String str,
-                                           int    beginOffset)
+    public static int indexOfNonWhitespace(
+        String str,
+        int    beginOffset)
     {
         if (beginOffset < 0)
         {
-            throw new IllegalArgumentException("beginOffset < 0 -- " +
-                                               beginOffset);
+            throw new IllegalArgumentException("beginOffset < 0 -- " + beginOffset);
         }
 
         for (int i = beginOffset, size = str.length(); i < size; i++)
@@ -286,43 +254,6 @@ public final class StringHelper
         return -1;
     }
 
-    /**
-     * Splits the given string into chunks.
-     *
-     * @param str string to split into chunks.
-     * @param delim the delimeter to use for splitting.
-     *
-     * @return array with the individual chunks.
-     *
-     * @since 1.0b8
-     */
-    public static String[] split(String str,
-                                 String delim)
-    {
-        int startOffset = 0;
-        int endOffset = -1;
-        int sepLength = delim.length();
-        List lines = new ArrayList(15);
-
-        while ((endOffset = str.indexOf(delim, startOffset)) > -1)
-        {
-            lines.add(str.substring(startOffset, endOffset));
-            startOffset = endOffset + sepLength;
-        }
-
-        if (startOffset > 0)
-        {
-            lines.add(str.substring(startOffset));
-        }
-        else
-        {
-            lines.add(str);
-        }
-
-        return (String[])lines.toArray(EMPTY_STRING_ARRAY);
-    }
-
-    private final static String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * Left pad a String with spaces. Pad to a size of n.
@@ -332,10 +263,11 @@ public final class StringHelper
      *
      * @return DOCUMENT ME!
      */
-    public static String leftPad(String str,
-                                 int    size)
+    public static String leftPad(
+        String str,
+        int    size)
     {
-        return leftPad(str, size, " ");
+        return leftPad(str, size, SPACE);
     }
 
 
@@ -348,9 +280,10 @@ public final class StringHelper
      *
      * @return DOCUMENT ME!
      */
-    public static String leftPad(String str,
-                                 int    size,
-                                 String delim)
+    public static String leftPad(
+        String str,
+        int    size,
+        String delim)
     {
         size = (size - str.length()) / delim.length();
 
@@ -368,9 +301,8 @@ public final class StringHelper
      *
      * @param str string to transform.
      *
-     * @return the transformed string. If the string already begins with a
-     *         lower case letter or is the empty string, the original string
-     *         is returned.
+     * @return the transformed string. If the string already begins with a lower case
+     *         letter or is the empty string, the original string is returned.
      */
     public static String lowercaseFirst(String str)
     {
@@ -382,7 +314,7 @@ public final class StringHelper
         if (isUppercase(str.charAt(0)))
         {
             char[] letters = str.toCharArray();
-            letters[0] = (char)(letters[0] + 32);
+            letters[0] = (char) (letters[0] + 32);
 
             return new String(letters);
         }
@@ -392,17 +324,17 @@ public final class StringHelper
 
 
     /**
-     * Returns the number of occurrences of <em>character</em> in
-     * <em>string</em>.
+     * Returns the number of occurrences of <em>character</em> in <em>string</em>.
      *
      * @param character character to search for.
      * @param string character array to search.
      *
-     * @return number of occurrences of <em>character</em> in <em>string</em>.
-     *         Returns <code>0</code> if no occurrences could be found.
+     * @return number of occurrences of <em>character</em> in <em>string</em>. Returns
+     *         <code>0</code> if no occurrences could be found.
      */
-    public static int occurs(char   character,
-                             char[] string)
+    public static int occurs(
+        char   character,
+        char[] string)
     {
         int count = 0;
 
@@ -419,17 +351,17 @@ public final class StringHelper
 
 
     /**
-     * Returns the number of occurrences of <em>character</em> in
-     * <em>string</em>.
+     * Returns the number of occurrences of <em>character</em> in <em>string</em>.
      *
      * @param character character to search for.
      * @param string string to search.
      *
-     * @return number of occurrences of <em>character</em> in <em>string</em>.
-     *         Returns <code>0</code> if no occurrences could be found.
+     * @return number of occurrences of <em>character</em> in <em>string</em>. Returns
+     *         <code>0</code> if no occurrences could be found.
      */
-    public static int occurs(char   character,
-                             String string)
+    public static int occurs(
+        char   character,
+        String string)
     {
         return occurs(character, string.toCharArray());
     }
@@ -443,8 +375,9 @@ public final class StringHelper
      *
      * @return String with repeated string
      */
-    public static String repeat(String str,
-                                int    repeat)
+    public static String repeat(
+        String str,
+        int    repeat)
     {
         StringBuffer buffer = new StringBuffer(repeat * str.length());
 
@@ -466,9 +399,10 @@ public final class StringHelper
      *
      * @return new string with all occurrences replaced.
      */
-    public static String replace(String original,
-                                 String replaceFrom,
-                                 String replaceTo)
+    public static String replace(
+        String original,
+        String replaceFrom,
+        String replaceTo)
     {
         if (EMPTY_STRING.equals(replaceFrom))
         {
@@ -507,13 +441,49 @@ public final class StringHelper
 
 
     /**
-     * Returns <code>true</code> if the given string starts with an uppercase
-     * letter.
+     * Splits the given string into chunks.
+     *
+     * @param str string to split into chunks.
+     * @param delim the delimeter to use for splitting.
+     *
+     * @return array with the individual chunks.
+     *
+     * @since 1.0b8
+     */
+    public static String[] split(
+        String str,
+        String delim)
+    {
+        int startOffset = 0;
+        int endOffset = -1;
+        int sepLength = delim.length();
+        List lines = new ArrayList(15);
+
+        while ((endOffset = str.indexOf(delim, startOffset)) > -1)
+        {
+            lines.add(str.substring(startOffset, endOffset));
+            startOffset = endOffset + sepLength;
+        }
+
+        if (startOffset > 0)
+        {
+            lines.add(str.substring(startOffset));
+        }
+        else
+        {
+            lines.add(str);
+        }
+
+        return (String[]) lines.toArray(EMPTY_STRING_ARRAY);
+    }
+
+
+    /**
+     * Returns <code>true</code> if the given string starts with an uppercase letter.
      *
      * @param str string to check.
      *
-     * @return <code>true</code> if the given string starts with an uppercase
-     *         letter.
+     * @return <code>true</code> if the given string starts with an uppercase letter.
      */
     public static boolean startsWithUppercase(String str)
     {
@@ -525,22 +495,52 @@ public final class StringHelper
         return isUppercase(str.charAt(0));
     }
 
+
+    /**
+     * Removes trailing whitespace from the given string.
+     *
+     * @param str the string to trim.
+     *
+     * @return a copy of the string with trailing whitespace removed, or the original
+     *         string if no trailing whitespace could be removed.
+     */
+    public static String trimTrailing(String str)
+    {
+        int index = str.length();
+
+        while ((index > 0) && Character.isWhitespace(str.charAt(index - 1)))
+        {
+            index--;
+        }
+
+        if (index != str.length())
+        {
+            return str.substring(0, index);
+        }
+        else
+        {
+            return str;
+        }
+    }
+
+
     /**
      * Wraps multi-line strings.
      *
      * @param str the string to wrap.
      * @param width the maximum width of lines.
-     * @param removeNewLines if <code>true</code>, any newlines in the
-     *        original string are ignored.
+     * @param removeNewLines if <code>true</code>, any newlines in the original string
+     *        are ignored.
      *
      * @return the whole string with embedded newlines.
      */
-    public static String wrapString(String  str,
-                                    int     width,
-                                    boolean removeNewLines)
+    public static String wrapString(
+        String  str,
+        int     width,
+        boolean removeNewLines)
     {
-        String[] lines = wrapStringToArray(str, width, NEWLINE, removeNewLines,
-                                           TRIM_ALL);
+        String[] lines =
+            wrapStringToArray(str, width, LINE_SEPARATOR, removeNewLines, TRIM_ALL);
         StringBuffer buf = new StringBuffer(str.length());
 
         for (int i = 0; i < lines.length; i++)
@@ -559,48 +559,22 @@ public final class StringHelper
      * @param str the string to wrap.
      * @param width the maximum width of each line.
      * @param lineSeparator the lineSeparator string used for newlines.
-     * @param removeNewLines if <code>true</code>, any newlines in the
-     *        original string are ignored.
-     * @param trimPolicy trim the resulting lines according to the given
-     *        policy.
+     * @param removeNewLines if <code>true</code>, any newlines in the original string
+     *        are ignored.
+     * @param trimPolicy trim the resulting lines according to the given policy.
      *
      * @return the lines after wrapping.
      */
-    public static String[] wrapStringToArray(String  str,
-                                             int     width,
-                                             String  lineSeparator,
-                                             boolean removeNewLines,
-                                             int     trimPolicy)
+    public static String[] wrapStringToArray(
+        String  str,
+        int     width,
+        String  lineSeparator,
+        boolean removeNewLines,
+        int     trimPolicy)
     {
-        return wrapStringToArray(str, width, new SpaceBreakIterator(),
-                                 lineSeparator, removeNewLines, trimPolicy);
-    }
-
-    /**
-     * Removes trailing whitespace from the given string.
-     *
-     * @param str the string to trim.
-     *
-     * @return a copy of the string with trailing whitespace removed, or the
-     *         original string if no trailing whitespace could be removed.
-     */
-    public static String trimTrailing(String str)
-    {
-        int index = str.length();
-
-        while((index > 0) && Character.isWhitespace(str.charAt(index - 1)))
-        {
-            index--;
-        }
-
-        if (index != str.length())
-        {
-            return str.substring(0, index);
-        }
-        else
-        {
-            return str;
-        }
+        return wrapStringToArray(
+            str, width, new SpaceBreakIterator(), lineSeparator, removeNewLines,
+            trimPolicy);
     }
 
 
@@ -611,19 +585,19 @@ public final class StringHelper
      * @param width the maximum width of each line.
      * @param breakIter the iterator to use to break the string into chunks.
      * @param lineSeparator the lineSeparator string used for newlines.
-     * @param removeNewLines if <code>true</code>, any newlines in the
-     *        original string are ignored.
-     * @param trimPolicy trim the resulting lines according to the given
-     *        policy.
+     * @param removeNewLines if <code>true</code>, any newlines in the original string
+     *        are ignored.
+     * @param trimPolicy trim the resulting lines according to the given policy.
      *
      * @return the lines after wrapping.
      */
-    public static String[] wrapStringToArray(String        str,
-                                             int           width,
-                                             BreakIterator breakIter,
-                                             String        lineSeparator,
-                                             boolean       removeNewLines,
-                                             int           trimPolicy)
+    public static String[] wrapStringToArray(
+        String        str,
+        int           width,
+        BreakIterator breakIter,
+        String        lineSeparator,
+        boolean       removeNewLines,
+        int           trimPolicy)
     {
         if (str.length() == 0)
         {
@@ -656,7 +630,7 @@ public final class StringHelper
 
                 if (trimPolicy == TRIM_LEADING)
                 {
-LOOP:
+LOOP: 
                     for (int j = 0; j < token.length(); j++)
                     {
                         switch (token.charAt(j))
@@ -724,7 +698,7 @@ LOOP:
 
 
 // check if all lines are within the given max width
-WIDTHCHECK:
+WIDTHCHECK: 
         {
             boolean ok = true;
 
@@ -768,8 +742,9 @@ WIDTHCHECK:
 
                 do
                 {
-                    while (((nextStart - lineStart) < width) &&
-                           (nextStart != BreakIterator.DONE))
+                    while (
+                        ((nextStart - lineStart) < width)
+                        && (nextStart != BreakIterator.DONE))
                     {
                         prevStart = nextStart;
                         nextStart = breakIter.next();
@@ -784,23 +759,23 @@ WIDTHCHECK:
                     {
                         // if the text before and after the last space fits
                         // into the max width, just print it on one line
-                        if (((prevStart - lineStart) +
-                             (workingSet[i].length() - prevStart)) < width)
+                        if (
+                            ((prevStart - lineStart)
+                            + (workingSet[i].length() - prevStart)) < width)
                         {
                             switch (trimPolicy)
                             {
                                 case TRIM_ALL :
-                                    lines.add(workingSet[i].substring(
-                                                                      lineStart,
-                                                                      workingSet[i].length())
-                                                           .trim());
+                                    lines.add(
+                                        workingSet[i].substring(
+                                            lineStart, workingSet[i].length()).trim());
 
                                     break;
 
                                 default :
-                                    lines.add(workingSet[i].substring(
-                                                                      lineStart,
-                                                                      workingSet[i].length()));
+                                    lines.add(
+                                        workingSet[i].substring(
+                                            lineStart, workingSet[i].length()));
                             }
                         }
                         else
@@ -812,17 +787,16 @@ WIDTHCHECK:
 
                                     if (prevStart > 0) // more than one line
                                     {
-                                        lines.add(workingSet[i].substring(
-                                                                          lineStart,
-                                                                          prevStart)
-                                                               .trim());
-                                        lines.add(workingSet[i].substring(prevStart)
-                                                               .trim());
+                                        lines.add(
+                                            workingSet[i].substring(
+                                                lineStart, prevStart).trim());
+                                        lines.add(
+                                            workingSet[i].substring(prevStart).trim());
                                     }
                                     else
                                     {
-                                        lines.add(workingSet[i].substring(lineStart)
-                                                               .trim());
+                                        lines.add(
+                                            workingSet[i].substring(lineStart).trim());
                                     }
 
                                     break;
@@ -831,15 +805,15 @@ WIDTHCHECK:
 
                                     if (prevStart > 0) // more than one line
                                     {
-                                        lines.add(workingSet[i].substring(
-                                                                          lineStart,
-                                                                          prevStart));
+                                        lines.add(
+                                            workingSet[i].substring(
+                                                lineStart, prevStart));
                                         lines.add(workingSet[i].substring(prevStart));
                                     }
                                     else
                                     {
-                                        lines.add(workingSet[i].substring(lineStart)
-                                                               .trim());
+                                        lines.add(
+                                            workingSet[i].substring(lineStart).trim());
                                     }
                             }
                         }
@@ -851,15 +825,13 @@ WIDTHCHECK:
                         switch (trimPolicy)
                         {
                             case TRIM_ALL :
-                                lines.add(workingSet[i].substring(lineStart,
-                                                                  prevStart)
-                                                       .trim());
+                                lines.add(
+                                    workingSet[i].substring(lineStart, prevStart).trim());
 
                                 break;
 
                             default :
-                                lines.add(workingSet[i].substring(lineStart,
-                                                                  prevStart));
+                                lines.add(workingSet[i].substring(lineStart, prevStart));
                         }
                     }
 
@@ -874,18 +846,18 @@ WIDTHCHECK:
 
         String[] s = new String[lines.size()];
 
-        return (String[])lines.toArray(s);
+        return (String[]) lines.toArray(s);
     }
 
 
     /**
-     * Checks whether the first non-whitespace character of the given line of
-     * text is the asterix (&#042).
+     * Checks whether the first non-whitespace character of the given line of text is the
+     * asterix (&#042).
      *
      * @param line line of text to check.
      *
-     * @return <code>true</code> if the first non-whitespace character of the
-     *         given text is an asterix.
+     * @return <code>true</code> if the first non-whitespace character of the given text
+     *         is an asterix.
      */
     private static boolean isLeadingAsterix(String line)
     {
@@ -922,16 +894,16 @@ WIDTHCHECK:
         return false;
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * A BreakIterator for space breaks. Implements only the functionality
-     * which is needed by {@link #wrapStringToArray}.
+     * A BreakIterator for space breaks. Implements only the functionality which is
+     * needed by {@link #wrapStringToArray}.
      */
     private static class SpaceBreakIterator
         extends BreakIterator
     {
-        static final String BR = "<br>";
+        static final String BR = "<br>" /* NOI18N */;
         String text;
         boolean isBreak;
         int end = -1;

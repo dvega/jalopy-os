@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
@@ -48,7 +21,7 @@ import java.util.Comparator;
 public class Filters
     implements FilenameFilter
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** If one filter accepts a file, the file will be accepted. */
     public static final int POLICY_LAZY = 2;
@@ -56,7 +29,7 @@ public class Filters
     /** Only if all filters accept a file, the file will be accepted. */
     public static final int POLICY_STRICT = 1;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Comparator for filters. */
     private FilterComparator _filterComp;
@@ -67,11 +40,10 @@ public class Filters
     /** Used filter policy. */
     private int _policy = POLICY_LAZY;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new Filters object. Uses {@link #POLICY_STRICT} as its
-     * policy.
+     * Creates a new Filters object. Uses {@link #POLICY_STRICT} as its policy.
      */
     public Filters()
     {
@@ -93,7 +65,7 @@ public class Filters
         Arrays.sort(_filters, _filterComp);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Sets the filter policy to use.
@@ -126,11 +98,12 @@ public class Filters
      * @param dir the directory in which the file was found.
      * @param name the name of the file.
      *
-     * @return <code>true</code> if and only if the name should be included in
-     *         the file list.
+     * @return <code>true</code> if and only if the name should be included in the file
+     *         list.
      */
-    public boolean accept(File   dir,
-                          String name)
+    public boolean accept(
+        File   dir,
+        String name)
     {
         if (_policy == POLICY_STRICT)
         {
@@ -190,26 +163,25 @@ public class Filters
         {
             FilenameFilter[] tmp = new FilenameFilter[length - 1];
             System.arraycopy(_filters, 0, tmp, 0, length - (length - found));
-            System.arraycopy(_filters, found + 1, tmp, found,
-                             length - found - 1);
+            System.arraycopy(_filters, found + 1, tmp, found, length - found - 1);
             _filters = tmp;
         }
     }
 
 
     /**
-     * Gibt an, ob die angegebene Datei akzeptiert wird oder nicht. Die Datei
-     * wird dann akzeptiert, wenn ein oder mehrere Filter die Datei
-     * akzeptieren.
+     * Gibt an, ob die angegebene Datei akzeptiert wird oder nicht. Die Datei wird dann
+     * akzeptiert, wenn ein oder mehrere Filter die Datei akzeptieren.
      *
      * @param dir Verzeichnis, in dem die Datei gefunden wurde.
      * @param name Name der Datei.
      *
-     * @return <code>true</code> wenn die Datei akzeptiert wird, <code>false
-     *         </code> wenn nicht.
+     * @return <code>true</code> wenn die Datei akzeptiert wird, <code>false </code> wenn
+     *         nicht.
      */
-    private boolean lazyAccept(File   dir,
-                               String name)
+    private boolean lazyAccept(
+        File   dir,
+        String name)
     {
         if (_filters.length == 0)
         {
@@ -229,17 +201,18 @@ public class Filters
 
 
     /**
-     * Gibt an, ob die angegebene Datei akzeptiert wird oder nicht. Die Datei
-     * wird dann akzeptiert, wenn alle Filter die Datei akzeptieren.
+     * Gibt an, ob die angegebene Datei akzeptiert wird oder nicht. Die Datei wird dann
+     * akzeptiert, wenn alle Filter die Datei akzeptieren.
      *
      * @param dir Verzeichnis, in dem die Datei gefunden wurde.
      * @param name Name der Datei.
      *
-     * @return <code>true</code> wenn die Datei akzeptiert wird, <code>false
-     *         </code> wenn nicht.
+     * @return <code>true</code> wenn die Datei akzeptiert wird, <code>false </code> wenn
+     *         nicht.
      */
-    private boolean strictAccept(File   dir,
-                                 String name)
+    private boolean strictAccept(
+        File   dir,
+        String name)
     {
         // recurse into directories
         if (new File(dir + File.separator + name).isDirectory())
@@ -258,7 +231,7 @@ public class Filters
         return true;
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Comparator to compare filename filters.
@@ -266,8 +239,9 @@ public class Filters
     private static class FilterComparator
         implements Comparator
     {
-        public int compare(Object first,
-                           Object second)
+        public int compare(
+            Object first,
+            Object second)
         {
             if (first == null)
             {

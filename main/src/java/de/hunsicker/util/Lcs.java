@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.util;
 
@@ -40,16 +13,20 @@ package de.hunsicker.util;
  * @version 1.0
  *
  * @see <a
-href="http://www.ics.uci.edu/~eppstein/161/960229.html">http://www.ics.uci.edu/~eppstein/161/960229.html</a>
+ *      href="http://www.ics.uci.edu/~eppstein/161/960229.html">http://www.ics.uci.edu/~eppstein/161/960229.html</a>
  * @see <a
-href="http://hissa.nist.gov/dads/HTML/longestcommn.html">http://hissa.nist.gov/dads/HTML/longestcommn.html</a>
+ *      href="http://hissa.nist.gov/dads/HTML/longestcommn.html">http://hissa.nist.gov/dads/HTML/longestcommn.html</a>
  */
 public final class Lcs
 {
-    //~ Instance variables ····················································
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String EMPTY_STRING = "" /* NOI18N */;
+
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Lcs stores the longest common subsequence. */
-    private String _lcs = "";
+    private String _lcs = EMPTY_STRING;
 
     /** s1 and s2 are the two strings that we are finding the Lcs of. */
     private String _s1;
@@ -72,7 +49,7 @@ public final class Lcs
     /** The number of rows  in the table. */
     private int _rows;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new Lcs object.
@@ -88,15 +65,16 @@ public final class Lcs
      * @param string1 first string.
      * @param string2 second string.
      */
-    public Lcs(String string1,
-               String string2)
+    public Lcs(
+        String string1,
+        String string2)
     {
         _s1 = string1;
         _s2 = string2;
         init();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Computes the longest common subsequence for the two given strings.
@@ -104,15 +82,16 @@ public final class Lcs
      * @param s1 first string.
      * @param s2 second string.
      *
-     * @return Lcs object with the computed information. Use the accessor
-     *         methods to get the piece of information you need.
+     * @return Lcs object with the computed information. Use the accessor methods to get
+     *         the piece of information you need.
      *
      * @see #getString
      * @see #getLength
      * @see #getPercentage
      */
-    public static Lcs compute(String s1,
-                              String s2)
+    public static Lcs compute(
+        String s1,
+        String s2)
     {
         Lcs lcs = new Lcs(s1, s2);
 
@@ -180,7 +159,7 @@ public final class Lcs
             init();
         }
 
-        _lcs = "";
+        _lcs = EMPTY_STRING;
         recursiveLcs(_s2, _rows - 1, _columns - 1);
 
         // release the processing table
@@ -197,8 +176,9 @@ public final class Lcs
      * @param s1 first string.
      * @param s2 second string.
      */
-    public void init(String s1,
-                     String s2)
+    public void init(
+        String s1,
+        String s2)
     {
         _s1 = s1;
         _s2 = s2;
@@ -209,14 +189,14 @@ public final class Lcs
     /**
      * Initialization of the processing table.
      *
-     * @throws IllegalStateException if either one of the strings is <code>
-     *         null</code>.
+     * @throws IllegalStateException if either one of the strings is <code>null</code>.
      */
     private void init()
     {
         if ((_s1 == null) || (_s2 == null))
         {
-            throw new IllegalStateException("both strings must be specified and non-null");
+            throw new IllegalStateException(
+                "both strings must be specified and non-null");
         }
 
         int temp1 = 0;
@@ -281,22 +261,14 @@ public final class Lcs
     }
 
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param x DOCUMENT ME!
-     * @param i DOCUMENT ME!
-     * @param j DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     */
-    private String recursiveLcs(String x,
-                                int    i,
-                                int    j)
+    private String recursiveLcs(
+        String x,
+        int    i,
+        int    j)
     {
         if ((i == 0) || (j == 0))
         {
-            return "";
+            return EMPTY_STRING;
         }
 
         if (_table[i][j] != null)
@@ -318,16 +290,16 @@ public final class Lcs
             }
         }
 
-        return "";
+        return EMPTY_STRING;
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Cell makes up each individual cell in the Lcs table.  Each cell stores
-     * a directional arrow and the total length of the longest common string.
+     * Cell makes up each individual cell in the Lcs table.  Each cell stores a
+     * directional arrow and the total length of the longest common string.
      */
-    private static class Cell
+    private static final class Cell
     {
         /** Represents the directional value. */
         public static final char DIRECTIONAL = '\\';
@@ -342,21 +314,22 @@ public final class Lcs
         public static final char UP = '^';
 
         /**
-         * Because Java contains no enumerated types, and it seems like a
-         * waste to declare a whole new class to represent a 2-bit value,
-         * char is used to represent the directional value.  '\' ('\\' in
-         * Java) is diagonal  '^' is up  '&lt;' is left  '+' is undefined
+         * Because Java contains no enumerated types, and it seems like a waste to
+         * declare a whole new class to represent a 2-bit value, char is used to
+         * represent the directional value.  '\' ('\\' in Java) is diagonal  '^' is up
+         * '&lt;' is left  '+' is undefined
          */
         private char _arrow;
 
         /**
-         * total stores the total length of the longest common string  that
-         * the cell describes.
+         * total stores the total length of the longest common string  that the cell
+         * describes.
          */
         private int _total;
 
-        public Cell(int  total,
-                    char arrow)
+        public Cell(
+            int  total,
+            char arrow)
         {
             _total = total;
             _arrow = arrow;

@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
@@ -44,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.text.MessageFormat;
+
+import de.hunsicker.util.ResourceBundleFactory;
 
 
 /**
@@ -54,22 +30,24 @@ import java.io.Writer;
  */
 public class FileBackup
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String BUNDLE_NAME = "de.hunsicker.io.Bundle" /* NOI18N */;
 
     /**
-     * Make numbered backups of every file by appending ~REVISION~ to the
-     * file. The revision count gets increased with every new backup.
+     * Make numbered backups of every file by appending ~REVISION~ to the file. The
+     * revision count gets increased with every new backup.
      */
     public static final int NUMBERED = 2;
 
     /**
-     * Make simple backups of every file. Filenames are not numbered and just
-     * end in a suffix that signifies a backup file, i.e. no revisions are
-     * available as every backup file overwrites the last backup written.
+     * Make simple backups of every file. Filenames are not numbered and just end in a
+     * suffix that signifies a backup file, i.e. no revisions are available as every
+     * backup file overwrites the last backup written.
      */
     public static final int SIMPLE = 1;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new FileBackup object.
@@ -78,23 +56,24 @@ public class FileBackup
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the new backup file for the given file. Uses a backup level of
      * <code>5</code>.
      *
      * @param file the file to back up.
-     * @param directory the directory to copy the backup to. If the directory
-     *        doesn't exist, it will be created.
+     * @param directory the directory to copy the backup to. If the directory doesn't
+     *        exist, it will be created.
      *
      * @return the created backup file.
      *
      * @throws IOException if an I/O error occured.
      */
-    public static synchronized File create(File file,
-                                           File directory)
-        throws IOException
+    public static synchronized File create(
+        File file,
+        File directory)
+      throws IOException
     {
         return create(file, directory, NUMBERED, null, 5);
     }
@@ -104,18 +83,19 @@ public class FileBackup
      * Returns the name of the new backup file for the given file..
      *
      * @param file the file to back up.
-     * @param directory the directory to copy the backup to. If the directory
-     *        doesn't exist, it will be created.
+     * @param directory the directory to copy the backup to. If the directory doesn't
+     *        exist, it will be created.
      * @param backupLevel number of revisions to hold.
      *
      * @return the created backup file.
      *
      * @throws IOException if an I/O error occured.
      */
-    public static synchronized File create(File file,
-                                           File directory,
-                                           int  backupLevel)
-        throws IOException
+    public static synchronized File create(
+        File file,
+        File directory,
+        int  backupLevel)
+      throws IOException
     {
         return create(file, directory, NUMBERED, null, backupLevel);
     }
@@ -126,33 +106,39 @@ public class FileBackup
      *
      * @param content content to write to a backup file.
      * @param filename the filename of the backup file.
-     * @param directory the directory to create the backup in. If the
-     *        directory doesn't exist, it will be created.
+     * @param directory the directory to create the backup in. If the directory doesn't
+     *        exist, it will be created.
      * @param backupLevel number of revisions to hold.
      *
      * @return the created backup file.
      *
      * @throws IOException if an I/O error occured.
      */
-    public static synchronized File create(String content,
-                                           String filename,
-                                           File   directory,
-                                           int    backupLevel)
-        throws IOException
+    public static synchronized File create(
+        String content,
+        String filename,
+        File   directory,
+        int    backupLevel)
+      throws IOException
     {
         // ensure that target directory exists
         if (!directory.exists())
         {
             if (!directory.mkdirs())
             {
-                throw new IOException("could not create target directory " +
-                                      directory);
+                Object[] args = { directory };
+                throw new IOException(
+                    MessageFormat.format(
+                        ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            "COULD_NOT_CREATE_DIRECTORY" /* NOI18N */), args));
             }
         }
 
         int highestBackup = getLatestRevision(filename, directory);
-        File backup = new File(directory + File.separator +
-                               getVersionName(filename, highestBackup + 1));
+        File backup =
+            new File(
+                directory + File.separator + getVersionName(
+                    filename, highestBackup + 1));
         Writer out = null;
 
         try
@@ -168,8 +154,7 @@ public class FileBackup
             }
         }
 
-        removeObsoleteRevisions(highestBackup + 1, backupLevel, filename,
-                                directory);
+        removeObsoleteRevisions(highestBackup + 1, backupLevel, filename, directory);
 
         return backup;
     }
@@ -179,33 +164,37 @@ public class FileBackup
      * Returns the new backup file for the given file.
      *
      * @param file the file to back up.
-     * @param directory the directory to copy the backup to. If the directory
-     *        doesn't exist, it will be created.
-     * @param backupType the type of the backup. Either {@link #SIMPLE} or
-     *        {@link #NUMBERED}.
-     * @param suffix the suffix to designate a backup file, ignored for the
-     *        {@link #NUMBERED} backup type.
-     * @param backupLevel number of revisions to hold, ignored for the  {@link
-     *        #SIMPLE} backup type.
+     * @param directory the directory to copy the backup to. If the directory doesn't
+     *        exist, it will be created.
+     * @param backupType the type of the backup. Either {@link #SIMPLE} or {@link
+     *        #NUMBERED}.
+     * @param suffix the suffix to designate a backup file, ignored for the {@link
+     *        #NUMBERED} backup type.
+     * @param backupLevel number of revisions to hold, ignored for the  {@link #SIMPLE}
+     *        backup type.
      *
      * @return the created backup file.
      *
      * @throws IOException if an I/O error occured.
      */
-    public static synchronized File create(File   file,
-                                           File   directory,
-                                           int    backupType,
-                                           String suffix,
-                                           int    backupLevel)
-        throws IOException
+    public static synchronized File create(
+        File   file,
+        File   directory,
+        int    backupType,
+        String suffix,
+        int    backupLevel)
+      throws IOException
     {
         // ensure that target directory exists
         if (!directory.exists())
         {
             if (!directory.mkdirs())
             {
-                throw new IOException("could not create target directory " +
-                                      directory);
+                Object[] args = { directory };
+                throw new IOException(
+                    MessageFormat.format(
+                        ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            "COULD_NOT_CREATE_DIRECTORY" /* NOI18N */), args));
             }
         }
 
@@ -217,11 +206,11 @@ public class FileBackup
 
                 if (suffix == null)
                 {
-                    suffix = ".bak";
+                    suffix = ".bak" /* NOI18N */;
                 }
-                else if (!suffix.startsWith("."))
+                else if (!suffix.startsWith("." /* NOI18N */))
                 {
-                    suffix = "." + suffix;
+                    suffix = "." /* NOI18N */ + suffix;
                 }
 
                 backup = new File(file.getAbsolutePath() + suffix);
@@ -232,11 +221,13 @@ public class FileBackup
             case NUMBERED :
 
                 int highestBackup = getLatestRevision(file.getName(), directory);
-                backup = new File(directory + File.separator +
-                                  getVersionName(file, highestBackup + 1));
+                backup =
+                    new File(
+                        directory + File.separator
+                        + getVersionName(file, highestBackup + 1));
                 copy(file, backup);
-                removeObsoleteRevisions(highestBackup + 1, backupLevel,
-                                        file.getName(), directory);
+                removeObsoleteRevisions(
+                    highestBackup + 1, backupLevel, file.getName(), directory);
 
                 break;
         }
@@ -246,17 +237,17 @@ public class FileBackup
 
 
     /**
-     * Returns the revision number of the latest revision found for the given
-     * filename.
+     * Returns the revision number of the latest revision found for the given filename.
      *
      * @param filename filename to check for revision numbers.
      * @param dir directory to search.
      *
-     * @return revision number of the latest backup; returns <code>0</code> if
-     *         no backup could be found.
+     * @return revision number of the latest backup; returns <code>0</code> if no backup
+     *         could be found.
      */
-    private static int getLatestRevision(String filename,
-                                         File   dir)
+    private static int getLatestRevision(
+        String filename,
+        File   dir)
     {
         if (dir == null)
         {
@@ -323,16 +314,15 @@ public class FileBackup
      *
      * @param filename filename to check for a revision number.
      *
-     * @return the found revision number; returns <code>0</code> if no
-     *         revision number could be found.
+     * @return the found revision number; returns <code>0</code> if no revision number
+     *         could be found.
      */
     private static int getRevision(String filename)
     {
         int startOffset = filename.indexOf('~');
         int endOffset = filename.indexOf('~', startOffset + 1);
 
-        while ((startOffset < endOffset) && (startOffset > -1) &&
-               (endOffset > -1))
+        while ((startOffset < endOffset) && (startOffset > -1) && (endOffset > -1))
         {
             String result = filename.substring(startOffset + 1, endOffset);
             startOffset = filename.indexOf('~', endOffset);
@@ -361,8 +351,9 @@ public class FileBackup
      *
      * @return the resulting string.
      */
-    private static String getVersionName(File file,
-                                         int  revision)
+    private static String getVersionName(
+        File file,
+        int  revision)
     {
         return getVersionName(file.getName(), revision);
     }
@@ -376,8 +367,9 @@ public class FileBackup
      *
      * @return the resulting string.
      */
-    private static String getVersionName(String filename,
-                                         int    revision)
+    private static String getVersionName(
+        String filename,
+        int    revision)
     {
         StringBuffer buf = new StringBuffer(15);
         buf.append(filename);
@@ -397,9 +389,10 @@ public class FileBackup
      *
      * @throws IOException if an I/O error occured.
      */
-    private static void copy(File source,
-                             File target)
-        throws IOException
+    private static void copy(
+        File source,
+        File target)
+      throws IOException
     {
         InputStream in = null;
         OutputStream out = null;
@@ -431,18 +424,18 @@ public class FileBackup
 
 
     /**
-     * Removes all obsolete revisions for the given filename in the given
-     * directory.
+     * Removes all obsolete revisions for the given filename in the given directory.
      *
      * @param currentRevision revision number of the latest revision.
      * @param backupLevel number of revisions to hold.
      * @param filename filename to check for revision numbers.
      * @param directory directory which holds the backups.
      */
-    private static void removeObsoleteRevisions(int    currentRevision,
-                                                int    backupLevel,
-                                                String filename,
-                                                File   directory)
+    private static void removeObsoleteRevisions(
+        int    currentRevision,
+        int    backupLevel,
+        String filename,
+        File   directory)
     {
         File[] files = directory.listFiles();
 
