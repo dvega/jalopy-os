@@ -636,7 +636,7 @@ SEARCH:
                                             {
 
 
-                                                result = wrapFirst( /*indentation, */
+                                                result = wrapFirst(
                                                 type, true, next == null, out);
                                                 firstWrapped = result;
                                             }
@@ -648,7 +648,7 @@ SEARCH:
                                             {
                                                 if ((type == JavaTokenTypes.PARAMETERS))
                                                 {
-                                                    result = wrapFirst( /*indentation, */
+                                                    result = wrapFirst(
                                                     type, true, next == null,
                                                     out);
                                                     firstWrapped = result;
@@ -665,7 +665,7 @@ SEARCH:
                                                          *       StringBreaker
                                                          *       feature
                                                          */
-                                                        result = wrapFirst( /*indentation,*/
+                                                        result = wrapFirst(
                                                         type, true,
                                                         next == null, out);
                                                         firstWrapped = result;
@@ -683,7 +683,7 @@ SEARCH:
 
                                                             if ((out.column + tester.length) > lineLength)
                                                             {
-                                                                result = wrapFirst( /*indentation, */
+                                                                result = wrapFirst(
                                                                 type, true,
                                                                 next == null,
                                                                 out);
@@ -691,7 +691,7 @@ SEARCH:
                                                             }
                                                             else
                                                             {
-                                                                result = wrapFirst( /*indentation,*/
+                                                                result = wrapFirst(
                                                                 type,
                                                                 next == null,
                                                                 out);
@@ -701,14 +701,14 @@ SEARCH:
                                                         else if (parameter.getFirstChild()
                                                                           .getType() == JavaTokenTypes.STRING_LITERAL)
                                                         {
-                                                            result = wrapFirst( /*indentation, */
+                                                            result = wrapFirst(
                                                             type, next == null,
                                                             true, out);
                                                             firstWrapped = result;
                                                         }
                                                         else
                                                         {
-                                                            result = wrapFirst( /*indentation, */
+                                                            result = wrapFirst(
                                                             type, next == null,
                                                             out);
                                                             firstWrapped = result;
@@ -720,13 +720,6 @@ SEARCH:
                                         else // for successive params align
                                         {
                                             int indentLength = out.getIndentLength();
-
-                                            /*if ((indentation == -1)
-                                                || ((type == JavaTokenTypes.ELIST)
-                                                && !this.prefs.getBoolean(
-                                                            Keys.INDENT_USE_PARAMS_METHOD_CALL,
-                                                            Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
-                                            {*/
                                             Marker m = out.state.markers.getLast();
                                             int length = (m.column > indentLength)
                                                              ? (m.column -
@@ -739,11 +732,6 @@ SEARCH:
                                             {
                                                 out.printNewline();
                                                 printIndentation(out);
-
-                                                /*out.print(out.getString(
-                                                                  length),
-                                                          JavaTokenTypes.WS);
-                                                out.state.markers.add();*/
                                                 result = true;
                                             }
                                             else if (spaceAfterComma)
@@ -792,12 +780,9 @@ SEARCH:
                                         if ((length + indentLength + 1) != out.column)
                                         {
                                             out.printNewline();
-                                            result = true;
                                             printIndentation(out);
 
-                                            /*out.print(out.getString(length),
-                                                      JavaTokenTypes.WS);
-                                            out.state.markers.add();*/
+                                            result = true;
                                         }
                                         else if (spaceAfterComma)
                                         {
@@ -826,29 +811,13 @@ SEARCH:
                                     }
 
                                     printIndentation(out);
-
-                                    /*if (!firstWrapped || (indentation == -1)
-                                        || ((type == JavaTokenTypes.ELIST)
-                                        && !this.prefs.getBoolean(
-                                                    Keys.INDENT_USE_PARAMS_METHOD_CALL,
-                                                    Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
-                                    {
-                                        out.print(out.getString(out.state.markers.getLast().column - out.getIndentLength()),
-                                                  JavaTokenTypes.WS);
-                                    }
-                                    else // force specified indendation
-                                    {
-                                        out.print(out.getString(
-                                                          indentation * out.state.paramLevel),
-                                                  JavaTokenTypes.WS);
-                                    }*/
                                 }
                                 else
                                 {
                                     if (out.newline)
                                     {
                                         printIndentation(out);
-                                    firstWrapped = true;
+                                        firstWrapped = true;
                                     }
                                     else if (preferWrapAfterLeftParen)
                                     {
@@ -861,7 +830,7 @@ SEARCH:
 
                                             if ((out.column + tester.length) > lineLength)
                                             {
-                                                result = wrapFirst( /*indentation, */
+                                                result = wrapFirst(
                                                 type, true, next == null, out);
                                                 firstWrapped = true;
                                             }
@@ -870,7 +839,7 @@ SEARCH:
                                         }
                                         else
                                         {
-                                            result = wrapFirst( /*indentation, */
+                                            result = wrapFirst(
                                             type, preferWrapAfterLeftParen,
                                             next == null, out);
                                             firstWrapped = result;
@@ -878,7 +847,7 @@ SEARCH:
                                     }
                                     else if (out.column > deepIndent)
                                     {
-                                        result = wrapFirst( /*indentation, */
+                                        result = wrapFirst(
                                         type, preferWrapAfterLeftParen,
                                         next == null, out);
                                         firstWrapped = result;
@@ -1165,9 +1134,8 @@ SEARCH:
                         int column = out.column;
 
                         out.printNewline();
-
-                        //out.print(out.getString(length), JavaTokenTypes.WS);
                         printIndentation(out);
+
                         result = true;
 
                         adjustAlignmentOffset(column, out);
@@ -1200,11 +1168,12 @@ SEARCH:
                          ((offset + indentLength) > (out.column + out.indentSize))))
                     {
                         int column = out.column;
-                        out.printNewline();
 
-                        //out.print(out.getString(offset), JavaTokenTypes.WS);
+                        out.printNewline();
                         printIndentation(out);
+
                         result = true;
+
                         adjustAlignmentOffset(column, out);
                     }
 

@@ -230,8 +230,20 @@ ITERATE:
             PrinterFactory.create(lhs).print(lhs, out);
         }
 
+        boolean continuation = out.continuation;
         boolean continuationIndent = this.prefs.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
                                                            Defaults.INDENT_CONTINUATION_OPERATOR);
+        if (continuationIndent && !continuation)
+        {
+            switch (operator.getType())
+            {
+                case JavaTokenTypes.PLUS:
+                case JavaTokenTypes.MINUS:
+                    break;
+                    default:
+                    out.continuation = true;
+            }
+        }
 
         boolean wrapped = false;
 
@@ -239,14 +251,7 @@ ITERATE:
         {
             wrapped = true;
 
-            if (continuationIndent && (!out.continuation))
-            {
-                printIndentation(out.continuationIndentSize, out);
-            }
-            else
-            {
-                printIndentation(out);
-            }
+            printIndentation(out);
         }
 
         boolean wrapBeforeOperator = this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR,
@@ -283,14 +288,7 @@ ITERATE:
                                NodeWriter.NEWLINE_YES, out);
             wrapped = true;
 
-            if (continuationIndent && (!out.continuation))
-            {
-                printIndentation(out.continuationIndentSize, out);
-            }
-            else
-            {
-                printIndentation(out);
-            }
+            printIndentation(out);
         }
         else if (wrapLines)
         {
@@ -315,16 +313,7 @@ ITERATE:
 
                     default :
                         out.printNewline();
-
-                        if (continuationIndent && (!out.continuation))
-                        {
-                            printIndentation(out.continuationIndentSize, out);
-                        }
-                        else
-                        {
-                            printIndentation(out);
-                        }
-
+                        printIndentation(out);
                         wrapped = true;
 
                         break;
@@ -345,8 +334,12 @@ ITERATE:
 
         if (wrapBeforeOperator)
         {
+
+            /** @todo */
+            /*
             // check whether continuation indentation is appropriate
-            if (wrapped && continuationIndent)
+            //if (wrapped && continuationIndent)
+            if (wrapped && out.continuation)
             {
                 switch (operator.getType())
                 {
@@ -357,7 +350,7 @@ ITERATE:
 
                         break;
                 }
-            }
+            }*/
 
             if (paddOperator)
             {
@@ -375,6 +368,8 @@ ITERATE:
         }
         else
         {
+            /** @todo */
+            /*
             // check whether continuation indentation is appropriate
             if (wrapped && out.continuation)
             {
@@ -387,7 +382,7 @@ ITERATE:
 
                         break;
                 }
-            }
+            }*/
         }
 
         if (insertRightParen)
@@ -412,8 +407,13 @@ ITERATE:
             // 'null' means no operator follows
             if (operator.getNextSibling() == null)
             {
-                //printIndentation(out);
+                printIndentation(out);
             }
+        }
+
+        if (continuationIndent && !continuation)
+        {
+            out.continuation = false;
         }
     }
 }

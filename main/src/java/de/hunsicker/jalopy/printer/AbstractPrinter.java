@@ -252,7 +252,6 @@ class AbstractPrinter
                 out.print(out.getString((out.state.paramLevel * out.indentSize) +
                                         diff), JavaTokenTypes.WS);
             }
-
             else if (out.state.markers.isMarked())
             {
                 int indentLength = out.getIndentLength();

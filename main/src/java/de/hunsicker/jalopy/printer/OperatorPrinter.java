@@ -51,7 +51,7 @@ import java.io.IOException;
  * @version $Revision$
  */
 abstract class OperatorPrinter
-    extends AbstractPrinter
+extends AbstractPrinter
 {
     //~ Constructors ··························································
 
@@ -85,7 +85,7 @@ abstract class OperatorPrinter
                                   boolean    wrapBefore,
                                   boolean    paddOperator,
                                   NodeWriter out)
-        throws IOException
+    throws IOException
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
@@ -125,7 +125,7 @@ abstract class OperatorPrinter
      */
     protected AST printLeftHandSide(AST        node,
                                     NodeWriter out)
-        throws IOException
+    throws IOException
     {
         AST first = node.getFirstChild();
 
@@ -133,11 +133,11 @@ abstract class OperatorPrinter
         {
             case JavaTokenTypes.LPAREN :
 
-                int count = 0; // number of enclosing parentheses
+                int count = 0;    // number of enclosing parentheses
 
                 for (AST child = first;
-                     child != null;
-                     child = child.getNextSibling())
+                    child != null;
+                    child = child.getNextSibling())
                 {
                     PrinterFactory.create(child).print(child, out);
 
@@ -183,7 +183,7 @@ abstract class OperatorPrinter
      */
     protected void printRightHandSide(AST        node,
                                       NodeWriter out)
-        throws IOException
+    throws IOException
     {
         for (AST child = node; child != null; child = child.getNextSibling())
         {
@@ -242,9 +242,9 @@ abstract class OperatorPrinter
             case JavaTokenTypes.DEC :
             case JavaTokenTypes.INC :
 
-            for (AST child = operator.getFirstChild();
-                     child != null;
-                     child = child.getNextSibling())
+                for (AST child = operator.getFirstChild();
+                    child != null;
+                    child = child.getNextSibling())
                 {
                     switch (child.getType())
                     {
@@ -279,19 +279,19 @@ abstract class OperatorPrinter
                         case JavaTokenTypes.MOD :
                         case JavaTokenTypes.DIV :
                         case JavaTokenTypes.STAR :
-                        //case JavaTokenTypes.LNOT :
-                        //case JavaTokenTypes.BNOT :
-                        //case JavaTokenTypes.UNARY_MINUS :
-                        //case JavaTokenTypes.UNARY_PLUS :
-                        //case JavaTokenTypes.DEC :
-                        //case JavaTokenTypes.INC :
+                            //case JavaTokenTypes.LNOT :
+                            //case JavaTokenTypes.BNOT :
+                            //case JavaTokenTypes.UNARY_MINUS :
+                            //case JavaTokenTypes.UNARY_PLUS :
+                            //case JavaTokenTypes.DEC :
+                            //case JavaTokenTypes.INC :
                             return true;
                     }
                 }
 
                 return false;
 
-            default: // no parent operator
+            default:    // no parent operator
                 return true;
         }
     }
@@ -308,8 +308,8 @@ abstract class OperatorPrinter
     private static boolean isLowerLevel(JavaNode operator)
     {
         for (AST child = operator.getFirstChild();
-             child != null;
-             child = child.getNextSibling())
+            child != null;
+            child = child.getNextSibling())
         {
             switch (child.getType())
             {
@@ -564,18 +564,18 @@ abstract class OperatorPrinter
 
                 break;
 
-            /*case JavaTokenTypes.UNARY_MINUS:
-                result = 35;
-                break;
-            case JavaTokenTypes.UNARY_PLUS:
-                result = 36;
-                break;
-            case JavaTokenTypes.DEC :
-                result = 37;
-                break;
-            case JavaTokenTypes.INC :
-                result = 38;
-                break;*/
+                /*case JavaTokenTypes.UNARY_MINUS:
+                    result = 35;
+                    break;
+                case JavaTokenTypes.UNARY_PLUS:
+                    result = 36;
+                    break;
+                case JavaTokenTypes.DEC :
+                    result = 37;
+                    break;
+                case JavaTokenTypes.INC :
+                    result = 38;
+                    break;*/
         }
 
         return result;
@@ -598,10 +598,9 @@ abstract class OperatorPrinter
             return false;
         }
 
-        boolean isOutMost = out.state.paramLevel < 2;
-
-        if (out.state.paramList || isHigherLevel((JavaNode)operator))
+        if (out.state.paramList || out.state.paramLevel < 2 || isHigherLevel((JavaNode)operator))
         {
+            // only allow certain operators to wrap
             switch (operator.getType())
             {
                 // Mathematical operators
@@ -618,7 +617,7 @@ abstract class OperatorPrinter
                 case JavaTokenTypes.BXOR :
 
                 // Prefix operators
-                case JavaTokenTypes.BNOT :
+                //case JavaTokenTypes.BNOT :
                     return true;
             }
         }
@@ -656,7 +655,7 @@ abstract class OperatorPrinter
      */
     boolean printWithParentheses(JavaNode   node,
                                  NodeWriter out)
-        throws IOException
+    throws IOException
     {
         JavaNode n = NodeHelper.getLastChild(node);
 

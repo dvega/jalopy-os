@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -110,6 +110,9 @@ final class MethodCallPrinter
                       NodeWriter out)
         throws IOException
     {
+        // we need to keep track of the current continuation indentation state
+        boolean continuation = out.continuation;
+
         boolean lastInChain = false;
         ParenthesesScope scope = null;
 
@@ -289,8 +292,8 @@ final class MethodCallPrinter
                     length += 1;
                 }
 
-                // -3 because -1 for the usual 'step one back'
-                //            -2 for the parentheses
+                // -3 because 1 for the usual 'step one back'
+                //            2 for the parentheses
                 marker = out.state.markers.add(out.line,
                                                (out.column - 3) - length);
 
@@ -313,7 +316,7 @@ final class MethodCallPrinter
 
         PrinterFactory.create(elist).print(elist, out);
 
-        // HACK another trick to track inner class definitions
+        // another trick to track inner class definitions
         if (out.last == JavaTokenTypes.CLASS_DEF)
         {
             innerClass = true;
@@ -322,7 +325,7 @@ final class MethodCallPrinter
         AST rparen = elist.getNextSibling();
         PrinterFactory.create(rparen).print(rparen, out);
 
-        // HACK for the correct blank lines behaviour: we want blank lines
+        // for the correct blank lines behaviour: we want blank lines
         // after inner classes but not after method calls
         if (innerClass)
         {
@@ -334,6 +337,13 @@ final class MethodCallPrinter
         if (lastInChain && (scope != null))
         {
             scope.chainCall = null;
+        }
+
+        // reset continuation indentation if necessary (it could have been set
+        // in DotPrinter.java)
+        if (out.continuation && !continuation)
+        {
+            out.continuation = false;
         }
     }
 

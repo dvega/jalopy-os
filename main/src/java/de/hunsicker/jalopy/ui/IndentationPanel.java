@@ -71,7 +71,7 @@ public class IndentationPanel
     private JCheckBox _indentCaseSwitchCheckBox;
     private JCheckBox _indentContinuationCheckBox;
     private JCheckBox _indentContinuationOperatorCheckBox;
-    private JCheckBox _indentContinuationTernaryCheckBox;
+    //private JCheckBox _indentContinuationTernaryCheckBox;
     private JCheckBox _indentExtendsCheckBox;
     private JCheckBox _indentFirstColumnCheckBox;
     private JCheckBox _indentImplementsCheckBox;
@@ -154,8 +154,8 @@ public class IndentationPanel
                               _indentContinuationCheckBox.isSelected());
         this.prefs.putBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
                               _indentFirstColumnCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_CONTINUATION_IF_TERNARY,
-                              _indentContinuationTernaryCheckBox.isSelected());
+        /*this.prefs.putBoolean(Keys.INDENT_CONTINUATION_IF_TERNARY,
+                              _indentContinuationTernaryCheckBox.isSelected());*/
         this.prefs.put(Keys.INDENT_SIZE_TABS,
                        (String)_tabSizeComboBox.getSelectedItem());
         this.prefs.putBoolean(Keys.INDENT_WITH_TABS,
@@ -325,7 +325,7 @@ public class IndentationPanel
         indentPanel.add(endlineIndent);
 
         Object[] tabSizeItems ={ "2", "3", "4", "6", "8", "10" };
-        ComboBoxPanel tabSize = new NumberComboBoxPanel("Tab indent:",
+        ComboBoxPanel tabSize = new NumberComboBoxPanel("Original Tab indent:",
                                                         tabSizeItems,
                                                         this.prefs.get(
                                                                        Keys.INDENT_SIZE_TABS,
@@ -507,7 +507,7 @@ public class IndentationPanel
         miscPanelLayout.setConstraints(_indentFirstColumnCheckBox, c);
         miscPanel.add(_indentFirstColumnCheckBox);
 
-        _indentContinuationCheckBox = new JCheckBox("Continuation indent for \"if\"",
+        _indentContinuationCheckBox = new JCheckBox("Continuation indent for blocks",
                                                     this.prefs.getBoolean(
                                                                           Keys.INDENT_CONTINUATION_IF,
                                                                           Defaults.INDENT_CONTINUATION_IF));
@@ -529,7 +529,7 @@ public class IndentationPanel
         miscPanelLayout.setConstraints(_indentContinuationOperatorCheckBox, c);
         miscPanel.add(_indentContinuationOperatorCheckBox);
 
-        _indentContinuationTernaryCheckBox = new JCheckBox("Continuation indent for ternary \"if-else\"",
+        /*_indentContinuationTernaryCheckBox = new JCheckBox("Continuation indent for ternary \"if-else\"",
                                                            this.prefs.getBoolean(
                                                                                  Keys.INDENT_CONTINUATION_IF_TERNARY,
                                                                                  Defaults.INDENT_CONTINUATION_IF_TERNARY));
@@ -538,7 +538,7 @@ public class IndentationPanel
                                    1.0, 1.0, GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         miscPanelLayout.setConstraints(_indentContinuationTernaryCheckBox, c);
-        miscPanel.add(_indentContinuationTernaryCheckBox);
+        miscPanel.add(_indentContinuationTernaryCheckBox);*/
 
         /*_indentMethodCallCheckBox = new JCheckBox(
             "Force indentation for parameters",
@@ -601,7 +601,7 @@ public class IndentationPanel
         alignPanel.add(_alignMethodCallChainsCheckBox);
 
 
-        _alignTernaryOperatorCheckBox       = new JCheckBox("Ternary operator",
+        _alignTernaryOperatorCheckBox       = new JCheckBox("Ternary expressions",
                                                        this.prefs.getBoolean(
                                                                              Keys.ALIGN_TERNARY_OPERATOR,
                                                                              Defaults.ALIGN_TERNARY_OPERATOR));

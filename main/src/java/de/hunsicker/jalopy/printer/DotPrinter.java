@@ -91,6 +91,9 @@ final class DotPrinter
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
+            /**
+             * @todo add switch to disable wrapping along dots alltogether
+             */
             boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
                                                       Defaults.LINE_WRAP);
             boolean forceWrappingForChainedCalls = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
@@ -103,6 +106,7 @@ final class DotPrinter
         }
 
         out.print(DOT, JavaTokenTypes.DOT);
+
         printRightHandSide(rhs, out);
     }
 
@@ -188,6 +192,10 @@ final class DotPrinter
     {
         ParenthesesScope scope = (ParenthesesScope)out.state.parenScope.getFirst();
 
+        boolean continuationIndent = this.prefs.getBoolean(
+                                                    Keys.INDENT_CONTINUATION_OPERATOR,
+                                                    Defaults.INDENT_CONTINUATION_OPERATOR);
+
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
         if (scope.chainCall != null)
@@ -196,9 +204,8 @@ final class DotPrinter
 
             switch (parent.getType())
             {
+                //case JavaTokenTypes.INDEX_OP:
                 case JavaTokenTypes.METHOD_CALL :
-
-                    //case JavaTokenTypes.INDEX_OP:
                     boolean align = this.prefs.getBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
                                                           Defaults.ALIGN_METHOD_CALL_CHAINS);
 
@@ -211,8 +218,8 @@ final class DotPrinter
                         {
                             if (MethodCallPrinter.isOuterMethodCall(parent))
                             {
-                                // simply wrap and align all chained calls under
-                                // the first one
+                                // simply wrap and align all chained calls
+                                // under the first one
                                 out.printNewline();
 
                                 int indentLength = out.getIndentLength();
@@ -224,14 +231,10 @@ final class DotPrinter
                                                                 : scope.chainOffset),
                                               JavaTokenTypes.WS);
                                 }
-                                else if (out.continuation ||
-                                         ((!out.continuation) &&
-                                          this.prefs.getBoolean(
-                                                                Keys.INDENT_CONTINUATION_OPERATOR,
-                                                                Defaults.INDENT_CONTINUATION_OPERATOR)))
+                                else if (continuationIndent)
                                 {
-                                    printIndentation(out.continuationIndentSize,
-                                                     out);
+                                    out.continuation = true;
+                                    printIndentation(out);
                                 }
                                 else
                                 {
@@ -251,6 +254,9 @@ final class DotPrinter
                             if (out.column > lineLength)
                             {
                                 out.printNewline();
+                                if (continuationIndent)
+                                    out.continuation = true;
+
                                 indent(align, scope, out);
 
                                 return;
@@ -286,6 +292,9 @@ final class DotPrinter
                             // line length, perform wrapping
                             if ((out.column + length) > lineLength)
                             {
+                                if (continuationIndent)
+                                    out.continuation = true;
+
                                 out.printNewline();
                                 indent(align, scope, out);
                             }
@@ -309,6 +318,10 @@ final class DotPrinter
                     if (out.column  + 1 > lineLength)
                     {
                         out.printNewline();
+
+                        if (continuationIndent)
+                            out.continuation = true;
+
                         printIndentation(out);
                     }
                     else
@@ -322,6 +335,9 @@ final class DotPrinter
                         if (out.column + 1 + tester.length> lineLength)
                         {
                             out.printNewline();
+                        if (continuationIndent)
+                            out.continuation = true;
+
                             printIndentation(out);
                         }
 
@@ -330,8 +346,10 @@ final class DotPrinter
 
                 break;
             }
-
         }
+
+        /*if (indent && !continuation )
+            out.continuation = false;*/
     }
 
 

@@ -106,7 +106,6 @@ final class ForPrinter
         PrinterFactory.create(lparen).print(lparen, out);
 
         Marker marker = out.state.markers.add();
-        int mark = out.column - 1;
 
         /**
          * @todo print comments after semis
@@ -117,12 +116,12 @@ final class ForPrinter
         AST secondSemi = forCond.getNextSibling();
         AST forIter = secondSemi.getNextSibling();
 
+        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+                                           Defaults.LINE_LENGTH);
         boolean deepIndent = this.prefs.getBoolean(Keys.INDENT_DEEP,
                                                    Defaults.INDENT_DEEP);
-
         boolean firstWrap = false;
 
-        // check if we should wrap the first part
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             out.state.paramLevel++;
@@ -154,74 +153,81 @@ final class ForPrinter
                     PrinterFactory.create(child).print(child, tester);
                 }
 
-                int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
-                                                   Defaults.LINE_LENGTH);
-
                 if ((out.column + tester.length) > lineLength)
                 {
-                    out.printNewline();
                     firstWrap = true;
-
-                    /*int indentation = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
-                                                        Defaults.INDENT_SIZE_PARAMETERS);
-
-                    if (indentation == -1)
-                    {
-                        out.print(out.getString(out.indentSize),
-                                  JavaTokenTypes.WS);
-                    }
-                    else
-                    {
-                        out.print(out.getString(indentation),
-                                  JavaTokenTypes.WS);
-                    }*/
-                    if (deepIndent)
-                    {
-                        out.print(out.getString(mark - out.getIndentLength()),
-                                  JavaTokenTypes.WS);
-                    }
-                    else
-                    {
-                        out.print(out.getString(out.indentSize),
-                                  JavaTokenTypes.WS);
-                        mark = out.column - 1;
-                    }
                 }
 
                 out.testers.release(tester);
             }
         }
 
-        printForInit(forInit, out);
+        printForInit(forInit, firstWrap, out);
 
-        boolean wrap = firstWrap;
+        boolean wrapAll = this.prefs.getBoolean(Keys.LINE_WRAP_ALL, Defaults.LINE_WRAP_ALL);
 
-        // check if we should wrap the second and third part
-        if ((!firstWrap) &&
-            this.prefs.getBoolean(Keys.LINE_WRAP, Defaults.LINE_WRAP) &&
-            (out.mode == NodeWriter.MODE_DEFAULT))
+        out.continuation = this.prefs.getBoolean(Keys.INDENT_CONTINUATION_IF,
+                                         Defaults.INDENT_CONTINUATION_IF);
+
+        boolean secondWrap = false;
+
+        if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            TestNodeWriter tester = out.testers.get();
-            printForCond(forCond, tester, -1);
-            printForIter(forIter, tester, -1);
-
-            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
-                                               Defaults.LINE_LENGTH);
-
-            if ((tester.length + out.column) > lineLength)
+            if (firstWrap && wrapAll)
+                secondWrap = true;
+            else
             {
-                wrap = true;
-            }
+                TestNodeWriter tester = out.testers.get();
 
-            out.testers.release(tester);
+                AST child = forIter.getFirstChild();
+
+                if (child != null)
+                {
+                    PrinterFactory.create(child).print(child, tester);
+                }
+
+                if ((out.column + tester.length) > lineLength)
+                {
+                    secondWrap = true;
+                }
+
+                out.testers.release(tester);
+            }
         }
 
-        printForCond(forCond, out, wrap ? mark
-                                        : (-1));
-        printForIter(forIter, out, wrap ? mark
-                                        : (-1));
+        printForCond(forCond, secondWrap , out);
 
-        if (wrap &&
+        boolean thirdWrap = false;
+
+        if (out.mode == NodeWriter.MODE_DEFAULT)
+        {
+            if (firstWrap && wrapAll)
+                thirdWrap = true;
+            else
+            {
+                TestNodeWriter tester = out.testers.get();
+
+                AST child = forIter.getFirstChild();
+
+                if (child != null)
+                {
+                    PrinterFactory.create(child).print(child, tester);
+                }
+
+                if ((out.column + tester.length) > lineLength)
+                {
+                    thirdWrap = true;
+                }
+
+                out.testers.release(tester);
+            }
+        }
+
+        printForIter(forIter, thirdWrap, out);
+
+        out.continuation = false;
+
+        if ((firstWrap || secondWrap || thirdWrap)  &&
             this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                                   Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
@@ -231,7 +237,7 @@ final class ForPrinter
 
                 if (deepIndent)
                 {
-                    out.print(out.getString(mark - 1 - out.getIndentLength()),
+                    out.print(out.getString(marker.column - 1 - out.getIndentLength()),
                               JavaTokenTypes.WS);
                 }
             }
@@ -293,14 +299,14 @@ final class ForPrinter
      * Prints the condition part of the for loop.
      *
      * @param node the condition part node of the loop.
+     * @param wrap if <code>true</code> print a newline before the part.
      * @param out stream to write to.
-     * @param mark
      *
      * @throws IOException if an I/O error occured.
      */
     private void printForCond(AST        node,
-                              NodeWriter out,
-                              int        mark)
+                              boolean wrap,
+                              NodeWriter out)
         throws IOException
     {
         out.print(SEMI, JavaTokenTypes.FOR_INIT);
@@ -310,13 +316,12 @@ final class ForPrinter
             return;
         }
 
-        if (mark > -1)
+        if (wrap)
         {
             out.printNewline();
-            out.print(out.getString(mark - out.getIndentLength()),
-                      JavaTokenTypes.WS);
+            printIndentation(out);
         }
-        else if ((mark == -1) &&
+        else if (
                  this.prefs.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
                                        Defaults.SPACE_AFTER_SEMICOLON))
         {
@@ -341,17 +346,22 @@ final class ForPrinter
      * @throws IOException if an I/O error occured.
      */
     private void printForInit(AST        node,
+                                boolean wrap,
                               NodeWriter out)
         throws IOException
     {
-        AST child = node.getFirstChild();
-
-        if (child == null)
+        if (wrap)
         {
-            return;
+            out.printNewline();
+            printIndentation(out);
         }
 
-        printVariableDefs(node, out);
+        AST child = node.getFirstChild();
+
+        if (child != null)
+        {
+            printVariableDefs(node, out);
+        }
     }
 
 
@@ -359,14 +369,14 @@ final class ForPrinter
      * Prints the iteration part of the for loop.
      *
      * @param node the iteration part node of the loop.
+     * @param wrap if <code>true</code> print a newline before the part.
      * @param out stream to write to.
-     * @param mark
      *
      * @throws IOException if an I/O error occured.
      */
     private void printForIter(AST        node,
-                              NodeWriter out,
-                              int        mark)
+                boolean wrap,
+                              NodeWriter out)
         throws IOException
     {
         out.print(SEMI, JavaTokenTypes.FOR_INIT);
@@ -378,13 +388,12 @@ final class ForPrinter
             return;
         }
 
-        if (mark > -1)
+        if (wrap)
         {
             out.printNewline();
-            out.print(out.getString(mark - out.getIndentLength()),
-                      JavaTokenTypes.WS);
+            printIndentation(out);
         }
-        else if ((mark == -1) &&
+        else if (
                  this.prefs.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
                                        Defaults.SPACE_AFTER_SEMICOLON))
         {
@@ -447,6 +456,7 @@ final class ForPrinter
                 String comma = spaceAfterComma ? COMMA_SPACE
                                                : COMMA;
 
+                /** @todo is this still valid? */
                 // don't use ParametersPrinter.java because of the added
                 // parenthesis
                 for (AST param = node.getFirstChild();
@@ -490,7 +500,7 @@ final class ForPrinter
 
         if (assign != null)
         {
-            // BUG FIX: if we're printing multiple variable defs but the last one
+            // if we're printing multiple variable defs but the last one
             // has no assignment then a semi appears which is bad as we always
             // output one in printForCond(), so ignore it
             switch (assign.getType())

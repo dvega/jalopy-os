@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -75,7 +75,7 @@ public class LineWrappingPanel
     private JCheckBox _wrapAfterExtendsCheckBox;
     private JCheckBox _wrapAfterImplementsCheckBox;
     private JCheckBox _wrapAfterLeftParenCheckBox;
-    private JCheckBox _wrapAfterThrowsCheckBox;
+    private JCheckBox _wrapAfterThrowsTypesCheckBox;
     private JCheckBox _wrapAllIfFirstCheckBox;
     private JCheckBox _wrapArraysCheckBox;
     private JCheckBox _wrapAsNeededCheckBox;
@@ -90,6 +90,8 @@ public class LineWrappingPanel
     private JComboBox _indentDeepComboBox;
     private JComboBox _lineLengthComboBox;
     private JTabbedPane _tabbedPane;
+    private JCheckBox _wrapAfterThrowsCheckBox;
+
 
     //~ Constructors ··························································
 
@@ -147,8 +149,12 @@ public class LineWrappingPanel
                               _alignExpressionCheckBox.isSelected());
         this.prefs.putBoolean(Keys.ALIGN_TERNARY_VALUES,
                               _alignValuesCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
+        this.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
+                              _wrapBeforeThrowsCheckBox.isSelected());
+        this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_THROWS,
                               _wrapAfterThrowsCheckBox.isSelected());
+        this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
+                              _wrapAfterThrowsTypesCheckBox.isSelected());
         this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_TYPES_IMPLEMENTS,
                               _wrapAfterImplementsCheckBox.isSelected());
         this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_TYPES_EXTENDS,
@@ -171,10 +177,9 @@ public class LineWrappingPanel
                               _wrapBeforeExtendsCheckBox.isSelected());
         this.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_IMPLEMENTS,
                               _wrapBeforeImplementsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
-                              _wrapBeforeThrowsCheckBox.isSelected());
         this.prefs.putBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                               _wrapAfterChainedCallCheckBox.isSelected());
+
         this.prefs.put(Keys.INDENT_SIZE_DEEP,
                        (String)_indentDeepComboBox.getSelectedItem());
 
@@ -300,7 +305,7 @@ public class LineWrappingPanel
         wrapPolicyPanelLayout.setConstraints(_wrapAfterAssignCheckBox, c);
         wrapPolicyPanel.add(_wrapAfterAssignCheckBox);
 
-        _wrapAllIfFirstCheckBox = new JCheckBox("Wrap all on wrap",
+        _wrapAllIfFirstCheckBox = new JCheckBox("Wrap all if first wrapped",
                                                 this.prefs.getBoolean(
                                                                       Keys.LINE_WRAP_ALL,
                                                                       Defaults.LINE_WRAP_ALL));
@@ -421,36 +426,38 @@ public class LineWrappingPanel
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapAlwaysPanelLayout.setConstraints(_wrapBeforeThrowsCheckBox, c);
         wrapAlwaysPanel.add(_wrapBeforeThrowsCheckBox);
-        _wrapAfterThrowsCheckBox = new JCheckBox("After throws types",
-                                                 this.prefs.getBoolean(
-                                                                       Keys.LINE_WRAP_AFTER_TYPES_THROWS,
+
+        _wrapAfterThrowsTypesCheckBox = new JCheckBox("After throws types",
+                                                 this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
                                                                        Defaults.LINE_WRAP_AFTER_TYPES_THROWS));
-        _wrapAfterThrowsCheckBox.addActionListener(this.trigger);
+        _wrapAfterThrowsTypesCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(c, 1, 2, GridBagConstraints.REMAINDER, 1,
+                                   1.0, 0.0, GridBagConstraints.WEST,
+                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapAlwaysPanelLayout.setConstraints(_wrapAfterThrowsTypesCheckBox, c);
+        wrapAlwaysPanel.add(_wrapAfterThrowsTypesCheckBox);
+
+        _wrapAfterThrowsCheckBox = new JCheckBox("After throws clause",
+                                                 this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
+                                                                       Defaults.LINE_WRAP_AFTER_THROWS));
+        _wrapAfterThrowsCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(c, 0, 3, 1, 1,
                                    1.0, 0.0, GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapAlwaysPanelLayout.setConstraints(_wrapAfterThrowsCheckBox, c);
         wrapAlwaysPanel.add(_wrapAfterThrowsCheckBox);
+
         _alignParamsCheckBox = new JCheckBox("Method Def parameters",
                                              this.prefs.getBoolean(
                                                                    Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
                                                                    Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF));
         _alignParamsCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 3, 1, 1, 1.0, 0.0,
+        SwingHelper.setConstraints(c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
                                    GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapAlwaysPanelLayout.setConstraints(_alignParamsCheckBox, c);
         wrapAlwaysPanel.add(_alignParamsCheckBox);
-        _wrapAfterChainedCallCheckBox = new JCheckBox("Chained Method Calls",
-                                                      this.prefs.getBoolean(
-                                                                            Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
-                                                                            Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL));
-        _wrapAfterChainedCallCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 1, 3, GridBagConstraints.REMAINDER, 1,
-                                   1.0, 0.0, GridBagConstraints.WEST,
-                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        wrapAlwaysPanelLayout.setConstraints(_wrapAfterChainedCallCheckBox, c);
-        wrapAlwaysPanel.add(_wrapAfterChainedCallCheckBox);
+
         _alignMethodCallParamsCheckBox = new JCheckBox("Method Call parameters",
                                                        this.prefs.getBoolean(
                                                                              Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
@@ -477,36 +484,49 @@ public class LineWrappingPanel
         wrapAlwaysPanelLayout.setConstraints(_alignMethodCallParamsIfNestedCheckBox, c);
         wrapAlwaysPanel.add(_alignMethodCallParamsIfNestedCheckBox);
 
-        _alignExpressionCheckBox = new JCheckBox("Ternary \"if-else\" expression",
-                                                 this.prefs.getBoolean(
-                                                                       Keys.ALIGN_TERNARY_EXPRESSION,
-                                                                       Defaults.ALIGN_TERNARY_EXPRESSION));
-        _alignExpressionCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 5, 1, 1, 1.0, 0.0,
-                                   GridBagConstraints.WEST,
+        _wrapAfterChainedCallCheckBox = new JCheckBox("Chained Method Calls",
+                                                      this.prefs.getBoolean(
+                                                                            Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+                                                                            Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL));
+        _wrapAfterChainedCallCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(c, 0, 5, 1, 1,
+                                   1.0, 0.0, GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        wrapAlwaysPanelLayout.setConstraints(_alignExpressionCheckBox, c);
-        wrapAlwaysPanel.add(_alignExpressionCheckBox);
-        _alignValuesCheckBox = new JCheckBox("Ternary \"if-else\" values",
-                                             this.prefs.getBoolean(
-                                                                   Keys.ALIGN_TERNARY_VALUES,
-                                                                   Defaults.ALIGN_TERNARY_VALUES));
-        _alignValuesCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 1, 5, GridBagConstraints.REMAINDER, 1,
-                                   1.0, 1.0, GridBagConstraints.NORTHWEST,
-                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        wrapAlwaysPanelLayout.setConstraints(_alignValuesCheckBox, c);
-        wrapAlwaysPanel.add(_alignValuesCheckBox);
+        wrapAlwaysPanelLayout.setConstraints(_wrapAfterChainedCallCheckBox, c);
+        wrapAlwaysPanel.add(_wrapAfterChainedCallCheckBox);
+
         _wrapLabelsCheckBox = new JCheckBox("Labels",
                                             this.prefs.getBoolean(
                                                                   Keys.LINE_WRAP_AFTER_LABEL,
                                                                   Defaults.LINE_WRAP_AFTER_LABEL));
         _wrapLabelsCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 7, 1, 1, 1.0, 1.0,
+        SwingHelper.setConstraints(c, 1, 5, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
                                    GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapAlwaysPanelLayout.setConstraints(_wrapLabelsCheckBox, c);
         wrapAlwaysPanel.add(_wrapLabelsCheckBox);
+
+        _alignExpressionCheckBox = new JCheckBox("Ternary \"if-else\" expression",
+                                                 this.prefs.getBoolean(
+                                                                       Keys.ALIGN_TERNARY_EXPRESSION,
+                                                                       Defaults.ALIGN_TERNARY_EXPRESSION));
+        _alignExpressionCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(c, 0, 6, 1, 1, 1.0, 1.0,
+                                   GridBagConstraints.WEST,
+                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapAlwaysPanelLayout.setConstraints(_alignExpressionCheckBox, c);
+        wrapAlwaysPanel.add(_alignExpressionCheckBox);
+
+        _alignValuesCheckBox = new JCheckBox("Ternary \"if-else\" values",
+                                             this.prefs.getBoolean(
+                                                                   Keys.ALIGN_TERNARY_VALUES,
+                                                                   Defaults.ALIGN_TERNARY_VALUES));
+        _alignValuesCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(c, 1, 6, GridBagConstraints.REMAINDER, 1,
+                                   1.0, 1.0, GridBagConstraints.NORTHWEST,
+                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapAlwaysPanelLayout.setConstraints(_alignValuesCheckBox, c);
+        wrapAlwaysPanel.add(_alignValuesCheckBox);
 
         JPanel arraysPanel = new JPanel();
         GridBagLayout arraysPanelLayout = new GridBagLayout();

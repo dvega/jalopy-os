@@ -89,32 +89,8 @@ abstract class BlockStatementPrinter
         printCommentsBefore(node, out);
     }
 
-
-    /*
-     * {@inheritDoc}
-     *
-    protected void printIndentation(NodeWriter out)
-        throws IOException
-    {
-        int indentation = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
-                                            Defaults.INDENT_SIZE_PARAMETERS);
-
-        if (indentation == -1) // use current indentation
-        {
-            out.print(out.getString(out.indentSize),
-                      JavaTokenTypes.WS);
-        }
-        else // force specified indentation
-        {
-            out.print(out.getString(indentation),
-                      JavaTokenTypes.WS);
-        }
-
-        out.state.markers.add();
-    }*/
-
     /**
-     * Prints the expression list starting with the given node, the left
+     * Prints the expression list starting with the given node; the left
      * parenthesis.
      *
      * @param lparen a LPAREN node.
@@ -133,10 +109,12 @@ abstract class BlockStatementPrinter
         throws IOException
     {
         PrinterFactory.create(lparen).print(lparen, out);
+
         Marker marker = out.state.markers.add();
-        boolean wrapped = false; // was line wrapping performed?
         TestNodeWriter tester = null;
         AST expr = lparen.getNextSibling();
+
+        boolean wrapped = false; // was line wrapping performed?
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
@@ -212,8 +190,8 @@ abstract class BlockStatementPrinter
 
         PrinterFactory.create(expr).print(expr, out);
 
-        out.state.wrap = false;
         out.continuation = false;
+        out.state.wrap = false;
 
         if (wrapped &&
             this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
@@ -253,7 +231,6 @@ abstract class BlockStatementPrinter
                 rparen.setHiddenAfter(null);
             }
         }
-
 
         PrinterFactory.create(rparen).print(rparen, out);
 

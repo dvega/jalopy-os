@@ -211,6 +211,71 @@ public final class PrinterFactory
 
                 break;
 
+            case JavaTokenTypes.PLUS_ASSIGN :
+            case JavaTokenTypes.MINUS_ASSIGN :
+            case JavaTokenTypes.STAR_ASSIGN :
+            case JavaTokenTypes.DIV_ASSIGN :
+            case JavaTokenTypes.MOD_ASSIGN :
+            case JavaTokenTypes.BAND_ASSIGN :
+            case JavaTokenTypes.BOR_ASSIGN :
+            case JavaTokenTypes.BXOR_ASSIGN :
+            case JavaTokenTypes.SL_ASSIGN :
+            case JavaTokenTypes.SR_ASSIGN :
+            case JavaTokenTypes.BSR_ASSIGN :
+                result = AssignmentOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.INC :
+            case JavaTokenTypes.DEC :
+            case JavaTokenTypes.LNOT :
+            case JavaTokenTypes.BNOT :
+            case JavaTokenTypes.UNARY_MINUS :
+            case JavaTokenTypes.UNARY_PLUS :
+                result = PrefixOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.LOR :
+            case JavaTokenTypes.LAND :
+                result = LogicalOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.BAND :
+            case JavaTokenTypes.BOR :
+            case JavaTokenTypes.BXOR :
+                result = BitwiseOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.PLUS :
+            case JavaTokenTypes.MINUS :
+            case JavaTokenTypes.STAR :
+            case JavaTokenTypes.DIV :
+            case JavaTokenTypes.MOD :
+                result = MathematicalOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.EQUAL :
+            case JavaTokenTypes.NOT_EQUAL :
+            case JavaTokenTypes.LT :
+            case JavaTokenTypes.GT :
+            case JavaTokenTypes.LE :
+            case JavaTokenTypes.GE :
+            case JavaTokenTypes.LITERAL_instanceof :
+                result = RelationalOperatorPrinter.getInstance();
+
+                break;
+
+            case JavaTokenTypes.SL :
+            case JavaTokenTypes.SR :
+            case JavaTokenTypes.BSR :
+                result = ShiftOperatorPrinter.getInstance();
+
+                break;
+
             case JavaTokenTypes.POST_INC :
             case JavaTokenTypes.POST_DEC :
                 result = PostfixOperatorPrinter.getInstance();
@@ -229,61 +294,6 @@ public final class PrinterFactory
 
             case JavaTokenTypes.INTERFACE_DEF :
                 result = InterfaceDeclarationPrinter.getInstance();
-
-                break;
-
-            case JavaTokenTypes.INC :
-            case JavaTokenTypes.DEC :
-            case JavaTokenTypes.LNOT :
-            case JavaTokenTypes.BNOT :
-            case JavaTokenTypes.UNARY_MINUS :
-            case JavaTokenTypes.UNARY_PLUS :
-                result = PrefixOperatorPrinter.getInstance();
-
-                break;
-
-            // Logical operators
-            case JavaTokenTypes.LOR :
-            case JavaTokenTypes.LAND :
-                result = LogicalOperatorPrinter.getInstance();
-
-                break;
-
-            // Bitwise operators
-            case JavaTokenTypes.BAND :
-            case JavaTokenTypes.BOR :
-            case JavaTokenTypes.BXOR :
-                result = BitwiseOperatorPrinter.getInstance();
-
-                break;
-
-            // Mathematical operators
-            case JavaTokenTypes.PLUS :
-            case JavaTokenTypes.MINUS :
-            case JavaTokenTypes.STAR :
-            case JavaTokenTypes.DIV :
-            case JavaTokenTypes.MOD :
-                result = MathematicalOperatorPrinter.getInstance();
-
-                break;
-
-            // Relational operators
-            case JavaTokenTypes.EQUAL :
-            case JavaTokenTypes.NOT_EQUAL :
-            case JavaTokenTypes.LT :
-            case JavaTokenTypes.GT :
-            case JavaTokenTypes.LE :
-            case JavaTokenTypes.GE :
-            case JavaTokenTypes.LITERAL_instanceof :
-                result = RelationalOperatorPrinter.getInstance();
-
-                break;
-
-            // Shift operators
-            case JavaTokenTypes.SL :
-            case JavaTokenTypes.SR :
-            case JavaTokenTypes.BSR :
-                result = ShiftOperatorPrinter.getInstance();
 
                 break;
 
@@ -345,21 +355,6 @@ public final class PrinterFactory
 
             case JavaTokenTypes.DOT :
                 result = DotPrinter.getInstance();
-
-                break;
-
-            case JavaTokenTypes.PLUS_ASSIGN :
-            case JavaTokenTypes.MINUS_ASSIGN :
-            case JavaTokenTypes.STAR_ASSIGN :
-            case JavaTokenTypes.DIV_ASSIGN :
-            case JavaTokenTypes.MOD_ASSIGN :
-            case JavaTokenTypes.BAND_ASSIGN :
-            case JavaTokenTypes.BOR_ASSIGN :
-            case JavaTokenTypes.BXOR_ASSIGN :
-            case JavaTokenTypes.SL_ASSIGN :
-            case JavaTokenTypes.SR_ASSIGN :
-            case JavaTokenTypes.BSR_ASSIGN :
-                result = AssignmentOperatorPrinter.getInstance();
 
                 break;
 

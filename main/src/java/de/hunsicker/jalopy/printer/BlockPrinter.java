@@ -87,15 +87,10 @@ class BlockPrinter
                       NodeWriter out)
         throws IOException
     {
+        JavaNode lcurly = (JavaNode)node;
+
         // always print a newline before the left curly brace
         boolean forceNewlineBefore = out.state.extraWrap;
-
-        // do we print a SLIST or an OBJBLOCK?
-        int closeBraceType = ((node.getType() == JavaTokenTypes.SLIST)
-                                  ? JavaTokenTypes.RCURLY
-                                  : JavaTokenTypes.OBJBLOCK);
-
-        JavaNode lcurly = (JavaNode)node;
 
         boolean treatDifferent = this.prefs.getBoolean(Keys.BRACE_TREAT_DIFFERENT,
                                   Defaults.BRACE_TREAT_DIFFERENT);
@@ -108,9 +103,14 @@ class BlockPrinter
                 case JavaTokenTypes.CTOR_DEF :
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
-                case JavaTokenTypes.CASESLIST :
                     forceNewlineBefore = true;
                     break;
+
+                case JavaTokenTypes.CASESLIST :
+                    forceNewlineBefore = true;
+                    treatDifferent = false;
+                    break;
+
                 default:
                     treatDifferent = false;
                     break;
@@ -135,6 +135,11 @@ class BlockPrinter
                                                              Defaults.BRACE_EMPTY_INSERT_STATEMENT);
         boolean leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                          Defaults.BRACE_NEWLINE_LEFT);
+
+        // do we print a SLIST or an OBJBLOCK?
+        int closeBraceType = ((node.getType() == JavaTokenTypes.SLIST)
+                                  ? JavaTokenTypes.RCURLY
+                                  : JavaTokenTypes.OBJBLOCK);
 
         if (NodeHelper.isEmptyBlock(node))
         {
@@ -334,13 +339,13 @@ class BlockPrinter
 
         if (brace)
         {
-            boolean indentBrace = !leftBraceNewline;
+            /*boolean indentBrace = !leftBraceNewline;
 
             if ((!leftBraceNewline) &&
                 lcurly.getPreviousSibling().hasCommentsAfter())
             {
                 indentBrace = false;
-            }
+            }*/
 
             printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore,
                            freestanding, out);
@@ -355,6 +360,7 @@ class BlockPrinter
         }
 
         JavaNode rcurly = null;
+
 LOOP:
 
         // print everything despite the closing curly brace
@@ -732,15 +738,15 @@ LOOP:
             }
             else
             {
-                if (out.column != 1)
-                {
-                    out.printLeftBrace(leftBraceNewline, !commentsAfter,
-                                       !freestanding);
-                }
-                else
+                if (out.newline)
                 {
                     out.printLeftBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
                                        NodeWriter.INDENT_NO);
+                }
+                else
+                {
+                    out.printLeftBrace(leftBraceNewline, !commentsAfter,
+                                       !freestanding);
                 }
             }
         }
