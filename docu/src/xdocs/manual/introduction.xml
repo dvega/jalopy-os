@@ -15,19 +15,20 @@ and correct Javadoc entries to match method signatures and much more.
 </para>
 
 <para>
-If your development team can agree on a coding style, Jalopy can help you 
-maintain it, without any browbeating or bloodletting. With a simple Ant target, 
+If your development team can agree on a coding style, Jalopy can help you
+maintain it, without any browbeating or bloodletting. With a simple Ant target,
 you can format all the source into the style, as often as you like.
 </para>
 
 <para>
-Jalopy is written in Java, and comes in several &quot;flavors&quot;, including
-an Ant task and Plug-ins for Eclipse, JBuilder, JDeveloper, jEdit and
-NetBeans/Sun ONE Studio.
+Jalopy is written in Java and there are several Plug-ins available to integrate
+the formatting engine into some of the more popular Java applications, including Ant,
+Eclipse, JBuilder, JDeveloper, jEdit and NetBeans/Sun ONE Studio.
 </para>
 
 <para>
-Jalopy is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
+Jalopy is
+&quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
 released under a <ulink url="./license-bsd.html">BSD License</ulink>.
 For the individual license terms of the provided Plug-ins, please refer to the
 different Plug-in chapters in <xref linkend="part-plugins" />.

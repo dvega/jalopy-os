@@ -8,10 +8,18 @@
 <indexterm><primary>jEdit</primary></indexterm>
 <indexterm><primary>Plug-in</primary><secondary>jEdit</secondary></indexterm>
 
+<para>
+Describes the installation and usage of the Jalopy jEdit Plug-in.
+</para>
+
 <sect1 id="plugin-jedit-installation">
 <title>Installation</title>
 
-<sect2 id="plugin-jedit-installation-requirements">
+<para>
+Explains the steps involved to install the jEdit Plug-in.
+</para>
+
+<sect3 id="plugin-jedit-installation-requirements">
 <title>System requirements</title>
 <para>
 The Jalopy jEdit Plug-in requires at least jEdit 4.1pre1 and MessageView 0.1.0.
@@ -26,16 +34,24 @@ To obtain more information about this wonderful Editor, visit the official
 jEdit homepage:
 <ulink url="http://www.jedit.org/">http://www.jedit.org/</ulink>
 </para>
-</sect2>
+</sect3>
 
-<sect2 id="plugin-jedit-installation-installation">
+<sect3 id="plugin-jedit-installation-installation">
 <title>Installation</title>
 <indexterm zone="plugin-jedit-installation-installation"><primary>Installation</primary><secondary>jEdit Plug-in</secondary></indexterm>
 <para>
 The Plug-in comes either as a single <filename>.zip</filename> or compressed
 <filename>.tar</filename> archive. Unzipping either one of these files into a directory
 of your choice (referred to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will
-produce two subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
+produce two subdirectories <filename>/docs</filename> and <filename>/lib</filename>.
+</para>
+
+<para>
+<screen>
+..
+  docs/      contains the documentation
+  lib/       contains all necessary libraries
+</screen>
 </para>
 
 <para>
@@ -50,15 +66,19 @@ press <guilabel>Remove Plugins</guilabel>.
 
 <para>
 Further installation is simple: just copy all <filename>.jar</filename> files
-contained  in the <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/bin</filename> folder
+contained  in the <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/lib</filename> folder
 into the <filename>/jars</filename> directory of your jEdit distribution.
 jEdit will then need to be restarted before Jalopy begins working.
 </para>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-jedit-integration">
 <title>Integration</title>
+
+<para>
+Shows how the Plug-in is integrated into jEdit.
+</para>
 
 <para>
 The software adds a new menu item group into the <guimenu><accel>P</accel>lugins</guimenu>
@@ -109,7 +129,12 @@ These options are available under jEdit's Global Options dialog, too.
 <title>License</title>
 <para>
 The jEdit Plug-in is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
-released under a BSD license. See <ulink url="http://jalopy.sf.net/license-bsd.html" />
-for more information.
+released under a BSD license.
+</para>
+
+<para>
+See <ulink url="http://jalopy.sf.net/license-bsd.html">Appendix B</ulink> of the manual
+for the license and refer to <ulink url="http://jalopy.sf.net/dependencies.html">Appendix A</ulink> for
+the license terms of the accompanying 3rd party libraries.
 </para>
 </sect1>

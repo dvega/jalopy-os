@@ -2,9 +2,8 @@
 
 <!-- Jalopy jEdit Plug-in Users' Guide -->
 
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-  "../../../ext/docbook/dtd/docbookx.dtd"
-
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
   [
   <!ENTITY plugin-jedit SYSTEM "../manual/plugin-jedit.xml">
   ] >

@@ -67,10 +67,12 @@ Jalopy's functionality covers:
 </blockquote>
 
 <para>
-Jalopy is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
-released under a <ulink url="./license-bsd.html">BSD License</ulink>. For
-the individual license terms of the provided Plug-ins, please refer to the
-different <ulink url="./part-plugins.html">Plug-in chapters</ulink>.
+Jalopy is
+&quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
+released under a <ulink url="./license-bsd.html">BSD License</ulink>. Please
+refer to <ulink url="./dependencies.html">Appendix A</ulink> for the license terms of the
+accompanying 3rd party libraries and the different <ulink url="./part-plugins.html">Plug-in chapters</ulink>
+for the license terms of the provided Plug-ins.
 </para>
 </simplesect>
 </article>

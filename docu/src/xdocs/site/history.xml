@@ -14,7 +14,7 @@
 </articleinfo>
 
 <simplesect>
-<title>1.0 Beta 9 (2002-??-??)</title>
+<title>1.0 Beta 9 (2002-11-10)</title>
 <orderedlist numeration="lowerroman">
 <listitem>
 New Features
@@ -46,7 +46,7 @@ The wrapping options has been extended. See
 
 <listitem>
 New curly brace wrapping option. See
-<ulink url="./braces.html#braces-different-wrapped">Treat class/method block different if wrapped</ulink>
+<ulink url="./printer.html#braces-different-wrapped">Treat class/method block different if wrapped</ulink>
 </listitem>
 
 <listitem>
@@ -62,8 +62,19 @@ All aforementioned features were requested, sponsored and thoroughly tested by t
 
 <itemizedlist mark="square">
 <listitem>
+The sources have been internationalized. If you're willing to provide translations of the
+used message bundles, please <ulink url="./contact.html">contact</ulink> me
+</listitem>
+
+<listitem>
+Jalopy now contains a simple Code Inspector that is able to inspector your sources for
+naming convention violations and possible code weaknesses. See the
+<ulink url="./inspector.html">Code Inspector</ulink> chapter in the manual
+</listitem>
+
+<listitem>
 Javadoc tag checking for <literal>@throws</literal> tags can now be enabled
-separatedly. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct @throws tags</ulink>
+separately. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct @throws tags</ulink>
 </listitem>
 <listitem>
 Array type brackets may now be printed after the identifier.
@@ -87,15 +98,44 @@ Requested by J&uuml;rgen Ebert
 </listitem>
 
 <listitem>
+The <guilabel>Format</guilabel> menu item now appears in the context menu of the Content
+Pane too
+</listitem>
+
+<listitem>
 Auto-correction for Javadoc <literal>@throws</literal> tags can now be
 controlled separately. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct <literal>@throws</literal> tags</ulink> for insight
+</listitem>
+
+<listitem>
+NetBeans Plug-in: the Format action is now available for Servlet nodes too
+</listitem>
+
+<listitem>
+JBuilder Plug-in: the Format item it now available in the context menu of content tab pane too
+</listitem>
+
+<listitem>
+JBuilder Plug-in: Breakpoints and Bookmarks are restored after formatting
+</listitem>
+
+<listitem>
+JDeveloper Plug-in: the Plug-in has been completely rewritten. Formatting works for
+workspaces too, the message output is displayed in a nice tree view. And the whole thing
+is now compatible with JDeveloper 9.0.3
+</listitem>
+
+<listitem>
+The core engine is now able to track positions. The IDE Plug-ins are therefore now able
+to restore the mouse pointer correctly (it will be positioned before the line with the
+node that was nearest to the last caret position)
 </listitem>
 </itemizedlist>
 <para/>
 </listitem>
 
 <listitem>
-Bugfixes
+Bug fixes
 
 <itemizedlist mark="square">
 <listitem>
@@ -128,7 +168,7 @@ Reported by Ralf Wiebicke
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607697&amp;group_id=45216">#607697</ulink>)
 </listitem>
 <listitem>
-The Javadoc printer failed to output HTML defintion lists correcty. Reportey by
+The Javadoc printer failed to output HTML definition lists correctly. Reportey by
 David Cooper
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607416&amp;group_id=45216">#607416</ulink>)
 </listitem>
@@ -246,8 +286,13 @@ Backup files were always kept if the output target was not a file
 </listitem>
 
 <listitem>
-jEdit Plug-in: the <gui-label>Format current Buffer</gui-label> menu item was grayed out upon start-up if the buffer contained
-a non-Java file.
+jEdit Plug-in: the <guilabel>Format current Buffer</guilabel> menu item was grayed out
+upon start-up if the buffer contained a non-Java file
+</listitem>
+
+<listitem>
+Console Plug-in: specifying several regular expression patterns did not work.
+Reported by Sameer Singh
 </listitem>
 
 </itemizedlist>
@@ -259,14 +304,28 @@ Changes
 
 <itemizedlist mark="square">
 <listitem>
-The sources have been internationalized. If you're willing to provide translations of the
-used message bundles, please <ulink url="./contact.html">contact</ulink> me.
+The <filename>.XML</filename> settings format has been revised. It should now be somewhat cleaner. These
+changes are transparent, the old settings format can be imported but only the new format
+will be exportet. Those who use the <filename>.XML</filename> format should re-export their settings to avoid
+the auto-transformation (and of course, there are many new switches)
+</listitem>
+
+<listitem>
+The <filename>/bin</filename> directory of the distributions have been renamed to
+<filename>/lib</filename>. For the Console and Ant Plug-ins the <filename>/bin</filename>
+now only contains the wrapper scripts and the libaries moved to <filename>/lib</filename>.
 </listitem>
 
 <listitem>
 Eclipse Plug-in: the <guilabel>Format</guilabel> label in the project view context menu
 no longer appears at the end. Suggested by Davor Cengija and Vincent Massol
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=578331&amp;group_id=45216">#578331</ulink>)
+</listitem>
+
+<listitem>
+JBuilder Plug-in: the <guilabel>Format</guilabel> item in the project view context menu
+is now more context sensitive. It won't pop up for non-Java files. Additionally, when
+formatting the whole Project a confirmation message box appears
 </listitem>
 
 <listitem>
@@ -303,13 +362,12 @@ earlier versions)
 </listitem>
 
 <listitem>
-The preview frame no longer uses the (unmaintained) jEdit syntax package but
-rather a standard <classname>JFrame</classname> with a simple highlighter
-based on work from Bogdan Mitu. Users of prior betas may savely remove the file
-<filename>textarea-2.2.3.jar</filename> from their disk
+The preview frame no longer uses the (unmaintained) jEdit Public Domain text area but
+rather a standard <classname>JEditorPane</classname> with a highlighter dereived from
+the <ulink url="http://www.bluej.org/">BlueJ</ulink> project (and that highlighter is
+again build upon the jEdit Public Domain syntax package). Users of prior betas may
+savely remove the file <filename>textarea-2.2.3.jar</filename> from their disks
 </listitem>
-
-
 </itemizedlist>
 <para/>
 </listitem>
@@ -406,7 +464,7 @@ for interface or interface method declarations (as these are implicitly
 You can now specify whether Java sources should be parsed as JDK 1.4 compatible
 (the default) or if sources should be parsed without treating
 <literal>assert</literal> as a reserved keyword (i.e. JDK 1.3 compatible).
-See the <ulink url="./preferences.html#general-compliance">General section</ulink>.
+See the <ulink url="./settings.html#general-compliance">General section</ulink>.
 This change addresses bugs
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=565512&amp;group_id=45216">#565512</ulink> and
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=576983&amp;group_id=45216">#576983</ulink>
@@ -497,9 +555,9 @@ fields (it was not implemented). Reported by Thomas B&ouml;rkel
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=564255&amp;group_id=45216">#564255</ulink>)
 </listitem>
 <listitem>
-After importing preferences from a distributed location, Jalopy did not use
-these preferences if the host was unavailable on successive invocations (but
-rather the build-in defaults); now the imported preferences are used and a
+After importing settings from a distributed location, Jalopy did not use
+these settings if the host was unavailable on successive invocations (but
+rather the build-in defaults); now the imported settings are used and a
 warning message issued. Reported by Thomas B&ouml;rkel
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=563976&amp;group_id=45216">#563976</ulink>)
 </listitem>
@@ -541,7 +599,7 @@ Emil A. Lefkof, Thomas B&ouml;rkel, Larry Hamel and Christian Halstrick, Anders 
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=580600&amp;group_id=45216">#580600</ulink>)
 </listitem>
 <listitem>
-The preferences format was not correctly updated between 1.0b6 and 1.0b7
+The settings format was not correctly updated between 1.0b6 and 1.0b7
 causing an <classname>IllegalArgumentException</classname> if the history
 feature was disabled. Reported by Martin Spiller
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=561398&amp;group_id=45216">#561398</ulink>,
@@ -608,7 +666,7 @@ The default setting for the backup level changed, it is now set to &quot;0&quot;
 (no backups are kept)
 </listitem>
 <listitem>
-The preferences dialog is no longer a modal dialog (necessary for the live preview)
+The settings dialog is no longer a modal dialog (necessary for the live preview)
 </listitem>
 <listitem>
 Started from the command line, the settings dialog now appears in the task
@@ -738,11 +796,11 @@ The detection logic for debug logging calls has been slightly improved. Calls li
 </listitem>
 <listitem>
 The custom Javadoc tag definitions are not stored in distinct files anymore but
-rather go into the preferences file (to make it portable across system bounderies)
+rather go into the settings file (to make it portable across system bounderies)
 </listitem>
 <listitem>
 The Ant task attribute handling changed: if you omit any optional attribute now the
-corresponding preferences settings will be used for *all* attributes
+corresponding settings settings will be used for *all* attributes
 </listitem>
 </itemizedlist>
 <para/>
@@ -759,7 +817,7 @@ New Features
 <itemizedlist mark="square">
 <listitem>
 Thanks to Roman Sarychev, Jalopy now provides the ability to import/export
-preferences in an <filename>.xml</filename> format
+settings in an <filename>.XML</filename> format
 (<ulink url="http://sf.net/tracker/index.php?func=detail&amp;atid=442215&amp;aid=549177&amp;group_id=45216">#549177</ulink>)
 </listitem>
 <listitem>
@@ -788,8 +846,8 @@ You can now print a blank between array type and initializer. Requested by David
 (<ulink url="http://sf.net/tracker/index.php?func=detail&amp;atid=442215&amp;aid=548888&amp;group_id=45216">#548888</ulink>)
 </listitem>
 <listitem>
-Jalopy is now able to load its preferences from an Internet address. Refer to the
-<ulink url="./preferences.html#general">General section</ulink> of the manual. Cool feature requested by Sven van't Veer
+Jalopy is now able to load its settings from an Internet address. Refer to the
+<ulink url="./settings.html#general">General section</ulink> of the manual. Cool feature requested by Sven van't Veer
 </listitem>
 <listitem>
 You can now use stdin/stdout redirection from the command line. If no input
@@ -908,7 +966,7 @@ intermediate component that provides a history
 <listitem>
 Eclipse Plug-in: Updated the <filename>plugin.xml</filename> to work with the
 latest stable build (20020416). This change only regards the menu item to
-invoke the Jalopy preferences dialog; this item now appears under the 'Window'
+invoke the Jalopy settings dialog; this item now appears under the 'Window'
 menu as the 'Workbench' menu has been gone
 </listitem>
 <listitem>
@@ -926,7 +984,7 @@ handled like an up-to-date file
 </listitem>
 <listitem>
 <guibutton>Load...</guibutton> and <guibutton>Save...</guibutton> buttons on the
-General preferences page has been renamed
+General settings page has been renamed
 to <guibutton>Import...</guibutton> and <guibutton>Export...</guibutton>
 </listitem>
 <listitem>
@@ -945,7 +1003,7 @@ instances. Note that 1.2 is *no* drop-in replacement (no matter what the log4j d
 as they renamed a public (sic!) field I have to use
 </listitem>
 <listitem>
-jEdit Plug-in: The menu item to display the Jalopy preferences dialog can now
+jEdit Plug-in: The menu item to display the Jalopy settings dialog can now
 be added to the context menu
 </listitem>
 </itemizedlist>
@@ -1029,7 +1087,7 @@ The source base has been split into different modules (to make CVS happy and
 life easier) and the build system has changed accordingly
 </listitem>
 <listitem>
-The website and all documentation is now auto-generated out of <filename>.xml</filename> files
+The website and all documentation is now auto-generated out of <filename>.XML</filename> files
 (using the Ant style task and DocBook XSL 1.50.0/Saxon 6.5.1)
 </listitem>
 <listitem>
@@ -1119,7 +1177,7 @@ expression part if <guilabel>Insert parentheses around expressions</guilabel> wa
 Now parentheses are only inserted if actually needed
 </listitem>
 <listitem>
-<guilabel>Indent labels</guilabel> option didn't show up on the indentation preferences page
+<guilabel>Indent labels</guilabel> option didn't show up on the indentation settings page
 </listitem>
 <listitem>
 The Javadoc auto-generation facility no longer inserts @throws tags for throws
@@ -1252,7 +1310,7 @@ JBuilder Plug-in: added the Format and Settings actions to the popup
 menu of the editor pane
 </listitem>
 <listitem>
-Ant Plug-in: new parameter <parameter>style</parameter> to set the preferences file to use
+Ant Plug-in: new parameter <parameter>style</parameter> to set the settings file to use
 </listitem>
 </itemizedlist>
 <para/>
@@ -1324,8 +1382,8 @@ the documentation for the public client API, removed the documentation for the
 Plug-ins from the distribution Javadoc
 </listitem>
 <listitem>
-Moved the logic to set the preferences file to use, from the command line
-interface into <classname>Jalopy.java</classname> to let Plug-ins easily set the preferences file
+Moved the logic to set the settings file to use, from the command line
+interface into <classname>Jalopy.java</classname> to let Plug-ins easily set the settings file
 to use
 </listitem>
 <listitem>
@@ -1398,7 +1456,7 @@ Changes
 <itemizedlist mark="square">
 <listitem>
 Changed default package depth for packages java, javax, gnu in the
-preferences (former was 3, now uses 2)
+settings (former was 3, now uses 2)
 </listitem>
 <listitem>
 Changed the SwingWorker implementation to the one found in Doug Lea's

@@ -5,7 +5,7 @@
                 exclude-result-prefixes="#default xsl xhtml" >
 
 <!-- load the main docbook stylesheet -->
-<xsl:import href="../../../ext/docbook/xsl/html/docbook.xsl" />
+<xsl:import href="file:///G:/XML/docbook-xsl/html/docbook.xsl" />
 
 <!-- override templates to customize -->
 

@@ -12,28 +12,28 @@
 </simplesect>
 
 <para condition="ant">
-This is the README for the Ant Task distribution of the Jalopy Java 
+This is the README for the Ant Task distribution of the Jalopy Java
 Source Code Formatter. This Plug-in provides the integration with the
 wonderful Jakarta build tool.
 </para>
 
 <para condition="console">
-This is the README for the Console application distribution of the Jalopy Java 
+This is the README for the Console application distribution of the Jalopy Java
 Source Code Formatter. This Plug-in provides a powerful command line interface for Jalopy.
 </para>
 
 <para condition="eclipse">
-This is the README for the Eclipse Plug-in distribution of the Jalopy 
+This is the README for the Eclipse Plug-in distribution of the Jalopy
 Java Source Code Formatter.
 </para>
 
 <para condition="jbuilder">
-This is the README for the JBuilder OpenTool distribution of the Jalopy 
+This is the README for the JBuilder OpenTool distribution of the Jalopy
 Java Source Code Formatter.
 </para>
 
 <para condition="jdeveloper">
-This is the README for the JDeveloper Extension distribution of the Jalopy 
+This is the README for the JDeveloper Extension distribution of the Jalopy
 Java Source Code Formatter.
 </para>
 
@@ -43,20 +43,20 @@ Java Source Code Formatter.
 </para>
 
 <para condition="main">
-This is the README for the core runtime distribution of the Jalopy Java Source 
+This is the README for the core runtime distribution of the Jalopy Java Source
 Code Formatter. This distribution only contains the Jalopy core classes and is
 therefore only suited for those who want to integrate Jalopy with their custom
 applications or develop a new Plug-in.
 </para>
 
 <para condition="netbeans">
-This is the README for the NetBeans/Sun ONE Studio module distribution of the Jalopy 
+This is the README for the NetBeans/Sun ONE Studio module distribution of the Jalopy
 Java Source Code Formatter.
 </para>
 <sect1>
 
 <title>Distribution libraries</title>
-  
+
 <para>
 This distribution contains the following libraries:
 </para>
@@ -78,25 +78,25 @@ This distribution contains the following libraries:
   Jalopy Ant Task (<filename>jalopy-ant-0.5.5.jar</filename>)
 </listitem>
 <listitem condition="console">
-  Jalopy Console Application (<filename>jalopy-console-@BUILD.VERSION.CONSOLE@.jar</filename>)
+  Jalopy Console Application (<filename>jalopy-console-0.9.1.jar</filename>)
 </listitem>
 <listitem condition="eclipse">
-  Jalopy Eclipse Plug-in (<filename>jalopy-eclipse-0.2.3.jar</filename>)
+  Jalopy Eclipse Plug-in (<filename>jalopy-eclipse-0.2.5.jar</filename>)
 </listitem>
 <listitem condition="jbuilder">
   Jalopy JBuilder OpenTool (<filename>jalopy-jbuilder-0.7.5.jar</filename>)
 </listitem>
 <listitem condition="jdeveloper">
-  Jalopy JDeveloper Extension (<filename>jalopy-jdev-1.0.2.jar</filename>)
+  Jalopy JDeveloper Extension (<filename>jalopy-jdev-1.1.0.jar</filename>)
 </listitem>
 <listitem condition="jedit">
-  Jalopy jEdit Plug-in (<filename>jalopy-jedit-0.3.2.jar</filename>)
+  Jalopy jEdit Plug-in (<filename>jalopy-jedit-0.3.5.jar</filename>)
 </listitem>
 <listitem condition="jedit">
   MessageView Plug-in (<filename>messageview-@LIB.VERSION.MESSAGEVIEWN@.jar</filename>)
 </listitem>
 <listitem condition="netbeans">
-  Jalopy NetBeans module (<filename>jalopy-jedit-0.3.1.jar</filename>)
+  Jalopy NetBeans module (<filename>jalopy-jedit-0.3.3.jar</filename>)
 </listitem>
 <listitem condition="ant;console">
   <ulink url="http://java.sun.com/xml/">JAXP</ulink> Java API for XML Processing (<filename>jaxp-1.2.jar</filename>)
@@ -144,7 +144,7 @@ In order to be able to use Jalopy you need to obtain the following 3rd-party lib
 <title>Latest version</title>
 <para>
 Details of the latest version can be found on the Jalopy project
-web site at SourceForge, see 
+web site at SourceForge, see
 <ulink url="http://jalopy.sf.net/">http://jalopy.sf.net</ulink>.
 </para>
 </sect1>
@@ -153,79 +153,79 @@ web site at SourceForge, see
 <sect1>
 <title>Installation</title>
 <para>
-For installation instructions, see 
-<ulink condition="ant" url="./docs/plugin-ant.html#plugin-ant-installation-installation">/docs/plugin-ant.html</ulink><ulink condition="main" url="./docs/installation.html">/docs/installation.html</ulink><ulink condition="eclipse" url="./docs/plugin-eclipse.html#plugin-eclipse-installation-installation">/docs/plugin-eclipse.html</ulink><ulink condition="jbuilder" url="./docs/plugin-jbuilder.html#plugin-jbuilder-installation-installation">/docs/plugin-jbuilder.html</ulink><ulink condition="jdeveloper" url="./docs/plugin-jdev.html#plugin-jdev-installation-installation">/docs/plugin-jdev.html</ulink><ulink condition="jedit" url="./docs/plugin-jedit.html#plugin-jedit-installation-installation">/docs/plugin-jedit.html</ulink><ulink condition="netbeans" url="./docs/plugin-netbeans.html#plugin-netbeans-installation-installation">/docs/plugin-netbeans.html</ulink>.
-</para>  
+For installation instructions, see
+<ulink condition="ant" url="./docs/plugin-ant.html#plugin-ant-installation">/docs/plugin-ant.html</ulink><ulink condition="main" url="./docs/installation.html">/docs/installation.html</ulink><ulink condition="eclipse" url="./docs/plugin-eclipse.html#plugin-eclipse-installation">/docs/plugin-eclipse.html</ulink><ulink condition="jbuilder" url="./docs/plugin-jbuilder.html#plugin-jbuilder-installation">/docs/plugin-jbuilder.html</ulink><ulink condition="jdeveloper" url="./docs/plugin-jdev.html#plugin-jdev-installation">/docs/plugin-jdev.html</ulink><ulink condition="jedit" url="./docs/plugin-jedit.html#plugin-jedit-installation">/docs/plugin-jedit.html</ulink><ulink condition="netbeans" url="./docs/plugin-netbeans.html#plugin-netbeans-installation">/docs/plugin-netbeans.html</ulink>.
+</para>
 </sect1>
 
 <sect1>
 <title>Custom build</title>
 <para>
-For build instructions, see 
+For build instructions, see
 <ulink url="./docs/build.html">/docs/build.html</ulink>.
-</para>  
+</para>
 </sect1>
 
 <sect1>
 <title>Change history</title>
 <para>
-To learn about implementation changes, fixed bugs and new features of this 
+To learn about implementation changes, fixed bugs and new features of this
 version, see <ulink url="./docs/history.html">/docs/history.html</ulink>.
 </para>
 </sect1>
 
 <sect1>
 <title>Licensing</title>
-  
+
 <para condition="ant;jbuilder;jdeveloper;jedit">
-This Plug-in is licensed under a 
-<ulink url="./docs/license-bsd.html">BSD License</ulink>. For 
+This Plug-in is licensed under a
+<ulink url="./docs/license-bsd.html">BSD License</ulink>. For
 additional license terms of the used 3rd-party libraries, please refer to
 <ulink url="./docs/dependencies.html">Appendix A</ulink>.
 </para>
-  
+
 <para condition="console">
-This Plug-in is licensed under the 
-<ulink url="./docs/license-gnu.html">GNU General Public License</ulink>. For 
-additional license terms of the used 3rd-party libraries, please refer to 
+This Plug-in is licensed under the
+<ulink url="./docs/license-gnu.html">GNU General Public License</ulink>. For
+additional license terms of the used 3rd-party libraries, please refer to
 <ulink url="./docs/dependencies.html">Appendix A</ulink>.
-</para>  
+</para>
 
 <para condition="eclipse">
-This Plug-in is licensed under the 
-<ulink url="./docs/license-common-public.html">Common Public License</ulink>. For 
-additional license terms of the used 3rd-party libraries, please refer to 
-<ulink url="./docs/dependencies.html">Appendix A</ulink>.
-</para>  
-
-<para condition="main">
-This library is licensed under a 
-<ulink url="./docs/license-bsd.html">BSD License</ulink>. For 
+This Plug-in is licensed under the
+<ulink url="./docs/license-common-public.html">Common Public License</ulink>. For
 additional license terms of the used 3rd-party libraries, please refer to
 <ulink url="./docs/dependencies.html">Appendix A</ulink>.
-</para>  
+</para>
+
+<para condition="main">
+This library is licensed under a
+<ulink url="./docs/license-bsd.html">BSD License</ulink>. For
+additional license terms of the used 3rd-party libraries, please refer to
+<ulink url="./docs/dependencies.html">Appendix A</ulink>.
+</para>
 
 <para condition="netbeans">
-This Plug-in is licensed under the 
-<ulink url="./docs/license-sun-public.html">Sun Public License</ulink>. For 
-additional license terms of the used 3rd-party libraries, please refer to 
+This Plug-in is licensed under the
+<ulink url="./docs/license-sun-public.html">Sun Public License</ulink>. For
+additional license terms of the used 3rd-party libraries, please refer to
 <ulink url="./docs/dependencies.html">Appendix A</ulink>.
-</para> 
-</sect1>  
+</para>
+</sect1>
 
-<sect1>  
+<sect1>
 <title>Contact</title>
 <para>
-For ways to contact the author or submit bug, feature or support requests, see 
+For ways to contact the author or submit bug, feature or support requests, see
 <ulink url="./docs/contact.html">/docs/contact.html</ulink>.
 </para>
-</sect1>  
+</sect1>
 
-<sect1>  
+<sect1>
 <title>Contributors</title>
 <para>
-For a list of project contributors, see 
+For a list of project contributors, see
 <ulink url="./docs/contributors.html">/docs/contributors.html</ulink>.
 </para>
-</sect1>  
+</sect1>
 </article>

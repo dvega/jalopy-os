@@ -5,18 +5,24 @@
 <!-- Contains the documentaion for the Eclipse Plug-in -->
 
 <title>Eclipse Plug-in</title>
-
 <indexterm><primary>Eclipse</primary></indexterm>
 <indexterm><primary>Plug-in</primary><secondary>Eclipse</secondary></indexterm>
 
+<para>
+Describes the installation and usage of the Jalopy Eclipse Plug-in.
+</para>
+
 <sect1 id="plugin-eclipse-installation">
 <title>Installation</title>
+<para>
+Explains the steps involved to install the Eclipse Plug-in.
+</para>
 
-<sect2 id="plugin-eclipse-installation-requirements">
+<sect3 id="plugin-eclipse-installation-requirements">
 <title>System requirements</title>
 <para>
-This Plug-in requires Eclipse 2.0. It may or may not work with prior or
-later builds. See <xref linkend="installation-requirements" /> for the basic requirements
+This Plug-in requires Eclipse 2.0 or higher. It has only been tested with Eclipse 2.0.
+See <xref linkend="installation-requirements" /> for the basic requirements
 to run Jalopy.
 </para>
 
@@ -25,9 +31,9 @@ To obtain more information about this powerful IDE, visit the official
 Eclipse homepage:
 <ulink url="http://www.eclipse.org/">http://www.eclipse.org/</ulink>
 </para>
-</sect2>
+</sect3>
 
-<sect2 id="plugin-eclipse-installation-installation">
+<sect3 id="plugin-eclipse-installation-installation">
 <title>Installation</title>
 <indexterm zone="plugin-eclipse-installation-installation"><primary>Installation</primary><secondary>Eclipse Plug-in</secondary></indexterm>
 <para>
@@ -35,22 +41,35 @@ The Plug-in comes either as a single <filename>.zip</filename> or
 compressed <filename>.tar</filename> archive. Unzipping either one of these
 files into a directory of your choice (referred to as
 <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce two
-subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
+subdirectories <filename>/de.hunsicker.jalopy.plugin.eclipse_<replaceable>version</replaceable></filename>
+and <filename>/docs</filename>.
+</para>
+
+<para>
+<screen>
+..
+  de.hunsicker.jalopy.plugin.eclipse_<replaceable>version</replaceable>/    contains the Plug-in files
+  docs/                                          contains the documentation
+</screen>
 </para>
 
 <para>
 Copy the <filename>de.hunsicker.jalopy.plugin.eclipse_<replaceable>version</replaceable></filename>
-folder from <filename>/bin</filename> into your Eclipse plugin folder and
+folder into your Eclipse plugin directory and
 restart Eclipse. That's all there is to it, you are now ready to run Jalopy
 from within Eclipse.
 </para>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-eclipse-integration">
 <title>Integration</title>
 
-<sect2>
+<para>
+Shows how the Plug-in is integrated into the Eclipse IDE.
+</para>
+
+<sect3>
 <title>Main menu bar</title>
 
 <para>
@@ -88,9 +107,9 @@ enable it permanently, mark
 </menuchoice>
 
 </para>
-</sect2>
+</sect3>
 
-<sect2>
+<sect3>
 <title>Java Editor context menu</title>
 <para>
 The software adds a new menu item to the context menu of Java editors.
@@ -107,9 +126,9 @@ Formats the contents of the editor.
 </para>
 </listitem>
 </itemizedlist>
-</sect2>
+</sect3>
 
-<sect2>
+<sect3>
 <title>Project, Folder, File context menus</title>
 <para>
 The software adds a new menu item to the context menu of projects, folders and
@@ -129,7 +148,7 @@ either all Java source files of the project, the contents of the selected folder
 </para>
 </listitem>
 </itemizedlist>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-eclipse-license">
@@ -138,5 +157,10 @@ either all Java source files of the project, the contents of the selected folder
 The Eclipse Plug-in is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
 released under the Common Public License. See <xref linkend="license-common-public" />
 for more information.
+</para>
+
+<para>
+See <xref linkend="license-bsd" /> for the Jalopy license
+and refer to <xref linkend="dependencies" /> for the license terms of the accompanying 3rd party libraries.
 </para>
 </sect1>

@@ -12,14 +12,22 @@
 <indexterm><primary>Module</primary><secondary>Sun ONE Studio</secondary></indexterm>
 <indexterm><primary>Plug-in</primary><secondary>NetBeans</secondary></indexterm>
 
+<para>
+Describes the installation and usage of the Jalopy NetBeans/Sun ONE Studio Plug-in module.
+</para>
+
 <sect1 id="plugin-netbeans-installation">
 <title>Installation</title>
 
-<sect2 id="plugin-netbeans-installation-requirements">
+<para>
+Explains the steps involved to install the NetBeans Plug-in module.
+</para>
+
+<sect3 id="plugin-netbeans-installation-requirements">
 <title>System requirements</title>
 <para>
-The Plug-in requires NetBeans 3.3 (or above) or Sun ONE Studio 4. It has been
-successfully tested with NetBeans 3.3.1 and 3.3.2.
+The Plug-in requires NetBeans 3.3 (or above) or Sun ONE Studio 4. It has only been
+tested with NetBeans 3.4.
 See <xref linkend="installation-requirements" /> for the basic requirements
 to run Jalopy.
 </para>
@@ -31,9 +39,9 @@ powerful IDE, visit the official NetBeans homepage:
 pages at Sun:
 <ulink url="http://wwws.sun.com/software/sundev/jde/index.html">http://wwws.sun.com/software/sundev/jde/</ulink>
 </para>
-</sect2>
+</sect3>
 
-<sect2 id="plugin-netbeans-installation-installation">
+<sect3 id="plugin-netbeans-installation-installation">
 <title>Installation</title>
 <indexterm zone="plugin-netbeans-installation-installation"><primary>Installation</primary><secondary>NetBeans Module</secondary></indexterm>
 <indexterm zone="plugin-netbeans-installation-installation"><primary>Installation</primary><secondary>Sun ONE Studio Module</secondary></indexterm>
@@ -41,8 +49,16 @@ pages at Sun:
 The Plug-in comes either as a single <filename>.zip</filename> or compressed
 <filename>.tar</filename> file. Unzipping either one of these files into a directory
 of your choice (referred to as <replaceable>&lt;INST_DIR&gt;</replaceable>)
-will produce two subdirectories <filename>/bin</filename> and
-<filename>/docs</filename>.
+will produce two subdirectories <filename>/docs</filename> and
+<filename>/lib</filename>.
+</para>
+
+<para>
+<screen>
+..
+  docs/      contains the documentation
+  lib/       contains all necessary libraries
+</screen>
 </para>
 
 <para>
@@ -71,18 +87,22 @@ Open the Update Center Wizard by selecting
 <para>
 On the first page 'Select Location of modules', choose 'Install Manually
 Downloaded Modules (.nbm Files)', select the <filename>.nbm</filename> contained
-in <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/bin</filename> and
+in <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/lib</filename> and
 proceed through all steps of the wizard as outlined.
 </para>
 </listitem>
 </orderedlist>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-netbeans-integration">
 <title>Integration</title>
 
-<sect2>
+<para>
+Shows how the Plug-in is integrated into the NetBeans IDE.
+</para>
+
+<sect3>
 <title>Workspace main menu</title>
 <para>
 The software adds two new menu items into the main menu of the current
@@ -126,10 +146,10 @@ layout of any formatted code.
 </listitem>
 </itemizedlist>
 <para/>
-</sect2>
+</sect3>
 
 
-<sect2>
+<sect3>
 <title>Explorer popup-menu</title>
 <para>
 The <guimenuitem>Format [All]</guimenuitem> item can be also reached via the
@@ -142,7 +162,7 @@ If it happens that a file has an open editor view, this view will be updated,
 not the actual file. You have to save the view first to see the physical file
 updated.
 </para>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-netbeans-license">
@@ -151,5 +171,10 @@ updated.
 The NetBeans Plug-in is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
 released under the Sun Public License. See <xref linkend="license-sun-public" />
 for more information.
+</para>
+
+<para>
+See <xref linkend="license-bsd" /> for the Jalopy license
+and refer to <xref linkend="dependencies" /> for the license terms of the accompanying 3rd party libraries.
 </para>
 </sect1>

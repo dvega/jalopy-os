@@ -14,22 +14,37 @@ The Console application provides a powerful command line interface for Jalopy.
 
 <sect1 id="plugin-console-installation">
 <title>Installation</title>
-<sect2 id="plugin-console-installation-requirements">
+
+<para>
+Explains the steps involved to install the Console Plug-in.
+</para>
+
+<sect3 id="plugin-console-installation-requirements">
 <title>System requirements</title>
 <para>
 See <xref linkend="installation-requirements" /> for the basic requirements to
 run Jalopy.
 </para>
-</sect2>
+</sect3>
 
-<sect2 id="plugin-console-installation-installation">
+<sect3 id="plugin-console-installation-installation">
 <title>Installation</title>
 <indexterm zone="plugin-console-installation-installation"><primary>Installation</primary><secondary>Ant</secondary></indexterm>
 <para>
 The Plug-in comes either as a single <filename>.zip</filename> or compressed <filename>.tar</filename> file.
 Unzipping either one of these files into a directory of your choice (referred
-to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce two
-subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
+to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce three
+subdirectories <filename>/bin</filename>, <filename>/docs</filename> and
+<filename>/lib</filename>.
+</para>
+
+<para>
+<screen>
+..
+  bin/       contains wrapper scripts for different platforms
+  docs/      contains the documentation
+  lib/       contains all necessary libraries
+</screen>
 </para>
 
 <para>
@@ -47,7 +62,7 @@ For the Unix Bash shell, this means can be achieved using
 </para>
 
 <synopsis>
-export CLASSPATH=${CLASSPATH}:<replaceable>&lt;INST_DIR&gt;</replaceable>/bin/jalopy-console-<replaceable>&lt;version&gt;</replaceable>.jar
+export CLASSPATH=${CLASSPATH}:<replaceable>&lt;INST_DIR&gt;</replaceable>/lib/jalopy-console-<replaceable>&lt;version&gt;</replaceable>.jar
 </synopsis>
 
 <para>
@@ -55,26 +70,38 @@ For Windows, use something like
 </para>
 
 <synopsis>
-set CLASSPATH=%CLASSPATH%;<replaceable>&lt;INST_DIR&gt;</replaceable>\bin\jalopy-console-<replaceable>&lt;version&gt;</replaceable>.jar
+set CLASSPATH=%CLASSPATH%;<replaceable>&lt;INST_DIR&gt;</replaceable>\lib\jalopy-console-<replaceable>&lt;version&gt;</replaceable>.jar
 </synopsis>
 
 <para>
 Refer to your system documentation on how to apply these changes more permanently.
 </para>
 
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-console-usage">
 <title>Usage</title>
 
-<sect2 id="synopsis">
+<para>
+Presents the available command line options along with some usage examples.
+</para>
+
+<sect3 id="synopsis">
 <title>Synopsis</title>
 <indexterm><primary>Synopsis</primary></indexterm>
 <indexterm><primary>Usage</primary></indexterm>
 <indexterm><primary>Command line</primary></indexterm>
 <para>
 To start Jalopy from the command line you may either use
+</para>
+
+<synopsis>
+jalopy [-options] <replaceable>args</replaceable>...
+</synopsis>
+
+<para>
+or
 </para>
 
 <synopsis>
@@ -98,10 +125,6 @@ You can specify as many <replaceable>args</replaceable> as you want,
 where <replaceable>args</replaceable> describes either files,
 directories or filter expressions. You can use any valid Perl5 (5.003)
 regular expression as a filter expression.
-</para>
-<para>
-Additionally, wrapper scripts for these Java specific commands are provided for different platforms. Check the
-<filename>/bin</filename> directory of your distribution.
 </para>
 
 <indexterm zone="usage-options"><primary>Command line</primary><secondary>options</secondary></indexterm>
@@ -130,13 +153,13 @@ Additionally, wrapper scripts for these Java specific commands are provided for 
 </screen>
 
 <para>
-If no input file(s) are given, Jalopy starts listening on STDIN.
+If no input file(s) are given, Jalopy starts listening on <emphasis>STDIN</emphasis>.
 </para>
 </simplesect>
-</sect2>
+</sect3>
 
 
-<sect2 id="plugin-console-usage-example">
+<sect3 id="plugin-console-usage-example">
 <title>Examples</title>
 
 <para>
@@ -146,7 +169,7 @@ If no input file(s) are given, Jalopy starts listening on STDIN.
 <indexterm><primary>Usage</primary><secondary>examples</secondary></indexterm>
 
 <synopsis>
-java Jalopy -r <replaceable>myDirectory</replaceable>
+jalopy -r <replaceable>myDirectory</replaceable>
 </synopsis>
 
 <para>
@@ -159,7 +182,7 @@ of the original source files will be kept.
 <example id="ex-command-line-two">
 <title>Sample command line usage</title>
 <synopsis>
-java Jalopy -d <replaceable>/directory</replaceable> -f DOS
+jalopy -d <replaceable>/directory</replaceable> -f DOS
 <replaceable>myFile1.java myFile2.java</replaceable>
 </synopsis>
 <para>
@@ -173,7 +196,7 @@ format of the new files.
 <example  id="ex-command-line-three">
 <title>Sample command line usage</title>
 <synopsis>
-java Jalopy -r 3 -d <replaceable>/directory</replaceable> ^A.*java
+jalopy -r 3 -d <replaceable>/directory</replaceable> ^A.*java
 </synopsis>
 
 <para>
@@ -187,7 +210,7 @@ original source files will be kept.
 <example  id="ex-command-line-four">
 <title>Sample command line usage</title>
 <synopsis>
-type f:\test\in.java | java Jalopy > out.java
+type f:\test\in.java | jalopy > out.java
 </synopsis>
 
 <para>
@@ -198,7 +221,7 @@ current directory.
 </example>
 
 </para>
-</sect2>
+</sect3>
 </sect1>
 
 <sect1 id="plugin-console-license">
@@ -207,5 +230,10 @@ current directory.
 The Console Plug-in is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
 released under the GNU General Public License. See <xref linkend="license-gnu" />
 for more information.
+</para>
+
+<para>
+See <xref linkend="license-bsd" /> for the Jalopy license
+and refer to <xref linkend="dependencies" /> for the license terms of the accompanying 3rd party libraries.
 </para>
 </sect1>
