@@ -151,25 +151,6 @@ final class JbProject
      */
     private void walkChildren(Node node)
     {
-        if (Loggers.IO.isDebugEnabled())
-        {
-            Node[] nodes = Browser.getActiveBrowser().getOpenNodes(_project);
-
-            boolean open = false;
-
-            for (int i = 0; i < nodes.length; i++)
-            {
-                if (nodes[i] == node)
-                {
-                    open = true;
-
-                    break;
-                }
-            }
-
-            System.err.println("Iterate over -- " + node + " " + open);
-        }
-
         Node[] nodes = node.getDisplayChildren();
 
         for (int i = 0; i < nodes.length; i++)
