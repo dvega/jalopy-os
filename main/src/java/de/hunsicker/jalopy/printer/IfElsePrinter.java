@@ -137,7 +137,7 @@ final class IfElsePrinter
                 {
                     out.printLeftBrace(
                         leftBraceNewline && !out.newline, NodeWriter.NEWLINE_YES,
-                        !leftBraceNewline && !out.newline);
+                        NodeWriter.NEWLINE_YES);
                 }
                 else
                 {
@@ -153,7 +153,9 @@ final class IfElsePrinter
             }
             else
             {
-                out.printNewline();
+                if (!out.newline)
+                    out.printNewline();
+
                 out.indent();
                 PrinterFactory.create(body).print(body, out);
                 out.unindent();
@@ -177,7 +179,7 @@ final class IfElsePrinter
 
             offset = out.print(ELSE, JavaTokenTypes.LITERAL_else);
 
-            trackPosition((JavaNode) next, out.line, offset, out);
+            trackPosition(next, out.line, offset, out);
 
             JavaNode block = (JavaNode) next.getNextSibling();
 
