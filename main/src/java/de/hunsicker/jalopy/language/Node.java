@@ -448,6 +448,11 @@ public class Node
         return result;
     }
 
+    public int hashCode()
+    {
+        return this.text.hashCode() + this.type;
+    }
+
 
     /**
      * Compares the specified object with this object for equality. Returns
@@ -469,9 +474,8 @@ public class Node
         if (o instanceof Node)
         {
             Node node = (Node) o;
-            boolean result = this.text.equals(node.text) && (this.type == node.type);
 
-            return result;
+            return this.text.equals(node.text) && (this.type == node.type);
         }
 
         return false;

@@ -63,7 +63,7 @@ final class NodeComparator
      * Compares its two arguments for order. Returns a negative integer, zero, or a
      * positive integer as the first argument is less than, equal to, or greater than
      * the second.
-     * 
+     *
      * <p>
      * Delegates to {@link #compareNodes} to perform the comparison.
      * </p>
@@ -85,66 +85,6 @@ final class NodeComparator
 
         return compareNodes((AST) o1, (AST) o2);
     }
-
-
-    /**
-     * Indicates whether some other object is <code>equal to</code> this one.
-     *
-     * @param o the reference object with which to compare.
-     *
-     * @return <code>true</code> if this object is the same as the obj argument.
-     */
-    public boolean equals(Object o)
-    {
-        return false;
-    }
-
-
-    /**
-     * Determines whether the given (method) name makes up a Java bean method to test for
-     * a boolean condition.
-     *
-     * @param name method name.
-     *
-     * @return <code>true</code> if the given name denotes a Java bean tester method.
-     */
-    protected boolean isBooleanTester(String name)
-    {
-        if (name.length() > 2)
-        {
-            if (
-                (name.startsWith("is") && Character.isUpperCase(name.charAt(2)))
-                || (name.startsWith("has") && Character.isUpperCase(name.charAt(3)))
-                || (name.startsWith("should") && Character.isUpperCase(name.charAt(6))))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Determines if the given (method) name makes up for Java bean method getter.
-     *
-     * @param name method name.
-     *
-     * @return <code>true</code> if the given name denotes a Java bean getter method.
-     */
-    protected boolean isGetter(String name)
-    {
-        if (name.length() > 3)
-        {
-            if (name.startsWith("get") && Character.isUpperCase(name.charAt(3)))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 
     /**
      * Returns the number of parameters of the given node.
@@ -171,27 +111,6 @@ final class NodeComparator
         }
 
         return result;
-    }
-
-
-    /**
-     * Determines if the given (method) name makes up for Java bean method setter.
-     *
-     * @param name method name.
-     *
-     * @return <code>true</code> if the given name denotes a Java bean setter method.
-     */
-    protected boolean isSetter(String name)
-    {
-        if (name.length() > 3)
-        {
-            if (name.startsWith("set") && Character.isUpperCase(name.charAt(3)))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 

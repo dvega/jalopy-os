@@ -81,7 +81,7 @@ final class SortTransformation
         }
 
         AST first = null;
-LOOP: 
+LOOP:
 
         // advance to the first CLASS_DEF or INTERFACE_DEF
         for (AST child = tree.getFirstChild(); child != null;
@@ -351,14 +351,14 @@ LOOP:
         {
             case JavaTokenTypes.CLASS_DEF :
                 lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling()
+                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
                                    .getNextSibling().getNextSibling();
 
                 break;
 
             case JavaTokenTypes.INTERFACE_DEF :
                 lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling()
+                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
                                    .getNextSibling();
 
                 break;
