@@ -39,16 +39,16 @@
     </viewerContribution>
   </extension>
 
-<!--<extension point="org.eclipse.ui.editorActions"> 
-	<editorContribution id="editor2" 
-		                  targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
-		<action	id="action11" 
-			      label="Editor Action 1" 
-			      tooltip="Tooltip for Editor Action 1"
-			      menubarPath="navigate/showGroup"
-			      class="de.hunsicker.jalopy.plugin.eclipse.EditorPopupAction"> 
-		</action>
-	</editorContribution> 
+<!--<extension point="org.eclipse.ui.editorActions">
+    <editorContribution id="editor2"
+                          targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+        <action id="action11"
+                  label="Editor Action 1"
+                  tooltip="Tooltip for Editor Action 1"
+                  menubarPath="navigate/showGroup"
+                  class="de.hunsicker.jalopy.plugin.eclipse.EditorPopupAction">
+        </action>
+    </editorContribution>
 </extension> -->
 
   <!-- ==================================================================== -->
@@ -162,35 +162,35 @@
   </extension>
 
   <extension point="org.eclipse.ui.actionSetPartAssociations">
-  	<actionSetPartAssociation targetID="actionSet">
-  	  <part id="org.eclipse.team.ui.sync.SyncView" />
-  	  <part id="org.eclipse.vcm.ui.SyncView" />
-  	  <part id="org.eclipse.vcm.ui.RepositoryView" />
-  	  <part id="org.eclipse.vcm.ui.HistoryView" />
-  	  <part id="org.eclipse.ui.views.TaskList" />
-  	  <part id="org.eclipse.ui.views.ContentOutline" />
-  		<part id="org.eclipse.ui.views.ResourceNavigator" />
-  		<part id="org.eclipse.jdt.ui.PackageExplorer" />
-  		<part id="org.eclipse.jdt.ui.TypeHierarchy" />
-  		<part id="org.eclipse.jdt.ui.CompilationUnitEditor" />
-  		<part id="org.eclipse.jdt.ui.ClassFileEditor" />
-  		<part id="org.eclipse.jdt.ui.ProjectsView" />
-  		<part id="org.eclipse.jdt.ui.PackagesView" />
-  		<part id="org.eclipse.jdt.ui.TypesView" />
-  		<part id="org.eclipse.jdt.ui.MembersView" />
-  	</actionSetPartAssociation>
+    <actionSetPartAssociation targetID="actionSet">
+      <part id="org.eclipse.team.ui.sync.SyncView" />
+      <part id="org.eclipse.vcm.ui.SyncView" />
+      <part id="org.eclipse.vcm.ui.RepositoryView" />
+      <part id="org.eclipse.vcm.ui.HistoryView" />
+      <part id="org.eclipse.ui.views.TaskList" />
+      <part id="org.eclipse.ui.views.ContentOutline" />
+      <part id="org.eclipse.ui.views.ResourceNavigator" />
+      <part id="org.eclipse.jdt.ui.PackageExplorer" />
+      <part id="org.eclipse.jdt.ui.TypeHierarchy" />
+      <part id="org.eclipse.jdt.ui.CompilationUnitEditor" />
+      <part id="org.eclipse.jdt.ui.ClassFileEditor" />
+      <part id="org.eclipse.jdt.ui.ProjectsView" />
+      <part id="org.eclipse.jdt.ui.PackagesView" />
+      <part id="org.eclipse.jdt.ui.TypesView" />
+      <part id="org.eclipse.jdt.ui.MembersView" />
+    </actionSetPartAssociation>
   </extension>
 
   <!--
   <extension point="org.eclipse.ui.preferencePages">
-    <page id="GeneralPage" 
-          class="de.hunsicker.jalopy.plugin.eclipse.prefs.GeneralPage" 
-          name="Jalopy Preferences"> 
+    <page id="GeneralPage"
+          class="de.hunsicker.jalopy.plugin.eclipse.prefs.GeneralPage"
+          name="Jalopy Preferences">
     </page>
-    <page id="BracesPage" 
-          class="de.hunsicker.jalopy.plugin.eclipse.prefs.BracesPage" 
-          name="Braces"  
-          category="GeneralPage"> 
+    <page id="BracesPage"
+          class="de.hunsicker.jalopy.plugin.eclipse.prefs.BracesPage"
+          name="Braces"
+          category="GeneralPage">
     </page>
   </extension>
   -->

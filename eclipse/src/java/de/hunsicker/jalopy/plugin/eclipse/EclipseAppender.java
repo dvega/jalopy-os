@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -14,6 +14,7 @@ import de.hunsicker.jalopy.plugin.AbstractAppender;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
+
 import org.apache.oro.text.regex.MatchResult;
 
 import org.eclipse.core.resources.IFile;
@@ -28,19 +29,18 @@ import org.eclipse.core.runtime.Path;
 
 /**
  * Appender which displays warning and error messages in an Eclipse task view.
- * 
- * @version $Revision$
+ *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 final class EclipseAppender
     extends AbstractAppender
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String ID_MARKER = EclipsePlugin.ID + 
-                                            ".JalopyProblemMarker";
+    private static final String ID_MARKER = EclipsePlugin.ID + ".JalopyProblemMarker";
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new EclipseAppender object.
@@ -49,13 +49,13 @@ final class EclipseAppender
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the marker severity for the given logging event.
-     * 
+     *
      * @param ev logging event.
-     * 
+     *
      * @return the marker severity for the given logging event.
      */
     public int getSeverity(LoggingEvent ev)
@@ -77,7 +77,7 @@ final class EclipseAppender
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @param ev DOCUMENT ME!
      */
     public void append(LoggingEvent ev)
@@ -122,14 +122,12 @@ final class EclipseAppender
 
                     IMarker marker = file.createMarker(ID_MARKER);
                     marker.setAttribute(IMarker.SEVERITY, severity);
-                    marker.setAttribute(IMarker.PRIORITY, 
-                                        IMarker.PRIORITY_NORMAL);
+                    marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_NORMAL);
                     marker.setAttribute(IMarker.MESSAGE, text);
 
                     if (lineno > 0)
                     {
-                        marker.setAttribute(IMarker.LINE_NUMBER, 
-                                            new Integer(lineno));
+                        marker.setAttribute(IMarker.LINE_NUMBER, new Integer(lineno));
                     }
 
                     break;
@@ -156,8 +154,8 @@ final class EclipseAppender
     {
         try
         {
-            ResourcesPlugin.getWorkspace().getRoot()
-               .deleteMarkers(ID_MARKER, true, IResource.DEPTH_INFINITE);
+            ResourcesPlugin.getWorkspace().getRoot().deleteMarkers(
+                ID_MARKER, true, IResource.DEPTH_INFINITE);
         }
         catch (CoreException ignored)
         {

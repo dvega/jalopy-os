@@ -1,4 +1,46 @@
 <jalopy>
+    <inspector>
+        <tips>
+            <stringLiterallI18n>true</stringLiterallI18n>
+            <neverDeclareException>false</neverDeclareException>
+            <replaceStructureWithClass>false</replaceStructureWithClass>
+            <neverDeclareThrowable>false</neverDeclareThrowable>
+            <wrongCollectionComment>false</wrongCollectionComment>
+            <declareCollectionComment>false</declareCollectionComment>
+            <referToObjectsByInterface>false</referToObjectsByInterface>
+            <useInterfaceOnlyForTypes>false</useInterfaceOnlyForTypes>
+            <overrideToString>false</overrideToString>
+            <alwaysOverrideEquals>false</alwaysOverrideEquals>
+            <dontIgnoreExceptions>false</dontIgnoreExceptions>
+            <neverReturnZeroArrays>false</neverReturnZeroArrays>
+            <alwaysOverrideHashCode>false</alwaysOverrideHashCode>
+            <neverUseEmptyFinally>false</neverUseEmptyFinally>
+            <avoidThreadGroups>false</avoidThreadGroups>
+            <dontSubstituteObjectEquals>false</dontSubstituteObjectEquals>
+            <neverInvokeWaitOutsideLoop>false</neverInvokeWaitOutsideLoop>
+            <obeyContractEquals>false</obeyContractEquals>
+        </tips>
+        <naming>
+            <packages>[a-z]+(?:\.[a-z]+)*</packages>
+            <classes>[A-Z][a-zA-Z0-9]*</classes>
+            <fieldPrivateStaticFinal>[a-zA-Z][\w]*</fieldPrivateStaticFinal>
+            <fieldPrivate>[a-z][\w]*</fieldPrivate>
+            <fieldPrivateStatic>[a-z][\w]*</fieldPrivateStatic>
+            <fieldPublicStatic>[a-z][\w]*</fieldPublicStatic>
+            <fieldPublic>[a-z][\w]*</fieldPublic>
+            <fieldPublicStaticFinal>[a-zA-Z][\w]*</fieldPublicStaticFinal>
+            <fieldProtectedStatic>[a-z][\w]*</fieldProtectedStatic>
+            <label>[a-zA-Z0-9_]+</label>
+            <fieldFriendlyStaticFinal>[a-zA-Z][\w]*</fieldFriendlyStaticFinal>
+            <fieldProtected>[a-z][\w]*</fieldProtected>
+            <fieldFriendlyStatic>[a-z][\w]*</fieldFriendlyStatic>
+            <fieldFriendly>[a-z][\w]*</fieldFriendly>
+            <fieldProtectedStaticFinal>[a-zA-Z][\w]*</fieldProtectedStaticFinal>
+            <interfaces>[A-Z][a-zA-Z0-9]*</interfaces>
+            <abstractClasses>[A-Z][a-zA-Z0-9]*</abstractClasses>
+        </naming>
+        <enable>false</enable>
+    </inspector>
     <printer>
         <whitespace>
             <paddingLogicalOperators>true</paddingLogicalOperators>
@@ -12,10 +54,10 @@
             <beforeBracketsTypes>false</beforeBracketsTypes>
             <paddingMathematicalOperators>true</paddingMathematicalOperators>
             <afterComma>true</afterComma>
-            <afterCastingParenthesis>false</afterCastingParenthesis>
+            <afterCastingParenthesis>true</afterCastingParenthesis>
             <paddingBitwiseOperators>true</paddingBitwiseOperators>
-            <beforeCaseColon>true</beforeCaseColon>
             <padddingTypeCast>false</padddingTypeCast>
+            <beforeCaseColon>true</beforeCaseColon>
             <beforeBrackets>false</beforeBrackets>
             <padddingBrackets>false</padddingBrackets>
             <paddingRelationalOperators>true</paddingRelationalOperators>
@@ -23,6 +65,31 @@
             <beforeMethodDeclarationParenthesis>false</beforeMethodDeclarationParenthesis>
             <afterSemiColon>true</afterSemiColon>
         </whitespace>
+        <wrapping>
+            <beforeRightParen>false</beforeRightParen>
+            <paramsMethodDef>true</paramsMethodDef>
+            <beforeOperator>true</beforeOperator>
+            <afterImplementsTypesIfExceeded>false</afterImplementsTypesIfExceeded>
+            <use>true</use>
+            <afterExtendsTypes>false</afterExtendsTypes>
+            <parenGrouping>false</parenGrouping>
+            <arrayElements>0</arrayElements>
+            <beforeExtends>true</beforeExtends>
+            <ifFirst>false</ifFirst>
+            <afterLabel>true</afterLabel>
+            <paramsMethodCall>false</paramsMethodCall>
+            <afterExtendsTypesIfExceeded>false</afterExtendsTypesIfExceeded>
+            <afterThrowsTypes>false</afterThrowsTypes>
+            <beforeImplements>true</beforeImplements>
+            <afterThrowsTypesIfExceeded>false</afterThrowsTypesIfExceeded>
+            <afterLeftParen>true</afterLeftParen>
+            <beforeThrows>true</beforeThrows>
+            <afterImplementsTypes>false</afterImplementsTypes>
+            <paramsMethodCallIfCall>false</paramsMethodCallIfCall>
+            <afterChainedMethodCall>false</afterChainedMethodCall>
+            <afterAssign>true</afterAssign>
+            <lineLength>90</lineLength>
+        </wrapping>
         <blankLines>
             <afterClass>2</afterClass>
             <beforeBraceRight>0</beforeBraceRight>
@@ -42,7 +109,7 @@
             <beforeJavadoc>1</beforeJavadoc>
             <beforeBlock>1</beforeBlock>
             <afterBraceLeft>0</afterBraceLeft>
-            <beforeCommentSingleLine>1</beforeCommentSingleLine>
+            <beforeCommentSingleLine>0</beforeCommentSingleLine>
             <afterLastImport>2</afterLastImport>
             <afterHeader>0</afterHeader>
         </blankLines>
@@ -54,20 +121,23 @@
             <general>4</general>
             <firstColumnComments>false</firstColumnComments>
             <tabs>
-                <size>8</size>
+                <size>4</size>
                 <use>false</use>
+                <useOnlyLeading>false</useOnlyLeading>
             </tabs>
             <extends>-1</extends>
             <caseFromSwitch>true</caseFromSwitch>
             <braceLeft>0</braceLeft>
-            <continuation>2</continuation>
+            <continuation>4</continuation>
+            <continationOperator>false</continationOperator>
             <deep>60</deep>
             <parameter>-1</parameter>
             <braceRight>0</braceRight>
-            <throws>4</throws>
+            <throws>2</throws>
             <commentEndline>1</commentEndline>
             <useMethodCallParams>false</useMethodCallParams>
             <braceRightAfter>0</braceRightAfter>
+            <policyDeep>false</policyDeep>
             <implements>-1</implements>
             <continationIf>false</continationIf>
         </indentation>
@@ -84,29 +154,12 @@
             <variable>true</variable>
             <orderModifiers>public,protected,private,abstract,static,final,synchronized,transient,volatile,native,strictfp</orderModifiers>
         </sorting>
-        <wrapping>
-            <paramsMethodDef>true</paramsMethodDef>
-            <beforeOperator>false</beforeOperator>
-            <use>true</use>
-            <afterExtendsTypes>true</afterExtendsTypes>
-            <arrayElements>0</arrayElements>
-            <beforeExtends>true</beforeExtends>
-            <afterLabel>true</afterLabel>
-            <paramsMethodCall>false</paramsMethodCall>
-            <afterThrowsTypes>true</afterThrowsTypes>
-            <beforeImplements>true</beforeImplements>
-            <beforeThrows>true</beforeThrows>
-            <afterImplementsTypes>true</afterImplementsTypes>
-            <paramsMethodCallIfCall>false</paramsMethodCallIfCall>
-            <afterChainedMethodCall>false</afterChainedMethodCall>
-            <lineLength>79</lineLength>
-        </wrapping>
         <comments>
             <separator>
                 <interface>Inner Interfaces</interface>
                 <instanceInit>Instance initializers</instanceInit>
                 <instanceVariable>Instance variables</instanceVariable>
-                <fillCharacter>·</fillCharacter>
+                <fillCharacter>-</fillCharacter>
                 <staticVariableInit>Static variables/initializers</staticVariableInit>
                 <ctor>Constructors</ctor>
                 <method>Methods</method>
@@ -123,16 +176,27 @@
                         <return> * @return DOCUMENT ME!</return>
                         <param> * @param $paramType$ DOCUMENT ME!</param>
                     </methods>
+                    <interface>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</interface>
+                    <constructors>
+                        <param> * @param $paramType$ DOCUMENT ME!</param>
+                        <bottom> */</bottom>
+                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
+                        <top>/**| * Creates a new $objectType$ object.</top>
+                    </constructors>
+                    <classes>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</classes>
+                    <variables>/** DOCUMENT ME! */</variables>
                 </templates>
                 <tags>
-                    <standard>@todo</standard>
+                    <standard />
                     <in-line />
                 </tags>
                 <remove>false</remove>
                 <addMethod>5</addMethod>
                 <addClass>5</addClass>
                 <checkTags>true</checkTags>
+                <checkThrowsTags>true</checkThrowsTags>
                 <addField>5</addField>
+                <fieldsShort>true</fieldsShort>
                 <parseComments>true</parseComments>
                 <checkInnerClass>false</checkInnerClass>
             </javadoc>
@@ -143,12 +207,13 @@
         </comments>
         <footer>
             <keys />
-            <text></text>
+            <text />
             <use>false</use>
             <smartModeLines>0</smartModeLines>
         </footer>
         <braces>
             <treatMethodClassDifferent>false</treatMethodClassDifferent>
+            <treatMethodClassDifferentIfWrapped>false</treatMethodClassDifferentIfWrapped>
             <insertBracesWhile>true</insertBracesWhile>
             <removeBracesWhile>false</removeBracesWhile>
             <insertBracesFor>true</insertBracesFor>
@@ -166,30 +231,27 @@
         <header>
             <smartModeLines>0</smartModeLines>
             <use>true</use>
-            <keys>Jalopy Java Source Code Formatter|Sun Public License Notice|Common Public License|THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</keys>
-            <text>/*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
- *
- * The contents of this file are subject to the Common Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.eclipse.org/
- *
- * $Id$
- */</text>
+            <keys>Marco Hunsicker|Jalopy Java Source Code Formatter|Sun Public License Notice|Common Public License|THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</keys>
+            <text>/*| * Copyright (c) 2002, Marco Hunsicker. All rights reserved.| *| * The contents of this file are subject to the Common Public License| * Version 1.0 (the "License"). You may not use this file except in| * compliance with the License. A copy of the License is available at| * http://www.eclipse.org/| *| * Copyright (c) 2001-2002 Marco Hunsicker| */</text>
         </header>
         <chunks>
             <byBlankLines>true</byBlankLines>
             <byComments>true</byComments>
         </chunks>
-        <environment />
         <alignment>
+            <methodCallChains>true</methodCallChains>
             <varIdents>false</varIdents>
             <ParamsMethodDef>true</ParamsMethodDef>
             <varAssigns>false</varAssigns>
+            <ternaryOperator>true</ternaryOperator>
             <ternaryExpresssion>false</ternaryExpresssion>
             <ternaryValue>true</ternaryValue>
         </alignment>
+        <misc>
+            <insertTrailingNewline>true</insertTrailingNewline>
+            <arrayBracketsAfterIdent>false</arrayBracketsAfterIdent>
+        </misc>
+        <environment />
         <history>
             <policy>History.Policy [disabled]</policy>
         </history>
@@ -202,19 +264,19 @@
         </misc>
         <import>
             <policy>ImportPolicy [expand]</policy>
-            <grouping>javax:1|java:1|gnu:2|com.borland:2|org.apache:2|de.hunsicker:2|org.openide:2|org.eclipse:2</grouping>
+            <grouping>*:1|java:1|javax:1|com.borland:2|de.hunsicker:2|gnu:2|org.apache:3|org.eclipse:2|org.netbeans:2|org.openide:2|oracle:1</grouping>
             <groupingDepth>3</groupingDepth>
             <sort>true</sort>
         </import>
     </transform>
     <messages>
-        <transformMsgPrio>30000</transformMsgPrio>
+        <transformMsgPrio>10000</transformMsgPrio>
         <printerMsgPrio>30000</printerMsgPrio>
         <parserJavadocMsgPrio>30000</parserJavadocMsgPrio>
         <parserMsgPrio>30000</parserMsgPrio>
         <printerJavadocMsgPrio>30000</printerJavadocMsgPrio>
         <showErrorStackTrace>true</showErrorStackTrace>
-        <ioMsgPrio>30000</ioMsgPrio>
+        <ioMsgPrio>10000</ioMsgPrio>
     </messages>
     <general>
         <styleDescription>Jalopy code convention with CPL header</styleDescription>
@@ -223,9 +285,9 @@
         <sourceVersion>14</sourceVersion>
         <threadCount>1</threadCount>
         <backupLevel>0</backupLevel>
-        <forceFormatting>false</forceFormatting>
+        <forceFormatting>true</forceFormatting>
     </general>
     <internal>
-        <version>4</version>
+        <version>5</version>
     </internal>
 </jalopy>

@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse.prefs;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.Text;
 public class GeneralPage
     extends AbstractPage
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     private Text _descriptionTextField;
     private Text _nameTextField;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new GeneralPage object.
@@ -44,17 +44,18 @@ public class GeneralPage
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @return DOCUMENT ME!
      */
     public boolean performOk()
     {
-        prefs.put(Keys.STYLE_NAME, _nameTextField.getText());
-        prefs.put(Keys.STYLE_DESCRIPTION, _descriptionTextField.getText());
+        this.settings.put(ConventionKeys.CONVENTION_NAME, _nameTextField.getText());
+        this.settings.put(
+            ConventionKeys.CONVENTION_DESCRIPTION, _descriptionTextField.getText());
 
         return true;
     }
@@ -66,9 +67,9 @@ public class GeneralPage
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @param parent DOCUMENT ME!
-     * 
+     *
      * @return DOCUMENT ME!
      */
     protected Control createContents(final Composite parent)
@@ -82,8 +83,8 @@ public class GeneralPage
         layout.numColumns = 2;
         group.setLayout(layout);
 
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL | 
-                                   GridData.VERTICAL_ALIGN_BEGINNING);
+        GridData gd =
+            new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
         group.setLayoutData(gd);
         group.setText("Convention");
 
@@ -92,15 +93,19 @@ public class GeneralPage
         _nameTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         _nameTextField.setLayoutData(gd);
-        _nameTextField.setText(prefs.get(Keys.STYLE_NAME, Defaults.STYLE_NAME));
+        _nameTextField.setText(
+            this.settings.get(
+                ConventionKeys.CONVENTION_NAME, ConventionDefaults.CONVENTION_NAME));
 
         Label descLabel = new Label(group, SWT.NULL);
         descLabel.setText("Description:");
         _descriptionTextField = new Text(group, SWT.SINGLE | SWT.BORDER);
         gd = new GridData(GridData.FILL_HORIZONTAL);
         _descriptionTextField.setLayoutData(gd);
-        _descriptionTextField.setText(prefs.get(Keys.STYLE_DESCRIPTION, 
-                                                Defaults.STYLE_DESCRIPTION));
+        _descriptionTextField.setText(
+            this.settings.get(
+                ConventionKeys.CONVENTION_DESCRIPTION,
+                ConventionDefaults.CONVENTION_DESCRIPTION));
 
         Composite buttons = new Composite(container, SWT.NULL);
         layout = new GridLayout();
@@ -123,13 +128,13 @@ public class GeneralPage
                    {
                        InputStream in = new BufferedInputStream(
                                                 new FileInputStream(filename));
-                       prefs.importPreferences(in);
-                       _nameTextField.setText(prefs.get(
-                                                      Key.STYLE_NAME, 
-                                                      Defaults.STYLE_NAME));
+                       settings.importConvention(in);
+                       _nameTextField.setText(settings.get(
+                                                      Key.CONVENTION_NAME,
+                                                      ConventionDefaults.CONVENTION_NAME));
                        _descriptionTextField.setText(prefs.get(
-                                                             Key.STYLE_DESCRIPTION, 
-                                                             Defaults.STYLE_DESCRIPTION));
+                                                             Key.CONVENTION_DESCRIPTION,
+                                                             ConventionDefaults.CONVENTION_DESCRIPTION));
                    }
                    catch (Exception ex)
                    {
@@ -179,7 +184,7 @@ public class GeneralPage
     /**
      * DOCUMENT ME!
      */
-    protected void performDefaults()
+    protected void performConventionDefaults()
     {
     }
 }

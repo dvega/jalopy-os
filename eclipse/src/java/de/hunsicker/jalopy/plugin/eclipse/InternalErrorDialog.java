@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -28,28 +28,27 @@ import org.eclipse.swt.widgets.Text;
 
 
 /**
- * Added a Details button to the MessageDialog to show the exception stack
- * trace.
+ * Added a Details button to the MessageDialog to show the exception stack trace.
  */
 public class InternalErrorDialog
     extends MessageDialog
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Size of the text in lines. */
     private static final int TEXT_LINE_COUNT = 15;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     private Text text;
     private Throwable detail;
     private int detailButtonID = -1;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new InternalErrorDialog object.
-     * 
+     *
      * @param parentShell DOCUMENT ME!
      * @param dialogTitle DOCUMENT ME!
      * @param dialogTitleImage DOCUMENT ME!
@@ -59,35 +58,37 @@ public class InternalErrorDialog
      * @param dialogButtonLabels DOCUMENT ME!
      * @param defaultIndex DOCUMENT ME!
      */
-    public InternalErrorDialog(Shell     parentShell, 
-                               String    dialogTitle, 
-                               Image     dialogTitleImage, 
-                               String    dialogMessage, 
-                               Throwable detail, 
-                               int       dialogImageType, 
-                               String[]  dialogButtonLabels, 
-                               int       defaultIndex)
+    public InternalErrorDialog(
+        Shell     parentShell,
+        String    dialogTitle,
+        Image     dialogTitleImage,
+        String    dialogMessage,
+        Throwable detail,
+        int       dialogImageType,
+        String[]  dialogButtonLabels,
+        int       defaultIndex)
     {
-        super(parentShell, dialogTitle, dialogTitleImage, dialogMessage, 
-              dialogImageType, dialogButtonLabels, defaultIndex);
+        super(
+            parentShell, dialogTitle, dialogTitleImage, dialogMessage, dialogImageType,
+            dialogButtonLabels, defaultIndex);
         this.detail = detail;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Convenience method to open a standard error dialog.
-     * 
-     * @param parent the parent shell of the dialog, or <code>null</code> if
-     *        none
+     *
+     * @param parent the parent shell of the dialog, or <code>null</code> if none
      * @param title the dialog's title, or <code>null</code> if none
      * @param message the message
      * @param detail the detail throwable.
      */
-    public static void openError(Shell     parent, 
-                                 String    title, 
-                                 String    message, 
-                                 Throwable detail)
+    public static void openError(
+        Shell     parent,
+        String    title,
+        String    message,
+        Throwable detail)
     {
         String[] labels;
 
@@ -97,17 +98,18 @@ public class InternalErrorDialog
         }
         else
         {
-            labels = new String[] 
-            {
-                IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL
-            };
+            labels =
+                new String[] 
+                {
+                    IDialogConstants.OK_LABEL, IDialogConstants.SHOW_DETAILS_LABEL
+                };
         }
 
-        InternalErrorDialog dialog = new InternalErrorDialog(parent, title, 
-                                                             null, // accept the default window icon
-                                                             message, detail, 
-                                                             ERROR, // ok is the default
-                                                             labels, 0);
+        InternalErrorDialog dialog =
+            new InternalErrorDialog(
+                parent, title, null, // accept the default window icon
+                message, detail, ERROR, // ok is the default
+                labels, 0);
 
         if (detail != null)
         {
@@ -122,44 +124,43 @@ public class InternalErrorDialog
 
     /**
      * Convenience method to open a simple Yes/No question dialog.
-     * 
-     * @param parent the parent shell of the dialog, or <code>null</code> if
-     *        none
+     *
+     * @param parent the parent shell of the dialog, or <code>null</code> if none
      * @param title the dialog's title, or <code>null</code> if none
      * @param message the message
      * @param detail the detail throwable.
-     * 
-     * @return <code>true</code> if the user presses the OK button,
-     *         <code>false</code> otherwise
+     *
+     * @return <code>true</code> if the user presses the OK button, <code>false</code>
+     *         otherwise
      */
-    public static boolean openQuestion(Shell     parent, 
-                                       String    title, 
-                                       String    message, 
-                                       Throwable detail)
+    public static boolean openQuestion(
+        Shell     parent,
+        String    title,
+        String    message,
+        Throwable detail)
     {
         String[] labels;
 
         if (detail == null)
         {
-            labels = new String[] 
-            {
-                IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL
-            };
+            labels =
+                new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL };
         }
         else
         {
-            labels = new String[] 
-            {
-                IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL, 
-                IDialogConstants.SHOW_DETAILS_LABEL
-            };
+            labels =
+                new String[] 
+                {
+                    IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
+                    IDialogConstants.SHOW_DETAILS_LABEL
+                };
         }
 
-        InternalErrorDialog dialog = new InternalErrorDialog(parent, title, 
-                                                             null, // accept the default window icon
-                                                             message, detail, 
-                                                             QUESTION, // yes is the default
-                                                             labels, 0);
+        InternalErrorDialog dialog =
+            new InternalErrorDialog(
+                parent, title, null, // accept the default window icon
+                message, detail, QUESTION, // yes is the default
+                labels, 0);
 
         if (detail != null)
         {
@@ -172,7 +173,7 @@ public class InternalErrorDialog
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @param buttonId DOCUMENT ME!
      */
     protected void buttonPressed(int buttonId)
@@ -191,7 +192,7 @@ public class InternalErrorDialog
 
     /**
      * Create this dialog's drop-down list component.
-     * 
+     *
      * @param parent the parent composite
      */
     protected void createDropDownText(Composite parent)
@@ -206,17 +207,17 @@ public class InternalErrorDialog
             PrintStream ps = new PrintStream(baos);
             detail.printStackTrace(ps);
 
-            if ((detail instanceof SWTError) && 
-                (((SWTError)detail).throwable != null))
+            if ((detail instanceof SWTError) && (((SWTError) detail).throwable != null))
             {
                 ps.println("*** Stack trace of contained exception ***");
-                ((SWTError)detail).throwable.printStackTrace(ps);
+                ((SWTError) detail).throwable.printStackTrace(ps);
             }
-            else if ((detail instanceof SWTException) && 
-                     (((SWTException)detail).throwable != null))
+            else if (
+                (detail instanceof SWTException)
+                && (((SWTException) detail).throwable != null))
             {
                 ps.println("*** Stack trace of contained exception ***");
-                ((SWTException)detail).throwable.printStackTrace(ps);
+                ((SWTException) detail).throwable.printStackTrace(ps);
             }
 
             ps.flush();
@@ -228,18 +229,18 @@ public class InternalErrorDialog
             ;
         }
 
-        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
-                                     GridData.GRAB_HORIZONTAL | 
-                                     GridData.VERTICAL_ALIGN_FILL | 
-                                     GridData.GRAB_VERTICAL);
+        GridData data =
+            new GridData(
+                GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL
+                | GridData.VERTICAL_ALIGN_FILL | GridData.GRAB_VERTICAL);
         data.heightHint = text.getLineHeight() * TEXT_LINE_COUNT;
         text.setLayoutData(data);
     }
 
 
     /**
-     * Toggles the unfolding of the details area.  This is triggered by the
-     * user pressing the details button.
+     * Toggles the unfolding of the details area.  This is triggered by the user pressing
+     * the details button.
      */
     private void toggleDetailsArea()
     {
@@ -250,19 +251,16 @@ public class InternalErrorDialog
         {
             text.dispose();
             text = null;
-            getButton(detailButtonID)
-                .setText(IDialogConstants.SHOW_DETAILS_LABEL);
+            getButton(detailButtonID).setText(IDialogConstants.SHOW_DETAILS_LABEL);
         }
         else
         {
-            createDropDownText((Composite)getContents());
-            getButton(detailButtonID)
-                .setText(IDialogConstants.HIDE_DETAILS_LABEL);
+            createDropDownText((Composite) getContents());
+            getButton(detailButtonID).setText(IDialogConstants.HIDE_DETAILS_LABEL);
         }
 
         Point newSize = getContents().computeSize(SWT.DEFAULT, SWT.DEFAULT);
-        getShell()
-            .setSize(new Point(windowSize.x, 
-                               windowSize.y + (newSize.y - oldSize.y)));
+        getShell().setSize(
+            new Point(windowSize.x, windowSize.y + (newSize.y - oldSize.y)));
     }
 }

@@ -1,40 +1,16 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jedit;
 
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.textarea.Selection;
+
+import java.util.Collections;
+import java.util.List;
 
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
@@ -49,13 +25,13 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 final class JEditEditor
     implements Editor
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The 'physical' editor. */
     JEditTextArea textArea;
     ProjectFile file;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JEditEditor object.
@@ -63,14 +39,15 @@ final class JEditEditor
      * @param file the underlying Java source file.
      * @param textArea the underlying editor.
      */
-    public JEditEditor(ProjectFile   file,
-                       JEditTextArea textArea)
+    public JEditEditor(
+        ProjectFile   file,
+        JEditTextArea textArea)
     {
         this.file = file;
         this.textArea = textArea;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -84,8 +61,9 @@ final class JEditEditor
     /**
      * {@inheritDoc}
      */
-    public void setCaretPosition(int line,
-                                 int column)
+    public void setCaretPosition(
+        int line,
+        int column)
     {
         setCaretPosition(line, column);
     }
@@ -148,8 +126,9 @@ final class JEditEditor
     /**
      * {@inheritDoc}
      */
-    public void setSelection(int startOffset,
-                             int endOffset)
+    public void setSelection(
+        int startOffset,
+        int endOffset)
     {
         Selection selection = new Selection.Range(startOffset, endOffset);
         this.textArea.setSelection(selection);
@@ -203,6 +182,23 @@ final class JEditEditor
     public String getText()
     {
         return this.textArea.getText();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attachAnnotations(List annotations)
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List detachAnnotations()
+    {
+        return Collections.EMPTY_LIST;
     }
 
 

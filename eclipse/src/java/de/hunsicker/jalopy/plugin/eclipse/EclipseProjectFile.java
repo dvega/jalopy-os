@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
+
+import java.io.File;
 
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
-
-import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.ui.IEditorPart;
@@ -27,19 +27,19 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 /**
  * The Jalopy Eclipse ProjectFile implementation.
  *
- * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 final class EclipseProjectFile
     implements ProjectFile
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     EclipseEditor editor;
     IFile file;
     IWorkbenchPage page;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new EclipseProjectFile object.
@@ -58,14 +58,15 @@ final class EclipseProjectFile
      * @param file the underlying file object.
      * @param page the workbench page the file is containted in.
      */
-    public EclipseProjectFile(IFile          file,
-                              IWorkbenchPage page)
+    public EclipseProjectFile(
+        IFile          file,
+        IWorkbenchPage page)
     {
         this.file = file;
         this.page = page;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -152,8 +153,7 @@ final class EclipseProjectFile
                  */
                 if (part.getTitle().equals(this.file.getName()))
                 {
-                    this.editor = new EclipseEditor(this,
-                                                    (AbstractTextEditor)part);
+                    this.editor = new EclipseEditor(this, (AbstractTextEditor) part);
 
                     return true;
                 }
@@ -188,6 +188,12 @@ final class EclipseProjectFile
         }
     }
 
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public String toString()
     {
         return this.file.toString();
@@ -196,7 +202,7 @@ final class EclipseProjectFile
 
     private IFile getFile(EclipseEditor editor)
     {
-        FileEditorInput input = (FileEditorInput)editor.editor.getEditorInput();
+        FileEditorInput input = (FileEditorInput) editor.editor.getEditorInput();
 
         return input.getFile();
     }

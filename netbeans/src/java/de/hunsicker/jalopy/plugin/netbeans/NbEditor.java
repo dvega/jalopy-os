@@ -1,43 +1,27 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ *                 Sun Public License Notice
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * The Original Code is Marco Hunsicker. The Initial Developer of the Original
+ * Code is Marco Hunsicker. All rights reserved.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * Copyright (c) 2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
-import de.hunsicker.jalopy.plugin.Editor;
-import de.hunsicker.jalopy.plugin.ProjectFile;
+import java.util.Collections;
+import java.util.List;
 
 import javax.swing.JEditorPane;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.StyledDocument;
+
+import de.hunsicker.jalopy.plugin.Editor;
+import de.hunsicker.jalopy.plugin.ProjectFile;
 
 import org.openide.text.Line;
 
@@ -51,7 +35,7 @@ import org.openide.text.Line;
 final class NbEditor
     implements Editor
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The editor view. */
     JEditorPane pane;
@@ -65,7 +49,7 @@ final class NbEditor
     /** The editor document. */
     StyledDocument document;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates new NbEditor object.
@@ -74,17 +58,19 @@ final class NbEditor
      * @param pane the physical editor pane.
      * @param lines set with the actual editor lines.
      */
-    public NbEditor(ProjectFile file,
-                    JEditorPane pane,
-                    Line.Set    lines)
+    public NbEditor(
+        ProjectFile file,
+        JEditorPane pane,
+        Line.Set    lines)
     {
         this.file = file;
         this.pane = pane;
         this.lines = lines;
-        this.document = (StyledDocument)pane.getDocument();
+        this.document = (StyledDocument) pane.getDocument();
+        System.out.println(this.document.getClass());
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -98,8 +84,9 @@ final class NbEditor
     /**
      * {@inheritDoc}
      */
-    public void setCaretPosition(int line,
-                                 int column)
+    public void setCaretPosition(
+        int line,
+        int column)
     {
         throw new UnsupportedOperationException();
     }
@@ -199,8 +186,9 @@ final class NbEditor
     /**
      * {@inheritDoc}
      */
-    public void setSelection(int startOffset,
-                             int endOffset)
+    public void setSelection(
+        int startOffset,
+        int endOffset)
     {
         this.pane.setSelectionStart(startOffset);
         this.pane.setSelectionEnd(endOffset);
@@ -228,8 +216,32 @@ final class NbEditor
     /**
      * {@inheritDoc}
      */
-    public void setText(String text)
+    public void setText(final String text)
     {
+        final AttributeSet attributes =
+            this.document.getDefaultRootElement().getAttributes();
+
+        /*NbDocument.runAtomic(
+            this.document,
+            new Runnable()
+            {
+                public void run()
+                {
+                    try
+                    {
+                        NbDocument.unmarkGuarded(document, 0, document.getLength());
+
+                        document.remove(0, document.getLength());
+                        document.insertString(0, text, attributes);
+                    }
+                    catch (Throwable ex)
+                    {
+                        System.out.println(ex.getClass());
+                        System.err.println(ex.getMessage());
+                        ex.printStackTrace();
+                    }
+                }
+            });*/
         this.pane.setText(text);
     }
 
@@ -240,6 +252,23 @@ final class NbEditor
     public String getText()
     {
         return this.pane.getText();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attachAnnotations(List annotations)
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List detachAnnotations()
+    {
+        return Collections.EMPTY_LIST;
     }
 
 

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse.prefs;
 
@@ -31,12 +31,12 @@ import org.eclipse.swt.widgets.Text;
 public class BracesPage
     extends AbstractPage
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     private Text _descriptionTextField;
     private Text _nameTextField;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new BracesPage object.
@@ -45,11 +45,11 @@ public class BracesPage
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @return DOCUMENT ME!
      */
     public boolean performOk()
@@ -97,7 +97,6 @@ public class BracesPage
         Button customStyleCheckBox = new Button(styleGroup, SWT.CHECK);
         customStyleCheckBox.setText("Custom style");
 
-
         // -----------
         layout = new GridLayout();
         layout.numColumns = 1;
@@ -110,17 +109,14 @@ public class BracesPage
         newlineAfterCheckBox.setText("Newline after right brace");
 
         Button treatDifferentCheckBox = new Button(alignmentGroup, SWT.CHECK);
-        treatDifferentCheckBox.setText(
-              "Treat class and method blocks different");
-
+        treatDifferentCheckBox.setText("Treat class and method blocks different");
 
         // -------------------
         layout = new GridLayout();
         layout.numColumns = 2;
         layout.makeColumnsEqualWidth = true;
 
-        Group whitespaceGroup = createGroup(styleContainer, layout, 
-                                            "Whitespace");
+        Group whitespaceGroup = createGroup(styleContainer, layout, "Whitespace");
         String[] items = { "0", "1", "2", "3", "4", "5" };
         Label beforeLeftLabel = new Label(whitespaceGroup, SWT.NULL);
         beforeLeftLabel.setText("Before left brace");
@@ -151,27 +147,27 @@ public class BracesPage
     /**
      * DOCUMENT ME!
      */
-    protected void performDefaults()
+    protected void performConventionDefaults()
     {
     }
 
 
     /**
      * Create a group for encapsualting the buttons.
-     * 
+     *
      * @param composite Composite
      * @param layout DOCUMENT ME!
      * @param text DOCUMENT ME!
-     * 
+     *
      * @return DOCUMENT ME!
      */
-    private Group createGroup(Composite composite, 
-                              Layout    layout, 
-                              String    text)
+    private Group createGroup(
+        Composite composite,
+        Layout    layout,
+        String    text)
     {
         Group group = new Group(composite, SWT.SHADOW_ETCHED_IN);
         group.setText(text);
-
 
         //GridLayout
         group.setLayout(layout);

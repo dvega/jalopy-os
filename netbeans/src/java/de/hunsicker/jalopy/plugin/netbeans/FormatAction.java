@@ -1,35 +1,15 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ *                 Sun Public License Notice
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * The Original Code is Marco Hunsicker. The Initial Developer of the Original
+ * Code is Marco Hunsicker. All rights reserved.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * Copyright (c) 2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
@@ -40,12 +20,11 @@ import javax.swing.JEditorPane;
 
 import org.openide.TopManager;
 import org.openide.cookies.EditorCookie;
-import org.openide.filesystems.*;
 import org.openide.filesystems.LocalFileSystem;
-import org.openide.loaders.*;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataLoader;
 import org.openide.loaders.DataObject;
+import org.openide.loaders.DataShadow;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -62,20 +41,18 @@ import org.openide.util.actions.SystemAction;
 public final class FormatAction
     extends CookieAction
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Cookies for which to enable the action. */
-    private static final Class[] COOKIE_CLASSES = new Class[] 
-    {
-        EditorCookie.class, DataFolder.class, DataFolder.FolderNode.class
-    };
+    private static final Class[] COOKIE_CLASSES =
+        new Class[] { EditorCookie.class, DataFolder.class, DataFolder.FolderNode.class };
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The name of the action to display in 'Build' menu. */
     private String _name;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new FormatAction object.
@@ -87,7 +64,7 @@ public final class FormatAction
         registerPopups();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Get a help context for the action.
@@ -126,9 +103,9 @@ public final class FormatAction
 
 
     /**
-     * Indicates whether the action should be enabled based on the currently
-     * activated nodes. The action will only be enabled for Java data objects
-     * (representing Java source files) and data folders.
+     * Indicates whether the action should be enabled based on the currently activated
+     * nodes. The action will only be enabled for Java data objects (representing Java
+     * source files) and data folders.
      *
      * @param nodes the set of activated nodes.
      *
@@ -137,19 +114,16 @@ public final class FormatAction
     protected boolean enable(Node[] nodes)
     {
         /**
-         * @todo this is not the proposed way to implement this logic, it
-         *       should be sufficient to specify a cookie and mode to go, as
-         *       outlined in the Javadocs, but I don't know how to achieve
-         *       enabling the node only for Java source files and folders
-         *       this way, therefore this hack. Plus I gain context
-         *       information so I can change the name of the menu item
+         * @todo this is not the proposed way to implement this logic, it should be
+         *       sufficient to specify a cookie and mode to go, as outlined in the
+         *       Javadocs, but I don't know how to achieve enabling the node only for
+         *       Java source files and folders this way, therefore this hack. Plus I
+         *       gain context information so I can change the name of the menu item
          *       depending on the state. Nice!
          */
         for (int i = 0; i < nodes.length; i++)
         {
-            System.err.println(nodes[i]);
-
-            DataObject obj = (DataObject)nodes[i].getCookie(DataObject.class);
+            DataObject obj = (DataObject) nodes[i].getCookie(DataObject.class);
 
             if (obj == null)
             {
@@ -164,21 +138,22 @@ public final class FormatAction
 
                 if (obj instanceof DataShadow)
                 {
-                    folder = (DataFolder)((DataShadow)obj).getOriginal();
+                    folder = (DataFolder) ((DataShadow) obj).getOriginal();
                 }
                 else
                 {
-                    folder = (DataFolder)obj;
+                    folder = (DataFolder) obj;
                 }
 
                 try
                 {
                     /**
-                     * @todo can it ever happen that a LocalFileSystem is part
-                     *       of a MultiFileSystem? If so, we have to add
-                     *       extra checking code here
+                     * @todo can it ever happen that a LocalFileSystem is part of a
+                     *       MultiFileSystem? If so, we have to add extra checking code
+                     *       here
                      */
-                    if (folder.getPrimaryFile().getFileSystem() instanceof LocalFileSystem)
+                    if (
+                        folder.getPrimaryFile().getFileSystem() instanceof LocalFileSystem)
                     {
                         _name = "&Format All";
 
@@ -210,14 +185,14 @@ public final class FormatAction
     protected void initialize()
     {
         super.initialize();
-        putProperty(Action.SHORT_DESCRIPTION,
-                    NbBundle.getMessage(FormatAction.class, "HINT_FormatAction"));
+        putProperty(
+            Action.SHORT_DESCRIPTION,
+            NbBundle.getMessage(FormatAction.class, "HINT_FormatAction"));
     }
 
 
     /**
-     * Get the mode of the action (how strict it should be about cookie
-     * support).
+     * Get the mode of the action (how strict it should be about cookie support).
      *
      * @return{@link CookieAction#MODE_SOME}.
      */
@@ -230,8 +205,7 @@ public final class FormatAction
     /**
      * Performs the action based on the currently activated nodes.
      *
-     * @param nodes current activated nodes, may be empty but not
-     *        <code>null</code>.
+     * @param nodes current activated nodes, may be empty but not <code>null</code>.
      */
     protected void performAction(org.openide.nodes.Node[] nodes)
     {
@@ -243,13 +217,12 @@ public final class FormatAction
         {
             // set the context class loader for the ImportTransformation
             // feature to work
-            Thread.currentThread()
-                  .setContextClassLoader(TopManager.getDefault()
-                                                   .currentClassLoader());
+            Thread.currentThread().setContextClassLoader(
+                TopManager.getDefault().currentClassLoader());
 
             if (nodes.length == 1)
             {
-                DataObject obj = (DataObject)nodes[0].getCookie(DataObject.class);
+                DataObject obj = (DataObject) nodes[0].getCookie(DataObject.class);
 
                 if (NbHelper.isJavaFile(obj))
                 {
@@ -282,8 +255,7 @@ public final class FormatAction
 
 
     /**
-     * Determines whether the given Java source file node has an opened editor
-     * pane.
+     * Determines whether the given Java source file node has an opened editor pane.
      *
      * @param node a Java source file node.
      *
@@ -291,7 +263,7 @@ public final class FormatAction
      */
     private boolean isOpened(Node node)
     {
-        EditorCookie cookie = (EditorCookie)node.getCookie(EditorCookie.class);
+        EditorCookie cookie = (EditorCookie) node.getCookie(EditorCookie.class);
 
         /**
          * @todo maybe this check is obsolete?
@@ -310,15 +282,15 @@ public final class FormatAction
     private void registerPopups()
     {
         /**
-         * @todo this code is ugly and subject to change but until the Looks
-         *       API is in place, I really like this better than the
-         *       SystemAction way to integrate items into the Tools submenu
+         * @todo this code is ugly and subject to change but until the Looks API is in
+         *       place, I really like this better than the SystemAction way to integrate
+         *       items into the Tools submenu
          */
         TopManager manager = TopManager.getDefault();
 
-        DataLoader loader = manager.getLoaderPool()
-                                   .firstProducerOf(DataFolder.class);
+        DataLoader loader = manager.getLoaderPool().firstProducerOf(DataFolder.class);
         SystemAction[] actions = loader.getActions();
+
 SEARCH: 
         for (int i = 0; i < actions.length; i++)
         {
@@ -331,8 +303,8 @@ SEARCH:
                     System.arraycopy(actions, 0, result, 0, i + 1);
                     result[i + 2] = this; // add the action
                     result[i + 3] = null; // and a separator
-                    System.arraycopy(actions, i + 2, result, i + 4,
-                                     actions.length - i - 2);
+                    System.arraycopy(
+                        actions, i + 2, result, i + 4, actions.length - i - 2);
                     loader.setActions(result);
 
                     break SEARCH;
@@ -341,17 +313,18 @@ SEARCH:
         }
 
         // add our action to the popup menu of Java source file nodes
-        for (Enumeration loaders = manager.getLoaderPool().allLoaders();
-             loaders.hasMoreElements();)
+        for (
+            Enumeration loaders = manager.getLoaderPool().allLoaders();
+            loaders.hasMoreElements();)
         {
-            loader = (DataLoader)loaders.nextElement();
+            loader = (DataLoader) loaders.nextElement();
 
             String name = loader.getClass().getName();
 
             /**
              * @todo it would be cool to be able to format FormDataNodes
-             *       (FormDataLoader) as well, but I don't know how to
-             *       achieve that as form views have "locked" portions
+             *       (org.netbeans.modules.form.FormDataLoader) as well, but I don't
+             *       know how to achieve that as form views have guarded sections
              */
             if (name.equals("org.netbeans.modules.java.JavaDataLoader"))
             {
@@ -364,13 +337,12 @@ SEARCH_JAVA_FILE:
                         // add after the Execute action
                         if (actions[i] instanceof org.openide.actions.ExecuteAction)
                         {
-                            SystemAction[] result = new SystemAction[actions.length +
-                                                    2];
+                            SystemAction[] result = new SystemAction[actions.length + 2];
                             System.arraycopy(actions, 0, result, 0, i + 1);
                             result[i + 2] = this; // add the action
                             result[i + 3] = null; // and a separator
-                            System.arraycopy(actions, i + 2, result, i + 4,
-                                             actions.length - i - 2);
+                            System.arraycopy(
+                                actions, i + 2, result, i + 4, actions.length - i - 2);
                             loader.setActions(result);
 
                             break SEARCH_JAVA_FILE;

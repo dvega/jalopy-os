@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
-
-import de.hunsicker.jalopy.plugin.AbstractPlugin;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import de.hunsicker.jalopy.plugin.AbstractPlugin;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -40,23 +40,23 @@ import org.eclipse.ui.actions.ActionDelegate;
 
 
 /**
- * Action to be added to the context menu of the Navigator or Packages view.
- * Enables the user to format the selected files (the files contained in the
- * selected folders or packages).
+ * Action to be added to the context menu of the Navigator or Packages view. Enables the
+ * user to format the selected files (the files contained in the selected folders or
+ * packages).
  *
- * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class ResourcePopupAction
     extends ActionDelegate
     implements IObjectActionDelegate
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The file extension for Java source files. */
     private static final String EXT_JAVA = ".java";
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The page containing the part target. */
     private IWorkbenchPage _page;
@@ -64,7 +64,7 @@ public class ResourcePopupAction
     /** The part target. */
     private IWorkbenchPart _part;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ResourcePopupAction object.
@@ -73,13 +73,14 @@ public class ResourcePopupAction
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
      */
-    public void setActivePart(IAction        action,
-                              IWorkbenchPart targetPart)
+    public void setActivePart(
+        IAction        action,
+        IWorkbenchPart targetPart)
     {
         _part = targetPart;
         _page = _part.getSite().getPage();
@@ -93,7 +94,7 @@ public class ResourcePopupAction
     {
         IWorkbenchPartSite site = _part.getSite();
         ISelectionProvider provider = site.getSelectionProvider();
-        StructuredSelection selection = (StructuredSelection)provider.getSelection();
+        StructuredSelection selection = (StructuredSelection) provider.getSelection();
         Object[] items = selection.toArray();
         Set files = new HashSet(items.length, 1.0F);
 
@@ -103,22 +104,20 @@ public class ResourcePopupAction
             {
                 if (items[i] instanceof IResource)
                 {
-                    IResource resource = (IResource)items[i];
+                    IResource resource = (IResource) items[i];
 
                     switch (resource.getType())
                     {
                         case IResource.FOLDER :
                         case IResource.PROJECT :
 
-                            IContainer folder = (IContainer)items[i];
+                            IContainer folder = (IContainer) items[i];
                             getChildren(folder, files);
 
                             break;
 
                         case IResource.FILE :
-                            files.add(
-                                  new EclipseProjectFile((IFile)items[i],
-                                                         _page));
+                            files.add(new EclipseProjectFile((IFile) items[i], _page));
 
                             break;
 
@@ -127,31 +126,29 @@ public class ResourcePopupAction
                             /**
                              * @todo use logger
                              */
-                            System.out.println("unexpected resource type -- " +
-                                               items[i]);
+                            System.out.println("unexpected resource type -- " + items[i]);
 
                             break;
                     }
                 }
                 else if (items[i] instanceof ICompilationUnit)
                 {
-                    ICompilationUnit unit = (ICompilationUnit)items[i];
+                    ICompilationUnit unit = (ICompilationUnit) items[i];
                     IResource resource = unit.getCorrespondingResource();
 
                     if (resource != null)
                     {
-                        files.add(
-                              new EclipseProjectFile((IFile)resource, _page));
+                        files.add(new EclipseProjectFile((IFile) resource, _page));
                     }
                 }
                 else if (items[i] instanceof IPackageFragment)
                 {
-                    IPackageFragment fragment = (IPackageFragment)items[i];
+                    IPackageFragment fragment = (IPackageFragment) items[i];
                     addFilesFromPackage(fragment, files);
                 }
                 else if (items[i] instanceof IJavaProject)
                 {
-                    IJavaProject project = (IJavaProject)items[i];
+                    IJavaProject project = (IJavaProject) items[i];
 
                     try
                     {
@@ -164,19 +161,17 @@ public class ResourcePopupAction
                                 case IPackageFragmentRoot.K_SOURCE :
 
                                     /**
-                                     * @todo I'm not sure whether K_SOURCE
-                                     *       actually means non-Archive (and
-                                     *       therefore further testing is
-                                     *       obsolete)
+                                     * @todo I'm not sure whether K_SOURCE actually means
+                                     *       non-Archive (and therefore further testing
+                                     *       is obsolete)
                                      */
                                     IPackageFragmentRoot root =
-                                          (IPackageFragmentRoot)fragments[j].getAncestor(
-                                                IJavaElement.PACKAGE_FRAGMENT_ROOT);
+                                        (IPackageFragmentRoot) fragments[j].getAncestor(
+                                            IJavaElement.PACKAGE_FRAGMENT_ROOT);
 
                                     if (!root.isArchive())
                                     {
-                                        addFilesFromPackage(fragments[j],
-                                                            files);
+                                        addFilesFromPackage(fragments[j], files);
                                     }
 
                                     break;
@@ -200,29 +195,26 @@ public class ResourcePopupAction
 
         EclipsePlugin plugin = EclipsePlugin.getDefault();
 
-
         // update the project information
         plugin.files = files;
-        System.err.println(files);
-
 
         // and format the selected files
-        //plugin.impl.performAction(AbstractPlugin.Action.FORMAT_SELECTED);
+        plugin.impl.performAction(AbstractPlugin.Action.FORMAT_SELECTED);
     }
 
 
     /**
-     * Returns all children of the given container that denotes Java source
-     * files.
+     * Returns all children of the given container that denotes Java source files.
      *
      * @param resource the resource to return the children for.
      * @param files set to add all children to.
      *
      * @throws CoreException if the request failed.
      */
-    private void getChildren(IContainer resource,
-                             Set        files)
-        throws CoreException
+    private void getChildren(
+        IContainer resource,
+        Set        files)
+      throws CoreException
     {
         IResource[] children = resource.members();
 
@@ -236,23 +228,23 @@ public class ResourcePopupAction
 
                     if (child.getName().endsWith(EXT_JAVA))
                     {
-                        files.add(new EclipseProjectFile((IFile)child, _page));
+                        files.add(new EclipseProjectFile((IFile) child, _page));
                     }
 
                     break;
 
                 case IResource.FOLDER :
-                    getChildren((IFolder)child, files);
+                    getChildren((IFolder) child, files);
 
                     break;
 
                 case IResource.PROJECT :
-                    getChildren((IProject)child, files);
+                    getChildren((IProject) child, files);
 
                     break;
 
                 case IResource.ROOT :
-                    getChildren((IWorkspaceRoot)child, files);
+                    getChildren((IWorkspaceRoot) child, files);
 
                     break;
             }
@@ -261,18 +253,19 @@ public class ResourcePopupAction
 
 
     /**
-     * Adds all Java source files contained in the given package fragement to
-     * the given collection.
+     * Adds all Java source files contained in the given package fragement to the given
+     * collection.
      *
      * @param fragment package fragement to search.
      * @param files collection to add all found Java source files to.
      *
-     * @throws JavaModelException if the fragement does not exist or if an
-     *         exception occurs while accessing its corresponding resource.
+     * @throws JavaModelException if the fragement does not exist or if an exception
+     *         occurs while accessing its corresponding resource.
      */
-    private void addFilesFromPackage(IPackageFragment fragment,
-                                     Collection       files)
-        throws JavaModelException
+    private void addFilesFromPackage(
+        IPackageFragment fragment,
+        Collection       files)
+      throws JavaModelException
     {
         ICompilationUnit[] units = fragment.getCompilationUnits();
 
@@ -282,7 +275,7 @@ public class ResourcePopupAction
 
             if (resource != null)
             {
-                files.add(new EclipseProjectFile((IFile)resource, _page));
+                files.add(new EclipseProjectFile((IFile) resource, _page));
             }
         }
     }

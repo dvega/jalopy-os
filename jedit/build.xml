@@ -184,13 +184,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="*" />
         <include name="de/hunsicker/io/*" />
         <include name="de/hunsicker/jalopy/*" />
-        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/language/*" />
         <include name="de/hunsicker/jalopy/plugin/*" />
         <include name="de/hunsicker/jalopy/prefs/*" />
         <include name="de/hunsicker/jalopy/printer/*" />
-        <include name="de/hunsicker/jalopy/ui/*" />
-        <include name="de/hunsicker/ui/*" />
-        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/jalopy/swing/*" />
+        <include name="de/hunsicker/swing/*" />
+        <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
         <include name="de/hunsicker/jalopy/plugin/jedit/*" />

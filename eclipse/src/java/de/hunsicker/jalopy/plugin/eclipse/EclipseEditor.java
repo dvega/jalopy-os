@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
+
+import java.util.Collections;
+import java.util.List;
 
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
@@ -16,7 +19,6 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.text.*;
 import org.eclipse.jface.text.TextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
@@ -25,29 +27,30 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 /**
  * The Eclipse editor implementation.
- * 
- * @version $Revision$
+ *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 final class EclipseEditor
     implements Editor
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     AbstractTextEditor editor;
     IDocument document;
     ProjectFile file;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new EclipseEditor object.
-     * 
+     *
      * @param file the corresponding project file.
      * @param editor the Eclipse editor object.
      */
-    public EclipseEditor(ProjectFile        file, 
-                         AbstractTextEditor editor)
+    public EclipseEditor(
+        ProjectFile        file,
+        AbstractTextEditor editor)
     {
         this.editor = editor;
 
@@ -56,7 +59,7 @@ final class EclipseEditor
         this.file = file;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
@@ -64,21 +67,23 @@ final class EclipseEditor
     public void setCaretPosition(int offset)
     {
         //setSelection(offset, offset);
-        this.editor.setHighlightRange(offset, 0, true); 
+        this.editor.setHighlightRange(offset, 0, true);
     }
 
 
     /**
      * {@inheritDoc}
      */
-    public void setCaretPosition(int line, 
-                                 int column)
+    public void setCaretPosition(
+        int line,
+        int column)
     {
         try
         {
             int offset = this.document.getLineOffset(line);
+
             //setSelection(offset, offset + column);
-            this.editor.setHighlightRange(offset, 0, true); 
+            this.editor.setHighlightRange(offset, 0, true);
         }
         catch (BadLocationException ignored)
         {
@@ -92,8 +97,8 @@ final class EclipseEditor
      */
     public int getCaretPosition()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         return selection.getOffset();
     }
@@ -104,13 +109,13 @@ final class EclipseEditor
      */
     public int getColumn()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         try
         {
-            return this.document.getLineOffset(selection.getStartLine()) - 
-                   selection.getOffset();
+            return this.document.getLineOffset(selection.getStartLine())
+            - selection.getOffset();
         }
         catch (BadLocationException ex)
         {
@@ -142,8 +147,8 @@ final class EclipseEditor
      */
     public int getLine()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         return selection.getStartLine();
     }
@@ -154,8 +159,8 @@ final class EclipseEditor
      */
     public String getSelectedText()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         return selection.getText();
     }
@@ -164,19 +169,18 @@ final class EclipseEditor
     /**
      * {@inheritDoc}
      */
-    public void setSelection(int startOffset, 
-                             int endOffset)
+    public void setSelection(
+        int startOffset,
+        int endOffset)
     {
-        if ((startOffset < 0) || (endOffset < 0) || 
-            (endOffset < startOffset))
+        if ((startOffset < 0) || (endOffset < 0) || (endOffset < startOffset))
         {
-            throw new IllegalArgumentException("invalid range -- start " + 
-                                               startOffset + ", end " + 
-                                               endOffset);
+            throw new IllegalArgumentException(
+                "invalid range -- start " + startOffset + ", end " + endOffset);
         }
 
-        ISelection selection = new TextSelection(this.document, startOffset, 
-                                                 endOffset - startOffset);
+        ISelection selection =
+            new TextSelection(this.document, startOffset, endOffset - startOffset);
         this.editor.getSelectionProvider().setSelection(selection);
     }
 
@@ -186,8 +190,8 @@ final class EclipseEditor
      */
     public int getSelectionEnd()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         if (selection.isEmpty())
         {
@@ -209,8 +213,8 @@ final class EclipseEditor
      */
     public int getSelectionStart()
     {
-        ITextSelection selection = (ITextSelection)this.editor.getSelectionProvider()
-                                                              .getSelection();
+        ITextSelection selection =
+            (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         return selection.getOffset();
     }
@@ -231,6 +235,23 @@ final class EclipseEditor
     public String getText()
     {
         return this.document.get();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attachAnnotations(List annotations)
+    {
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List detachAnnotations()
+    {
+        return Collections.EMPTY_LIST;
     }
 
 

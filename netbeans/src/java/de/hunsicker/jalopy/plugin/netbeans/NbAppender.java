@@ -1,48 +1,29 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ *                 Sun Public License Notice
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * The Original Code is Marco Hunsicker. The Initial Developer of the Original
+ * Code is Marco Hunsicker. All rights reserved.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * Copyright (c) 2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.netbeans;
-
-import de.hunsicker.jalopy.plugin.AbstractAppender;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.StringTokenizer;
 
+import de.hunsicker.jalopy.plugin.AbstractAppender;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
+
 import org.apache.oro.text.regex.MatchResult;
 
 import org.openide.TopManager;
@@ -68,18 +49,18 @@ import org.openide.windows.OutputWriter;
 final class NbAppender
     extends AbstractAppender
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     private static final String TYPE_ERROR = "error";
     private static final String TYPE_WARN = "warn";
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     private InputOutput _sink;
     private OutputWriter _errors;
     private OutputWriter _infos;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new NbAppender object.
@@ -93,7 +74,7 @@ final class NbAppender
         _sink.setFocusTaken(false);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
@@ -162,8 +143,9 @@ final class NbAppender
     }
 
 
-    private String formatFilename(String filename,
-                                  int    lineno)
+    private String formatFilename(
+        String filename,
+        int    lineno)
     {
         StringBuffer buf = new StringBuffer(100);
 
@@ -222,11 +204,12 @@ final class NbAppender
     }
 
 
-    private void outputMessage(OutputWriter out,
-                               Priority     level,
-                               String       filename,
-                               int          lineno,
-                               String       text)
+    private void outputMessage(
+        OutputWriter out,
+        Priority     level,
+        String       filename,
+        int          lineno,
+        String       text)
     {
         try
         {
@@ -275,9 +258,9 @@ final class NbAppender
                 {
                     case Level.WARN_INT :
                         out.print("[WARN] ");
-                        out.println(formatFilename(filename, lineno),
-                                    new OutputHandler(TYPE_WARN, filename,
-                                                      lineno, text));
+                        out.println(
+                            formatFilename(filename, lineno),
+                            new OutputHandler(TYPE_WARN, filename, lineno, text));
                         out.println("        " + text);
                         out.flush();
 
@@ -288,13 +271,12 @@ final class NbAppender
                         out.print("[ERROR] ");
 
                         int linebreakPos = text.indexOf('\n'); // multiline message?
-                        out.println(formatFilename(filename, lineno),
-                                    new OutputHandler(TYPE_ERROR, filename,
-                                                      lineno,
-                                                      (linebreakPos > -1)
-                                                          ? text.substring(0,
-                                                                           linebreakPos)
-                                                          : text));
+                        out.println(
+                            formatFilename(filename, lineno),
+                            new OutputHandler(
+                                TYPE_ERROR, filename, lineno,
+                                (linebreakPos > -1) ? text.substring(0, linebreakPos)
+                                                    : text));
                         out.println(formatMessage(text));
                         out.flush();
 
@@ -317,7 +299,7 @@ final class NbAppender
         }
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     private static class LineAnnotation
         extends Annotation
@@ -325,8 +307,9 @@ final class NbAppender
         final String message;
         final String type;
 
-        public LineAnnotation(String message,
-                              String type)
+        public LineAnnotation(
+            String message,
+            String type)
         {
             this.message = message;
             this.type = "de-hunsicker-jalopy-plugin-netbeans-" + type;
@@ -349,8 +332,7 @@ final class NbAppender
      * The click-handler which marks lines for errors and warnings.
      */
     private static class OutputHandler
-        implements OutputListener,
-                   PropertyChangeListener
+        implements OutputListener, PropertyChangeListener
     {
         Annotation ann;
         String filename;
@@ -358,10 +340,11 @@ final class NbAppender
         String type;
         int lineno;
 
-        public OutputHandler(String type,
-                             String filename,
-                             int    lineno,
-                             String text)
+        public OutputHandler(
+            String type,
+            String filename,
+            int    lineno,
+            String text)
         {
             this.type = type;
             this.filename = filename;
@@ -382,7 +365,8 @@ final class NbAppender
                     {
                         FileObject fileWithError = file[0];
                         DataObject objWithError = DataObject.find(fileWithError);
-                        LineCookie cookie = (LineCookie)objWithError.getCookie(LineCookie.class);
+                        LineCookie cookie =
+                            (LineCookie) objWithError.getCookie(LineCookie.class);
                         Line.Set lineSet = cookie.getLineSet();
                         final Line line = lineSet.getOriginal(this.lineno - 1);
                         this.ann = new LineAnnotation(this.text, this.type);
@@ -417,9 +401,9 @@ final class NbAppender
             {
                 String property = ev.getPropertyName();
 
-                if ((property == null) ||
-                    property.equals(Annotatable.PROP_TEXT) ||
-                    property.equals(Annotatable.PROP_DELETED))
+                if (
+                    (property == null) || property.equals(Annotatable.PROP_TEXT)
+                    || property.equals(Annotatable.PROP_DELETED))
                 {
                     detach();
                 }
@@ -431,7 +415,8 @@ final class NbAppender
         {
             if (this.ann != null)
             {
-                ((Annotatable)this.ann.getAttachedAnnotatable()).removePropertyChangeListener(this);
+                ((Annotatable) this.ann.getAttachedAnnotatable())
+                .removePropertyChangeListener(this);
                 this.ann.detach();
                 this.ann = null;
             }

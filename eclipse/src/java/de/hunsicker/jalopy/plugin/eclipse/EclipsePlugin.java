@@ -1,26 +1,26 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
+
+import java.awt.Frame;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
+import java.util.Collections;
 
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.ui.ProgressMonitor;
-
-import java.awt.Frame;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Collections;
+import de.hunsicker.jalopy.swing.ProgressMonitor;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPluginDescriptor;
@@ -44,15 +44,15 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
  * The Jalopy Eclipse Plug-in.
- * 
- * @version $Revision$
+ *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class EclipsePlugin
     extends AbstractUIPlugin
     implements Project
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The Plug-in identifier ({@value}). */
     public static final String ID = "de.hunsicker.jalopy.plugin.eclipse";
@@ -63,7 +63,7 @@ public class EclipsePlugin
     /** The sole object instance. */
     private static EclipsePlugin plugin;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The currently selected project files. */
     Collection files = Collections.EMPTY_LIST; // List of <ProjectFile>
@@ -74,11 +74,11 @@ public class EclipsePlugin
     /** The currently opened project file. */
     ProjectFile file;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new EclipsePlugin object.
-     * 
+     *
      * @param descriptor the Plug-in descriptor.
      */
     public EclipsePlugin(IPluginDescriptor descriptor)
@@ -87,11 +87,11 @@ public class EclipsePlugin
         plugin = this;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the shared plugin instance.
-     * 
+     *
      * @return the sole instance of this class.
      */
     public static EclipsePlugin getDefault()
@@ -138,11 +138,11 @@ public class EclipsePlugin
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @throws CoreException DOCUMENT ME!
      */
     public void shutdown()
-        throws CoreException
+      throws CoreException
     {
         super.shutdown();
         this.impl = null;
@@ -156,16 +156,17 @@ public class EclipsePlugin
 
     /**
      * DOCUMENT ME!
-     * 
+     *
      * @throws CoreException DOCUMENT ME!
      */
     public void startup()
-        throws CoreException
+      throws CoreException
     {
         super.startup();
         this.impl = new PluginImpl();
-        _ibeamCursor = new Cursor(getActiveWorkbenchWindow().getShell()
-                                      .getDisplay(), SWT.CURSOR_IBEAM);
+        _ibeamCursor =
+            new Cursor(
+                getActiveWorkbenchWindow().getShell().getDisplay(), SWT.CURSOR_IBEAM);
     }
 
 
@@ -176,8 +177,7 @@ public class EclipsePlugin
         if (window == null)
         {
             final Visibility visibility = new Visibility();
-            IWorkbenchWindow[] windows = plugin.getWorkbench()
-                                               .getWorkbenchWindows();
+            IWorkbenchWindow[] windows = plugin.getWorkbench().getWorkbenchWindows();
 
             for (int i = 0; i < windows.length; i++)
             {
@@ -187,16 +187,17 @@ public class EclipsePlugin
 
                 if (shell != null)
                 {
-                    Display.getDefault().syncExec(new Runnable()
-                    {
-                        public void run()
+                    Display.getDefault().syncExec(
+                        new Runnable()
                         {
-                            if (shell.isVisible())
+                            public void run()
                             {
-                                visibility.visible = true;
+                                if (shell.isVisible())
+                                {
+                                    visibility.visible = true;
+                                }
                             }
-                        }
-                    });
+                        });
 
                     if (visibility.visible)
                     {
@@ -233,7 +234,9 @@ public class EclipsePlugin
 
                 if (statusLineManager instanceof SubStatusLineManager)
                 {
-                    statusLineManager = (IStatusLineManager)((SubStatusLineManager)statusLineManager).getParent();
+                    statusLineManager =
+                        (IStatusLineManager) ((SubStatusLineManager) statusLineManager)
+                        .getParent();
                 }
 
                 return statusLineManager;
@@ -243,7 +246,7 @@ public class EclipsePlugin
         return null;
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Implements the Jalopy Plug-in contract.
@@ -298,15 +301,16 @@ public class EclipsePlugin
 
             try
             {
-                execSync(new Runnable()
-                {
-                    public void run()
+                execSync(
+                    new Runnable()
                     {
-                        monitor.monitor = new ProgressMonitorImpl(
-                                                plugin.getActiveWorkbenchWindow()
-                                                      .getShell());
-                    }
-                });
+                        public void run()
+                        {
+                            monitor.monitor =
+                                new ProgressMonitorImpl(
+                                    plugin.getActiveWorkbenchWindow().getShell());
+                        }
+                    });
             }
             catch (Exception ex)
             {
@@ -317,25 +321,26 @@ public class EclipsePlugin
         }
 
 
-        protected void displayError(final Throwable error, 
-                                    Frame           parent)
+        protected void displayError(
+            final Throwable error,
+            Frame           parent)
         {
             try
             {
-                execSync(new Runnable()
-                {
-                    public void run()
+                execSync(
+                    new Runnable()
                     {
-                        IWorkbenchWindow window = plugin.getActiveWorkbenchWindow();
-                        Shell shell = window.getShell();
-                        InternalErrorDialog.openError(shell, "Internal Error", 
-                                                      (error.getMessage() != null)
-                                                          ? error.getMessage()
-                                                          : error.getClass()
-                                                                 .getName(), 
-                                                      error);
-                    }
-                });
+                        public void run()
+                        {
+                            IWorkbenchWindow window = plugin.getActiveWorkbenchWindow();
+                            Shell shell = window.getShell();
+                            InternalErrorDialog.openError(
+                                shell, "Internal Error",
+                                (error.getMessage() != null) ? error.getMessage()
+                                                             : error.getClass().getName(),
+                                error);
+                        }
+                    });
             }
             catch (Exception ex)
             {
@@ -351,8 +356,7 @@ public class EclipsePlugin
 
 
         protected void execSync(Runnable operation)
-            throws InterruptedException, 
-                   InvocationTargetException
+          throws InterruptedException, InvocationTargetException
         {
             Display.getDefault().syncExec(operation);
         }
@@ -364,26 +368,26 @@ public class EclipsePlugin
             {
                 try
                 {
-                    execSync(new Runnable()
-                    {
-                        public void run()
+                    execSync(
+                        new Runnable()
                         {
-                            PluginImpl.this.activeControl.setCursor(
-                                  _ibeamCursor);
-
-                            Shell[] shells = PluginImpl.this.activeShell.getDisplay()
-                                                                        .getShells();
-
-                            for (int i = 0; i < shells.length; i++)
+                            public void run()
                             {
-                                shells[i].setCursor(null);
-                            }
+                                PluginImpl.this.activeControl.setCursor(_ibeamCursor);
 
-                            PluginImpl.this.waitCursor.dispose();
-                            PluginImpl.this.activeShell = null;
-                            PluginImpl.this.activeControl = null;
-                        }
-                    });
+                                Shell[] shells =
+                                    PluginImpl.this.activeShell.getDisplay().getShells();
+
+                                for (int i = 0; i < shells.length; i++)
+                                {
+                                    shells[i].setCursor(null);
+                                }
+
+                                PluginImpl.this.waitCursor.dispose();
+                                PluginImpl.this.activeShell = null;
+                                PluginImpl.this.activeControl = null;
+                            }
+                        });
                 }
                 catch (Exception ex)
                 {
@@ -397,29 +401,30 @@ public class EclipsePlugin
         {
             IWorkbenchWindow window = plugin.getActiveWorkbenchWindow();
             this.activeShell = window.getShell();
-            this.waitCursor = new Cursor(this.activeShell.getDisplay(), 
-                                         SWT.CURSOR_WAIT);
+            this.waitCursor = new Cursor(
+                    this.activeShell.getDisplay(), SWT.CURSOR_WAIT);
 
             try
             {
-                execSync(new Runnable()
-                {
-                    public void run()
+                execSync(
+                    new Runnable()
                     {
-                        PluginImpl.this.activeControl = PluginImpl.this.activeShell.getDisplay()
-                                                                                   .getCursorControl();
-                        PluginImpl.this.activeControl.setCursor(
-                              PluginImpl.this.waitCursor);
-
-                        Shell[] shells = PluginImpl.this.activeShell.getDisplay()
-                                                                    .getShells();
-
-                        for (int i = 0; i < shells.length; i++)
+                        public void run()
                         {
-                            shells[i].setCursor(PluginImpl.this.waitCursor);
+                            PluginImpl.this.activeControl =
+                                PluginImpl.this.activeShell.getDisplay().getCursorControl();
+                            PluginImpl.this.activeControl.setCursor(
+                                PluginImpl.this.waitCursor);
+
+                            Shell[] shells =
+                                PluginImpl.this.activeShell.getDisplay().getShells();
+
+                            for (int i = 0; i < shells.length; i++)
+                            {
+                                shells[i].setCursor(PluginImpl.this.waitCursor);
+                            }
                         }
-                    }
-                });
+                    });
             }
             catch (Exception ex)
             {
@@ -442,19 +447,20 @@ public class EclipsePlugin
     {
         public void setText(final String message)
         {
-            Display.getDefault().syncExec(new Runnable()
-            {
-                public void run()
+            Display.getDefault().syncExec(
+                new Runnable()
                 {
-                    IStatusLineManager statusLine = plugin.getStatusLine();
-
-                    if (statusLine != null)
+                    public void run()
                     {
-                        statusLine.setMessage(message);
-                        statusLine.update(true);
+                        IStatusLineManager statusLine = plugin.getStatusLine();
+
+                        if (statusLine != null)
+                        {
+                            statusLine.setMessage(message);
+                            statusLine.update(true);
+                        }
                     }
-                }
-            });
+                });
         }
     }
 
@@ -494,13 +500,14 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(new Runnable()
-                    {
-                        public void run()
+                    plugin.impl.execSync(
+                        new Runnable()
                         {
-                            ProgressMonitorImpl.this.monitor.worked(units);
-                        }
-                    });
+                            public void run()
+                            {
+                                ProgressMonitorImpl.this.monitor.worked(units);
+                            }
+                        });
                 }
                 catch (Exception ex)
                 {
@@ -522,13 +529,14 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(new Runnable()
-                    {
-                        public void run()
+                    plugin.impl.execSync(
+                        new Runnable()
                         {
-                            ProgressMonitorImpl.this.monitor.subTask(text);
-                        }
-                    });
+                            public void run()
+                            {
+                                ProgressMonitorImpl.this.monitor.subTask(text);
+                            }
+                        });
                 }
                 catch (Exception ex)
                 {
@@ -538,29 +546,31 @@ public class EclipsePlugin
         }
 
 
-        public void begin(final String text, 
-                          final int    units)
+        public void begin(
+            final String text,
+            final int    units)
         {
             try
             {
-                plugin.impl.execSync(new Runnable()
-                {
-                    public void run()
+                plugin.impl.execSync(
+                    new Runnable()
                     {
-                        ProgressMonitorImpl.this.dialog = new ProgressMonitorDialog(
-                                                                ProgressMonitorImpl.this.shell);
+                        public void run()
+                        {
+                            ProgressMonitorImpl.this.dialog =
+                                new ProgressMonitorDialog(ProgressMonitorImpl.this.shell);
 
+                            /**
+                             * @todo causes error if Cancel button pressed
+                             */
 
-                        /**
-                         * @todo causes error if Cancel button pressed
-                         */
-
-                        // ProgressMonitorImpl.this.dialog.setCancelable(true);
-                        ProgressMonitorImpl.this.monitor = ProgressMonitorImpl.this.dialog.getProgressMonitor();
-                        ProgressMonitorImpl.this.dialog.open();
-                        ProgressMonitorImpl.this.monitor.beginTask(text, units);
-                    }
-                });
+                            // ProgressMonitorImpl.this.dialog.setCancelable(true);
+                            ProgressMonitorImpl.this.monitor =
+                                ProgressMonitorImpl.this.dialog.getProgressMonitor();
+                            ProgressMonitorImpl.this.dialog.open();
+                            ProgressMonitorImpl.this.monitor.beginTask(text, units);
+                        }
+                    });
             }
             catch (Exception ex)
             {
@@ -575,16 +585,17 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(new Runnable()
-                    {
-                        public void run()
+                    plugin.impl.execSync(
+                        new Runnable()
                         {
-                            ProgressMonitorImpl.this.dialog.close();
-                            ProgressMonitorImpl.this.dialog = null;
-                            ProgressMonitorImpl.this.monitor = null;
-                            ProgressMonitorImpl.this.shell = null;
-                        }
-                    });
+                            public void run()
+                            {
+                                ProgressMonitorImpl.this.dialog.close();
+                                ProgressMonitorImpl.this.dialog = null;
+                                ProgressMonitorImpl.this.monitor = null;
+                                ProgressMonitorImpl.this.shell = null;
+                            }
+                        });
                 }
                 catch (Exception ex)
                 {

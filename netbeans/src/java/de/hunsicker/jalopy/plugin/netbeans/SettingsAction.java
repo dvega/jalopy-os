@@ -1,41 +1,21 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ *                 Sun Public License Notice
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
+ * The contents of this file are subject to the Sun Public License
+ * Version 1.0 (the "License"). You may not use this file except in
+ * compliance with the License. A copy of the License is available at
+ * http://www.sun.com/
  *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ * The Original Code is Marco Hunsicker. The Initial Developer of the Original
+ * Code is Marco Hunsicker. All rights reserved.
  *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * Copyright (c) 2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
-import de.hunsicker.jalopy.ui.SettingsDialog;
-
 import javax.swing.Action;
+
+import de.hunsicker.jalopy.swing.SettingsDialog;
 
 import org.openide.TopManager;
 import org.openide.util.HelpCtx;
@@ -52,7 +32,7 @@ import org.openide.util.actions.CallableSystemAction;
 public final class SettingsAction
     extends CallableSystemAction
 {
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
@@ -75,8 +55,7 @@ public final class SettingsAction
      */
     public String getName()
     {
-        return NbBundle.getMessage(SettingsAction.class,
-                                   "LBL_SettingsAction");
+        return NbBundle.getMessage(SettingsAction.class, "LBL_SettingsAction");
     }
 
 
@@ -85,12 +64,12 @@ public final class SettingsAction
      */
     public void performAction()
     {
-        SettingsDialog dialog = new SettingsDialog(TopManager.getDefault()
-                                                                   .getWindowManager()
-                                                                   .getMainWindow());
+        SettingsDialog dialog =
+            SettingsDialog.create(
+                TopManager.getDefault().getWindowManager().getMainWindow());
         dialog.pack();
-        dialog.setLocationRelativeTo(TopManager.getDefault().getWindowManager()
-                                               .getMainWindow());
+        dialog.setLocationRelativeTo(
+            TopManager.getDefault().getWindowManager().getMainWindow());
         dialog.setVisible(true);
     }
 
@@ -112,8 +91,8 @@ public final class SettingsAction
     protected void initialize()
     {
         super.initialize();
-        putProperty(Action.SHORT_DESCRIPTION,
-                    NbBundle.getMessage(SettingsAction.class,
-                                        "HINT_SettingsAction"));
+        putProperty(
+            Action.SHORT_DESCRIPTION,
+            NbBundle.getMessage(SettingsAction.class, "HINT_SettingsAction"));
     }
 }

@@ -7,11 +7,11 @@
 Module              : netbeans
 Module-Dependencies : ant, build, main
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -80,10 +80,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <attribute name="Install-After" value="org.netbeans.modules.projects.ProjectDataObject, org.openide.loaders.DataFolder, org.netbeans.modules.java.JavaDataObject, org.netbeans.modules.form.FormDataObject, org.netbeans.modules.autoupdate.NbmDataObject" />
         <section name="de/hunsicker/jalopy/plugin/netbeans/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.NETBEANS}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION.NETBEANS}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.netbeans" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION.NETBEANS}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.NETBEANS}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -186,7 +186,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         </fileset>
       </classpath>
     </taskdef>
-    
+
     <property name="netbeans.init" value="true" />
   </target>
 
@@ -201,10 +201,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <!-- now we know module 'build' exists so we can use its targets -->
     <ant dir="../build" target="build-check-ant" inheritAll="false" />
     <ant dir="../build" target="build-check-main" inheritAll="false" />
-    
+
     <!-- build the runtime .jar if necessary -->
     <ant dir="../main" target="main-jar" inheritAll="false" />
-    
+
     <property name="netbeans.check.modules" value="true" />
   </target>
 
@@ -231,13 +231,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="*" />
         <include name="de/hunsicker/io/*" />
         <include name="de/hunsicker/jalopy/*" />
-        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/language/*" />
         <include name="de/hunsicker/jalopy/plugin/*" />
         <include name="de/hunsicker/jalopy/prefs/*" />
         <include name="de/hunsicker/jalopy/printer/*" />
-        <include name="de/hunsicker/jalopy/ui/*" />
-        <include name="de/hunsicker/ui/*" />
-        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/jalopy/swing/*" />
+        <include name="de/hunsicker/swing/*" />
+        <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
         <include name="de/hunsicker/jalopy/plugin/netbeans/*" />

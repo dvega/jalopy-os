@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2001-2002, Marco Hunsicker. All Rights Reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * The contents of this file are subject to the Common Public License
  * Version 1.0 (the "License"). You may not use this file except in
  * compliance with the License. A copy of the License is available at
  * http://www.eclipse.org/
  *
- * $Id$
+ * Copyright (c) 2001-2002 Marco Hunsicker
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -21,20 +21,20 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * Action to be added to the context menu of the Java editor.
- * 
- * @version $Revision$
+ *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class EditorPopupAction
     extends ActionDelegate
     implements IEditorActionDelegate
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The editor target. */
     private IEditorPart _part;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Create a new EditorPopupAction object.
@@ -43,13 +43,14 @@ public class EditorPopupAction
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * @see IEditorActionDelegate#setActiveEditor(IAction, IEditorPart)
      */
-    public void setActiveEditor(IAction     action, 
-                                IEditorPart targetEditor)
+    public void setActiveEditor(
+        IAction     action,
+        IEditorPart targetEditor)
     {
         _part = targetEditor;
     }
@@ -62,10 +63,8 @@ public class EditorPopupAction
     {
         EclipsePlugin plugin = EclipsePlugin.getDefault();
 
-
         // update the project information
-        plugin.file = new EclipseProjectFile((AbstractTextEditor)_part);
-
+        plugin.file = new EclipseProjectFile((AbstractTextEditor) _part);
 
         // and format the current file
         plugin.impl.performAction(AbstractPlugin.Action.FORMAT_ACTIVE);
