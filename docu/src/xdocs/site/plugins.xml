@@ -36,7 +36,7 @@ to get more information.
 </listitem>
 
 <listitem>
-<ulink url="./plugin-eclipse.html">Eclipse 2.0</ulink> 
+<ulink url="./plugin-eclipse.html">Eclipse 3.0 or above</ulink> 
 </listitem>
 
 <listitem>
@@ -44,7 +44,7 @@ to get more information.
 </listitem>
 
 <listitem>
-<ulink url="./plugin-jdev.html">JDeveloper 9i</ulink> 
+<ulink url="./plugin-jdev.html">JDeveloper 10g</ulink> 
 </listitem>
 
 <listitem>
@@ -52,7 +52,7 @@ to get more information.
 </listitem>
 
 <listitem>
-<ulink url="./plugin-netbeans.html">NetBeans 3.3 or above/Sun ONE Studio 4</ulink>
+<ulink url="./plugin-netbeans.html">NetBeans 3.3 or above</ulink>
 </listitem>
 </itemizedlist>
 
