@@ -113,7 +113,7 @@ public abstract class AbstractAppender
 
 
     /**
-     * Releases any resources allocated within the appender.
+     * {@inheritDoc}
      */
     public void close()
     {
@@ -166,8 +166,7 @@ public abstract class AbstractAppender
 
 
     /**
-     * Determines if the appender requires a layout. Returns <code>true</code> by
-     * default.
+     * {@inheritDoc}
      *
      * @return always <code>true</code>.
      */
@@ -178,7 +177,7 @@ public abstract class AbstractAppender
 
 
     /**
-     * This method determines if there is a sense in attempting to append.
+     * {@inheritDoc}
      *
      * @return always <code>true</code>.
      */

@@ -144,8 +144,8 @@ public interface Editor
     /**
      * Attaches the given annotations to this view.
      *
-     * @param annotations list of annotations (of type &lt;{@link
-     *        de.hunsicker.jalopy.language.Annotation}&gt;) to attach.
+     * @param annotations list of annotations (of type {@link
+     *        de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}) to attach.
      *
      * @see de.hunsicker.jalopy.language.Annotation
      * @since 1.0b9
@@ -156,8 +156,8 @@ public interface Editor
     /**
      * Detaches all existing annotations of this view.
      *
-     * @return list with all annotations of this view (of type &lt;{@link
-     *         de.hunsicker.jalopy.language.Annotation}&gt;). Returns an empty list, if no
+     * @return list with all annotations of this view (of type {@link
+     *         de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}). Returns an empty list, if no
      *         annotations were attached.
      *
      * @see #attachAnnotations

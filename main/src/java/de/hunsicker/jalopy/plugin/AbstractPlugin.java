@@ -224,7 +224,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread after an action was performed.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work after the formatting process
      * finished.
@@ -237,7 +237,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread before an action will be started.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work before the formatting process
      * starts.
@@ -527,11 +527,8 @@ public abstract class AbstractPlugin
 
                     List annotations = editor.detachAnnotations();
                     jalopy.getRecognizer().attachAnnotations(annotations);
-                    jalopy.getRecognizer().markPosition(
+                    jalopy.getRecognizer().setPosition(
                         editor.getLine(), editor.getColumn());
-
-                    System.err.println(
-                        editor.getLine() + " " + editor.getColumn() + " >");
 
                     final StringBuffer textBuf = new StringBuffer(content.length());
                     jalopy.setOutput(textBuf);
