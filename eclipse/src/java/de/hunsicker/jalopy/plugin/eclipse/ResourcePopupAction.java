@@ -43,7 +43,7 @@ import org.eclipse.ui.actions.ActionDelegate;
  * Action to be added to the context menu of the Navigator or Packages view.
  * Enables the user to format the selected files (the files contained in the
  * selected folders or packages).
- * 
+ *
  * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  */
@@ -78,7 +78,7 @@ public class ResourcePopupAction
     /**
      * @see IObjectActionDelegate#setActivePart(IAction, IWorkbenchPart)
      */
-    public void setActivePart(IAction        action, 
+    public void setActivePart(IAction        action,
                               IWorkbenchPart targetPart)
     {
         _part = targetPart;
@@ -95,7 +95,7 @@ public class ResourcePopupAction
         ISelectionProvider provider = site.getSelectionProvider();
         StructuredSelection selection = (StructuredSelection)provider.getSelection();
         Object[] items = selection.toArray();
-        Set files = new HashSet();
+        Set files = new HashSet(items.length, 1.0F);
 
         try
         {
@@ -117,7 +117,7 @@ public class ResourcePopupAction
 
                         case IResource.FILE :
                             files.add(
-                                  new EclipseProjectFile((IFile)items[i], 
+                                  new EclipseProjectFile((IFile)items[i],
                                                          _page));
 
                             break;
@@ -127,7 +127,7 @@ public class ResourcePopupAction
                             /**
                              * @todo use logger
                              */
-                            System.out.println("unexpected resource type -- " + 
+                            System.out.println("unexpected resource type -- " +
                                                items[i]);
 
                             break;
@@ -169,13 +169,13 @@ public class ResourcePopupAction
                                      *       therefore further testing is
                                      *       obsolete)
                                      */
-                                    IPackageFragmentRoot root = 
+                                    IPackageFragmentRoot root =
                                           (IPackageFragmentRoot)fragments[j].getAncestor(
                                                 IJavaElement.PACKAGE_FRAGMENT_ROOT);
 
                                     if (!root.isArchive())
                                     {
-                                        addFilesFromPackage(fragments[j], 
+                                        addFilesFromPackage(fragments[j],
                                                             files);
                                     }
 
@@ -203,23 +203,24 @@ public class ResourcePopupAction
 
         // update the project information
         plugin.files = files;
+        System.err.println(files);
 
 
         // and format the selected files
-        plugin.impl.performAction(AbstractPlugin.Action.FORMAT_SELECTED);
+        //plugin.impl.performAction(AbstractPlugin.Action.FORMAT_SELECTED);
     }
 
 
     /**
      * Returns all children of the given container that denotes Java source
      * files.
-     * 
+     *
      * @param resource the resource to return the children for.
      * @param files set to add all children to.
-     * 
+     *
      * @throws CoreException if the request failed.
      */
-    private void getChildren(IContainer resource, 
+    private void getChildren(IContainer resource,
                              Set        files)
         throws CoreException
     {
@@ -262,14 +263,14 @@ public class ResourcePopupAction
     /**
      * Adds all Java source files contained in the given package fragement to
      * the given collection.
-     * 
+     *
      * @param fragment package fragement to search.
      * @param files collection to add all found Java source files to.
-     * 
+     *
      * @throws JavaModelException if the fragement does not exist or if an
      *         exception occurs while accessing its corresponding resource.
      */
-    private void addFilesFromPackage(IPackageFragment fragment, 
+    private void addFilesFromPackage(IPackageFragment fragment,
                                      Collection       files)
         throws JavaModelException
     {

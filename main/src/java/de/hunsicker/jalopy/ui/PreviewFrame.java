@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -37,20 +37,26 @@ import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.prefs.Defaults;
 import de.hunsicker.jalopy.prefs.Keys;
 import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.ui.util.*;
 import de.hunsicker.jalopy.ui.syntax.SyntaxTextArea;
-
+import java.io.File;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.awt.event.KeyEvent;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
-
+import javax.swing.JToolBar;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
 import org.apache.log4j.Level;
-
+import javax.swing.JFileChooser;
 
 /**
  * Provides a floating preview that can be used to display a Java source file.
@@ -100,12 +106,47 @@ final class PreviewFrame
         _textArea = new SyntaxTextArea();
         _textArea.setEditable(false);
 
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+
+        menuBar.add(fileMenu);
+
+        JMenuItem openFileMenuItem = new JMenuItem(new FileOpenAction());
+        /*openFileMenuItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_O, ActionEvent.CTRL_MASK));*/
+        fileMenu.add(openFileMenuItem);
+
+
+        JMenuItem closeFileMenuItem = new JMenuItem("Close",
+                                 KeyEvent.VK_C);
+        fileMenu.add(closeFileMenuItem);
+
+        setJMenuBar(menuBar);
         JScrollPane scrollPane = new JScrollPane(_textArea);
         getContentPane().add(scrollPane);
         pack();
     }
 
     //~ Methods ·······························································
+
+
+    private class FileOpenAction
+        extends AbstractAction
+    {
+        public FileOpenAction()
+        {
+            super.putValue(Action.NAME, "Open");
+            super.putValue(Action.SHORT_DESCRIPTION, "Open an existing Java source file");
+            super.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_O));
+        }
+
+        public void actionPerformed(ActionEvent ev)
+        {
+            LocationDialog dialog = new LocationDialog(PreviewFrame.this, "Open Java source file", "Test", "");
+            dialog.setVisible(true);
+        }
+    }
 
     /**
      * Sets the preferences page that is currently displayed in the

@@ -26,7 +26,7 @@ import org.eclipse.ui.texteditor.AbstractTextEditor;
 
 /**
  * The Jalopy Eclipse ProjectFile implementation.
- * 
+ *
  * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  */
@@ -43,7 +43,7 @@ final class EclipseProjectFile
 
     /**
      * Creates a new EclipseProjectFile object.
-     * 
+     *
      * @param editor the opened associated editor view of the file.
      */
     public EclipseProjectFile(AbstractTextEditor editor)
@@ -54,11 +54,11 @@ final class EclipseProjectFile
 
     /**
      * Creates a new EclipseProjectFile object.
-     * 
+     *
      * @param file the underlying file object.
      * @param page the workbench page the file is containted in.
      */
-    public EclipseProjectFile(IFile          file, 
+    public EclipseProjectFile(IFile          file,
                               IWorkbenchPage page)
     {
         this.file = file;
@@ -152,7 +152,7 @@ final class EclipseProjectFile
                  */
                 if (part.getTitle().equals(this.file.getName()))
                 {
-                    this.editor = new EclipseEditor(this, 
+                    this.editor = new EclipseEditor(this,
                                                     (AbstractTextEditor)part);
 
                     return true;
@@ -186,6 +186,11 @@ final class EclipseProjectFile
         {
             return this.file.isReadOnly();
         }
+    }
+
+    public String toString()
+    {
+        return this.file.toString();
     }
 
 
