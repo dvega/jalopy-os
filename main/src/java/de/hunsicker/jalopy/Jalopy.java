@@ -6,9 +6,11 @@
  */
 package de.hunsicker.jalopy;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,6 +26,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import de.hunsicker.io.Copy;
 import de.hunsicker.io.FileBackup;
@@ -53,51 +58,51 @@ import org.apache.oro.text.regex.MatchResult;
  * <p>
  * The bean-like interface to Jalopy.
  * </p>
- *
+ * 
  * <p>
  * <strong>Sample Usage</strong>
  * </p>
- *
+ * 
  * <p>
  * <pre class="snippet">
  * // create a new Jalopy instance with the currently active code convention settings
  * Jalopy jalopy = new Jalopy();
- *
+ * 
  * File file = ...;
- *
+ * 
  * // specify input and output target
  * jalopy.setInput(file);
  * jalopy.setOutput(file);
- *
+ * 
  * // format and overwrite the given input file
  * jalopy.format();
- *
+ * 
  * if (jalopy.getState() == Jalopy.State.OK)
  *     System.out.println(file + " successfully formatted");
  * else if (jalopy.getState() == Jalopy.State.WARN)
  *     System.out.println(file + " formatted with warnings");
  * else if (jalopy.getState() == Jalopy.State.ERROR)
  *     System.out.println(file + " could not be formatted");
- *
+ * 
  * // setup a destination directory
  * File destination = ...;
- *
+ * 
  * jalopy.setDestination(destination);
  * jalopy.setInput(file);
  * jalopy.setOutput(file);
- *
+ * 
  * // format the given input file and write the output to the given destination,
  * // the package structure will be retained automatically
  * jalopy.format();
- *
+ * 
  * ...
  * </pre>
  * </p>
- *
+ * 
  * <p>
  * <strong>Thread safety</strong>
  * </p>
- *
+ * 
  * <p>
  * This class is <em>thread-hostile</em>, it is not safe for concurrent use by multiple
  * threads even if all method invocations are surrounded by external synchronisation.
@@ -184,6 +189,8 @@ public final class Jalopy
 
     //~ Instance variables ---------------------------------------------------------------
 
+    private Checksum _inputFileChecksum;
+
     /** The code inspector. */
     private CodeInspector _inspector;
 
@@ -219,6 +226,9 @@ public final class Jalopy
      * issue or a list of issues.
      */
     private Map _issues; // Map of <JavaNode>:<Object>
+
+    /** What history method should be used if file policy is enabled? */
+    private History.Method _historyMethod = History.Method.ADLER32;
 
     /** What history policy should be used? */
     private History.Policy _historyPolicy = History.Policy.DISABLED;
@@ -425,7 +435,7 @@ public final class Jalopy
     /**
      * Specifies whether all files should be formatted no matter what the state of a file
      * is.
-     *
+     * 
      * <p>
      * Defaults to <code>false</code>, which means that a source file will be only
      * formatted if it hasn't ever been formatted before or if it has been modified
@@ -437,6 +447,19 @@ public final class Jalopy
     public void setForce(boolean force)
     {
         _force = force;
+    }
+
+
+    /**
+     * Sets the history policy to use.
+     *
+     * @param method history policy.
+     *
+     * @since 1.0b9
+     */
+    public void setHistoryMethod(History.Method method)
+    {
+        _historyMethod = method;
     }
 
 
@@ -568,16 +591,6 @@ public final class Jalopy
 
 
     /**
-     * Returns the current state info.
-     *
-     * @return The current state.
-     */
-    public State getState()
-    {
-        return _state;
-    }
-
-    /**
      * Returns the used Java recognizer.
      *
      * @return the recognizer that is used for the language processing.
@@ -589,12 +602,24 @@ public final class Jalopy
         return _recognizer;
     }
 
+
+    /**
+     * Returns the current state info.
+     *
+     * @return The current state.
+     */
+    public State getState()
+    {
+        return _state;
+    }
+
+
     /**
      * Checks whether the specification version of the given Plug-in is compatible with
      * the Jalopy Plug-in API spec version.
      *
-     * @param packageName the package name of a Plug-in as specified in the Jar Manifest, e.g.
-     *        &quot;de.hunsicker.jalopy.plugin.ant&quot;.
+     * @param packageName the package name of a Plug-in as specified in the Jar Manifest,
+     *        e.g. &quot;de.hunsicker.jalopy.plugin.ant&quot;.
      *
      * @throws VersionMismatchException if the Plug-in with the given package name is not
      *         compatible with the Plug-in API version of the Jalopy runtime.
@@ -649,12 +674,12 @@ public final class Jalopy
     /**
      * Sets whether to hold a backup copy of an input file. Defaults to
      * <code>true</code>.
-     *
+     * 
      * <p>
      * This switch only takes action if you specify the same file for both input and
      * output.
      * </p>
-     *
+     * 
      * <p>
      * Note that you can specify how many backups should be retained, in case you want a
      * history. See {@link #setBackupLevel} for further information.
@@ -761,11 +786,11 @@ public final class Jalopy
      * Sets the destination directory to create all formatting output into. This setting
      * then lasts until you either specify another directory or {@link #reset} was
      * called (which results in deleting the destination, files are overwritten now on).
-     *
+     * 
      * <p>
      * If the given destination does not exist, it will be created.
      * </p>
-     *
+     * 
      * <p>
      * Only applies if a file output target was specified.
      * </p>
@@ -808,8 +833,8 @@ public final class Jalopy
      * @param input string to use as input source.
      * @param path path of the file that is to be processed.
      *
-     * @throws NullPointerException if <code><em>input</em> == null</code> or <code><em>path</em> ==
-     *         null</code>
+     * @throws NullPointerException if <code><em>input</em> == null</code> or
+     *         <code><em>path</em> == null</code>
      */
     public void setInput(
         String input,
@@ -826,6 +851,7 @@ public final class Jalopy
         }
 
         _inputFile = new File(path);
+        _inputFileChecksum = null;
         _inputString = input;
         _inputReader = new BufferedReader(new StringReader(input));
 
@@ -842,8 +868,9 @@ public final class Jalopy
      * @param input stream to use as input source.
      * @param path path of file that is to be processed.
      *
-     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if <em>path</em>
-     *         does not denote a valid, i.e. existing file or the system input stream.
+     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if
+     *         <em>path</em> does not denote a valid, i.e. existing file or the system
+     *         input stream.
      */
     public void setInput(
         InputStream input,
@@ -871,6 +898,7 @@ public final class Jalopy
         }
 
         _inputFile = new File(path);
+        _inputFileChecksum = null;
         _inputReader = new BufferedReader(new InputStreamReader(input));
 
         if (!hasInput())
@@ -886,8 +914,8 @@ public final class Jalopy
      * @param input reader to use as input source.
      * @param path path of file that is to be processed.
      *
-     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if <em>path</em>
-     *         does not denote a valid, i.e. existing file.
+     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if
+     *         <em>path</em> does not denote a valid, i.e. existing file.
      */
     public void setInput(
         Reader input,
@@ -915,6 +943,7 @@ public final class Jalopy
         }
 
         _inputFile = new File(path);
+        _inputFileChecksum = null;
         _inputReader = input;
 
         if (!hasInput())
@@ -939,6 +968,7 @@ public final class Jalopy
     {
         _inputReader = new BufferedReader(new FileReader(input));
         _inputFile = input.getAbsoluteFile();
+        _inputFileChecksum = null;
 
         if (!hasInput())
         {
@@ -998,19 +1028,21 @@ public final class Jalopy
     /**
      * Formats the (via {@link #setInput(File)}) specified input source and writes the
      * formatted result to the specified target.
-     *
+     * 
      * <p>
      * Formatting a file means that {@link #parse parsing}, {@link #inspect inspecting}
      * and printing will be performed in sequence depending on the current state. Thus
      * the parsing and/or inspection phase may be skipped.
      * </p>
-     *
+     * 
      * <p>
      * It is safe to call this method multiple times after you've first constructed an
      * instance: just set new input/output targets and go with it. But remember that
      * this class is thread-hostile: accessing the class concurrently from multiple
      * threads will lead to unsuspected results.
      * </p>
+     *
+     * @throws IllegalStateException if no input source has been specified.
      *
      * @see #setInput(File)
      * @see #setOutput(File)
@@ -1020,6 +1052,11 @@ public final class Jalopy
     public void format()
     {
         JavaNode tree = null;
+
+        if (!hasInput())
+        {
+            throw new IllegalStateException("no input source specified");
+        }
 
         try
         {
@@ -1174,6 +1211,8 @@ public final class Jalopy
      *         <code>null</code> if the input source could not be successfully parsed
      *         (i.e. always use {@link #getState} to check for success).
      *
+     * @throws IllegalStateException if no input source has been specified.
+     *
      * @see #setInput(File)
      * @see #getState
      * @since 1.0b8
@@ -1197,8 +1236,7 @@ public final class Jalopy
                 case FILE_STRING :
                 case FILE_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(
-                        Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
+                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
                     _recognizer.parse(_inputFile);
 
                     break;
@@ -1212,8 +1250,7 @@ public final class Jalopy
                 case READER_STRING :
                 case READER_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(
-                        Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
+                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
                     _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
@@ -1277,7 +1314,7 @@ public final class Jalopy
 
     /**
      * Resets this instance.
-     *
+     * 
      * <p>
      * Note that this method is not meant to be invoked after every call of {@link
      * #format}, but rather serves as a way to reset this instance to exactly the state
@@ -1469,33 +1506,36 @@ public final class Jalopy
                 // we have to release the file locks prior to changing the
                 // timestamp
                 _inputReader.close();
-                _outputWriter.close();
 
-                // update the timestamp of the file with our 'magic' stamp
-                _outputFile.setLastModified(_now);
-            }
-
-            // delete the backup if the user don't want backup copies
-            if (!_holdBackup && (_backupFile != null))
-            {
-                _backupFile.delete();
-
-                if (Loggers.IO.isDebugEnabled())
+                if (_outputWriter != null)
                 {
-                    _args[0] = _inputFile;
-                    _args[1] = _backupFile;
-                    Loggers.IO.l7dlog(
-                        Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
+                    _outputWriter.close();
+                    // update the timestamp of the file with our 'magic' stamp (but only if theres a writer)
+                    _outputFile.setLastModified(_now);
                 }
-            }
 
-            // update the status information if necessary
-            if (
-                (_state == State.PARSED) || (_state == State.INSPECTED)
-                || (_state == State.RUNNING))
-            {
-                // no error or warnings occured, all ok
-                _state = State.OK;
+                // delete the backup if the user don't want backup copies
+                if (!_holdBackup && (_backupFile != null) && _backupFile.exists())
+                {
+                    _backupFile.delete();
+
+                    if (Loggers.IO.isDebugEnabled())
+                    {
+                        _args[0] = _inputFile;
+                        _args[1] = _backupFile;
+                        Loggers.IO.l7dlog(
+                            Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
+                    }
+                }
+
+                // update the status information if necessary
+                if (
+                    (_state == State.PARSED) || (_state == State.INSPECTED)
+                    || (_state == State.RUNNING))
+                {
+                    // no error or warnings occured, all ok
+                    _state = State.OK;
+                }
             }
         }
         catch (Throwable ex)
@@ -1614,6 +1654,22 @@ public final class Jalopy
 
 
     /**
+     * Determines whether we should checksum compare files before we print them in order
+     * to determine whether two files are equal.
+     *
+     * @return <code>true</code> if the checksum comparison should be applied.
+     *
+     * @since 1.0b9
+     */
+    private boolean isChecksum()
+    {
+        return (_historyPolicy == History.Policy.FILE)
+        && ((_historyMethod == History.Method.CRC32)
+        || (_historyMethod == History.Method.ADLER32));
+    }
+
+
+    /**
      * Returns the destination file for the given target. If the directory where the file
      * should reside does not exist it will be created.
      *
@@ -1663,7 +1719,7 @@ public final class Jalopy
     /**
      * Indicates whether the input file is <em>dirty</em>. <em>Dirty</em> means that the
      * file needs to be formatted.
-     *
+     * 
      * <p>
      * Use {@link #setForce setForce(true)} to always force a formatting of the file.
      * </p>
@@ -1683,7 +1739,7 @@ public final class Jalopy
             return true;
         }
 
-        // no input file means we're processing a non-file input. This
+        // no input file means we're processing a non-file input. This is
         // generally the case if we're format an editor view in a graphical
         // application. As the user may revert the formatting, we assume
         // processing is always necessary
@@ -1694,7 +1750,7 @@ public final class Jalopy
         }
 
         // it doesn't make much sense to format a non-existing or empty file
-        if (!_inputFile.exists() || (_inputFile.length() == 0))
+        if (((_inputFile != null) && !_inputFile.exists()) || (_inputFile.length() == 0))
         {
             return false;
         }
@@ -1705,17 +1761,50 @@ public final class Jalopy
 
             if (entry != null)
             {
-                // the input file is up-to-date
-                if (entry.getModification() >= _inputFile.lastModified())
+                if (_historyMethod == History.Method.TIMESTAMP)
                 {
-                    if (_destination != null)
+                    return entry.getModification() < _inputFile.lastModified();
+                }
+                else if (_inputFileChecksum == null)
+                {
+                    if (_historyMethod == History.Method.CRC32)
                     {
-                        copyInputToOutput(
-                            _inputFile, _destination, entry.getPackageName(),
-                            entry.getModification());
+                        _inputFileChecksum = new CRC32();
+                    }
+                    else if (_historyMethod == History.Method.ADLER32)
+                    {
+                        _inputFileChecksum = new Adler32();
                     }
 
-                    return false;
+                    InputStream in = null;
+
+                    try
+                    {
+                        in = new BufferedInputStream(new FileInputStream(_inputFile));
+
+                        byte[] buffer = new byte[8 * 1024];
+                        int count = 0;
+
+                        do
+                        {
+                            _inputFileChecksum.update(buffer, 0, count);
+                            count = in.read(buffer, 0, buffer.length);
+                        }
+                        while (count != -1);
+                    }
+                    finally
+                    {
+                        if (in != null)
+                        {
+                            in.close();
+                        }
+                    }
+
+                    return _inputFileChecksum.getValue() != entry.getModification();
+                }
+                else
+                {
+                    return _inputFileChecksum.getValue() != entry.getModification();
                 }
             }
 
@@ -1798,7 +1887,7 @@ public final class Jalopy
     /**
      * Sets the local macro variables.
      *
-     * @param environment DOCUMENT ME!
+     * @param environment the current environment.
      * @param file file that is to be printed.
      * @param packageName package name of the file.
      * @param fileFormat fileFormat to use.
@@ -1886,15 +1975,28 @@ public final class Jalopy
      * #setInput(File)}).
      *
      * @param packageName the package name of the Java source file.
+     * @param checksumWriter the writer we use in case we perform checksum comparison.
      *
      * @throws IOException if the input source could not be added to the history.
      */
-    private void addFileHistoryEntry(String packageName)
+    private void addFileHistoryEntry(
+        String                          packageName,
+        History.ChecksumCharArrayWriter checksumWriter)
       throws IOException
     {
         if ((_historyPolicy == History.Policy.FILE) && (_inputFile != null))
         {
-            History.getInstance().add(_inputFile, packageName, _now);
+            if (
+                (_historyMethod == History.Method.CRC32)
+                || (_historyMethod == History.Method.ADLER32))
+            {
+                History.getInstance().add(
+                    _inputFile, packageName, checksumWriter.getChecksum().getValue());
+            }
+            else
+            {
+                History.getInstance().add(_inputFile, packageName, _now);
+            }
         }
     }
 
@@ -2115,12 +2217,13 @@ public final class Jalopy
         {
             case FILE_FILE :
 
-                // only create a backup if input and output file are equal
-                if (_destination == null)
+                if ((_destination == null) && !isChecksum())
                 {
                     _backupFile = createBackup(packageName);
                 }
-                else
+
+                // set the output file to the destination file
+                if (_destination != null)
                 {
                     // create the target file
                     _outputFile =
@@ -2138,7 +2241,10 @@ public final class Jalopy
                     return;
                 }
 
-                _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                if (!isChecksum())
+                {
+                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                }
 
                 break;
 
@@ -2187,9 +2293,24 @@ public final class Jalopy
 
         _now = System.currentTimeMillis();
 
+        Writer outputWriter = null;
+        History.ChecksumCharArrayWriter checksumWriter = null;
+
+        if (isChecksum())
+        {
+            checksumWriter = new History.ChecksumCharArrayWriter(_historyMethod);
+
+            // do not write the result to disk, but to a buffer
+            outputWriter = new BufferedWriter(checksumWriter);
+        }
+        else
+        {
+            outputWriter = _outputWriter;
+        }
+
         NodeWriter out =
             new NodeWriter(
-                _outputWriter, _inputFile.getAbsolutePath(), _issues,
+                outputWriter, _inputFile.getAbsolutePath(), _issues,
                 getLineSeparator(_outputFileFormat, format), format.toString());
 
         out.setAnnotation(_recognizer.hasAnnotations());
@@ -2199,7 +2320,10 @@ public final class Jalopy
             environment, _inputFile, packageName, _outputFileFormat.getName(),
             out.getIndentSize());
         out.setEnvironment(environment);
+
         addCommentHistoryEntry(packageName, out);
+
+        long start = 0;
 
         try
         {
@@ -2209,22 +2333,61 @@ public final class Jalopy
                     ((_outputFile != null) ? _outputFile
                                            : _inputFile) + ":0:0:print");
 
-                long start = System.currentTimeMillis();
+                start = System.currentTimeMillis();
                 PrinterFactory.create(tree).print(tree, out);
 
-                long stop = System.currentTimeMillis();
-                _timePrinting += (stop - start);
-                Loggers.IO.debug(
-                    ((_outputFile != null) ? _outputFile
-                                           : _inputFile) + ":0:0:printing took "
-                    + (stop - start));
+                if (!isChecksum())
+                {
+                    long stop = System.currentTimeMillis();
+                    _timePrinting += (stop - start);
+                    Loggers.IO.debug(
+                        ((_outputFile != null) ? _outputFile
+                                               : _inputFile) + ":0:0:printing took "
+                        + (stop - start));
+                }
             }
             else
             {
                 PrinterFactory.create(tree).print(tree, out);
             }
 
-            addFileHistoryEntry(packageName);
+            if (isChecksum())
+            {
+                out.flush(); // make sure the buffer is clean
+
+                // no checksum means there was no entry for the file
+                if (
+                    (_inputFileChecksum == null)
+                    || (_inputFileChecksum.getValue() != checksumWriter.getChecksum()
+                                                                       .getValue()))
+                {
+                    // only create a backup if input and output file may be equal
+                    if (_destination == null)
+                    {
+                        _backupFile = createBackup(packageName);
+                    }
+
+                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    checksumWriter.writeTo(_outputWriter);
+                }
+                else
+                {
+                    Loggers.IO.l7dlog(
+                        Level.INFO, "FILE_MODIFIED_BUT_SAME" /* NOI18N */, _args, null);
+                }
+
+                if (Loggers.IO.isDebugEnabled())
+                {
+                    long stop = System.currentTimeMillis();
+                    _timePrinting += (stop - start);
+                    Loggers.IO.debug(
+                        ((_outputFile != null) ? _outputFile
+                                               : _inputFile) + ":0:0:printing took "
+                        + (stop - start));
+                }
+            }
+
+            addFileHistoryEntry(packageName, checksumWriter);
         }
         finally
         {
@@ -2233,6 +2396,14 @@ public final class Jalopy
             if (out != null)
             {
                 out.close();
+            }
+
+            if (isChecksum())
+            {
+                if (_outputWriter != null)
+                {
+                    _outputWriter.close();
+                }
             }
         }
     }
@@ -2273,7 +2444,7 @@ public final class Jalopy
     /**
      * Unsets the local macro variables.
      *
-     * @param environment DOCUMENT ME!
+     * @param environment the current environment.
      *
      * @since 1.0b8
      */
