@@ -100,7 +100,7 @@ Reported by Ralf Wiebicke
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=605998&amp;group_id=45216">#605998</ulink>)
 </listitem>
 <listitem>
-Javadoc endline comments were ignored. Jalopy will now (again) treat such cases as errors.
+Javadoc trailing comments were ignored. Jalopy will now (again) treat such cases as errors.
 Reported by Ralf Wiebicke
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604072&amp;group_id=45216">#604072</ulink>)
 </listitem>
@@ -122,7 +122,7 @@ Variable interpolation did not work in header or footers. Reported by Daniel Fre
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=601901&amp;group_id=45216">#601901</ulink>
 </listitem>
 <listitem>
-Jalopy lost endline comments in certain cases. Reported by Shankar Unni, Steve Corwin, Ray Powell
+Jalopy lost trailing comments in certain cases. Reported by Shankar Unni, Steve Corwin, Ray Powell
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=601393&amp;group_id=45216">#601393</ulink>,
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=602169&amp;group_id=45216">#602169</ulink>,
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=603914&amp;group_id=45216">#603914</ulink>)
@@ -278,11 +278,13 @@ The preferences dialog now comes with a live preview. Requested by Erik Dick
 (<ulink url="http://sf.net/tracker/?func=detail&amp;aid=563215&amp;group_id=45216&amp;atid=442215">#563215</ulink>)
 </listitem>
 
+<!--
 <listitem>
 The indentation for parameters is now user configurable.
 See <ulink url="./indentation.html#indentation-sizes-param">Indentation section</ulink>.
 Requested by Daniel Ritchey
 </listitem>
+-->
 
 <listitem>
 Similar to Jindent, Jalopy is now able to perform variable interpolation for
@@ -409,7 +411,7 @@ Javadoc comments. Reportedy by Olivier Mengu&eacute;
 </listitem>
 <listitem>
 Enabling the cuddling of empty braces lead to compilation errors if an
-endline comment appeared before the opening brace. The cuddling is now disabled
+trailing comment appeared before the opening brace. The cuddling is now disabled
 for such a (rare) case. Reported by Kees Kuip
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=568974&amp;group_id=45216">#568974</ulink>)
 </listitem>
@@ -474,7 +476,7 @@ feature was disabled. Reported by Martin Spiller
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=561675&amp;group_id=45216">#561675</ulink>)
 </listitem>
 <listitem>
-As the comment preserving/printing implementation has been rewritten, endline
+As the comment preserving/printing implementation has been rewritten, trailing
 comment support should now work in nearly all cases. At least all reported
 issues are now treated correctly. Reported by Stephane Houle, Emil A. Lefkof,
 Kees Kuip, John Wilson
@@ -766,7 +768,7 @@ Custom Javadoc tag definitions are now loaded correctly and thus working. Report
 (<ulink url="http://sf.net/tracker/index.php?func=detail&amp;atid=442212&amp;aid=547028&amp;group_id=45216">#547028</ulink>)
 </listitem>
 <listitem>
-Fixed an endline comment bug for the Sun brace styling. Reported by Martin Spiller
+Fixed an trailing comment bug for the Sun brace styling. Reported by Martin Spiller
 (<ulink url="http://sf.net/tracker/index.php?func=detail&amp;atid=442212&amp;aid=545616&amp;group_id=45216">#545616</ulink>)
 </listitem>
 <listitem>
@@ -1033,7 +1035,7 @@ Bugfixes
 
 <itemizedlist mark="square">
 <listitem>
-Small bugfix regarding endline comments and array initialization
+Small bugfix regarding trailing comments and array initialization
 </listitem>
 <listitem>
 Line wrapping for parameter lists was always performed, no matter what
@@ -1201,7 +1203,7 @@ No space was printed after array elements for arrays that fit in
 one line
 </listitem>
 <listitem>
-Printing of endline comments now works much more reliable
+Printing of trailing comments now works much more reliable
 </listitem>
 <listitem>
 No message was reported in case the user specified an invalid input file

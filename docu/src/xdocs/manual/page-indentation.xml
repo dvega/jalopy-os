@@ -16,18 +16,98 @@ Controls the indentation settings.
 
 <sect3 id="indentation-policy">
 <title>Indentation policy</title>
+<para>
+Lets you choose the way lines should be indented.
+</para>
+
 
 <itemizedlist>
 <listitem>
 <para id="indentation-policy-standard">
 Standard indentation
 </para>
+<para>
+With standard indentation, lines will be indented according to the
+current indentation level (Note that the indentation level changes as the block
+or parentheses level changes).
+</para>
+
+<example id="indentation-method-decl-standard">
+<title>Method declaration (standard indented)</title>
+<programlisting>
+public void severalParameters(String one, int two, String three,
+    StringObject four, AnotherObject five) {
+...
+}
+</programlisting>
+</example>
+
+<example id="indentation-method-call-standard">
+<title>Method Call (standard indented)</title>
+<programlisting>
+vector.add(new AppServerReference(
+        "RemoteApplicationManager",
+        poa.create_reference_with_id("RemoteApplicationManager".getBytes(),
+            RemoteApplicationManagerHelper.id())));
+</programlisting>
+</example>
+<example id="indentation-assign-standard">
+<title>Assignment (standard indented)</title>
+<programlisting>
+doublette[InteressentenPflegeController.GEBURTSDATUM] = versichertenResultSetRow[i].field[0]
+    .substring(0, 2) + "."
+    + versichertenResultSetRow[i].field[0].substring(2, 4) + "."
+    + versichertenResultSetRow[i].field[0].substring(4, 6);
+</programlisting>
+</example>
+<para/>
 </listitem>
 
 <listitem>
 <para id="indentation-policy-deep">
 Deep indentation
 </para>
+
+<para>
+Deep indentation means that lines will be indented relative to the current
+parentheses or assignment offset.
+</para>
+
+<example id="indentation-method-decl-deep">
+<title>Method declaration (deep indented)</title>
+<programlisting>
+public void severalParameters(String one, int two, String three,
+                              StringObject four, AnotherObject five) {
+    ...
+}
+</programlisting>
+</example>
+
+<example id="indentation-method-call-deep">
+<title>Method Call (deep indented)</title>
+<programlisting>
+this.add(lbPunktzahl,
+         new GridBagLayout(0, 1, 2, 1, 0.0, 0.0,
+                           GribBagConstraints.WEST,
+                           GribBagConstraints.NONE,
+                           new Insets(0, GribBagConstraints.WEST,
+                                      GribBagConstraints.WEST,
+                                      GribBagConstraints.WEST), 0, 0));
+</programlisting>
+</example>
+<example id="indentation-assign-deep">
+<title>Assignment (deep indented)</title>
+<programlisting>
+doublette[Controller.GEBURTSDATUM] = versichertenResultSetRow[i].field[0]
+                                     .substring(0, 2) + "."
+                                     + versichertenResultSetRow[i].field[0]
+                                       .substring(2, 4)
+                                     + "."
+                                     + versichertenResultSetRow[i].field[0]
+                                       .substring(4, 6);
+</programlisting>
+</example>
+<para/>
 </listitem>
 </itemizedlist>
 </sect3>
@@ -128,8 +208,8 @@ Continuation indent
 <indexterm zone="indentation-sizes-continuation"><primary>Indentation</primary><secondary>sizes</secondary><tertiary>Continuation</tertiary></indexterm>
 </para>
 <para>
-Specifies the number of spaces that should be inserted in front of continuation lines,
-i.e. the successive line(s) in case of a line wrap.
+Specifies the number of spaces that should be inserted in front of
+continuation lines, i.e. the consecutive lines in case of a line wrap.
 </para>
 <example id="ex-indentation-two-continuation">
 <title>2 space continuation indent</title>
@@ -156,18 +236,18 @@ if ((condition1 &amp;&amp; condition2)
 </listitem>
 
 <listitem>
-<para id="indentation-sizes-endline">
-Endline comment indent
-<indexterm zone="indentation-sizes-endline"><primary>Indentation</primary><secondary>sizes</secondary><tertiary>Endline comment</tertiary></indexterm>
-<indexterm zone="indentation-sizes-endline"><primary>Comment</primary><secondary>endline</secondary></indexterm>
-<indexterm zone="indentation-sizes-endline"><primary>Endline Comment</primary></indexterm>
+<para id="indentation-sizes-trailing">
+Trailing comment indent
+<indexterm zone="indentation-sizes-trailing"><primary>Indentation</primary><secondary>sizes</secondary><tertiary>Trailing comment</tertiary></indexterm>
+<indexterm zone="indentation-sizes-trailing"><primary>Comment</primary><secondary>trailing</secondary></indexterm>
+<indexterm zone="indentation-sizes-trailing"><primary>Trailing Comment</primary></indexterm>
 </para>
 <para>
-Specifies the number of spaces to insert between endline comments and the
+Specifies the number of spaces to insert between trailing comments and the
 preceding statement.
 </para>
-<example id="ex-indentation-three-endline">
-<title>3 space endline comment indent</title>
+<example id="ex-indentation-three-trailing">
+<title>3 space trailing comment indent</title>
 <programlisting>
 new String[] {
     "Sunday",--&gt;// Sunday
@@ -185,7 +265,7 @@ new String[] {
 
 <listitem>
 <para id="indentation-sizes-tab">
-Tab Indent
+Original Tab Indent
 </para>
 <para>
 Specifies the original tabular size of the source code. Some indentations
@@ -283,6 +363,7 @@ because you specifically enabled <link linkend="wrapping-before-throws">wrapping
 </para>
 </listitem>
 
+<!--
 <listitem>
 <para id="indentation-sizes-param">
 Parameters Indent
@@ -309,9 +390,9 @@ private static final File getDestinationFile(File dest,
 <title>Forced Parameter indentation with 4 spaces</title>
 <programlisting>
 private static final File getDestinationFile(
----&gt;File dest,
----&gt;String packageName,
----&gt;String filename)
+-&gt;File dest,
+-&gt;String packageName,
+-&gt;String filename)
 {
     ...
 }
@@ -330,6 +411,7 @@ for <link linkend="wrap-method-params">method declaration parameters</link>,
 <link linkend="wrap-left-parenthesis">parenthesis</link>.
 </para>
 </listitem>
+-->
 
 <para/>
 </itemizedlist>
@@ -508,12 +590,13 @@ during the developing phase.
 
 <listitem>
 <para id="indentation-misc-continuation-if">
-Continuation indent for &quot;if&quot;
+Continuation indent for blocks
 </para>
 <para>
 The Sun brace style could make seeing the statement body difficult. To
-workaround this problem, you can use continuation indentation if you like this
-brace style.
+workaround this problem, you may want to use continuation indentation in case you like this
+brace style. This settings applies for <literal>if</literal>, <literal>for</literal>, <literal>while</literal>
+and <literal>do-while</literal> blocks.
 </para>
 
 <example id="ex-indentation-misc-non-continuation">
@@ -547,11 +630,12 @@ Refer to <xref linkend="braces-style-styles" /> for the available brace style op
 Continuation indent for ternary &quot;if-else&quot;
 </para>
 <para>
-If enabled, the indentation level will be increased by one before the
+If enabled, indentation will be increased before the
 expression part will be printed. This only applies if the expression part will
 be printed on a new line. Read <xref linkend="wrapping-always" /> for more
 information about the line wrapping options.
 </para>
+
 <example id="ex-indentation-misc-ternary-if-else">
 <title>Ternary if-else</title>
 <programlisting>
@@ -563,6 +647,7 @@ String comma = spaceAfterComma
 <para/>
 </listitem>
 
+<!--
 <listitem>
 <para id="indentation-misc-force-param">
 Force indentation for parameters
@@ -586,13 +671,15 @@ _userDatabase.addUser("Name",
 <title>Forced Parameter indentation with 4 spaces</title>
 <programlisting>
 _userDatabase.addUser("Name",
----&gt;encryptPassword("password",
----&gt;---&gt;_secretKey),
----&gt;"123 fake address");
+- -&gt;encryptPassword("password",
+- -&gt;- -&gt;_secretKey),
+- -&gt;"123 fake address");
 </programlisting>
 </example>
 <para/>
 </listitem>
+-->
+
 </itemizedlist>
 </sect2>
 
@@ -710,7 +797,7 @@ public static File create(final File file,
 
 <listitem>
 <para id="indentation-align-method-chains">
-Chained Method Calls
+Method Call chains
 </para>
 
 <para>
@@ -718,7 +805,7 @@ If disabled, indentation happens according to the current indentation level.
 </para>
 
 <example id="ex-indentation-align-call">
-<title>Chained Method call</title>
+<title>Chained Method call (standard indented)</title>
 <programlisting>
 Fachschluesselerzeugung.createService()
 .getNeuerFachschluesselServiceService(
@@ -739,7 +826,56 @@ Fachschluesselerzeugung.createService()
 </programlisting>
 </example>
 <para/>
+</listitem>
 
+<listitem>
+<para>
+Ternary expressions
+</para>
+
+<para>
+If disabled, ternary expressions are printed according to the current
+<link linkend="indentation-policy">indentation policy</link>.
+</para>
+
+<example id="ex-indentation-ternary-standard">
+<title>Ternary operators (standard indented)</title>
+<programlisting>
+                                                   |
+        alpha = (aLongBooleanExpression) ? beta    |
+        : gamma;                                   |
+                                                   |
+</programlisting>
+</example>
+
+<example id="ex-indentation-ternary-deep">
+<title>Ternary operators (deep indented)</title>
+<programlisting>
+                                                   |
+        alpha = (aLongBooleanExpression) ? beta    |
+                : gamma;                           |
+                                                   |
+</programlisting>
+</example>
+
+<para>
+If enabled, the second operator will always be aligned relative to the first one.
+</para>
+
+<example id="ex-indentation-ternary-align">
+<title>Ternary expresssions (aligned)</title>
+<programlisting>
+                                                   |
+        alpha = (aLongBooleanExpression) ? beta    |
+                                         : gamma;  |
+                                                   |
+</programlisting>
+</example>
+<para>
+Note that this switch only takes affect, if indeed a line break was inserted
+before the second expression. You can force such line breaks with the
+<link linkend="wrap-ternary-colon">Wrap always before ternary expression colon</link> setting.
+</para>
 </listitem>
 </itemizedlist>
 <para/>

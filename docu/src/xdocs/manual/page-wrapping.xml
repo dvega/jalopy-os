@@ -609,7 +609,7 @@ private File getDestinationFile(File dest, String packageName,
 <para/>
 
 <example id="ex-wrapping-after-throws-types-wrapped-standard">
-<title>throws types (wrapped with standard indentation)</title>
+<title>throws types (standard indented)</title>
 <programlisting>
 private static final File getDestinationFile(File dest, String packageName,
                                              String filename)
@@ -622,6 +622,34 @@ private static final File getDestinationFile(File dest, String packageName,
 </example>
 <para/>
 </listitem>
+
+<listitem>
+<para>
+After throws clause
+</para>
+
+<para>
+Forces a line wrap after the throws clause.
+</para>
+
+<example id="ex-wrapping-after-throws-clause">
+<title>throws clause (standard indented)</title>
+<programlisting>
+public void severalParameters(
+	String one,
+	int two,
+	String three,
+	StringObject four,
+	AnotherObject five
+) throws Exception
+{
+	...
+}
+</programlisting>
+</example>
+<para/>
+</listitem>
+
 
 <listitem>
 <para id="wrap-method-params">
@@ -657,10 +685,12 @@ public static File create(File file,
 }
 </programlisting>
 </example>
+<!--
 <para>
 You can control the space printed before each parameter with the
 <link linkend="indentation-sizes-param">Parameters Indent</link> setting.
 </para>
+-->
 </listitem>
 
 <listitem>
@@ -748,56 +778,57 @@ doSomethingElse();
 
 <listitem>
 <para>
-Ternary if-else expression
+Ternary expression question mark (<literal>?</literal>)
 </para>
 <para>
-Forces line wrapping after the first operand.
+Forces a line wrap after the first operand.
 </para>
 <example id="ex-wrap-ternary-expr">
-<title>Ternary if-else expression</title>
+<title>Ternary expression question mark (deep indented)</title>
 <programlisting>
 String comma = spaceAfterComma
                ? COMMA_SPACE : COMMA;
 </programlisting>
 </example>
 <para>
-You may want to use <link linkend="indentation-misc-ternary-if-else">continuation indentation</link> for if-else values.
+Indentation for consecutive lines depends on the used <link linkend="indentation-policy">indenatation policy</link>.
+You may further want to use <link linkend="indentation-misc-ternary-if-else">continuation indentation</link>.
 </para>
 </listitem>
 
 <listitem>
-<para>
-Ternary if-else values
+<para id="wrap-ternary-colon">
+Ternary expression colon (<literal>:</literal>)
 </para>
 <para>
-Forces line wrapping after the second operand.
+Forces a line wrap after the second operand.
 </para>
 <example id="ex-wrap-ternary-values">
-<title>Ternary if-else values</title>
+<title>Ternary expression colon</title>
 <programlisting>
 String comma = spaceAfterComma ? COMMA_SPACE
                                : COMMA;
 </programlisting>
 </example>
 <para>
-If both switches are disabled, you can achieve a style like the following:
+If both switches are disabled, ternary expressions are printed in one line (if everything fits in one line, that is).
 </para>
 <example id="ex-wrap-ternary">
-<title>Ternary if-else</title>
+<title>Ternary expressions</title>
 <programlisting>
 String comma = spaceAfterComma ? COMMA_SPACE : COMMA;
 </programlisting>
 </example>
 
 <para>
-If both switches are enabled, you can achieve a style like the following:
+If both switches are enabled, you can force a style like the following:
 </para>
 <example id="ex-wrap-ternary-continued">
-<title>Ternary if-else (continued)</title>
+<title>Ternary expressions (continued)</title>
 <programlisting>
 String comma = spaceAfterComma
-               ? COMMA_SPACE
-               : COMMA;
+    ? COMMA_SPACE
+    : COMMA;
 </programlisting>
 </example>
 <para />

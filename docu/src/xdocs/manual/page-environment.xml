@@ -14,7 +14,7 @@
 <para>
 Lets you specify/view environment variables. Environment variables can be used
 in headers, footers and Javadoc templates to form variable expressions that will
-be resolved during printing. I call this process <emphasis>variable interpolation</emphasis>;.
+be resolved during printing. I call this process <emphasis>variable interpolation</emphasis>.
 </para>
 
 <para>
@@ -131,6 +131,9 @@ The current list of valid local variables reads as follows:
 <para>
 Once defined, variables can then be enclosed with the dollar sign to form variable expressions.
 Variable expressions thus take the form <literal>$([a-zA-Z_][a-zA-Z0-9_.]+)$</literal>.
+</para>
+
+<para>
 During printing these expressions will be interpolated and
 the value of the variable inserted into the output file.
 </para>

@@ -1,55 +1,56 @@
 <article>
 
 <simplesect>
-<title condition="ant">Ant TAsk</title>
-<title condition="console">Console Application</title>
-<title condition="eclipse">Eclipse Plug-in</title>
-<title condition="jbuilder">JBuilder OpenTool</title>
-<title condition="jedit">jEdit Plugin</title>
-<title condition="main">Jalopy Java Source Code Formatter</title>
-<title condition="netbeans">NetBeans/Sun ONE Studio module</title>
+<title condition="ant">README Ant Task</title>
+<title condition="console">README Console Application</title>
+<title condition="eclipse">README Eclipse Plug-in</title>
+<title condition="jbuilder">README JBuilder OpenTool</title>
+<title condition="jdeveloper">README JDeveloper Extension</title>
+<title condition="jedit">README jEdit Plugin</title>
+<title condition="main">README Jalopy Java Source Code Formatter</title>
+<title condition="netbeans">README NetBeans/Sun ONE Studio module</title>
 </simplesect>
 
 <para condition="ant">
-This is the readme for the Ant Task distribution of the Jalopy Java 
+This is the README for the Ant Task distribution of the Jalopy Java 
 Source Code Formatter. This Plug-in provides the integration with the
 wonderful Jakarta build tool.
 </para>
 
 <para condition="console">
-This is the readme for the Console application distribution of the Jalopy Java 
+This is the README for the Console application distribution of the Jalopy Java 
 Source Code Formatter. This Plug-in provides a powerful command line interface for Jalopy.
 </para>
 
 <para condition="eclipse">
-This is the readme for the Eclipse Plug-in distribution of the Jalopy 
+This is the README for the Eclipse Plug-in distribution of the Jalopy 
 Java Source Code Formatter.
 </para>
 
 <para condition="jbuilder">
-This is the readme for the JBuilder OpenTool distribution of the Jalopy 
+This is the README for the JBuilder OpenTool distribution of the Jalopy 
 Java Source Code Formatter.
 </para>
 
 <para condition="jdeveloper">
-This is the readme for the JDeveloper Extension distribution of the Jalopy 
+This is the README for the JDeveloper Extension distribution of the Jalopy 
 Java Source Code Formatter.
 </para>
 
 <para condition="jedit">
-This is the readme for the jEdit Plug-in distribution of the Jalopy
+This is the README for the jEdit Plug-in distribution of the Jalopy
 Java Source Code Formatter.
 </para>
 
 <para condition="main">
-This is the readme for the core runtime distribution of the Jalopy Java Source 
+This is the README for the core runtime distribution of the Jalopy Java Source 
 Code Formatter. This distribution only contains the Jalopy core classes and is
 therefore only suited for those who want to integrate Jalopy with their custom
 applications or develop a new Plug-in.
 </para>
 
 <para condition="netbeans">
-This is the readme for the NetBeans/Sun ONE Studio module distribution of the Jalopy 
+This is the README for the NetBeans/Sun ONE Studio module distribution of the Jalopy 
 Java Source Code Formatter.
 </para>
 <sect1>
@@ -80,7 +81,7 @@ This distribution contains the following libraries:
   Jalopy Console Application (<filename>jalopy-console-@BUILD.VERSION.CONSOLE@.jar</filename>)
 </listitem>
 <listitem condition="eclipse">
-  Jalopy Eclipse Plug-in (<filename>jalopy-eclipse-0.2.2.jar</filename>)
+  Jalopy Eclipse Plug-in (<filename>jalopy-eclipse-0.2.3.jar</filename>)
 </listitem>
 <listitem condition="jbuilder">
   Jalopy JBuilder OpenTool (<filename>jalopy-jbuilder-0.7.5.jar</filename>)

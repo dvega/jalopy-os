@@ -152,7 +152,7 @@ sources:
 <itemizedlist mark="square">
 <listitem>
 <para>
-Jakarta Ant. Jalopy comes with a simple, Ant-based build
+Jakarta Ant - Jalopy comes with a simple, Ant-based build
 system. So you first need to obtain and install Ant as outlined in the
 <ulink url="http://jakarta.apache.org/ant/manual/install.html">Ant manual</ulink>.
 The build system is only tested against the Ant 1.5 release, but later nightly
@@ -162,16 +162,16 @@ builds of Ant may also work.
 
 <listitem>
 <para>
-Oasis DocBook XML DTD. You can get it from the
+Oasis DocBook XML DTD - you can get it from the
 <ulink url="http://www.oasis-open.org/committees/docbook/xml/4.2/index.shtml">OASIS website</ulink>.
 </para>
 </listitem>
 
 <listitem>
 <para>
-Norman Walsh's DocBook XSL Stylesheets. Download the latest release from SourceForge
+Norman Walsh's DocBook XSL Stylesheets - download the latest release from SourceForge
 (<ulink url="http://docbook.sf.net">http://docbook.sf.net</ulink>).
-You have to copy the file <filename>extensions/saxon65.jar</filename> that
+You have to copy the file <filename>extensions/saxon651.jar</filename> that
 comes with the distribution into the <filename>/lib</filename> folder of your
 Ant installation directory as this file is needed for sophisticated table
 generation.
@@ -180,9 +180,8 @@ generation.
 
 <listitem>
 <para>
-An XSLT processor. The only one I found working with the DocBook XSL release
-I'm using is Michael Kay's Saxon. You should download the current stable
-production release from SourceForge
+An XSLT processor - Michael Kay's Saxon is known to work. You should download
+the current stable production release from SourceForge
 (<ulink url="http://saxon.sf.net">http://saxon.sf.net</ulink>)
 and extract the file <filename>saxon.jar</filename> into the <filename>/lib</filename>
 folder of your Ant installation directory.

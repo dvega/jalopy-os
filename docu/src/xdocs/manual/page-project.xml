@@ -12,6 +12,15 @@ Enables you to manage your Jalopy settings in a project-like manner. For every
 project you define, Jalopy creates a new subdirectory where all related files
 will be stored.
 
+<para>
+The list component displays all currently known project spaces. Click on an
+entry to see what actions are available.
+</para>
+
+<para>
+The different actions are:
+</para>
+
 <itemizedlist>
 <listitem>
 <para><guibutton>Add...</guibutton></para>
@@ -30,7 +39,8 @@ is not active. The default project cannot be removed.</para>
 
 <listitem>
 <para><guibutton>Activate</guibutton></para>
-<para>Activates the selected project.</para>
+<para>Activates the selected project. The stored preferences will be loaded and the
+Preferences dialog updates accordingly.</para>
 </listitem>
 </itemizedlist>
 </para>
