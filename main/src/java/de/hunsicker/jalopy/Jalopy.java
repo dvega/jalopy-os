@@ -1494,19 +1494,19 @@ public final class Jalopy
 
                 // update the timestamp of the file with our 'magic' stamp
                 _outputFile.setLastModified(_now);
+            }
 
-                // delete the backup if the user don't want backup copies
-                if (!_holdBackup && (_backupFile != null))
+            // delete the backup if the user don't want backup copies
+            if (!_holdBackup && (_backupFile != null))
+            {
+                _backupFile.delete();
+
+                if (Loggers.IO.isDebugEnabled())
                 {
-                    _backupFile.delete();
-
-                    if (Loggers.IO.isDebugEnabled())
-                    {
-                        _args[0] = _inputFile;
-                        _args[1] = _backupFile;
-                        Loggers.IO.l7dlog(
-                            Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
-                    }
+                    _args[0] = _inputFile;
+                    _args[1] = _backupFile;
+                    Loggers.IO.l7dlog(
+                        Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
                 }
             }
 
