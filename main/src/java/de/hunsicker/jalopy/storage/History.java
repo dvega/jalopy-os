@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -235,6 +235,77 @@ public final class History
 
 
     /**
+     * Represents a history entry.
+     */
+    public static final class Entry
+        implements Serializable
+    {
+        /** Use serialVersionUID for interoperability. */
+        static final long serialVersionUID = 7661537884776942605L;
+
+        /** The package name of the entry. */
+        String packageName;
+
+        /** The time this entry was last processed. */
+        long lastmod;
+
+        /**
+         * Creates a new entry object.
+         *
+         * @param packageName the package name of the entry.
+         * @param modification the value calculated for the last processing of this
+         *        entry.
+         */
+        public Entry(
+            String packageName,
+            long   modification)
+        {
+            this.packageName = packageName;
+            this.lastmod = modification;
+        }
+
+        /**
+         * Returns the last modification value (could be timestamp or crc).
+         *
+         * @return last modification value.
+         */
+        public long getModification()
+        {
+            return this.lastmod;
+        }
+
+
+        /**
+         * Returns the package name of the entry.
+         *
+         * @return the package name.
+         */
+        public String getPackageName()
+        {
+            return this.packageName;
+        }
+
+
+        /**
+         * Returns a string representation of this entry.
+         *
+         * @return a string representation of this entry.
+         */
+        public String toString()
+        {
+            StringBuffer buf = new StringBuffer(30);
+            buf.append('%');
+            buf.append(this.lastmod);
+            buf.append(':');
+            buf.append(this.packageName);
+            buf.append('%');
+
+            return buf.toString();
+        }
+    }
+
+
+    /**
      * Represents the method used to identify dirty files and changed files.
      *
      * @author Michael Callum
@@ -325,77 +396,6 @@ public final class History
         public String toString()
         {
             return _displayName;
-        }
-    }
-
-
-    /**
-     * Represents a history entry.
-     */
-    public static final class Entry
-        implements Serializable
-    {
-        /** Use serialVersionUID for interoperability. */
-        static final long serialVersionUID = 7661537884776942605L;
-
-        /** The package name of the entry. */
-        String packageName;
-
-        /** The time this entry was last processed. */
-        long lastmod;
-
-        /**
-         * Creates a new entry object.
-         *
-         * @param packageName the package name of the entry.
-         * @param modification the value calculated for the last processing of this
-         *        entry.
-         */
-        public Entry(
-            String packageName,
-            long   modification)
-        {
-            this.packageName = packageName;
-            this.lastmod = modification;
-        }
-
-        /**
-         * Returns the last modification value (could be timestamp or crc).
-         *
-         * @return last modification value.
-         */
-        public long getModification()
-        {
-            return this.lastmod;
-        }
-
-
-        /**
-         * Returns the package name of the entry.
-         *
-         * @return the package name.
-         */
-        public String getPackageName()
-        {
-            return this.packageName;
-        }
-
-
-        /**
-         * Returns a string representation of this entry.
-         *
-         * @return a string representation of this entry.
-         */
-        public String toString()
-        {
-            StringBuffer buf = new StringBuffer(30);
-            buf.append('%');
-            buf.append(this.lastmod);
-            buf.append(':');
-            buf.append(this.packageName);
-            buf.append('%');
-
-            return buf.toString();
         }
     }
 

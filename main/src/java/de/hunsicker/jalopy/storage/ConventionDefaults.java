@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -152,7 +152,7 @@ public final class ConventionDefaults
     public static final boolean BRACE_TREAT_DIFFERENT_IF_WRAPPED = false;
 
     /** DOCUMENT ME! */
-    public static final boolean INSERT_TRAILING_NEWLINE = false;
+    public static final boolean INSERT_TRAILING_NEWLINE = true;
 
     /** DOCUMENT ME! */
     public static final boolean BRACE_NEWLINE_RIGHT = false;
@@ -593,61 +593,31 @@ public final class ConventionDefaults
     public static final String REGEXP_PACKAGE = "[a-z]+(?:\\.[a-z]+)*";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_CLASS = "[A-Z][a-zA-Z0-9]*";
+    public static final String REGEXP_CLASS = "[A-Z][a-zA-Z0-9]+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_CLASS_ABSTRACT = "[A-Z][a-zA-Z0-9]*";
+    public static final String REGEXP_CLASS_ABSTRACT = "[A-Z][a-zA-Z0-9]+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_INTERFACE = "[A-Z][a-zA-Z0-9]*";
+    public static final String REGEXP_INTERFACE = "[A-Z][a-zA-Z0-9]+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_LABEL = "[a-zA-Z0-9_]+";
+    public static final String REGEXP_LABEL = "\\w+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PUBLIC = "[a-z][\\w]*";
+    public static final String REGEXP_FIELD = "[a-z][\\w]+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PROTECTED = "[a-z][\\w]*";
+    public static final String REGEXP_FIELD_STATIC_FINAL = "[a-zA-Z][\\w]+";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_DEFAULT = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PRIVATE = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PUBLIC_STATIC = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PROTECTED_STATIC = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_DEFAULT_STATIC = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PRIVATE_STATIC = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PUBLIC_STATIC_FINAL = "[a-zA-Z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PROTECTED_STATIC_FINAL = "[a-zA-Z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_DEFAULT_STATIC_FINAL = "[a-zA-Z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_FIELD_PRIVATE_STATIC_FINAL = "[a-zA-Z][\\w]*";
+    public static final String REGEXP_METHOD = "[a-z][\\w]+";
 
     /** DOCUMENT ME! */
     public static final String REGEXP_LOCAL_VARIABLE = "[a-z][\\w]*";
 
     /** DOCUMENT ME! */
-    public static final String REGEXP_PARAM = "[a-z][\\w]*";
-
-    /** DOCUMENT ME! */
-    public static final String REGEXP_PARAM_FINAL = "[a-z][\\w]*";
+    public static final String REGEXP_PARAM = "[a-z][\\w]+";
 
     /** DOCUMENT ME! */
     public static final String SEPARATOR_FILL_CHARACTER = "-";

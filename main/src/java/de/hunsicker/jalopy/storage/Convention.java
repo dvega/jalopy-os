@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -321,18 +321,6 @@ public final class Convention
 
                 values = t;
             }
-            else if (key instanceof de.hunsicker.jalopy.storage.Key)
-            {
-                Map t = new HashMap(values.size());
-
-                for (Iterator i = values.entrySet().iterator(); i.hasNext();)
-                {
-                    Map.Entry entry = (Map.Entry) i.next();
-                    t.put(new Key(entry.getKey().toString()), entry.getValue());
-                }
-
-                values = t;
-            }
         }
 
         _values = values;
@@ -537,8 +525,7 @@ public final class Convention
                         if (files[i].isFile())
                         {
                             Copy.file(
-                                files[i], new File(
-                                    projectDirectory, files[i].getName()));
+                                files[i], new File(projectDirectory, files[i].getName()));
                         }
                     }
                 }
@@ -665,6 +652,8 @@ public final class Convention
      * @param file code convention file.
      *
      * @throws IOException if an I/O error occured.
+     * @throws FileNotFoundException DOCUMENT ME!
+     * @throws IllegalArgumentException DOCUMENT ME!
      */
     public static void importSettings(File file)
       throws IOException
@@ -912,8 +901,7 @@ public final class Convention
             {
                 String encoding = System.getProperty("file.encoding");
                 XMLOutputter outputter = new XMLOutputter("    ", true, encoding);
-                outputter.output(
-                    convertMapToXml(_values), new BufferedOutputStream(out));
+                outputter.output(convertMapToXml(_values), new BufferedOutputStream(out));
             }
             finally
             {
@@ -1497,8 +1485,7 @@ public final class Convention
         sortOrder = regexp.substitute("s/Interface/Interfaces/", sortOrder);
         sortOrder = regexp.substitute("s/Method/Methods/", sortOrder);
         sortOrder = regexp.substitute("s/Constructor/Constructors/", sortOrder);
-        sortOrder = regexp.substitute(
-                "s/Initializer/Instance Initializers/", sortOrder);
+        sortOrder = regexp.substitute("s/Initializer/Instance Initializers/", sortOrder);
         sortOrder = regexp.substitute("s/Variable/Instance Variables/", sortOrder);
         sortOrder = "Static Variables/Initializers," + sortOrder;
 

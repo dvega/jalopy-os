@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -1173,7 +1173,7 @@ public final class ConventionKeys
      * @since 1.0b8
      */
     public static final Convention.Key TIP_ADHERE_TO_NAMING_CONVENTION =
-        new Convention.Key("inspector/tips/");
+        new Convention.Key("inspector/tips/adhereToNamingConvention");
 
     /**
      * Perform this code inspection? (<em>boolean</em>)
@@ -1415,6 +1415,103 @@ public final class ConventionKeys
      */
     public static final Convention.Key REGEXP_FIELD_PRIVATE_STATIC_FINAL =
         new Convention.Key("inspector/naming/fieldPrivateStaticFinal");
+
+    /**
+     * Regexp for public methods  (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC =
+        new Convention.Key("inspector/naming/methodPublic");
+
+    /**
+     * Regexp for protected methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED =
+        new Convention.Key("inspector/naming/methodProtected");
+
+    /**
+     * Regexp for package protected (default access) methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT =
+        new Convention.Key("inspector/naming/methodFriendly");
+
+    /**
+     * Regexp for private methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE =
+        new Convention.Key("inspector/naming/methodPrivate");
+
+    /**
+     * Regexp for public static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC =
+        new Convention.Key("inspector/naming/methodPublicStatic");
+
+    /**
+     * Regexp for protected static  (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC =
+        new Convention.Key("inspector/naming/methodProtectedStatic");
+
+    /**
+     * Regexp for package protected (default access) static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC =
+        new Convention.Key("inspector/naming/methodFriendlyStatic");
+
+    /**
+     * Regexp for private static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC =
+        new Convention.Key("inspector/naming/methodPrivateStatic");
+
+    /**
+     * Regexp for public static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methodPublicStaticFinal");
+
+    /**
+     * Regexp for protected static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methodProtectedStaticFinal");
+
+    /**
+     * Regexp for package protected (default access) static final methods
+     * (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methodFriendlyStaticFinal");
+
+    /**
+     * Regexp for private static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methodPrivateStaticFinal");
 
     //~ Constructors ---------------------------------------------------------------------
 
