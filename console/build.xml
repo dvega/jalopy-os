@@ -27,7 +27,6 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
   <property name="dir.src.res" value="${dir.src}/resources" />
-  <property name="dir.lib" value="../main/ext/lib" />
 
   <!-- ==================================================================== -->
   <!-- Defines the project classpath                                        -->
