@@ -93,7 +93,7 @@
           </td>
         </tr>
         <tr valign="top">
-          <td valign="top" bgcolor="#fffff0">
+          <td valign="top" bgcolor="#ffffff"> <!-- fffff0 -->
 
             <!-- CONTENT STARTS HERE -->
 

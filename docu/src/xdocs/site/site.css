@@ -1,54 +1,40 @@
 /**
  $Id$
  */
-a:link{
-	color : #3366CC;
-	text-decoration : none;
-}
+A               { color: #00F; }
+A:link 		{ text-decoration: none; }
+A:active 	{ text-decoration: none; }
+A:visited 	{ text-decoration: none; }
+A:hover	  	{  text-decoration: underline; }
 
-a:visited{
-	color : #3366CC;
-	text-decoration : none;
-}
-
-a:hover{
-	color : #FF0033;
-	text-decoration : underline;
-}
-
-body{
+body    {
+        font-size : 0.9em;
+	font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+	margin: 20px 20px 20px 20px;
 	padding-bottom:15px;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-}
-
+        }
 h1{
 	font-weight : bold;
-	font-size : 24px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
 h2{
 	font-weight : bold;
-	font-size : 20px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
 h3{
 	font-weight : bold;
-	font-size : 20px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
 h4{
 	font-weight : bold;
-	font-size : 18px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
 h5{
 	font-weight : bold;
-	font-size : 18px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
@@ -59,12 +45,10 @@ hr{
 }
 
 td,p,div,form,blockquote,ul,ol{
-	font-size : 12px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
 th{
-	font-size : 13px;
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
@@ -88,47 +72,15 @@ th{
 	font-family : Verdana,Arial,Helvetica,sans-serif;
 }
 
-.navlink:link{
-	color : #FFFFFF;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
+.navlink:link           { color: #FFF; text-decoration: none; }
+.navlink:active         { color: #FFF; text-decoration: none; }
+.navlink:visited        { color: #FFF; text-decoration: none; }
+.navlink:hover          { color: #FFF; text-decoration: underline; }
 
-.navlink:visited{
-	color : #FFFFFF;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
-
-.navlink:hover{
-	color : #FFCC00;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
-
-.navlink2:link{
-	color : #000000;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
-
-.navlink2:visited{
-	color : #000000;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
-
-.navlink2:hover{
-	color : #FF0033;
-	font-size : 12px;
-	font-family : Verdana,Arial,Helvetica,sans-serif;
-	text-decoration : none;
-}
+.navlink2:link          { color : #000;	text-decoration : none; }
+.navlink2:active        { color : #000;	text-decoration : none; }
+.navlink2:visited       { color : #000;	text-decoration : none; }
+.navlink2:hover         { color : #000;	text-decoration : underline; }
 
 .shade{
 	background-color: ;

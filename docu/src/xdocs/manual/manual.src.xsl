@@ -242,7 +242,7 @@
   <body id="toppage">
     <xsl:call-template name="body.attributes" />
 
-    <table width="700" border="0" cellpadding="0" cellspacing="0" align="center">
+    <table width="700" border="0" cellpadding="0" cellspacing="0" align="left">
       <tbody>
         <tr>
           <td>
@@ -305,7 +305,7 @@
           </td>
         </tr>
         <tr valign="top">
-          <td valign="top" bgcolor="#fffff0">
+          <td valign="top" bgcolor="#ffffff"> <!-- was fffff0 -->
 
             <!-- CONTENT STARTS HERE -->
 
