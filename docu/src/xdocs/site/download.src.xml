@@ -57,7 +57,7 @@ information about the changes in the latest release.
     <entry><ulink url="http://jakarta.apache.org/ant/">Ant</ulink> task, contains Jalopy @BUILD.VERSION@</entry>
     </row>
 <row rowsep="0" valign="top">
-<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-console-@BUILD.VERSION@.zip">Console (.zip)</ulink></entry>
+<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-console-@BUILD.VERSION.CONSOLE@.zip">Console (.zip)</ulink></entry>
 <entry align="center">@SIZE.CONSOLE@ KB</entry>
 <entry align="center">@TODAY@</entry>
 <entry>Command line interface, contains Jalopy @BUILD.VERSION@</entry>
