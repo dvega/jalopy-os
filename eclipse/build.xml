@@ -7,11 +7,11 @@
 Module              : eclipse
 Module-Dependencies : ant, build, main
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -24,6 +24,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- load the global properties -->
   <property file="../build/build.properties" />
 
+  <property name="dir.lib" value="lib" />
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
   <property name="dir.src.res" value="${dir.src}/resources" />
@@ -35,7 +36,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <fileset dir="${DIR.LIB}" >
       <include name="*.jar" />
     </fileset>
-    <pathelement path="${LIB.PATH.ECLIPSE}" />
+    <fileset dir="${dir.lib}" >
+      <include name="*.jar" />
+    </fileset>
     <pathelement path="${DIR.COMPILE}" />
   </path>
 
@@ -58,10 +61,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <manifest>
         <section name="de/hunsicker/jalopy/plugin/eclipse/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.ECLIPSE}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION.ECLIPSE}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.eclipse" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION.ECLIPSE}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.ECLIPSE}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -129,10 +132,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <!-- now we know module 'build' exists so we can use its targets -->
     <ant dir="../build" target="build-check-ant"  inheritAll="false"/>
     <ant dir="../build" target="build-check-main"  inheritAll="false"/>
-    
+
     <!-- build the runtime .jar if necessary -->
     <ant dir="../main" target="main-jar"  inheritAll="false"/>
-    
+
     <property name="eclipse.check.modules" value="true" />
   </target>
 
