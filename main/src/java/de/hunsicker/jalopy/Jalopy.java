@@ -1,53 +1,10 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy;
-
-import de.hunsicker.io.Copy;
-import de.hunsicker.io.FileBackup;
-import de.hunsicker.io.FileFormat;
-import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.storage.Environment;
-import de.hunsicker.jalopy.parser.CodeInspector;
-import de.hunsicker.jalopy.parser.JavaNode;
-import de.hunsicker.jalopy.parser.JavaRecognizer;
-import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Loggers;
-import de.hunsicker.jalopy.storage.Convention;
-import de.hunsicker.jalopy.printer.NodeWriter;
-import de.hunsicker.jalopy.printer.PrinterFactory;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -65,11 +22,29 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import de.hunsicker.io.Copy;
+import de.hunsicker.io.FileBackup;
+import de.hunsicker.io.FileFormat;
+import de.hunsicker.io.IoHelper;
+import de.hunsicker.jalopy.language.CodeInspector;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaRecognizer;
+import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.printer.NodeWriter;
+import de.hunsicker.jalopy.printer.PrinterFactory;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.jalopy.storage.Loggers;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
+
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.oro.text.regex.MatchResult;
 
@@ -80,10 +55,53 @@ import org.apache.oro.text.regex.MatchResult;
  * </p>
  *
  * <p>
- * This class is <em>thread-hostile</em>, it is not safe for concurrent use by
- * multiple threads even if all method invocations are surrounded by external
- * synchronisation. You should rather create one instance of this class per
- * thread.
+ * <strong>Sample Usage</strong>
+ * </p>
+ *
+ * <p>
+ * <pre class="snippet">
+ * // create a new Jalopy instance with the currently active code convention settings
+ * Jalopy jalopy = new Jalopy();
+ *
+ * File file = ...;
+ *
+ * // specify input and output target
+ * jalopy.setInput(file);
+ * jalopy.setOutput(file);
+ *
+ * // format and overwrite the given input file
+ * jalopy.format();
+ *
+ * if (jalopy.getState() == Jalopy.State.OK)
+ *     System.out.println(file + " successfully formatted");
+ * else if (jalopy.getState() == Jalopy.State.WARN)
+ *     System.out.println(file + " formatted with warnings");
+ * else if (jalopy.getState() == Jalopy.State.ERROR)
+ *     System.out.println(file + " could not be formatted");
+ *
+ * // setup a destination directory
+ * File destination = ...;
+ *
+ * jalopy.setDestination(destination);
+ * jalopy.setInput(file);
+ * jalopy.setOutput(file);
+ *
+ * // format the given input file and write the output to the given destination,
+ * // the package structure will be retained automatically
+ * jalopy.format();
+ *
+ * ...
+ * </pre>
+ * </p>
+ *
+ * <p>
+ * <strong>Thread safety</strong>
+ * </p>
+ *
+ * <p>
+ * This class is <em>thread-hostile</em>, it is not safe for concurrent use by multiple
+ * threads even if all method invocations are surrounded by external synchronisation.
+ * You should rather create one instance of this class per thread.
  * </p>
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
@@ -91,7 +109,7 @@ import org.apache.oro.text.regex.MatchResult;
  */
 public final class Jalopy
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The empty byte array. */
     private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
@@ -164,7 +182,7 @@ public final class Jalopy
         setVersion(loadVersionString());
     }
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The code inspector. */
     private CodeInspector _inspector;
@@ -184,9 +202,11 @@ public final class Jalopy
     /** Output target file. */
     private File _outputFile;
 
+    /** File format of the input stream. */
+    private FileFormat _inputFileFormat;
+
     /** File format of the output stream. */
-    private FileFormat _fileFormat;
-    private FileFormat _format;
+    private FileFormat _outputFileFormat;
 
     /** The last generated Java AST. */
     private JavaNode _tree;
@@ -195,8 +215,8 @@ public final class Jalopy
     private JavaRecognizer _recognizer;
 
     /**
-     * Holds the issues found during inspection. Maps one node to either
-     * exactly one issue or a list of issues.
+     * Holds the issues found during inspection. Maps one node to either exactly one
+     * issue or a list of issues.
      */
     private Map _issues; // Map of <JavaNode>:<Object>
 
@@ -206,15 +226,15 @@ public final class Jalopy
     /** Input source reader. */
     private Reader _inputReader;
 
-    /** Appender which 'spies' for logging events. */
+    /** Appender which <em>spies</em> for logging events. */
     private SpyAppender _spy;
 
     /** Run status. */
     private State _state = State.UNDEFINED;
 
     /**
-     * The encoding to use for formatting. If <code>null</code> the platform's
-     * default encoding will be used.
+     * The encoding to use for formatting. If <code>null</code> the platform's default
+     * encoding will be used.
      */
     private String _encoding;
 
@@ -263,14 +283,14 @@ public final class Jalopy
     /** Holds the number of milliseconds used for transforming. */
     private long _timeTransforming;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new Jalopy object.
      */
     public Jalopy()
     {
-        initDefaults();
+        initConventionDefaults();
         _issues = new HashMap(30);
         _recognizer = new JavaRecognizer();
         _inspector = new CodeInspector(_issues);
@@ -278,7 +298,7 @@ public final class Jalopy
         Loggers.ALL.addAppender(_spy);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Indicates whether this version is a beta release.
@@ -292,10 +312,152 @@ public final class Jalopy
 
 
     /**
-     * Enables or disables the code inspector during formatting runs. You can
-     * always perform inspection using {@link #inspect}.
+     * Sets the code convention to be loaded from the given file (either a qualified file
+     * path or single file name).
+     *
+     * @param file the code convention file.
+     *
+     * @throws IOException if no code convention could be loaded from the given file.
+     */
+    public static void setConvention(File file)
+      throws IOException
+    {
+        Convention.getInstance().importSettings(file);
+    }
+
+
+    /**
+     * Sets the code convention to be loaded from the given url.
+     *
+     * @param url url.
+     *
+     * @throws IOException if no code convention could be loaded from the given url.
+     */
+    public static void setConvention(URL url)
+      throws IOException
+    {
+        Convention.getInstance().importSettings(url);
+    }
+
+
+    /**
+     * Sets the code convention to be loaded from the given location string.
+     *
+     * @param location location. Either a local file pathname or a pointer to a
+     *        distributed resource accessible via the HTTP protocol (that is starting
+     *        with &quot;<code>http://</code>&quot; or &quot;<code>www.</code>&quot;).
+     *
+     * @throws IOException if no code convention could be loaded from the given location.
+     */
+    public static void setConvention(String location)
+      throws IOException
+    {
+        if (
+            location.startsWith("http://" /* NOI18N */)
+            || location.startsWith("www." /* NOI18N */))
+        {
+            setConvention(new URL(location));
+        }
+        else
+        {
+            setConvention(new File(location));
+        }
+    }
+
+
+    /**
+     * Sets the encoding that controls how Jalopy interprets text files containing
+     * characters beyond the ASCII character set.
+     *
+     * @param encoding a valid encoding name. For a list of valid encoding names refer to
+     *        <a
+     *        href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Supported
+     *        Encodings</a>. Note that <code>null</code> is permitted and indicates the
+     *        platform's default encoding.
+     *
+     * @throws IllegalArgumentException if an invalid encoding was specified.
+     */
+    public void setEncoding(String encoding)
+    {
+        if (encoding != null)
+        {
+            try
+            {
+                new String(EMPTY_BYTE_ARRAY, encoding);
+            }
+            catch (UnsupportedEncodingException ex)
+            {
+                throw new IllegalArgumentException(
+                    "invalid encoding specified -- " + encoding);
+            }
+        }
+
+        _encoding = encoding;
+    }
+
+
+    /**
+     * Sets the file format of the output stream. The file format controls what end of
+     * line character is used for the output files.
+     *
+     * @param format file format to use.
+     */
+    public void setFileFormat(FileFormat format)
+    {
+        _outputFileFormat = format;
+    }
+
+
+    /**
+     * Sets the file format of the output stream. The file format controls what end of
+     * line character is used for the output files.
+     *
+     * @param format string representation of the file format to use.
+     *
+     * @see de.hunsicker.io.FileFormat#valueOf
+     */
+    public void setFileFormat(String format)
+    {
+        _outputFileFormat = FileFormat.valueOf(format);
+    }
+
+
+    /**
+     * Specifies whether all files should be formatted no matter what the state of a file
+     * is.
+     *
+     * <p>
+     * Defaults to <code>false</code>, which means that a source file will be only
+     * formatted if it hasn't ever been formatted before or if it has been modified
+     * since the last time it was processed.
+     * </p>
+     *
+     * @param force if <code>true</code> all files are always formatted.
+     */
+    public void setForce(boolean force)
+    {
+        _force = force;
+    }
+
+
+    /**
+     * Sets the history policy to use.
+     *
+     * @param policy history policy.
+     */
+    public void setHistoryPolicy(History.Policy policy)
+    {
+        _historyPolicy = policy;
+    }
+
+
+    /**
+     * Enables or disables the code inspector during formatting runs. You can always
+     * perform inspection using {@link #inspect}.
      *
      * @param enabled if <code>true</code> the code inspector will be enabled.
+     *
+     * @since 1.0b8
      */
     public void setInspect(boolean enabled)
     {
@@ -307,6 +469,8 @@ public final class Jalopy
      * Determines wether the code inspector is enabled during formatting runs.
      *
      * @return <code>true</code> if the code inspector is enabled.
+     *
+     * @since 1.0b8
      */
     public boolean isInspect()
     {
@@ -348,18 +512,102 @@ public final class Jalopy
 
 
     /**
-     * Checks whether the specification version of the given Plug-in is
-     * compatible with the Jalopy Plug-in API spec version.
+     * Returns the version number.
      *
-     * @param packageName the package name of a Plug-in, e.g.
+     * @return the current version number.
+     */
+    public static String getVersion()
+    {
+        return _version;
+    }
+
+
+    /**
+     * Sets the output target to use.
+     *
+     * @param output writer to use as output target.
+     */
+    public void setOutput(Writer output)
+    {
+        _outputWriter = output;
+        _mode += WRITER_OUTPUT;
+    }
+
+
+    /**
+     * Returns a string with the elapsed times for the different profiling categories.
+     * Purely a diagnostic method only useful during developing.
+     *
+     * @return string with rudimentary profiling information.
+     */
+    public String getProfileTimes()
+    {
+        long whole = _timeParsing + _timeTransforming + _timePrinting;
+
+        if (whole > 0)
+        {
+            StringBuffer buf = new StringBuffer(100);
+            buf.append(_timeParsing);
+            buf.append('(');
+            buf.append((_timeParsing * 100) / whole);
+            buf.append("%) ");
+            buf.append(_timeTransforming);
+            buf.append('(');
+            buf.append((_timeTransforming * 100) / whole);
+            buf.append("%) ");
+            buf.append(_timePrinting);
+            buf.append('(');
+            buf.append((_timePrinting * 100) / whole);
+            buf.append("%)");
+
+            return buf.toString();
+        }
+
+        return "";
+    }
+
+
+    /**
+     * Returns the current state info.
+     *
+     * @return The current state.
+     */
+    public State getState()
+    {
+        return _state;
+    }
+
+
+    /**
+     * Attaches the given annotations to the current input source.
+     *
+     * @param annotations list with annotations (of type {@link
+     *        de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}).
+     *
+     * @see de.hunsicker.jalopy.plugin.Annotation
+     * @see #detachAnnotations
+     * @since 1.0b9
+     */
+    public void attachAnnotations(List annotations)
+    {
+        _recognizer.attachAnnotations(annotations);
+    }
+
+
+    /**
+     * Checks whether the specification version of the given Plug-in is compatible with
+     * the Jalopy Plug-in API spec version.
+     *
+     * @param packageName the package name of a Plug-in as specified in the Jar Manifest, e.g.
      *        &quot;de.hunsicker.jalopy.plugin.ant&quot;.
      *
-     * @throws VersionMismatchException if the Plug-in with the given package
-     *         name is not compatible with the Plug-in API version of the
-     *         Jalopy runtime.
+     * @throws VersionMismatchException if the Plug-in with the given package name is not
+     *         compatible with the Plug-in API version of the Jalopy runtime.
+     *
+     * @since 1.0b8
      */
     public static void checkCompatibility(String packageName)
-        throws VersionMismatchException
+      throws VersionMismatchException
     {
         /*// make sure the Plug-in package is known to the class loader
         // (necessary for those Plug-ins that don't make use of the
@@ -404,12 +652,39 @@ public final class Jalopy
 
 
     /**
+     * Sets whether to hold a backup copy of an input file. Defaults to
+     * <code>true</code>.
+     *
+     * <p>
+     * This switch only takes action if you specify the same file for both input and
+     * output.
+     * </p>
+     *
+     * <p>
+     * Note that you can specify how many backups should be retained, in case you want a
+     * history. See {@link #setBackupLevel} for further information.
+     * </p>
+     *
+     * @param backup if <code>true</code> the backup of an input file will not be deleted
+     *        after the run.
+     *
+     * @see #setBackupLevel
+     * @see #setInput(File)
+     * @see #setOutput(File)
+     */
+    public void setBackup(boolean backup)
+    {
+        _holdBackup = backup;
+    }
+
+
+    /**
      * Sets the directory where backup files will be stored.
      *
      * @param directory path to an existing directory.
      *
-     * @throws IllegalArgumentException if the given file does not denote a
-     *         valid directory.
+     * @throws IllegalArgumentException if the given file does not denote a valid
+     *         directory.
      *
      * @see #setBackup
      */
@@ -417,16 +692,15 @@ public final class Jalopy
     {
         if (!directory.isAbsolute())
         {
-            directory = new File(Convention.getProjectSettingsDirectory(),
-                                 directory.getPath());
+            directory =
+                new File(Convention.getProjectSettingsDirectory(), directory.getPath());
         }
 
         IoHelper.ensureDirectoryExists(directory.getAbsoluteFile());
 
-        if ((!directory.exists()) || (!directory.isDirectory()))
+        if (!directory.exists() || !directory.isDirectory())
         {
-            throw new IllegalArgumentException("invalid directory -- " +
-                                               directory);
+            throw new IllegalArgumentException("invalid directory -- " + directory);
         }
 
         _backupDir = directory.getAbsoluteFile();
@@ -449,26 +723,26 @@ public final class Jalopy
 
 
     /**
-     * Returns the path to the directory where file backups will be stored.
+     * Returns the directory where file backups will be stored.
      *
-     * @return path to the backup directory.
+     * @return the backup directory.
      *
      * @see #setBackup
      */
-    public String getBackupDirectory()
+    public File getBackupDirectory()
     {
-        return _backupDir.getAbsolutePath();
+        return _backupDir;
     }
 
 
     /**
-     * Sets the number of backups to hold. A value of <code>0</code> means to
-     * hold no backup at all (same as {@link #setBackup setBackup(false)}).
-     * The default is <code>1</code>.
+     * Sets the number of backups to hold. A value of <code>0</code> means to hold no
+     * backup at all (same as {@link #setBackup setBackup(false)}). The default is
+     * <code>1</code>.
      *
      * @param level number of backups to hold.
      *
-     * @throws IllegalArgumentException if <code>level &lt; 0</code>
+     * @throws IllegalArgumentException if <code><em>level</em> &lt; 0</code>
      *
      * @see #setBackup
      */
@@ -489,181 +763,47 @@ public final class Jalopy
 
 
     /**
-     * Sets the destination directory to create all formatting output into.
-     * This setting then lasts until you either specify another directory or
-     * {@link #reset} was called (which results in deleting the destination,
-     * files are overwritten now on).
+     * Sets the destination directory to create all formatting output into. This setting
+     * then lasts until you either specify another directory or {@link #reset} was
+     * called (which results in deleting the destination, files are overwritten now on).
+     *
+     * <p>
+     * If the given destination does not exist, it will be created.
+     * </p>
+     *
+     * <p>
+     * Only applies if a file output target was specified.
+     * </p>
      *
      * @param destination destination directory.
      *
-     * @throws IllegalArgumentException if <em>destination</em> is
-     *         <code>null</code> or does not denote a directory.
-     * @throws RuntimeException if the destination directory could not be
-     *         created.
+     * @throws IllegalArgumentException if <em>destination</em> is <code>null</code> or
+     *         does not denote a directory.
+     * @throws RuntimeException if the destination directory could not be created.
+     *
+     * @see #setOutput(File)
      */
     public void setDestination(File destination)
     {
-        if ((destination == null) ||
-            (destination.exists() && (!destination.isDirectory())))
+        if ((destination == null) || (destination.exists() && !destination.isDirectory()))
         {
-            throw new IllegalArgumentException("no valid directory -- " +
-                                               destination);
+            throw new IllegalArgumentException("no valid directory -- " + destination);
         }
 
         if (!destination.exists())
         {
             if (!destination.mkdirs())
             {
-                throw new RuntimeException("could not create destination directory -- " +
-                                           destination);
+                throw new RuntimeException(
+                    "could not create destination directory -- " + destination);
             }
 
-            Object[] args ={ destination };
-            Loggers.IO.l7dlog(Level.INFO, "FILE_DESTINATION_CREATED", args,
-                              null);
+            Object[] args = { destination };
+            Loggers.IO.l7dlog(
+                Level.INFO, "FILE_DESTINATION_CREATED" /* NOI18N */, args, null);
         }
 
         _destination = destination;
-    }
-
-
-    /**
-     * Sets the encoding that controls how Jalopy interprets text files
-     * containing characters beyond the ASCII character set.
-     *
-     * @param encoding a valid encoding name. For a list of valid encoding
-     *        names refer to
-     *        <a
-href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Supported
-     *        Encodings</a>. Note that <code>null</code> indicates the
-     *        platform's default encoding.
-     *
-     * @throws IllegalArgumentException DOCUMENT ME!
-     */
-    public void setEncoding(String encoding)
-    {
-        if (encoding != null)
-        {
-            try
-            {
-                new String(EMPTY_BYTE_ARRAY, encoding);
-            }
-            catch (UnsupportedEncodingException ex)
-            {
-                throw new IllegalArgumentException("invalid encoding specified -- " +
-                                                   encoding);
-            }
-        }
-
-        _encoding = encoding;
-    }
-
-
-    /**
-     * Sets the file format of the output stream. The file format controls
-     * what end of line character is used for the output files.
-     *
-     * @param format file format to use.
-     */
-    public void setFileFormat(FileFormat format)
-    {
-        _fileFormat = format;
-    }
-
-
-    /**
-     * Sets the file format of the output stream. The file format controls
-     * what end of line character is used for the output files.
-     *
-     * @param format file format to use.
-     */
-    public void setFileFormat(String format)
-    {
-        _fileFormat = FileFormat.valueOf(format);
-    }
-
-
-    /**
-     * Sets whether all files should be formatted no matter what the state of
-     * a file is.
-     *
-     * <p>
-     * Defaults to <code>false</code>, which means that a source file will be
-     * only formatted if it hasn't ever been formatted before or if it has
-     * been modified since the last time it was processed.
-     * </p>
-     *
-     * @param force if <code>true</code> all files are always formatted.
-     */
-    public void setForce(boolean force)
-    {
-        _force = force;
-    }
-
-
-    /**
-     * Sets the history policy to use.
-     *
-     * @param policy history policy.
-     */
-    public void setHistoryPolicy(History.Policy policy)
-    {
-        _historyPolicy = policy;
-    }
-
-
-    /**
-     * Sets the code convention to be loaded from the given file (either a
-     * qualified file path or single file name).
-     *
-     * @param file the code convention file.
-     *
-     * @throws IOException if no code convention could be loaded from the given
-     *         file.
-     */
-    public static void setConvention(File file)
-        throws IOException
-    {
-        Convention.getInstance().importSettings(file);
-    }
-
-
-    /**
-     * Returns the version number.
-     *
-     * @return the current version number.
-     */
-    public static String getVersion()
-    {
-        return _version;
-    }
-
-
-    /**
-     * Sets whether to hold a backup copy of an input file. Defaults to
-     * <code>true</code>.
-     *
-     * <p>
-     * This switch only takes action if you specify the same file for both
-     * input and output.
-     * </p>
-     *
-     * <p>
-     * Note that you can specify how many backups should be retained, in case
-     * you want a history. See {@link #setBackupLevel} for further
-     * information.
-     * </p>
-     *
-     * @param backup if <code>true</code> the backup of an input file should
-     *        not be deleted after the run.
-     *
-     * @see #setBackupLevel
-     * @see #setInput(File)
-     * @see #setOutput(File)
-     */
-    public void setBackup(boolean backup)
-    {
-        _holdBackup = backup;
     }
 
 
@@ -673,20 +813,21 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * @param input string to use as input source.
      * @param path path of the file that is to be processed.
      *
-     * @throws NullPointerException if <code>input == null</code> or
-     *         <code>path == null</code>
+     * @throws NullPointerException if <code><em>input</em> == null</code> or <code><em>path</em> ==
+     *         null</code>
      */
-    public void setInput(String input,
-                         String path)
+    public void setInput(
+        String input,
+        String path)
     {
         if (input == null)
         {
-            throw new NullPointerException("input == null");
+            throw new NullPointerException();
         }
 
         if (path == null)
         {
-            throw new NullPointerException("path == null");
+            throw new NullPointerException();
         }
 
         _inputFile = new File(path);
@@ -706,12 +847,12 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * @param input stream to use as input source.
      * @param path path of file that is to be processed.
      *
-     * @throws IllegalArgumentException if <code>path == null</code> or if
-     *         <em>path</em> does not denote a valid, i.e. existing file or
-     *         the system input stream.
+     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if <em>path</em>
+     *         does not denote a valid, i.e. existing file or the system input stream.
      */
-    public void setInput(InputStream input,
-                         String      path)
+    public void setInput(
+        InputStream input,
+        String      path)
     {
         // ignore empty input
         if (input == null)
@@ -729,7 +870,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
         File file = new File(path);
 
-        if (((!file.exists()) || (!file.isFile())) && (System.in != input))
+        if ((!file.exists() || !file.isFile()) && (System.in != input))
         {
             throw new IllegalArgumentException("invalid path given -- " + path);
         }
@@ -750,11 +891,12 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * @param input reader to use as input source.
      * @param path path of file that is to be processed.
      *
-     * @throws IllegalArgumentException if <code>path == null</code> or if
-     *         <em>path</em> does not denote a valid, i.e. existing file.
+     * @throws IllegalArgumentException if <code><em>path</em> == null</code> or if <em>path</em>
+     *         does not denote a valid, i.e. existing file.
      */
-    public void setInput(Reader input,
-                         String path)
+    public void setInput(
+        Reader input,
+        String path)
     {
         if (path == null)
         {
@@ -772,7 +914,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
         File file = new File(path);
 
-        if (((!file.exists()) || (!file.isFile())))
+        if (!file.exists() || !file.isFile())
         {
             throw new IllegalArgumentException("invalid path given -- " + path);
         }
@@ -792,14 +934,13 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @param input file to use as input source.
      *
-     * @throws FileNotFoundException if the specified source file does not
-     *         exist.
+     * @throws FileNotFoundException if the specified source file does not exist.
      *
      * @see #setInput(Reader, String)
      * @see #setInput(String, String)
      */
     public void setInput(File input)
-        throws FileNotFoundException
+      throws FileNotFoundException
     {
         _inputReader = new BufferedReader(new FileReader(input));
         _inputFile = input.getAbsoluteFile();
@@ -844,116 +985,52 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Sets the output target to use.
+     * Cleans up the backup directory. All empty directories will be deleted. Only takes
+     * affect if no backup copies should be kept.
      *
-     * @param output writer to use as output target.
+     * @see #setBackup
+     * @since 1.0b9
      */
-    public void setOutput(Writer output)
+    public void cleanupBackupDirectory()
     {
-        _outputWriter = output;
-        _mode += WRITER_OUTPUT;
-    }
-
-
-    /**
-     * Sets the code convention to be loaded from the given url.
-     *
-     * @param url url.
-     *
-     * @throws IOException if no code convention could be loaded from the given
-     *         url.
-     */
-    public static void setConvention(URL url)
-        throws IOException
-    {
-        Convention.getInstance().importSettings(url);
-    }
-
-
-    /**
-     * Sets the code convention to be loaded from the given file string (denoting
-     * either a qualified file path or single file name).
-     *
-     * @param file file.
-     *
-     * @throws IOException if no code convention could be loaded from the given
-     *         file.
-     */
-    public static void setConvention(String file)
-        throws IOException
-    {
-        if (file.startsWith("http://") || file.startsWith("www."))
+        if (!_holdBackup)
         {
-            setConvention(new URL(file));
-        }
-        else
-        {
-            setConvention(new File(file));
+            cleanupDirectory(_backupDir);
         }
     }
 
 
     /**
-     * Returns a string with the elapsed times for the different profiling
-     * categories.
+     * Detaches all annotations.
      *
-     * @return string with rudimentary profiling information.
+     * @return list with annotations (of type &lt;{@link
+     *         de.hunsicker.jalopy.plugin.Annotation}&gt;). Returns an empty list in
+     *         case no annotations were attached for the input source.
+     *
+     * @see #attachAnnotations
+     * @since 1.0b9
      */
-    public String getProfileTimes()
+    public List detachAnnotations()
     {
-        long whole = _timeParsing + _timeTransforming + _timePrinting;
-
-        if (whole > 0)
-        {
-            StringBuffer buf = new StringBuffer(100);
-            buf.append(_timeParsing);
-            buf.append('(');
-            buf.append((_timeParsing * 100) / whole);
-            buf.append("%) ");
-            buf.append(_timeTransforming);
-            buf.append('(');
-            buf.append((_timeTransforming * 100) / whole);
-            buf.append("%) ");
-            buf.append(_timePrinting);
-            buf.append('(');
-            buf.append((_timePrinting * 100) / whole);
-            buf.append("%)");
-
-            return buf.toString();
-        }
-
-        return "";
+        return _recognizer.detachAnnotations();
     }
 
 
     /**
-     * Returns the current state info.
-     *
-     * @return The current state.
-     */
-    public State getState()
-    {
-        return _state;
-    }
-
-
-    /**
-     * Formats the (via {@link #setInput(File)}) specified input source and
-     * writes the formatted result to the specified target.
+     * Formats the (via {@link #setInput(File)}) specified input source and writes the
+     * formatted result to the specified target.
      *
      * <p>
-     * Formatting a file means that {@link #parse parsing}, {@link #inspect
-     * inspecting} and printing will be performed in sequence depending on
-     * the current state. Thus the parsing and/or inspection phase may be
-     * skipped.
+     * Formatting a file means that {@link #parse parsing}, {@link #inspect inspecting}
+     * and printing will be performed in sequence depending on the current state. Thus
+     * the parsing and/or inspection phase may be skipped.
      * </p>
      *
      * <p>
-     * It is safe to call this method multiple times after you've first
-     * constructed an instance: just set new input/output targets and go with
-     * it. But remember that this class is thread-hostile: accessing the
-     * class concurrently from multiple threads will lead to unsuspected
-     * results.
+     * It is safe to call this method multiple times after you've first constructed an
+     * instance: just set new input/output targets and go with it. But remember that
+     * this class is thread-hostile: accessing the class concurrently from multiple
+     * threads will lead to unsuspected results.
      * </p>
      *
      * @see #setInput(File)
@@ -971,7 +1048,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             if (!isDirty())
             {
                 _args[0] = _inputFile;
-                Loggers.IO.l7dlog(Level.INFO, "FILE_FOUND_HISTORY", _args, null);
+                Loggers.IO.l7dlog(
+                    Level.INFO, "FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
                 _state = State.OK;
                 cleanup();
 
@@ -991,8 +1069,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 else
                 {
                     /**
-                     * @todo we need to reset the line info for the
-                     *       recognizer!!!
+                     * @todo we need to reset the line info for the recognizer!!!
                      */
                 }
             }
@@ -1005,13 +1082,13 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         {
             _state = State.ERROR;
             _args[0] = _inputFile;
-            _args[1] = (ex.getMessage() == null)
-                           ? ex.getClass().getName()
-                           : ex.getMessage();
-            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR", _args, ex);
+            _args[1] =
+                (ex.getMessage() == null) ? ex.getClass().getName()
+                                          : ex.getMessage();
+            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
 
-        format(tree, _packageName, _format, false);
+        format(tree, _packageName, _inputFileFormat, false);
     }
 
 
@@ -1032,9 +1109,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     }*/
 
     /**
-     * Inspects the (via {@link #setInput(File)}) specified input source for
-     * code convention violations and coding weaknesses. If no parsing was
-     * performed yet, the input source will first be parsed.
+     * Inspects the (via {@link #setInput(File)}) specified input source for code
+     * convention violations and coding weaknesses. If no parsing was performed yet, the
+     * input source will first be parsed.
      *
      * @see #setInput(File)
      * @see #parse
@@ -1059,10 +1136,10 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             {
                 _state = State.ERROR;
                 _args[0] = _inputFile;
-                _args[1] = (ex.getMessage() == null)
-                               ? ex.getClass().getName()
-                               : ex.getMessage();
-                Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR", _args, ex);
+                _args[1] =
+                    (ex.getMessage() == null) ? ex.getClass().getName()
+                                              : ex.getMessage();
+                Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
             }
         }
         else
@@ -1075,8 +1152,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Inspects the given Java AST for code convention violations and coding
-     * weaknesses.
+     * Inspects the given Java AST for code convention violations and coding weaknesses.
      *
      * @param tree root node of the Java AST that is to be inspected.
      *
@@ -1091,18 +1167,16 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         {
             start = System.currentTimeMillis();
             _args[0] = _inputFile;
-            Loggers.IO.l7dlog(Level.DEBUG, "FILE_INSPECT", _args, null);
+            Loggers.IO.l7dlog(Level.DEBUG, "FILE_INSPECT" /* NOI18N */, _args, null);
         }
 
-        _inspector.inspect(tree, (_outputFile != null)
-                                     ? _outputFile
-                                     : _inputFile);
+        _inspector.inspect(tree, (_outputFile != null) ? _outputFile
+                                                       : _inputFile);
 
         if (Loggers.IO.isDebugEnabled())
         {
             long stop = System.currentTimeMillis();
-            Loggers.IO.debug(_inputFile + ":0:0:inspecting took " +
-                             (stop - start));
+            Loggers.IO.debug(_inputFile + ":0:0:inspecting took " + (stop - start));
         }
 
         if (_state != State.ERROR)
@@ -1113,17 +1187,17 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Parses the (via {@link #setInput(File)}) specified input source. You
-     * should always check the state after parsing, to be sure the input
-     * source could be successfully parsed.
+     * Parses the (via {@link #setInput(File)}) specified input source. You should always
+     * check the state after parsing, to be sure the input source could be successfully
+     * parsed.
      *
      * @return The root node of the created Java AST. May or may not return
-     *         <code>null</code> if the input source could not be
-     *         successfully parsed (i.e. always use {@link #getState} to
-     *         check for success).
+     *         <code>null</code> if the input source could not be successfully parsed
+     *         (i.e. always use {@link #getState} to check for success).
      *
      * @see #setInput(File)
      * @see #getState
+     * @since 1.0b8
      */
     public JavaNode parse()
     {
@@ -1144,7 +1218,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 case FILE_STRING :
                 case FILE_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE", _args, null);
+                    Loggers.IO.l7dlog(
+                        Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
                     _recognizer.parse(_inputFile);
 
                     break;
@@ -1158,9 +1233,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 case READER_STRING :
                 case READER_WRITER :
                     _args[0] = _inputFile;
-                    Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE", _args, null);
-                    _recognizer.parse(_inputReader,
-                                      _inputFile.getAbsolutePath());
+                    Loggers.IO.l7dlog(
+                        Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
+                    _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
 
@@ -1176,8 +1251,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             if (Loggers.IO.isDebugEnabled())
             {
                 long stop = System.currentTimeMillis();
-                Loggers.IO.debug(_inputFile.getAbsolutePath() +
-                                 ":0:0:parsing took " + (stop - start));
+                Loggers.IO.debug(
+                    _inputFile.getAbsolutePath() + ":0:0:parsing took " + (stop - start));
                 _timeParsing += (stop - start);
             }
 
@@ -1190,26 +1265,26 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
             if (Loggers.IO.isDebugEnabled())
             {
-                Loggers.IO.debug(((_outputFile != null)
-                                      ? _outputFile
-                                      : _inputFile) + ":0:0:transform");
+                Loggers.IO.debug(
+                    ((_outputFile != null) ? _outputFile
+                                           : _inputFile) + ":0:0:transform");
                 start = System.currentTimeMillis();
-                tree = (JavaNode)_recognizer.getAST();
+                tree = (JavaNode) _recognizer.getAST();
 
                 long stop = System.currentTimeMillis();
                 _timeTransforming += (stop - start);
-                Loggers.IO.debug(((_outputFile != null)
-                                      ? _outputFile
-                                      : _inputFile) + ":0:0:transforming took " +
-                                 (stop - start));
+                Loggers.IO.debug(
+                    ((_outputFile != null) ? _outputFile
+                                           : _inputFile) + ":0:0:transforming took "
+                    + (stop - start));
             }
             else
             {
-                tree = (JavaNode)_recognizer.getAST();
+                tree = (JavaNode) _recognizer.getAST();
             }
 
             _tree = tree;
-            _format = _recognizer.getFileFormat();
+            _inputFileFormat = _recognizer.getFileFormat();
             _packageName = _recognizer.getPackageName();
 
             return tree;
@@ -1225,15 +1300,15 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * Resets this instance.
      *
      * <p>
-     * Note that this method is not meant to be invoked after every call of
-     * {@link #format}, but rather serves as a way to reset this instance to
-     * exactly the state directly after the object creation.
+     * Note that this method is not meant to be invoked after every call of {@link
+     * #format}, but rather serves as a way to reset this instance to exactly the state
+     * directly after the object creation.
      * </p>
      */
     public void reset()
     {
         cleanup();
-        initDefaults();
+        initConventionDefaults();
     }
 
 
@@ -1253,8 +1328,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @param version string with encoded version information.
      *
-     * @throws IllegalArgumentException if <em>version</em> is not a valid
-     *         version string.
+     * @throws IllegalArgumentException if <em>version</em> is not a valid version
+     *         string.
      *
      * @since 1.0b8
      */
@@ -1270,15 +1345,15 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         if (regexp.match("m/(\\d).(\\d)(?:.(\\d+))?(b\\d+)?/", version))
         {
             MatchResult result = regexp.getMatch();
-            _majorVersion = (byte)Integer.parseInt(result.group(1));
-            _minorVersion = (byte)Integer.parseInt(result.group(2));
+            _majorVersion = (byte) Integer.parseInt(result.group(1));
+            _minorVersion = (byte) Integer.parseInt(result.group(2));
 
             String betaString = result.group(4);
 
             if (betaString != null)
             {
                 _isBeta = true;
-                _microVersion = (byte)Integer.parseInt(result.group(3));
+                _microVersion = (byte) Integer.parseInt(result.group(3));
             }
             else
             {
@@ -1292,37 +1367,76 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                     }
                     else
                     {
-                        _microVersion = (byte)Integer.parseInt(result.group(3));
+                        _microVersion = (byte) Integer.parseInt(result.group(3));
                     }
                 }
             }
         }
         else
         {
-            throw new IllegalArgumentException("invalid version information -- " +
-                                               version);
+            throw new IllegalArgumentException(
+                "invalid version information -- " + version);
         }
     }
 
 
     /**
-     * Formats the given Java AST and writes the result to the specified
-     * target.
+     * Cleans up the given directory. All empty subdirectories will be removed.
+     *
+     * @param directory directory to cleanup.
+     *
+     * @since 1.0b9
+     */
+    private void cleanupDirectory(File directory)
+    {
+        File[] files = directory.listFiles();
+
+        if (files != null)
+        {
+            for (int i = 0; i < files.length; i++)
+            {
+                if (files[i].isDirectory())
+                {
+                    if (files[i].list().length > 0)
+                    {
+                        cleanupDirectory(files[i]);
+                    }
+                    else
+                    {
+                        if (files[i].delete())
+                        {
+                            File parent = directory.getParentFile();
+
+                            if (!directory.equals(_backupDir))
+                            {
+                                cleanupDirectory(parent);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Formats the given Java AST and writes the result to the specified target.
      *
      * @param tree root node of the JavaAST that is to be formatted.
      * @param packageName the package name of the tree.
-     * @param format the detected file format of the Java source file
-     *        represented by the tree.
-     * @param check if <code>true</code> the method checks if the source file
-     *        of the given tree actually needs reformatting and omitts
-     *        further processing if so.
+     * @param format the detected file format of the Java source file represented by the
+     *        tree.
+     * @param check if <code>true</code> the method checks if the source file of the
+     *        given tree actually needs reformatting and omitts further processing if
+     *        so.
      *
      * @since 1.0b8
      */
-    private void format(JavaNode   tree,
-                        String     packageName,
-                        FileFormat format,
-                        boolean    check)
+    private void format(
+        JavaNode   tree,
+        String     packageName,
+        FileFormat format,
+        boolean    check)
     {
         String defaultEncoding = null;
 
@@ -1331,9 +1445,10 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             _args[0] = _inputFile;
 
             // only process the file if necessary
-            if (check && (!isDirty()))
+            if (check && !isDirty())
             {
-                Loggers.IO.l7dlog(Level.INFO, "FILE_FOUND_HISTORY", _args, null);
+                Loggers.IO.l7dlog(
+                    Level.INFO, "FILE_FOUND_HISTORY" /* NOI18N */, _args, null);
                 _state = State.OK;
 
                 return;
@@ -1342,10 +1457,10 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             if (_encoding != null)
             {
                 // store the current default encoding
-                defaultEncoding = System.getProperty("file.encoding");
+                defaultEncoding = System.getProperty("file.encoding" /* NOI18N */);
 
                 // now set the encoding to use by Jalopy
-                System.setProperty("file.encoding", _encoding);
+                System.setProperty("file.encoding" /* NOI18N */, _encoding);
             }
 
             if (_inspect)
@@ -1381,31 +1496,24 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 _outputFile.setLastModified(_now);
 
                 // delete the backup if the user don't want backup copies
-                if ((!_holdBackup) && (_backupFile != null))
+                if (!_holdBackup && (_backupFile != null))
                 {
-                    File parentDirectory = _backupFile.getParentFile();
                     _backupFile.delete();
-
-                    // if the directory is now empty, delete it too
-                    String[] content = parentDirectory.list();
-
-                    if ((content != null) && (content.length == 0))
-                    {
-                        parentDirectory.delete();
-                    }
 
                     if (Loggers.IO.isDebugEnabled())
                     {
-                        _args[0] = _backupFile;
-                        Loggers.IO.l7dlog(Level.DEBUG, "FILE_BACKUP_REMOVE",
-                                          _args, null);
+                        _args[0] = _inputFile;
+                        _args[1] = _backupFile;
+                        Loggers.IO.l7dlog(
+                            Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
                     }
                 }
             }
 
             // update the status information if necessary
-            if ((_state == State.PARSED) || (_state == State.INSPECTED) ||
-                (_state == State.RUNNING))
+            if (
+                (_state == State.PARSED) || (_state == State.INSPECTED)
+                || (_state == State.RUNNING))
             {
                 // no error or warnings occured, all ok
                 _state = State.OK;
@@ -1415,10 +1523,10 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         {
             _state = State.ERROR;
             _args[0] = _inputFile;
-            _args[1] = (ex.getMessage() == null)
-                           ? ex.getClass().getName()
-                           : ex.getMessage();
-            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR", _args, ex);
+            _args[1] =
+                (ex.getMessage() == null) ? ex.getClass().getName()
+                                          : ex.getMessage();
+            Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
             restore(_inputFile, _backupFile);
         }
         finally
@@ -1426,7 +1534,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             if (defaultEncoding != null)
             {
                 // restore the default encoding
-                System.setProperty("file.encoding", defaultEncoding);
+                System.setProperty("file.encoding" /* NOI18N */, defaultEncoding);
             }
 
             cleanup();
@@ -1527,8 +1635,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Returns the destination file for the given target. If the directory
-     * where the file should reside does not exist it will be created.
+     * Returns the destination file for the given target. If the directory where the file
+     * should reside does not exist it will be created.
      *
      * @param destination destination directory.
      * @param packageName package name of the file.
@@ -1538,10 +1646,11 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @throws IOException if the target directory could not be created.
      */
-    private File getDestinationFile(File   destination,
-                                    String packageName,
-                                    String filename)
-        throws IOException
+    private File getDestinationFile(
+        File   destination,
+        String packageName,
+        String filename)
+      throws IOException
     {
         StringBuffer buf = new StringBuffer(90);
         buf.append(destination);
@@ -1554,8 +1663,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         {
             if (!test.mkdirs())
             {
-                throw new IOException("could not create target directory -- " +
-                                      buf);
+                throw new IOException("could not create target directory -- " + buf);
             }
             else
             {
@@ -1574,23 +1682,22 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Indicates whether the input file is <em>dirty</em>. <em>Dirty</em>
-     * means that the file needs to be formatted.
+     * Indicates whether the input file is <em>dirty</em>. <em>Dirty</em> means that the
+     * file needs to be formatted.
      *
      * <p>
-     * Use {@link #setForce setForce(true)} to always force a formatting of
-     * the file.
+     * Use {@link #setForce setForce(true)} to always force a formatting of the file.
      * </p>
      *
-     * @return <code>true</code> if the input file is dirty. If the user
-     *         specified an input stream or input string, this method always
-     *         returns <code>true</code> as we cannot determine the last
-     *         modification of the input source in such cases.
+     * @return <code>true</code> if the input file is dirty. If the user specified an
+     *         input stream or input string, this method always returns
+     *         <code>true</code> as we cannot determine the last modification of the
+     *         input source in such cases.
      *
      * @throws IOException if an I/O error occured.
      */
     private boolean isDirty()
-        throws IOException
+      throws IOException
     {
         if (_force) // the user forces formatting
         {
@@ -1608,7 +1715,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         }
 
         // it doesn't make much sense to format a non-existing or empty file
-        if ((!_inputFile.exists()) || (_inputFile.length() == 0))
+        if (!_inputFile.exists() || (_inputFile.length() == 0))
         {
             return false;
         }
@@ -1624,8 +1731,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 {
                     if (_destination != null)
                     {
-                        copyInputToOutput(_inputFile, _destination,
-                                          entry.getPackageName(), entry.getModification());
+                        copyInputToOutput(
+                            _inputFile, _destination, entry.getPackageName(),
+                            entry.getModification());
                     }
 
                     return false;
@@ -1646,8 +1754,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 in.close();
 
                 // we only check the very first line
-                if (line.startsWith("// %") && line.endsWith("%") &&
-                    (line.indexOf("modified") == -1))
+                if (
+                    line.startsWith("// %") && line.endsWith("%")
+                    && (line.indexOf("modified") == -1))
                 {
                     int start = line.indexOf('%') + 1;
                     int stop = line.indexOf(':');
@@ -1658,11 +1767,10 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                     {
                         if (_destination != null)
                         {
-                            String packageName = line.substring(stop + 1,
-                                                                line.length() -
-                                                                1);
-                            copyInputToOutput(_inputFile, _destination,
-                                              packageName, lastmod);
+                            String packageName =
+                                line.substring(stop + 1, line.length() - 1);
+                            copyInputToOutput(
+                                _inputFile, _destination, packageName, lastmod);
                         }
 
                         return false;
@@ -1692,11 +1800,12 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * @param fileFormat the user specified file format.
      * @param detectedFileFormat the detected file format.
      *
-     * @return line separator. Either one of &quot;\n&quot;, &quot;\r\n&quot;
-     *         or &quot;\r&quot;.
+     * @return line separator. Either one of &quot;\n&quot;, &quot;\r\n&quot; or
+     *         &quot;\r&quot;.
      */
-    private String getLineSeparator(FileFormat fileFormat,
-                                    FileFormat detectedFileFormat)
+    private String getLineSeparator(
+        FileFormat fileFormat,
+        FileFormat detectedFileFormat)
     {
         if (fileFormat == FileFormat.AUTO)
         {
@@ -1718,23 +1827,22 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @since 1.0b8
      */
-    private void setLocalVariables(Environment environment,
-                                   File        file,
-                                   String      packageName,
-                                   String      fileFormat,
-                                   int         indentSize)
+    private void setLocalVariables(
+        Environment environment,
+        File        file,
+        String      packageName,
+        String      fileFormat,
+        int         indentSize)
     {
-        environment.set(Environment.Variable.FILE_NAME.getName(),
-                        file.getName());
-        environment.set(Environment.Variable.FILE.getName(),
-                        file.getAbsolutePath());
-        environment.set(Environment.Variable.PACKAGE.getName(),
-                        "".equals(packageName)
-                            ? "default package"
-                            : packageName);
+        environment.set(Environment.Variable.FILE_NAME.getName(), file.getName());
+        environment.set(Environment.Variable.FILE.getName(), file.getAbsolutePath());
+        environment.set(
+            Environment.Variable.PACKAGE.getName(),
+            "".equals(packageName) ? "default package"
+                                   : packageName);
         environment.set(Environment.Variable.FILE_FORMAT.getName(), fileFormat);
-        environment.set(Environment.Variable.TAB_SIZE.getName(),
-                        String.valueOf(indentSize));
+        environment.set(
+            Environment.Variable.TAB_SIZE.getName(), String.valueOf(indentSize));
     }
 
 
@@ -1743,8 +1851,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @param file file to test.
      *
-     * @return <code>true</code> if the given file exists and can modified or
-     *         if the file does <strong>not</strong> exist.
+     * @return <code>true</code> if the given file exists and can modified or if the file
+     *         does <strong>not</strong> exist.
      */
     private boolean isWritable(File file)
     {
@@ -1767,18 +1875,18 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Outputs the comment history header to the given stream (if set via
-     * {@link #setInput(File)}).
+     * Outputs the comment history header to the given stream (if set via {@link
+     * #setInput(File)}).
      *
      * @param packageName the package name of the Java source file.
      * @param out stream to write to.
      *
-     * @throws IOException if the input source could not be added to the
-     *         history.
+     * @throws IOException if the input source could not be added to the history.
      */
-    private void addCommentHistoryEntry(String     packageName,
-                                        NodeWriter out)
-        throws IOException
+    private void addCommentHistoryEntry(
+        String     packageName,
+        NodeWriter out)
+      throws IOException
     {
         if ((_historyPolicy == History.Policy.COMMENT) && (_inputFile != null))
         {
@@ -1795,16 +1903,15 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Adds the last processed input source to the file history (if set via
-     * {@link #setInput(File)}).
+     * Adds the last processed input source to the file history (if set via {@link
+     * #setInput(File)}).
      *
      * @param packageName the package name of the Java source file.
      *
-     * @throws IOException if the input source could not be added to the
-     *         history.
+     * @throws IOException if the input source could not be added to the history.
      */
     private void addFileHistoryEntry(String packageName)
-        throws IOException
+      throws IOException
     {
         if ((_historyPolicy == History.Policy.FILE) && (_inputFile != null))
         {
@@ -1853,8 +1960,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         _outputFile = null;
         _backupFile = null;
         _packageName = null;
-        _format = null;
+        _inputFileFormat = null;
         _tree = null;
+
         cleanupRecognizer();
     }
 
@@ -1871,9 +1979,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * In case the given input file is up-to-date but the user specified a
-     * certain output destination target, this method copies the input file
-     * into the destination directory.
+     * In case the given input file is up-to-date but the user specified a certain output
+     * destination target, this method copies the input file into the destination
+     * directory.
      *
      * @param inputFile the input file for which formatting is not necessary.
      * @param destination the directory to copy all output into.
@@ -1882,22 +1990,22 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @throws IOException if an I/O error occured.
      */
-    private void copyInputToOutput(File   inputFile,
-                                   File   destination,
-                                   String packageName,
-                                   long   lastmod)
-        throws IOException
+    private void copyInputToOutput(
+        File   inputFile,
+        File   destination,
+        String packageName,
+        long   lastmod)
+      throws IOException
     {
-        File file = getDestinationFile(destination, packageName,
-                                       inputFile.getName());
+        File file = getDestinationFile(destination, packageName, inputFile.getName());
 
-        if ((!file.exists()) || (file.lastModified() != lastmod))
+        if (!file.exists() || (file.lastModified() != lastmod))
         {
             Copy.file(inputFile, file, true);
             file.setLastModified(lastmod);
             _args[0] = inputFile;
             _args[1] = file.getAbsolutePath();
-            Loggers.IO.l7dlog(Level.INFO, "FILE_COPY", _args, null);
+            Loggers.IO.l7dlog(Level.INFO, "FILE_COPY" /* NOI18N */, _args, null);
         }
     }
 
@@ -1907,13 +2015,13 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      *
      * @param packageName packageName of the file currently being parsed.
      *
-     * @return the backup file if both input and target source are files and
-     *         equal. Returns <code>null</code> for all other cases.
+     * @return the backup file if both input and target source are files and equal.
+     *         Returns <code>null</code> for all other cases.
      *
      * @throws IOException if an I/O error occured.
      */
     private File createBackup(String packageName)
-        throws IOException
+      throws IOException
     {
         switch (_mode)
         {
@@ -1923,16 +2031,18 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 {
                     IoHelper.ensureDirectoryExists(_backupDir);
 
-                    File directory = new File(_backupDir + File.separator +
-                                              packageName.replace('.',
-                                                                  File.separatorChar));
-                    File backupFile = FileBackup.create(_inputFile, directory,
-                                                        _backupLevel);
+                    File directory =
+                        new File(
+                            _backupDir + File.separator
+                            + packageName.replace('.', File.separatorChar));
+                    File backupFile =
+                        FileBackup.create(_inputFile, directory, _backupLevel);
 
                     if (Loggers.IO.isDebugEnabled())
                     {
                         _args[1] = backupFile;
-                        Loggers.IO.l7dlog(Level.DEBUG, "FILE_COPY", _args, null);
+                        Loggers.IO.l7dlog(
+                            Level.DEBUG, "FILE_COPY" /* NOI18N */, _args, null);
                     }
 
                     return backupFile;
@@ -1948,17 +2058,20 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 {
                     IoHelper.ensureDirectoryExists(_backupDir);
 
-                    File directory = new File(_backupDir + File.separator +
-                                              packageName.replace('.',
-                                                                  File.separatorChar));
+                    File directory =
+                        new File(
+                            _backupDir + File.separator
+                            + packageName.replace('.', File.separatorChar));
                     String filename = _inputFile.getName();
-                    File backupFile = FileBackup.create(_inputString, filename,
-                                                        directory, _backupLevel);
+                    File backupFile =
+                        FileBackup.create(
+                            _inputString, filename, directory, _backupLevel);
 
                     if (Loggers.IO.isDebugEnabled())
                     {
                         _args[1] = backupFile;
-                        Loggers.IO.l7dlog(Level.DEBUG, "FILE_COPY", _args, null);
+                        Loggers.IO.l7dlog(
+                            Level.DEBUG, "FILE_COPY" /* NOI18N */, _args, null);
                     }
 
                     return backupFile;
@@ -1983,35 +2096,36 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     /**
      * Initializes the default startup values.
      */
-    private void initDefaults()
+    private void initConventionDefaults()
     {
         _backupDir = Convention.getBackupDirectory();
-        _backupLevel = Defaults.BACKUP_LEVEL;
+        _backupLevel = ConventionDefaults.BACKUP_LEVEL;
         _holdBackup = false;
         _state = State.UNDEFINED;
-        _fileFormat = FileFormat.UNKNOWN;
+        _outputFileFormat = FileFormat.UNKNOWN;
         _destination = null; // all files are overwritten
         _encoding = null; // use platform default encoding
     }
 
 
     /**
-     * Prints the generated AST tree to the given output source. The tree will
-     * only be printed if no errors we're found during parsing.
+     * Prints the generated AST to the given output source. The tree will only be printed
+     * if no errors we're found during parsing.
      *
      * @param tree root node of the Java AST.
      * @param packageName the package name of the tree.
-     * @param format the detected file format of the Java source file
-     *        represented by the tree.
+     * @param format the detected file format of the Java source file represented by the
+     *        tree.
      *
      * @throws IOException if an I/O error occured.
-     * @throws IllegalStateException if either one of input source or output
-     *         target was not specified.
+     * @throws IllegalStateException if either one of input source or output target was
+     *         not specified.
      */
-    private void print(JavaNode   tree,
-                       String     packageName,
-                       FileFormat format)
-        throws IOException
+    private void print(
+        JavaNode   tree,
+        String     packageName,
+        FileFormat format)
+      throws IOException
     {
         if (_state == State.ERROR)
         {
@@ -2030,15 +2144,17 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 else
                 {
                     // create the target file
-                    _outputFile = getDestinationFile(_destination, packageName,
-                                                     _outputFile.getName());
+                    _outputFile =
+                        getDestinationFile(
+                            _destination, packageName, _outputFile.getName());
                 }
 
                 if (!isWritable(_outputFile))
                 {
                     _args[0] = _outputFile.getAbsolutePath();
                     _outputFile = null;
-                    Loggers.IO.l7dlog(Level.WARN, "FILE_NO_WRITE", _args, null);
+                    Loggers.IO.l7dlog(
+                        Level.WARN, "FILE_NO_WRITE" /* NOI18N */, _args, null);
 
                     return;
                 }
@@ -2059,15 +2175,17 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 if (_destination != null)
                 {
                     // specify the target file
-                    _outputFile = getDestinationFile(_destination, packageName,
-                                                     _outputFile.getName());
+                    _outputFile =
+                        getDestinationFile(
+                            _destination, packageName, _outputFile.getName());
                 }
 
                 if (!isWritable(_outputFile))
                 {
                     _args[0] = _outputFile.getAbsolutePath();
                     _outputFile = null;
-                    Loggers.IO.l7dlog(Level.WARN, "FILE_NO_WRITE", _args, null);
+                    Loggers.IO.l7dlog(
+                        Level.WARN, "FILE_NO_WRITE" /* NOI18N */, _args, null);
 
                     return;
                 }
@@ -2084,18 +2202,23 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
                 break;
 
             default :
-                throw new IllegalStateException("both input source and output target has to be specified");
+                throw new IllegalStateException(
+                    "both input source and output target has to be specified");
         }
 
         _now = System.currentTimeMillis();
 
-        NodeWriter out = new NodeWriter(_outputWriter,
-                                        _inputFile.getAbsolutePath(), _issues,
-                                        getLineSeparator(_fileFormat, format),
-                                        format.toString());
+        NodeWriter out =
+            new NodeWriter(
+                _outputWriter, _inputFile.getAbsolutePath(), _issues,
+                getLineSeparator(_outputFileFormat, format), format.toString());
+
+        out.setAnnotation(_recognizer.hasAnnotations());
+
         Environment environment = Environment.getInstance().copy();
-        setLocalVariables(environment, _inputFile, packageName,
-                          _fileFormat.getName(), out.getIndentSize());
+        setLocalVariables(
+            environment, _inputFile, packageName, _outputFileFormat.getName(),
+            out.getIndentSize());
         out.setEnvironment(environment);
         addCommentHistoryEntry(packageName, out);
 
@@ -2103,19 +2226,19 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         {
             if (Loggers.IO.isDebugEnabled())
             {
-                Loggers.IO.debug(((_outputFile != null)
-                                      ? _outputFile
-                                      : _inputFile) + ":0:0:print");
+                Loggers.IO.debug(
+                    ((_outputFile != null) ? _outputFile
+                                           : _inputFile) + ":0:0:print");
 
                 long start = System.currentTimeMillis();
                 PrinterFactory.create(tree).print(tree, out);
 
                 long stop = System.currentTimeMillis();
                 _timePrinting += (stop - start);
-                Loggers.IO.debug(((_outputFile != null)
-                                      ? _outputFile
-                                      : _inputFile) + ":0:0:printing took " +
-                                 (stop - start));
+                Loggers.IO.debug(
+                    ((_outputFile != null) ? _outputFile
+                                           : _inputFile) + ":0:0:printing took "
+                    + (stop - start));
             }
             else
             {
@@ -2142,15 +2265,16 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      * @param original original file
      * @param backup backup of the original file.
      */
-    private void restore(File original,
-                         File backup)
+    private void restore(
+        File original,
+        File backup)
     {
         // check if we're in FILE_FILE mode (both source and target are files)
         if ((original != null) && (backup != null))
         {
             _args[0] = original.getAbsolutePath();
             _args[1] = backup.getAbsolutePath();
-            Loggers.IO.l7dlog(Level.INFO, "FILE_RESTORE", _args, null);
+            Loggers.IO.l7dlog(Level.INFO, "FILE_RESTORE" /* NOI18N */, _args, null);
 
             try
             {
@@ -2160,7 +2284,8 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             }
             catch (IOException ex)
             {
-                Loggers.IO.l7dlog(Level.FATAL, "FILE_RESTORE_ERROR", _args, ex);
+                Loggers.IO.l7dlog(
+                    Level.FATAL, "FILE_RESTORE_ERROR" /* NOI18N */, _args, ex);
             }
         }
     }
@@ -2182,35 +2307,40 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         environment.unset(Environment.Variable.TAB_SIZE.getName());
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Represents a Jalopy run state. You may want to use {@link Jalopy#getState()} to query the engine about its current state.
+     * Represents a Jalopy run state. You may want to use {@link Jalopy#getState()} to
+     * query the engine about its current state.
      *
      * @since 1.0b8
      */
     public static final class State
     {
-        /** Indicates a clean run. */
-        public static final State OK = new State("Jalopy.State [ok]");
+        /** Indicates a finished run without any warnings or errors. */
+        public static final State OK = new State("Jalopy.State [ok]" /* NOI18N */);
 
-        /** Indicates a run which produced warnings. */
-        public static final State WARN = new State("Jalopy.State [warn]");
+        /** Indicates a finished run which produced warnings. */
+        public static final State WARN = new State("Jalopy.State [warn]" /* NOI18N */);
 
-        /** Indicates a failed run. */
-        public static final State ERROR = new State("Jalopy.State [error]");
+        /** Indicates a finished run, that failed. */
+        public static final State ERROR = new State("Jalopy.State [error]" /* NOI18N */);
 
-        /** Indicates a successfully finished parse phase. */
-        public static final State PARSED = new State("Jalopy.State [parsed]");
+        /** Indicates a successful parse phase. */
+        public static final State PARSED =
+            new State("Jalopy.State [parsed]" /* NOI18N */);
 
-        /** Indicates a successfully finished inspection phase. */
-        public static final State INSPECTED = new State("Jalopy.State [inspected]");
+        /** Indicates a successful inspection phase. */
+        public static final State INSPECTED =
+            new State("Jalopy.State [inspected]" /* NOI18N */);
 
         /** Indicates the running state (no phase yet finished). */
-        public static final State RUNNING = new State("Jalopy.State [running]");
+        public static final State RUNNING =
+            new State("Jalopy.State [running]" /* NOI18N */);
 
         /** Indicates the undefined state (a run was not yet startet). */
-        public static final State UNDEFINED = new State("Jalopy.State [undefined]");
+        public static final State UNDEFINED =
+            new State("Jalopy.State [undefined]" /* NOI18N */);
 
         /** The name of the state. */
         final String name;
@@ -2228,7 +2358,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         /**
          * Returns a string representation of this state.
          *
-         * @return A string representation of this state.
+         * @return a string representation of this state.
          */
         public String toString()
         {
@@ -2238,15 +2368,15 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Detects whether and what kind of messages were produced during a run.
-     * Updates the state info accordingly.
+     * Detects whether and what kind of messages were produced during a run. Updates the
+     * state info accordingly.
      */
     private final class SpyAppender
         extends AppenderSkeleton
     {
         public SpyAppender()
         {
-            this.name = "JalopySpyAppender";
+            this.name = "JalopySpyAppender" /* NOI18N */;
         }
 
         public void append(LoggingEvent ev)
