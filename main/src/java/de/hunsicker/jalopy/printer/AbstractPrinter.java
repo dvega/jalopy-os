@@ -1204,7 +1204,7 @@ class AbstractPrinter
                                                        Defaults.BLANK_LINES_AFTER_CLASS);
 
                             /**
-                             * @todo see NodeWriter.printCloseBrace(int,
+                             * @todo see NodeWriter.printRightBrace(int,
                              *       boolean)
                              */
                             if (out.indentLevel == 0)
@@ -1260,7 +1260,7 @@ class AbstractPrinter
                                                        Defaults.BLANK_LINES_AFTER_INTERFACE);
 
                             /**
-                             * @todo see NodeWriter.printCloseBrace(int,
+                             * @todo see NodeWriter.printRightBrace(int,
                              *       boolean)
                              */
                             if (out.indentLevel == 0)

@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -153,13 +153,13 @@ final class IfElsePrinter
             {
                 if (out.pendingComment == null)
                 {
-                    out.printOpenBrace(leftBraceNewline && (!out.newline),
+                    out.printLeftBrace(leftBraceNewline && (!out.newline),
                                        NodeWriter.NEWLINE_YES,
                                        (!leftBraceNewline) && (!out.newline));
                 }
                 else
                 {
-                    out.printOpenBrace(NodeWriter.NEWLINE_NO,
+                    out.printLeftBrace(NodeWriter.NEWLINE_NO,
                                        NodeWriter.NEWLINE_NO);
                     rparen.setHiddenAfter(out.pendingComment);
                     printCommentsAfter(rparen, NodeWriter.NEWLINE_NO,
@@ -168,7 +168,7 @@ final class IfElsePrinter
                 }
 
                 PrinterFactory.create(body).print(body, out);
-                out.printCloseBrace(rightBraceNewline || (next == null));
+                out.printRightBrace(rightBraceNewline || (next == null));
             }
             else
             {
@@ -227,7 +227,7 @@ final class IfElsePrinter
                         {
                             printCommentsAfter(next, NodeWriter.NEWLINE_NO,
                                                !leftBraceNewline, out);
-                            out.printOpenBrace(rightBraceNewline,
+                            out.printLeftBrace(rightBraceNewline,
                                                NodeWriter.NEWLINE_NO,
                                                (!rightBraceNewline) &&
                                                (!out.newline));
@@ -235,14 +235,14 @@ final class IfElsePrinter
                         }
                         else
                         {
-                            out.printOpenBrace(NodeWriter.NEWLINE_NO,
+                            out.printLeftBrace(NodeWriter.NEWLINE_NO,
                                                NodeWriter.NEWLINE_NO);
                             printCommentsAfter(next, NodeWriter.NEWLINE_NO,
                                                NodeWriter.NEWLINE_YES, out);
                         }
 
                         PrinterFactory.create(block).print(block, out);
-                        out.printCloseBrace();
+                        out.printRightBrace();
                     }
                     else
                     {

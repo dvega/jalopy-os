@@ -624,10 +624,10 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printCloseBrace()
+    public void printRightBrace()
         throws IOException
     {
-        printCloseBrace(NEWLINE_YES);
+        printRightBrace(NEWLINE_YES);
     }
 
 
@@ -639,10 +639,10 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printCloseBrace(boolean newlineAfter)
+    public void printRightBrace(boolean newlineAfter)
         throws IOException
     {
-        printCloseBrace(JavaTokenTypes.RCURLY, newlineAfter);
+        printRightBrace(JavaTokenTypes.RCURLY, newlineAfter);
     }
 
 
@@ -656,7 +656,7 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printCloseBrace(int     type,
+    public void printRightBrace(int     type,
                                 boolean newlineAfter)
         throws IOException
     {
@@ -746,10 +746,10 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printOpenBrace()
+    public void printLeftBrace()
         throws IOException
     {
-        printOpenBrace(NEWLINE_YES, NEWLINE_YES);
+        printLeftBrace(NEWLINE_YES, NEWLINE_YES);
     }
 
 
@@ -763,11 +763,11 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printOpenBrace(boolean newlineBefore,
+    public void printLeftBrace(boolean newlineBefore,
                                boolean newlineAfter)
         throws IOException
     {
-        printOpenBrace(newlineBefore, newlineAfter, NodeWriter.INDENT_YES);
+        printLeftBrace(newlineBefore, newlineAfter, NodeWriter.INDENT_YES);
     }
 
 
@@ -783,7 +783,7 @@ public class NodeWriter
      *
      * @throws IOException if an I/O error occured.
      */
-    public void printOpenBrace(boolean newlineBefore,
+    public void printLeftBrace(boolean newlineBefore,
                                boolean newlineAfter,
                                boolean indent)
         throws IOException

@@ -201,7 +201,7 @@ class BlockPrinter
                         /**
                          * @todo handle class/ifc/method/ctor different
                          */
-                        out.printOpenBrace();
+                        out.printLeftBrace();
                         out.printRightBrace(JavaTokenTypes.RCURLY, !treatDifferent, NodeWriter.NEWLINE_YES);
                         out.last = closeBraceType;
                     }
@@ -679,7 +679,7 @@ LOOP:
 
         boolean newLineAfterBrace = isCloseBraceNewline(lcurly, type,
                                                         freestanding);
-        out.printCloseBrace(type, NodeWriter.NEWLINE_NO);
+        out.printRightBrace(type, NodeWriter.NEWLINE_NO);
 
         if ((!printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO,
                                  newLineAfterBrace, out)) && newLineAfterBrace)
@@ -720,26 +720,26 @@ LOOP:
 
         if (freestanding)
         {
-            out.printOpenBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
+            out.printLeftBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
                                NodeWriter.INDENT_NO);
         }
         else
         {
             if (forceNewlineBefore)
             {
-                out.printOpenBrace(NodeWriter.NEWLINE_YES, !commentsAfter,
+                out.printLeftBrace(NodeWriter.NEWLINE_YES, !commentsAfter,
                                    NodeWriter.INDENT_NO);
             }
             else
             {
                 if (out.column != 1)
                 {
-                    out.printOpenBrace(leftBraceNewline, !commentsAfter,
+                    out.printLeftBrace(leftBraceNewline, !commentsAfter,
                                        !freestanding);
                 }
                 else
                 {
-                    out.printOpenBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
+                    out.printLeftBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
                                        NodeWriter.INDENT_NO);
                 }
             }
