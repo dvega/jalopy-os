@@ -11,8 +11,10 @@ import java.lang.reflect.Modifier;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
@@ -21,12 +23,6 @@ import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.util.ResourceBundleFactory;
-
-import org.apache.oro.text.PatternCache;
-import org.apache.oro.text.PatternCacheLRU;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
@@ -49,7 +45,7 @@ public final class CodeInspector
     private static final List _collectionTypes = new ArrayList(28); // List of <String>
 
     /** The cache with the regular expression patterns. */
-    private static final PatternCache _patterns = new PatternCacheLRU(30);
+    private static final HashMap _patternMap = new HashMap(30);
 
     /** The name for ResourceBundle lookup. */
     private static final String BUNDLE_NAME =
@@ -184,11 +180,11 @@ public final class CodeInspector
     private Map _issues; // Map of <JavaNode>:<Object>
 
     /** The pattern matcher. */
-    private final PatternMatcher _matcher = new Perl5Matcher();
+    //private final PatternMatcher _matcher = new Perl5Matcher();
 
     /** Helper array used to store the arguments for the message formatter. */
     protected final String[] _args = new String[3];
-
+	
     //~ Constructors ---------------------------------------------------------------------
 
     /**
@@ -203,6 +199,13 @@ public final class CodeInspector
 
     //~ Methods --------------------------------------------------------------------------
 
+	private Pattern getPattern(String pattern) {
+		if (_patternMap.containsKey(pattern)) {
+			_patternMap.put(pattern,Pattern.compile(pattern));
+		}
+		
+		return (Pattern) _patternMap.get(pattern);
+	}
     /**
      * Inspects the given Java parse tree for code convention violations and coding
      * weaknesses.
@@ -901,35 +904,35 @@ public final class CodeInspector
             if (!JavaNodeModifier.isAbstract(node))
             {
                 Pattern pattern =
-                    _patterns.getPattern(
+                    getPattern(
                         _settings.get(
                             ConventionKeys.REGEXP_CLASS, ConventionDefaults.REGEXP_CLASS));
 
                 if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
+                    !pattern.pattern().equals(EMPTY_STRING)
+                    && !pattern.matcher(name).matches())
                 {
                     _args[0] = "Class" /* NOI18N */;
                     _args[1] = name;
-                    _args[2] = pattern.getPattern();
+                    _args[2] = pattern.pattern();
                     addIssue(node, STR_NAMING_CONVENTION, _args);
                 }
             }
             else
             {
                 Pattern pattern =
-                    _patterns.getPattern(
+                    getPattern(
                         _settings.get(
                             ConventionKeys.REGEXP_CLASS_ABSTRACT,
                             ConventionDefaults.REGEXP_CLASS_ABSTRACT));
 
                 if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
+	                    !pattern.pattern().equals(EMPTY_STRING)
+	                    && !pattern.matcher(name).matches())
                 {
                     _args[0] = "Abstract class" /* NOI18N */;
                     _args[1] = name;
-                    _args[2] = pattern.getPattern();
+                    _args[2] = pattern.pattern();
                     addIssue(node, STR_NAMING_CONVENTION, _args);
                 }
             }
@@ -1122,17 +1125,17 @@ SEARCH:
         {
             String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
             Pattern pattern =
-                _patterns.getPattern(
+                getPattern(
                     _settings.get(
                         ConventionKeys.REGEXP_INTERFACE, ConventionDefaults.REGEXP_INTERFACE));
 
             if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+                    !pattern.pattern().equals(EMPTY_STRING)
+                    && !pattern.matcher(name).matches())
             {
                 _args[0] = "Interface" /* NOI18N */;
                 _args[1] = name;
-                _args[2] = pattern.getPattern();
+                _args[2] = pattern.pattern();
                 addIssue(node, STR_NAMING_CONVENTION, _args);
             }
         }
@@ -1152,17 +1155,17 @@ SEARCH:
         {
             String name = node.getFirstChild().getText();
             Pattern pattern =
-                _patterns.getPattern(
+                getPattern(
                     _settings.get(
                         ConventionKeys.REGEXP_LABEL, ConventionDefaults.REGEXP_LABEL));
 
             if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+                    !pattern.pattern().equals(EMPTY_STRING)
+                    && !pattern.matcher(name).matches())
             {
                 _args[0] = "Label" /* NOI18N */;
                 _args[1] = name;
-                _args[2] = pattern.getPattern();
+                _args[2] = pattern.pattern();
                 addIssue(node, STR_NAMING_CONVENTION, _args);
             }
         }
@@ -1271,72 +1274,72 @@ SEARCH:
                     if (Modifier.isPublic(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC_FINAL,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "public static final method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isProtected(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC_FINAL,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "protected static final method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isPrivate(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC_FINAL,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "private static final method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC_FINAL,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "static final method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
@@ -1346,72 +1349,72 @@ SEARCH:
                     if (Modifier.isPublic(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PUBLIC_STATIC,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "public static method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isProtected(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PROTECTED_STATIC,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "protected static method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isPrivate(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_PRIVATE_STATIC,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "private static method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_METHOD_DEFAULT_STATIC,
                                     ConventionDefaults.REGEXP_METHOD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "static method" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
@@ -1422,72 +1425,72 @@ SEARCH:
                 if (Modifier.isPublic(modifierMask))
                 {
                     Pattern pattern =
-                        _patterns.getPattern(
+                        getPattern(
                             _settings.get(
                                 ConventionKeys.REGEXP_METHOD_PUBLIC,
                                 ConventionDefaults.REGEXP_METHOD));
 
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
+	                if (
+		                    !pattern.pattern().equals(EMPTY_STRING)
+		                    && !pattern.matcher(name).matches())
                     {
                         _args[0] = "public method" /* NOI18N */;
                         _args[1] = name;
-                        _args[2] = pattern.getPattern();
+                        _args[2] = pattern.pattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
                 }
                 else if (Modifier.isProtected(modifierMask))
                 {
                     Pattern pattern =
-                        _patterns.getPattern(
+                        getPattern(
                             _settings.get(
                                 ConventionKeys.REGEXP_METHOD_PROTECTED,
                                 ConventionDefaults.REGEXP_METHOD));
 
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
+	                if (
+		                    !pattern.pattern().equals(EMPTY_STRING)
+		                    && !pattern.matcher(name).matches())
                     {
                         _args[0] = "protected method" /* NOI18N */;
                         _args[1] = name;
-                        _args[2] = pattern.getPattern();
+                        _args[2] = pattern.pattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
                 }
                 else if (Modifier.isPrivate(modifierMask))
                 {
                     Pattern pattern =
-                        _patterns.getPattern(
+                        getPattern(
                             _settings.get(
                                 ConventionKeys.REGEXP_METHOD_PRIVATE,
                                 ConventionDefaults.REGEXP_METHOD));
 
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
+	                if (
+		                    !pattern.pattern().equals(EMPTY_STRING)
+		                    && !pattern.matcher(name).matches())
                     {
                         _args[0] = "private method" /* NOI18N */;
                         _args[1] = name;
-                        _args[2] = pattern.getPattern();
+                        _args[2] = pattern.pattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
                 }
                 else
                 {
                     Pattern pattern =
-                        _patterns.getPattern(
+                        getPattern(
                             _settings.get(
                                 ConventionKeys.REGEXP_METHOD_DEFAULT,
                                 ConventionDefaults.REGEXP_METHOD));
 
-                    if (
-                        !pattern.getPattern().equals(EMPTY_STRING)
-                        && !_matcher.matches(name, pattern))
+	                if (
+		                    !pattern.pattern().equals(EMPTY_STRING)
+		                    && !pattern.matcher(name).matches())
                     {
                         _args[0] = "method" /* NOI18N */;
                         _args[1] = name;
-                        _args[2] = pattern.getPattern();
+                        _args[2] = pattern.pattern();
                         addIssue(node, STR_NAMING_CONVENTION, _args);
                     }
                 }
@@ -1531,17 +1534,17 @@ SEARCH:
         {
             String name = JavaNodeHelper.getDottedName(node.getFirstChild());
             Pattern pattern =
-                _patterns.getPattern(
+                getPattern(
                     _settings.get(
                         ConventionKeys.REGEXP_PACKAGE, ConventionDefaults.REGEXP_PACKAGE));
 
             if (
-                !pattern.getPattern().equals(EMPTY_STRING)
-                && !_matcher.matches(name, pattern))
+                    !pattern.pattern().equals(EMPTY_STRING)
+                    && !pattern.matcher(name).matches())
             {
                 _args[0] = "Package" /* NOI18N */;
                 _args[1] = name;
-                _args[2] = pattern.getPattern();
+                _args[2] = pattern.pattern();
                 addIssue(node, STR_NAMING_CONVENTION, _args);
             }
         }
@@ -1722,18 +1725,18 @@ SEARCH:
             if (JavaNodeHelper.isLocalVariable(node))
             {
                 Pattern pattern =
-                    _patterns.getPattern(
+                    getPattern(
                         _settings.get(
                             ConventionKeys.REGEXP_LOCAL_VARIABLE,
                             ConventionDefaults.REGEXP_LOCAL_VARIABLE));
 
                 if (
-                    !pattern.getPattern().equals(EMPTY_STRING)
-                    && !_matcher.matches(name, pattern))
+	                    !pattern.pattern().equals(EMPTY_STRING)
+	                    && !pattern.matcher(name).matches())
                 {
                     _args[0] = "local variable" /* NOI18N */;
                     _args[1] = name;
-                    _args[2] = pattern.getPattern();
+                    _args[2] = pattern.pattern();
                     addIssue(node, STR_NAMING_CONVENTION, _args);
                 }
             }
@@ -1749,72 +1752,72 @@ SEARCH:
                         if (Modifier.isPublic(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
                                         ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "public static final field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else if (Modifier.isProtected(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
                                         ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "protected static final field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else if (Modifier.isPrivate(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
                                         ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "private static final field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
                                         ConventionDefaults.REGEXP_FIELD_STATIC_FINAL));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "static final field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
@@ -1824,72 +1827,72 @@ SEARCH:
                         if (Modifier.isPublic(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PUBLIC_STATIC,
                                         ConventionDefaults.REGEXP_FIELD));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "public static field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else if (Modifier.isProtected(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PROTECTED_STATIC,
                                         ConventionDefaults.REGEXP_FIELD));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "protected static field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else if (Modifier.isPrivate(modifierMask))
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_PRIVATE_STATIC,
                                         ConventionDefaults.REGEXP_FIELD));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "private static field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
                         else
                         {
                             Pattern pattern =
-                                _patterns.getPattern(
+                                getPattern(
                                     _settings.get(
                                         ConventionKeys.REGEXP_FIELD_DEFAULT_STATIC,
                                         ConventionDefaults.REGEXP_FIELD));
 
-                            if (
-                                !pattern.getPattern().equals(EMPTY_STRING)
-                                && !_matcher.matches(name, pattern))
+			                if (
+				                    !pattern.pattern().equals(EMPTY_STRING)
+				                    && !pattern.matcher(name).matches())
                             {
                                 _args[0] = "static field" /* NOI18N */;
                                 _args[1] = name;
-                                _args[2] = pattern.getPattern();
+                                _args[2] = pattern.pattern();
                                 addIssue(node, STR_NAMING_CONVENTION, _args);
                             }
                         }
@@ -1900,72 +1903,72 @@ SEARCH:
                     if (Modifier.isPublic(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_FIELD_PUBLIC,
                                     ConventionDefaults.REGEXP_FIELD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "public field" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isProtected(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_FIELD_PROTECTED,
                                     ConventionDefaults.REGEXP_FIELD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "protected field" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else if (Modifier.isPrivate(modifierMask))
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_FIELD_PRIVATE,
                                     ConventionDefaults.REGEXP_FIELD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "private field" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }
                     else
                     {
                         Pattern pattern =
-                            _patterns.getPattern(
+                            getPattern(
                                 _settings.get(
                                     ConventionKeys.REGEXP_FIELD_DEFAULT,
                                     ConventionDefaults.REGEXP_FIELD));
 
-                        if (
-                            !pattern.getPattern().equals(EMPTY_STRING)
-                            && !_matcher.matches(name, pattern))
+		                if (
+			                    !pattern.pattern().equals(EMPTY_STRING)
+			                    && !pattern.matcher(name).matches())
                         {
                             _args[0] = "field" /* NOI18N */;
                             _args[1] = name;
-                            _args[2] = pattern.getPattern();
+                            _args[2] = pattern.pattern();
                             addIssue(node, STR_NAMING_CONVENTION, _args);
                         }
                     }

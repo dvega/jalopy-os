@@ -6,13 +6,8 @@
  */
 package de.hunsicker.util;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -231,35 +226,20 @@ public class Version
      */
     public static Version valueOf(String version)
     {
-        PatternMatcher matcher = new Perl5Matcher();
-        PatternCompiler compiler = new Perl5Compiler();
-        Pattern regexp = null;
-
-        try
+        Pattern regexp = Pattern.compile("(\\d).(\\d)(?:([.b])(\\d+))?" /* NOI18N */);
+		Matcher matcher = regexp.matcher(version);
+        if (matcher.matches())
         {
-            regexp =
-                compiler.compile(
-                    "(\\d).(\\d)(?:([.b])(\\d+))?" /* NOI18N */,
-                    Perl5Compiler.SINGLELINE_MASK);
-        }
-        catch (MalformedPatternException neverOccurs)
-        {
-            // I know that the regexp is valid
-        }
-
-        if (matcher.matches(version, regexp))
-        {
-            MatchResult result = matcher.getMatch();
-            int major = Integer.parseInt(result.group(1));
-            int minor = Integer.parseInt(result.group(2));
+            int major = Integer.parseInt(matcher.group(1));
+            int minor = Integer.parseInt(matcher.group(2));
 
             int micro = 0;
             boolean beta = false;
 
-            if (result.groups() == 5)
+            if (matcher.groupCount() == 5)
             {
-                beta = result.group(3).indexOf('b') > -1;
-                micro = Integer.parseInt(result.group(4));
+                beta = matcher.group(3).indexOf('b') > -1;
+                micro = Integer.parseInt(matcher.group(4));
             }
 
             return new Version(null, major, minor, micro, beta);

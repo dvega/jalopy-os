@@ -18,6 +18,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -36,14 +39,6 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.ResourceBundleFactory;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-
 
 /**
  * Settings page for the Jalopy Code Inspector naming settings.
@@ -573,10 +568,9 @@ public class NamingSettingsPage
 
             try
             {
-                PatternCompiler compiler = new Perl5Compiler();
-                regexp = compiler.compile(pattern);
+                regexp = Pattern.compile(pattern);
             }
-            catch (MalformedPatternException ex)
+            catch (PatternSyntaxException ex)
             {
                 this.messageLabel.setForeground(Color.red);
                 this.messageLabel.setText(
@@ -586,9 +580,9 @@ public class NamingSettingsPage
                 return false;
             }
 
-            PatternMatcher matcher = new Perl5Matcher();
+            Matcher matcher = regexp.matcher(string);
 
-            if (matcher.matches(string, regexp))
+            if (matcher.matches())
             {
                 this.messageLabel.setForeground(Color.blue);
                 this.messageLabel.setText(

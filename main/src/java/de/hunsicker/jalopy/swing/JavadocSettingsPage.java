@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -52,12 +53,6 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.StringHelper;
-
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
@@ -96,7 +91,6 @@ public class JavadocSettingsPage
     private JCheckBox _createInnerCheckBox;
     JCheckBox _parseCheckBox;
     JCheckBox _singleLineFieldCommentsCheckBox;
-    final PatternMatcher _matcher = new Perl5Matcher();
     Pattern _bottomTextPattern;
     Pattern _exceptionPattern;
     Pattern _paramPattern;
@@ -107,30 +101,23 @@ public class JavadocSettingsPage
     TemplateContainer _templatesContainer;
     boolean _disposed;
     {
-        PatternCompiler compiler = new Perl5Compiler();
+        //PatternCompiler compiler = new Perl5Compiler();
 
-        try
-        {
-            _tagNamePattern = compiler.compile("@[a-zA-Z]+" /* NOI18N */);
+            _tagNamePattern = Pattern.compile("@[a-zA-Z]+" /* NOI18N */);
             _topTextPattern =
-                compiler.compile(
+				Pattern.compile(
                     "\\/\\*\\*(?:.*)+\\n\\s*\\*\\s*(.*)(?:\\n)*" /* NOI18N */);
             _paramPattern =
-                compiler.compile(
+				Pattern.compile(
                     "\\s*\\*\\s*@param\\s+\\$paramType\\$\\s+(?:.+)" /* NOI18N */);
             _returnPattern =
-                compiler.compile("\\s*\\*\\s*@return\\s+(?:.+)" /* NOI18N */);
+				Pattern.compile("\\s*\\*\\s*@return\\s+(?:.+)" /* NOI18N */);
             _exceptionPattern =
-                compiler.compile(
+				Pattern.compile(
                     "\\s*\\*\\s*@(?:throws|exception)\\s+\\$exceptionType\\$\\s+(?:.+)" /* NOI18N */);
-            _bottomTextPattern = compiler.compile("\\s*(?:\\*)+/" /* NOI18N */);
+            _bottomTextPattern = Pattern.compile("\\s*(?:\\*)+/" /* NOI18N */);
             _templatePattern =
-                compiler.compile("\\/\\*\\*[^*]*\\*+([^//*][^*]*\\*+)*\\/" /* NOI18N */);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+				Pattern.compile("\\/\\*\\*[^*]*\\*+([^//*][^*]*\\*+)*\\/" /* NOI18N */);
     }
 
     //~ Constructors ---------------------------------------------------------------------
@@ -923,9 +910,9 @@ public class JavadocSettingsPage
         {
             String topText = this.topTextArea.getText();
 
-            if (!_matcher.matches(topText, _topTextPattern))
+            if (!_topTextPattern.matcher(topText).matches())
             {
-                Object[] args = { _topTextPattern.getPattern() };
+                Object[] args = { _topTextPattern.pattern() };
 
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
@@ -940,9 +927,9 @@ public class JavadocSettingsPage
 
             String parameterText = this.parameterTextArea.getText();
 
-            if (!_matcher.matches(parameterText, _paramPattern))
+            if (!_paramPattern.matcher(parameterText).matches())
             {
-                Object[] args = { _paramPattern.getPattern() };
+                Object[] args = { _paramPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -956,9 +943,9 @@ public class JavadocSettingsPage
 
             String exceptionText = this.exceptionTextArea.getText();
 
-            if (!_matcher.matches(exceptionText, _exceptionPattern))
+            if (!_exceptionPattern.matcher(exceptionText).matches())
             {
-                Object[] args = { _exceptionPattern.getPattern() };
+                Object[] args = { _exceptionPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -972,9 +959,9 @@ public class JavadocSettingsPage
 
             String bottomText = this.bottomTextArea.getText();
 
-            if (!_matcher.matches(bottomText, _bottomTextPattern))
+            if (!_bottomTextPattern.matcher(bottomText).matches())
             {
-                Object[] args = { _bottomTextPattern.getPattern() };
+                Object[] args = { _bottomTextPattern.pattern() };
 
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
@@ -1201,9 +1188,9 @@ public class JavadocSettingsPage
             DefaultListModel model = (DefaultListModel) ev.getSource();
             String name = (String) model.get(ev.getIndex0());
 
-            if (!_matcher.matches(name, _tagNamePattern))
+            if (!_tagNamePattern.matcher(name).matches())
             {
-                Object[] args = { name, _tagNamePattern.getPattern() };
+                Object[] args = { name, _tagNamePattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(JavadocSettingsPage.this),
                     MessageFormat.format(
@@ -1291,9 +1278,9 @@ public class JavadocSettingsPage
 
             String returnText = this.returnTextArea.getText();
 
-            if (!_matcher.matches(returnText, _returnPattern))
+            if (!_returnPattern.matcher(returnText).matches())
             {
-                Object[] args = { _returnPattern.getPattern() };
+                Object[] args = { _returnPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -1403,9 +1390,9 @@ public class JavadocSettingsPage
         {
             String text = this.textArea.getText();
 
-            if (!_matcher.matches(text, _templatePattern))
+            if (!_templatePattern.matcher(text).matches())
             {
-                Object[] args = { _templatePattern.getPattern() };
+                Object[] args = { _templatePattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(SimpleTemplatePanel.this),
                     MessageFormat.format(

@@ -30,8 +30,6 @@ import de.hunsicker.util.StringHelper;
 
 import org.apache.log4j.Level;
 
-import org.apache.oro.text.perl.Perl5Util;
-
 /**
  * Transformation which replaces <em>single-type-import declarations</em> with their
  * <em>type-import-on-demand</em> counterpart or vice versa. Implements also the sorting
@@ -900,8 +898,6 @@ final class ImportTransformation
         }
     }
 
-    private final static Perl5Util REGEX_ENGINE = new Perl5Util();
-
     /**
      * Updates the given unqualified import node to .
      *
@@ -911,8 +907,8 @@ final class ImportTransformation
      */
     private JavaNode createImportNode(JavaNode node)
     {
-        List parts = new ArrayList(6);
-        REGEX_ENGINE.split(parts, "/([.])/" /* NOI18N */, node.text, Perl5Util.SPLIT_ALL);
+        List parts = 
+		Arrays.asList(node.text.split("/([.])/" /* NOI18N */));
 
         ASTPair curAST = new ASTPair();
 

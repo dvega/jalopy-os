@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -40,15 +42,6 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.swing.util.SwingHelper;
-import de.hunsicker.util.ChainingRuntimeException;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-
 
 /**
  * Settings page for the Jalopy printer environment settings.
@@ -73,26 +66,20 @@ public class EnvironmentSettingsPage
     private static final String EMPTY_STRING = "".intern(); /* NOI18N */
 
     /** The pattern to validate variables . */
-    static Pattern _variablesPattern;
+//     static Pattern _variablesPattern;
 
     /** The pattern matcher. */
-    static final PatternMatcher _matcher = new Perl5Matcher();
-
+    static final Matcher  _matcher = Pattern.compile(
+    "[a-zA-Z_][a-zA-Z0-9_]*").matcher("a");
+/*
     static
     {
-        PatternCompiler compiler = new Perl5Compiler();
+		
 
-        try
-        {
-            _variablesPattern =
-                compiler.compile(
-                    "[a-zA-Z_][a-zA-Z0-9_]*" /* NOI18N */, Perl5Compiler.READ_ONLY_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            throw new ChainingRuntimeException(ex);
-        }
+			Pattern  compiler = Pattern.compile(
+                    "[a-zA-Z_][a-zA-Z0-9_]*");
     }
+	*/
 
     AddRemoveList _variablesList;
     private JButton _addButton;
@@ -456,10 +443,10 @@ public class EnvironmentSettingsPage
                                 return;
                             }
 
-                            if (!_matcher.matches(variable, _variablesPattern))
+                            if (!_matcher.reset(variable).matches())
                             {
                                 Object[] args =
-                                { variable, _variablesPattern.getPattern() };
+                                { variable, _matcher.pattern() };
                                 JOptionPane.showMessageDialog(
                                     AddDialog.this,
                                     MessageFormat.format(

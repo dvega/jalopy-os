@@ -17,6 +17,7 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -41,8 +42,6 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.ImportPolicy;
 import de.hunsicker.swing.EmptyButtonGroup;
 import de.hunsicker.swing.util.SwingHelper;
-
-import org.apache.oro.text.perl.Perl5Util;
 
 
 /**
@@ -782,10 +781,9 @@ public class ImportsSettingsPage
         public boolean stopCellEditing()
         {
             String s = (String) super.getCellEditorValue();
-            Perl5Util engine = new Perl5Util();
 
             // only allow package/type names
-            if (!engine.match("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
+            if (!Pattern.matches("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
             {
                 ((JComponent) getComponent()).setBorder(
                     BorderFactory.createLineBorder(Color.red));

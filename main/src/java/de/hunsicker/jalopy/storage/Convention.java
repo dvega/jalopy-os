@@ -14,11 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -40,19 +38,25 @@ import de.hunsicker.util.StringHelper;
 
 import org.apache.log4j.Level;
 
-import org.apache.oro.text.perl.Perl5Util;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.XMLOutputter;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 //J- needed only as a workaround for a Javadoc bug
-import java.lang.Long;
 import java.lang.NullPointerException;
 import java.lang.Object;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 //J+
 
 /**
@@ -575,23 +579,28 @@ public final class Convention
         }
         else if (EXTENSION_XML.equals(extension))
         {
-            Reader isr = null;
+        	BufferedInputStream isr = null;
 
             try
             {
-                isr = new InputStreamReader(
-                        new BufferedInputStream(in), "UTF-8" /* NOI18N */);
+                isr = 
+                        new BufferedInputStream(in);
 
-                SAXBuilder builder = new SAXBuilder();
-                Document document = builder.build(isr);
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                Document doc = dbf.newDocumentBuilder().parse(isr);
+                //SAXBuilder builder = new SAXBuilder();
+                //Document document = builder.build(isr);
                 INSTANCE._values = new HashMap();
-                convertXmlToMap(INSTANCE._values, document.getRootElement());
+                convertXmlToMap(INSTANCE._values, doc.getDocumentElement());
                 synchronize(INSTANCE);
             }
-            catch (JDOMException ex)
+            catch (SAXException ex)
             {
                 throw new IOException(ex.getMessage());
-            }
+            } 
+            catch (ParserConfigurationException ex) {
+                throw new IOException(ex.getMessage());
+			}
             finally
             {
                 if (isr != null)
@@ -910,10 +919,28 @@ public final class Convention
         {
             try
             {
-                XMLOutputter outputter = new XMLOutputter("    " /* NOI18N */, true);
-                Document document = new Document(convertMapToXml(_values));
-                outputter.output(document, out);
-            }
+                //XMLOutputter outputter = new XMLOutputter("    " /* NOI18N */, true);
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                Document doc = dbf.newDocumentBuilder().newDocument();
+                convertMapToXml(_values,doc);
+				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+				transformer.transform(new DOMSource(doc),new StreamResult(out));
+                //Document document = new Document(convertMapToXml(_values));
+                //outputter.output(document, out);
+                // TODO dbf.
+            } catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerFactoryConfigurationError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             finally
             {
                 out.close();
@@ -1232,12 +1259,12 @@ public final class Convention
         Map     map,
         Element element)
     {
-        List children = element.getChildren();
+        NodeList children = element.getChildNodes();
 
-        if (children.size() == 0)
+        if (children.getLength() == 0)
         {
             StringBuffer path = new StringBuffer();
-            String value = element.getText();
+            String value = element.getTagName();
 
             while (true)
             {
@@ -1246,10 +1273,10 @@ public final class Convention
                     path.insert(0, '/');
                 }
 
-                path.insert(0, element.getName());
-                element = element.getParent();
+                path.insert(0, element.getTagName());
+                element = (Element) element.getParentNode();
 
-                if ((element == null) || element.getName().equals("jalopy" /* NOI18N */))
+                if ((element == null) || element.getTagName().equals("jalopy" /* NOI18N */))
                 {
                     break;
                 }
@@ -1260,9 +1287,9 @@ public final class Convention
             return;
         }
 
-        for (int i = 0, i_len = children.size(); i < i_len; i++)
+        for (int i = 0, i_len = children.getLength(); i < i_len; i++)
         {
-            Element childElement = (Element) children.get(i);
+            Element childElement = (Element) children.item(i);
             convertXmlToMap(map, childElement);
         }
     }
@@ -2474,11 +2501,14 @@ public final class Convention
      *
      * @return root element of the resulting XML document.
      */
-    private Element convertMapToXml(Map map)
+    private Element convertMapToXml(Map map,Document doc)
     {
         map = new java.util.TreeMap(map);
 
-        Element root = new Element("jalopy" /* NOI18N */);
+        //doc.createElement("jalopy" /* NOI18N */);
+        
+        Element root = doc.createElement("jalopy" /* NOI18N */);
+        doc.appendChild(root);
 
         for (Iterator it = map.entrySet().iterator(); it.hasNext();)
         {
@@ -2491,18 +2521,23 @@ public final class Convention
             for (int i = 0, size = pathList.size(); i < size; i++)
             {
                 String elName = (String) pathList.get(i);
-                Element child = go.getChild(elName);
-
-                if (child == null)
+                NodeList children = go.getElementsByTagName(elName);
+                
+                Element child = null;
+                
+                if (children.getLength() == 0)
                 {
-                    child = new Element(elName);
-                    go.addContent(child);
+                    child = doc.createElement(elName);
+                    go.appendChild(child);
+                }
+                else {
+                	child =(Element) children.item(0);
                 }
 
                 go = child;
             }
 
-            go.setText(value.toString());
+            go.setNodeValue(value.toString());
         }
 
         return root;
@@ -2567,7 +2602,7 @@ public final class Convention
      * @see de.hunsicker.jalopy.storage.ConventionKeys
      * @since 1.0b9
      */
-    public static final class Key
+    public static class Key
         implements Serializable, Comparable
     {
         /** Use serialVersionUID for interoperability. */

@@ -6,19 +6,14 @@
  */
 package de.hunsicker.jalopy.plugin;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import de.hunsicker.util.ChainingRuntimeException;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
@@ -62,9 +57,6 @@ public abstract class AbstractAppender
      */
     protected final Pattern regex;
 
-    /** Matcher instance. */
-    private PatternMatcher _matcher;
-
     //~ Constructors ---------------------------------------------------------------------
 
     /**
@@ -77,18 +69,7 @@ public abstract class AbstractAppender
         this.name = APPENDER_NAME;
         this.layout = new SwingLayout();
         setThreshold(Level.DEBUG);
-        _matcher = new Perl5Matcher();
-
-        PatternCompiler compiler = new Perl5Compiler();
-
-        try
-        {
-            this.regex = compiler.compile(PATTERN, Perl5Compiler.SINGLELINE_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            throw new ChainingRuntimeException(ex);
-        }
+		regex = Pattern.compile(PATTERN);
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -154,11 +135,12 @@ public abstract class AbstractAppender
      * @return parsing result. Returns <code>null</code> if the message doesn't match the
      *         Emacs format <code>filename:line:column:text</code>.
      */
-    public MatchResult parseMessage(LoggingEvent ev)
+    public Matcher parseMessage(LoggingEvent ev)
     {
-        if (_matcher.matches(this.layout.format(ev), this.regex))
+		Matcher matcher = regex.matcher(this.layout.format(ev));
+        if (matcher.matches())
         {
-            return _matcher.getMatch();
+            return matcher;
         }
 
         return null;

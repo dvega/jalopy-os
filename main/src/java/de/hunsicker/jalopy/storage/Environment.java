@@ -10,9 +10,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.hunsicker.util.ChainingRuntimeException;
 
+/*
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
@@ -24,7 +27,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 import org.apache.oro.text.regex.StringSubstitution;
 import org.apache.oro.text.regex.Substitution;
 import org.apache.oro.text.regex.Util;
-
+*/
 
 /**
  * Provides access to global and local environment variables (key/value pairs).
@@ -46,23 +49,16 @@ public final class Environment
     private static final String DELIMETER = "|";
 
     /** The compiler to create pattern objects. */
-    private static final PatternCompiler REGEXP_COMPILER = new Perl5Compiler();
+    //private static final PatternCompiler REGEXP_COMPILER = new Perl5Compiler();
 
     /** The pattern to search for variables . */
     private static Pattern _variablesPattern;
 
     static
     {
-        try
-        {
-            _variablesPattern =
-                REGEXP_COMPILER.compile(
-                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$", Perl5Compiler.READ_ONLY_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            throw new ChainingRuntimeException(ex);
-        }
+            _variablesPattern = 
+                Pattern.compile(
+                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$");
     }
 
     private static final Environment INSTANCE = new Environment(true);
@@ -70,7 +66,7 @@ public final class Environment
     //~ Instance variables ---------------------------------------------------------------
 
     /** The pattern matcher. */
-    private final PatternMatcher _matcher = new Perl5Matcher();
+    private final Matcher _matcher = _variablesPattern.matcher("");
 
     /** The current environment variables. */
     private Map _variables; // Map of <String:String>
@@ -151,8 +147,14 @@ public final class Environment
      */
     public String interpolate(String str)
     {
-        PatternMatcherInput input = new PatternMatcherInput(str);
+		// TODO Fix interpolate
+    return str;
+    }
+		/*
+        //PatternMatcherInput input = new PatternMatcherInput(str);
         Map keys = new HashMap(10);
+		
+		_matcher.reset(str);
 
         // map all found variable expressions with their environment variable
         while (_matcher.contains(input, _variablesPattern))
@@ -180,9 +182,6 @@ public final class Environment
 
             try
             {
-                /**
-                 * @todo use a cache
-                 */
                 pattern = REGEXP_COMPILER.compile(Perl5Compiler.quotemeta(key));
             }
             catch (MalformedPatternException ex)
@@ -197,7 +196,7 @@ public final class Environment
         return str;
     }
 
-
+*/
     /**
      * Sets the given variable to the given value.
      *

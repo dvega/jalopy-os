@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import antlr.CommonAST;
 import antlr.collections.AST;
@@ -30,14 +32,14 @@ import de.hunsicker.util.Lcs;
 import de.hunsicker.util.StringHelper;
 
 import org.apache.log4j.Level;
-
+/*
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.PatternMatcher;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-
+*/
 
 /**
  * Printer for Javadoc comments.
@@ -75,34 +77,11 @@ final class JavadocPrinter
     private static final String KEY_GENERATE_COMMENT = "GENERATE_COMMENT" /* NOI18N */;
     // TODO private static final String TAG_OPARA = "<p>" /* NOI18N */;
     private static final String TAG_CPARA = "</p>" /* NOI18N */;
-    private static Pattern _pattern;
-
-    static
-    {
-        try
-        {
-            _pattern =
-                new Perl5Compiler().compile(
-                    "(?: )*([a-zA-z0-9_.]*)\\s*(.*)" /* NOI18N */,
-                    Perl5Compiler.READ_ONLY_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            ;
-        }
-    }
+    protected static Pattern _pattern = Pattern.compile(
+            "(?: )*([a-zA-z0-9_.]*)\\s*(.*)" /* NOI18N */);
+    
 
     //~ Instance variables ---------------------------------------------------------------
-
-    /** Our matcher for regular expression matching. */
-    private ThreadLocal _matcher =
-        new ThreadLocal()
-        {
-            protected Object initialValue()
-            {
-                return new Perl5Matcher();
-            }
-        };
 
     /** The break iterator to use for realigning the comment texts. */
     private ThreadLocal _stringBreaker =
@@ -2535,18 +2514,16 @@ SELECTION:
             // normalize the description if this is not an auto-generated tag
             if (normalize && description.charAt(0) != '@')
             {
-                PatternMatcher matcher = (PatternMatcher) _matcher.get();
+                Matcher matcher = _pattern.matcher(description);
 
-                if (matcher.matches(description, _pattern))
+                if (matcher.matches())
                 {
-                    MatchResult result = matcher.getMatch();
-
-                    if (result.group(1) != null)
+                    if (matcher.group(1) != null)
                     {
                         StringBuffer buf = new StringBuffer(description.length());
-                        buf.append(result.group(1));
+                        buf.append(matcher.group(1));
                         buf.append(SPACE);
-                        buf.append(result.group(2));
+                        buf.append(matcher.group(2));
 
                         description = buf.toString();
                     }

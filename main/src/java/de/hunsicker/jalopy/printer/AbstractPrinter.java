@@ -9,8 +9,9 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
-import org.apache.oro.text.perl.Perl5Util;
+//import org.apache.oro.text.perl.Perl5Util;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
@@ -38,7 +39,7 @@ abstract class AbstractPrinter
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    static final Perl5Util REGEX_ENGINE = new Perl5Util();
+//    static final Perl5Util REGEX_ENGINE = new Perl5Util();
 
     static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -2337,11 +2338,7 @@ OUTER:
         }
         else
         {
-            List l =  new ArrayList(15);
-
-            REGEX_ENGINE.split(l, "/\r\n|\n|\r/" /* NOI18N */, comment.getText(), Perl5Util.SPLIT_ALL);
-
-            lines = (String[])l.toArray(EMPTY_STRING_ARRAY);
+			lines = comment.getText().split( "/\r\n|\n|\r/" /* NOI18N */);
         }
 
         int lastLine = lines.length - 1;
