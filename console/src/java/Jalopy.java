@@ -1,7 +1,7 @@
 /*
  * Jalopy Java Source Code Formatter
  *
- * Copyright (C) 2001-2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -17,28 +17,26 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
- *
- * $Id$
  */
 import de.hunsicker.jalopy.plugin.console.ConsolePlugin;
 
 
 /**
  * Shorthand for {@link de.hunsicker.jalopy.plugin.console.ConsolePlugin}.
- * 
- * @version $Revision$
+ *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class Jalopy
 {
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Command line entry point. Delegates to {@link
      * de.hunsicker.jalopy.plugin.console.ConsolePlugin#main}.
-     * 
-     * @param argv command line arguments. Type <code>java Jalopy -h</code>
-     *        for details about the valid options.
+     *
+     * @param argv command line arguments. Type <code>java Jalopy -h</code> for details
+     *        about the valid options.
      */
     public static void main(String[] argv)
     {
