@@ -43,7 +43,7 @@ import java.io.IOException;
 
 
 /**
- * Printer for switch selection statements (<code>LITERAL_switch</code>).
+ * Printer for switch selection statements [<code>LITERAL_switch</code>].
  * <pre style="background:lightgrey">
  * <strong>switch</strong> (<em>integral-selector</em>)
  * {
@@ -146,15 +146,15 @@ final class SwitchPrinter
 
         boolean commentsAfter = ((JavaNode)lcurly).hasCommentsAfter();
 
-        if (out.column != 1)
-        {
-            out.printLeftBrace(leftBraceNewline, !commentsAfter,
-                               !leftBraceNewline);
-        }
-        else
+        if (out.newline)
         {
             out.printLeftBrace(NodeWriter.NEWLINE_NO, !commentsAfter,
                                NodeWriter.INDENT_NO);
+        }
+        else
+        {
+            out.printLeftBrace(leftBraceNewline, !commentsAfter,
+                               NodeWriter.INDENT_YES);
         }
 
         if (commentsAfter)
