@@ -61,7 +61,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 
 /**
  * The console Plug-in provides a powerful command line interface for the Jalopy engine.
- * 
+ *
  * <p>
  * Refer to the online manual for the list of valid command line options. You can find
  * the most recent version of the manual on the official Jalopy homepage: <a
@@ -141,8 +141,8 @@ public final class ConsolePlugin
             "de.hunsicker.jalopy.plugin.console.Bundle" /* NOI18N */,
             Convention.getInstance().getLocale());
 
-    private static String CONSOLE_APPENDER_NAME = "ConsoleAppender";            
-            
+    private static String CONSOLE_APPENDER_NAME = "ConsoleAppender";
+
     //~ Instance variables ---------------------------------------------------------------
 
     /** Holds the name of the destination directory, if any. */
@@ -769,7 +769,7 @@ public final class ConsolePlugin
 
     /**
      * Initializes the given logger.
-     * 
+     *
      * @param logger the logger to initialize.
      * @param appender the appender the logger should be added to (if it weren't already).
      * @param level the new level of the logger.
@@ -1004,7 +1004,7 @@ public final class ConsolePlugin
                     {
                         Object[] args = { level };
 
-                        System.err(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString("INVALID_LOGLEVEL" /* NOI18N */), args));
                         System.exit(1);
