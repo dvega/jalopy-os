@@ -163,8 +163,8 @@ sources:
 Jalopy comes with a simple, Ant-based build system. So you first need to obtain and
 install Ant as outlined in the
 <ulink url="http://jakarta.apache.org/ant/manual/install.html">Ant manual</ulink>.
-The build system is only tested against the Ant 1.5 release, but later nightly
-builds of Ant may also work.
+The build system is only tested against the Ant 1.5.4 release, but later
+releases of Ant may also work.
 </entry>
 </row>
 <indexterm zone="build-prerequisites"><primary>Build</primary><secondary>Ant</secondary></indexterm>
@@ -189,7 +189,10 @@ This is done via XSLT and Michael Kay's Saxon is the processor I found working w
 Stylesheet package I use. You should download the current stable production
 release from SourceForge (<ulink url="http://saxon.sf.net">http://saxon.sf.net</ulink>)
 and extract the file <filename>saxon.jar</filename> into the <filename>/lib</filename>
-folder of your Ant installation directory.
+folder of your Ant installation directory.  I also had to setup saxon to use
+Xerces as the XML parser by editing the
+META-INF/services/javax.xml.parsers.SAXParserFactory file inside of
+saxon.jar and replacing the alfred parser with org.apache.xerces.jaxp.SAXParserFactoryImpl
 </entry>
 </row>
 <indexterm zone="build-prerequisites"><primary>Build</primary><secondary>XSLT</secondary></indexterm>
@@ -198,7 +201,7 @@ folder of your Ant installation directory.
 <entry valign="top">DocBook XSL Stylesheets</entry>
 <entry>
 To perform the markup translation you need Norman Walsh's XSL Stylesheet package.
-The version that works for me is 1.55.0. You can get it from SourceForge
+The version that works for me is 1.62.4. You can get it from SourceForge
 (<ulink url="http://docbook.sf.net">http://docbook.sf.net</ulink>).
 Copy the file <filename>extensions/saxon651.jar</filename> that
 comes with the distribution into the <filename>/lib</filename> folder of your
@@ -293,7 +296,7 @@ Luckily you only have to change some common properties to get things running:
 <listitem>
 <para>
 Specifies the installation directory of the DocBook XSL Stylesheets package.
-Note that you have to specify a protocol, e.g. <filename>file:///G:/XML/docbook-xsl-1.55.0</filename>.
+Note that you have to specify a protocol, e.g. <filename>file:///G:/XML/docbook-xsl-1.62.4</filename>.
 </para>
 </listitem>
 </varlistentry>
