@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -74,7 +74,7 @@ import org.apache.log4j.varia.NullAppender;
 /**
  * The Jalopy preferences dialog. Provides a graphical user interface to
  * display and interactively edit all preferences options.
- * 
+ *
  * <p>
  * The dialog can be used from other Java applications as usual, in which case
  * it acts like any other JDialog (i.e. as a secondary window). But it may be
@@ -284,7 +284,14 @@ public class PreferencesDialog
             //Loggers.initialize(new NullAppender());
         }
 
-        initializeLookAndFeel();
+        for (int i = 0; i < argv.length; i++)
+        {
+            if (argv[i].equals("-laf"))
+            {
+                initializeLookAndFeel(argv[i+1]);
+                i++;
+            }
+        }
 
         final PreferencesFrame frame = new PreferencesFrame("Jalopy Preferences",
                                                             argv);
@@ -361,8 +368,20 @@ public class PreferencesDialog
     /**
      * Initializes preferences for the Look &amp; Feel.
      */
-    private static void initializeLookAndFeel()
+    private static void initializeLookAndFeel(String clazz)
     {
+        if (clazz != null)
+        {
+            try
+            {
+                UIManager.setLookAndFeel(clazz);
+            }
+            catch (Throwable ignored)
+            {
+                System.err.println("Could not find Look&Feel class -- " + clazz);
+            }
+        }
+
         if (UIManager.getLookAndFeel().getID().equals("Metal"))
         {
             String fontName = "Tahoma";
@@ -406,64 +425,6 @@ public class PreferencesDialog
             UIManager.put("ToolBar.font", dialogPlain);
             UIManager.put("ToolTip.font", sansSerifPlain);
             UIManager.put("Tree.font", dialogPlain);
-
-            Color control = new ColorUIResource(SystemColor.control);
-            Color desktop = new ColorUIResource(SystemColor.desktop);
-            Color menu = new ColorUIResource(SystemColor.menu);
-            Color textText = new ColorUIResource(SystemColor.textText);
-            Color textInactiveText = new ColorUIResource(SystemColor.textInactiveText);
-            Color textHighlight = new ColorUIResource(SystemColor.textHighlight);
-            Color textHighlightText = new ColorUIResource(SystemColor.textHighlightText);
-            UIManager.put("control", control);
-            UIManager.put("Button.background", control);
-            UIManager.put("CheckBox.background", control);
-            UIManager.put("CheckBoxMenuItem.background", control);
-            UIManager.put("ColorChooser.background", control);
-            UIManager.put("ComboBox.background", control);
-            UIManager.put("ComboBox.disabledBackground", control);
-            UIManager.put("ComboBox.disabledForeground", textInactiveText);
-            UIManager.put("Desktop.background", desktop);
-            UIManager.put("Label.background", control);
-            UIManager.put("Label.disabledForeground", textInactiveText);
-            UIManager.put("Menu.background", control);
-            UIManager.put("MenuBar.background", control);
-            UIManager.put("MenuItem.background", control);
-            UIManager.put("OptionPane.background", control);
-            UIManager.put("Panel.background", control);
-            UIManager.put("PopupMenu.background", control);
-            UIManager.put("ProgressBar.background", control);
-            UIManager.put("RadioButton.background", control);
-            UIManager.put("RadioButtonMenuItem.background", control);
-            UIManager.put("ScrollBar.background", control);
-            UIManager.put("ScrollPane.background", control);
-            UIManager.put("Slider.background", control);
-            UIManager.put("SplitPane.background", control);
-            UIManager.put("TabbedPane.background", control);
-            UIManager.put("Table.background", Color.white);
-            UIManager.put("TableHeader.background", control);
-            UIManager.put("TabbedPane.selected", control);
-            UIManager.put("ToggleButton.background", control);
-            UIManager.put("ToolBar.background", control);
-            UIManager.put("ToolBar.dockingBackground", control);
-            UIManager.put("ToolBar.flotingBackground", control);
-            UIManager.put("viewport.background", control);
-            UIManager.put("PopupMenu.background", menu);
-            UIManager.put("Menu.foreground", textText);
-            UIManager.put("Menu.acceleratorForeground", textText);
-            UIManager.put("Menu.acceleratorSelectionForeground",
-                          textHighlightText);
-            UIManager.put("Menu.selectionBackground", textHighlight);
-            UIManager.put("Menu.selectionForeground", textHighlightText);
-            UIManager.put("MenuItem.acceleratorForeground", textText);
-            UIManager.put("MenuItem.acceleratorSelectionForeground",
-                          textHighlightText);
-            UIManager.put("MenuItem.selectionBackground", textHighlight);
-            UIManager.put("MenuItem.selectionForeground", textHighlightText);
-            UIManager.put("MenuItem.background", menu);
-            UIManager.put("Tree.selectionForeground", textHighlightText);
-            UIManager.put("Tree.selectionBackground", textHighlight);
-            UIManager.put("Label.foreground", Color.black);
-            UIManager.put("TitledBorder.titleColor", Color.black);
         }
     }
 
