@@ -17,7 +17,7 @@
 <sect2 id="plugin-jbuilder-installation-requirements">
 <title>System requirements</title>
 <para>
-The JBuilder Plug-in requires JBuilder 5.0 or higher. 
+The JBuilder Plug-in requires JBuilder 5.0 or higher.
 </para>
 <para>
 See <xref linkend="installation-requirements" /> for the basic requirements to run Jalopy.
@@ -29,7 +29,7 @@ See <xref linkend="installation-requirements" /> for the basic requirements to r
 <indexterm zone="plugin-jbuilder-installation-installation"><primary>Installation</primary><secondary>JBuilder OpenTool</secondary></indexterm>
 
 <para>
-The Plug-in comes either as a single <filename>.zip</filename> or compressed <filename>.tar</filename> file. 
+The Plug-in comes either as a single <filename>.zip</filename> or compressed <filename>.tar</filename> file.
 Unzipping either one of these files into a directory of your choice (referred
 to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce two
 subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
@@ -43,8 +43,8 @@ your JBuilder extension directory (<filename>/lib/ext</filename>).
 <para>
 Further installation is simple: just copy all files from your
 <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/bin</filename> folder
-into the <filename>/lib/ext</filename> directory of your JBuilder distribution. 
-JBuilder will then need to be restarted before Jalopy begins working. 
+into the <filename>/lib/ext</filename> directory of your JBuilder distribution.
+JBuilder will then need to be restarted before Jalopy begins working.
 </para>
 </sect2>
 </sect1>
@@ -54,8 +54,8 @@ JBuilder will then need to be restarted before Jalopy begins working.
 <sect2>
 <title>AppBrowser main menu</title>
 <para>
-The software adds two new menu items into the main menu of the AppBrowser to 
-seamlessly integrate with JBuilder: 
+The software adds two new menu items into the main menu of the AppBrowser to
+seamlessly integrate with JBuilder:
 </para>
 
 <itemizedlist>
@@ -70,7 +70,7 @@ seamlessly integrate with JBuilder:
 </menuchoice>
 </para>
 <para>
-Formats the current editor view. Use this item if you need to format the 
+Formats the current editor view. Use this item if you need to format the
 current opened file.
 </para>
 <para>
@@ -86,10 +86,10 @@ Only available if there is an open view that contains a Java source file.
 </menuchoice>.
 </para>
 <para>
-Displays the Jalopy preferences dialog. 
+Displays the Jalopy settings dialog.
 </para>
 <para>
-Use this item if you want to configure your preference settings to control the 
+Use this item if you want to configure your settings to control the
 layout of any formatted code.
 </para>
 </listitem>
@@ -99,22 +99,22 @@ layout of any formatted code.
 <sect2>
 <title>Project pane popup-menu </title>
 <para>
-There will also be a new menu item available at the end of the popup-menu of 
-the Project pane: <guimenuitem>Format</guimenuitem>. Use this item if you want 
-to format several files at once. All currently selected files are formatted. 
+There will also be a new menu item available at the end of the popup-menu of
+the Project pane: <guimenuitem>Format</guimenuitem>. Use this item if you want
+to format several files at once. All currently selected files are formatted.
 </para>
 <para>
-If it happens that a file has an open editor view, this view will be updated, 
-not the actual file. You have to save the view first to see the physical file 
-updated. 
+If it happens that a file has an open editor view, this view will be updated,
+not the actual file. You have to save the view first to see the physical file
+updated.
 </para>
 </sect2>
 
 <sect2>
-<title>Editor view popup menu 
+<title>Editor view popup menu
 </title>
 <para>
-Both the <guimenuitem>Format &lt;file&gt;</guimenuitem> and <guimenuitem>Jalopy Options...</guimenuitem> items can be also reached via the popup menu of the active editor view. 
+Both the <guimenuitem>Format &lt;file&gt;</guimenuitem> and <guimenuitem>Jalopy Options...</guimenuitem> items can be also reached via the popup menu of the active editor view.
 </para>
 </sect2>
 </sect1>

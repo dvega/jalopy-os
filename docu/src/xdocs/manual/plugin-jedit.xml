@@ -15,7 +15,7 @@
 <title>System requirements</title>
 <para>
 The Jalopy jEdit Plug-in requires at least jEdit 4.1pre1 and MessageView 0.1.0.
-If you want to import/exprt XML preferences, you need the XML Plug-in also.
+If you want to import/exprt XML settings, you need the XML Plug-in also.
 </para>
 
 <para>
@@ -29,9 +29,9 @@ may find the latest version on the Jalopy website,
 <title>Installation</title>
 <indexterm zone="plugin-jedit-installation-installation"><primary>Installation</primary><secondary>jEdit Plug-in</secondary></indexterm>
 <para>
-The Plug-in comes either as a single <filename>.zip</filename> or compressed 
+The Plug-in comes either as a single <filename>.zip</filename> or compressed
 <filename>.tar</filename> archive. Unzipping either one of these files into a directory
-of your choice (referred to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will 
+of your choice (referred to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will
 produce two subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
 </para>
 
@@ -41,15 +41,15 @@ prior to install. Open the Plugin Manager via
 <menuchoice>
 <guimenu><accel>P</accel>lugins</guimenu>
 <guimenuitem>Plugin <accel>M</accel>anager</guimenuitem>
-</menuchoice>, select the Jalopy Java Source Code Formatter entry and 
+</menuchoice>, select the Jalopy Java Source Code Formatter entry and
 press <guilabel>Remove Plugins</guilabel>.
 </para>
 
 <para>
 Further installation is simple: just copy all <filename>.jar</filename> files
 contained  in the <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/bin</filename> folder
-into the <filename>/jars</filename> directory of your jEdit distribution. 
-jEdit will then need to be restarted before Jalopy begins working. 
+into the <filename>/jars</filename> directory of your jEdit distribution.
+jEdit will then need to be restarted before Jalopy begins working.
 </para>
 </sect2>
 </sect1>
@@ -78,7 +78,7 @@ menu of the editor view. Available are two new menu items:
 Formats the contents of the active text area.
 </para>
 <para>
-Note that this menu item reflects the state of the text area: it will only be enabled 
+Note that this menu item reflects the state of the text area: it will only be enabled
 if the current edit mode is actually the <firstterm>java</firstterm> mode.
 </para>
 </listitem>
@@ -92,16 +92,16 @@ if the current edit mode is actually the <firstterm>java</firstterm> mode.
 </menuchoice>.
 </para>
 <para>
-Displays the Jalopy preferences dialog. 
+Displays the Jalopy settings dialog.
 </para>
 <para>
-Use this item if you want to change your preference settings to control the 
+Use this item if you want to change your settings to control the
 layout of any formatted code.
 </para>
 </listitem>
 </itemizedlist>
 <para>
-These options are available under jEdit's Global Options dialog, too. 
+These options are available under jEdit's Global Options dialog, too.
 </para>
 </sect1>
 

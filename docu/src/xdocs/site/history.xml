@@ -14,31 +14,45 @@
 </articleinfo>
 
 <simplesect>
-<title>1.0 Beta 9 (2002-08-23)</title>
+<title>1.0 Beta 9 (2002-??-??)</title>
 <orderedlist numeration="lowerroman">
 <listitem>
 New Features
 
 <itemizedlist mark="square">
+
 <listitem>
-The wrapping behaviour for parameter and expression lists is now more
-configurable. See
+New indentation policy. See
+<ulink url="./indentation.html#indentation-policy-standard">Standard indent</ulink>
+</listitem>
+
+<listitem>
+New alignment options for the <literal>operators</literal> and ternary expression. See
+<ulink url="./indentation.html#indentation-align-method-chains">Align Method Call chains</ulink> and
+<ulink url="./indentation.html#indentation-align-ternary">Align Ternary expressions</ulink>
+</listitem>
+
+<listitem>
+The wrapping options has been extended. See
 <ulink url="./wrapping.html#wrap-left-parenthesis">Wrap after left parenthesis</ulink>,
 <ulink url="./wrapping.html#wrap-right-parenthesis">Wrap before right parenthesis</ulink>,
-<ulink url="./wrapping.html#wrap-after-assignment">Wrap after assignments </ulink> and
-<ulink url="./wrapping.html#wrap-all-if-first">Wrap all on wrap</ulink>
+<ulink url="./wrapping.html#wrap-after-assignment">Wrap after assignments </ulink>,
+<ulink url="./wrapping.html#wrap-grouping-paren">Wrap grouping parentheses</ulink>,
+<ulink url="./wrapping.html#wrap-always-extends">Wrap after extends types when exceed</ulink>,
+<ulink url="./wrapping.html#wrap-always-implements">Wrap after implements types when exceed</ulink>,
+<ulink url="./wrapping.html#wrap-always-throws">Wrap after throws types when exceed</ulink> and
+<ulink url="./wrapping.html#wrap-always-param">After parameters/expressions when exceed</ulink>
+</listitem>
+
+<listitem>
+New curly brace wrapping option. See
+<ulink url="./braces.html#braces-different-wrapped">Treat class/method block different if wrapped</ulink>
 </listitem>
 
 <listitem>
 The output style for field Javadoc comments is now configurable. See
 <ulink url="./javadoc.html#javadoc-misc">Field comments in single line</ulink>
 </listitem>
-
-<listitem>
-The alignment for the <literal>.</literal> operator is now configurable. See
-<ulink url="./indentation.html#indentation-align-method-chains">Align Chained Method Calls</ulink>
-</listitem>
-
 </itemizedlist>
 
 <para>
@@ -47,16 +61,20 @@ All aforementioned features were requested and sponsored by the german <ulink ur
 
 <itemizedlist mark="square">
 <listitem>
+Javadoc tag checking for <literal>@throws</literal> tags can now be enabled
+separatedly. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct @throws tags</ulink>
+</listitem>
+<listitem>
 Array type brackets may now be printed after the identifier.
 See <ulink url="./misc.html#misc-array-brackets">Misc section</ulink>.
 Requested by John Zukowski
 (<ulink url="http://sf.net/tracker/?func=detail&amp;aid=599239&amp;group_id=45216&amp;atid=442215">#599239</ulink>)
 </listitem>
-
 <listitem>
 You can now specify whether Jalopy should insert a trailing empty line at the
 end of files in order to avoid problems with certain text formatters and processors.
-See <ulink url="./misc.html#misc-trailing-newline">Misc section</ulink>.
+See <ulink url="./misc.html#misc-trailing-newline">Misc section</ulink>. Note that
+Jalopy always inserts a trailing newline after EOF-comments (like footers).
 Requested by David Karr
 (<ulink url="http://sf.net/tracker/?func=detail&amp;aid=589696&amp;group_id=45216&amp;atid=442215">#589696</ulink>)
 </listitem>
@@ -65,6 +83,11 @@ Requested by David Karr
 The order of import statement groups is now user configurable. See <ulink url="./imports.html">Import section</ulink>.
 Requested by J&uuml;rgen Ebert
 (<ulink url="http://sf.net/tracker/?func=detail&amp;aid=591904&amp;group_id=45216&amp;atid=442215">#591904</ulink>)
+</listitem>
+
+<listitem>
+Auto-correction for Javadoc <literal>@throws</literal> tags can now be
+controlled separately. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct <literal>@throws</literal> tags</ulink> for insight
 </listitem>
 </itemizedlist>
 <para/>
@@ -75,12 +98,41 @@ Bugfixes
 
 <itemizedlist mark="square">
 <listitem>
+The cleanup of the backup directory could lead to NPE. Reported by Mike Dubman
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=617942&amp;group_id=45216">#617942</ulink>)
+</listitem>
+<listitem>
+The output of array initializers has been improved. Reported by Kate Rhodes
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=617684&amp;group_id=45216">#617684</ulink>)
+</listitem>
+<listitem>
+Important statements collapsing failed because of incompatible parsetree changes between 1.0b7 and 1.0b8. Reported by Mark Ralph
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=617608&amp;group_id=45216">#617608</ulink>)
+</listitem>
+<listitem>
+Handling of Javadoc comments failed for methods/ctors returning an array type. Reported by Magnus Ihse
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=615039&amp;group_id=45216">#615039</ulink>)
+</listitem>
+<listitem>
+The problem with wrong indentation after assignments has gone. Reported by Timo Carl
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=612049&amp;group_id=45216">#612049</ulink>)
+</listitem>
+<listitem>
+<emphasis>Treat different</emphasis> option has been corrected to work with all styles. Reported by Eric Lamontagne
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=611182&amp;group_id=45216">#611182</ulink>)
+</listitem>
+<listitem>
 I've fixed some cases where Jalopy produced trailing whitespace on wrapping lines. There may still be others...
 Reported by Ralf Wiebicke
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607697&amp;group_id=45216">#607697</ulink>)
 </listitem>
 <listitem>
-The Javadoc printed failed to print HTML defintion lists correcty. Reportey by
+The Javadoc printer failed to output HTML defintion lists correcty. Reportey by
+David Cooper
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607416&amp;group_id=45216">#607416</ulink>)
+</listitem>
+<listitem>
+The Javadoc printer failed to output HTML defintion lists correcty. Reportey by
 David Cooper
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607416&amp;group_id=45216">#607416</ulink>)
 </listitem>
@@ -109,7 +161,7 @@ Jalopy duplicated comments in some rare cases. Reported by David Cooper
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604065&amp;group_id=45216">#604065</ulink>)
 </listitem>
 <listitem>
-The console app failed to work on certain platform due to classloading problems.
+The console app failed to work on certain platforms due to classloading problems.
 Reported by Benjamin Geer
 <ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604038&amp;group_id=45216">#604038</ulink>
 </listitem>
@@ -185,7 +237,7 @@ Blank lines before comments were not always kept. Reported by Thomas B&ouml;rkel
 -->
 <listitem>
 Eclipse Plug-in: upon startup of the IDE <classname>org.eclipse.swt.SWTException: invalid thread access</classname>
-were thrown. Reportedy by Dirk Jacobs
+was thrown. Reportedy by Dirk Jacobs
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=567314&amp;group_id=45216">#567314</ulink>)
 </listitem>
 </itemizedlist>
@@ -200,6 +252,10 @@ Changes
 Eclipse Plug-in: the <guilabel>Format</guilabel> label in the project view context menu
 no longer appears at the end. Suggested by Davor Cengija and Vincent Massol
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=578331&amp;group_id=45216">#578331</ulink>)
+</listitem>
+
+<listitem>
+The <literal>@todo</literal> tag is now part of the build-in tag list.
 </listitem>
 
 <listitem>
@@ -232,11 +288,17 @@ earlier versions)
 </listitem>
 
 <listitem>
+The preview window is no longer a non-modal dialog but a floating frame; so you
+can stick it behind the main settings dialog.
+</listitem>
+
+<listitem>
 The preview frame no longer uses the (unmaintained) jEdit syntax package but
 rather a standard <classname>JFrame</classname> with a simple highlighter
 based on work from Bogdan Mitu. Users of prior betas may savely remove the file
 <filename>textarea-2.2.3.jar</filename> from their disk
 </listitem>
+
 
 </itemizedlist>
 <para/>
@@ -274,7 +336,7 @@ The line wrapping for chained method calls now works for nested calls too
 </listitem>
 
 <listitem>
-The preferences dialog now comes with a live preview. Requested by Erik Dick
+The settings dialog now comes with a live preview. Requested by Erik Dick
 (<ulink url="http://sf.net/tracker/?func=detail&amp;aid=563215&amp;group_id=45216&amp;atid=442215">#563215</ulink>)
 </listitem>
 
@@ -539,7 +601,7 @@ The default setting for the backup level changed, it is now set to &quot;0&quot;
 The preferences dialog is no longer a modal dialog (necessary for the live preview)
 </listitem>
 <listitem>
-Started from the command line, the Preferences dialog now appears in the task
+Started from the command line, the settings dialog now appears in the task
 bar (under Win32). Suggested by Knut Wannheden
 </listitem>
 <listitem>
@@ -572,7 +634,7 @@ New Features
 <itemizedlist mark="square">
 <listitem>
 The wrapping behaviour for throws clauses is now more configurable. See
-<ulink url="./wrapping.html#wrapping-before-throws">Wrapping section</ulink>.
+<ulink url="./wrapping.html#wrap-before-throws">Wrapping section</ulink>.
 Requested by Stephane Houle
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442215&amp;aid=559222&amp;group_id=45216">#559222</ulink>)
 </listitem>
@@ -586,7 +648,7 @@ and <classname>throws</classname> can now be specified explicitly. See
 <listitem>
 Chained method calls are now wrapped (if line wrapping is enabled, of course).
 You can either force wrapping after every call
-(Refer to the <ulink url="./wrapping.html#wrapping-call-chained">Wrapping section</ulink>)
+(Refer to the <ulink url="./wrapping.html#wrap-call-chained">Wrapping section</ulink>)
 or let wrapping happen automatically. Requested by Stephane Houle
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442215&amp;aid=559222&amp;group_id=45216">#559222</ulink>)
 </listitem>
@@ -728,7 +790,7 @@ command line interface is now only available via the Console Plug-in! See
 <listitem>
 For array initializers you can now force a specfic number of elements to be
 printed on each line or whether all elements should be printed on one line.
-See <ulink url="./wrapping.html#wrapping-misc-arrays">Wrapping section</ulink>
+See <ulink url="./wrapping.html#wrap-misc-arrays">Wrapping section</ulink>
 </listitem>
 <listitem>
 Eclipse Plug-in: the Packages view context menu now contains a formatting menu item
@@ -992,7 +1054,7 @@ The line wrapping logic is now fully implemented
 New line wrapping option: You can now force the wrapping for parameter
 lists of method calls. Note that this switch only applies to those lists
 that contain another method call. Refer to the
-<ulink url="wrapping.html#wrapping-always">Wrap always</ulink> section of the manual.
+<ulink url="wrapping.html#wrap-always">Wrap always</ulink> section of the manual.
 Nice feature suggested by David Beutel
 </listitem>
 <listitem>
@@ -1018,13 +1080,13 @@ The history feature is now *disabled* by default
 Added two new wrapping options: <guilabel>Before extends keyword</guilabel> and
 <guilabel>Before implements keyword</guilabel>. Enabling any of them will force
 a newline before the given keyword. Refer to the
-<ulink url="wrapping.html#wrapping-always">Wrap always</ulink> section of the manual.
+<ulink url="wrapping.html#wrap-always">Wrap always</ulink> section of the manual.
 Requested by John Bishop
 </listitem>
 <listitem>
 New option to control the printing of labels. You can now specify whether
 a line break should be printed after labels or not. Refer to the
-<ulink url="wrapping.html#wrapping-always-label">Wrap always</ulink> section of the manual
+<ulink url="wrapping.html#wrap-always-label">Wrap always</ulink> section of the manual
 </listitem>
 </itemizedlist>
 <para/>
@@ -1062,7 +1124,7 @@ Changes
 
 <itemizedlist mark="square">
 <listitem>
-Preferences pages <guilabel>Braces</guilabel> and <guilabel>Block style</guilabel>
+Settings pages <guilabel>Braces</guilabel> and <guilabel>Block style</guilabel>
 now merged into one page <guilabel>Braces</guilabel> with two tabs
 <guilabel>Style</guilabel> and <guilabel>Misc</guilabel>
 </listitem>
@@ -1071,7 +1133,7 @@ now merged into one page <guilabel>Braces</guilabel> with two tabs
 <guibutton>Stop</guibutton> to reflect the fact that some files might have changed
 </listitem>
 <listitem>
-Preferences page <guilabel>Javadoc</guilabel> cleaned up
+Settings page <guilabel>Javadoc</guilabel> cleaned up
 </listitem>
 <listitem>
 Specifying an identify key to delete existing headers/footers is now
@@ -1176,7 +1238,7 @@ NetBeans Plug-in added (for NetBeans 3.3.1 and higher)
 jEdit Plug-in: updated to work with jEdit 4.0prev1 and higher
 </listitem>
 <listitem>
-JBuilder Plug-in: added the Format and Preferences actions to the popup
+JBuilder Plug-in: added the Format and Settings actions to the popup
 menu of the editor pane
 </listitem>
 <listitem>
@@ -1302,7 +1364,7 @@ Bugfixes
 
 <itemizedlist mark="square">
 <listitem>
-Preferences dialog did not close when invoked on the command line
+Settings dialog did not close when invoked on the command line
 with <command>java Preferences</command>
 </listitem>
 <listitem>

@@ -232,7 +232,7 @@ block of a switch expression.
 {
 &lt;--
 &lt;--
-&lt;--    
+&lt;--
     case JavaTokenTypes.LPAREN :
         type = PrinterUtils.advanceToFirstNonParen(next);
         break;
@@ -338,7 +338,7 @@ Blank lines after left curly brace
 <indexterm zone="separation-misc-left-curly"><primary>Blank lines</primary><secondary>After left curly brace</secondary></indexterm>
 
 <para>
-Forces the given number of blank lines after left curly braces no matter 
+Forces the given number of blank lines after left curly braces no matter
 what your other blank lines settings say.
 </para>
 <example id="ex-blank-lines-left-curly-no">
@@ -357,6 +357,9 @@ what your other blank lines settings say.
 }
 </programlisting>
 </example>
+
+<para/>
+
 <example id="ex-separation-misc-left-curly-yes">
 <title>Blank lines before blocks=1, Blank lines after left curly braces=0</title>
 <programlisting format="linespecific" linenumbering="numbered">public void foo()
@@ -383,7 +386,7 @@ Blank lines before right curly brace
 <indexterm zone="separation-misc-right-curly"><primary>Blank lines</primary><secondary>Before right curly brace</secondary></indexterm>
 
 <para>
-Forces the given number of blank lines before closing curly braces no matter 
+Forces the given number of blank lines before closing curly braces no matter
 what your other blank lines settings say.
 </para>
 <example id="ex-separation-misc-left-curly-no">
@@ -395,7 +398,7 @@ what your other blank lines settings say.
         if (anotherCondition())
         {
             doSomething();
-&lt;--    
+&lt;--
         }
 &lt;--
     }
@@ -411,21 +414,21 @@ what your other blank lines settings say.
 Keep Blank lines up to
 </para>
 <para>
-If enabled, retains up to the given number of blank lines found in the 
-original source. This only works for method or constructor bodies. Note that Jalopy 
+If enabled, retains up to the given number of blank lines found in the
+original source. This only works for method or constructor bodies. Note that Jalopy
 still takes your other blank lines settings into account.
 </para>
 
 <example id="ex-separation-misc-keep-no">
 <title>Source code with blank lines to separate code sections</title>
-<programlisting format="linespecific" linenumbering="numbered">aMVString = new MultiValueString("abc"); 
+<programlisting format="linespecific" linenumbering="numbered">aMVString = new MultiValueString("abc");
 &lt;--
-System.out.println("MV = "+aMVString); 
+System.out.println("MV = "+aMVString);
 &lt;--
-System.out.println("MV0 = "+aMVString.extract(0)); 
-System.out.println("MV1 = "+aMVString.extract(1)); 
-System.out.println("MV2 = "+aMVString.extract(2)); 
-System.out.println(""); 
+System.out.println("MV0 = "+aMVString.extract(0));
+System.out.println("MV1 = "+aMVString.extract(1));
+System.out.println("MV2 = "+aMVString.extract(2));
+System.out.println("");
 </programlisting>
 </example>
 <para>
@@ -463,7 +466,7 @@ String        text  = "text";
 int           a     = -1;
 
 // create a new entry
-History.Entry entry = new History.Entry(text); 
+History.Entry entry = new History.Entry(text);
 </programlisting>
 </example>
 <para/>
@@ -474,7 +477,7 @@ String text  = "text";
 int    a     = -1;
 
 // create a new entry
-History.Entry entry = new History.Entry(text); 
+History.Entry entry = new History.Entry(text);
 </programlisting>
 </example>
 <para/>
@@ -503,8 +506,8 @@ as the start of a new chunk.
 <sect2 id="separation-comment">
 <title>Comments</title>
 <para>
-Lets you control the behaviour of the separator comments. If the 
-<link linkend="sorting">sorting of class elements</link> is enabled, Separator comments 
+Lets you control the behaviour of the separator comments. If the
+<link linkend="sorting">sorting of class elements</link> is enabled, Separator comments
 can be inserted before every element section, to make it easier to identify the
 different parts of a source file.
 </para>

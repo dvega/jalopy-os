@@ -53,7 +53,7 @@ Start NetBeans/Sun ONE Studio.
 
 <listitem>
 <para>
-Open the Update Center Wizard by selecting 
+Open the Update Center Wizard by selecting
 <menuchoice>
 <guimenu><accel>T</accel>ools</guimenu>
 <guimenuitem><accel>U</accel>pdate Center...</guimenuitem>
@@ -64,7 +64,7 @@ Open the Update Center Wizard by selecting
 
 <listitem>
 <para>
-On the first page 'Select Location of modules', choose 'Install Manually 
+On the first page 'Select Location of modules', choose 'Install Manually
 Downloaded Modules (.nbm Files)', select the <filename>.nbm</filename> contained
 in <filename><replaceable>&lt;INST_DIR&gt;</replaceable>/bin</filename> and
 proceed through all steps of the wizard as outlined.
@@ -81,7 +81,7 @@ proceed through all steps of the wizard as outlined.
 <title>Workspace main menu</title>
 <para>
 The software adds two new menu items into the main menu of the current
-Workspace to seamlessly integrate with NetBeans: 
+Workspace to seamlessly integrate with NetBeans:
 </para>
 
 <itemizedlist>
@@ -112,10 +112,10 @@ Java source files.
 </menuchoice>.
 </para>
 <para>
-Displays the Jalopy preferences dialog. 
+Displays the Jalopy settings dialog.
 </para>
 <para>
-Use this item if you want to change your preference settings to control the 
+Use this item if you want to change your settings to control the
 layout of any formatted code.
 </para>
 </listitem>
@@ -127,15 +127,15 @@ layout of any formatted code.
 <sect2>
 <title>Explorer popup-menu</title>
 <para>
-The <guimenuitem>Format [All]</guimenuitem> item can be also reached via the 
+The <guimenuitem>Format [All]</guimenuitem> item can be also reached via the
 popup menu of the Explorer. Note that the item only appears for folder nodes
 or plain Java source files. It does not work for form based nodes.
 </para>
 
 <para>
-If it happens that a file has an open editor view, this view will be updated, 
-not the actual file. You have to save the view first to see the physical file 
-updated. 
+If it happens that a file has an open editor view, this view will be updated,
+not the actual file. You have to save the view first to see the physical file
+updated.
 </para>
 </sect2>
 </sect1>

@@ -33,6 +33,8 @@ int result = 12 + 4 % 3 * 7 / 8;
 </programlisting>
 </example>
 
+<para/>
+
 <example id="ex-misc-expr-continued">
 <title>How is this expression evaluated? (continued)</title>
 <programlisting>
@@ -109,6 +111,11 @@ Insert trailing newline
 <para>
 If enabled, Jalopy inserts an empty line at the end of every file. This may
 help to avoid problems with certain text formatters and processors.
+</para>
+<para>
+Note that Jalopy always inserts at least one empty line after footers, so there
+is no real need (but it doesn't hurt) to check the mark in case footer insertion
+will be performed (see <xref linkend="footer" />)
 </para>
 </listitem>
 
@@ -216,6 +223,19 @@ remove obsolete entries.
 </para>
 
 <para>
+In order to effectively use formatting of a project with several developers it is
+nice to be able to only format files which have changed. There are three methods of
+working out if a file has changed provided in a drop down. Timestamp will use the
+modification time of the file, this does not work very well with source control
+and multiple developers. There are two standard checksums available. These
+work by taking a checksum of the file and comparing it to the one in the history file
+if its different the file is parsed and formatted in memory and a new checksum
+is calculated. If the new checksum is different than the checksum for the unformatted
+file it is written to disk. This stops file that have just been updated from source
+control from having being formatted (and timestamps updated).
+</para>
+
+<para>
 Use the <guibutton>View...</guibutton> button to display the history viewer. You
 can selectively remove entries via the popup menu.
 </para>
@@ -249,7 +269,7 @@ Directory
 </para>
 <para>
 Specifies where file backups are stored. You should leave this setting untouched
-in order to make your preferences portable across different systems and platforms.
+in order to make your code convention portable across different systems and platforms.
 </para>
 </listitem>
 </itemizedlist>

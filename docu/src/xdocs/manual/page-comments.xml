@@ -117,7 +117,7 @@ all text from the ASCII characters
 
 <listitem>
 <para id="comments-pragma">
-Pragma comment <literal>//J[directive]</literal>
+Pragma comments <literal>//J[directive]</literal>
 </para>
 
 <indexterm zone="comments-pragma"><primary>Comments</primary><secondary>Pragma</secondary></indexterm>
@@ -126,7 +126,7 @@ Pragma comment <literal>//J[directive]</literal>
 <para>
 A Jalopy-specific <emphasis>control comment</emphasis>: actually a special kind of single-line comment;
 all text from the ASCII characters
-<literal>//J</literal> to the end of the line
+<literal>//J[-|+]</literal> to the end of the line
 </para>
 
 <example id="ex-comments-control">
@@ -217,7 +217,7 @@ Multi-line comments
 <indexterm zone="comments-format-multi"><primary>Multi-line comments</primary></indexterm>
 
 <para>
-Enables the reformatting of multi-line Comments. Only affects the leading
+Enables the reformatting of multi-line comments. Only affects the leading
 asterixes of consecutive comment lines as shown in the examples below.
 </para>
 
@@ -230,6 +230,8 @@ asterixes of consecutive comment lines as shown in the examples below.
 */
 </programlisting>
 </example>
+
+<para/>
 
 <example id="ex-comments-multi-line-formatted">
 <title>Multi-line comment (reformatted)</title>

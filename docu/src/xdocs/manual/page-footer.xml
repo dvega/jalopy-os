@@ -7,7 +7,11 @@
 <title>Footer</title>
 <indexterm><primary>footer</primary></indexterm>
 <para>
-Controls the printing of footers. Refer to <xref linkend="header" /> for an 
+Controls the printing of footers. Refer to <xref linkend="header" /> for an
 explanation of the different options.
+</para>
+
+<para>
+Note that Jalopy always prints one trailing empty line after the footer.
 </para>
 </sect1>

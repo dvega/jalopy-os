@@ -17,7 +17,7 @@ The Console application provides a powerful command line interface for Jalopy.
 <sect2 id="plugin-console-installation-requirements">
 <title>System requirements</title>
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements to 
+See <xref linkend="installation-requirements" /> for the basic requirements to
 run Jalopy.
 </para>
 </sect2>
@@ -26,7 +26,7 @@ run Jalopy.
 <title>Installation</title>
 <indexterm zone="plugin-console-installation-installation"><primary>Installation</primary><secondary>Ant</secondary></indexterm>
 <para>
-The Plug-in comes either as a single <filename>.zip</filename> or compressed <filename>.tar</filename> file. 
+The Plug-in comes either as a single <filename>.zip</filename> or compressed <filename>.tar</filename> file.
 Unzipping either one of these files into a directory of your choice (referred
 to as <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce two
 subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
@@ -35,7 +35,7 @@ subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
 <para>
 Wrapper scripts are provided for the common platforms, so you may want to add
 the <filename>/bin</filename> folder to your path. If your platform
-is not covered you should make use of the <option>-jar</option> option of the 
+is not covered you should make use of the <option>-jar</option> option of the
 Java application launcher (the <command>java -jar</command> command), since
 this requires no classpath manipulation. If you don't want to use the
 <option>-jar</option> option, you have to add the <filename>.jar</filename>
@@ -43,7 +43,7 @@ files as usual to your classpath.
 </para>
 
 <para>
-For the Unix Bash shell, this means can be achieved using 
+For the Unix Bash shell, this means can be achieved using
 </para>
 
 <synopsis>
@@ -100,7 +100,7 @@ directories or filter expressions. You can use any valid Perl5 (5.003)
 regular expression as a filter expression.
 </para>
 <para>
-Additionally, wrapper scripts for these Java specific commands are provided for different platforms. Check the 
+Additionally, wrapper scripts for these Java specific commands are provided for different platforms. Check the
 <filename>/bin</filename> directory of your distribution.
 </para>
 
@@ -111,11 +111,12 @@ Additionally, wrapper scripts for these Java specific commands are provided for 
 <simplesect id="options">
 <title>Options</title>
 <screen>
--c, --disclaimer        print software disclaimer
+-c, --convention=FILE   use FILE as code convention file
+    --disclaimer        print software disclaimer
 -d, --dest=DIR          use DIR as base output directory
 -e, --encoding=WORD     assume WORD as encoding of input files where WORD
                         describes one of the JDK supported encodings
-                        (defaults to Cp1252 if omitted)
+                        (if omitted, the platform default is used)
 -f, --format=WORD       use WORD as output file format where WORD can be
                         either UNIX, DOS, MAC, AUTO (the default) or DEFAULT
                         (all case-insensitive)
@@ -124,7 +125,6 @@ Additionally, wrapper scripts for these Java specific commands are provided for 
     --nobackup          don't keep backup files
 -r, --recursive{=NUM}   recurse into directories, up to NUM levels
                         if NUM is omitted, recurses indefinitely
--s, --style=FILE        use FILE as preferences file
 -t, --thread=NUM        use NUM processing threads
 -v, --version           print product version and exit
 </screen>
@@ -159,7 +159,7 @@ of the original source files will be kept.
 <example id="ex-command-line-two">
 <title>Sample command line usage</title>
 <synopsis>
-java Jalopy -d <replaceable>/directory</replaceable> -f DOS 
+java Jalopy -d <replaceable>/directory</replaceable> -f DOS
 <replaceable>myFile1.java myFile2.java</replaceable>
 </synopsis>
 <para>

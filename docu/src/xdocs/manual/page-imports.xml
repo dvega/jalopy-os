@@ -10,36 +10,41 @@
 <para>
 Controls the handling of import declarations.
 </para>
+
+
 <sect2 id="imports-sorting">
-<title>Sorting</title>
+<title>General</title>
 <indexterm><primary>Imports</primary><secondary>sorting</secondary></indexterm>
 
 <para>
-Controls the sorting of import statements. Sorting the import statements makes 
-it simple to browse a long list of imports. 
+Enables the sorting of import statements. Sorting the import statements makes
+it simple to browse a long list of imports.
 </para>
 
 <itemizedlist>
 <listitem>
 <para>
-Sort imports
+Sort import statements
 </para>
 
 <para>
-Enables or disables the sorting of import statements. Enabling this option 
-will sort all imports lexicographically. Additionally, associated packages can 
-be grouped together to reduce complexity by collapsing related 
-information into a common unit. 
-</para>
-
-<para>
-You can add/remove package fragments (e.g. javax, javax.swing or com.foo.sarah)
-via the <guibutton>Add...</guibutton> and <guibutton>Remove</guibutton>
-buttons. To specify the order in which related statements should appear, you 
-may want to use the <guibutton>Up</guibutton> and <guibutton>Down</guibutton> buttons.
+Enables or disables the sorting of import statements. Enabling this option
+will sort all imports lexicographically.
 </para>
 </listitem>
+</itemizedlist>
+</sect2>
 
+<sect2 id="import-grouping">
+<indexterm zone="imports-grouping"><primary>Imports</primary><secondary>grouping</secondary></indexterm>
+
+<title>Grouping</title>
+<para>
+In addition to sorting, associated packages can be grouped together to reduce
+complexity by packing related information into a common unit.
+</para>
+
+<itemizedlist>
 <listitem>
 <para id="imports-grouping-depth">
 Default grouping depth
@@ -49,14 +54,14 @@ Default grouping depth
 <indexterm zone="imports-grouping-depth"><primary>Grouping depth</primary></indexterm>
 
 <para>
-Lets you define the default grouping depth.
+Lets you define the default grouping depth. Only takes effect if sorting is enabled.
 </para>
 
 <para>
-Grouping depth specifies the number of packages and subpackages that are to be 
-taken into account in order to determine whether two import statements are to 
-be grouped together. For certain packages you may want to specify a grouping 
-depth that differs from the default. 
+The grouping depth specifies the number of package name parts that are to
+be taken into account in order to determine whether two import statements are to
+be grouped together. For certain packages you may want to specify a grouping
+depth that differs from the default.
 </para>
 
 <para>
@@ -82,6 +87,8 @@ import <emphasis role="bold">java</emphasis>.util.List;
 </programlisting>
 </example>
 
+<para/>
+
 <example id="ex-imports-grouping-depth-two">
 <title>Grouping depth java='2'</title>
 <programlisting>
@@ -96,6 +103,8 @@ import <emphasis role="bold">java.util</emphasis>.ArrayList;
 import <emphasis role="bold">java.util</emphasis>.List;
 </programlisting>
 </example>
+
+<para/>
 
 <example id="ex-imports-grouping-depth-three">
 <title>Grouping depth java= '3'</title>
@@ -115,12 +124,27 @@ import <emphasis role="bold">java.util</emphasis>.List;
 <para/>
 </listitem>
 </itemizedlist>
+
+<para>
+You can add/remove package fragments (e.g. javax, javax.swing or com.foo.sarah)
+via the <guibutton>Add...</guibutton> and <guibutton>Remove</guibutton>
+buttons to fine-tune the appearance for certain packages.
+</para>
+
+<para>
+To specify the order in which related statements should appear, you
+may want to use the <guibutton>Up</guibutton> and <guibutton>Down</guibutton> buttons.
+</para>
+
+<para>
+Note that the <literal>asterix</literal> represents all undefined packages.
+</para>
 </sect2>
 
 <sect2 id="import-optimization">
 <title>Optimize</title>
 <para>
-Optimizes the import statements by either expanding or collapsing them. This 
+Optimizes the import statements by either expanding or collapsing them. This
 is a nice feature that is currently only available with the Ant and
 JBuilder Plug-in.
 </para>
@@ -136,14 +160,14 @@ Expand on-demand imports
 If enabled, tries to expand all on-demand import statements.
 </para>
 <para id="imports-on-demand">
-Expanding means to resolve all on-demand import statements (sometimes called 
-wildcard imports) and replace them with single-type import statements (sometimes 
+Expanding means to resolve all on-demand import statements (sometimes called
+wildcard imports) and replace them with single-type import statements (sometimes
 called explicit imports) of the types that are actually used in the source file.
 </para>
 <indexterm zone="imports-on-demand"><primary>Imports</primary><secondary>on-demand</secondary></indexterm>
 
 <para>
-So the following on-demand import statement may be expanded into two 
+So the following on-demand import statement may be expanded into two
 single-type import statements that reference the needed types for this package.
 </para>
 
@@ -154,6 +178,8 @@ import java.util.*;
 </programlisting>
 </example>
 
+<para/>
+
 <example id="ex-import-single-type">
 <title>Single-type import statements</title>
 <programlisting>
@@ -162,10 +188,10 @@ import java.util.List;
 </programlisting>
 </example>
 <para>
-Using single-type imports is quite useful and an absolute requirement in the 
-open source community as this code is usually really reviewed. Using 
-single-type imports makes it easy for the code reader to quickly find 
-out the package a particular type is in: You just search for the type name 
+Using single-type imports is quite useful and an absolute requirement in the
+open source community as this code is usually really reviewed. Using
+single-type imports makes it easy for the code reader to quickly find
+out the package a particular type is in: You just search for the type name
 from the start of the source file.
 </para>
 </listitem>
@@ -184,8 +210,8 @@ If enabled, tries to collapse all single-type statements.
 </para>
 
 <para>
-Collapsing means to remove all single-type imports of a given package and 
-replacing them with one on-demand import statement.
+Collapsing means to remove all single-type imports of a given package and
+replace them with one on-demand import statement.
 </para>
 </listitem>
 </itemizedlist>

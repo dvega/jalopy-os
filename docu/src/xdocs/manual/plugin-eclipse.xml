@@ -28,9 +28,9 @@ See <xref linkend="installation-requirements" /> for the basic requirements to r
 <title>Installation</title>
 <indexterm zone="plugin-eclipse-installation-installation"><primary>Installation</primary><secondary>Eclipse Plug-in</secondary></indexterm>
 <para>
-The Plug-in comes either as a single <filename>.zip</filename> or 
+The Plug-in comes either as a single <filename>.zip</filename> or
 compressed <filename>.tar</filename> archive. Unzipping either one of these
-files into a directory of your choice (referred to as 
+files into a directory of your choice (referred to as
 <replaceable>&lt;INST_DIR&gt;</replaceable>) will produce two
 subdirectories <filename>/bin</filename> and <filename>/docs</filename>.
 </para>
@@ -51,11 +51,11 @@ from within Eclipse.
 <title>Main menu bar</title>
 
 <para>
-Currently, the software adds a new item into the main menu bar of Eclipse 
-to launch the Jalopy preferences dialog. Note that the Jalopy preferences
-dialog is actually a Java Swing dialog launched in-process so the 
+Currently, the software adds a new item into the main menu bar of Eclipse
+to launch the Jalopy settings dialog. Note that the this configuration
+dialog is actually a Java Swing dialog launched in-process so the
 appearance and behaviour may slightly differ compared to native applications.
-A future version will bring tightly integration with the Eclipse workbench 
+A future version will bring tightly integration with the Eclipse workbench
 preferences dialog.
 </para>
 
@@ -64,19 +64,19 @@ preferences dialog.
 <para>
 <menuchoice>
   <guimenu><accel>W</accel>indow</guimenu>
-  <guimenuitem><accel>J</accel>alopy Preferences...</guimenuitem>
+  <guimenuitem><accel>J</accel>alopy Settings...</guimenuitem>
 </menuchoice>
 </para>
 <para>
-Displays the Jalopy preferences dialog. Use this item if you want to change the
-Jalopy preference settings that control the layout of any formatted code.
+Displays the Jalopy settings dialog. Use this item if you want to change the
+settings that control the layout of any formatted code.
 </para>
 </listitem>
 </itemizedlist>
 
 <para>
 The menu item appears only for certain views/editors. If you want to
-enable it permanently, mark 
+enable it permanently, mark
 <menuchoice>
   <guimenu><accel>W</accel>indow</guimenu>
   <guimenuitem>Customi<accel>z</accel>e Perspective...</guimenuitem>
@@ -121,7 +121,7 @@ Java source files in the navigation view of the Java perspective.
 </para>
 <para>
 Formats the selected files. Depending on the object type (project, folder, file) formats
-either all Java source files of the project, the contents of the selected folder(s) 
+either all Java source files of the project, the contents of the selected folder(s)
 (including subfolders) or the currently selected Java source file(s).
 </para>
 </listitem>

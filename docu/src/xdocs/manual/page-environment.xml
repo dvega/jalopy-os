@@ -25,6 +25,7 @@ freely choosen.
 
 <example id="environment-variable-ex">
 <title>Sample environment variables</title>
+
 <variablelist>
 <varlistentry>
 <listitem>
@@ -98,12 +99,12 @@ The current list of valid local variables reads as follows:
 
 <row>
 <entry>convention</entry>
-<entry>The name of the currently active code convention (as specified in the preferences)</entry>
+<entry>The name of the currently active code convention (as specified in the settings)</entry>
 </row>
 
 <row>
 <entry>tabSize</entry>
-<entry>The current indentation setting (as specified in the preferences)</entry>
+<entry>The current indentation setting (as specified in the settings)</entry>
 </row>
 
 <row>
@@ -153,6 +154,8 @@ the value of the variable inserted into the output file.
 //==============================================================================
 </programlisting>
 </example>
+
+<para/>
 
 <example id="environment-header">
 <title>Header after interpolation</title>

@@ -33,6 +33,12 @@
 </row>
 
 <row rowsep="1">
+  <entry>convention</entry>
+  <entry>Sets the location to the convention file to use - given either relative to the project's basedir or as an absolute local path or internet address. If omitted, the current settings are used, if available. Otherwise the Jalopy build-in defaults will be used.</entry>
+  <entry>No</entry>
+</row>
+
+<row rowsep="1">
   <entry>destdir</entry>
   <entry>Sets the destination directory to create/copy all formatting output into. If the given directory does not exist, it will be created. If this attribute is ommitted, all input files will simply be overriden.</entry>
   <entry>No</entry>
@@ -92,13 +98,13 @@
 
 <row rowsep="1">
   <entry>style</entry>
-  <entry>Sets the preferences file to use - given either relative to the project's basedir or as an absolute local path or internet address. If omitted, the current preferences are used, if available. Otherwise the Jalopy build-in defaults will be used.</entry>
+  <entry>DEPRECATED. See <emphasis>convention</emphasis></entry>
   <entry>No</entry>
 </row>
 
 <row rowsep="1">
   <entry>threads</entry>
-  <entry>Specifies the number of processing threads to use. Integer between 1 - 8.
+  <entry>Specifies the number of processing threads to use. Integer between <literal>1</literal> - <literal>8</literal>.
   </entry>
   <entry>No</entry>
 </row>

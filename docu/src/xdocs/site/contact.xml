@@ -15,14 +15,16 @@
 <simplesect id="trackers">
 <title>Trackers</title>
 <para>
-Please use the following SourceForge trackers to submit bug reports or post 
+Please use the following SourceForge trackers to submit bug reports or post
 feature requests:
 </para>
 
 <blockquote>
 <simplelist type="vert" columns="1">
-<member><ulink url="http://sourceforge.net/tracker/?func=add&amp;group_id=45216&amp;atid=442212">Submit a bug report</ulink></member>
-<member><ulink url="http://sourceforge.net/tracker/?func=add&amp;group_id=45216&amp;atid=442215">Request a new feature</ulink></member>
+<member><ulink url="http://sf.net/tracker/?func=add&amp;group_id=45216&amp;atid=442212">Submit a bug report</ulink></member>
+<member><ulink url="http://sf.net/tracker/?func=add&amp;group_id=45216&amp;atid=442215">Request a new feature</ulink></member>
+<member><ulink url="http://sf.net/tracker/?func=add&amp;group_id=45216&amp;atid=442214">Send a patch</ulink></member>
+<member><ulink url="http://sf.net/tracker/?func=add&amp;group_id=45216&amp;atid=442213">Ask for support</ulink></member>
 <para/>
 </simplelist>
 </blockquote>
@@ -33,7 +35,7 @@ feature requests:
 <title>Mailing Lists</title>
 
 <para>
-If you want to provide feedback on this software or stay current with the 
+If you want to provide feedback on this software or stay current with the
 latest development, you may want to join one of the Jalopy mailing lists.
 </para>
 
@@ -53,24 +55,28 @@ latest development, you may want to join one of the Jalopy mailing lists.
 <tbody>
 <row>
 <entry colsep="1" rowsep="1"><emphasis role="bold">jalopy-announce</emphasis>
+
+<para>A high-level
+announcements list, for things like major release notifications
+or important bug-fixes. This is not a discussion list, and is not open to
+public posting. Traffic is expected to be very low.
+</para>
 <para>
-A high-level announcements list, for things like major release notifications
-or important bug-fixes. This is not a discussion list, and is not open to 
-public posting. Traffic is expected to be very low. If you're interested in 
-Jalopy, it is recommended you subscribe at a minimum to this list. 
+If you're interested in
+Jalopy, it is recommended you subscribe at a minimum to this list.
 </para>
 </entry>
-<entry colsep="1" rowsep="1"><ulink url="http://lists.sourceforge.net/mailman/listinfo/jalopy-announce">Subscribe/Unsubscribe</ulink></entry>
+<entry colsep="1" rowsep="1"><ulink url="http://lists.sf.net/mailman/listinfo/jalopy-announce">Subscribe/Unsubscribe</ulink></entry>
 <entry colsep="1" rowsep="1"><ulink url="http://www.geocrawler.com/redir-sf.php3?list=jalopy-announce">Browse archives</ulink></entry>
 </row>
 <row>
 <entry><emphasis role="bold">jalopy-user</emphasis>
 <para>
-The Jalopy users mailing list. Intended for users to ask questions, share knowledge,
-and discuss Jalopy related issues.
+Intended for
+users to ask questions, share knowledge, and discuss general Jalopy related issues.
 </para>
 </entry>
-<entry><ulink url="http://lists.sourceforge.net/mailman/listinfo/jalopy-user">Subscribe/Unsubscribe</ulink></entry>
+<entry><ulink url="http://lists.sf.net/mailman/listinfo/jalopy-user">Subscribe/Unsubscribe</ulink></entry>
 <entry colwidth="100"><ulink url="http://www.geocrawler.com/redir-sf.php3?list=jalopy-user">Browse archives</ulink></entry>
 </row>
 <row>
@@ -79,12 +85,11 @@ and discuss Jalopy related issues.
 Hosts development related discussions.
 </para>
 </entry>
-<entry><ulink url="http://lists.sourceforge.net/mailman/listinfo/jalopy-development">Subscribe/Unsubscribe</ulink></entry>
+<entry><ulink url="http://lists.sf.net/mailman/listinfo/jalopy-development">Subscribe/Unsubscribe</ulink></entry>
 <entry><ulink url="http://www.geocrawler.com/redir-sf.php3?list=jalopy-development">Browse archives</ulink></entry>
 </row>
 </tbody>
 </tgroup>
 </informaltable>
-
 </simplesect>
 </article>

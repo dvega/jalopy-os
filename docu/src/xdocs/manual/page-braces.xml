@@ -19,7 +19,7 @@ Controls the handling of curly braces (the Java block delimeters).
 
 <para>
 Controls how the enclosing block delimeters - left and right curly
-brace - are printed. You can either choose from a predefined set of common 
+brace - are printed. You can either choose from a predefined set of common
 styles or build one on your own.
 </para>
 
@@ -38,14 +38,14 @@ C style
 <indexterm zone="braces-style-c"><primary>Braces</primary><secondary>style</secondary><tertiary>C</tertiary></indexterm>
 
 <para>
-Selects the C indent style. This style is sometimes called &quot;Allman style&quot; or &quot;BSD style&quot;.
+Selects the C brace style. This style is sometimes called &quot;Allman style&quot; or &quot;BSD style&quot;.
 </para>
 <example id="ex-brace-style-c">
 <title>C style</title>
 <programlisting>
 if (!isDone)
-<emphasis role="bold">{</emphasis>    
-    doSomething();  
+<emphasis role="bold">{</emphasis>
+    doSomething();
 <emphasis role="bold">}</emphasis>
 else
 <emphasis role="bold">{</emphasis>
@@ -64,16 +64,16 @@ Sun style
 <indexterm zone="braces-style-sun"><primary>Braces</primary><secondary>style</secondary><tertiary>Sun</tertiary></indexterm>
 
 <para>
-Selects the Sun indent style. Sometimes called &quot;K&amp;R style&quot;.
+Selects the Sun brace style. Sometimes called &quot;K&amp;R style&quot;.
 </para>
 
 <example id="ex-brace-style-sun">
 <title>Sun style</title>
 <programlisting>
-if (!isDone) <emphasis role="bold">{</emphasis>    
-    doSomething();  
+if (!isDone) <emphasis role="bold">{</emphasis>
+    doSomething();
 <emphasis role="bold">}</emphasis> else <emphasis role="bold">{</emphasis>
-    System.err.println("Finished");   
+    System.err.println("Finished");
 <emphasis role="bold">}</emphasis>
 </programlisting>
 </example>
@@ -88,14 +88,14 @@ GNU style
 <indexterm zone="braces-style-c"><primary>Braces</primary><secondary>style</secondary><tertiary>GNU</tertiary></indexterm>
 
 <para>
-Selects the GNU indent style.
+Selects the GNU brace style.
 </para>
 <example id="ex-brace-style-gnu">
 <title>GNU style</title>
 <programlisting>
 if (!isDone)
   <emphasis role="bold">{</emphasis>
-    doSomething();  
+    doSomething();
   <emphasis role="bold">}</emphasis>
 else
   <emphasis role="bold">{</emphasis>
@@ -114,7 +114,7 @@ Custom style
 <indexterm zone="braces-style-custom"><primary>Braces</primary><secondary>style</secondary><tertiary>custom</tertiary></indexterm>
 
 <para>
-Selecting this option will enable you to freely choose from the different brace 
+Selecting this option will enable you to freely choose between the different brace
 style options discussed below.
 </para>
 </listitem>
@@ -134,7 +134,7 @@ Controls the brace wrapping options.
 Newline before left brace
 </para>
 <para>
-If enabled, always prints a newline before the right curly brace.
+If enabled, always prints a newline before the left curly brace.
 </para>
 </listitem>
 
@@ -149,15 +149,28 @@ If enabled, prints a newline after the left curly brace (when possible).
 
 <listitem>
 <para>
-Treat class and method blocks different
+Treat class/method blocks different
 </para>
 <para>
 It is common in the Java developer community to have the opening brace
-at the end of the line of the keyword for all types of blocks. One may
-find the C++ convention of treating class and method blocks different
-from other blocks useful. With this switch you can achieve exactly that: 
-class/interface and method/constructor blocks are then always printed in C 
-brace style.
+at the end of the line of the keyword for all types of blocks (Sun brace style).
+One may find the C++ convention of treating class/interface and method/constructor
+blocks different from other blocks useful. With this switch you can achieve
+exactly that: if enabled, class/interface and method/constructor blocks are
+then always printed in C brace style (newline before left brace).
+</para>
+</listitem>
+
+<listitem>
+<para id="braces-different-wrapped">
+Treat class/method blocks different if wrapped
+</para>
+<para>
+With this switch enabled, the opening brace for class/interface or
+method/constructor blocks will always be printed on a new line (C style), if
+either the parameter list spawns several lines and a <literal>throws</literal>
+clause follows, or one of the possible clauses (<literal>extends</literal>,
+<literal>implements</literal>, <literal>throws</literal>) was wrapped.
 </para>
 </listitem>
 </itemizedlist>
@@ -249,9 +262,9 @@ while (!isDone)
 <indexterm zone="braces-remove"><primary>Braces</primary><secondary>remove</secondary></indexterm>
 
 <para>
-It is also possible to remove braces in case they are superfluous. This
+It is permittable to remove braces in case they are superfluous. This not only
 applies to the control statements <function>if</function>, <function>for</function>,
-<function>while</function> and <function>do-while</function> but also to every
+<function>while</function> and <function>do-while</function>, but also to every
 block in general (remember a block is just a sequence of statements,
 local class declarations and local variable declaration statements within
 braces).
@@ -270,21 +283,21 @@ would become
 </para>
 <programlisting>
 for (int i = 0; i &lt; 100; i++)
-    sum += value[i]; 
+    sum += value[i];
 </programlisting>
 </example>
 <para/>
 </sect3>
 
 <sect3 id="braces-empty">
-<title>Empty braces handling</title>
+<title>Empty braces</title>
 
 <indexterm zone="braces-empty"><primary>Empty braces</primary></indexterm>
 <indexterm zone="braces-empty"><primary>Braces</primary><secondary>Empty</secondary></indexterm>
 
 <para>
 Controls how empty braces should be handled. If no option is selected,
-they are left untouched. 
+they are left untouched.
 </para>
 
 <example id="ex-brace-empty">
@@ -304,7 +317,7 @@ if (in != null)
 </example>
 
 <para>
-All options don't apply to class/interface and method/constructor bodies but 
+All options don't apply to class/interface and method/constructor bodies but
 are only used for control statements and blocks.
 </para>
 
@@ -317,7 +330,7 @@ Insert empty statement
 
 </para>
 <para>
-Inserts an empty statement to make it obvious for the reader that the empty braces 
+Inserts an empty statement to make it obvious for the reader that the empty braces
 are intentional.
 </para>
 <example id="ex-braces-empty-statement">

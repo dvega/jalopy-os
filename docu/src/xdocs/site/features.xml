@@ -17,7 +17,7 @@
 <title>Feature list</title>
 <itemizedlist mark="square">
 <listitem>
-distributed settings support - share one preferences file across multiple machines/platforms
+distributed settings support - share one code convention across multiple machines/platforms
 </listitem>
 
 <listitem>
@@ -66,7 +66,7 @@ special comments to prohibit formatting for certain pieces of code
 </listitem>
 
 <listitem>
-auto-insertion of missing Javadoc comments (selectively configurable for the 
+auto-insertion of missing Javadoc comments (selectively configurable for the
 different access levels) with variable interpolation
 </listitem>
 
@@ -125,7 +125,7 @@ client <ulink url="./api/index.html">API</ulink> to make integration with other 
 </listitem>
 
 <listitem>
-graphical application to customize the user preferences (with live-preview)
+graphical application to customize the settings (with live-preview)
 </listitem>
 
 <listitem>
@@ -133,13 +133,13 @@ powerful command line interface with regular expression filtering (<ulink url=".
 </listitem>
 
 <listitem>
-several <ulink url="./plugins.html">Plug-ins</ulink> to integrate with common Java applications (current set includes  
+several <ulink url="./plugins.html">Plug-ins</ulink> to integrate with common Java applications (current set includes
 <ulink url="http://jakarta.apache.org/ant/">Ant</ulink>,
 <ulink url="http://www.eclipse.org/">Eclipse</ulink>,
 <ulink url="http://www.borland.com/jbuilder/">JBuilder</ulink>,
 <ulink url="http://otn.oracle.com/products/jdev/">JDeveloper</ulink>,
 <ulink url="http://www.jedit.org/">jEdit</ulink> and
-<ulink url="http://www.netbeans.org/">NetBeans</ulink>/<ulink url="http://wwws.sun.com/software/sundev/jde/index.html">Sun ONE Studio</ulink>) 
+<ulink url="http://www.netbeans.org/">NetBeans</ulink>/<ulink url="http://wwws.sun.com/software/sundev/jde/index.html">Sun ONE Studio</ulink>)
 </listitem>
 
 <listitem>

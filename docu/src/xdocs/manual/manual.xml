@@ -47,21 +47,12 @@
 <book>
 <bookinfo>
 <title>Jalopy User Manual</title>
-<author>
-<firstname>Larry</firstname>
-<surname>Hamel</surname>
-</author>
-<author>
-<firstname>Marco</firstname>
-<surname>Hunsicker</surname>
-</author>
 <copyright>
 <year>2002</year>
 <holder>Marco Hunsicker</holder>
 </copyright>
 <legalnotice>
 <title>Legal Notice</title>
-
 <para>
 Permission is granted to copy, distribute and/or modify this document under
 the terms of the GNU Free Documentation License, Version 1.1 or any later
@@ -345,12 +336,12 @@ individual Plug-in chapters in <xref linkend="part-plugins" /> for details.
 <!-- ====================================================================== -->
 
 <chapter id="preferences">
-<title>Preferences</title>
+<title>Settings</title>
 
-<indexterm><primary>Preferences</primary></indexterm>
+<indexterm><primary>Settings</primary></indexterm>
 
 <para id="settings-directory">
-Jalopy stores all preferences settings as files inside its
+Jalopy stores all settings as files inside its
 <firstterm>settings directory</firstterm> (or subdirectories thereof).
 This directory is located in the user home directory (<filename>$HOME/.jalopy</filename>).
 </para>
@@ -358,7 +349,7 @@ This directory is located in the user home directory (<filename>$HOME/.jalopy</f
 <indexterm zone="settings-directory"><primary>Settings directory</primary></indexterm>
 
 <para>
-A graphical user interface is provided to easily configure the preferences.
+A graphical user interface is provided to easily configure the settings.
 Please refer to the individual Plug-in chapters in <xref linkend="part-plugins"/>
 for information on how to display it from within the Plug-in you received.
 </para>

@@ -5,7 +5,7 @@
 <!-- ==========================================================================
 
 Module              : docu
-Module-Dependencies : build, main
+Module-Dependencies : build, console, main
 
 This build script is part of the Jalopy build system. It is not meant to be
 directly invoked by the user but should only be used in conjunction with the
@@ -84,11 +84,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           message="de.hunsicker.jalopy
                    de.hunsicker.jalopy.parser
                    de.hunsicker.jalopy.plugin
-                   de.hunsicker.jalopy.prefs
+                   de.hunsicker.jalopy.storage
                    de.hunsicker.jalopy.printer
-                   de.hunsicker.jalopy.ui
+                   de.hunsicker.jalopy.swing
                    de.hunsicker.io
-                   de.hunsicker.ui
+                   de.hunsicker.swing
                    de.hunsicker.util"
           append="true" />
   </target>
@@ -143,22 +143,23 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <available file="../build/build.xml" property="present.build" />
     <antcall target="docu-check-build" />
     <javadoc locale="en_US"
+             overview="${dir.src}/javadoc/overview.html"
              maxmemory="196m"
              packagenames="de.hunsicker.jalopy,
                    de.hunsicker.jalopy.parser,
                    de.hunsicker.jalopy.plugin,
-                   de.hunsicker.jalopy.prefs,
+                   de.hunsicker.jalopy.storage,
                    de.hunsicker.jalopy.printer,
-                   de.hunsicker.jalopy.ui,
+                   de.hunsicker.jalopy.swing,
                    de.hunsicker.io,
-                   de.hunsicker.ui,
+                   de.hunsicker.swing,
                    de.hunsicker.util"
              classpathref="project.classpath"
              sourcepath="${dir.src.main.java}"
              destdir="${DIR.DOCS}/api"
              author="true"
              version="true"
-             windowtitle="${NAME} ${BUILD.VERSION} API"
+             windowtitle="Jalopy Java Source Code Formatter ${BUILD.VERSION} API"
              doctitle="${NAME} ${BUILD.VERSION} API Specification"
              use="false"
              notree="true"
@@ -172,7 +173,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br>
       For further information and documentation, visit the <a href="${HOMEPAGE}" target="_top">official Jalopy website</a>.
       <br>Last modified: <strong>${TODAY}</strong>
-      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All Rights Reserved.</p>
+      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All rights reserved.</p>
       </font>]]></bottom>
       <group title="Core runtime" packages="de.hunsicker.jalopy*" />
       <group title="Plug-in API" packages="de.hunsicker.jalopy.plugin*" />
@@ -222,15 +223,15 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           depends="docu-init, docu-compile, docu-uptodate-javadoc"
           unless="uptodate.javadoc">
     <javadoc locale="en_US"
+             overview="${dir.src}/javadoc/overview.html"
              maxmemory="196m"
              classpathref="project.classpath"
              charset="iso-8859-1"
              failonerror="true"
-             sourcepath="${dir.src.main.java}"
              destdir="${DIR.DOCS}/api"
              author="true"
              version="true"
-             windowtitle="${NAME} ${BUILD.VERSION} API"
+             windowtitle="Jalopy Java Source Code Formatter ${BUILD.VERSION} API"
              doctitle="${NAME} ${BUILD.VERSION} API Specification"
              use="true"
              notree="false"
@@ -239,27 +240,35 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
              private="false"
              nohelp="true"
              verbose="false"
-
+             header="&lt;b&gt;${NAME}&lt;sup&gt;&lt;font size=-2&gt;&lt;&#47;font&gt;&lt;&#47;sup&gt; ${BUILD.VERSION}&lt;&#47;b&gt;"
+             footer="&lt;b&gt;${NAME}&lt;sup&gt;&lt;font size=2&gt;&lt;&#47;font&gt;&lt;&#47;sup&gt; ${BUILD.VERSION}&lt;&#47;b&gt;"
              stylesheetfile="${dir.src}/javadoc/stylesheet.css">
-        <!--additionalparam="-breakiterator -noqualifier all"-->
+        <!--additionalparam="-breakiterator -noqualifier all" -->
 
       <bottom><![CDATA[<font size="-1" class="footer">
-      <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br>
+      <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br><br>
       For further information and documentation, visit the <a href="${HOMEPAGE}" target="_top">official Jalopy website</a>.
-      <br>Last modified: <strong>${TODAY}</strong>
-      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All Rights Reserved.</p>
+      <br>This page generated: <strong>${TODAY}</strong>
+      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All rights reserved.</p>
       </font>]]></bottom>
 
       <package name="de.hunsicker.jalopy" />
+      <package name="de.hunsicker.jalopy.storage" />
+      <package name="de.hunsicker.jalopy.swing" />
       <package name="de.hunsicker.jalopy.plugin" />
-      <package name="de.hunsicker.jalopy.prefs" />
-      <package name="de.hunsicker.jalopy.ui" />
+      <package name="de.hunsicker.jalopy.plugin.console" />
 
-      <group title="Runtime library" packages="de.hunsicker.jalopy*" />
-      <group title="Plug-in API" packages="de.hunsicker.jalopy.plugin*" />
+      <group title="Core classes" packages="de.hunsicker.jalopy*" />
+      <group title="Graphical user interface support" packages="de.hunsicker.jalopy.swing*" />
+      <group title="Plug-in support" packages="de.hunsicker.jalopy.plugin*" />
+      <group title="Console Plug-in" packages="de.hunsicker.jalopy.plugin.console*" />
+
+      <sourcepath path="../console/src/java" />
+      <sourcepath path="${dir.src.main.java}" />
+
       <source file="${dir.src.main.java}/de/hunsicker/io/FileFormat.java" />
-      <source file="${dir.src.main.java}/de/hunsicker/jalopy/parser/Node.java" />
-      <source file="${dir.src.main.java}/de/hunsicker/jalopy/parser/JavaNode.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/Node.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/JavaNode.java" />
       <source file="${dir.src.main.java}/de/hunsicker/util/ChainingRuntimeException.java" />
 
       <link offline="true" href="http://java.sun.com/products/jdk/1.4/docs/api"
@@ -308,7 +317,6 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
            includes="manual.xml">
       <param name="base.dir" expression="${DIR.DOCS}/manual/" />
       <param name="build.time" expression="${TODAY}" />
-      <param name="chunk.tocs.and.lots" expression="0" />
       <xmlcatalog refid="DTDs"/>
     </xslt>
     <copy todir="${DIR.DOCS}/manual"

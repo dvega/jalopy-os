@@ -18,7 +18,8 @@
 <xsl:param name="css.decoration">1</xsl:param>
 <xsl:param name="using.chunker" select="1" />
 <xsl:param name="chunk.section.depth" select="1" />
-<xsl:param name="chunk.quietly" select="1" />
+<xsl:param name="chunk.quietly" select="0" />
+<xsl:param name="html.extra.head.links" select="1"/>
 <xsl:param name="generate.index" select="1" />
 <xsl:param name="section.autolabel" select="1" />
 <xsl:param name="section.label.includes.component.label" select="1" />
@@ -31,12 +32,15 @@
 <xsl:param name="table.border.thickness" select="'1px'"/>
 <xsl:param name="table.border.color" select="'#336699'"/>
 <xsl:param name="shade.verbatim" select="1"/>
-
 <xsl:param name="linenumbering.extension" select="'1'"/>
 <xsl:param name="linenumbering.everyNth" select="'1'"/>
 <xsl:param name="use.extensions" select="'1'"/>
 
 <xsl:param name="build.time" select="-1"/>
+
+<xsl:param name="generate.toc">
+   book      toc,title,figure,table,equation
+</xsl:param>
 
 <xsl:attribute-set name="shade.verbatim.style">
   <xsl:attribute name="class">shade</xsl:attribute>

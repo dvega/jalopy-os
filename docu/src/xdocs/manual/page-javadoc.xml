@@ -6,7 +6,7 @@
 <sect1 id="javadoc">
 <title>Javadoc</title>
 <para>
-Lets you control all Javadoc-related options. Refer to the
+Let's you control all Javadoc-related options. Refer to the
 <ulink url="http://java.sun.com/j2se/javadoc/index.html">Javadoc home page</ulink>
 for more information about Sun's Javadoc tool.
 </para>
@@ -16,7 +16,7 @@ for more information about Sun's Javadoc tool.
 <para>
 Note that the Javadoc parsing for Jalopy may not work properly under Sun
 JDK 1.4.0 with the Client JVM. Seems to be a problem with the garbage
-collection. You may want to enable the server JVM as a workaround.
+collection. You may want to enable the Server JVM as a workaround.
 </para>
 </caution>
 
@@ -127,8 +127,20 @@ Correct tags
 <indexterm zone="javadoc-correct"><primary>Javadoc comments</primary></indexterm>
 <indexterm zone="javadoc-correct"><primary>Auto-correction</primary></indexterm>
 <para>
-Enables the auto-insertion or removal of missing and obsolete Javadoc tags and
+Enables the auto-insertion or -removal of missing and obsolete Javadoc tags (all but the <literal>@throws</literal> tag, see below) and
 the correction of misspelled Javadoc tag names.
+</para>
+</listitem>
+<listitem>
+<para id="javadoc-correct-throws">
+Correct @throws tags
+</para>
+<para>
+Controls the auto-correction for <literal>@throws</literal> tags. If enabled,
+Jalopy enforces a distinct <literal>@throws</literal> tag for every exception
+thrown by a method/constructor. Thus, if a method only declares to throw an
+<classname>IOException</classname> but throws a <classname>FileNotFoundException</classname>
+(which is a subclass of the former) too, Jalopy will add a declaration for the latter.
 </para>
 </listitem>
 </itemizedlist>
@@ -168,7 +180,7 @@ auto-generation does not apply to anonymous inner classes.
 <sect3 id="javadoc-misc">
 <title>Misc</title>
 <para>
-Lets you control miscellaneous Javadoc settings.
+Let's you control miscellaneous Javadoc settings.
 </para>
 
 <itemizedlist>
@@ -178,8 +190,7 @@ Field comments in single line
 </para>
 
 <para>
-Lets you specifiy how Javadoc fields comments should be printed that fit into
-one line.
+Let's you specify how Javadoc comments of fields, that fit into one line, should be printed.
 </para>
 
 <example id="ex-comments-control">
@@ -223,8 +234,8 @@ must be enabled for this feature to work.
 <sect2 id="javadoc-templates">
 <title>Templates</title>
 <para>
-Lets you define templates to be inserted for the different declaration elements.
-Each element (class, interface, constructor, method and field) has its
+Let's you define templates to be inserted for the different declaration elements.
+Each element (Class, Interface, Constructor, Method and Field) has its
 own template.
 </para>
 
