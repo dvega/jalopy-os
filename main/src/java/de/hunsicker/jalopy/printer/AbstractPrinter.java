@@ -2308,7 +2308,7 @@ OUTER:
         if (format)
         {
             lines =
-                StringHelper.wrap(comment.getText(), Integer.MAX_VALUE, false,
+                StringHelper.wrapStringToArray(comment.getText(), Integer.MAX_VALUE, out.lineSeparator, false,
                     StringHelper.TRIM_LEADING);
         }
         else
