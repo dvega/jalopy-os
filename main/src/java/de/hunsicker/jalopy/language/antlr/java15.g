@@ -489,8 +489,8 @@ modifier
 	;
 
 annotation!
-	:	AT! i:identifier ( lp:LPAREN ( args:annotationArguments )? rp:RPAREN )?
-		{#annotation = #(#[ANNOTATION,"ANNOTATION"], i, lp, args, rp);}
+	:	a:AT i:identifier ( lp:LPAREN ( args:annotationArguments )? rp:RPAREN )?
+		{#annotation = #(#[ANNOTATION,"ANNOTATION"],a, i, lp, args, rp);}
 	;
 
 annotations

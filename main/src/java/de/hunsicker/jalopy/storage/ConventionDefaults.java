@@ -474,19 +474,19 @@ public final class ConventionDefaults
     public static final boolean LINE_WRAP_BEFORE_RIGHT_PAREN = false;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final boolean ENUM_LCURLY_NEW_LINE = true;
+    public static final boolean ENUM_LCURLY_NO_NEW_LINE = true;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final int ENUM_ALIGN_VALUES_WHEN_EXCEEDS = 0;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final boolean ANON_LCURLY_NEW_LINE = true;
+    public static final boolean ANON_LCURLY_NO_NEW_LINE = true;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final int ANON_ALIGN_VALUES_WHEN_EXCEEDS = 0;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final boolean ANON_DEF_LCURLY_NEW_LINE = false;
+    public static final boolean ANON_DEF_LCURLY_NO_NEW_LINE = false;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final int ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS = 0;

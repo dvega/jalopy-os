@@ -60,8 +60,9 @@ public class AnnotatePrinter extends AbstractPrinter {
             out.line,
             out.state.markers.getLast().column + out.indentSize);
         
+        printCommentsBefore(node,true, out);
         // Print @ symbol
-        out.print(AT,node.getType());
+//        out.print(AT,node.getType());
         
         // Print All sub elements
         printChildren(node,out);

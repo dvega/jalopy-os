@@ -316,6 +316,10 @@ public static AST lastChild = null;
                 result = BasicPrinter.getInstance();
 
                 break;
+            case JavaTokenTypes.AT:
+                result = BasicPrinter.getInstance();
+
+                break;
 
             case JavaTokenTypes.STRING_LITERAL :
                 result = StringLiteralPrinter.getInstance();

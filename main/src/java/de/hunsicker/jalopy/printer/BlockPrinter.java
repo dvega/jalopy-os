@@ -205,10 +205,7 @@ class BlockPrinter
         boolean brace = true;
         boolean indent = false;
         boolean forceNewLineAfter =true;
-        boolean checkForEnum = false;
-	    int enumLineCount = AbstractPrinter.settings.getInt(
-                                                            ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,
-                                                            ConventionDefaults.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
+	    int wrapLineCount = Integer.MAX_VALUE;
         boolean removeBlockBraces =
             AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_REMOVE_BLOCK, ConventionDefaults.BRACE_REMOVE_BLOCK);
@@ -244,6 +241,16 @@ class BlockPrinter
                 }
                 */
                 brace = false;
+            }
+            switch(lcurly.getParent().getType()) {
+                case JavaTokenTypes.ANNOTATION:
+                    forceNewLineAfter = !AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_LCURLY_NO_NEW_LINE,
+                                                                            ConventionDefaults.ANON_LCURLY_NO_NEW_LINE);
+                    wrapLineCount = AbstractPrinter.settings.getInt(
+                                                                        ConventionKeys.ANON_ALIGN_VALUES_WHEN_EXCEEDS,
+                                                                        ConventionDefaults.ANON_ALIGN_VALUES_WHEN_EXCEEDS);
+                    newLineAfter = false;
+                break;
             }
 
             indent = false;
@@ -323,15 +330,20 @@ class BlockPrinter
                     break;
                 case JavaTokenTypes.LITERAL_enum:
                     newLineAfter = false;
-                	checkForEnum = true;
-                	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ENUM_LCURLY_NEW_LINE,
-                                                                        ConventionDefaults.ENUM_LCURLY_NEW_LINE);
+                	forceNewLineAfter = !AbstractPrinter.settings.getBoolean(ConventionKeys.ENUM_LCURLY_NO_NEW_LINE,
+                                                                        ConventionDefaults.ENUM_LCURLY_NO_NEW_LINE);
+                    wrapLineCount = AbstractPrinter.settings.getInt(
+                                                                    ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,
+                                                                    ConventionDefaults.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
                 	indent=true;
             	break;
             	
                 case JavaTokenTypes.AT:
-                	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_LCURLY_NEW_LINE,
-                                                                             ConventionDefaults.ANON_LCURLY_NEW_LINE);
+                	forceNewLineAfter = !AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_DEF_LCURLY_NO_NEW_LINE,
+                                                                             ConventionDefaults.ANON_DEF_LCURLY_NO_NEW_LINE);
+                    wrapLineCount = AbstractPrinter.settings.getInt(
+                                                                    ConventionKeys.ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS,
+                                                                    ConventionDefaults.ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS);
 	            	newLineAfter = false;
 	            	indent=true;
                 	break;
@@ -351,8 +363,11 @@ class BlockPrinter
                     default :
                         switch(lcurly.getParent().getType()) {
                             case JavaTokenTypes.ANNOTATION:
-                            	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_DEF_LCURLY_NEW_LINE,
-                                                                                        ConventionDefaults.ANON_DEF_LCURLY_NEW_LINE);
+                            	forceNewLineAfter = !AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_LCURLY_NO_NEW_LINE,
+                                                                                        ConventionDefaults.ANON_LCURLY_NO_NEW_LINE);
+                                wrapLineCount = AbstractPrinter.settings.getInt(
+                                                                                ConventionKeys.ANON_ALIGN_VALUES_WHEN_EXCEEDS,
+                                                                                ConventionDefaults.ANON_ALIGN_VALUES_WHEN_EXCEEDS);
            	            	newLineAfter = false;
            	            	indent=true;
                            	break;
@@ -401,16 +416,14 @@ LOOP:
                    
 
                 default :
-                    if (checkForEnum) {
-	                    if (enumLineCount!=Integer.MAX_VALUE) {
-	                        if (++enumCounter>enumLineCount) {
-	                            enumCounter = 1;
-	                            newLineAfter = true;
-	                        }
-	                        else {
-	                            newLineAfter = false;
-	                        }
-	                    }
+                    if (wrapLineCount!=Integer.MAX_VALUE) {
+                        if (++enumCounter>wrapLineCount) {
+                            enumCounter = 1;
+                            newLineAfter = true;
+                        }
+                        else {
+                            newLineAfter = false;
+                        }
                     }
                     PrinterFactory.create(child).print(child, out);
 
@@ -652,6 +665,7 @@ LOOP:
         switch (lcurly.getParent().getType())
         {
             case JavaTokenTypes.INSTANCE_INIT :
+            case JavaTokenTypes.ANNOTATION :
                 return false;
         }
 

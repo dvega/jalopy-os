@@ -1460,8 +1460,8 @@ public final class ConventionKeys
      *
      * @since 1.5
      */
-    public static final Convention.Key ENUM_LCURLY_NEW_LINE =
-        new Convention.Key("printer/wrapping/enum/lcurly/newline");
+    public static final Convention.Key ENUM_LCURLY_NO_NEW_LINE =
+        new Convention.Key("printer/wrapping/enum/lcurly/nonewline");
     
     /**
      * Force alignment of wrapping ENUM values after a certain amount ? (<em>int</em>)
@@ -1476,7 +1476,7 @@ public final class ConventionKeys
      *
      * @since 1.5
      */
-    public static final Convention.Key ANON_LCURLY_NEW_LINE =
+    public static final Convention.Key ANON_LCURLY_NO_NEW_LINE =
         new Convention.Key("printer/wrapping/anon/lcurly/newline");
     
     /**
@@ -1484,8 +1484,8 @@ public final class ConventionKeys
      *
      * @since 1.5
      */
-    public static final Convention.Key ANON_DEF_LCURLY_NEW_LINE =
-        new Convention.Key("printer/wrapping/anondef/lcurly/newline");
+    public static final Convention.Key ANON_DEF_LCURLY_NO_NEW_LINE =
+        new Convention.Key("printer/wrapping/anondef/lcurly/nonewline");
     
     /**
      * Force alignment of wrapping ANON values after a certain amount ? (<em>int</em>)

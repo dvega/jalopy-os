@@ -7,7 +7,10 @@ public class Braces
  * Annotation type to indicate a task still needs to be
  *   completed.
  */
-    @Target( { ANNOTATION_TYPE, METHOD } )
+    @Target({ElementType.TYPE,
+        ElementType.METHOD,
+        ElementType.CONSTRUCTOR,
+        ElementType.ANNOTATION_TYPE})
     @Retention( RUNTIME )
  public @interface TODO {
   String value() default "TODO";
