@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: main/src/java/de/hunsicker/jalopy/language/antlr/java.doc.g -> JavadocTokenTypes.txt$
+// $ANTLR 2.7.4: java.doc.g -> JavadocTokenTypes.txt$
 Javadoc    // output token vocab name
 JAVADOC_COMMENT=6
 LCURLY=7

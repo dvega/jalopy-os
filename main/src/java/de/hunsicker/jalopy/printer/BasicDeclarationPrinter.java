@@ -395,8 +395,7 @@ abstract class BasicDeclarationPrinter
             {
                 if (c.getHiddenAfter() == null)
                 {
-                    // TODO
-                    //((JavaNode)c).setHiddenAfter(comment);
+                    ((ExtendedToken)c).setHiddenAfter(comment);
 
                     break;
                 }
@@ -485,7 +484,7 @@ abstract class BasicDeclarationPrinter
      * @param buf buffer to add the interpolated text to.
      * @param types EXCEPTION node.
      * @param text exception template text
-     * @param environment DOCUMENT ME!
+     * @param environment The enviroment
      *
      * @since 1.0b8
      */
@@ -513,7 +512,7 @@ abstract class BasicDeclarationPrinter
      * @param buf buffer to add the interpolated text to.
      * @param node PARAMETERS node.
      * @param text exception template text
-     * @param environment DOCUMENT ME!
+     * @param environment The enviroment
      *
      * @since 1.0b8
      */

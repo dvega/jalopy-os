@@ -52,7 +52,7 @@ public class AnnotatePrinter extends AbstractPrinter {
      */
     public void print(AST node, NodeWriter out) throws IOException {
         // Print the comments
-        printCommentsBefore(node,out);
+        printCommentsBefore(node,false,out);
         
         // Add a marker
         Marker marker = out.state.markers.add(out.line, out.indentSize * out.indentLevel);

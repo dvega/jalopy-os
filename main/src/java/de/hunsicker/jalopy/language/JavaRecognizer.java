@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import antlr.CommonASTWithHiddenTokens;
-import antlr.CommonHiddenStreamToken;
 import antlr.RecognitionException;
 import antlr.Token;
 import antlr.TokenBuffer;
@@ -467,10 +465,7 @@ public final class JavaRecognizer
         {
             this.parser.parse();
             
-            System.out.println(getClass() + "*********** start");
             root = ((JavaParser)this.parser).getAST();
-            parseToken(root,0, new java.util.Vector());
-            System.out.println("*********** end");
         }
 
         // the parsers/lexers should never throw any checked exception as we
@@ -500,62 +495,6 @@ public final class JavaRecognizer
     public AST getRoot() {
         return root;
     }
-/**
- * TODO Get rid of
- * @param token
- * @param counter
- * @param path
- */
-	public void parseToken(AST token,int counter,java.util.Vector path) {
-	    
-	    AST child = null;
-	    
-	    while(token!=null) {
-            /*
-	        if (token instanceof CommonASTWithHiddenTokens) {
-	            //filter.getHiddenAfter(token);
-	            
-	            parseToken(((CommonASTWithHiddenTokens)token).getHiddenBefore(),counter,"before");
-	        }
-	        else {
-	            System.out.println("not a token");
-	        }
-            */
-	        System.out.println(" **" + token.getType() +"**,"+ token.getText()+"," + counter);
-	        if (token instanceof CommonASTWithHiddenTokens) {
-	            //filter.getHiddenAfter(((CommonHiddenStreamToken)token));
-	            parseToken(((CommonASTWithHiddenTokens)token).getHiddenAfter(),counter,"after");
-	            
-	        }
-	        else {
-	            System.out.println("not a token");
-	        }
-	        
-	        child = token.getFirstChild();
-            counter *=100;
-            path.add(new Integer(counter));
-	        parseToken(child,counter,path);
-            path.remove(new Integer(counter));
-            counter /=100;
-	        //System.out.println();
-	        //printSpace(counter);
-	        token = token.getNextSibling();
-            counter ++;
-	    }
-        //System.out.println(counter +"," + path);
-	}
-	private static void parseToken(CommonHiddenStreamToken token,int counter,String text) {
-	    if(token!=null) {
-	        //System.out.println();
-	        //printSpace(counter);
-	        System.out.print(" ** " +token.getType() +" ** " + token.getText());
-	        parseToken(token.getHiddenAfter(),counter,"a Unknown");
-	        //parseToken(token.getHiddenBefore(),counter,"b Unknown");
-	    }
-	    else {
-	        //System.out.println("none " + text);
-	    }
-	}
 
     /**
      * Decodes the given encoded tags string.

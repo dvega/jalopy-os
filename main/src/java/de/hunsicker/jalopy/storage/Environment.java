@@ -80,7 +80,7 @@ public final class Environment
     /**
      * Creates a new Environment object.
      *
-     * @param initial DOCUMENT ME!
+     * @param initial True if initial
      */
     private Environment(boolean initial)
     {

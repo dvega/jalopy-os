@@ -64,6 +64,7 @@ class BlockPrinter
 
         // always print a newline before the left curly brace
         boolean forceNewlineBefore = out.state.newlineBeforeLeftBrace;
+        boolean newLineAfter = false;
 
         boolean treatDifferent =
             AbstractPrinter.settings.getBoolean(
@@ -78,8 +79,6 @@ class BlockPrinter
                 case JavaTokenTypes.CTOR_DEF :
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
-                case JavaTokenTypes.ENUM_DEF:
-                case JavaTokenTypes.ANNOTATION_DEF:
                     forceNewlineBefore = true;
 
                     break;
@@ -89,6 +88,10 @@ class BlockPrinter
                     treatDifferent = false;
 
                     break;
+                case JavaTokenTypes.ENUM_DEF:
+                case JavaTokenTypes.ANNOTATION_DEF:
+                    forceNewlineBefore = false;
+                	break;
 
                 default :
                     treatDifferent = false;
@@ -201,6 +204,11 @@ class BlockPrinter
 
         boolean brace = true;
         boolean indent = false;
+        boolean forceNewLineAfter =true;
+        boolean checkForEnum = false;
+	    int enumLineCount = AbstractPrinter.settings.getInt(
+                                                            ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,
+                                                            ConventionDefaults.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
         boolean removeBlockBraces =
             AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_REMOVE_BLOCK, ConventionDefaults.BRACE_REMOVE_BLOCK);
@@ -314,8 +322,18 @@ class BlockPrinter
 
                     break;
                 case JavaTokenTypes.LITERAL_enum:
+                    newLineAfter = false;
+                	checkForEnum = true;
+                	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ENUM_LCURLY_NEW_LINE,
+                                                                        ConventionDefaults.ENUM_LCURLY_NEW_LINE);
+                	indent=true;
+            	break;
+            	
                 case JavaTokenTypes.AT:
-                    leftBraceNewline = true;
+                	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_LCURLY_NEW_LINE,
+                                                                             ConventionDefaults.ANON_LCURLY_NEW_LINE);
+	            	newLineAfter = false;
+	            	indent=true;
                 	break;
 
                 case JavaTokenTypes.LITERAL_case :
@@ -330,6 +348,15 @@ class BlockPrinter
                     leftBraceNewline = false;
 
                     break;
+                    default :
+                        switch(lcurly.getParent().getType()) {
+                            case JavaTokenTypes.ANNOTATION:
+                            	forceNewLineAfter = AbstractPrinter.settings.getBoolean(ConventionKeys.ANON_DEF_LCURLY_NEW_LINE,
+                                                                                        ConventionDefaults.ANON_DEF_LCURLY_NEW_LINE);
+           	            	newLineAfter = false;
+           	            	indent=true;
+                           	break;
+                        }
             }
         }
 
@@ -338,18 +365,20 @@ class BlockPrinter
             boolean indentBrace = !freestanding && !forceNewlineBefore;
 
             printLeftBrace(
-                lcurly, leftBraceNewline, forceNewlineBefore, freestanding, indentBrace, out);
+                lcurly, leftBraceNewline, forceNewlineBefore,forceNewLineAfter, freestanding, indentBrace, out);
         }
+        
         else if (indent)
         {
             out.indent();
 
             // we suppress the printing of braces, but for the sake of
-            // simplicity we let our anchestors think we doesn't
+            // simplicity we let our ancestors think we doesn't
             out.last = JavaTokenTypes.LCURLY;
         }
 
         JavaNode rcurly = null;
+        int enumCounter = 1;
 
 LOOP:
 
@@ -363,8 +392,26 @@ LOOP:
                     rcurly = (JavaNode) child;
 
                     break LOOP;
+               case JavaTokenTypes.COMMA :
+                   PrinterFactory.create(child).print(child, out);
+	               if (newLineAfter) {
+	                   out.printNewline();
+	               }
+               break;
+                   
 
                 default :
+                    if (checkForEnum) {
+	                    if (enumLineCount!=Integer.MAX_VALUE) {
+	                        if (++enumCounter>enumLineCount) {
+	                            enumCounter = 1;
+	                            newLineAfter = true;
+	                        }
+	                        else {
+	                            newLineAfter = false;
+	                        }
+	                    }
+                    }
                     PrinterFactory.create(child).print(child, out);
 
                     break;
@@ -387,6 +434,9 @@ LOOP:
                                           : out.line, offset, out);
 
             printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+            //if (!freestanding && !forceNewlineBefore) {
+            //    out.unindent();
+           // }
         }
         else if (indent)
         {
@@ -509,7 +559,11 @@ LOOP:
 
         if (type == JavaTokenTypes.OBJBLOCK)
         {
-            return node.getParent().getType() != JavaTokenTypes.LITERAL_new;
+            switch (node.getParent().getType()) {
+             case JavaTokenTypes.LITERAL_new : return false;
+             case JavaTokenTypes.ANNOTATION : return false;
+             default : return true;
+            }
         }
         else if (!freestanding)
         {
@@ -624,8 +678,8 @@ LOOP:
     /**
      * Prints an empty pair of braces cuddled (on one line).
      *
-     * @param type DOCUMENT ME!
-     * @param lcurly DOCUMENT ME!
+     * @param type The type
+     * @param lcurly The left curly
      * @param newlineAfter if <code>true</code> a newline should be printed after the
      *        brace.
      * @param out stream to write to.
@@ -665,14 +719,14 @@ LOOP:
     /**
      * Prints a pair of braces with a single empty statement.
      *
-     * @param lcurly DOCUMENT ME!
-     * @param leftBraceNewline DOCUMENT ME!
-     * @param forceNewlineBefore DOCUMENT ME!
-     * @param freestanding DOCUMENT ME!
-     * @param type DOCUMENT ME!
-     * @param out DOCUMENT ME!
+     * @param lcurly The left curly
+     * @param leftBraceNewline Flag
+     * @param forceNewlineBefore Flag
+     * @param freestanding Flag
+     * @param type The node type
+     * @param out The output
      *
-     * @throws IOException DOCUMENT ME!
+     * @throws IOException If an IO error occurs
      */
     private void printBracesEmptyStatement(
         JavaNode   lcurly,
@@ -685,7 +739,7 @@ LOOP:
     {
         JavaNode rcurly = (JavaNode) lcurly.getFirstChild();
 
-        printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore, freestanding, true, out);
+        printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore,false, freestanding, true, out);
 
         if (out.state.newlineBeforeLeftBrace)
         {
@@ -710,8 +764,19 @@ LOOP:
 
         out.last = type;
     }
-
-
+/*
+    private void printLeftBrace(
+                                JavaNode   lcurly,
+                                boolean    leftBraceNewline,
+                                boolean    forceNewlineBefore,
+                                boolean    freestanding,
+                                boolean    indent,
+                                NodeWriter out)
+                              throws IOException
+                            {
+        printLeftBrace(lcurly,leftBraceNewline, forceNewlineBefore, true,freestanding,indent,out);
+                            }
+    */
     /**
      * Prints the opening curly brace.
      *
@@ -729,6 +794,7 @@ LOOP:
         JavaNode   lcurly,
         boolean    leftBraceNewline,
         boolean    forceNewlineBefore,
+        boolean    forceNewLineAfter,
         boolean    freestanding,
         boolean    indent,
         NodeWriter out)
@@ -740,12 +806,13 @@ LOOP:
         }
 
         boolean commentsAfter = lcurly.hasCommentsAfter();
+        forceNewLineAfter = forceNewLineAfter && !commentsAfter;
 
         if (freestanding)
         {
             int offset =
                 out.printLeftBrace(
-                    NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
+                    NodeWriter.NEWLINE_NO, forceNewLineAfter, NodeWriter.INDENT_NO);
 
             trackPosition(lcurly, commentsAfter ? out.line
                                                 : (out.line - 1), offset, out);
@@ -756,7 +823,7 @@ LOOP:
             {
                 int offset =
                     out.printLeftBrace(
-                        NodeWriter.NEWLINE_YES, !commentsAfter, NodeWriter.INDENT_NO);
+                        NodeWriter.NEWLINE_YES, forceNewLineAfter, NodeWriter.INDENT_NO);
 
                 trackPosition(
                     lcurly, commentsAfter ? out.line
@@ -768,7 +835,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            NodeWriter.NEWLINE_NO, !commentsAfter, indent && NodeWriter.INDENT_YES);
+                            NodeWriter.NEWLINE_NO, forceNewLineAfter, indent && NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line
@@ -778,7 +845,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            leftBraceNewline, !commentsAfter, indent && NodeWriter.INDENT_YES);
+                            leftBraceNewline, forceNewLineAfter, indent && NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line

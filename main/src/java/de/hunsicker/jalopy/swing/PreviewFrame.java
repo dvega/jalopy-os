@@ -31,11 +31,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
@@ -180,7 +182,7 @@ final class PreviewFrame
     {
         if (text == null)
         {
-            text = _textArea.getText();
+            text = _textOriginal.getText();
         }
 
         synchronized (_threads)
@@ -206,9 +208,8 @@ final class PreviewFrame
             }
 
             Thread thread = new FormatThread(text);
-            System.out.println(getClass() + "*****Actual Text");
-            System.out.println(text);
-            System.out.println(getClass() + "*****Actual Text End");
+            _textOriginal.setText(text);
+            ((DefaultSyntaxDocument)_textOriginal.getDocument()).tokenizeLines();
             _threads.add(thread);
             thread.start();
         }
@@ -341,9 +342,11 @@ final class PreviewFrame
         setJMenuBar(menuBar);
 
         SyntaxEditorKit kit = new SyntaxEditorKit();
+        DefaultSyntaxDocument doc = new DefaultSyntaxDocument();
+        doc.setAsynchronousLoadPriority(-1);
 
         _textArea = new JEditorPane();
-        _textArea.setDocument(new DefaultSyntaxDocument());
+        _textArea.setDocument(doc);
         _textArea.setFont(new Font("Monospaced" /* NOI18N */, Font.PLAIN, 12));
         _textArea.setEditable(false);
         _textArea.setCaretPosition(0);
@@ -352,9 +355,25 @@ final class PreviewFrame
         _textArea.setEditorKit(kit);
 
         JScrollPane scrollPane = new JScrollPane(_textArea);
-        getContentPane().add(scrollPane);
+        JTabbedPane mainTabbedPane = new JTabbedPane();
+        doc = new DefaultSyntaxDocument();
+        doc.setAsynchronousLoadPriority(-1);
+        _textOriginal = new JEditorPane();
+        _textOriginal.setDocument(doc);
+        _textOriginal.setFont(new Font("Monospaced" /* NOI18N */, Font.PLAIN, 12));
+        _textOriginal.setEditable(false);
+        _textOriginal.setCaretPosition(0);
+        _textOriginal.setMargin(new Insets(2, 2, 2, 2));
+        _textOriginal.setOpaque(true);
+        _textOriginal.setEditorKit(new SyntaxEditorKit());
+        
+        mainTabbedPane.add("Original",new JScrollPane(_textOriginal));
+        mainTabbedPane.add("Formatted",scrollPane);
+        
+        
+        getContentPane().add(mainTabbedPane);
     }
-
+    JEditorPane _textOriginal = null;
     //~ Inner Classes --------------------------------------------------------------------
 
     private final class FileCloseAction
@@ -649,12 +668,10 @@ final class PreviewFrame
                             public void run()
                             {
                                 int offset = _textArea.getCaretPosition();
-                                
-                                // Ensure that the existing is removed gracefully
-                                Document newdoc = _textArea.getEditorKit().createDefaultDocument();
-                                _textArea.setDocument(newdoc);
-
-                                _textArea.setText(buf.toString());
+                                synchronized (_textArea) {
+                                    _textArea.setText(buf.toString());
+                                    ((DefaultSyntaxDocument)_textArea.getDocument()).tokenizeLines();
+                                }
 
                                 if (_textArea.getDocument().getLength() > offset)
                                 {
@@ -670,8 +687,7 @@ final class PreviewFrame
             }
             catch (Throwable ignored)
             {
-                ignored.printStackTrace();
-                System.out.println(getClass() + "," + PrinterFactory.lastChild);
+                // ignored.printStackTrace();
             }
             finally
             {

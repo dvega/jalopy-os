@@ -51,7 +51,7 @@ public final class SyntaxView
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    static final short TAG_WIDTH = 0;
+    static final short TAG_WIDTH = 10;
     static final int BREAKPOINT_OFFSET = TAG_WIDTH + 2;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -124,7 +124,8 @@ public final class SyntaxView
 
             g.setColor(def);
 
-            //drawLineNumber(g, lineIndex + 1, x, y);
+            drawLineNumber(g, lineIndex + 1, x, y);
+            
             // if no tokenMarker just paint as plain text
             if (tokenMarker == null)
             {
@@ -384,10 +385,10 @@ public final class SyntaxView
     /**
      * Draw the line number in front of the line
      *
-     * @param g DOCUMENT ME!
-     * @param lineNumber DOCUMENT ME!
-     * @param x DOCUMENT ME!
-     * @param y DOCUMENT ME!
+     * @param g The graphics object
+     * @param lineNumber the line number
+     * @param x The x coordinate
+     * @param y The Y coordinate
      */
     private void drawLineNumber(
         Graphics g,

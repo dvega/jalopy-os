@@ -298,6 +298,7 @@ final class AssignmentPrinter
             if (out.mode == NodeWriter.MODE_DEFAULT)
             {
                 TestNodeWriter tester = out.testers.get();
+                tester.reset();
                 PrinterFactory.create(rhs).print(rhs, tester);
 
                 boolean indent =
@@ -339,7 +340,7 @@ final class AssignmentPrinter
                     {
                         JavaNode parent = ((JavaNode) node).getParent();
 
-                        if (isNewChunk(parent, JavaTokenTypes.ASSIGN))
+                        if (isNewChunk(parent, JavaTokenTypes.ASSIGN) || out.state.anonymousInnerClass)
                         {
                             out.state.assignOffset = OFFSET_NONE;
                         }

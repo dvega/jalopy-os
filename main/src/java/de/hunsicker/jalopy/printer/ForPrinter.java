@@ -385,7 +385,7 @@ final class ForPrinter
      * Prints the initialization part of the for loop.
      *
      * @param node the initialization part node of the loop.
-     * @param wrap DOCUMENT ME!
+     * @param wrap True if should wrap
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occurred.

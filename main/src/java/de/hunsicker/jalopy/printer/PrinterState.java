@@ -126,4 +126,11 @@ final class PrinterState
             this.markers = null;
         }
     }
+    public void reset(PrinterState state) {
+        this.anonymousInnerClass = state.anonymousInnerClass;
+        this.innerClass = state.innerClass;
+        this.newlineBeforeLeftBrace = state.newlineBeforeLeftBrace;
+        this.parametersWrapped=state.parametersWrapped;
+        this.wrap=state.wrap;
+    }
 }

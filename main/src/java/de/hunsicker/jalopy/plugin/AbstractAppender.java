@@ -70,7 +70,7 @@ public abstract class AbstractAppender
     /**
      * Creates a new AbstractAppender object.
      *
-     * @throws ChainingRuntimeException DOCUMENT ME!
+     * @throws ChainingRuntimeException If an error occurs
      */
     public AbstractAppender()
     {

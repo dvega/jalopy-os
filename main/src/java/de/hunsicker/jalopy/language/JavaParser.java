@@ -424,10 +424,6 @@ private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode k
         }
     }
 }
-protected AST processMLComment(AST node) {
-    if (node==null) ;
-    return node;
-}
 
 /**
  * Attaches the hidden tokens associated to either the modifiers or type to the imaginary node.

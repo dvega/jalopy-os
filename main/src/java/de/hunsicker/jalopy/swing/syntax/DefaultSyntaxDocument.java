@@ -51,10 +51,10 @@ public class DefaultSyntaxDocument
 
     // protected members
 
-    /** DOCUMENT ME! */
+    /** The token marker */
     protected TokenMarker tokenMarker;
 
-    /** DOCUMENT ME! */
+    /** The colors */
     protected Color[] colors;
 
     //~ Constructors ---------------------------------------------------------------------
@@ -87,7 +87,7 @@ public class DefaultSyntaxDocument
      * Returns the color array that maps token identifiers to <code>java.awt.Color</code>
      * objects.
      *
-     * @return DOCUMENT ME!
+     * @return The colors
      */
     public Color[] getColors()
     {
@@ -120,7 +120,7 @@ public class DefaultSyntaxDocument
      * Returns the token marker that is to be used to split lines of this document up
      * into tokens. May return null if this document is not to be colorized.
      *
-     * @return DOCUMENT ME!
+     * @return The token marker
      */
     public TokenMarker getTokenMarker()
     {

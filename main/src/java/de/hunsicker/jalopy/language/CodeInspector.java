@@ -91,9 +91,6 @@ public final class CodeInspector
 
     private static final String STR_REPLACE_STRUCTURE_WITH_CLASS =
         "REPLACE_STRUCTURE_WITH_CLASS" /* NOI18N */;
-// TODO needed ?
-//    private static final String STR_ADHERE_TO_NAMING_CONVENTION =
-//        "ADHERE_TO_NAMING_CONVENTION" /* NOI18N */;
 
     private static final String STR_REFER_BY_INTERFACE =
         "REFER_BY_INTERFACE" /* NOI18N */;
@@ -189,10 +186,6 @@ public final class CodeInspector
     /** The pattern matcher. */
     private final PatternMatcher _matcher = new Perl5Matcher();
 
-    /** The file currently beeing processed. */
-    // TODO Needed ?
-    //private String _file;
-
     /** Helper array used to store the arguments for the message formatter. */
     protected final String[] _args = new String[3];
 
@@ -221,8 +214,6 @@ public final class CodeInspector
         AST  tree,
         File file)
     {
-        // TODO See above
-        //_file = file.getAbsolutePath();
         walk(tree);
     }
 
@@ -817,7 +808,6 @@ public final class CodeInspector
         boolean foundEquals = false;
         AST equalsNode = null;
         boolean foundHashCode = false;
-        //TODO AST hashCodeNode = null;
         boolean foundToString = false;
 
         for (AST child = body.getFirstChild(); child != null;
@@ -859,7 +849,6 @@ public final class CodeInspector
                     if (checkOverrideHashCode &&
                         !foundHashCode && isHashCodeMethod(method == null ? (method = new Method(child)): method))
                     {
-                        //TODO hashCodeNode = child;
                         foundHashCode = true;
                     }
 

@@ -513,6 +513,18 @@ LOOP:
         {
             Collections.sort(interfaces, comp);
         }
+        if (
+                settings.getBoolean(
+                    ConventionKeys.SORT_ENUM, ConventionDefaults.SORT_ENUM))
+            {
+                Collections.sort(enums, comp);
+            }
+        if (
+                settings.getBoolean(
+                    ConventionKeys.SORT_ANNOTATION, ConventionDefaults.SORT_ANNOTATION))
+            {
+                Collections.sort(annotations, comp);
+            }
 
         Map nodes = new HashMap(10, 1.0f);
         nodes.put(DeclarationType.STATIC_VARIABLE_INIT.getName(), staticStuff);

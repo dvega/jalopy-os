@@ -194,6 +194,30 @@ final class NodeComparator
 
         return compareNames(node1, node2);
     }
+    /**
+     * Compares the two class declaration nodes.
+     *
+     * @param node1 the first CLASS_DEF node.
+     * @param node2 the second  CLASS_DEF node.
+     *
+     * @return a negative integer, zero, or a positive integer as the first node is less
+     *         than, equal to, or greater than the second node.
+     */
+    protected int compareEnum(
+        AST node1,
+        AST node2)
+    {
+        int mod1 = JavaNodeModifier.valueOf(node1);
+        int mod2 = JavaNodeModifier.valueOf(node2);
+        int result = compareModifiers(mod1, mod2);
+
+        if (result != 0)
+        {
+            return result;
+        }
+
+        return compareNames(node1, node2);
+    }
 
 
     /**
@@ -271,11 +295,12 @@ final class NodeComparator
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
                     return compareClass(node1, node2);
-
+                
+                case JavaTokenTypes.ENUM_DEF:
+                    return compareEnum(node1,node2);
                 // nothing to compare here
                 case JavaTokenTypes.STATIC_INIT :
                 case JavaTokenTypes.INSTANCE_INIT :
-                case JavaTokenTypes.ENUM_DEF:
                     return 0;
                 
 

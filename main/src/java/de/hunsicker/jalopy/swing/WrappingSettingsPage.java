@@ -65,6 +65,9 @@ public class WrappingSettingsPage
     private JComboBox _arraysElementsComboBox;
     private JComboBox _indentDeepComboBox;
     private JComboBox _lineLengthComboBox;
+    private JComboBox _enumLineLengthComboBox;
+    private JCheckBox _enumAlignAlwaysCheckBox;
+    private JCheckBox _enumLineLengthCheckBox;
     private JTabbedPane _tabbedPane;
 
     //~ Constructors ---------------------------------------------------------------------
@@ -113,7 +116,7 @@ public class WrappingSettingsPage
     public void updateSettings()
     {
         this.settings.putBoolean(
-            ConventionKeys.LINE_WRAP, _wrapLinesCheckBox.isSelected());
+                                 ConventionKeys.LINE_WRAP, _wrapLinesCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.LINE_WRAP_BEFORE_OPERATOR, _wrapBeforeCheckBox.isSelected());
         this.settings.putBoolean(
@@ -197,6 +200,18 @@ public class WrappingSettingsPage
             this.settings.putInt(
                 ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS, Integer.MAX_VALUE);
         }
+        if (_enumLineLengthCheckBox.isSelected()) {
+	        this.settings.put(
+	                          ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,(String) _enumLineLengthComboBox.getSelectedItem());
+        }
+        else
+        {
+            this.settings.putInt(
+                ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS, Integer.MAX_VALUE);
+        }
+        this.settings.putBoolean(
+                          ConventionKeys.ENUM_LCURLY_NEW_LINE, _enumAlignAlwaysCheckBox.isSelected());
+        
     }
 
 
@@ -725,7 +740,25 @@ public class WrappingSettingsPage
         EmptyButtonGroup arrayButtonGroup = new EmptyButtonGroup();
         arrayButtonGroup.add(_wrapAsNeededCheckBox);
         arrayButtonGroup.add(_wrapArraysCheckBox);
+        
+        // Enum area
+      arrayElements =
+      this.settings.getInt(
+          ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,
+          ConventionDefaults.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
+        ComboPanel enumPanel = new ComboPanel(this.bundle.getString("LBL_ENUM" /* NOI18N */),
+                                              this.bundle.getString("LBL_LEFT_BRACES_NOT_NEW_LINE" /* NOI18N */),
+                                              this.bundle.getString("LBL_LEFT_BRACES_NEW_LINE" /* NOI18N */),
+                                              this.bundle.getString("CMB_NUMBER" /* NOI18N */),
+                                              arrayElements,
+                                              items,c
+                                              );
+        _enumAlignAlwaysCheckBox = enumPanel.getCheckBox();
+        _enumLineLengthCheckBox = enumPanel.getNCB().getCheckBox();
+        _enumLineLengthComboBox = enumPanel.getNCB().getComboBoxPanel().getComboBox();
 
+
+        // Back to main panel
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         panel.setLayout(layout);
@@ -740,7 +773,74 @@ public class WrappingSettingsPage
         layout.setConstraints(arraysPanel, c);
         panel.add(arraysPanel);
 
+        c.insets.top = 0;
+        SwingHelper.setConstraints(
+            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 5, 5);
+        layout.setConstraints(enumPanel, c);
+        panel.add(enumPanel);
+
         return panel;
+    }
+    class ComboPanel extends JPanel {
+        JCheckBox checkBox = null;
+        NumberComboBoxPanelCheckBox ncb = null;
+        public JCheckBox getCheckBox() { return checkBox;}
+        public NumberComboBoxPanelCheckBox getNCB() { return ncb;}
+        public ComboPanel(String borderName,String chkBoxName,String ncbName,String comboName,int arrayElements,String[]items, GridBagConstraints c) {
+            GridBagLayout enumPanelLayout = new GridBagLayout();
+            this.setLayout(enumPanelLayout);
+            this.setBorder(
+                BorderFactory.createCompoundBorder(
+                    BorderFactory.createTitledBorder(borderName),
+                    BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+            
+            checkBox = new JCheckBox(chkBoxName,arrayElements == 0);
+            checkBox.addActionListener(WrappingSettingsPage.this.trigger);
+            SwingHelper.setConstraints(
+                                       c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                       GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+            enumPanelLayout.setConstraints(checkBox, c);
+            this.add(checkBox);
+            
+            ncb =
+                new NumberComboBoxPanelCheckBox(
+                                                	ncbName,
+                    (arrayElements < Integer.MAX_VALUE) && (arrayElements > 0),
+                    comboName, items,
+                    getWrapValue(arrayElements));
+            ncb.getCheckBox().addActionListener(WrappingSettingsPage.this.trigger);
+            ncb.getComboBoxPanel().getComboBox().addActionListener(WrappingSettingsPage.this.trigger);
+            SwingHelper.setConstraints(
+                c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+            enumPanelLayout.setConstraints(ncb, c);
+            this.add(ncb);
+            EmptyButtonGroup enumButtonGroup = new EmptyButtonGroup();
+            
+            enumButtonGroup.add(checkBox);
+            enumButtonGroup.add(ncb.getCheckBox());        
+            }
+        
+        /**
+         * Returns the value that should be displayed in the combo box.
+         *
+         * @param value the value as stored in the settings.
+         *
+         * @return string value.
+         */
+        private String getWrapValue(int value)
+        {
+            switch (value)
+            {
+                case 0 : // wrap as needed
+                case Integer.MAX_VALUE : // never wrap
+                    return "1" /* NOI18N */;
+
+                default :
+                    return String.valueOf(value);
+            }
+        }
     }
 
 

@@ -127,7 +127,6 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
     {
         this(new StringReader(""));
 
-        // TODO
         JavadocLexer lexer = new JavadocLexer();
         _javadocParser = (JavadocParser)lexer.getParser();
         _recognizer = new Recognizer(_javadocParser, lexer);

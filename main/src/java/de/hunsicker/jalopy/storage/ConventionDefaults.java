@@ -288,7 +288,7 @@ public final class ConventionDefaults
     public static final boolean COMMENT_REMOVE_SINGLE_LINE = false;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final int SOURCE_VERSION = JavaParser.JDK_1_4;
+    public static final int SOURCE_VERSION = JavaParser.JDK_1_5;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean FOOTER = false;
@@ -472,6 +472,24 @@ public final class ConventionDefaults
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean LINE_WRAP_BEFORE_RIGHT_PAREN = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ENUM_LCURLY_NEW_LINE = true;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ENUM_ALIGN_VALUES_WHEN_EXCEEDS = 0;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ANON_LCURLY_NEW_LINE = true;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ANON_ALIGN_VALUES_WHEN_EXCEEDS = 0;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ANON_DEF_LCURLY_NEW_LINE = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS = 0;
 
     /** The default value for the key with the same name. */
     public static final int MSG_PRIORITY_IO = Level.WARN.toInt();

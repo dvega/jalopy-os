@@ -708,12 +708,12 @@ annotationField!
 enumConstant!
 	:	an:annotations
 		i:IDENT
-		(	LPAREN
+		(	lp:LPAREN
 			a:argList
-			RPAREN
+			rp:RPAREN
 		)?
 		( b:enumConstantBlock )?
-		{#enumConstant = #([ENUM_CONSTANT_DEF, "ENUM_CONSTANT_DEF"], an, i, a, b);}
+		{#enumConstant = #([ENUM_CONSTANT_DEF, "ENUM_CONSTANT_DEF"], an, i, lp,a,rp, b);}
 	;
 
 //The class-like body of an enum constant

@@ -75,14 +75,14 @@ public class DeclarationType
             ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_CLASS" /* NOI18N */),
             CLASS_INT);
 
-    /** Represents an ANNOTATION declaration. TODO Add in bundle*/
+    /** Represents an ANNOTATION declaration. */
     public static final DeclarationType ANNOTATION =
         new DeclarationType(
             "annotation" /* NOI18N */,
             ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_ANNOTATION" /* NOI18N */),
             ANNOTATION_INT);
     
-    /** Represents an ENUM declaration. TODO Add in bundle */
+    /** Represents an ENUM declaration. */
     public static final DeclarationType ENUM =
         new DeclarationType(
             "enum" /* NOI18N */,
@@ -162,7 +162,7 @@ public class DeclarationType
     private final String _name;
 
     /** The bit value of the method type. */
-    // TODO private final int _key;
+    private final int _key;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -170,7 +170,7 @@ public class DeclarationType
      * Creates a new DeclarationType object.
      *
      * @param name a string representing the declaration type.
-     * @param displayName DOCUMENT ME!
+     * @param displayName The name representing the type
      * @param key a bit value representing the declaration type.
      */
     private DeclarationType(
@@ -180,7 +180,7 @@ public class DeclarationType
     {
         _name = name;
         _displayName = displayName;
-        // TODO _key = key;
+        _key = key;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -264,16 +264,26 @@ public class DeclarationType
     {
         return _sortOrder;
     }
+    public static synchronized int getOrderSize() {
+        return _order.size();
+    }
 
 
     /**
-     * DOCUMENT ME!
+     * Returns the display name
      *
-     * @return DOCUMENT ME!
+     * @return The display name
      */
     public String getDisplayName()
     {
         return _displayName;
+    }
+    /**
+     * Returns the key 
+     * @return The key
+     */
+    public int  getKey() {
+        return _key;
     }
 
 
@@ -284,7 +294,7 @@ public class DeclarationType
      *
      * @param other the object to be compared.
      *
-     * @return DOCUMENT ME!
+     * @return An integer comparision of the 2 values
      *
      * @throws ClassCastException if the specified object's type prevents it from being
      *         compared to this object.

@@ -157,10 +157,11 @@ public final class Convention
 
     static
     {
+        // TODO Change to dynamiclly specify
         _settingsDirectory =
             new File(
                 System.getProperty("user.home" /* NOI18N */) + File.separator
-                + ".jalopy" /* NOI18N */    );
+                + ".jalopy.15" /* NOI18N */    );
 
         Project project = loadProject();
         _project = project;
@@ -619,7 +620,7 @@ public final class Convention
      * @param url url to import the code convention from.
      *
      * @throws IOException an I/O error occured.
-     * @throws ChainingRuntimeException DOCUMENT ME!
+     * @throws ChainingRuntimeException If an error occurs
      */
     public static void importSettings(URL url)
       throws IOException
@@ -659,8 +660,8 @@ public final class Convention
      * @param file code convention file.
      *
      * @throws IOException if an I/O error occured.
-     * @throws FileNotFoundException DOCUMENT ME!
-     * @throws IllegalArgumentException DOCUMENT ME!
+     * @throws FileNotFoundException File not found
+     * @throws IllegalArgumentException Illegal arg
      */
     public static void importSettings(File file)
       throws IOException
@@ -1113,9 +1114,9 @@ public final class Convention
 
 
     /**
-     * DOCUMENT ME!
+     * Sets the directory for the project
      *
-     * @param project DOCUMENT ME!
+     * @param project The project
      */
     private static void setDirectories(Project project)
     {
@@ -2432,7 +2433,13 @@ public final class Convention
         
         // Temporary modify one of the keys
         // TODO Update to add in the order, this requires a version change !
-        settings.put(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
+        String s=settings.get(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
+        StringTokenizer sortOrder = new StringTokenizer(s,"|");
+        int t = sortOrder.countTokens();
+        int z= DeclarationType.getOrderSize();
+        if (t!=z) {
+            settings.put(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
+        }
         
     }
 

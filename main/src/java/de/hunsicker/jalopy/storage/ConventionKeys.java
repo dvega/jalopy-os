@@ -1455,7 +1455,54 @@ public final class ConventionKeys
     /** Force wrapping/alignment after given number of array elements (<em>int</em>). */
     public static final Convention.Key LINE_WRAP_ARRAY_ELEMENTS =
         new Convention.Key("printer/wrapping/always/after/arrayElement");
-
+    /**
+     * Enumeration LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ENUM_LCURLY_NEW_LINE =
+        new Convention.Key("printer/wrapping/enum/lcurly/newline");
+    
+    /**
+     * Force alignment of wrapping ENUM values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ENUM_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/enum/align/after");
+    
+    /**
+     * Annotation LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_LCURLY_NEW_LINE =
+        new Convention.Key("printer/wrapping/anon/lcurly/newline");
+    
+    /**
+     * Annotation Def LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_DEF_LCURLY_NEW_LINE =
+        new Convention.Key("printer/wrapping/anondef/lcurly/newline");
+    
+    /**
+     * Force alignment of wrapping ANON values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/anon/align/after");
+    
+    /**
+     * Force alignment of wrapping ANON DEF values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/anondef/align/after");
+    
     /** Force line wrapping before implements? (<em>boolean</em>) */
     public static final Convention.Key LINE_WRAP_BEFORE_IMPLEMENTS =
         new Convention.Key("printer/wrapping/always/before/implements");
@@ -1555,9 +1602,9 @@ public final class ConventionKeys
 
 
     /**
-     * DOCUMENT ME!
+     * Called to dump the keys
      *
-     * @param args DOCUMENT ME!
+     * @param args Args ignored
      */
     public static void main(String[] args)
     {

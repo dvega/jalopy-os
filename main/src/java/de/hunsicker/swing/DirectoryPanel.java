@@ -7,7 +7,7 @@
 package de.hunsicker.swing;
 
 /**
- * DOCUMENT ME!
+ * The directory panel
  *
  * @author $author$
  * @version $Revision$
@@ -20,8 +20,8 @@ public class DirectoryPanel
     /**
      * Creates a new DirectoryPanel object.
      *
-     * @param label DOCUMENT ME!
-     * @param value DOCUMENT ME!
+     * @param label The label
+     * @param value The value
      */
     public DirectoryPanel(
         String label,
@@ -33,7 +33,7 @@ public class DirectoryPanel
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Change pressed
      */
     public void changePressed()
     {

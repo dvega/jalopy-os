@@ -9,7 +9,7 @@ import antlr.collections.AST;
 
 
 /**
- * TODO 
+ * The enum printer 
  */
 public class EnumPrinter extends BasicDeclarationPrinter {
 
@@ -19,7 +19,7 @@ public class EnumPrinter extends BasicDeclarationPrinter {
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new ImportPrinter object.
+     * Creates a new EnumPrinter object.
      */
     protected EnumPrinter()
     {
@@ -39,17 +39,16 @@ public class EnumPrinter extends BasicDeclarationPrinter {
 
 
     /** 
-     * TODO 
+     * Prints the enumeration 
      *
      * @param node
      * @param out
      * @throws IOException
      */
     public void print(AST node, NodeWriter out) throws IOException {
-        // TODO Complete annotations implementation
         out.state.innerClass = (out.getIndentLength() > 0);
 
-        // TODO addCommentIfNeeded(node, out);
+        // TODO addCommentIfNeeded((JavaNode)node, out);
 
         printCommentsBefore(node, out);
 
@@ -61,12 +60,10 @@ public class EnumPrinter extends BasicDeclarationPrinter {
         for(AST child = modifiers.getNextSibling();child!=null;child = child.getNextSibling()) {
             if (child.getType() == JavaTokenTypes.OBJBLOCK) {
                 out.state.extendsWrappedBefore = false;
-                out.last = JavaTokenTypes.LITERAL_enum;
-                
+                out.last = JavaTokenTypes.LITERAL_enum;                
             }
             PrinterFactory.create(child).print(child, out);
         }
-        
         // TODO out.state.innerClass = false;
         out.last = JavaTokenTypes.ENUM_DEF;
     }

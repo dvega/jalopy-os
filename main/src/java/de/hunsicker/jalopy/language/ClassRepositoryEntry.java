@@ -410,11 +410,11 @@ public class ClassRepositoryEntry
 
 
         /**
-         * DOCUMENT ME!
+         * Writes the object to the stream
          *
-         * @param out DOCUMENT ME!
+         * @param out The output stream
          *
-         * @throws IOException DOCUMENT ME!
+         * @throws IOException If an IO Error occur
          *
          * @todo document serial data
          */

@@ -69,7 +69,7 @@ abstract class BlockStatementPrinter
      * Prints the expression list starting with the given node; the left parenthesis.
      *
      * @param lparen a LPAREN node.
-     * @param insertBraces DOCUMENT ME!
+     * @param insertBraces Flag
      * @param out stream to write to.
      *
      * @return the RPAREN node of the expression list.

@@ -44,7 +44,6 @@ public class AnnotationDefPrinter extends AbstractPrinter {
      */
     protected AnnotationDefPrinter() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     /**
@@ -65,9 +64,9 @@ public class AnnotationDefPrinter extends AbstractPrinter {
      * @throws IOException
      */
     public void print(AST node, NodeWriter out) throws IOException {
-        out.indent();
+//        out.indent();
         
-        Marker marker = out.state.markers.add(out.line, out.indentSize * out.indentLevel);
+        Marker marker = out.state.markers.add(out.line, out.indentSize );
         out.state.markers.add(
             out.line,
             out.state.markers.getLast().column + out.indentSize);
@@ -97,7 +96,7 @@ public class AnnotationDefPrinter extends AbstractPrinter {
         out.state.innerClass = false;
         out.last = JavaTokenTypes.AT;
         out.state.markers.remove(marker);
-        out.unindent();
+//        out.unindent();
 
     }
 

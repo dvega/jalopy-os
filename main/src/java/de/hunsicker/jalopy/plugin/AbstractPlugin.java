@@ -822,7 +822,7 @@ public abstract class AbstractPlugin
         implements SwingAppender
     {
         /**
-         * DOCUMENT ME!
+         * Default appender for plufins
          *
          * @todo overide format() to add stacktraces
          */

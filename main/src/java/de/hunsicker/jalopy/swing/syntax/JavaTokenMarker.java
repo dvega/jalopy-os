@@ -89,6 +89,10 @@ public final class JavaTokenMarker
             cKeywords.add("interface", Token.KEYWORD2);
             cKeywords.add("extends", Token.KEYWORD2);
             cKeywords.add("implements", Token.KEYWORD2);
+            cKeywords.add("enum", Token.KEYWORD2);
+            cKeywords.add("@interface", Token.KEYWORD2);
+            cKeywords.add("@Target", Token.KEYWORD2);
+            cKeywords.add("@Retention", Token.KEYWORD2);
 
             cKeywords.add("byte", Token.KEYWORD3);
             cKeywords.add("char", Token.KEYWORD3);
@@ -143,11 +147,11 @@ public final class JavaTokenMarker
 
 
     /**
-     * DOCUMENT ME!
+     * Marks the token 
      *
-     * @param token DOCUMENT ME!
-     * @param line DOCUMENT ME!
-     * @param lineIndex DOCUMENT ME!
+     * @param token The token to mark
+     * @param line The line it is on
+     * @param lineIndex The index of the line
      *
      * @return DOCUMENT ME!
      */
@@ -311,7 +315,7 @@ loop:
                 default :
                     backslash = false;
 
-                    if ((token == Token.NULL) && (c != '_') && !Character.isLetter(c))
+                    if ((token == Token.NULL) && (c != '_') && !(Character.isLetter(c) || c == '@'))
                     {
                         int len = i - lastKeyword;
                         byte id = keywords.lookup(line, lastKeyword, len);

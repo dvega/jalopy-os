@@ -29,7 +29,7 @@ public abstract class AbstractSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    /** DOCUMENT ME! */
+    /** The Deliminator */
     protected static final String DELIMETER = "|" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------

@@ -6,18 +6,17 @@ import antlr.collections.AST;
 
 
 /**
- * TODO 
+ * The annotation printer
  */
 public class AnnotationsPrinter extends AbstractPrinter {
     /** Singleton. */
     private static final Printer INSTANCE = new AnnotationsPrinter();
 
     /**
-     * 
+     * Single instance printer
      */
     public AnnotationsPrinter() {
         super();
-        // TODO Auto-generated constructor stub
     }
     
     /**
@@ -39,8 +38,6 @@ public class AnnotationsPrinter extends AbstractPrinter {
      */
     public void print(AST node, NodeWriter out) throws IOException {
         // TODO Complete annotations implementation
-        System.out.println("TODO Annotations " + node);
-        //out.print("TODO Annotations",node.getType());
 
     }
 

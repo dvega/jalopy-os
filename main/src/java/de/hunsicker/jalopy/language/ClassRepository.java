@@ -767,7 +767,7 @@ public class ClassRepository
      * @return the loaded entry.
      *
      * @throws IOException if an I/O error occured.
-     * @throws ChainingRuntimeException DOCUMENT ME!
+     * @throws ChainingRuntimeException If an error occurs
      */
     private ClassRepositoryEntry loadFromDisk(File file)
       throws IOException

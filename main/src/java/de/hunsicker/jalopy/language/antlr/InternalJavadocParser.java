@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "main/src/java/de/hunsicker/jalopy/language/antlr/java.doc.g" -> "InternalJavadocParser.java"$
+// $ANTLR 2.7.4: "java.doc.g" -> "InternalJavadocParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 

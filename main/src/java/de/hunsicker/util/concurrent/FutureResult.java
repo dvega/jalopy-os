@@ -209,7 +209,7 @@ public class FutureResult
     /**
      * Wait at most msecs to access the reference.
      *
-     * @param msecs DOCUMENT ME!
+     * @param msecs Number of msecs
      *
      * @return current value
      *
@@ -257,9 +257,9 @@ public class FutureResult
     /**
      * internal utility: either get the value or throw the exception
      *
-     * @return DOCUMENT ME!
+     * @return The object
      *
-     * @throws InvocationTargetException DOCUMENT ME!
+     * @throws InvocationTargetException On error
      */
     protected Object doGet()
       throws InvocationTargetException

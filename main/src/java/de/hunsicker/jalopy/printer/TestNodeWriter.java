@@ -117,4 +117,10 @@ final class TestNodeWriter
         this.line = 1;
         this.column = 1;
     }
+    public void reset (NodeWriter writer) {
+        this.column = writer.column;
+        this.state.anonymousInnerClass = writer.state.anonymousInnerClass;
+        this.state.reset(writer.state);
+        this.line = 1;
+    }
 }

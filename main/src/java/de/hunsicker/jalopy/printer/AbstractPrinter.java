@@ -7,8 +7,10 @@
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.oro.text.perl.Perl5Util;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
@@ -22,8 +24,6 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.StringHelper;
-
-import org.apache.oro.text.perl.Perl5Util;
 
 
 /**
@@ -271,7 +271,7 @@ abstract class AbstractPrinter
      * Outputs indentation whitespace according to the current marker offset. If no
      * marker is set, this method does nothing.
      *
-     * @param diff DOCUMENT ME!
+     * @param diff The amount
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
@@ -328,12 +328,12 @@ abstract class AbstractPrinter
 
 
     /**
-     * DOCUMENT ME!
+     * True if node is the child of parent
      *
-     * @param node DOCUMENT ME!
-     * @param child DOCUMENT ME!
+     * @param node The parent
+     * @param child The child
      *
-     * @return DOCUMENT ME!
+     * @return True 
      *
      * @since 1.0b9
      */
@@ -870,7 +870,7 @@ abstract class AbstractPrinter
      * @return <code>true</code> if comments were printed.
      *
      * @throws IOException if an I/O error occured.
-     * @throws RuntimeException DOCUMENT ME!
+     * @throws RuntimeException If an error occurs
      */
     boolean printCommentsBefore(
         AST        node,
@@ -893,7 +893,7 @@ abstract class AbstractPrinter
             return false;
         }
 
-        /**
+        
         int linesToKeep =
             AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_KEEP_UP_TO,
@@ -902,8 +902,7 @@ abstract class AbstractPrinter
 
 
         CommonHiddenStreamToken previousComment = null;
-        TODO Check if neccesary
-        */
+        
         CommonHiddenStreamToken firstComment = n.getCommentBefore();
         
 
@@ -921,7 +920,7 @@ abstract class AbstractPrinter
 
                     if (n.getStartLine() != comment.getLine())
                     {
-                        /*switch (out.last)
+                        switch (out.last)
                         {
                             case JavaTokenTypes.SEPARATOR_COMMENT :
                                 break;
@@ -930,13 +929,14 @@ abstract class AbstractPrinter
 
                                 if (keepLines && (previousComment != null))
                                 {
+                                    // TODO Was commented out
                                     printBlankLinesBetweenComments(comment,
                                                                    previousComment,
                                                                    linesToKeep,
                                                                    out);
                                 }
                                 break;
-                        }*/
+                        }
 
                         printCommentBefore(
                             n, comment, comment == firstComment, newlineBefore,
@@ -963,8 +963,7 @@ abstract class AbstractPrinter
                     throw new RuntimeException("" + comment);
             }
 
-            // previousComment = comment;
-            // TODO See previous todo
+            previousComment = comment;
         }
 
         return true;
@@ -1568,7 +1567,7 @@ OUTER:
      * the given comment (the first comment of the given node).
      *
      * @param comment the first comment of a node.
-     * @param previous DOCUMENT ME!
+     * @param previous The previous node
      * @param out stream to write to.
      *
      * @return the number of blank lines to be printed before the given comment.
@@ -2052,7 +2051,7 @@ OUTER:
      *
      * @throws IOException if an I/O error occured.
      */
-    /* TODO Unused method
+    
     private void printBlankLinesBetweenComments(
         CommonHiddenStreamToken comment,
         CommonHiddenStreamToken previousComment,
@@ -2082,7 +2081,7 @@ OUTER:
             out.printBlankLines(lines);
         }
     }
-*/
+
 
     /**
      * Prints the given comment after the specified node.
@@ -2099,7 +2098,7 @@ OUTER:
      * @param out the stream to write to.
      *
      * @throws IOException if an I/O error occured.
-     * @throws IllegalArgumentException DOCUMENT ME!
+     * @throws IllegalArgumentException If an error occurs
      */
     private void printCommentAfter(
         AST                     node,
@@ -2196,7 +2195,7 @@ OUTER:
      *
      * @param node node the comment belongs to.
      * @param comment the comment to print.
-     * @param first DOCUMENT ME!
+     * @param first true indicates that comment is the first comment (in case of multiple comments in a row)
      * @param newlineBefore if <code>true</code>, a line break will be added before each
      *        comment, if appropriate.
      * @param newlineAfter if <code>true</code>, a line break will be added after each
@@ -2204,7 +2203,7 @@ OUTER:
      * @param out the stream to print to.
      *
      * @throws IOException if an I/O error occured.
-     * @throws IllegalArgumentException DOCUMENT ME!
+     * @throws IllegalArgumentException If an error occurs
      */
     private void printCommentBefore(
         JavaNode                node,

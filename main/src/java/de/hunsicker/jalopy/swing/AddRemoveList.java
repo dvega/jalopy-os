@@ -54,7 +54,7 @@ class AddRemoveList
     /** The button to remove items from the list. */
     protected JButton removeButton;
 
-    /** DOCUMENT ME! */
+    /** The reource bundle */
     protected ResourceBundle bundle;
 
     /** The text to use for the default add dialog. */
@@ -127,9 +127,9 @@ class AddRemoveList
 
 
     /**
-     * DOCUMENT ME!
+     * Set enabled
      *
-     * @param enable DOCUMENT ME!
+     * @param enable New value
      */
     public void setEnabled(boolean enable)
     {
@@ -165,9 +165,9 @@ class AddRemoveList
 
 
     /**
-     * DOCUMENT ME!
+     * Converts the list to an array
      *
-     * @return DOCUMENT ME!
+     * @return The list to array
      */
     public Object[] toArray()
     {
@@ -176,11 +176,11 @@ class AddRemoveList
 
 
     /**
-     * DOCUMENT ME!
+     * Returns add dialog
      *
-     * @param owner DOCUMENT ME!
+     * @param owner The owner
      *
-     * @return DOCUMENT ME!
+     * @return The dialog
      */
     protected JDialog getAddDialog(Dialog owner)
     {
@@ -189,11 +189,11 @@ class AddRemoveList
 
 
     /**
-     * DOCUMENT ME!
+     * Returns add dialog
      *
-     * @param owner DOCUMENT ME!
+     * @param owner The owner
      *
-     * @return DOCUMENT ME!
+     * @return The dialog
      */
     protected JDialog getAddDialog(Frame owner)
     {

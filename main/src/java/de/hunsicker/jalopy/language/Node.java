@@ -447,12 +447,13 @@ public class Node
 
         return result;
     }
-
+/*
     public int hashCode()
     {
        // TODO This really buggers up the tree view !!  
         return this.text.hashCode() + this.type;
     }
+    */
 
     /**
      * Compares the specified object with this object for equality. Returns

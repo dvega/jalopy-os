@@ -53,6 +53,7 @@ public class AnnotationFieldPrinter extends AbstractPrinter {
      */
     public void print(AST node, NodeWriter out) throws IOException {
         
+        // TODO Check to see if we should force or add comments
         printCommentsBefore(node,true,out);
         
         for(AST child = node.getFirstChild();child!=null;child=child.getNextSibling()) {

@@ -1039,7 +1039,6 @@ public final class Jalopy
         }
         catch (Throwable ex)
         {
-            ex.printStackTrace();
             _state = State.ERROR;
             _args[0] = _inputFile;
             _args[1] =
@@ -1047,7 +1046,6 @@ public final class Jalopy
                                           : ex.getMessage();
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
-        System.out.println(getClass() + "Got tree , " +tree);
 
         return format(tree, _packageName, _inputFileFormat, false);
     }
@@ -2201,8 +2199,6 @@ public final class Jalopy
                     "both input source and output target has to be specified");
         }
         
-        System.out.println(getClass() +  " Start print  !");
-        
 
         _now = System.currentTimeMillis();
 
@@ -2221,7 +2217,6 @@ public final class Jalopy
             outputWriter = _outputWriter;
         }
 
-        System.out.println(getClass() +  " Node writer !");
         NodeWriter out =
             new NodeWriter(
                 outputWriter, _inputFile.getAbsolutePath(), _issues,
@@ -2248,9 +2243,7 @@ public final class Jalopy
                                            : _inputFile) + ":0:0:print");
 
                 start = System.currentTimeMillis();
-                System.out.println(getClass() + "Creating print job !");
                 PrinterFactory.create(tree).print(tree, out);
-                System.out.println(getClass() + "Done Creating print job !");
 
                 if (!isChecksum())
                 {
@@ -2264,9 +2257,7 @@ public final class Jalopy
             }
             else
             {
-                System.out.println(getClass() + "Creating print job !" + tree);
                 PrinterFactory.create(tree).print(tree, out);
-                System.out.println(getClass() + "Done Creating print job !");
             }
 
             if (isChecksum())

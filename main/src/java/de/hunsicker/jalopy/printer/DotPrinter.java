@@ -94,7 +94,7 @@ final class DotPrinter
      * @param call the parent of the DOT node, a METHOD_CALL node.
      * @param lastCall the last METHOD_CALL node of the chain (but the first METHOD_CALL
      *        code of the AST tree!).
-     * @param testers DOCUMENT ME!
+     * @param testers The testers
      *
      * @return the length of the chained method call.
      *
@@ -174,7 +174,6 @@ final class DotPrinter
 
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
-        // TODO Modified to check parenScope.size - verify
         if (out.state.parenScope.size()>0 &&  ((ParenthesesScope) out.state.parenScope.getFirst()).chainCall != null)
         {
             ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();

@@ -171,6 +171,21 @@ public class SortingSettingsPage
                     ConventionKeys.SORT_INTERFACE,
                     ((Boolean) rowData.get(1)).booleanValue());
             }
+            else if (type == DeclarationType.ENUM)
+            {
+                this.settings.putBoolean(
+                    ConventionKeys.SORT_ENUM,
+                    ((Boolean) rowData.get(1)).booleanValue());
+            }
+            else if (type == DeclarationType.ANNOTATION)
+            {
+                this.settings.putBoolean(
+                    ConventionKeys.SORT_ANNOTATION,
+                    ((Boolean) rowData.get(1)).booleanValue());
+            }
+            else {
+                //throw new IllegalArgumentException("Unknown type " +type);
+            }
         }
 
         // remove the last delimeter
