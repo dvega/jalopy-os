@@ -52,45 +52,45 @@ information about the changes in the latest release.
     <tbody>
     <row rowsep="0" valign="top">
     <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-ant-0.5.5.zip">Ant &gt;= 1.4 (.zip)</ulink></entry>
-    <entry align="center">??? KB</entry>
-    <entry align="center">10/24/2002</entry>
+    <entry align="center">1.598 KB</entry>
+    <entry align="center">11/12/2002</entry>
     <entry><ulink url="http://jakarta.apache.org/ant/">Ant</ulink> task, contains Jalopy 1.0b9</entry>
     </row>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-console-1.0b9.zip">Console (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.610 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry>Command line interface, contains Jalopy 1.0b9</entry>
 </row>
 <row rowsep="0" valign="top">
-<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-eclipse-0.2.5.zip">Eclipse 2.0 (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-eclipse-0.2.5.zip">Eclipse &gt;= 2.0 (.zip)</ulink></entry>
+<entry align="center">1.553 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry><ulink url="http://www.eclipse.org/">Eclipse</ulink> integration, contains Jalopy 1.0b9</entry>
 </row>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-jbuilder-0.7.5.zip">JBuilder &gt;= 5.0 (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.557 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry><ulink url="http://www.borland.com/jbuilder/">JBuilder</ulink> integration, contains Jalopy 1.0b9</entry>
 </row>
 <row rowsep="0" valign="top">
-<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-jdeveloper-1.0.3.zip">JDeveloper 9i (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-jdeveloper-1.1.0.zip">JDeveloper 9i (.zip)</ulink></entry>
+<entry align="center">1.551 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry><ulink url="http://otn.oracle.com/products/jdev/">JDeveloper</ulink> integration, contains Jalopy 1.0b9</entry>
 </row>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-jedit-0.3.5.zip">jEdit &gt;= 4.1pre1 (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.571 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry><ulink url="http://www.jedit.org/">jEdit</ulink> integration, contains Jalopy 1.0b9</entry>
 </row>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-netbeans-0.3.3.zip">NetBeans &gt;= 3.3 (.zip), Sun ONE Studio 4
 </ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.537 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry><ulink url="http://www.netbeans.org/">NetBeans</ulink>/<ulink url="http://wwws.sun.com/software/sundev/jde/index.html">Sun ONE Studio</ulink> integration, contains Jalopy 1.0b9</entry>
 </row>
 </tbody>
@@ -118,8 +118,8 @@ information about the changes in the latest release.
 <tbody>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-1.0b9.src.tar.gz">Jalopy 1.0b9 (.src.tar.gz)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.793 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry>Contains the complete Jalopy 1.0b9 sources (core runtime + all Plug-ins)</entry>
 </row>
 </tbody>
@@ -149,8 +149,8 @@ Jalopy 1.0
 <tbody>
 <row rowsep="0" valign="top">
 <entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-1.0b9.zip">Jalopy 1.0b9 (.zip)</ulink></entry>
-<entry align="center">??? KB</entry>
-<entry align="center">10/24/2002</entry>
+<entry align="center">1.763 KB</entry>
+<entry align="center">11/12/2002</entry>
 <entry>Jalopy core runtime, for users who want to integrate Jalopy into their own applications</entry>
 </row>
 </tbody>

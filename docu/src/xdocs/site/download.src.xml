@@ -63,7 +63,7 @@ information about the changes in the latest release.
 <entry>Command line interface, contains Jalopy @BUILD.VERSION@</entry>
 </row>
 <row rowsep="0" valign="top">
-<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-eclipse-@BUILD.VERSION.ECLIPSE@.zip">Eclipse 2.0 (.zip)</ulink></entry>
+<entry><ulink url="http://prdownloads.sourceforge.net/jalopy/jalopy-eclipse-@BUILD.VERSION.ECLIPSE@.zip">Eclipse &gt;= 2.0 (.zip)</ulink></entry>
 <entry align="center">@SIZE.ECLIPSE@ KB</entry>
 <entry align="center">@TODAY@</entry>
 <entry><ulink url="http://www.eclipse.org/">Eclipse</ulink> integration, contains Jalopy @BUILD.VERSION@</entry>

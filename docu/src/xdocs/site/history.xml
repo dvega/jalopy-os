@@ -14,7 +14,7 @@
 </articleinfo>
 
 <simplesect>
-<title>1.0 Beta 9 (2002-11-11)</title>
+<title>1.0 Beta 9 (2002-11-12)</title>
 <orderedlist numeration="lowerroman">
 <listitem>
 New Features
@@ -73,7 +73,7 @@ naming convention violations and possible code weaknesses. See the
 </listitem>
 
 <listitem>
-New history method that use checksum to better handle chang detection for files.
+New history methods that uses checksums to better handle change detection for files.
 See <ulink url="./misc.html#misc-history">History section</ulink>. Very cool feature
 contributed by Michael Callum
 </listitem>

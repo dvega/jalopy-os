@@ -185,22 +185,6 @@ repeatedly over time. There are two methods for keeping history.
 
 <itemizedlist>
 <listitem>
-<para id="history-comment">
-Use history comments
-</para>
-
-<indexterm zone="history-comment"><primary>History</primary><secondary>comment</secondary></indexterm>
-<indexterm zone="history-comment"><primary>Comments</primary><secondary>for history</secondary></indexterm>
-<indexterm zone="history-comment"><primary>Comment-based history</primary></indexterm>
-
-<para>
-Jalopy will insert a small comment in the first line of every source file.
-The comment encodes the time a file was last formatted along with the package
-name of the file. This method is precise and relatively foolproof.
-</para>
-</listitem>
-
-<listitem>
 <para id="history-file">
 Use history file
 </para>
@@ -228,16 +212,33 @@ nice to be able to only format files which have changed. There are three methods
 working out if a file has changed provided in a drop down. Timestamp will use the
 modification time of the file, this does not work very well with source control
 and multiple developers. There are two standard checksums available. These
-work by taking a checksum of the file and comparing it to the one in the history file
-if its different the file is parsed and formatted in memory and a new checksum
-is calculated. If the new checksum is different than the checksum for the unformatted
-file it is written to disk. This stops file that have just been updated from source
-control from having being formatted (and timestamps updated).
+work by taking a checksum of the file and comparing it to the one in the history file.
+If this checksum is different, the file is parsed and formatted in memory and a new
+checksum calculated. If the new checksum is different than the checksum for the
+unformatted file, it is written to disk. This stops files that have just been updated
+from source control from having being formatted (and timestamps updated).
 </para>
 
 <para>
 Use the <guibutton>View...</guibutton> button to display the history viewer. You
 can selectively remove entries via the popup menu.
+</para>
+</listitem>
+
+<listitem>
+<para id="history-comment">
+Use history comments
+</para>
+
+<indexterm zone="history-comment"><primary>History</primary><secondary>comment</secondary></indexterm>
+<indexterm zone="history-comment"><primary>Comments</primary><secondary>for history</secondary></indexterm>
+<indexterm zone="history-comment"><primary>Comment-based history</primary></indexterm>
+
+<para>
+Jalopy will insert a small comment in the first line of every source file.
+The comment encodes the time a file was last formatted along with the package
+name of the file. This method is precise and relatively foolproof but does not work well
+with SCM tools.
 </para>
 </listitem>
 </itemizedlist>
@@ -246,9 +247,9 @@ can selectively remove entries via the popup menu.
 <sect3 id="misc-backup">
 <title>Backup</title>
 <para>
-Without the redirection option, Jalopy creates a backup copy of the currently
+For security reasons Jalopy creates a backup copy of the currently
 processed file so it can be restored in case a severe error occured during the
-formatting process. The original file is stored in the backup directory and
+formatting process. The original file is stored in the backup directory and normally
 deleted after the newly formatted file has been successfully written.
 </para>
 

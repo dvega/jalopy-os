@@ -385,12 +385,12 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           description="Creates the online website"
           depends="docu-compile">
 
-    <!-- make sure everything was build -->
-    <ant dir="../build" target="build-dist-all" inheritAll="false" />
+    <!-- make sure everything was build
+    <ant dir="../build" target="build-dist-all" inheritAll="true" /> -->
 
     <filesize name="size.main" file="${DIR.DIST}/jalopy-${BUILD.VERSION}.zip" />
     <filesize name="size.ant" file="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.zip" />
-    <filesize name="size.console" file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip" />
+    <filesize name="size.console" file="${DIR.DIST}/jalopy-console-${BUILD.VERSION.CONSOLE}.zip" />
     <filesize name="size.eclipse" file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.zip" />
     <filesize name="size.jbuilder" file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.zip" />
     <filesize name="size.jdeveloper" file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip" />
@@ -416,21 +416,21 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </filterset>
     </copy>
 
-    <mkdir dir="${DIR.DOCS}/online/" />
+    <mkdir dir="${DIR.DOCS}/website/" />
 
     <xslt basedir="${dir.src}/xdocs/site"
-           destdir="${DIR.DOCS}/online"
+           destdir="${DIR.DOCS}/website"
            processor="trax"
            force="true"
            style="${dir.src}/xdocs/site/site.xsl"
            includes="*.xml"
            excludes="*.src.xml, _*">
-      <param name="base.dir" expression="${DIR.DOCS}/online/" />
+      <param name="base.dir" expression="${DIR.DOCS}/website/" />
       <param name="build.time" expression="${TODAY}" />
       <xmlcatalog refid="DTDs"/>
     </xslt>
 
-    <copy todir="${DIR.DOCS}/online"
+    <copy todir="${DIR.DOCS}/website"
           file="${dir.src}/xdocs/site/site.css" />
   </target>
 
