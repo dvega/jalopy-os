@@ -26,6 +26,35 @@ public final class NodeHelper
     {
     }
 
+    /**
+     * Determines whether the given node represents an abstract method.
+     * @param node a METHOD_DEF node.
+     * @return <code>true</code> if the given node represents an abstract method.
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() != METHOD_DEF</code>
+     */
+      public static boolean isAbstractMethod(AST node)
+    {
+        boolean result = false;
+        switch (node.getType())
+        {
+            case JavaTokenTypes.METHOD_DEF:
+                for (AST child = node.getFirstChild(); child != null; child = child.getNextSibling())
+                {
+                    switch (child.getType())
+                    {
+                        case JavaTokenTypes.SEMI:
+                            result = true;
+                            break;
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("no METHOD_DEF -- " + node);
+        }
+
+        return result;
+    }
+
     //~ Methods --------------------------------------------------------------------------
 
     /**
