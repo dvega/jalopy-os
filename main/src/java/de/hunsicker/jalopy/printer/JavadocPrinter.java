@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -73,10 +73,8 @@ final class JavadocPrinter
     private static final String KEY_TAG_MISSPELLED_NAME =
         "TAG_MISSPELLED_NAME" /* NOI18N */;
     private static final String KEY_GENERATE_COMMENT = "GENERATE_COMMENT" /* NOI18N */;
-
     private static final String TAG_OPARA = "<p>" /* NOI18N */;
     private static final String TAG_CPARA = "</p>" /* NOI18N */;
-
     private static Pattern _pattern;
 
     static
@@ -384,7 +382,19 @@ final class JavadocPrinter
                 return false;
 
             case JavaTokenTypes.LITERAL_try :
-                return true;
+
+                AST next = parent.getFirstChild().getNextSibling();
+
+                if (next != null)
+                {
+                    switch (next.getType())
+                    {
+                        case JavaTokenTypes.LITERAL_catch :
+                            return true;
+                    }
+                }
+
+                return false;
 
             default :
 
@@ -934,8 +944,7 @@ LOOP:
             if (needTag)
             {
                 returnNode =
-                    createTag(
-                        node, JavadocTokenTypes.TAG_RETURN, null, out.environment);
+                    createTag(node, JavadocTokenTypes.TAG_RETURN, null, out.environment);
             }
         }
 
@@ -1181,9 +1190,10 @@ LOOP:
                 // make sure the tag is at the correct position
                 tags.set(i, tag);
 
+                /*
                 AST child = tag.getFirstChild();
 
-                /*if (child != null)
+                if (child != null)
                 {
                 String text = child.getText().trim();
                 String name = null;
@@ -1377,6 +1387,8 @@ LOOP:
      * @param node node to merge its text for.
      *
      * @return string with the textual content of the node and all siblings.
+     *
+     * @throws IllegalStateException if a &lt;pre&gt; tag was found in the description.
      */
     private String mergeChildren(AST node)
     {
@@ -1437,8 +1449,9 @@ LOOP:
 
                     break;
 
-                case JavadocTokenTypes.PRE:
-                    throw new IllegalStateException("<pre> tag not supported within tag description");
+                case JavadocTokenTypes.PRE :
+                    throw new IllegalStateException(
+                        "<pre> tag not supported within tag description");
 
                 default :
                     buf.append(child.getText());
