@@ -1,44 +1,27 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jbuilder;
 
-import com.borland.primetime.editor.EditorManager;
-import com.borland.primetime.editor.EditorPane;
-import com.borland.primetime.node.FileNode;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EventListener;
+import java.util.List;
 
+import com.borland.primetime.ide.*;
+import com.borland.jbuilder.node.*;
+import com.borland.jbuilder.debugger.*;
+import com.borland.primetime.editor.*;
+import com.borland.primetime.editor.EditorManager;
+import com.borland.primetime.node.FileNode;
+import com.borland.primetime.viewer.*;
+
+import de.hunsicker.jalopy.plugin.*;
 import de.hunsicker.jalopy.plugin.Editor;
-import de.hunsicker.jalopy.plugin.ProjectFile;
 
 
 /**
@@ -50,12 +33,16 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 final class JbEditor
     implements Editor
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
+    EditorPane pane;
     FileNode node;
     ProjectFile file;
 
-    //~ Constructors ··························································
+    private final static String MARK_BREAKPOINT = "com.borland.jbuilder.debugger.BreakpointMark" /* NOI18N */;
+    private final static String MARK_BOOK = "com.borland.primetime.editor.BookmarkManager$EditorMark" /* NOI18N */;
+
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JbEditor object.
@@ -63,29 +50,112 @@ final class JbEditor
      * @param file the underlying Java source file.
      * @param node the attached file node.
      */
-    public JbEditor(ProjectFile file,
-                    FileNode    node)
+    public JbEditor(
+        ProjectFile file,
+        FileNode    node)
     {
         this.file = file;
         this.node = node;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
+
+    /**
+     * Returns the BreakPointTreeModel for the active browser.
+     *
+     * @return BreakPointTreeModel
+     *
+     * @since 0.7.5
+     */
+    private BreakpointTreeModel getBreakpointTreeModel()
+    {
+        JBProject project = (JBProject)Browser.getActiveBrowser().getProjectView().getActiveProject();
+        return project.getDebugInfoManager().getBreakpointTreeModel();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void attachAnnotations(List annotations)
+    {
+        EditorPane pane = getEditorPane();
+        EditorDocument document = (EditorDocument) pane.getDocument();
+        Gutter gutter = NodeViewMap.getView(pane).getGutter();
+        BreakpointTreeModel model = getBreakpointTreeModel();
+
+        for (int i = 0, size = annotations.size(); i < size; i++)
+        {
+            Annotation annotation = (Annotation) annotations.get(i);
+
+            String classname = (String)annotation.getData();
+
+            if (MARK_BREAKPOINT.equals(classname))
+            {
+                model.toggleBreakpoint(gutter, annotation.getLine());
+            }
+            else if (MARK_BOOK.equals(classname))
+            {
+                BookmarkManager.toggleBookmark(annotation.getLine(), pane);
+            }
+        }
+
+        annotations.clear();
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    public List detachAnnotations()
+    {
+        List result = Collections.EMPTY_LIST;
+
+        EditorPane pane = getEditorPane();
+        EditorDocument document = (EditorDocument)pane.getDocument();
+        Gutter gutter = NodeViewMap.getView(pane).getGutter();
+        BreakpointTreeModel model = getBreakpointTreeModel();
+
+        for (int i = 0, lines = pane.getLineCount(); i < lines; i++)
+        {
+            LineMark[] marks = document.getLineMarks(i);
+
+            if (marks.length > 0)
+            {
+                if (result == Collections.EMPTY_LIST)
+                    result = new ArrayList();
+
+                for (int j = 0; j < marks.length; j++)
+                {
+                    String classname = marks[j].getClass().getName();
+
+                    if (MARK_BREAKPOINT.equals(classname))
+                    {
+                        model.toggleBreakpoint(gutter, i + 1);
+                        result.add(new Annotation(i + 1, MARK_BREAKPOINT));
+                    }
+                    else if (MARK_BOOK.equals(classname))
+                    {
+                        //BookmarkManager.toggleBookmark(i + 1, pane);
+                        result.add(new Annotation(i + 1, MARK_BOOK));
+                    }
+                }
+            }
+        }
+
+        BookmarkManager.clearBookmarks(Browser.getActiveBrowser(), pane);
+
+        return result;
+    }
+
 
     /**
      * {@inheritDoc}
      */
     public void setCaretPosition(int offset)
     {
-        int line = getEditorPane().getLineNumber(offset);
-
-        if (line <= getEditorPane().getLineCount())
+        if (offset < getLength())
         {
-            getEditorPane().setCaretPosition(line, 1);
-        }
-        else
-        {
-            getEditorPane().setCaretPosition(1, 1);
+            getEditorPane().gotoOffset(offset);
         }
     }
 
@@ -93,8 +163,9 @@ final class JbEditor
     /**
      * {@inheritDoc}
      */
-    public void setCaretPosition(int line,
-                                 int column)
+    public void setCaretPosition(
+        int line,
+        int column)
     {
         getEditorPane().gotoPosition(line, column);
     }
@@ -157,8 +228,9 @@ final class JbEditor
     /**
      * {@inheritDoc}
      */
-    public void setSelection(int startOffset,
-                             int endOffset)
+    public void setSelection(
+        int startOffset,
+        int endOffset)
     {
         getEditorPane().setSelectionStart(startOffset);
         getEditorPane().setSelectionEnd(endOffset);
@@ -227,9 +299,18 @@ final class JbEditor
         getEditorPane().selectAll();
     }
 
-
+    /**
+     * Returns the JBuilder EditorPane for this editor.
+     *
+     * @return the underlying JBuilder EditorPane for this editor.
+     */
     private EditorPane getEditorPane()
     {
-        return EditorManager.getEditor(this.node);
+        if (this.pane == null)
+        {
+            this.pane = EditorManager.getEditor(this.node);
+        }
+
+        return this.pane;
     }
 }

@@ -1,37 +1,31 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.jbuilder;
+
+import java.awt.Event;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import com.borland.jbuilder.JBuilderMenu;
 import com.borland.jbuilder.paths.JDKPathSet;
@@ -58,35 +52,18 @@ import com.borland.primetime.vfs.Url;
 
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.parser.ClassRepository;
+import de.hunsicker.jalopy.language.ClassRepository;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.ImportPolicy;
-import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.jalopy.storage.Convention;
-import de.hunsicker.jalopy.ui.SettingsDialog;
-import de.hunsicker.ui.ErrorDialog;
-
-import java.awt.Event;
-import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.ImportPolicy;
+import de.hunsicker.jalopy.swing.SettingsDialog;
+import de.hunsicker.swing.ErrorDialog;
+import de.hunsicker.util.StringHelper;
 
 
 /**
@@ -98,10 +75,16 @@ import javax.swing.KeyStroke;
 public final class JbPlugin
     extends AbstractPlugin
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The content type for Java source files. */
-    private static final String CONTENT_TYPE_JAVA = "text/java";
+    private static final String CONTENT_TYPE_JAVA = "text/java" /* NOI18N */;
+
+    /** A bundle that holds localized message strings. */
+    private static final ResourceBundle BUNDLE =
+        ResourceBundle.getBundle(
+            "de.hunsicker.jalopy.plugin.jbuilder.Bundle" /* NOI18N */,
+            Convention.getInstance().getLocale());
 
     /** Our sole instance. */
     private static final JbPlugin INSTANCE = new JbPlugin();
@@ -113,9 +96,12 @@ public final class JbPlugin
     private static int _numFiles;
 
     /** Directory to compile classes to. */
-    private static String _outputDir;
+    private static File _outputDir;
 
-    //~ Constructors ··························································
+    /** Helper array. */
+    private static final Object[] _args = new Object[1];
+
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JbPlugin object.
@@ -126,15 +112,15 @@ public final class JbPlugin
         initActions();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * {@inheritDoc}
      */
     public Project getActiveProject()
     {
-        return new JbProject(Browser.getActiveBrowser().getProjectView()
-                                    .getActiveProject());
+        return new JbProject(
+            Browser.getActiveBrowser().getProjectView().getActiveProject());
     }
 
 
@@ -172,29 +158,34 @@ public final class JbPlugin
     /**
      * Initializes the Plug-in.
      *
-     * @param major major release number for which the OpenTool is being
-     *        initialized.
-     * @param minor minor release number for which the OpenTool is being
-     *        initialized.
+     * @param major major release number for which the OpenTool is being initialized.
+     * @param minor minor release number for which the OpenTool is being initialized.
      */
-    public static void initOpenTool(byte major,
-                                    byte minor)
+    public static void initOpenTool(
+        byte major,
+        byte minor)
     {
         if (major != PrimeTime.CURRENT_MAJOR_VERSION)
         {
-            System.err.println("Could not load Jalopy OpenTool. Need PrimeTime " +
-                               PrimeTime.CURRENT_MAJOR_VERSION + "." +
-                               PrimeTime.CURRENT_MINOR_VERSION + ", was " +
-                               major + '.' + minor);
+            Object[] args =
+            {
+                String.valueOf(PrimeTime.CURRENT_MAJOR_VERSION),
+                String.valueOf(PrimeTime.CURRENT_MINOR_VERSION), String.valueOf(major),
+                String.valueOf(minor)
+            };
+
+            System.err.println(
+                MessageFormat.format(
+                    BUNDLE.getString("MSG_ERROR_LOADING" /* NOI18N */), args));
 
             return;
         }
 
-        System.out.println("Jalopy Java Source Code Formatter " +
-                           Jalopy.getVersion());
-        System.out.println("Copyright (c) 2001, 2002 Marco Hunsicker ");
-        System.out.println("Loading from " +
-                           INSTANCE.getClass().getResource("JbPlugin.class"));
+        System.out.println(
+            "Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion());
+        System.out.println(
+            "Copyright (c) 2001, 2002 Marco Hunsicker. All rights reserved." /* NOI18N */);
+
         Browser.addStaticBrowserListener(new BrowserHandler());
     }
 
@@ -213,28 +204,29 @@ public final class JbPlugin
      */
     protected FileFormat getFileFormat()
     {
-        return decodeFileFormat(Browser.getActiveBrowser().getActiveProject()
-                                       .getProperty("editor.general",
-                                                    "line_ending.style", null));
+        return decodeFileFormat(
+            Browser.getActiveBrowser().getActiveProject().getProperty(
+                "editor.general" /* NOI18N */, "line_ending.style" /* NOI18N */, null));
     }
 
 
     /**
      * Determines whether the import optimization feature is enabled.
      *
-     * @return <code>true</code> if the import optimization feature is
-     *         enabled.
+     * @return <code>true</code> if the import optimization feature is enabled.
      *
      * @since 1.0b8
      */
     static boolean isImportOptimizationEnabled()
     {
-        ImportPolicy importPolicy = ImportPolicy.valueOf(Convention.getInstance()
-                                                                    .get(Keys.IMPORT_POLICY,
-                                                                         Defaults.IMPORT_POLICY));
+        ImportPolicy importPolicy =
+            ImportPolicy.valueOf(
+                Convention.getInstance().get(
+                    ConventionKeys.IMPORT_POLICY, ConventionDefaults.IMPORT_POLICY));
 
-        if ((importPolicy == ImportPolicy.EXPAND) ||
-            (importPolicy == ImportPolicy.COLLAPSE))
+        if (
+            (importPolicy == ImportPolicy.EXPAND)
+            || (importPolicy == ImportPolicy.COLLAPSE))
         {
             return true;
         }
@@ -244,10 +236,8 @@ public final class JbPlugin
 
 
     /**
-     * Updates the class repository if Java source files have bean
-     * added/removed.
-     *
-     * @see ClassRepository#load
+     * Updates the class repository if Java source files have bean added/removed. Used by
+     * the build handlers.
      */
     static void updateRepository()
     {
@@ -259,15 +249,14 @@ public final class JbPlugin
             try
             {
                 // trigger the update of the repository
-                ClassRepository.getInstance().load(new File(_outputDir));
+                ClassRepository.getInstance().load(_outputDir);
 
                 // now it is save to update our counter
                 _numFiles = numFiles;
             }
             catch (Throwable ex)
             {
-                ErrorDialog dialog = new ErrorDialog(ex,
-                                                     Browser.getActiveBrowser());
+                ErrorDialog dialog = ErrorDialog.create(Browser.getActiveBrowser(), ex);
                 dialog.setVisible(true);
             }
         }
@@ -293,13 +282,11 @@ public final class JbPlugin
 
 
     /**
-     * Returns all Java source files that make up the currently active
-     * project.
+     * Returns all Java source files that make up the currently active project.
      *
-     * @return project files. Returns an empty collection if no source files
-     *         could be found which means that either no active project is
-     *         available or the project doesn't contains any source code
-     *         files.
+     * @return project files. Returns an empty collection if no source files could be
+     *         found which means that either no active project is available or the
+     *         project doesn't contains any source code files.
      */
     private static Collection getProjectFiles()
     {
@@ -322,8 +309,9 @@ public final class JbPlugin
         ActionGroup toolGroup = null;
         ActionGroup[] groups = Browser.getMenuGroups();
 
-        if ((PrimeTime.CURRENT_MAJOR_VERSION == 4) &&
-            (PrimeTime.CURRENT_MINOR_VERSION > 1))
+        if (
+            (PrimeTime.CURRENT_MAJOR_VERSION == 4)
+            && (PrimeTime.CURRENT_MINOR_VERSION > 1))
         {
             toolGroup = JBuilderMenu.GROUP_ToolsOptions;
         }
@@ -332,9 +320,9 @@ public final class JbPlugin
             // ugly workaround for a JBuilder 4.0 incompatibility
             for (int i = 0; i < groups.length; i++)
             {
-                if ("Tools".equals(groups[i].getShortText()))
+                if ("Tools" /* NOI18N */.equals(groups[i].getShortText()))
                 {
-                    toolGroup = (ActionGroup)groups[i].getAction(0);
+                    toolGroup = (ActionGroup) groups[i].getAction(0);
 
                     break;
                 }
@@ -346,9 +334,9 @@ public final class JbPlugin
 
 
     /**
-     * Checks whether all libraries as defined in the project properties, are
-     * valid (i.e. all library path sets contain at least one classpath
-     * entry, either a directory or an archive).
+     * Checks whether all libraries as defined in the project properties, are valid (i.e.
+     * all library path sets contain at least one classpath entry, either a directory or
+     * an archive).
      *
      * @param project the current project.
      *
@@ -356,25 +344,27 @@ public final class JbPlugin
      *
      * @since 1.0b8
      */
-    private boolean checkClassPath(com.borland.jbuilder.node.JBProject project)
+    private static boolean checkClassPath(com.borland.jbuilder.node.JBProject project)
     {
         String libraries = project.getProperty(project.PROPERTY_LIBRARIES);
 
-        for (StringTokenizer i = new StringTokenizer(libraries, ";");
-             i.hasMoreElements();)
+        for (
+            StringTokenizer i = new StringTokenizer(libraries, ";" /* NOI18N */);
+            i.hasMoreElements();)
         {
             String library = i.nextToken();
             PathSet set = PathSetManager.getLibrary(library);
 
             if (set.isEmpty())
             {
-                JOptionPane.showMessageDialog(INSTANCE.getMainWindow(),
-                                              "The library \"" + library +
-                                              "\" contains no paths. This most notably\n" +
-                                              "means it has been removed from disk.\n\n" +
-                                              "Check the settings in the \"Required Libraries\" tab in you project properties.\n",
-                                              "Error: Formatting cannot be performed",
-                                              JOptionPane.ERROR_MESSAGE);
+                Object[] args =
+                { library, BUNDLE.getString("TAB_REQUIRED_LIBRARIES" /* NOI18N */) };
+                JOptionPane.showMessageDialog(
+                    INSTANCE.getMainWindow(),
+                    MessageFormat.format(
+                        BUNDLE.getString("MSG_ERROR_EMPTY_LIBRARY" /* NOI18N */), args),
+                    BUNDLE.getString("TLE_FORMATTING_IMPOSSIBLE" /* NOI18N */),
+                    JOptionPane.ERROR_MESSAGE);
 
                 return false;
             }
@@ -385,19 +375,23 @@ public final class JbPlugin
 
                 for (int j = 0, size = locations.size(); j < size; j++)
                 {
-                    File location = (File)locations.get(j);
+                    File location = (File) locations.get(j);
+
+                    Object[] args =
+                    {
+                        library, location,
+                        BUNDLE.getString("TAB_REQUIRED_LIBRARIES" /* NOI18N */)
+                    };
 
                     if (!location.exists())
                     {
-                        JOptionPane.showMessageDialog(INSTANCE.getMainWindow(),
-                                                      "The library \"" +
-                                                      library +
-                                                      "\" contains an invalid path.\n" +
-                                                      "\"" + location +
-                                                      "\" could not be found!\n\n" +
-                                                      "Check the settings in the \"Required Libraries\" tab in you project properties.\n",
-                                                      "Error: Formatting cannot be performed",
-                                                      JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(
+                            INSTANCE.getMainWindow(),
+                            MessageFormat.format(
+                                BUNDLE.getString("MSG_ERROR_INVALID_PATH" /* NOI18N */),
+                                args),
+                            BUNDLE.getString("TLE_FORMATTING_IMPOSSIBLE" /* NOI18N */),
+                            JOptionPane.ERROR_MESSAGE);
 
                         return false;
                     }
@@ -410,8 +404,8 @@ public final class JbPlugin
 
 
     /**
-     * Decodes the file format string of the JBuilder editor properties as a
-     * valid Jalopy file format.
+     * Decodes the file format string of the JBuilder editor properties as a valid Jalopy
+     * file format.
      *
      * @param fileformat the JBuilder editor line ending style property
      *        (<code>editor.general.line_ending.style</code>)
@@ -425,22 +419,22 @@ public final class JbPlugin
             return FileFormat.AUTO;
         }
 
-        if (fileformat.equals("1"))
+        if (fileformat.equals("1" /* NOI18N */))
         {
             return FileFormat.DEFAULT;
         }
 
-        if (fileformat.equals("2"))
+        if (fileformat.equals("2" /* NOI18N */))
         {
             return FileFormat.DOS;
         }
 
-        if (fileformat.equals("3"))
+        if (fileformat.equals("3" /* NOI18N */))
         {
             return FileFormat.UNIX;
         }
 
-        if (fileformat.equals("4"))
+        if (fileformat.equals("4" /* NOI18N */))
         {
             return FileFormat.MAC;
         }
@@ -455,24 +449,25 @@ public final class JbPlugin
     private void initActions()
     {
         FormatSingleAction formatSingleAction = new FormatSingleAction();
+
         JBuilderMenu.GROUP_ProjectBuild.add(formatSingleAction);
         EditorManager.registerContextActionProvider(formatSingleAction);
-        EditorManager.getKeymap()
-                     .addActionForKeyStroke(KeyStroke.getKeyStroke(
-                                                                   KeyEvent.VK_F10,
-                                                                   Event.CTRL_MASK | Event.SHIFT_MASK),
-                                            formatSingleAction);
+        EditorManager.getKeymap().addActionForKeyStroke(
+            KeyStroke.getKeyStroke(KeyEvent.VK_F10, Event.CTRL_MASK | Event.SHIFT_MASK),
+            formatSingleAction);
         EditorActions.addBindableEditorAction(formatSingleAction);
+
         ProjectView.registerContextActionProvider(new JbContextActionProvider());
 
         SettingsAction displaySettingsAction = new SettingsAction();
         getToolsGroup().add(2, displaySettingsAction);
+
         EditorManager.registerContextActionProvider(displaySettingsAction);
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
-    private static class BrowserHandler
+    private static final class BrowserHandler
         extends BrowserAdapter
     {
         /** Holds the already monitored projects. */
@@ -492,7 +487,7 @@ public final class JbPlugin
 
 
         public void browserClosing(Browser browser)
-            throws VetoException
+          throws VetoException
         {
             this.closing = true;
         }
@@ -501,45 +496,63 @@ public final class JbPlugin
         public void browserOpened(Browser browser)
         {
             this.opened = true;
-            browserProjectActivated(browser,
-                                    browser.getProjectView().getActiveProject());
+            browserProjectActivated(
+                browser, browser.getProjectView().getActiveProject());
         }
 
 
-        public void browserProjectActivated(final Browser                      browser,
-                                            com.borland.primetime.node.Project project)
+        public void browserProjectActivated(
+            final Browser                      browser,
+            com.borland.primetime.node.Project project)
         {
             if ((project == null) || (!(this.opened)) || this.closing)
             {
                 return;
             }
 
-            _outputDir = project.getProjectPath().getFileObject() +
-                         File.separator +
-                         project.getProperty("sys", "OutPath", "build/classes");
+            String path =
+                project.getProperty(
+                    "sys" /* NOI18N */, "OutPath" /* NOI18N */,
+                    "build/classes" /* NOI18N */);
 
-            Thread updater = new UpdateThread(null,
-                                              (com.borland.jbuilder.node.JBProject)project);
-            updater.start();
+            path = StringHelper.replace(path, "%S", ";");
+            path = StringHelper.replace(path, "%|", ":");
+            _outputDir = new File(path);
+
+            if (!_outputDir.exists())
+            {
+                _outputDir = new File(project.getProjectPath().getFileObject(), path);
+            }
+
+            // keep track of the current project
+            _curProject = (com.borland.jbuilder.node.JBProject) project;
+
+            if (isImportOptimizationEnabled())
+            {
+                Thread updater = new UpdateThreadZwei(null, _curProject);
+                updater.start();
+            }
         }
 
 
-        public void browserProjectClosed(Browser                            browser,
-                                         com.borland.primetime.node.Project project)
+        public void browserProjectClosed(
+            Browser                            browser,
+            com.borland.primetime.node.Project project)
         {
             project.removeProjectListener(this.listener);
             this.projects.remove(project);
 
             if (this.projects.size() == 0)
             {
-                unloadProject((com.borland.jbuilder.node.JBProject)project,
-                              new Url[0]);
+                unloadProject(
+                    (com.borland.jbuilder.node.JBProject) project, new Url[0]);
             }
         }
 
 
-        private void unloadProject(com.borland.jbuilder.node.JBProject currentProject,
-                                   Url[]                               newLibraries)
+        private void unloadProject(
+            com.borland.jbuilder.node.JBProject currentProject,
+            Url[]                               newLibraries)
         {
             if (currentProject == null)
             {
@@ -583,14 +596,15 @@ public final class JbPlugin
         /**
          * Used to update the class repository for the active project.
          */
-        private class UpdateThread
+        private final class UpdateThreadZwei
             extends Thread
         {
             com.borland.jbuilder.node.JBProject project;
             JDialog dialog;
 
-            UpdateThread(JDialog                             dialog,
-                         com.borland.jbuilder.node.JBProject project)
+            UpdateThreadZwei(
+                JDialog                             dialog,
+                com.borland.jbuilder.node.JBProject project)
             {
                 this.dialog = dialog;
                 this.project = project;
@@ -606,7 +620,7 @@ public final class JbPlugin
 
                 ClassRepository repository = ClassRepository.getInstance();
                 List locations = getFilePaths(urls);
-                locations.add(new File(_outputDir));
+                locations.add(_outputDir);
 
                 try
                 {
@@ -624,17 +638,17 @@ public final class JbPlugin
                         ;
                     }
 
-                    JOptionPane.showMessageDialog(INSTANCE.getMainWindow(),
-                                                  ex.getMessage() +
-                                                  "\nCheck your classpath setup via Tools->Configure Libraries... and/or\n" +
-                                                  "Project->Project properties...->Required Libraries \n\n" +
-                                                  "Meanwhile the import optimization feature will be disabled.\n",
-                                                  "Error: Library not found",
-                                                  JOptionPane.ERROR_MESSAGE);
+                    Object[] args = { ex.getMessage() };
+
+                    JOptionPane.showMessageDialog(
+                        INSTANCE.getMainWindow(),
+                        MessageFormat.format(
+                            BUNDLE.getString("MSG_ERROR_LIBRARY_NOT_FOUND" /* NOI18N */),
+                            args),
+                        BUNDLE.getString("TLE_LIBRARY_NOT_FOUND" /* NOI18N */),
+                        JOptionPane.ERROR_MESSAGE);
                 }
 
-                // keep track of the current project
-                _curProject = this.project;
                 _numFiles = getProjectFiles().size();
 
                 if (!BrowserHandler.this.projects.contains(this.project))
@@ -648,46 +662,52 @@ public final class JbPlugin
 
 
     /**
-     * Used to update the class repository if the user changes project
-     * settings.
+     * Used to update the class repository if the user changes project settings.
      */
-    private static class ProjectHandler
+    private static final class ProjectHandler
         implements ProjectListener
     {
-        public void nodeChanged(com.borland.primetime.node.Project project,
-                                Node                               node)
+        public void nodeChanged(
+            com.borland.primetime.node.Project project,
+            Node                               node)
         {
             _numFiles = 0;
         }
 
 
-        public void nodeChildrenChanged(com.borland.primetime.node.Project project,
-                                        Node                               parent)
+        public void nodeChildrenChanged(
+            com.borland.primetime.node.Project project,
+            Node                               parent)
         {
         }
 
 
-        public void projectPropertyChanged(com.borland.primetime.node.Project project,
-                                           String                             category,
-                                           String                             property,
-                                           String                             oldValue,
-                                           String                             newValue)
+        public void projectPropertyChanged(
+            com.borland.primetime.node.Project project,
+            String                             category,
+            String                             property,
+            String                             oldValue,
+            String                             newValue)
         {
-            //System.err.println(category + " " + property + " " + oldValue +
-            //                   " " + newValue);
-            if ("sys".equals(category) && "Libraries".equals(property))
+            if (
+                isImportOptimizationEnabled() && "sys" /* NOI18N */.equals(category)
+                && "Libraries" /* NOI18N */.equals(property))
             {
                 List oldUrls = new ArrayList();
                 List newUrls = new ArrayList();
 
-                for (StringTokenizer tokens = new StringTokenizer(oldValue, ";");
-                     tokens.hasMoreTokens();)
+                for (
+                    StringTokenizer tokens =
+                        new StringTokenizer(oldValue, ";" /* NOI18N */);
+                    tokens.hasMoreTokens();)
                 {
                     oldUrls.add(tokens.nextToken());
                 }
 
-                for (StringTokenizer tokens = new StringTokenizer(newValue, ";");
-                     tokens.hasMoreTokens();)
+                for (
+                    StringTokenizer tokens =
+                        new StringTokenizer(newValue, ";" /* NOI18N */);
+                    tokens.hasMoreTokens();)
                 {
                     newUrls.add(tokens.nextToken());
                 }
@@ -696,7 +716,7 @@ public final class JbPlugin
 
                 for (int i = 0, size = oldUrls.size(); i < size; i++)
                 {
-                    String url = (String)oldUrls.get(i);
+                    String url = (String) oldUrls.get(i);
 
                     if (newUrls.contains(url))
                     {
@@ -714,7 +734,7 @@ public final class JbPlugin
 
                 for (int i = 0, size = newUrls.size(); i < size; i++)
                 {
-                    String url = (String)newUrls.get(i);
+                    String url = (String) newUrls.get(i);
 
                     if ((!repository.isEmpty()) && oldUrls.contains(url))
                     {
@@ -727,11 +747,12 @@ public final class JbPlugin
                 }
 
                 Url[] unload = new Url[0];
-                ProjectPathSet paths = ((com.borland.jbuilder.node.JBProject)project).getPaths();
+                ProjectPathSet paths =
+                    ((com.borland.jbuilder.node.JBProject) project).getPaths();
 
                 for (int i = 0, size = removed.size(); i < size; i++)
                 {
-                    PathSet pathset = paths.getLibrary((String)removed.get(i));
+                    PathSet pathset = paths.getLibrary((String) removed.get(i));
                     Url[] urls = pathset.getFullClassPath();
                     Url[] temp = new Url[unload.length + urls.length];
                     System.arraycopy(unload, 0, temp, 0, unload.length);
@@ -743,7 +764,7 @@ public final class JbPlugin
 
                 for (int i = 0, size = added.size(); i < size; i++)
                 {
-                    PathSet pathset = paths.getLibrary((String)added.get(i));
+                    PathSet pathset = paths.getLibrary((String) added.get(i));
                     Url[] urls = pathset.getFullClassPath();
                     Url[] temp = new Url[load.length + urls.length];
                     System.arraycopy(load, 0, temp, 0, load.length);
@@ -753,19 +774,22 @@ public final class JbPlugin
 
                 update(project, unload, load);
             }
-            else if ("sys".equals(category) && "JDK".equals(property))
+            else if (
+                "sys" /* NOI18N */.equals(category)
+                && "JDK" /* NOI18N */.equals(property))
             {
                 JDKPathSet oldpath = PathSetManager.getJDK(oldValue);
                 JDKPathSet newpath = PathSetManager.getJDK(newValue);
-                update(project, oldpath.getFullClassPath(),
-                       newpath.getFullClassPath());
+                update(project, oldpath.getFullClassPath(), newpath.getFullClassPath());
             }
-            else if ("sys".equals(category) && "OutPath".equals(property))
+            else if (
+                "sys" /* NOI18N */.equals(category)
+                && "OutPath" /* NOI18N */.equals(property))
             {
-                String projectPath = project.getProjectPath().getFileObject() +
-                                     File.separator;
-                Url[] unload ={ new Url(new File(projectPath + oldValue)) };
-                Url[] load ={ new Url(new File(projectPath + newValue)) };
+                String projectPath =
+                    project.getProjectPath().getFileObject() + File.separator;
+                Url[] unload = { new Url(new File(projectPath + oldValue)) };
+                Url[] load = { new Url(new File(projectPath + newValue)) };
                 update(project, unload, load);
             }
         }
@@ -798,7 +822,7 @@ public final class JbPlugin
             catch (Exception ex)
             {
                 /**
-                 * @todo show error dialog, unload all libs to disable
+                 * @todo log error
                  */
                 ex.printStackTrace();
             }
@@ -831,7 +855,7 @@ public final class JbPlugin
                 }
             }
 
-            files.add(new File(_outputDir));
+            files.add(_outputDir);
 
             try
             {
@@ -840,7 +864,7 @@ public final class JbPlugin
             catch (Exception ex)
             {
                 /**
-                 * @todo log error
+                 * @todo show error dialog, unload all libs to disable
                  */
                 ex.printStackTrace();
             }
@@ -851,31 +875,32 @@ public final class JbPlugin
          * Issues the updating of the class repository for the given project.
          *
          * @param project project which settings have been altered.
-         * @param unload urls that are to be removed from the class
-         *        repository.
+         * @param unload urls that are to be removed from the class repository.
          * @param load urls that are to be added to the class repository.
          */
-        private void update(com.borland.primetime.node.Project project,
-                            Url[]                              unload,
-                            Url[]                              load)
+        private void update(
+            com.borland.primetime.node.Project project,
+            Url[]                              unload,
+            Url[]                              load)
         {
-            Thread updater = new UpdateThread(null, unload, load);
+            Thread updater = new UpdateThreadDrei(null, unload, load);
             updater.start();
         }
 
         /**
          * Used to update the class repository after changes to the classpath.
          */
-        private static class UpdateThread
+        private static class UpdateThreadDrei
             extends Thread
         {
             JDialog dialog;
             Url[] load;
             Url[] unload;
 
-            UpdateThread(JDialog dialog,
-                         Url[]   unload,
-                         Url[]   load)
+            UpdateThreadDrei(
+                JDialog dialog,
+                Url[]   unload,
+                Url[]   load)
             {
                 this.dialog = dialog;
                 this.load = load;
@@ -892,171 +917,9 @@ public final class JbPlugin
 
 
     /**
-     * Formats the project files currently selected in the project view.
-     */
-    private class FormatMultiAction
-        extends BrowserAction
-    {
-        /**
-         * Creates a new FormatMultiAction object.
-         */
-        public FormatMultiAction()
-        {
-            super("project-format");
-            putValue("ActionGroup", "Build");
-            putValue(BrowserAction.SHORT_DESCRIPTION, "Format");
-            putValue(BrowserAction.LONG_DESCRIPTION,
-                     "Format the selected nodes");
-        }
-
-        public void actionPerformed(Browser browser)
-        {
-            if (isImportOptimizationEnabled())
-            {
-                if (!checkClassPath(_curProject))
-                {
-                    return;
-                }
-            }
-
-            // we want to update all selected nodes
-            performAction(Action.FORMAT_SELECTED);
-        }
-    }
-
-
-    /**
-     * Formats the currently active editor window content.
-     */
-    private class FormatSingleAction
-        extends EditorAction
-        implements EditorContextActionProvider
-    {
-        /**
-         * Creates a new FormatSingleAction object.
-         */
-        public FormatSingleAction()
-        {
-            super("file-format");
-            putValue("ActionGroup", "Build");
-            putValue(BrowserAction.LONG_DESCRIPTION,
-                     "Format active project node");
-            putValue(UpdateAction.MNEMONIC, new Character('t'));
-            putValue(UpdateAction.ACCELERATOR,
-                     KeyStroke.getKeyStroke(KeyEvent.VK_F10,
-                                            ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-        }
-
-        public javax.swing.Action getContextAction(EditorPane editor)
-        {
-            if (CONTENT_TYPE_JAVA.equals(editor.getContentType()))
-            {
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        /**
-         * Determines whether this action is enabled.
-         *
-         * @return <code>true</code> if the action is enabled.
-         */
-        public boolean isEnabled()
-        {
-            ProjectFile file = getActiveProject().getActiveFile();
-
-            if (null == file)
-            {
-                putValue(BrowserAction.SHORT_DESCRIPTION, "Format");
-
-                return false;
-            }
-
-            putValue(BrowserAction.SHORT_DESCRIPTION,
-                     "Format \"" + file.getName() + "\"");
-
-            return true;
-        }
-
-
-        public int getPriority()
-        {
-            return Integer.MAX_VALUE;
-        }
-
-
-        /**
-         * Gets one of this object's properties using the associated key.
-         *
-         * @param key a string containing the specified key.
-         *
-         * @return the binding Object stored with this key. If there are no
-         *         keys, it will return <code>null</code>.
-         */
-        public Object getValue(String key)
-        {
-            if (key.equals(BrowserAction.SHORT_DESCRIPTION))
-            {
-                ProjectFile file = getActiveProject().getActiveFile();
-
-                if (file == null)
-                {
-                    return "Format";
-                }
-                else
-                {
-                    return "Format \"" + file.getName() + "\"";
-                }
-            }
-
-            return super.getValue(key);
-        }
-
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param ev the event which caused the action.
-         */
-        public void actionPerformed(ActionEvent ev)
-        {
-            EditorManager.getEditor(Browser.getActiveBrowser().getActiveNode())
-                         .startUndoGroup();
-
-            // we only want to update the active file
-            performAction(Action.FORMAT_ACTIVE);
-        }
-    }
-
-
-    /**
-     * Provides the context menu action for the project view.
-     */
-    private class JbContextActionProvider
-        implements ContextActionProvider
-    {
-        FormatMultiAction action = new FormatMultiAction();
-
-        public JbContextActionProvider()
-        {
-        }
-
-        public javax.swing.Action getContextAction(Browser browser,
-                                                   Node[]  nodes)
-        {
-            return (this.action);
-        }
-    }
-
-
-    /**
      * Displays the configuration dialog.
      */
-    private class SettingsAction
+    private static final class SettingsAction
         extends EditorAction
         implements EditorContextActionProvider
     {
@@ -1065,12 +928,19 @@ public final class JbPlugin
          */
         public SettingsAction()
         {
-            super("config-jalopy");
-            putValue(BrowserAction.SMALL_ICON,
-                     new ImageIcon(this.getClass()
-                                       .getResource("/de/hunsicker/jalopy/ui/resources/Preferences16.gif")));
-            putValue(BrowserAction.LONG_DESCRIPTION, "Edit Jalopy options");
-            putValue(BrowserAction.SHORT_DESCRIPTION, "Jalopy Options...");
+            super("config-jalopy" /* NOI18N */);
+
+            putValue(
+                BrowserAction.SMALL_ICON,
+                new ImageIcon(
+                    this.getClass().getResource(
+                        "/de/hunsicker/jalopy/swing/resources/Preferences16.gif" /* NOI18N */)));
+            putValue(
+                BrowserAction.LONG_DESCRIPTION,
+                BUNDLE.getString("MNE_OPTIONS_DESCRIPTION" /* NOI18N */));
+            putValue(
+                BrowserAction.SHORT_DESCRIPTION,
+                BUNDLE.getString("MNE_OPTIONS" /* NOI18N */));
             putValue(UpdateAction.MNEMONIC, new Character('j'));
         }
 
@@ -1100,10 +970,212 @@ public final class JbPlugin
          */
         public void actionPerformed(ActionEvent ev)
         {
-            SettingsDialog dlg = new SettingsDialog(Browser.getActiveBrowser());
+            SettingsDialog dlg =
+                SettingsDialog.create(
+                    Browser.getActiveBrowser(),
+                    BUNDLE.getString("TLE_OPTIONS" /* NOI18N */));
             dlg.pack();
             dlg.setLocationRelativeTo(Browser.getActiveBrowser());
             dlg.setVisible(true);
+        }
+    }
+
+
+    /**
+     * Formats the project files currently selected in the project view.
+     */
+    private final class FormatMultiAction
+        extends BrowserAction
+    {
+        /**
+         * Creates a new FormatMultiAction object.
+         */
+        public FormatMultiAction()
+        {
+            super("project-format" /* NOI18N */);
+
+            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
+            putValue(
+                BrowserAction.SHORT_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+            putValue(
+                BrowserAction.LONG_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT_DESCRIPTION" /* NOI18N */));
+        }
+
+        public void actionPerformed(Browser browser)
+        {
+            if (isImportOptimizationEnabled())
+            {
+                if (!checkClassPath(_curProject))
+                {
+                    return;
+                }
+
+                if (ClassRepository.getInstance().isEmpty())
+                {
+                    /*Thread updater =  new UpdateThreadZwei(null, _curProject);
+                    updater.start();*/
+                }
+            }
+
+            // we want to update all selected nodes
+            performAction(Action.FORMAT_SELECTED);
+        }
+    }
+
+
+    /**
+     * Formats the currently active editor window content.
+     */
+    private final class FormatSingleAction
+        extends EditorAction
+        implements EditorContextActionProvider
+    {
+        /**
+         * Creates a new FormatSingleAction object.
+         */
+        public FormatSingleAction()
+        {
+            super("file-format" /* NOI18N */);
+            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
+            putValue(
+                BrowserAction.LONG_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT_DESCRIPTION" /* NOI18N */));
+            putValue(UpdateAction.MNEMONIC, new Character('t'));
+            putValue(
+                UpdateAction.ACCELERATOR,
+                KeyStroke.getKeyStroke(
+                    KeyEvent.VK_F10, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+        }
+
+        public javax.swing.Action getContextAction(EditorPane editor)
+        {
+            if (CONTENT_TYPE_JAVA.equals(editor.getContentType()))
+            {
+                return this;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        /**
+         * Determines whether this action is enabled.
+         *
+         * @return <code>true</code> if the action is enabled.
+         */
+        public boolean isEnabled()
+        {
+            ProjectFile file = getActiveProject().getActiveFile();
+
+            if (file == null)
+            {
+                putValue(
+                    BrowserAction.SHORT_DESCRIPTION,
+                    BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+
+                return false;
+            }
+            else
+            {
+                _args[0] = file.getName();
+
+                putValue(
+                    BrowserAction.SHORT_DESCRIPTION,
+                    MessageFormat.format(
+                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args));
+
+                return true;
+            }
+        }
+
+
+        public int getPriority()
+        {
+            return Integer.MAX_VALUE;
+        }
+
+
+        /**
+         * Gets one of this object's properties using the associated key.
+         *
+         * @param key a string containing the specified key.
+         *
+         * @return the binding Object stored with this key. If there are no keys, it will
+         *         return <code>null</code>.
+         */
+        public Object getValue(String key)
+        {
+            if (key.equals(BrowserAction.SHORT_DESCRIPTION))
+            {
+                ProjectFile file = getActiveProject().getActiveFile();
+
+                if (file == null)
+                {
+                    return BUNDLE.getString("MNE_FORMAT" /* NOI18N */);
+                }
+                else
+                {
+                    _args[0] = file.getName();
+
+                    return MessageFormat.format(
+                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args);
+                }
+            }
+
+            return super.getValue(key);
+        }
+
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param ev the event which caused the action.
+         */
+        public void actionPerformed(ActionEvent ev)
+        {
+            EditorManager.getEditor(Browser.getActiveBrowser().getActiveNode())
+                         .startUndoGroup();
+
+            if (isImportOptimizationEnabled())
+            {
+                if (!checkClassPath(_curProject))
+                {
+                    return;
+                }
+
+                if (ClassRepository.getInstance().isEmpty())
+                {
+                    ;
+                }
+            }
+
+            // we only want to update the active file
+            performAction(Action.FORMAT_ACTIVE);
+        }
+    }
+
+
+    /**
+     * Provides the context menu action for the project view.
+     */
+    private final class JbContextActionProvider
+        implements ContextActionProvider
+    {
+        FormatMultiAction action = new FormatMultiAction();
+
+        public JbContextActionProvider()
+        {
+        }
+
+        public javax.swing.Action getContextAction(
+            Browser browser,
+            Node[]  nodes)
+        {
+            return (this.action);
         }
     }
 }
