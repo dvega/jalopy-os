@@ -29,6 +29,7 @@ import de.hunsicker.util.StringHelper;
 
 import org.apache.log4j.Level;
 
+import org.apache.oro.text.perl.Perl5Util;
 
 /**
  * Transformation which replaces <em>single-type-import declarations</em> with their
@@ -187,7 +188,7 @@ final class ImportTransformation
 
     /**
      * Callback that will be called for every IMPORT node found.
-     * 
+     *
      * <p>
      * Adds the node to one of our collections (either single-type or on-demand).
      * </p>
@@ -682,13 +683,14 @@ final class ImportTransformation
         _line = 0;
     }
 
-
     private void collapse()
     {
+        if (_singleTypeImports.size() > 0)
+        {
+
         List singleTypeImports = _singleTypeImports;
 
-        // this will hold all on-demand imports
-        // (both original and newly collapsed ones)
+        // this will hold all on-demand imports (both original and newly collapsed ones)
         List newOnDemandImports = new ArrayList(singleTypeImports.size());
 
         // add the original on-demand imports
@@ -815,14 +817,20 @@ final class ImportTransformation
                         conflicts.add(firstPackageName);
                         template.text = firstPackageName;
 
-                        if (newOnDemandImports.remove(template))
+                        int index = 0;
+
+                        if ((index = newOnDemandImports.indexOf(template)) > -1)
                         {
+                            JavaNode importNode = (JavaNode)newOnDemandImports.remove(index);
+
                             // if this is an original on-demand import we must
                             // retain it in the output
                             if (_onDemandImports.contains(template))
                             {
-                                retainedOnDemandImports.add(
-                                    new JavaNode(JavaTokenTypes.IMPORT, template.text));
+                                importNode.text = template.text;
+                                importNode.setNextSibling(null);
+                                importNode.setPreviousSibling(null);
+                                retainedOnDemandImports.add(importNode);
                             }
                             else
                             {
@@ -874,8 +882,14 @@ final class ImportTransformation
 
         newOnDemandImports.addAll(retainedOnDemandImports);
         updateTree(newOnDemandImports, singleTypeImports);
+        }
+        else
+        {
+            updateTree(_onDemandImports, Collections.EMPTY_LIST);
+        }
     }
 
+    private final static Perl5Util REGEX_ENGINE = new Perl5Util();
 
     /**
      * Updates the given unqualified import node to .
@@ -886,21 +900,8 @@ final class ImportTransformation
      */
     private JavaNode createImportNode(JavaNode node)
     {
-        String identifier = node.text;
-        List parts = new ArrayList(8);
-
-        int endOffset = -1;
-        int startOffset = 0;
-
-        // split the identifier into parts
-        while ((endOffset = identifier.indexOf('.', startOffset)) > -1)
-        {
-            parts.add(identifier.substring(startOffset, endOffset));
-            parts.add(DOT);
-            startOffset = endOffset + 1;
-        }
-
-        parts.add(identifier.substring(startOffset));
+        List parts = new ArrayList(6);
+        REGEX_ENGINE.split(parts, "/([.])/" /* NOI18N */, node.text, Perl5Util.SPLIT_ALL);
 
         ASTPair curAST = new ASTPair();
 
@@ -1072,7 +1073,7 @@ final class ImportTransformation
 
     /**
      * Tries to expand all on-demand import declarations.
-     * 
+     *
      * <p>
      * Duplicate and obsolete import declarations will be removed.
      * </p>
@@ -1214,7 +1215,7 @@ final class ImportTransformation
                             }
                         }
 
-CHECK: 
+CHECK:
 
                         // inner class check (this sucks)
                         for (int k = 0, s = _qualIdents.size(); k < s; k++)
@@ -1312,7 +1313,7 @@ CHECK:
             {
                 String path = StringHelper.getPackageName(node.text);
                 boolean furtherCheck = true;
-CHECK: 
+CHECK:
 
                 // second check: inner classes
                 // we take every given qualified identifier
