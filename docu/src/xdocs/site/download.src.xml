@@ -24,11 +24,11 @@ Download your copy of Jalopy today!
 Jalopy comes in several flavors. End users most notably want to choose
 between one of the available Plug-in bundles. Each bundle provides the integration
 with exactly one application. Note that starting with 1.0b6 only the Console Plug-in
-provides command line capabilities! 
+provides command line capabilities!
 </para>
 
 <para>
-Read the <ulink url="./history.html">change history</ulink> for up-to-date 
+Read the <ulink url="./history.html">change history</ulink> for up-to-date
 information about the changes in the latest release.
 </para>
 
@@ -101,7 +101,7 @@ information about the changes in the latest release.
 <simplesect id="source">
 <title>Sources</title>
 
-<informaltable frame="none" colsep="0" rowsep="0" pgwide="1">
+<informaltable frame="none" colsep="0" rowsep="0">
 <tgroup cols="4" colsep="0" rowsep="0">
 <colspec colwidth="25*"/>
 <colspec colwidth="10*"/>
@@ -160,7 +160,7 @@ Jalopy 1.0
 
 
 <para>
-Prior versions can be obtained through the SourceForge file release area: 
+Prior versions can be obtained through the SourceForge file release area:
 <ulink url="http://sourceforge.net/project/showfiles.php?group_id=45216">http://sourceforge.net/project/showfiles.php?group_id=45216</ulink>
 </para>
 </simplesect>

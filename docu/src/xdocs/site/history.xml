@@ -75,20 +75,66 @@ Bugfixes
 
 <itemizedlist mark="square">
 <listitem>
-JBuilder Plug-in: the Plug-in is now compatible with JBuilder 7.0. Reported by Simeon Zverinski
-(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=596821&amp;group_id=45216">#596821</ulink>)
+I've fixed some cases where Jalopy produced trailing whitespace on wrapping lines. There may still be others...
+Reported by Ralf Wiebicke
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607697&amp;group_id=45216">#607697</ulink>)
 </listitem>
-
+<listitem>
+The Javadoc printed failed to print HTML defintion lists correcty. Reportey by
+David Cooper
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607416&amp;group_id=45216">#607416</ulink>)
+</listitem>
+<listitem>
+Array initializers inside statements were not printed correctly. Reported by
+Dirk Hoffmann
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=607303&amp;group_id=45216">#607303</ulink>)
+</listitem>
+<listitem>
+Variable macros did (as documented) not work for names like <literal>user.name</literal>. Reported by
+Don Johnson
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=606173&amp;group_id=45216">#606173</ulink>)
+</listitem>
+<listitem>
+Empty lines in multi-line comments produced trailing whitespace.
+Reported by Ralf Wiebicke
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=605998&amp;group_id=45216">#605998</ulink>)
+</listitem>
+<listitem>
+Javadoc endline comments were ignored. Jalopy will now (again) treat such cases as errors.
+Reported by Ralf Wiebicke
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604072&amp;group_id=45216">#604072</ulink>)
+</listitem>
 <listitem>
 Jalopy duplicated comments in some rare cases. Reported by David Cooper
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604065&amp;group_id=45216">#604065</ulink>)
 </listitem>
-
-
 <listitem>
-Printing of empty class/interface bodies failed, if cuddling of braces was
-enabled. Reported by Benjamin Geer
-(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=597080&amp;group_id=45216">#597080</ulink>)
+The console app failed to work on certain platform due to classloading problems.
+Reported by Benjamin Geer
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=604038&amp;group_id=45216">#604038</ulink>
+</listitem>
+<listitem>
+No blank lines were kept for <literal>synchronized</literal> blocks. Reported by Kees Kuip
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=603455&amp;group_id=45216">#603455</ulink>
+</listitem>
+<listitem>
+Variable interpolation did not work in header or footers. Reported by Daniel Frey
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=601901&amp;group_id=45216">#601901</ulink>
+</listitem>
+<listitem>
+Jalopy lost endline comments in certain cases. Reported by Shankar Unni, Steve Corwin, Ray Powell
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=601393&amp;group_id=45216">#601393</ulink>,
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=602169&amp;group_id=45216">#602169</ulink>,
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=603914&amp;group_id=45216">#603914</ulink>)
+</listitem>
+<listitem>
+Jalopy failed to handle empty Javadoc Standard tags. Reported by Henrik Kj&aelig;r and Don Johnson
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=601204&amp;group_id=45216">#601204</ulink>,
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=606163&amp;group_id=45216">#606163</ulink>)
+</listitem>
+<listitem>
+JBuilder Plug-in: the Plug-in is now compatible with JBuilder 7.0. Reported by Simeon Zverinski
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=596821&amp;group_id=45216">#596821</ulink>)
 </listitem>
 <listitem>
 The example Ant task in the manual contained a syntax error.
@@ -111,22 +157,32 @@ Auto-insertion of braces for braceless if-else blocks did not work as expected
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=594738&amp;group_id=45216">#594738</ulink>)
 </listitem>
 <listitem>
+Printing of empty class/interface bodies failed, if cuddling of braces was
+enabled. Reported by Richard Tasker and Benjamin Geer
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=594076&amp;group_id=45216">#594076</ulink>,
+<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=597080&amp;group_id=45216">#597080</ulink>)
+</listitem>
+<listitem>
 @version tags were wrapped if max. line length exceeded, and therefore failed to
 be updated by CVS when checked in. Reported by Johnny Cass
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=592504&amp;group_id=45216">#592504</ulink>)
 </listitem>
 <listitem>
-
-
+Jalopy used to insert two many blank lines before certain statements. Reported by Kees Kuip
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=592496&amp;group_id=45216">#592496</ulink>)
+</listitem>
+<listitem>
 <filename>jalopy.sh</filename> and <filename>preferences.sh</filename> failed
 to work (under some unix flavors) because of wrong end-of-line characters.
-Reported and fixed by Kees Kuip
+Actually a build/CVS problem. Reported and fixed by Kees Kuip
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=592487&amp;group_id=45216">#592487</ulink>)
 </listitem>
+<!--
 <listitem>
 Blank lines before comments were not always kept. Reported by Thomas B&ouml;rkel
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=591938&amp;group_id=45216">#591938</ulink>)
 </listitem>
+-->
 <listitem>
 Eclipse Plug-in: upon startup of the IDE <classname>org.eclipse.swt.SWTException: invalid thread access</classname>
 were thrown. Reportedy by Dirk Jacobs
@@ -141,19 +197,19 @@ Changes
 
 <itemizedlist mark="square">
 <listitem>
-Eclipse Plug-in: the &quot;Format&quot; label in the project view context menu
+Eclipse Plug-in: the <guilabel>Format</guilabel> label in the project view context menu
 no longer appears at the end. Suggested by Davor Cengija and Vincent Massol
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=578331&amp;group_id=45216">#578331</ulink>)
 </listitem>
 
 <listitem>
-The tab support has been rewritten. If tabs are enabled, *all* whitespace will
+The Tab support has been rewritten. If tabs are enabled, *all* whitespace will
 be realized with tabs (not only leading whitespace as with the former
 implementation)
 </listitem>
 
 <listitem>
-Denis N. Antonioli contributed several patches for the Javadoc parser.
+Denis N. Antonioli contributed several patches for the Javadoc parser:
 <itemizedlist mark="circle">
 <listitem>
 The parser is now able to handle left curly braces that are not part of
@@ -166,6 +222,7 @@ Attributes must not be quoted and numeric attributes may also start with <litera
 The closing tags for &lt;dd&gt;, &lt;dl&gt;, &lt;dir&gt; are now optional
 </listitem>
 </itemizedlist>
+Thank you!
 </listitem>
 
 <listitem>

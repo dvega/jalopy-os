@@ -8,6 +8,7 @@
           "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
   [
   <!ENTITY dedication SYSTEM "dedication.xml">
+  <!ENTITY acknowledgements SYSTEM "acknowledgements.xml">
   <!ENTITY introduction SYSTEM "introduction.xml">
   <!ENTITY page-general SYSTEM "page-general.xml">
   <!ENTITY page-project SYSTEM "page-project.xml">
@@ -68,15 +69,6 @@ version published by the Free Software Foundation; with no "Invariant Sections",
 "Front-Cover Texts" or "Back-Cover Texts", each as defined in the license. For
 a copy of the license terms refer to <xref linkend="license-gnu-doc" />.
 </para>
-
-<para>
-This product includes software developed by
-<ulink url="http://www.antlr.org/">jGuru.com (MageLang Institute)</ulink>, the
-<ulink url="http://www.apache.org/">Apache Software Foundation</ulink>, the
-<ulink url="http://www.jdom.org">JDOM group</ulink> and other
-individuals. Please refer to <xref linkend="dependencies" /> for a detailed list
-and the licensing terms.
-</para>
 </legalnotice>
 </bookinfo>
 
@@ -86,9 +78,14 @@ and the licensing terms.
 
 <!-- ====================================================================== -->
 
+&acknowledgements;
+
+<!-- ====================================================================== -->
+
 &introduction;
 
 <!-- ====================================================================== -->
+
 
 <part id="part-core">
 <title>Jalopy core</title>
@@ -121,9 +118,9 @@ regarding this 3rd party libraries refer to <xref linkend="dependencies" />.
 </sect1>
 
 <caution>
-<title>Incompatibility with Sun JDK 1.4</title>
+<title>Incompatibility with Sun JDK 1.4.0</title>
 <para>
-The contained Javadoc parser may not work properly under Sun JDK 1.4. Refer to
+The contained Javadoc parser may not work properly under Sun JDK 1.4.0. Refer to
 <xref linkend="javadoc" /> for more information regarding this issue.
 </para>
 </caution>

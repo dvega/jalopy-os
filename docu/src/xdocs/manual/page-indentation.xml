@@ -43,7 +43,7 @@ General indent
 <indexterm zone="indentation-sizes-general"><primary>Indentation</primary><secondary>sizes</secondary><tertiary>General</tertiary></indexterm>
 </para>
 <para>
-Specifies the number of spaces to use for standard indentation (Studies have 
+Specifies the number of spaces to use for standard indentation (Studies have
 indicated that 2 to 4 spaces for indentation is optimal)
 </para>
 
@@ -128,7 +128,7 @@ Continuation indent
 <indexterm zone="indentation-sizes-continuation"><primary>Indentation</primary><secondary>sizes</secondary><tertiary>Continuation</tertiary></indexterm>
 </para>
 <para>
-Specifies the number of spaces that should be inserted in front of continuation lines, 
+Specifies the number of spaces that should be inserted in front of continuation lines,
 i.e. the successive line(s) in case of a line wrap.
 </para>
 <example id="ex-indentation-two-continuation">
@@ -163,7 +163,7 @@ Endline comment indent
 <indexterm zone="indentation-sizes-endline"><primary>Endline Comment</primary></indexterm>
 </para>
 <para>
-Specifies the number of spaces to insert between endline comments and the 
+Specifies the number of spaces to insert between endline comments and the
 preceding statement.
 </para>
 <example id="ex-indentation-three-endline">
@@ -216,7 +216,7 @@ public interface Channel
 </example>
 
 <para>
-Note that this indentation setting only applies if the <classname>extends</classname> 
+Note that this indentation setting only applies if the <classname>extends</classname>
 keyword will be printed on a new line. Either because <link linkend="wrapping-use">line wrapping</link>
 is activated and the <link linkend="wrapping-sizes-line">maximal line length</link>
 would be exceeded or the <link linkend="wrapping-sizes-deep">deep indent barrier</link>
@@ -245,11 +245,11 @@ public class SynchronizedBoolean
 </example>
 
 <para>
-Note that this indentation setting only applies if the <classname>implements</classname> 
+Note that this indentation setting only applies if the <classname>implements</classname>
 keyword will be printed on a new line. Either because <link linkend="wrapping-use">line wrapping</link>
 is activated and the <link linkend="wrapping-sizes-line">maximal line length</link>
 would be exceeded or the <link linkend="wrapping-sizes-deep">deep indent barrier</link>
-reached, or because you specifically enabled 
+reached, or because you specifically enabled
 <link linkend="wrapping-before-implements">wrapping before the implements keyword</link>.
 </para>
 </listitem>
@@ -266,7 +266,7 @@ Specifies the whitespace to print before the <classname>throws</classname> keywo
 <example ex="ex-indentation-sizes-throws">
 <title>throws indentation with 3 spaces</title>
 <programlisting>
-private static final File getDestinationFile(File dest, String packageName, 
+private static final File getDestinationFile(File dest, String packageName,
                                              String filename)
 --&gt;throws IOException, FooException
 {
@@ -276,8 +276,8 @@ private static final File getDestinationFile(File dest, String packageName,
 </example>
 
 <para>
-Note that this indentation setting only applies if the <classname>throws</classname> 
-keyword will be printed on a new line. Either because <link linkend="wrapping-use">line wrapping</link> is activated 
+Note that this indentation setting only applies if the <classname>throws</classname>
+keyword will be printed on a new line. Either because <link linkend="wrapping-use">line wrapping</link> is activated
 and the <link linkend="wrapping-sizes-line">maximal line length</link> would be exceeded or the <link linkend="wrapping-sizes-deep">deep indent barrier</link> reached, or
 because you specifically enabled <link linkend="wrapping-before-throws">wrapping before the throws keyword</link>.
 </para>
@@ -297,7 +297,7 @@ lists for method or constructor declarations.
 <title>No forced Parameter indentation</title>
 <programlisting>
 private static final File getDestinationFile(File dest,
-                                             String packageName, 
+                                             String packageName,
                                              String filename)
 {
     ...
@@ -310,7 +310,7 @@ private static final File getDestinationFile(File dest,
 <programlisting>
 private static final File getDestinationFile(
 ---&gt;File dest,
----&gt;String packageName, 
+---&gt;String packageName,
 ---&gt;String filename)
 {
     ...
@@ -320,13 +320,13 @@ private static final File getDestinationFile(
 
 <para>
 Note that this indentation setting only applies if a parameter
-will be printed on a new line. Either because 
-<link linkend="wrapping-use">line wrapping</link> is activated and the 
+will be printed on a new line. Either because
+<link linkend="wrapping-use">line wrapping</link> is activated and the
 <link linkend="wrapping-sizes-line">maximal line length</link> would be exceeded
 or the <link linkend="wrapping-sizes-deep">deep indent barrier</link> reached,
 or because you specifically enabled wrapping
-for <link linkend="wrap-method-params">method declaration parameters</link>, 
-<link linkend="wrap-method-call-params">method call parameters</link> or 
+for <link linkend="wrap-method-params">method declaration parameters</link>,
+<link linkend="wrap-method-call-params">method call parameters</link> or
 <link linkend="wrap-left-parenthesis">parenthesis</link>.
 </para>
 </listitem>
@@ -354,10 +354,10 @@ Normally, Jalopy uses spaces to indent lines. If you prefer tabs, check this box
 Indent &quot;case&quot; from &quot;switch&quot;
 </para>
 <para>
-The Sun Java code convention recommends a switch style where case statements 
-are not indented relative to the switch statement as a whole. However, this 
-option allows you to indent the case statements to make the entire switch 
-statement stand out. 
+The Sun Java code convention recommends a switch style where case statements
+are not indented relative to the switch statement as a whole. However, this
+option allows you to indent the case statements to make the entire switch
+statement stand out.
 </para>
 
 <example id="ex-indentation-misch-switch-un">
@@ -439,7 +439,7 @@ Specifies whether lables should be indented with the current indentation level.
 <title>Indented label</title>
 <programlisting>
         // advance to the first CLASS_DEF or INTERFACE_DEF
-        <emphasis role="bold">LOOP</emphasis>: 
+        <emphasis role="bold">LOOP</emphasis>:
         for (AST child = tree.getFirstChild();
              child != null;
              child = child.getNextSibling())
@@ -464,10 +464,10 @@ Specifies whether lables should be indented with the current indentation level.
 Indent first column comments
 </para>
 <para>
-Normally, all comments will be indented relative to their position in the code 
-to avoid that comments break the logical structure of the program. Some 
-developers may like to disable the indentation for first column comments 
-during the developing phase. 
+Normally, all comments will be indented relative to their position in the code
+to avoid that comments break the logical structure of the program. Some
+developers may like to disable the indentation for first column comments
+during the developing phase.
 </para>
 
 <example id="ex-indentation-misc-first-column">
@@ -511,9 +511,9 @@ during the developing phase.
 Continuation indent for &quot;if&quot;
 </para>
 <para>
-The Sun brace style could make seeing the statement body difficult. To 
-workaround this problem, you can use continuation indentation if you like this 
-brace style. 
+The Sun brace style could make seeing the statement body difficult. To
+workaround this problem, you can use continuation indentation if you like this
+brace style.
 </para>
 
 <example id="ex-indentation-misc-non-continuation">
@@ -547,9 +547,9 @@ Refer to <xref linkend="braces-style-styles" /> for the available brace style op
 Continuation indent for ternary &quot;if-else&quot;
 </para>
 <para>
-If enabled, the indentation level will be increased by one before the 
+If enabled, the indentation level will be increased by one before the
 expression part will be printed. This only applies if the expression part will
-be printed on a new line. Read <xref linkend="wrapping-always" /> for more 
+be printed on a new line. Read <xref linkend="wrapping-always" /> for more
 information about the line wrapping options.
 </para>
 <example id="ex-indentation-misc-ternary-if-else">
@@ -576,18 +576,18 @@ Checking this switch, will extend this behaviour to all parameters.
 <example ex="ex-indentation-misc-force-no">
 <title>No forced Parameter indentation</title>
 <programlisting>
-_userDatabase.addUser("Name", 
-                      encryptPassword("password", 
-                                      _secretKey), 
+_userDatabase.addUser("Name",
+                      encryptPassword("password",
+                                      _secretKey),
                       "123 fake address");
 </programlisting>
 </example>
 <example ex="ex-indentation-misc-force">
 <title>Forced Parameter indentation with 4 spaces</title>
 <programlisting>
-_userDatabase.addUser("Name", 
----&gt;encryptPassword("password", 
----&gt;---&gt;_secretKey), 
+_userDatabase.addUser("Name",
+---&gt;encryptPassword("password",
+---&gt;---&gt;_secretKey),
 ---&gt;"123 fake address");
 </programlisting>
 </example>
@@ -673,8 +673,8 @@ History.Entry entry = new History.Entry(text);
 Method Def parameters
 </para>
 <para>
-If enabled, aligns the parameters of method declarations. This only applies if 
-all parameters will be wrapped; either because wrapping is forced or the 
+If enabled, aligns the parameters of method declarations. This only applies if
+all parameters will be wrapped; either because wrapping is forced or the
 max. line length is reached. To force aligning, you have to enable the
 wrapping for method parameters (See <link linkend="wrap-method-params">Method Def parameters</link>).
 </para>
@@ -685,8 +685,8 @@ wrapping for method parameters (See <link linkend="wrap-method-params">Method De
 <example id="ex-indentation-align-params">
 <title>Method declaration parameters</title>
 <programlisting>
-public static File create(final File file, 
-                          File directory, 
+public static File create(final File file,
+                          File directory,
                           int backupLevel)
 {
     ...
@@ -697,8 +697,8 @@ public static File create(final File file,
 <example id="ex-indentation-align-params-aligned">
 <title>Method declaration parameters (aligned)</title>
 <programlisting>
-public static File create(final File file, 
-                          File       directory, 
+public static File create(final File file,
+                          File       directory,
                           int        backupLevel)
 {
     ...
@@ -714,8 +714,7 @@ Chained Method Calls
 </para>
 
 <para>
-If enabled, wrapped chain parts will be aligned according to the first chain link.
-Otherwise indentation happens according to the current indentation level.
+If disabled, indentation happens according to the current indentation level.
 </para>
 
 <example id="ex-indentation-align-call">
@@ -726,6 +725,10 @@ Fachschluesselerzeugung.createService()
     FachschluesselerzeugungService.FACHSCHLUESSEL_KZ_INTERESSENT);
 </programlisting>
 </example>
+
+<para>
+Otherwise indentation is performed relative to the column offset of the first chain link.
+</para>
 
 <example id="ex-indentation-align-call-aligned">
 <title>Chained Method call (aligned)</title>

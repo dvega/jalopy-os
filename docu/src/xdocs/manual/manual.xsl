@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 
-<!-- 
+<!--
  $Id$
 -->
 
@@ -10,7 +10,7 @@
                 exclude-result-prefixes="#default xsl xhtml">
 
 <!-- load the main docbook stylesheet -->
-<xsl:import href="file:///C:/Programme/docbook-xsl-1.53.0/html/chunk.xsl" />
+<xsl:import href="file:///G:/XML/docbook-xsl/html/chunk.xsl" />
 
 <!-- set customization parameters -->
 <xsl:param name="annotate.toc" select="1" />
@@ -144,7 +144,7 @@
                     <a href="./download.html" class="navlink">Download</a> &#149;
                     <a href="./docs.html" class="navlink">Documentation</a> &#149;
                     <a href="./plugins.html" class="navlink">Plug-ins</a> &#149;
-                    <a href="./links.html" class="navlink">Links</a> &#149; 
+                    <a href="./links.html" class="navlink">Links</a> &#149;
                     <a href="./contact.html" class="navlink">Contact</a>
                   </td>
                 </tr>
@@ -158,12 +158,12 @@
             <!-- NAVIGATION ENDS HERE -->
 
           </td>
-        </tr>          
+        </tr>
         <tr valign="top">
           <td valign="top" bgcolor="#fffff0">
-          
+
             <!-- CONTENT STARTS HERE -->
-            
+
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody>
                 <tr>
@@ -190,23 +190,23 @@
               <tr>
                 <td>
                   <xsl:call-template name="user.header.navigation" />
-          
+
                   <xsl:call-template name="header.navigation">
                     <xsl:with-param name="prev" select="$prev" />
                     <xsl:with-param name="next" select="$next" />
                   </xsl:call-template>
-      
+
                   <xsl:call-template name="user.header.content" />
 
                   <xsl:apply-imports/>
-      
+
                   <xsl:call-template name="user.footer.content" />
-      
+
                   <xsl:call-template name="footer.navigation">
                   	<xsl:with-param name="prev" select="$prev" />
             	        <xsl:with-param name="next" select="$next" />
                   </xsl:call-template>
-      
+
                   <xsl:call-template name="user.footer.navigation" />
                 </td>
               </tr>
@@ -237,7 +237,7 @@
         <tr>
           <td height="1">
           </td>
-        </tr>        
+        </tr>
         <tr>
           <td bgcolor="#336699" height="16">
           </td>

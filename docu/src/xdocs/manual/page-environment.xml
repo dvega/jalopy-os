@@ -12,14 +12,14 @@
 <indexterm><primary>Interpolation</primary></indexterm>
 
 <para>
-Lets you specify/view environment variables. Environment variables can be used 
+Lets you specify/view environment variables. Environment variables can be used
 in headers, footers and Javadoc templates to form variable expressions that will
 be resolved during printing. I call this process <emphasis>variable interpolation</emphasis>;.
 </para>
 
 <para>
-Environment variables are simple key/value pairs. Valid keys take the form 
-<literal>[a-zA-Z_][a-zA-Z0-9_]+</literal> and are case-sensitive. Values can be
+Environment variables are simple key/value pairs. Valid keys take the form
+<literal>([a-zA-Z_][a-zA-Z0-9_.])+</literal> and are case-sensitive. Values can be
 freely choosen.
 </para>
 
@@ -45,7 +45,7 @@ project = Jalopy Java Source Code Formatter
 <title>User environment variables</title>
 <para>
 Lets you specify you're user specific environment variables. Use the
-<guibutton>Add...</guibutton> and <guibutton>Remove</guibutton> buttons to 
+<guibutton>Add...</guibutton> and <guibutton>Remove</guibutton> buttons to
 add or remove items to and from the list.
 </para>
 </sect2>
@@ -53,7 +53,7 @@ add or remove items to and from the list.
 <sect2 id="environment-system">
 <title>System environment variables</title>
 <para>
-All system environment variables are automatically available as well but 
+All system environment variables are automatically available as well but
 cannot be changed from within Jalopy.
 </para>
 </sect2>
@@ -129,8 +129,8 @@ The current list of valid local variables reads as follows:
 <sect2 id="environment-usage">
 <title>Usage</title>
 <para>
-Once defined, variables can then be used to form variable expressions. 
-Variable expressions take the form <literal>$<replaceable>your&bnsp;variable</replaceable>$</literal>.
+Once defined, variables can then be enclosed with the dollar sign to form variable expressions.
+Variable expressions thus take the form <literal>$([a-zA-Z_][a-zA-Z0-9_.]+)$</literal>.
 During printing these expressions will be interpolated and
 the value of the variable inserted into the output file.
 </para>
@@ -139,12 +139,12 @@ the value of the variable inserted into the output file.
 <title>Header template with environment variable expressions</title>
 <programlisting>
 //==============================================================================
-// file :       $fileName$
-// project:     $project$
+// file :       &#036;fileName&#036;
+// project:     &#036;project&#036;
 //
-// last change: date:       $Date$
-//              by:         $Author$
-//              revision:   $Revision$
+// last change: date:       &#036;Date&#036;
+//              by:         &#036;Author&#036;
+//              revision:   &#036;Revision&#036;
 //------------------------------------------------------------------------------
 // copyright:   BSJT Software License (see class documentation)
 //==============================================================================
@@ -158,9 +158,9 @@ the value of the variable inserted into the output file.
 // file :       Byte.java
 // project:     bsjt-rt
 //
-// last change: date:       $Date$
-//              by:         $Author$
-//              revision:   $Revision$
+// last change: date:       &#036;Date&#036;
+//              by:         &#036;Author&#036;
+//              revision:   &#036;Revision&#036;
 //------------------------------------------------------------------------------
 // copyright:   BSJT Software License (see class documentation)
 //==============================================================================
@@ -168,7 +168,7 @@ the value of the variable inserted into the output file.
 </example>
 
 <para>
-As you see with the above example, if a variable is not defined, Jalopy won't 
+As you see with the above example, if a variable is not defined, Jalopy won't
 touch the expression and simply preserve the original content. This way Jalopy
 works nicely with other source code tools and SCM products.
 </para>

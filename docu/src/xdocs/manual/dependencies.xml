@@ -72,28 +72,6 @@ to avoid classpath clashes.
 
 <row>
 <entry>Name:</entry>
-<entry>DocBook XSL Stylesheets 1.54.0</entry>
-</row>
-<row>
-<entry>Author:</entry>
-<entry>Norman Walsh et. al.</entry>
-</row>
-<row>
-<entry>License:</entry>
-<entry>Open Source</entry>
-</row>
-<row>
-<entry>URL:</entry>
-<entry><ulink url="http://docbook.sf.net/">http://docbook.sf.net/</ulink></entry>
-</row>
-
-<row>
-<entry></entry>
-<entry>&nbsp;</entry>
-</row>
-
-<row>
-<entry>Name:</entry>
 <entry>GNU getopt Java port 1.0.9</entry>
 </row>
 <row>

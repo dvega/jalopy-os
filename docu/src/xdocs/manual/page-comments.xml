@@ -71,8 +71,8 @@ Javadoc comments <literal>/** text */</literal>
 <indexterm zone="comments-javadoc"><primary>Javadoc comments</primary></indexterm>
 
 <para>
-A <emphasis>documentation comment</emphasis>: actually a special kind of 
-multi-line comment as defined by the Sun Javadoc specification; 
+A <emphasis>documentation comment</emphasis>: actually a special kind of
+multi-line comment as defined by the Sun Javadoc specification;
 all text from the ASCII characters <literal>/**</literal>
 to the ASCII characters <literal>*/</literal>
 </para>
@@ -101,7 +101,7 @@ Separator comments <literal>//~ text</literal>
 <indexterm zone="comments-separator"><primary>Separator comments</primary></indexterm>
 
 <para>
-A Jalopy-specific <emphasis>separator comment</emphasis>: actually a special kind of single-line comment; 
+A Jalopy-specific <emphasis>separator comment</emphasis>: actually a special kind of single-line comment;
 all text from the ASCII characters
 <literal>//~</literal> to the end of the line
 </para>
@@ -124,7 +124,7 @@ Pragma comment <literal>//J[directive]</literal>
 <indexterm zone="comments-pragma"><primary>Pragma comments</primary></indexterm>
 
 <para>
-A Jalopy-specific <emphasis>control comment</emphasis>: actually a special kind of single-line comment; 
+A Jalopy-specific <emphasis>control comment</emphasis>: actually a special kind of single-line comment;
 all text from the ASCII characters
 <literal>//J</literal> to the end of the line
 </para>
@@ -139,6 +139,10 @@ all text from the ASCII characters
 </example>
 
 <para>
+Currently, Jalopy recognizes two pragma comments: <literal>//J-</literal> and <literal>//J+</literal>
+</para>
+
+<para>
 With these comments you can disable formatting for certain code sections.
 <literal>//J-</literal> tells Jalopy to disable formatting until <literal>//J+</literal>
 will enable it again. Note that these comments can only be used in conjunction! Omitting the <literal>//J+</literal> will certainly produce errors.
@@ -151,7 +155,7 @@ will enable it again. Note that these comments can only be used in conjunction! 
 <sect2 id="coments-remove">
 <title>Remove</title>
 <para>
-Controls whether and what types of comments should be removed during the 
+Controls whether and what types of comments should be removed during the
 formatting process.
 </para>
 <itemizedlist>
@@ -177,19 +181,20 @@ Multi-line comments
 <para>
 If enabled, removes all multi-line comments (sometimes called block comments) found in a source file.
 </para>
-<para>
-Multi-line comments should only be used to comment out code for debugging purposes etc.
-</para>
 </listitem>
 
 <listitem>
 <para id="comments-remove-javadoc">
 Javadoc comments
 </para>
+
 <indexterm zone="comments-remove-javadoc"><primary>Comments</primary><secondary>Javadoc comments</secondary></indexterm>
 <indexterm zone="comments-remove-javadoc"><primary>Javadoc comments</primary></indexterm>
+
 <para>
-If enabled, removes all Javadoc comments found in a source file.
+If enabled, removes all Javadoc comments found in a source file. This may prove
+useful in conjunction with the <link linkend="javadoc-generation">Javadoc auto-generation capabilities</link>
+to build Javadoc from scratch.
 </para>
 </listitem>
 
@@ -199,7 +204,7 @@ If enabled, removes all Javadoc comments found in a source file.
 <sect2 id="coments-format">
 <title>Format</title>
 <para>
-Enables the reformatting of comments.
+Controls the reformatting of comments.
 </para>
 
 <itemizedlist>
@@ -207,16 +212,19 @@ Enables the reformatting of comments.
 <para id="comments-format-multi">
 Multi-line comments
 </para>
+
 <indexterm zone="comments-format-multi"><primary>Comments</primary><secondary>Multi-line comments</secondary></indexterm>
 <indexterm zone="comments-format-multi"><primary>Multi-line comments</primary></indexterm>
+
 <para>
-Enables the reformatting of multi-line Comments.
+Enables the reformatting of multi-line Comments. Only affects the leading
+asterixes of consecutive comment lines as shown in the examples below.
 </para>
 
 <example id="ex-comments-multi-line">
 <title>Multi-line comment</title>
 <programlisting>
-/** Multi-line
+/* Multi-line
 * comment.
 * end.
 */
@@ -226,7 +234,7 @@ Enables the reformatting of multi-line Comments.
 <example id="ex-comments-multi-line-formatted">
 <title>Multi-line comment (reformatted)</title>
 <programlisting>
-/** Multi-line
+/* Multi-line
  * comment.
  * end.
  */
