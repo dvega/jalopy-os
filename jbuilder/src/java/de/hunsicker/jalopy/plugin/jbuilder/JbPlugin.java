@@ -52,6 +52,7 @@ import com.borland.primetime.ide.ProjectView;
 import com.borland.primetime.node.FolderNode;
 import com.borland.primetime.node.Node;
 import com.borland.primetime.node.ProjectListener;
+import com.borland.primetime.properties.PropertyManager;
 import com.borland.primetime.util.VetoException;
 import com.borland.primetime.vfs.Url;
 
@@ -202,7 +203,43 @@ public final class JbPlugin
         }
 
         _appender = new JbAppender();
-        Loggers.initialize(_appender);
+
+        try
+        {
+            Loggers.initialize(_appender);
+        }
+        catch (Throwable ex)
+        {
+            Browser.addStaticBrowserListener(
+                new BrowserAdapter()
+                {
+                    public void browserOpened(Browser browser)
+                    {
+                        File installationDirectory =
+                            PropertyManager.getInstallRootUrl().getFileObject();
+                        File patchDirectory =
+                            new File(installationDirectory, "patch" /* NOI18N */);
+                        File extensionDirectory =
+                            new File(
+                                installationDirectory,
+                                "lib" /* NOI18N */ + File.separator + "ext" /* NOI18N */    );
+
+                        Object[] args = { extensionDirectory, patchDirectory };
+
+                        JOptionPane.showMessageDialog(
+                            browser,
+                            MessageFormat.format(
+                                BUNDLE.getString("MSG_ERROR_WRONG_LOG4J" /* NOI18N */),
+                                args),
+                            BUNDLE.getString("TLE_ERROR_WRONG_LOG4J" /* NOI18N */),
+                            JOptionPane.ERROR_MESSAGE);
+
+                        Browser.removeStaticBrowserListener(this);
+                    }
+                });
+
+            return;
+        }
 
         FormatSingleAction formatSingleAction = new FormatSingleAction();
 
