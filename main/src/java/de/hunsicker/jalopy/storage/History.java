@@ -192,6 +192,11 @@ public final class History
 
     //~ Inner Classes --------------------------------------------------------------------
 
+    /**
+     * A writer that calculates a checkum during the writing process.
+     *
+     * @author <a href="http://jalopy.sf.net/contact.html">Michael Callum</a>
+     */
     public static final class ChecksumCharArrayWriter
         extends CharArrayWriter
     {
@@ -308,7 +313,7 @@ public final class History
     /**
      * Represents the method used to identify dirty files and changed files.
      *
-     * @author Michael Callum
+     * @author <a href="http://jalopy.sf.net/contact.html">Michael Callum</a>
      *
      * @since 1.0b9
      */
@@ -316,17 +321,17 @@ public final class History
     {
         /** Use simple, last modified timestamp. */
         public static final Method TIMESTAMP =
-            new Method("History.Method [timestamp]" /* NOI18N */, "Timestamp");
+            new Method("timestamp" /* NOI18N */, "Timestamp");
 
         /** Use CRC32 checksum. */
         public static final Method CRC32 =
-            new Method("History.Method [crc32]" /* NOI18N */, "CRC32 Checksum");
+            new Method("crc32" /* NOI18N */, "CRC32 Checksum");
 
         /** Use Adler32 checksum. */
         public static final Method ADLER32 =
-            new Method("History.Method [adler32]" /* NOI18N */, "Adler32 Checksum");
-        private String _displayName;
-        private String _name;
+            new Method("adler32" /* NOI18N */, "Adler32 Checksum");
+        String displayName;
+        String name;
 
         /**
          * Creates a new Method object.
@@ -339,40 +344,40 @@ public final class History
             String name,
             String displayName)
         {
-            _name = name.intern();
-            _displayName = displayName;
+            this.name = name.intern();
+            this.displayName = displayName;
         }
 
         /**
          * Returns the history method for the given name.
          *
-         * @param name a valid policy name. Either &quot;timestamp&quot;,
+         * @param methodName a valid method name. Either &quot;timestamp&quot;,
          *        &quot;crc32&quot; or &quot;adler32&quot; (case-sensitive).
          *
          * @return The policy for the given name.
          *
          * @throws IllegalArgumentException if an invalid name specified.
          */
-        public static Method valueOf(String name)
+        public static Method valueOf(String methodName)
         {
-            name = name.intern();
+            methodName = methodName.intern();
 
-            if (name == TIMESTAMP._name)
+            if (methodName == TIMESTAMP.name)
             {
                 return TIMESTAMP;
             }
-            else if (name == CRC32._name)
+            else if (methodName == CRC32.name)
             {
                 return CRC32;
             }
-            else if (name == ADLER32._name)
+            else if (methodName == ADLER32.name)
             {
                 return ADLER32;
             }
             else
             {
                 throw new IllegalArgumentException(
-                    "no valid history method name -- " + name);
+                    "no valid history method name -- " + methodName);
             }
         }
 
@@ -384,7 +389,7 @@ public final class History
          */
         public String getName()
         {
-            return _name;
+            return this.name;
         }
 
 
@@ -395,7 +400,7 @@ public final class History
          */
         public String toString()
         {
-            return _displayName;
+            return this.displayName;
         }
     }
 
@@ -408,30 +413,38 @@ public final class History
     public static final class Policy
     {
         /** Don't use the history. */
-        public static final Policy DISABLED = new Policy("History.Policy [disabled]");
+        public static final Policy DISABLED =
+            new Policy("disabled", "History.Policy [disabled]");
 
         /** Insert a single line comment header at the top of every formatted file. */
-        public static final Policy COMMENT = new Policy("History.Policy [comment]");
+        public static final Policy COMMENT =
+            new Policy("comment", "History.Policy [comment]");
 
         /**
          * Track file modifications in a binary file stored in the Jalopy settings
          * directory.
          */
-        public static final Policy FILE = new Policy("History.Policy [file]");
+        public static final Policy FILE = new Policy("file", "History.Policy [file]");
 
-        /** The name of the history. */
+        /** The display name of the history policy. */
+        final String displayName;
+
+        /** The name of the history policy. */
         final String name;
 
-        private Policy(String name)
+        private Policy(
+            String name,
+            String displayName)
         {
             this.name = name.intern();
+            this.displayName = displayName;
         }
 
         /**
          * Returns the policy for the given name.
          *
-         * @param name a valid policy name. Either &quot;none&quot;, &quot;file&quot; or
-         *        &quot;comment&quot; (case-sensitive).
+         * @param name a valid policy name. Either &quot;disabled&quot;, &quot;file&quot;
+         *        or &quot;comment&quot; (case-sensitive).
          *
          * @return The policy for the given name.
          *
@@ -459,13 +472,24 @@ public final class History
 
 
         /**
+         * Returns the name of this policy.
+         *
+         * @return the name of this policy.
+         */
+        public String getName()
+        {
+            return this.name;
+        }
+
+
+        /**
          * Returns a string representation of this object.
          *
          * @return A string representation of this object.
          */
         public String toString()
         {
-            return this.name;
+            return this.displayName;
         }
     }
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -18,16 +18,19 @@ public final class ImportPolicy
 
     /** Apply no import optimization. */
     public static final ImportPolicy DISABLED =
-        new ImportPolicy("ImportPolicy [disabled]");
+        new ImportPolicy("disabled" /* NOI18N */, "ImportPolicy [disabled]");
 
     /** Expand on-demand import statements. */
-    public static final ImportPolicy EXPAND = new ImportPolicy("ImportPolicy [expand]");
+    public static final ImportPolicy EXPAND =
+        new ImportPolicy("expand" /* NOI18N */, "ImportPolicy [expand]");
 
     /** Collapse single-type import statements. */
     public static final ImportPolicy COLLAPSE =
-        new ImportPolicy("ImportPolicy [collapse]");
+        new ImportPolicy("collapse" /* NOI18N */, "ImportPolicy [collapse]");
 
     //~ Instance variables ---------------------------------------------------------------
+
+    private String _displayName;
 
     /** The unique policy name. */
     private String _name;
@@ -38,10 +41,14 @@ public final class ImportPolicy
      * Creates a new ImportPolicy object.
      *
      * @param name name of the policy.
+     * @param name a name suitable for displaying to users.
      */
-    private ImportPolicy(String name)
+    private ImportPolicy(
+        String name,
+        String displayName)
     {
         _name = name.intern();
+        _displayName = displayName;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -49,7 +56,8 @@ public final class ImportPolicy
     /**
      * Returns the ImportPolicy for the given name.
      *
-     * @param name a valid policy name.
+     * @param name a valid policy name. Either &quot;expand&quot;, &quot;collapse&quot;
+     *        or &quot;disabled&quot;.
      *
      * @return the corresponding policy for the given name.
      *
@@ -77,12 +85,23 @@ public final class ImportPolicy
 
 
     /**
+     * Returns the unique name of this policy.
+     *
+     * @return the unique name of this policy.
+     */
+    public String getName()
+    {
+        return _name;
+    }
+
+
+    /**
      * Returns a string representation of this object.
      *
      * @return A string representation of this object.
      */
     public String toString()
     {
-        return _name;
+        return _displayName;
     }
 }

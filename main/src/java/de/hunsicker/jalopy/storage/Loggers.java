@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -119,17 +119,18 @@ public final class Loggers
 
 
     /**
-     * DOCUMENT ME!
+     * Prints information about all appenders for the given logger. Purely a diagnostic
+     * method.
      *
-     * @param logger DOCUMENT ME!
+     * @param logger a logger.
      */
     public static void dumpAppenders(Logger logger)
     {
-        System.err.println("Appenders for " + logger.getName());
+        System.out.println("Appenders for " + logger.getName() + ":");
 
         for (Enumeration i = logger.getAllAppenders(); i.hasMoreElements();)
         {
-            System.err.println(i.nextElement());
+            System.out.println("    " + i.nextElement());
         }
     }
 
