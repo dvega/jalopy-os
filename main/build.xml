@@ -22,11 +22,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 <project name="jalopy-main" default="main-jar-all" basedir="." >
 
   <property file="../build/build.properties" />
-  <property name="dir.lib" value="ext/lib" />
-  <property name="dir.src" value="src" />
-  <property name="dir.src.java" value="${dir.src}/java" />
-  <property name="dir.src.parser" value="${dir.src.java}/de/hunsicker/jalopy/language" />
-  <property name="dir.src.res" value="${dir.src}/resources" />
+  <property name="dir.lib" value="${basedir}/ext/lib" />
+  <property name="main.dir.src" value="${basedir}/src" />
+  <property name="main.dir.src.java" value="${main.dir.src}/java" />
+  <property name="main.dir.src.parser" value="${main.dir.src.java}/de/hunsicker/jalopy/language" />
+  <property name="main.dir.src.res" value="${main.dir.src}/resources" />
 
 
   <!-- ==================================================================== -->
@@ -115,21 +115,6 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   </target>
 
 
-    <target name="test">
-        <taskdef name="unitgen"
-             classpath="g:/java/programme/unittestsgen-2.0.1/jar/unittestsgen.jar;${dir.lib}/log4j-1.2.6.jar"
-             classname="testsgen.taskant.UnitTestsGen"/>
-
-
-    <unitgen update="true"
-             classpath="${DIR.COMPILE};${dir.lib}/junit-3.8.1.jar;${dir.lib}/antlr-2.7.2a2.jar;${dir.lib}/oro-2.0.6.jar;${dir.lib}/jdom-1.0b8.jar;"
-             recursive="true"
-             input="${dir.src.java}"
-             quiet="false"
-             debug="true"
-             output="/testcases" />
-    </target>
-
   <!-- ==================================================================== -->
   <!-- Creates all .jars                                                    -->
   <!-- ==================================================================== -->
@@ -149,7 +134,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
          we need this file for the error recovery feature of the Javadoc
          parser, so we have to make sure it exists in the compile dir
     -->
-    <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
+    <copy file="${main.dir.src.parser}/JavadocTokenTypes.txt"
           tofile="${DIR.COMPILE}/de/hunsicker/jalopy/language/JavadocTokenTypes.txt"
           preservelastmodified="true" />
 
@@ -161,7 +146,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
            target="${BUILD.TARGET.VM}"
            verbose="${BUILD.VERBOSE}" >
       <classpath refid="project.classpath" />
-      <src path="${dir.src.java}" />
+      <src path="${main.dir.src.java}" />
       <include name="*" />
       <include name="de/hunsicker/io/*" />
       <include name="de/hunsicker/jalopy/*" />
@@ -195,7 +180,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <classpath refid="project.classpath" />
       <formatter type="plain" />
       <batchtest todir="${test.reports.dir}">
-        <fileset dir="${dir.src.java}" includes="**/*Test.java" />
+        <fileset dir="${main.dir.src.java}" includes="**/*Test.java" />
       </batchtest>
     </junit>
   </target>
@@ -209,15 +194,15 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <!-- we know the Ant module is available -->
     <ant dir="../ant" target="ant-compile" inheritAll="false" />
 
-    <!-- declare the Jalopy task -->
+    <!-- declare the jalopy task -->
     <taskdef name="jalopy"
              classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
       <classpath refid="project.classpath" />
     </taskdef>
 
     <jalopy classpathref="project.classpath"
-            style="${dir.src.res}/jal-bsd.xml">
-      <fileset dir="${dir.src.java}">
+            style="${main.dir.src.res}/jal-bsd.xml">
+      <fileset dir="${main.dir.src.java}">
         <include name="**/*.java" />
       </fileset>
     </jalopy>
@@ -233,19 +218,19 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <mkdir dir="${DIR.COMPILE}" />
 
     <native2ascii
-        src="${dir.src.java}"
+        src="${main.dir.src.java}"
         dest="${DIR.COMPILE}"
         includes="**/Bundle*.properties" />
 
     <copy todir="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources">
-      <fileset dir="${dir.src.res}">
+      <fileset dir="${main.dir.src.res}">
         <include name="*.java.tpl" />
       </fileset>
     </copy>
 
-    <copy file="${dir.src.res}/Preferences16.gif"
+    <copy file="${main.dir.src.res}/Preferences16.gif"
           tofile="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources/Preferences16.gif" />
-    <copy file="${dir.src.res}/History16.gif"
+    <copy file="${main.dir.src.res}/History16.gif"
           tofile="${DIR.COMPILE}/de/hunsicker/jalopy/swing/resources/History16.gif" />
   </target>
 
@@ -294,7 +279,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
       </srcfileset>
-      <srcfileset dir="${dir.src.res}">
+      <srcfileset dir="${main.dir.src.res}">
         <include name="*.properties" />
         <include name="*.tpl" />
         <include name="*.gif" />
@@ -320,8 +305,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="main-uptodate-parser-java" >
     <uptodate property="parser.java.uptodate"
-              targetfile="${dir.src.parser}/JavaParser.stamp" >
-      <srcfiles dir="${dir.src.parser}" includes="**/java.g" />
+              targetfile="${main.dir.src.parser}/JavaParser.stamp" >
+      <srcfiles dir="${main.dir.src.parser}" includes="**/java.g" />
     </uptodate>
   </target>
 
@@ -331,8 +316,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="main-uptodate-parser-javadoc" >
     <uptodate property="parser.javadoc.uptodate"
-              targetfile="${dir.src.parser}/JavadocParser.stamp" >
-      <srcfiles dir="${dir.src.parser}" includes="**/java.doc.g" />
+              targetfile="${main.dir.src.parser}/JavadocParser.stamp" >
+      <srcfiles dir="${main.dir.src.parser}" includes="**/java.doc.g" />
     </uptodate>
   </target>
 
@@ -348,8 +333,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           fork="yes"
           failonerror="yes" >
       <arg value="-o" />
-      <arg value="${dir.src.parser}" />
-      <arg value="${dir.src.parser}/java.g" />
+      <arg value="${main.dir.src.parser}" />
+      <arg value="${main.dir.src.parser}/java.g" />
     </java>
 
     <!--
@@ -363,7 +348,24 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </delete>
 
     <!-- touch the file to track build time -->
-    <touch file="${dir.src.parser}/JavaParser.stamp" />
+    <touch file="${main.dir.src.parser}/JavaParser.stamp" />
+
+    <!-- we know the Ant module is available -->
+    <ant dir="../ant" target="ant-compile" inheritAll="false" />
+
+    <!-- declare the jalopy task -->
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+      <classpath refid="project.classpath" />
+    </taskdef>
+
+    <jalopy classpathref="project.classpath"
+            style="${main.dir.src.res}/jal-bsd.xml">
+      <fileset dir="${main.dir.src.parser}">
+        <include name="JavaParser.java" />
+        <include name="JavaLexer.java" />
+      </fileset>
+    </jalopy>
   </target>
 
 
@@ -378,8 +380,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           fork="yes"
           failonerror="yes" >
       <arg value="-o" />
-      <arg value="${dir.src.parser}" />
-      <arg value="${dir.src.parser}/java.doc.g" />
+      <arg value="${main.dir.src.parser}" />
+      <arg value="${main.dir.src.parser}/java.doc.g" />
     </java>
 
     <!--
@@ -396,11 +398,28 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
          we need this file for the error recovery feature of the Javadoc
          parser, so we have to make sure it exists in the compile directory
     -->
-    <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
+    <copy file="${main.dir.src.parser}/JavadocTokenTypes.txt"
           tofile="${DIR.COMPILE}/de/hunsicker/jalopy/language/JavadocTokenTypes.txt"
           overwrite="true" />
 
     <!-- touch the file to track build time -->
-    <touch file="${dir.src.parser}/JavadocParser.stamp" />
+    <touch file="${main.dir.src.parser}/JavadocParser.stamp" />
+
+    <!-- we know the Ant module is available -->
+    <ant dir="../ant" target="ant-compile" inheritAll="false" />
+
+    <!-- declare the jalopy task -->
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+      <classpath refid="project.classpath" />
+    </taskdef>
+
+    <jalopy classpathref="project.classpath"
+            style="${main.dir.src.res}/jal-bsd.xml">
+      <fileset dir="${main.dir.src.parser}">
+        <include name="JavadocParser.java" />
+        <include name="JavadocLexer.java" />
+      </fileset>
+    </jalopy>
   </target>
 </project>
