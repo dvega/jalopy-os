@@ -1,71 +1,43 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.parser.JavaRecognizer;
+import de.hunsicker.jalopy.language.JavaRecognizer;
 
 import org.apache.log4j.Level;
 
 
 /**
- * Holds the code convention defaults.
- *
+ * Holds the default code convention values (Sun Java Coding Style).
+ * 
  * <p>
- * Use this class in conjunction with {@link Keys} to access the
- * convention settings:
+ * Use this class in conjunction with {@link ConventionKeys} to access the convention
+ * settings:
  * </p>
- *
- * <pre style="background:lightgrey">
+ * <pre class="snippet">
  * {@link Convention} settings = {@link Convention}.getInstance();
- * int numThreads = settings.getInt({@link Keys}.THREAD_COUNT,
- *                                  {@link Defaults}.THREAD_COUNT));
+ * int numThreads = settings.getInt({@link ConventionKeys}.THREAD_COUNT,
+ *                                  {@link ConventionDefaults}.THREAD_COUNT));
  * </pre>
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  *
  * @see de.hunsicker.jalopy.storage.Convention
- * @see de.hunsicker.jalopy.storage.Keys
+ * @see de.hunsicker.jalopy.storage.ConventionKeys
  */
-public final class Defaults
+public final class ConventionDefaults
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** DOCUMENT ME! */
     public static final boolean ALIGN_PARAMS_METHOD_DEF = false;
 
+    /** DOCUMENT ME! */
     public static final boolean ALIGN_TERNARY_OPERATOR = true;
 
     /** DOCUMENT ME! */
@@ -177,6 +149,9 @@ public final class Defaults
     public static final boolean BRACE_NEWLINE_LEFT = false;
 
     /** DOCUMENT ME! */
+    public static final boolean BRACE_TREAT_DIFFERENT_IF_WRAPPED = false;
+
+    /** DOCUMENT ME! */
     public static final boolean INSERT_TRAILING_NEWLINE = false;
 
     /** DOCUMENT ME! */
@@ -222,7 +197,10 @@ public final class Defaults
     public static final boolean COMMENT_JAVADOC_FIELDS_SHORT = true;
 
     /** DOCUMENT ME! */
-    public static final boolean COMMENT_JAVADOC_CHECK_TAG = false;
+    public static final boolean COMMENT_JAVADOC_CHECK_TAGS = false;
+
+    /** DOCUMENT ME! */
+    public static final boolean COMMENT_JAVADOC_CHECK_TAGS_THROWS = false;
 
     /** DOCUMENT ME! */
     public static final int COMMENT_JAVADOC_CLASS_MASK = 0;
@@ -249,40 +227,49 @@ public final class Defaults
     public static final boolean COMMENT_JAVADOC_TRANSFORM = false;
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_INTERFACE = "/**| * DOCUMENT ME!| *| * @author $author$| * @version \u0024Revision\u0024| */";
+    public static final String COMMENT_JAVADOC_TEMPLATE_INTERFACE =
+        "/**| * DOCUMENT ME!| *| * @author $author$| * @version \u0024Revision\u0024| */";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_CLASS = "/**| * DOCUMENT ME!| *| * @author $author$| * @version \u0024Revision\u0024| */";
+    public static final String COMMENT_JAVADOC_TEMPLATE_CLASS =
+        "/**| * DOCUMENT ME!| *| * @author $author$| * @version \u0024Revision\u0024| */";
 
     /** DOCUMENT ME! */
     public static final String COMMENT_JAVADOC_TEMPLATE_VARIABLE = "/** DOCUMENT ME! */";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_TOP = "/**| * DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_TOP =
+        "/**| * DOCUMENT ME!";
 
     /** DOCUMENT ME! */
     public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_SEPARATOR = " *";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM = " * @param $paramType$ DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM =
+        " * @param $paramType$ DOCUMENT ME!";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION = " * @throws $exceptionType$ DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION =
+        " * @throws $exceptionType$ DOCUMENT ME!";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN = " * @return DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN =
+        " * @return DOCUMENT ME!";
 
     /** DOCUMENT ME! */
     public static final String COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM = " */";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_TOP = "/**| * Creates a new $objectType$ object.";
+    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_TOP =
+        "/**| * Creates a new $objectType$ object.";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM = " * @param $paramType$ DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM =
+        " * @param $paramType$ DOCUMENT ME!";
 
     /** DOCUMENT ME! */
-    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION = " * @throws $exceptionType$ DOCUMENT ME!";
+    public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION =
+        " * @throws $exceptionType$ DOCUMENT ME!";
 
     /** DOCUMENT ME! */
     public static final String COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM = " */";
@@ -307,6 +294,9 @@ public final class Defaults
 
     /** DOCUMENT ME! */
     public static final String HISTORY_POLICY = History.Policy.DISABLED.toString();
+
+    /** The default method a timestamp. */
+    public static final String HISTORY_METHOD = History.Method.TIMESTAMP.getName();
 
     /** DOCUMENT ME! */
     public static final String IMPORT_POLICY = ImportPolicy.DISABLED.toString();
@@ -396,6 +386,12 @@ public final class Defaults
     public static final boolean INSERT_SERIAL_UID = false;
 
     /** DOCUMENT ME! */
+    public static final String LANGUAGE = "en";
+
+    /** DOCUMENT ME! */
+    public static final String COUNTRY = "US";
+
+    /** DOCUMENT ME! */
     public static final String COMMENT_JAVADOC_TAGS_INLINE = "";
 
     /** DOCUMENT ME! */
@@ -408,7 +404,10 @@ public final class Defaults
     public static final boolean LINE_WRAP = true;
 
     /** DOCUMENT ME! */
-    public static final boolean LINE_WRAP_ALL = false;
+    public static final boolean LINE_WRAP_PARAMS_EXCEED = false;
+
+    /** DOCUMENT ME! */
+    public static final boolean LINE_WRAP_PAREN_GROUPING = false;
 
     /** DOCUMENT ME! */
     public static final boolean LINE_WRAP_AFTER_CHAINED_METHOD_CALL = false;
@@ -432,13 +431,19 @@ public final class Defaults
     public static final boolean LINE_WRAP_AFTER_TYPES_EXTENDS = false;
 
     /** DOCUMENT ME! */
+    public static final boolean LINE_WRAP_AFTER_TYPES_EXTENDS_EXCEED = false;
+
+    /** DOCUMENT ME! */
     public static final boolean LINE_WRAP_AFTER_TYPES_IMPLEMENTS = false;
+
+    /** DOCUMENT ME! */
+    public static final boolean LINE_WRAP_AFTER_TYPES_IMPLEMENTS_EXCEED = false;
 
     /** DOCUMENT ME! */
     public static final boolean LINE_WRAP_AFTER_TYPES_THROWS = false;
 
     /** DOCUMENT ME! */
-    public static final boolean LINE_WRAP_AFTER_THROWS = false;
+    public static final boolean LINE_WRAP_AFTER_TYPES_THROWS_EXCEED = false;
 
     /** DOCUMENT ME! */
     public static final int LINE_WRAP_ARRAY_ELEMENTS = 0;
@@ -644,12 +649,15 @@ public final class Defaults
     /** DOCUMENT ME! */
     public static final String REGEXP_PARAM_FINAL = "[a-z][\\w]*";
 
-    //~ Constructors ··························································
+    /** DOCUMENT ME! */
+    public static final String SEPARATOR_FILL_CHARACTER = "-";
+
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new Defaults object.
+     * Creates a new ConventionDefaults object.
      */
-    private Defaults()
+    private ConventionDefaults()
     {
     }
 }
