@@ -410,13 +410,6 @@ public class JEditPlugin
             return this.project;
         }
 
-
-        protected Jalopy getEngine()
-        {
-            return super.getEngine();
-        }
-
-
         public FileFormat getFileFormat()
         {
             /**
