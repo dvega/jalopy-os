@@ -6,6 +6,9 @@
  */
 package de.hunsicker.jalopy;
 
+import de.hunsicker.util.Version;
+
+
 /**
  * Indicates a version mismatch between the specification versions of the Jalopy Plug-in
  * API and a concrete Plug-in implementation.
@@ -20,11 +23,11 @@ public final class VersionMismatchException
 {
     //~ Instance variables ---------------------------------------------------------------
 
-    /** The expected version string. */
-    private String _expected;
+    /** The expected version. */
+    private Version _expected;
 
-    /** The found version string. */
-    private String _found;
+    /** The found version. */
+    private Version _found;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -35,8 +38,8 @@ public final class VersionMismatchException
      * @param found the found vesion.
      */
     public VersionMismatchException(
-        String expected,
-        String found)
+        Version expected,
+        Version found)
     {
         super("expected version was " + expected + ", found " + found);
         _expected = expected;
@@ -46,22 +49,22 @@ public final class VersionMismatchException
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the expected version string.
+     * Returns the expected version.
      *
      * @return The expected version.
      */
-    public String getExpectedVersion()
+    public Version getExpected()
     {
         return _expected;
     }
 
 
     /**
-     * Returns the found version string.
+     * Returns the found version.
      *
      * @return The found version.
      */
-    public String getFoundVersion()
+    public Version getFound()
     {
         return _found;
     }
