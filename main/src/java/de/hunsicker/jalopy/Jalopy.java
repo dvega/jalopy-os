@@ -59,51 +59,51 @@ import org.apache.oro.text.regex.MatchResult;
  * <p>
  * The bean-like interface to Jalopy.
  * </p>
- * 
+ *
  * <p>
  * <strong>Sample Usage</strong>
  * </p>
- * 
+ *
  * <p>
  * <pre class="snippet">
  * // create a new Jalopy instance with the currently active code convention settings
  * Jalopy jalopy = new Jalopy();
- * 
+ *
  * File file = ...;
- * 
+ *
  * // specify input and output target
  * jalopy.setInput(file);
  * jalopy.setOutput(file);
- * 
+ *
  * // format and overwrite the given input file
  * jalopy.format();
- * 
+ *
  * if (jalopy.getState() == Jalopy.State.OK)
  *     System.out.println(file + " successfully formatted");
  * else if (jalopy.getState() == Jalopy.State.WARN)
  *     System.out.println(file + " formatted with warnings");
  * else if (jalopy.getState() == Jalopy.State.ERROR)
  *     System.out.println(file + " could not be formatted");
- * 
+ *
  * // setup a destination directory
  * File destination = ...;
- * 
+ *
  * jalopy.setDestination(destination);
  * jalopy.setInput(file);
  * jalopy.setOutput(file);
- * 
+ *
  * // format the given input file and write the output to the given destination,
  * // the package structure will be retained automatically
  * jalopy.format();
- * 
+ *
  * ...
  * </pre>
  * </p>
- * 
+ *
  * <p>
  * <strong>Thread safety</strong>
  * </p>
- * 
+ *
  * <p>
  * This class is <em>thread-hostile</em>, it is not safe for concurrent use by multiple
  * threads even if all method invocations are surrounded by external synchronisation.
@@ -413,7 +413,7 @@ public final class Jalopy
     /**
      * Specifies whether all files should be formatted no matter what the state of a file
      * is.
-     * 
+     *
      * <p>
      * Defaults to <code>false</code>, which means that a source file will be only
      * formatted if it hasn't ever been formatted before or if it has been modified
@@ -482,9 +482,9 @@ public final class Jalopy
 
 
     /**
-     * Returns the version number.
+     * Returns the version information.
      *
-     * @return the current version number.
+     * @return the current version information.
      */
     public static Version getVersion()
     {
@@ -621,12 +621,12 @@ public final class Jalopy
     /**
      * Sets whether to hold a backup copy of an input file. Defaults to
      * <code>true</code>.
-     * 
+     *
      * <p>
      * This switch only takes action if you specify the same file for both input and
      * output.
      * </p>
-     * 
+     *
      * <p>
      * Note that you can specify how many backups should be retained, in case you want a
      * history. See {@link #setBackupLevel} for further information.
@@ -733,11 +733,11 @@ public final class Jalopy
      * Sets the destination directory to create all formatting output into. This setting
      * then lasts until you either specify another directory or {@link #reset} was
      * called (which results in deleting the destination, files are overwritten now on).
-     * 
+     *
      * <p>
      * If the given destination does not exist, it will be created.
      * </p>
-     * 
+     *
      * <p>
      * Only applies if a file output target was specified.
      * </p>
@@ -975,13 +975,13 @@ public final class Jalopy
     /**
      * Formats the (via {@link #setInput(File)}) specified input source and writes the
      * formatted result to the specified target.
-     * 
+     *
      * <p>
      * Formatting a file means that {@link #parse parsing}, {@link #inspect inspecting}
      * and printing will be performed in sequence depending on the current state. Thus
      * the parsing and/or inspection phase may be skipped.
      * </p>
-     * 
+     *
      * <p>
      * It is safe to call this method multiple times after you've first constructed an
      * instance: just set new input/output targets and go with it. But remember that
@@ -1279,7 +1279,7 @@ public final class Jalopy
 
     /**
      * Resets this instance.
-     * 
+     *
      * <p>
      * Note that this method is not meant to be invoked after every call of {@link
      * #format}, but rather serves as a way to reset this instance to exactly the state
@@ -1418,22 +1418,10 @@ public final class Jalopy
                 if (_outputWriter != null)
                 {
                     _outputWriter.close();
-                    // update the timestamp of the file with our 'magic' stamp (but only if theres a writer)
+
+                    // update the timestamp of the file with our 'magic' stamp
+                    // (but only if theres a writer)
                     _outputFile.setLastModified(_now);
-                }
-
-                // delete the backup if the user don't want backup copies
-                if (!_holdBackup && (_backupFile != null) && _backupFile.exists())
-                {
-                    _backupFile.delete();
-
-                    if (Loggers.IO.isDebugEnabled())
-                    {
-                        _args[0] = _inputFile;
-                        _args[1] = _backupFile;
-                        Loggers.IO.l7dlog(
-                            Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
-                    }
                 }
 
                 // update the status information if necessary
@@ -1443,6 +1431,20 @@ public final class Jalopy
                 {
                     // no error or warnings occured, all ok
                     _state = State.OK;
+                }
+            }
+
+            // delete the backup if the user don't want backup copies
+            if (!_holdBackup && (_backupFile != null) && _backupFile.exists())
+            {
+                _backupFile.delete();
+
+                if (Loggers.IO.isDebugEnabled())
+                {
+                    _args[0] = _inputFile;
+                    _args[1] = _backupFile;
+                    Loggers.IO.l7dlog(
+                        Level.DEBUG, "FILE_BACKUP_REMOVE" /* NOI18N */, _args, null);
                 }
             }
         }
@@ -1630,7 +1632,7 @@ public final class Jalopy
     /**
      * Indicates whether the input file is <em>dirty</em>. <em>Dirty</em> means that the
      * file needs to be formatted.
-     * 
+     *
      * <p>
      * Use {@link #setForce setForce(true)} to always force a formatting of the file.
      * </p>
