@@ -1,12 +1,8 @@
 /*
- * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Common Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.eclipse.org/
- *
- * Copyright (c) 2001-2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -17,6 +13,7 @@ import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
@@ -131,36 +128,21 @@ final class EclipseProjectFile
      */
     public boolean isOpened()
     {
+        boolean result = false;
+
         if (this.editor != null)
         {
-            return true;
+            result = true;
         }
         else
         {
-            IEditorReference[] references = this.page.getEditorReferences();
+            Operation operation = new Operation();
+            Display.getDefault().syncExec(operation);
 
-            for (int i = 0; i < references.length; i++)
-            {
-                IEditorPart part = references[i].getEditor(true);
-
-                if (part == null)
-                {
-                    return false;
-                }
-
-                /**
-                 * @todo it would be better to compare file paths
-                 */
-                if (part.getTitle().equals(this.file.getName()))
-                {
-                    this.editor = new EclipseEditor(this, (AbstractTextEditor) part);
-
-                    return true;
-                }
-            }
-
-            return false;
+            result = operation.result;
         }
+
+        return result;
     }
 
 
@@ -205,5 +187,45 @@ final class EclipseProjectFile
         FileEditorInput input = (FileEditorInput) editor.editor.getEditorInput();
 
         return input.getFile();
+    }
+
+    //~ Inner Classes --------------------------------------------------------------------
+
+    private final class Operation
+        implements Runnable
+    {
+        boolean result;
+
+        public void run()
+        {
+            IEditorReference[] references =
+                EclipseProjectFile.this.page.getEditorReferences();
+
+            for (int i = 0; i < references.length; i++)
+            {
+                IEditorPart part = references[i].getEditor(true);
+
+                if (part == null)
+                {
+                    this.result = false;
+
+                    break;
+                }
+
+                /**
+                 * @todo it would be better to compare file paths
+                 */
+                if (part.getTitle().equals(EclipseProjectFile.this.file.getName()))
+                {
+                    EclipseProjectFile.this.editor =
+                        new EclipseEditor(
+                            EclipseProjectFile.this, (AbstractTextEditor) part);
+
+                    this.result = true;
+
+                    break;
+                }
+            }
+        }
     }
 }

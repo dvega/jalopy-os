@@ -76,10 +76,13 @@ final class JbEditor
      */
     public void setCaretPosition(int offset)
     {
-        if (offset < getLength())
+        if (offset < 0 || offset > getLength())
         {
-            getEditorPane().gotoOffset(offset);
+            throw new IllegalArgumentException(
+                "invalid range -- offset " + offset);
         }
+
+        getEditorPane().gotoOffset(offset);
     }
 
 
@@ -90,6 +93,12 @@ final class JbEditor
         int line,
         int column)
     {
+        if ((line < 1) || (column < 1))
+        {
+            throw new IllegalArgumentException(
+                "invalid range -- line " + line + ", column " + column);
+        }
+
         getEditorPane().gotoPosition(line, column);
     }
 
@@ -155,6 +164,12 @@ final class JbEditor
         int startOffset,
         int endOffset)
     {
+        if ((startOffset < 0) || (endOffset < 0) || (endOffset < startOffset))
+        {
+            throw new IllegalArgumentException(
+                "invalid range -- startOffset " + startOffset + ", endOffset " + endOffset);
+        }
+
         getEditorPane().setSelectionStart(startOffset);
         getEditorPane().setSelectionEnd(endOffset);
     }

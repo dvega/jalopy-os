@@ -1,12 +1,8 @@
 /*
- * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Common Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.eclipse.org/
- *
- * Copyright (c) 2001-2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -54,7 +50,7 @@ public class ResourcePopupAction
     //~ Static variables/initializers ----------------------------------------------------
 
     /** The file extension for Java source files. */
-    private static final String EXT_JAVA = ".java";
+    private static final String EXT_JAVA = ".java" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -124,10 +120,8 @@ public class ResourcePopupAction
                         default :
 
                             /**
-                             * @todo use logger
+                             * @todo use logger to print warning about invalid type
                              */
-                            System.out.println("unexpected resource type -- " + items[i]);
-
                             break;
                     }
                 }

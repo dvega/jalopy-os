@@ -1,16 +1,13 @@
 /*
- * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Common Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.eclipse.org/
- *
- * Copyright (c) 2001-2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import de.hunsicker.jalopy.plugin.Editor;
@@ -20,6 +17,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.text.TextSelection;
+import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.texteditor.AbstractTextEditor;
 import org.eclipse.ui.texteditor.IDocumentProvider;
@@ -55,7 +53,7 @@ final class EclipseEditor
         this.editor = editor;
 
         IDocumentProvider provider = editor.getDocumentProvider();
-        this.document = provider.getDocument(editor.getEditorInput());
+        this.document = provider.getDocument(this.editor.getEditorInput());
         this.file = file;
     }
 
@@ -66,7 +64,11 @@ final class EclipseEditor
      */
     public void setCaretPosition(int offset)
     {
-        //setSelection(offset, offset);
+        if ((offset < 0) || (offset > getLength()))
+        {
+            throw new IllegalArgumentException("invalid range -- offset " + offset);
+        }
+
         this.editor.setHighlightRange(offset, 0, true);
     }
 
@@ -78,11 +80,15 @@ final class EclipseEditor
         int line,
         int column)
     {
+        if ((line < 1) || (column < 1))
+        {
+            throw new IllegalArgumentException(
+                "invalid range -- line " + line + ", column " + column);
+        }
+
         try
         {
-            int offset = this.document.getLineOffset(line);
-
-            //setSelection(offset, offset + column);
+            int offset = (this.document.getLineOffset(line - 1) + column) - 1;
             this.editor.setHighlightRange(offset, 0, true);
         }
         catch (BadLocationException ignored)
@@ -109,18 +115,23 @@ final class EclipseEditor
      */
     public int getColumn()
     {
+        int result = 1;
+
         ITextSelection selection =
             (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
         try
         {
-            return this.document.getLineOffset(selection.getStartLine())
-            - selection.getOffset();
+            result =
+                selection.getOffset()
+                - this.document.getLineOffset(selection.getStartLine()) + 1;
         }
-        catch (BadLocationException ex)
+        catch (BadLocationException ignored)
         {
-            return 0;
+            ;
         }
+
+        return result;
     }
 
 
@@ -150,7 +161,7 @@ final class EclipseEditor
         ITextSelection selection =
             (ITextSelection) this.editor.getSelectionProvider().getSelection();
 
-        return selection.getStartLine();
+        return selection.getStartLine() + 1;
     }
 
 
@@ -176,7 +187,8 @@ final class EclipseEditor
         if ((startOffset < 0) || (endOffset < 0) || (endOffset < startOffset))
         {
             throw new IllegalArgumentException(
-                "invalid range -- start " + startOffset + ", end " + endOffset);
+                "invalid range -- startOffset " + startOffset + ", endOffset "
+                + endOffset);
         }
 
         ISelection selection =
@@ -251,6 +263,21 @@ final class EclipseEditor
      */
     public List detachAnnotations()
     {
+        /*
+        IDocumentProvider provider = editor.getDocumentProvider();
+        IAnnotationModel annotations = provider.getAnnotationModel(this.editor);
+        System.err.println(annotations);
+        annotations = provider.getAnnotationModel(this.document);
+        System.err.println(annotations);
+
+        if (annotations != null)
+        {
+            for (Iterator i = annotations.getAnnotationIterator(); i.hasNext();)
+            {
+                System.err.println(i.next());
+            }
+        }
+        */
         return Collections.EMPTY_LIST;
     }
 

@@ -1,12 +1,8 @@
 /*
- * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Common Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.eclipse.org/
- *
- * Copyright (c) 2001-2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
@@ -55,7 +51,7 @@ public class EclipsePlugin
     //~ Static variables/initializers ----------------------------------------------------
 
     /** The Plug-in identifier ({@value}). */
-    public static final String ID = "de.hunsicker.jalopy.plugin.eclipse";
+    public static final String ID = "de.hunsicker.jalopy.plugin.eclipse" /* NOI18N */;
 
     /** The I-Beam text cusor. */
     private static Cursor _ibeamCursor;
@@ -301,7 +297,7 @@ public class EclipsePlugin
 
             try
             {
-                execSync(
+                executeSynchron(
                     new Runnable()
                     {
                         public void run()
@@ -327,7 +323,7 @@ public class EclipsePlugin
         {
             try
             {
-                execSync(
+                executeSynchron(
                     new Runnable()
                     {
                         public void run()
@@ -349,13 +345,13 @@ public class EclipsePlugin
         }
 
 
-        protected void execAsync(Runnable operation)
+        protected void executeAsynchron(Runnable operation)
         {
             Display.getDefault().asyncExec(operation);
         }
 
 
-        protected void execSync(Runnable operation)
+        protected void executeSynchron(Runnable operation)
           throws InterruptedException, InvocationTargetException
         {
             Display.getDefault().syncExec(operation);
@@ -368,7 +364,7 @@ public class EclipsePlugin
             {
                 try
                 {
-                    execSync(
+                    executeSynchron(
                         new Runnable()
                         {
                             public void run()
@@ -401,12 +397,11 @@ public class EclipsePlugin
         {
             IWorkbenchWindow window = plugin.getActiveWorkbenchWindow();
             this.activeShell = window.getShell();
-            this.waitCursor = new Cursor(
-                    this.activeShell.getDisplay(), SWT.CURSOR_WAIT);
+            this.waitCursor = new Cursor(this.activeShell.getDisplay(), SWT.CURSOR_WAIT);
 
             try
             {
-                execSync(
+                executeSynchron(
                     new Runnable()
                     {
                         public void run()
@@ -500,7 +495,7 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(
+                    plugin.impl.executeSynchron(
                         new Runnable()
                         {
                             public void run()
@@ -529,7 +524,7 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(
+                    plugin.impl.executeSynchron(
                         new Runnable()
                         {
                             public void run()
@@ -552,7 +547,7 @@ public class EclipsePlugin
         {
             try
             {
-                plugin.impl.execSync(
+                plugin.impl.executeSynchron(
                     new Runnable()
                     {
                         public void run()
@@ -585,7 +580,7 @@ public class EclipsePlugin
             {
                 try
                 {
-                    plugin.impl.execSync(
+                    plugin.impl.executeSynchron(
                         new Runnable()
                         {
                             public void run()
