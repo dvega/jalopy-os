@@ -37,7 +37,7 @@ import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.prefs.Preferences;
 import de.hunsicker.ui.util.PopupSupport;
 import de.hunsicker.util.Helper;
-
+import java.net.URL;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -289,17 +289,20 @@ final class PreferencesContainer
 
 
     /**
-     * Loads the preview file with the given name.
+     * Loads the contents of the preview file with the given name.
      *
      * @param name the name of the preview file (without the file extension).
      *
-     * @return the contents of the specified preview file or <code>null</code>
-     *         if no preview file with the given extension exists.
+     * @return the contents of the specified preview file or the empty string
+     *         if no preview file with the given extension exists. Returns <code>null</code> if the user specified a custom preview file (via the file menu) and therefore loading one of the build-in preview file makes no sense.
      *
      * @since 1.0b8
      */
     String loadPreview(String name)
     {
+        if (_previewFrame.customFile)
+            return null;
+
         if (_previews.containsKey(name))
         {
             return (String)_previews.get(name);
@@ -380,7 +383,32 @@ final class PreferencesContainer
             }
         }
 
-        return null;
+        return "";
+
+        /*try
+        {
+            URL url = getClass().getResource("resources/" + name + ".java.tpl");
+            System.err.println(url);
+            System.err.println(url.getFile());
+
+            if (url != null)
+            {
+            File file = new File(url.getFile());
+
+            if (file != null && file.exists())
+                return IoHelper.readTextFile(file);
+            else
+                return "";
+            }
+            else
+                return "";
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+
+            return null;
+        }*/
     }
 
 
@@ -430,6 +458,18 @@ final class PreferencesContainer
     {
         if (!((DefaultMutableTreeNode)node.getParent()).isRoot())
         {
+            // only if the user did not choose to display a custom file, we
+            // display a different file for every preferences page
+            if (_previewFrame.customFile)
+            {
+                if (!_previewFrame.isVisible())
+                {
+                    _previewFrame.setVisible(true);
+                }
+            }
+            else
+            {
+
             PreferencesNode parent = (PreferencesNode)node.getParent();
 
             if (parent.getInfo().key.equals("printer"))
@@ -456,6 +496,7 @@ final class PreferencesContainer
             {
                 _previewFrame.setVisible(false);
             }
+}
         }
         else if (_previewFrame.isVisible())
         {

@@ -57,6 +57,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import org.apache.log4j.Level;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.*;
+import de.hunsicker.io.*;
 
 /**
  * Provides a floating preview that can be used to display a Java source file.
@@ -91,6 +93,41 @@ final class PreviewFrame
 
     //~ Constructors ··························································
 
+    private static FileFilter FILTER_JAVA = new JavaFilter();
+
+    /**
+     * JFileChooser filter for Java source files (.java).
+     */
+    private static class JavaFilter
+        extends FileFilter
+    {
+        public String getDescription()
+        {
+            return "Java source files (*.java)";
+        }
+
+
+        public boolean accept(File f)
+        {
+            if (f == null)
+            {
+                return false;
+            }
+
+            if (f.isDirectory())
+            {
+                return true;
+            }
+
+            if (f.getName().endsWith(".java"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     /**
      * Creates a new PreviewFrame object.
      *
@@ -112,14 +149,13 @@ final class PreviewFrame
 
         menuBar.add(fileMenu);
 
-        JMenuItem openFileMenuItem = new JMenuItem(new FileOpenAction());
+        JMenuItem openFileMenuItem = new JMenuItem(ACTION_FILE_OPEN);
         /*openFileMenuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_O, ActionEvent.CTRL_MASK));*/
         fileMenu.add(openFileMenuItem);
 
 
-        JMenuItem closeFileMenuItem = new JMenuItem("Close",
-                                 KeyEvent.VK_C);
+        JMenuItem closeFileMenuItem = new JMenuItem(ACTION_FILE_CLOSE);
         fileMenu.add(closeFileMenuItem);
 
         setJMenuBar(menuBar);
@@ -130,8 +166,38 @@ final class PreviewFrame
 
     //~ Methods ·······························································
 
+    /** Indicates whether the user opened a custom preview file. */
+    boolean customFile;
 
-    private class FileOpenAction
+    /** Action to close the active file. */
+    private final Action ACTION_FILE_CLOSE = new FileCloseAction();
+
+    /** Action to choose and open a new Java source file. */
+    private final Action ACTION_FILE_OPEN = new FileOpenAction();
+
+    private final class FileCloseAction
+    extends AbstractAction
+    {
+        public FileCloseAction()
+        {
+            super.putValue(Action.NAME, "Close");
+            super.putValue(Action.SHORT_DESCRIPTION, "Close the active file");
+            super.putValue(Action.MNEMONIC_KEY, new Integer(KeyEvent.VK_C));
+            setEnabled(false);
+        }
+
+        public void actionPerformed(ActionEvent ev)
+        {
+            PreviewFrame.this.customFile = false;
+
+            String filename = getCurrentPage().getPreviewFileName();
+            setText(getCurrentPage().getContainer().loadPreview(filename));
+
+            setEnabled(false);
+        }
+    }
+
+    private final class FileOpenAction
         extends AbstractAction
     {
         public FileOpenAction()
@@ -144,7 +210,43 @@ final class PreviewFrame
         public void actionPerformed(ActionEvent ev)
         {
             LocationDialog dialog = new LocationDialog(PreviewFrame.this, "Open Java source file", "Test", "");
-            dialog.setVisible(true);
+        dialog.addFilter(FILTER_JAVA, true);
+        dialog.setVisible(true);
+
+                    switch (dialog.getOption())
+                    {
+                        case JOptionPane.OK_OPTION :
+
+                        try
+                            {
+                                String location = (String)dialog.getSelectedLocation();
+
+                                if ((location == null) ||
+                                    (location.trim().length() == 0))
+                                {
+                                    /**
+                                     * @todo show error dialog;
+                                     */
+                                    return;
+                                }
+
+                                File file = new File(location);
+
+                                String contents = IoHelper.readTextFile(file);
+                                setText(contents);
+
+
+
+                        PreviewFrame.this.customFile = true;
+                        ACTION_FILE_CLOSE.setEnabled(true);
+                        }
+                        catch (Throwable ex)
+                        {
+                            ex.printStackTrace();
+                        }
+
+                        break;
+                    }
         }
     }
 
@@ -170,17 +272,26 @@ final class PreviewFrame
         return _page;
     }
 
+    /**
+     * Issues an update of the preview.
+     * @since 1.0b9
+     */
+    public void update()
+    {
+        setText(_textArea.getText());
+    }
+
 
     /**
      * Sets the contents of the preview.
      *
-     * @param text valid Java source file contents.
+     * @param text contents of a valid Java source file.
      */
     public synchronized void setText(String text)
     {
         if (text == null)
         {
-            text = "";
+            text = _textArea.getText();
         }
 
         synchronized (_threads)
@@ -297,49 +408,52 @@ final class PreviewFrame
                 Loggers.PRINTER.setLevel(Level.FATAL);
                 Loggers.PRINTER_JAVADOC.setLevel(Level.FATAL);
 
-                // enable Header/Footer template only for the Header/Footer page
-                if (_page.getCategory().equals("header"))
+                if (!PreviewFrame.this.customFile)
                 {
-                    _page.prefs.putBoolean(Keys.FOOTER, false);
-                }
-                else if (_page.getCategory().equals("footer"))
-                {
-                    _page.prefs.putBoolean(Keys.HEADER, false);
-                }
-                else
-                {
-                    _page.prefs.putBoolean(Keys.FOOTER, false);
-                    _page.prefs.putBoolean(Keys.HEADER, false);
-
-                    if (_page.getCategory().equals("indentation"))
+                    // enable Header/Footer template only for the Header/Footer page
+                    if (_page.getCategory().equals("header"))
                     {
-                        _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
-                                               true);
-                        _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_IMPLEMENTS,
-                                               true);
-                        _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
-                                               true);
-                        _page.prefs.putBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
-                                               true);
-                        _page.prefs.putBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
-                                               true);
-                        _page.prefs.putBoolean(Keys.ALIGN_TERNARY_VALUES, true);
+                        _page.prefs.putBoolean(Keys.FOOTER, false);
                     }
-                }
+                    else if (_page.getCategory().equals("footer"))
+                    {
+                        _page.prefs.putBoolean(Keys.HEADER, false);
+                    }
+                    else
+                    {
+                        _page.prefs.putBoolean(Keys.FOOTER, false);
+                        _page.prefs.putBoolean(Keys.HEADER, false);
 
-                // enable Javadoc template insertion only for Javadoc page
-                if (!_page.getCategory().equals("javadoc"))
-                {
-                    _page.prefs.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, 0);
-                    _page.prefs.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, 0);
-                    _page.prefs.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, 0);
-                    _page.prefs.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0);
-                }
+                        if (_page.getCategory().equals("indentation"))
+                        {
+                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
+                                                   true);
+                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_IMPLEMENTS,
+                                                   true);
+                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
+                                                   true);
+                            _page.prefs.putBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
+                                                   true);
+                            _page.prefs.putBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
+                                                   true);
+                            _page.prefs.putBoolean(Keys.ALIGN_TERNARY_VALUES, true);
+                        }
+                    }
 
-                // enable separation comments only for Separation page
-                if (!_page.getPreviewFileName().equals("separationcomments"))
-                {
-                    _page.prefs.putBoolean(Keys.COMMENT_INSERT_SEPARATOR, false);
+                    // enable Javadoc template insertion only for Javadoc page
+                    if (!_page.getCategory().equals("javadoc"))
+                    {
+                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, 0);
+                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, 0);
+                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, 0);
+                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0);
+                    }
+
+                    // enable separation comments only for Separation page
+                    if (!_page.getPreviewFileName().equals("separationcomments"))
+                    {
+                        _page.prefs.putBoolean(Keys.COMMENT_INSERT_SEPARATOR, false);
+                    }
                 }
 
                 int wrapGuideColumn = _page.prefs.getInt(Keys.LINE_LENGTH,
