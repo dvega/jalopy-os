@@ -65,7 +65,9 @@ public final class Keys
     /** Force alignment of ternary values? (<em>boolean</em>) */
     public static final Key ALIGN_TERNARY_VALUES = new Key("printer/alignment/ternaryValue");
 
-    /** Force alignment of indiviual method call chains? (<em>boolean</em>) */
+    /** Force alignment of indiviual method call chains? (<em>boolean</em>)
+     @since 1.0b9
+     */
     public static final Key ALIGN_METHOD_CALL_CHAINS = new Key("printer/alignment/methodCallChains");
 
     /** Align the indiviual parts of the ternar operator? (<em>boolean</em>)
@@ -252,7 +254,7 @@ public final class Keys
     public static final Key COMMENT_JAVADOC_CHECK_TAG = new Key("printer/comments/javadoc/checkTags");
 
     /**
-     * Print Javadoc comments for fields in one line, if possible?
+     * Print Javadoc comments for fields in one line if possible?
      * (<em>boolean</em>)
      * @since 1.0b9
      */
@@ -646,7 +648,10 @@ public final class Keys
      */
     public static final Key LINE_WRAP_AFTER_TYPES_THROWS = new Key("printer/wrapping/afterThrowsTypes");
 
-    /** DOCUMENT ME! */
+    /**
+     * Force wrapping after throws clause? (<em>boolean</em>)
+     * @since 1.0b9
+     */
     public static final Key LINE_WRAP_AFTER_THROWS = new Key("printer/wrapping/afterThrows");
 
     /**
