@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.io;
 
@@ -41,14 +14,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
+import de.hunsicker.util.ResourceBundleFactory;
+
 
 //J- needed only as a workaround for a Javadoc bug
 import org.apache.oro.io.RegexFilenameFilter;
 //J+
 
 /**
- * Class for scanning a directory for files/directories that match a certain
- * filter.
+ * Class for scanning a directory for files/directories that match a certain filter.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -56,10 +30,14 @@ import org.apache.oro.io.RegexFilenameFilter;
  * @see java.io.FilenameFilter
  * @see org.apache.oro.io.RegexFilenameFilter
  */
-public class DirScanner
+public class DirectoryScanner
     implements Runnable
 {
-    //~ Instance variables ····················································
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String BUNDLE_NAME = "de.hunsicker.io.Bundle" /* NOI18N */;
+
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Used filters. */
     private Filters _filters;
@@ -77,89 +55,92 @@ public class DirScanner
     private boolean _finished;
 
     /**
-     * The directory depth we scan. Defaults to <code>0</code> (Only the
-     * current directory).
+     * The directory depth we scan. Defaults to <code>0</code> (Only the current
+     * directory).
      */
     private int _levels = 0;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new DirScanner object. Scans the current user directory.
+     * Creates a new DirectoryScanner object. Scans the current user directory.
      */
-    public DirScanner()
+    public DirectoryScanner()
     {
-        this(System.getProperty("user.dir"), 0);
+        this(System.getProperty("user.dir" /* NOI18N */), 0);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directory directory to scan.
      */
-    public DirScanner(String directory)
+    public DirectoryScanner(String directory)
     {
         this(directory, Integer.MAX_VALUE);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directory directory to scan.
      * @param levels number of levels to scan.
      */
-    public DirScanner(String directory,
-                      int    levels)
+    public DirectoryScanner(
+        String directory,
+        int    levels)
     {
         this(new File(directory), levels);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directory directory to scan.
      */
-    public DirScanner(File directory)
+    public DirectoryScanner(File directory)
     {
         this(new File(directory.getAbsolutePath()), Integer.MAX_VALUE);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directory directory to scan.
      * @param levels number of levels to scan.
      */
-    public DirScanner(File directory,
-                      int  levels)
+    public DirectoryScanner(
+        File directory,
+        int  levels)
     {
         this(addToList(directory), levels);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directories directories to scan.
      */
-    public DirScanner(Set directories)
+    public DirectoryScanner(Set directories)
     {
         this(directories, Integer.MAX_VALUE);
     }
 
 
     /**
-     * Creates a new DirScanner object.
+     * Creates a new DirectoryScanner object.
      *
      * @param directories directories to scan.
      * @param levels number of levels to scan.
      */
-    public DirScanner(Set directories,
-                      int levels)
+    public DirectoryScanner(
+        Set directories,
+        int levels)
     {
         _queue = new Queue();
         setTargets(directories);
@@ -167,7 +148,7 @@ public class DirScanner
         _filters = new Filters();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Indicates whether the queue with the found files is empty.
@@ -230,8 +211,8 @@ public class DirScanner
      *
      * @param level directory depth to search.
      *
-     * @throws IllegalStateException if the scanner hasn't finished processing
-     *         yet (<code>isFinished() == true</code>)
+     * @throws IllegalStateException if the scanner hasn't finished processing yet
+     *         (<code>isFinished() == true</code>)
      *
      * @see #isFinished
      */
@@ -239,7 +220,9 @@ public class DirScanner
     {
         if (isFinished())
         {
-            throw new IllegalStateException("scanner is running");
+            throw new IllegalStateException(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "SCANNER_RUNNING" /* NOI18N */));
         }
 
         _levels = level;
@@ -258,8 +241,7 @@ public class DirScanner
 
 
     /**
-     * Sets the targets to search (both single files and directories are
-     * valid)
+     * Sets the targets to search (both single files and directories are valid)
      *
      * @param targets collection with the targets to search.
      */
@@ -267,7 +249,7 @@ public class DirScanner
     {
         if (targets instanceof HashSet)
         {
-            setTargets((HashSet)targets);
+            setTargets((HashSet) targets);
         }
         else
         {
@@ -282,19 +264,21 @@ public class DirScanner
      * @param targets set with the targets to search.
      *
      * @throws NullPointerException if <code>targets == null</code>
-     * @throws IllegalStateException if the scanner hasn't finished processing
-     *         yet (<code>isFinished() == true</code>)
+     * @throws IllegalStateException if the scanner hasn't finished processing yet
+     *         (<code>isFinished() == true</code>)
      */
     public void setTargets(Set targets)
     {
         if (targets == null)
         {
-            throw new NullPointerException("invalid targets given -- null");
+            throw new NullPointerException();
         }
 
         if (isFinished())
         {
-            throw new IllegalStateException("scanner is running");
+            throw new IllegalStateException(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "SCANNER_RUNNING" /* NOI18N */));
         }
 
         Set copy = new HashSet(targets);
@@ -306,13 +290,13 @@ public class DirScanner
             if (file instanceof String)
             {
                 targets.remove(file);
-                file = new File((String)file);
+                file = new File((String) file);
                 targets.add(file);
             }
 
-            if (!((File)file).isDirectory())
+            if (!((File) file).isDirectory())
             {
-                _queue.push((File)file);
+                _queue.push((File) file);
                 targets.remove(file);
             }
         }
@@ -327,14 +311,16 @@ public class DirScanner
      *
      * @param filter file filter to add.
      *
-     * @throws IllegalStateException if the scanner hasn't finished processing
-     *         yet (<code>isFinished() == true</code>)
+     * @throws IllegalStateException if the scanner hasn't finished processing yet
+     *         (<code>isFinished() == true</code>)
      */
     public void addFilter(FilenameFilter filter)
     {
         if (isFinished())
         {
-            throw new IllegalStateException("scanner is running");
+            throw new IllegalStateException(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "SCANNER_RUNNING" /* NOI18N */));
         }
 
         _filters.addFilter(filter);
@@ -377,14 +363,16 @@ public class DirScanner
      *
      * @param filter file filter to remove.
      *
-     * @throws IllegalStateException if the scanner hasn't finished processing
-     *         yet (<code>isFinished() == true</code>)
+     * @throws IllegalStateException if the scanner hasn't finished processing yet
+     *         (<code>isFinished() == true</code>)
      */
     public void removeFilter(FilenameFilter filter)
     {
         if (isFinished())
         {
-            throw new IllegalStateException("scanner is running");
+            throw new IllegalStateException(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "SCANNER_RUNNING" /* NOI18N */));
         }
 
         _filters.removeFilter(filter);
@@ -400,9 +388,9 @@ public class DirScanner
 
 
     /**
-     * Starts the scanning process. All files matching the given filters will
-     * be seamlessly added to the internal queue where they can be accessed
-     * via {@link #pop} or {@link #take} calls.
+     * Starts the scanning process. All files matching the given filters will be
+     * seamlessly added to the internal queue where they can be accessed via {@link
+     * #pop} or {@link #take} calls.
      */
     public void run()
     {
@@ -434,9 +422,9 @@ public class DirScanner
 
 
     /**
-     * Returns and removes the file at the top of the internal file queue. If
-     * the queue is empty, waits until one element is available, so this is
-     * in fact a blocking {@link #pop}.
+     * Returns and removes the file at the top of the internal file queue. If the queue
+     * is empty, waits until one element is available, so this is in fact a blocking
+     * {@link #pop}.
      *
      * @return the file at the top of the queue.
      *
@@ -445,7 +433,7 @@ public class DirScanner
      * @see #pop
      */
     public File take()
-        throws InterruptedException
+      throws InterruptedException
     {
         synchronized (_lock)
         {
@@ -460,8 +448,8 @@ public class DirScanner
 
 
     /**
-     * Blocks until the scanner has finished processing. Returns immediately
-     * if the scanner hasn't started processing already.
+     * Blocks until the scanner has finished processing. Returns immediately if the
+     * scanner hasn't started processing already.
      */
     public void waitUntilFinished()
     {
@@ -512,14 +500,14 @@ public class DirScanner
      * @param rootDir root directory of the search.
      * @param depth level that is currently be processed (0 based).
      */
-    private void scanDirectory(File   dir,
-                               String rootDir,
-                               int    depth)
+    private void scanDirectory(
+        File   dir,
+        String rootDir,
+        int    depth)
     {
         File[] dirEntries = null;
 
-        if (((dirEntries = dir.listFiles(_filters)) != null) &&
-            (depth <= _levels))
+        if (((dirEntries = dir.listFiles(_filters)) != null) && (depth <= _levels))
         {
             for (int i = 0; i < dirEntries.length; i++)
             {
@@ -536,7 +524,7 @@ public class DirScanner
         }
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Stores all found directories/files.
@@ -575,7 +563,7 @@ public class DirScanner
 
         public File pop()
         {
-            return (File)this.list.removeLast();
+            return (File) this.list.removeLast();
         }
 
 
