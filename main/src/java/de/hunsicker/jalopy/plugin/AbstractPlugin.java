@@ -295,7 +295,7 @@ public abstract class AbstractPlugin
      *
      * @since 1.0b8
      */
-    protected Jalopy getJalopy()
+    protected Jalopy getEngine()
     {
         if (this.jalopy == null)
         {
@@ -353,7 +353,7 @@ public abstract class AbstractPlugin
      *
      * @see javax.swing.SwingUtilities#invokeLater
      */
-    protected void execAsync(Runnable operation)
+    protected void executeAsynchron(Runnable operation)
     {
         EventQueue.invokeLater(operation);
     }
@@ -365,12 +365,12 @@ public abstract class AbstractPlugin
      * @param operation runnable to be invoked synchronously on the AWT event dispatching
      *        thread.
      *
-     * @throws InterruptedException if another thread has interrupted this thread
-     * @throws InvocationTargetException if an exception is thrown when running runnable
+     * @throws InterruptedException if another thread has interrupted this thread.
+     * @throws InvocationTargetException if an exception is thrown when running runnable.
      *
      * @see javax.swing.SwingUtilities#invokeAndWait
      */
-    protected void execSync(Runnable operation)
+    protected void executeSynchron(Runnable operation)
       throws InterruptedException, InvocationTargetException
     {
         EventQueue.invokeAndWait(operation);
@@ -419,7 +419,7 @@ public abstract class AbstractPlugin
 
             try
             {
-                execSync(
+                executeSynchron(
                     new Runnable()
                     {
                         public void run()
@@ -527,8 +527,23 @@ public abstract class AbstractPlugin
 
                     List annotations = editor.detachAnnotations();
                     jalopy.getRecognizer().attachAnnotations(annotations);
-                    jalopy.getRecognizer().setPosition(
-                        editor.getLine(), editor.getColumn());
+
+                    try
+                    {
+                        executeSynchron(
+                            new Runnable()
+                            {
+                                public void run()
+                                {
+                                    jalopy.getRecognizer().setPosition(
+                                        editor.getLine(), editor.getColumn());
+                                }
+                            });
+                    }
+                    catch (InterruptedException ex)
+                    {
+                    }
+
 
                     final StringBuffer textBuf = new StringBuffer(content.length());
                     jalopy.setOutput(textBuf);
@@ -546,7 +561,7 @@ public abstract class AbstractPlugin
                     {
                         try
                         {
-                            execSync(
+                            executeSynchron(
                                 new Runnable()
                                 {
                                     public void run()
@@ -564,8 +579,6 @@ public abstract class AbstractPlugin
                         }
                         catch (InterruptedException ex)
                         {
-                            editor.setText(content);
-                            editor.attachAnnotations(annotations);
                         }
                     }
                 }
@@ -876,7 +889,7 @@ public abstract class AbstractPlugin
                     // store the current offset to reposition the caret
                     // (synchronization needed to make Eclipse happy)
 
-                    /*execSync(
+                    /*executeSynchron(
                         new Runnable()
                         {
                             public void run()
@@ -884,7 +897,7 @@ public abstract class AbstractPlugin
                                 offset = editor.getCaretPosition();
                             }
                         });*/
-                    Jalopy jalopy = getJalopy();
+                    Jalopy jalopy = getEngine();
                     format(activeFile, jalopy);
 
                     // only change if no errors showed up
@@ -899,7 +912,7 @@ public abstract class AbstractPlugin
                          *       involved, but possible (and only necessary if in
                          *       sorting mode)
                          *
-                        execSync(
+                        executeSynchron(
                             new Runnable()
                             {
                                 public void run()
@@ -919,7 +932,7 @@ public abstract class AbstractPlugin
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getJalopy();
+                    Jalopy jalopy = getEngine();
                     formatSeveral(jalopy, getActiveProject().getAllFiles());
                     jalopy.cleanupBackupDirectory();
                 }
@@ -927,7 +940,7 @@ public abstract class AbstractPlugin
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getJalopy();
+                    Jalopy jalopy = getEngine();
                     formatSeveral(jalopy, getActiveProject().getSelectedFiles());
                     jalopy.cleanupBackupDirectory();
                 }
@@ -935,7 +948,7 @@ public abstract class AbstractPlugin
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getJalopy();
+                    Jalopy jalopy = getEngine();
                     formatSeveral(jalopy, getActiveProject().getOpenedFiles());
                     jalopy.cleanupBackupDirectory();
                 }
@@ -1200,7 +1213,7 @@ public abstract class AbstractPlugin
                 this.progressPanel.setText(text);
                 this.progressPanel.setMaximum(units);
 
-                execAsync(
+                executeAsynchron(
                     new Runnable()
                     {
                         public void run()
@@ -1219,7 +1232,7 @@ public abstract class AbstractPlugin
             {
                 try
                 {
-                    execSync(
+                    executeSynchron(
                         new Runnable()
                         {
                             public void run()
