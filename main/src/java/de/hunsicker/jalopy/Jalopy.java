@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -76,7 +76,7 @@ import org.apache.oro.text.regex.MatchResult;
  * <p>
  * The bean-like interface to Jalopy.
  * </p>
- * 
+ *
  * <p>
  * This class is <em>thread-hostile</em>, it is not safe for concurrent use by
  * multiple threads even if all method invocations are surrounded by external
@@ -584,7 +584,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     /**
      * Sets whether all files should be formatted no matter what the state of
      * a file is.
-     * 
+     *
      * <p>
      * Defaults to <code>false</code>, which means that a source file will be
      * only formatted if it hasn't ever been formatted before or if it has
@@ -640,12 +640,12 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     /**
      * Sets whether to hold a backup copy of an input file. Defaults to
      * <code>true</code>.
-     * 
+     *
      * <p>
      * This switch only takes action if you specify the same file for both
      * input and output.
      * </p>
-     * 
+     *
      * <p>
      * Note that you can specify how many backups should be retained, in case
      * you want a history. See {@link #setBackupLevel} for further
@@ -938,14 +938,14 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     /**
      * Formats the (via {@link #setInput(File)}) specified input source and
      * writes the formatted result to the specified target.
-     * 
+     *
      * <p>
      * Formatting a file means that {@link #parse parsing}, {@link #inspect
      * inspecting} and printing will be performed in sequence depending on
      * the current state. Thus the parsing and/or inspection phase may be
      * skipped.
      * </p>
-     * 
+     *
      * <p>
      * It is safe to call this method multiple times after you've first
      * constructed an instance: just set new input/output targets and go with
@@ -1221,7 +1221,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
     /**
      * Resets this instance.
-     * 
+     *
      * <p>
      * Note that this method is not meant to be invoked after every call of
      * {@link #format}, but rather serves as a way to reset this instance to
@@ -1574,7 +1574,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     /**
      * Indicates whether the input file is <em>dirty</em>. <em>Dirty</em>
      * means that the file needs to be formatted.
-     * 
+     *
      * <p>
      * Use {@link #setForce setForce(true)} to always force a formatting of
      * the file.
@@ -2224,9 +2224,9 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         }
 
         /**
-         * Returns a string representation of the state.
+         * Returns a string representation of this state.
          *
-         * @return A string representation of the state.
+         * @return A string representation of this state.
          */
         public String toString()
         {
