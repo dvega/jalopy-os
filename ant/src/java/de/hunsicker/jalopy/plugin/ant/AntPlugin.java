@@ -9,7 +9,6 @@ package de.hunsicker.jalopy.plugin.ant;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -403,7 +402,7 @@ public class AntPlugin
     /**
      * Sets whether Javadoc related messages should be displayed. Default is
      * <em>true</em>.
-     * 
+     *
      * <p>
      * Note that setting this switch to <code>false</code> means that <strong>no</strong>
      * Javadoc related messages will be displayed no matter what ever happens! Even if
@@ -421,7 +420,7 @@ public class AntPlugin
 
     /**
      * Sets the level to control logging output. The valid levels are
-     * 
+     *
      * <ul>
      * <li>
      * ERROR
@@ -436,10 +435,10 @@ public class AntPlugin
      * DEBUG
      * </li>
      * </ul>
-     * 
+     *
      * being <code>ERROR</code> the highest level and <code>DEBUG</code> the lowest
      * level.
-     * 
+     *
      * <p>
      * Enabling logging at a given level also enables logging at all higher levels.
      * </p>
@@ -723,15 +722,7 @@ public class AntPlugin
 
         Convention settings = Convention.getInstance();
 
-        try
-        {
-            jalopy.setEncoding(_encoding);
-        }
-        catch (UnsupportedEncodingException ex)
-        {
-            throw new BuildException(ex);
-        }
-
+        jalopy.setEncoding(_encoding);
         jalopy.setFileFormat(_fileFormat);
         jalopy.setInspect(
             settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
