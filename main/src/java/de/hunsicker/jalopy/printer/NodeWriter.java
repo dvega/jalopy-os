@@ -695,7 +695,7 @@ public class NodeWriter
             print(RCURLY, type);
 
         // only issue line break if not the last curly brace
-        if (newlineAfter && !this.footer && (insertTrailingEmpty || (this.indentLevel > 0)))
+        if (newlineAfter && ((this.indentLevel > 0) || (insertTrailingEmpty && !this.footer)))
         {
             printNewline();
         }
