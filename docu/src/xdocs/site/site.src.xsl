@@ -28,7 +28,7 @@
 <xsl:param name="annotate.toc" select="0" />
 <xsl:param name="generate.index" select="0" />
 <xsl:param name="section.autolabel" select="0" />
-<xsl:param name="use.extensions" select="1"/>
+<!-- <xsl:param name="use.extensions" select="1"/> -->
 <xsl:param name="tablecolumns.extension" select="1"/>
 <xsl:param name="table.borders.with.css" select="1"/>
 <xsl:param name="table.border.style" select="'solid'"/>
