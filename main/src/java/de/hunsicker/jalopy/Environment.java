@@ -153,9 +153,9 @@ public final class Environment
 
 
     /**
-     * DOCUMENT ME!
+     * Returns a copy of this object.
      *
-     * @return DOCUMENT ME!
+     * @return a copy of this object.
      */
     public Environment copy()
     {
@@ -169,13 +169,13 @@ public final class Environment
     /**
      * Performs variable interpolation for the given input string. All
      * environment variable expressions
-     * (<code>\$[a-zA-Z_][a-zA-Z0-9_]+\$</code>, e.g. $fileName$ or $author$)
+     * (<code>\$[a-zA-Z_][a-zA-Z0-9_.]+\$</code>, e.g. $fileName$ or $author$)
      * in the given string are replaced with their corresponding environment
      * value.
      *
      * @param str string to perform variable interpolation for.
      *
-     * @return The input <em>str</em> with all variable interpolated.
+     * @return The input <em>str</em> with all variables interpolated.
      *
      * @see #set
      */
@@ -190,7 +190,7 @@ public final class Environment
             MatchResult result = _matcher.getMatch();
             String value = (String)_variables.get(result.group(1));
 
-            // the value has to be set in order to  to be substituted
+            // the value has to be set in order to be substituted
             if (value != null && value.length() > 0)
                 keys.put(result.group(0), value);
         }
@@ -199,7 +199,6 @@ public final class Environment
         for (Iterator i = keys.entrySet().iterator(); i.hasNext();)
         {
             Map.Entry entry = (Map.Entry)i.next();
-
 
             String key = (String)entry.getKey();
             String value = (String)entry.getValue();
@@ -231,7 +230,7 @@ public final class Environment
      * Sets the given variable to the given value.
      *
      * @param variable variable name. Valid variable names have the form
-     *        <code>[a-zA-Z_][a-zA-Z0-9_]+</code>.
+     *        <nobr><code>[a-zA-Z_][a-zA-Z0-9_.]+</code></nobr>
      * @param value value to associate.
      *
      * @see #unset
@@ -244,9 +243,11 @@ public final class Environment
 
 
     /**
-     * DOCUMENT ME!
+     * Returns a string representation of this object. The string
+     * representation consists of a list of key-value mappings in no
+     * particular order.
      *
-     * @return DOCUMENT ME!
+     * @return a string representation of this object.
      */
     public String toString()
     {
@@ -318,7 +319,6 @@ public final class Environment
             return this.name;
         }
 
-
         public boolean equals(Object o)
         {
             if (this == o)
@@ -326,7 +326,12 @@ public final class Environment
                 return true;
             }
 
-            return this.name.equals(o);
+            if (o instanceof Environment.Variable)
+            {
+                return this.name == ((Environment.Variable)o).name;
+            }
+
+            return false;
         }
 
 
