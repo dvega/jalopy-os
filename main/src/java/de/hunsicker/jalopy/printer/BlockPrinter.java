@@ -83,7 +83,7 @@ class BlockPrinter
                     break;
 
                 case JavaTokenTypes.CASESLIST :
-                    forceNewlineBefore = true;
+                    forceNewlineBefore = false;
                     treatDifferent = false;
 
                     break;
@@ -359,7 +359,7 @@ class BlockPrinter
 
         JavaNode rcurly = null;
 
-LOOP: 
+LOOP:
 
         // print everything despite the closing curly brace
         for (AST child = node.getFirstChild(); child != null;
@@ -387,7 +387,7 @@ LOOP:
                 isCloseBraceNewline(lcurly, closeBraceType, freestanding);
 
             int offset =
-                out.printRightBrace(closeBraceType, !treatDifferent, rightBraceNewline);
+                out.printRightBrace(closeBraceType, !treatDifferent && !freestanding, rightBraceNewline);
 
             trackPosition(
                 rcurly, rightBraceNewline ? (out.line - 1)
@@ -588,7 +588,7 @@ LOOP:
 
     /**
      * Determines whether the braces of the given node may be savely removed.
-     * 
+     *
      * <p>
      * If we want to omit braces we have to check whether there is a VARIABLE_DEF in the
      * given scope, in which case we have to print braces as we don't know whether the
@@ -721,7 +721,7 @@ LOOP:
      * @param leftBraceNewline issue a line break before the brace.
      * @param forceNewlineBefore force a line break.
      * @param freestanding <code>true</code> indicates a freestanding block. For
-     *        freestanding block, we never want to ouput additional leading indentation.
+     *        freestanding blocks, we never want to ouput additional leading indentation.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
@@ -768,7 +768,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_NO);
+                            NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line
@@ -778,7 +778,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            leftBraceNewline, !commentsAfter, !freestanding);
+                            leftBraceNewline, !commentsAfter, NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line

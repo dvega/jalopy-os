@@ -355,27 +355,15 @@ public class MiscSettingsPage
                     ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
         GridBagLayout historyLayout = new GridBagLayout();
         historyPanel.setLayout(historyLayout);
-        _historyCommentCheckBox =
-            new JCheckBox(
-                this.bundle.getString("CHK_USE_HISTORY_COMMENT" /* NOI18N */),
-                historyPolicy == History.Policy.COMMENT);
 
         GridBagConstraints c = new GridBagConstraints();
-        SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        historyLayout.setConstraints(_historyCommentCheckBox, c);
-        historyPanel.add(_historyCommentCheckBox);
+
         _historyFileCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_USE_HISTORY_FILE" /* NOI18N */),
                 historyPolicy == History.Policy.FILE);
-
-        ButtonGroup historyCheckBoxGroup = new EmptyButtonGroup();
-        historyCheckBoxGroup.add(_historyCommentCheckBox);
-        historyCheckBoxGroup.add(_historyFileCheckBox);
         SwingHelper.setConstraints(
-            c, 0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            c, 0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         historyLayout.setConstraints(_historyFileCheckBox, c);
         historyPanel.add(_historyFileCheckBox);
@@ -394,7 +382,7 @@ public class MiscSettingsPage
         _historyMethodComboBox = historyMethodCombo.getComboBox();
         _historyMethodComboBox.setEnabled(_historyFileCheckBox.isSelected());
         SwingHelper.setConstraints(
-            c, 1, 1, 1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            c, 1, 0, 1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         historyLayout.setConstraints(_historyMethodComboBox, c);
         historyPanel.add(_historyMethodComboBox);
@@ -457,10 +445,24 @@ public class MiscSettingsPage
                 }
             });
         SwingHelper.setConstraints(
-            c, 2, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.EAST,
+            c, 2, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.EAST,
             GridBagConstraints.NONE, c.insets, 0, 0);
         historyLayout.setConstraints(browseButton, c);
         historyPanel.add(browseButton);
+
+        _historyCommentCheckBox =
+            new JCheckBox(
+                this.bundle.getString("CHK_USE_HISTORY_COMMENT" /* NOI18N */),
+                historyPolicy == History.Policy.COMMENT);
+        SwingHelper.setConstraints(
+            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        historyLayout.setConstraints(_historyCommentCheckBox, c);
+        historyPanel.add(_historyCommentCheckBox);
+
+        ButtonGroup historyCheckBoxGroup = new EmptyButtonGroup();
+        historyCheckBoxGroup.add(_historyCommentCheckBox);
+        historyCheckBoxGroup.add(_historyFileCheckBox);
 
         return historyPanel;
     }

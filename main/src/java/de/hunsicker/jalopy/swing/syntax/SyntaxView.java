@@ -252,15 +252,15 @@ public final class SyntaxView
 
 
     /*
- * redefined paint method to paint breakpoint area
- *
- * @param g DOCUMENT ME!
- * @param allocation DOCUMENT ME!
- *
-public void paint(
+    * redefined paint method to paint breakpoint area
+    *
+    * @param g DOCUMENT ME!
+    * @param allocation DOCUMENT ME!
+    *
+    public void paint(
     Graphics g,
     Shape    allocation)
-{
+    {
     // paint the lines
     super.paint(g, allocation);
 
@@ -272,7 +272,7 @@ public void paint(
     g.drawLine(
         bounds.x + TAG_WIDTH, 0, bounds.x + TAG_WIDTH,
         bounds.y + bounds.height + 1);
-}*/
+    }*/
 
     /**
      * Provides a mapping from the view coordinate space to the logical coordinate space

@@ -62,7 +62,6 @@ final class CaseBlockPrinter
 
         if (first != null)
         {
-            JavaNode n = (JavaNode) node;
 
             // only increase indentation if we're not followed by a SLIST
             // which takes care for itself
@@ -73,6 +72,7 @@ final class CaseBlockPrinter
 
                 default :
                     indent = true;
+                    break;
             }
         }
 

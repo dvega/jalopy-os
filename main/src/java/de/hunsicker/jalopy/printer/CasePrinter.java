@@ -35,7 +35,7 @@ final class CasePrinter
     /**
      * Creates a new CasePrinter object.
      */
-    protected CasePrinter()
+    private CasePrinter()
     {
     }
 
@@ -87,9 +87,10 @@ final class CasePrinter
 
                 if (
                     !printCommentsAfter(
-                        colon, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
+                        colon, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
                 {
-                    out.printNewline();
+                    if (this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT))
+                        out.printNewline();
                 }
 
                 out.last = JavaTokenTypes.LITERAL_case;
@@ -98,7 +99,7 @@ final class CasePrinter
             }
 
             case JavaTokenTypes.CASE_GROUP :
-LOOP: 
+LOOP:
                 for (
                     AST child = node.getFirstChild(); child != null;
                     child = child.getNextSibling())
@@ -109,10 +110,11 @@ LOOP:
 
                             if (
                                 !printCommentsAfter(
-                                    child, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES,
+                                    child, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO,
                                     out))
                             {
-                                out.printNewline();
+                                if (this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT))
+                                    out.printNewline();
                             }
 
                             continue LOOP;
