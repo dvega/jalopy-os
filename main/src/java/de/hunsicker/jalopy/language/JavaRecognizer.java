@@ -13,12 +13,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.RecognitionException;
-import de.hunsicker.antlr.TokenBuffer;
-import de.hunsicker.antlr.TokenStreamException;
-import de.hunsicker.antlr.TokenStreamHiddenTokenFilter;
-import de.hunsicker.antlr.TokenStreamRecognitionException;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonASTWithHiddenTokens;
+import antlr.CommonHiddenStreamToken;
+import antlr.RecognitionException;
+import antlr.Token;
+import antlr.TokenBuffer;
+import antlr.TokenStreamException;
+import antlr.TokenStreamHiddenTokenFilter;
+import antlr.TokenStreamRecognitionException;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -53,10 +57,10 @@ public final class JavaRecognizer
     private Convention _settings;
 
     /** List with the annotations for the current input source. */
-    private List _annotations = Collections.EMPTY_LIST; // List of <Annotation>
+    List _annotations = Collections.EMPTY_LIST; // List of <Annotation>
 
     /** The position that needs to be tracked. */
-    private Position _position;
+    Position _position;
 
     /** Resolves wildcard imports. */
     private Transformation _importTrans;
@@ -69,10 +73,12 @@ public final class JavaRecognizer
 
     /** Sorts the AST tree. */
     private Transformation _sortTrans;
-    private boolean _trackPosition;
+    boolean _trackPosition;
 
     /** Were the transformations applied to the generated AST? */
     private boolean _transformed;
+    
+    protected AST root = null;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -122,7 +128,7 @@ public final class JavaRecognizer
      * Returns the root node of the generated parse tree. Note that every call to this
      * method triggers the tree transformations, which could be quite expensive. So make
      * sure to avoid unnecessary calls.
-     *
+     * 
      * <p>
      * As we don't use checked exceptions to indicate runtime failures, one may check
      * successful execution of the transformations prior to perform further processing:
@@ -310,40 +316,40 @@ public final class JavaRecognizer
         _transformed = false;
 
         // update the parsers/lexer driving settings prior to parsing
-        JavaParser parser = (JavaParser) this.parser;
-        parser.stripQualification =
+        JavaParser javaParser = (JavaParser) this.parser;
+        javaParser.stripQualification =
             _settings.getBoolean(
                 ConventionKeys.STRIP_QUALIFICATION, ConventionDefaults.STRIP_QUALIFICATION);
 
-        JavaLexer lexer = (JavaLexer) this.lexer;
-        lexer.setTabSize(
+        JavaLexer javaLexer = (JavaLexer) this.lexer;
+        javaLexer.setTabSize(
             _settings.getInt(
                 ConventionKeys.INDENT_SIZE_TABS, ConventionDefaults.INDENT_SIZE_TABS));
-        lexer.sourceVersion =
+        javaLexer.sourceVersion =
             _settings.getInt(
                 ConventionKeys.SOURCE_VERSION, ConventionDefaults.SOURCE_VERSION);
-        lexer.parseJavadocComments =
+        javaLexer.parseJavadocComments =
             _settings.getBoolean(
                 ConventionKeys.COMMENT_JAVADOC_PARSE,
                 ConventionDefaults.COMMENT_JAVADOC_PARSE);
-        lexer.removeJavadocComments =
+        javaLexer.removeJavadocComments =
             _settings.getBoolean(
                 ConventionKeys.COMMENT_JAVADOC_REMOVE,
                 ConventionDefaults.COMMENT_JAVADOC_REMOVE);
-        lexer.removeSLComments =
+        javaLexer.removeSLComments =
             _settings.getBoolean(
                 ConventionKeys.COMMENT_REMOVE_SINGLE_LINE,
                 ConventionDefaults.COMMENT_REMOVE_SINGLE_LINE);
-        lexer.removeMLComments =
+        javaLexer.removeMLComments =
             _settings.getBoolean(
                 ConventionKeys.COMMENT_REMOVE_MULTI_LINE,
                 ConventionDefaults.COMMENT_REMOVE_MULTI_LINE);
-        lexer.formatMLComments =
+        javaLexer.formatMLComments =
             _settings.getBoolean(
                 ConventionKeys.COMMENT_FORMAT_MULTI_LINE,
                 ConventionDefaults.COMMENT_FORMAT_MULTI_LINE);
 
-        JavadocParser javadocParser = lexer.getJavadocParser();
+        JavadocParser javadocParser = javaLexer.getJavadocParser();
         javadocParser.setCustomStandardTags(
             decodeTags(
                 _settings.get(
@@ -358,7 +364,90 @@ public final class JavaRecognizer
         this.lexer.setInputBuffer(in);
 
         TokenStreamHiddenTokenFilter filter =
-            new TokenStreamHiddenTokenFilter(this.lexer);
+            new TokenStreamHiddenTokenFilter(this.lexer){
+            private void consumeFirst() throws TokenStreamException {
+                consume(); // get first token of input stream
+
+                // Handle situation where hidden or discarded tokens
+                // appear first in input stream
+                ExtendedToken p = null;
+                // while hidden or discarded scarf tokens
+                while (hideMask.member(LA(1).getType()) || discardMask.member(LA(1).getType())) {
+                    if (hideMask.member(LA(1).getType())) {
+                        if (p == null) {
+                            p = (ExtendedToken) LA(1);
+                        }
+                        else {
+                            p.setHiddenAfter(LA(1));
+                            ((ExtendedToken)LA(1)).setHiddenBefore(p); // double-link
+                            p = (ExtendedToken) LA(1);
+                        }
+                        lastHiddenToken = p;
+                        if (firstHidden == null) {
+                            firstHidden = p; // record hidden token if first
+                        }
+                    }
+                    consume();
+                }
+            }            
+            public Token nextToken() throws TokenStreamException {
+                // handle an initial condition; don't want to get lookahead
+                // token of this splitter until first call to nextToken
+                if (LA(1) == null) {
+                    consumeFirst();
+                }
+
+                // we always consume hidden tokens after monitored, thus,
+                // upon entry LA(1) is a monitored token.
+                ExtendedToken monitored = (ExtendedToken) LA(1);
+                // point to hidden tokens found during last invocation
+                if (lastHiddenToken!=null && !((ExtendedToken)lastHiddenToken).attached) {
+                monitored.setHiddenBefore(lastHiddenToken);
+                }
+                else {
+                    monitored.setHiddenBefore(null);
+                }
+                lastHiddenToken = null;
+
+                // Look for hidden tokens, hook them into list emanating
+                // from the monitored tokens.
+                consume();
+                ExtendedToken p = monitored;
+                ExtendedToken next = (ExtendedToken) LA(1);
+                // while hidden or discarded scarf tokens
+                while (hideMask.member(next.getType()) || discardMask.member(next.getType())) {
+                    if (hideMask.member(next.getType())) {
+                        // attach the hidden token to the monitored in a chain
+                        // link forwards
+                        if (!attachBefore && !next.attached) {
+                            p.setHiddenAfter(next);
+                            next.attached = true;
+                        }
+                        // link backwards
+                        if (p != monitored) { //hidden cannot point to monitored tokens
+                            if (attachBefore && !p.attached) {
+                                next.setHiddenBefore(p);
+                                next.attached = true;
+                            }
+                        }
+                        p = (ExtendedToken) (lastHiddenToken = next);
+                    }
+                    else if (next.getType()==JavaTokenTypes.WS) {
+                        if (next.getText().indexOf("\n")>-1) {
+                            attachBefore = true;
+                        }
+                        else {
+                            attachBefore = false;
+                        }
+                    }
+                    consume();
+                    next =(ExtendedToken) LA(1);
+                }
+                return monitored;
+            }            
+            protected boolean attachBefore = false;
+            protected ExtendedToken maybeLastToken = null;
+        };
 
         /**
          * @todo keep WS
@@ -377,6 +466,11 @@ public final class JavaRecognizer
         try
         {
             this.parser.parse();
+            
+            System.out.println(getClass() + "*********** start");
+            root = ((JavaParser)this.parser).getAST();
+            parseToken(root,0, new java.util.Vector());
+            System.out.println("*********** end");
         }
 
         // the parsers/lexers should never throw any checked exception as we
@@ -384,14 +478,17 @@ public final class JavaRecognizer
         // further parsing, but we want to provide a savety net
         catch (RecognitionException ex)
         {
+            ex.printStackTrace();
             throw new ParseException(ex);
         }
         catch (TokenStreamRecognitionException ex)
         {
+            ex.printStackTrace();
             throw new ParseException(ex);
         }
         catch (TokenStreamException ex)
         {
+            ex.printStackTrace();
             throw new ParseException(ex);
         }
         finally
@@ -400,7 +497,65 @@ public final class JavaRecognizer
             this.running = false;
         }
     }
-
+    public AST getRoot() {
+        return root;
+    }
+/**
+ * TODO Get rid of
+ * @param token
+ * @param counter
+ * @param path
+ */
+	public void parseToken(AST token,int counter,java.util.Vector path) {
+	    
+	    AST child = null;
+	    
+	    while(token!=null) {
+            /*
+	        if (token instanceof CommonASTWithHiddenTokens) {
+	            //filter.getHiddenAfter(token);
+	            
+	            parseToken(((CommonASTWithHiddenTokens)token).getHiddenBefore(),counter,"before");
+	        }
+	        else {
+	            System.out.println("not a token");
+	        }
+            */
+	        System.out.println(" **" + token.getType() +"**,"+ token.getText()+"," + counter);
+	        if (token instanceof CommonASTWithHiddenTokens) {
+	            //filter.getHiddenAfter(((CommonHiddenStreamToken)token));
+	            parseToken(((CommonASTWithHiddenTokens)token).getHiddenAfter(),counter,"after");
+	            
+	        }
+	        else {
+	            System.out.println("not a token");
+	        }
+	        
+	        child = token.getFirstChild();
+            counter *=100;
+            path.add(new Integer(counter));
+	        parseToken(child,counter,path);
+            path.remove(new Integer(counter));
+            counter /=100;
+	        //System.out.println();
+	        //printSpace(counter);
+	        token = token.getNextSibling();
+            counter ++;
+	    }
+        //System.out.println(counter +"," + path);
+	}
+	private static void parseToken(CommonHiddenStreamToken token,int counter,String text) {
+	    if(token!=null) {
+	        //System.out.println();
+	        //printSpace(counter);
+	        System.out.print(" ** " +token.getType() +" ** " + token.getText());
+	        parseToken(token.getHiddenAfter(),counter,"a Unknown");
+	        //parseToken(token.getHiddenBefore(),counter,"b Unknown");
+	    }
+	    else {
+	        //System.out.println("none " + text);
+	    }
+	}
 
     /**
      * Decodes the given encoded tags string.

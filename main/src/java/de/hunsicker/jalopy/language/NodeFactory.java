@@ -6,9 +6,9 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.collections.AST;
+import antlr.ASTFactory;
+import antlr.Token;
+import antlr.collections.AST;
 
 
 /**

@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -95,10 +95,10 @@ final class MethodCallPrinter
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             boolean wrapLines =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
             boolean forceWrappingForChainedCalls =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                     ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
@@ -215,7 +215,7 @@ final class MethodCallPrinter
                         length = identifier.getFirstChild().getText().length();
 
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
                                 ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
                         {
@@ -257,14 +257,14 @@ final class MethodCallPrinter
                 }
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
                 {
                     length += 2;
                 }
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_AFTER_CAST,
                         ConventionDefaults.SPACE_AFTER_CAST))
                 {
@@ -283,7 +283,7 @@ final class MethodCallPrinter
         PrinterFactory.create(first).print(first, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_METHOD_CALL_PAREN,
                 ConventionDefaults.SPACE_BEFORE_METHOD_CALL_PAREN))
         {

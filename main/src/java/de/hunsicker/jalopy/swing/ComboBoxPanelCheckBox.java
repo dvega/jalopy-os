@@ -30,7 +30,7 @@ class ComboBoxPanelCheckBox
     //~ Instance variables ---------------------------------------------------------------
 
     /** The combo box panel. */
-    private ComboBoxPanel _combo;
+    ComboBoxPanel _combo;
 
     /** The check box. */
     private JCheckBox _check;

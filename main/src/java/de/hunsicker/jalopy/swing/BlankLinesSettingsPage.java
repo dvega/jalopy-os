@@ -46,9 +46,9 @@ public class BlankLinesSettingsPage
 
     private JCheckBox _blankLinesAfterLeftCurlyCheckBox;
     private JCheckBox _blankLinesBeforeRightCurlyCheckBox;
-    private JCheckBox _chunksByBlankLinesCheckBox;
+    JCheckBox _chunksByBlankLinesCheckBox;
     private JCheckBox _chunksByCommentsCheckBox;
-    private JCheckBox _keepBlankLinesCheckBox;
+    JCheckBox _keepBlankLinesCheckBox;
     private JCheckBox _separatorCheckBox;
     private JCheckBox _separatorRecursiveCheckBox;
     private JComboBox _blankLinesAfterLeftCurlyComboBox;

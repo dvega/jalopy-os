@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -87,18 +87,18 @@ final class DoWhilePrinter
 
                 // insert braces manually
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.BRACE_INSERT_DO_WHILE,
                         ConventionDefaults.BRACE_INSERT_DO_WHILE))
                 {
                     out.printLeftBrace(
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
                     out.last = JavaTokenTypes.IDENT;
                     PrinterFactory.create(body).print(body, out);
                     out.printRightBrace(
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_RIGHT,
                             ConventionDefaults.BRACE_NEWLINE_RIGHT));
                 }
@@ -116,7 +116,7 @@ final class DoWhilePrinter
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                 JavaTokenTypes.WS);
@@ -130,7 +130,7 @@ final class DoWhilePrinter
         trackPosition((JavaNode) keyword, out.line, offset, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {

@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -64,7 +64,7 @@ final class LeftParenthesisPrinter
         printCommentsBefore(node, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_PAREN, ConventionDefaults.PADDING_PAREN))
         {
             out.print(LPAREN_SPACE, JavaTokenTypes.LPAREN);
@@ -78,7 +78,7 @@ final class LeftParenthesisPrinter
 
         if (
             (out.mode == NodeWriter.MODE_DEFAULT)
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_PAREN_GROUPING,
                 ConventionDefaults.LINE_WRAP_PAREN_GROUPING))
         {
@@ -165,7 +165,7 @@ ITERATION:
         }
 
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
         if ((out.column + tester.length) > lineLength)
@@ -173,7 +173,7 @@ ITERATION:
             out.printNewline();
 
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 out.state.markers.add(

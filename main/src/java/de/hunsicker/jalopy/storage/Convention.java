@@ -2411,7 +2411,7 @@ public final class Convention
 
                     break;
             }
-
+            
             for (
                 Iterator i = new HashMap(settings._values).keySet().iterator();
                 i.hasNext();)
@@ -2429,6 +2429,11 @@ public final class Convention
                 }
             }
         }
+        
+        // Temporary modify one of the keys
+        // TODO Update to add in the order, this requires a version change !
+        settings.put(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
+        
     }
 
 

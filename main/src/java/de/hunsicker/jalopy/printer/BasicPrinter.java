@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 
 
@@ -59,6 +59,11 @@ class BasicPrinter
         printCommentsBefore(node, out);
 
         int offset = out.print(node.getText(), node.getType());
+        
+        // TODO validate this is ok for all 
+        for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
+            PrinterFactory.create(child).print(child,out);
+        }
 
         trackPosition((JavaNode) node, out.line, offset, out);
 

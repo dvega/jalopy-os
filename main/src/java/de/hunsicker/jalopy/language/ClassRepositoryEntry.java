@@ -331,7 +331,7 @@ public class ClassRepositoryEntry
             }
             else if (o instanceof String)
             {
-                return this.location.equals((String) o);
+                return this.location.equals(o);
             }
 
             return false;
@@ -356,47 +356,47 @@ public class ClassRepositoryEntry
         }
 
 
-        private String genFilename(String filename)
+        private String genFilename(String newFilename)
         {
             File file =
                 new File(
                     Convention.getInstance().get(
                         ConventionKeys.CLASS_REPOSITORY_DIRECTORY,
-                        Convention.getRepositoryDirectory().getAbsolutePath()) + filename);
+                        Convention.getRepositoryDirectory().getAbsolutePath()) + newFilename);
 
             if (file.exists())
             {
-                int paren = filename.indexOf('(');
+                int paren = newFilename.indexOf('(');
 
                 if (paren > -1)
                 {
                     String number =
-                        filename.substring(paren + 1, filename.lastIndexOf(')'));
+                        newFilename.substring(paren + 1, newFilename.lastIndexOf(')'));
 
                     try
                     {
                         int n = Integer.parseInt(number);
-                        filename =
-                            filename.substring(0, filename.lastIndexOf('(')) + "("
+                        newFilename =
+                            newFilename.substring(0, newFilename.lastIndexOf('(')) + "("
                             + (++n) + ")" + ClassRepository.EXT_REPOSITORY;
                     }
                     catch (Exception ex)
                     {
                         throw new RuntimeException(
-                            "error creating filename for " + filename);
+                            "error creating filename for " + newFilename);
                     }
                 }
                 else
                 {
-                    filename =
-                        filename.substring(0, filename.lastIndexOf('.')) + "(1)"
+                    newFilename =
+                        newFilename.substring(0, newFilename.lastIndexOf('.')) + "(1)"
                         + ClassRepository.EXT_REPOSITORY;
                 }
 
-                filename = genFilename(filename);
+                newFilename = genFilename(newFilename);
             }
 
-            return filename;
+            return newFilename;
         }
 
 

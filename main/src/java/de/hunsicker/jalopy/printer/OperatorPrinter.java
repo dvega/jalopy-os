@@ -8,11 +8,11 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -70,7 +70,7 @@ abstract class OperatorPrinter
             }
 
             int lineLength =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
             if ((out.column >= lineLength) || (offset > lineLength))
@@ -537,51 +537,48 @@ abstract class OperatorPrinter
 
             return false;
         }
-        else
+        // the last node contains an endline comment, so we have to
+        // print the closing parenthesis before the comment
+        CommonHiddenStreamToken t = n.getHiddenAfter();
+        n.setHiddenAfter(null);
+
+        LeftParenthesisPrinter.getInstance().print(leftParen, out);
+
+        if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            // the last node contains an endline comment, so we have to
-            // print the closing parenthesis before the comment
-            CommonHiddenStreamToken t = n.getHiddenAfter();
-            n.setHiddenAfter(null);
+            out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
+        }
 
-            LeftParenthesisPrinter.getInstance().print(leftParen, out);
+        Marker marker = out.state.markers.add();
+        out.state.markers.remove(marker);
 
-            if (out.mode == NodeWriter.MODE_DEFAULT)
-            {
-                out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
-            }
+        PrinterFactory.create(node).print(node, out);
 
+        /*if (!isTopMost(node))
+        {
             Marker marker = out.state.markers.add();
-            out.state.markers.remove(marker);
-
+            out.state.paramLevel++;
             PrinterFactory.create(node).print(node, out);
-
-            /*if (!isTopMost(node))
-            {
-                Marker marker = out.state.markers.add();
-                out.state.paramLevel++;
-                PrinterFactory.create(node).print(node, out);
-                out.state.paramLevel--;
-                out.state.markers.remove(marker);
-                RightParenthesisPrinter.getInstance().print(rightParen, out);
-
-            }
-            else
-            {
-                PrinterFactory.create(node).print(node, out);
-            }*/
+            out.state.paramLevel--;
+            out.state.markers.remove(marker);
             RightParenthesisPrinter.getInstance().print(rightParen, out);
 
-            if (out.mode == NodeWriter.MODE_DEFAULT)
-            {
-                out.state.parenScope.removeFirst();
-            }
-
-            n.setHiddenAfter(t);
-            printCommentsAfter(n, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
-
-            return true;
         }
+        else
+        {
+            PrinterFactory.create(node).print(node, out);
+        }*/
+        RightParenthesisPrinter.getInstance().print(rightParen, out);
+
+        if (out.mode == NodeWriter.MODE_DEFAULT)
+        {
+            out.state.parenScope.removeFirst();
+        }
+
+        n.setHiddenAfter(t);
+        printCommentsAfter(n, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
+        return true;
     }
 
 
@@ -596,102 +593,102 @@ abstract class OperatorPrinter
      *
      * @since 1.0b9
      */
-    private static boolean isHigherLevel(JavaNode operator)
-    {
-        switch (operator.getParent().getType())
-        {
-            case JavaTokenTypes.BXOR_ASSIGN :
-            case JavaTokenTypes.BAND_ASSIGN :
-            case JavaTokenTypes.BSR_ASSIGN :
-            case JavaTokenTypes.SR_ASSIGN :
-            case JavaTokenTypes.SL_ASSIGN :
-            case JavaTokenTypes.MINUS_ASSIGN :
-            case JavaTokenTypes.PLUS_ASSIGN :
-            case JavaTokenTypes.MOD_ASSIGN :
-            case JavaTokenTypes.DIV_ASSIGN :
-            case JavaTokenTypes.STAR_ASSIGN :
-            case JavaTokenTypes.ASSIGN :
-            case JavaTokenTypes.COLON :
-            case JavaTokenTypes.QUESTION :
-            case JavaTokenTypes.LOR :
-            case JavaTokenTypes.LAND :
-            case JavaTokenTypes.BOR :
-            case JavaTokenTypes.BXOR :
-            case JavaTokenTypes.BAND :
-            case JavaTokenTypes.NOT_EQUAL :
-            case JavaTokenTypes.EQUAL :
-            case JavaTokenTypes.GE :
-            case JavaTokenTypes.LE :
-            case JavaTokenTypes.GT :
-            case JavaTokenTypes.LT :
-            case JavaTokenTypes.SR :
-            case JavaTokenTypes.SL :
-            case JavaTokenTypes.MINUS :
-            case JavaTokenTypes.PLUS :
-            case JavaTokenTypes.MOD :
-            case JavaTokenTypes.DIV :
-            case JavaTokenTypes.STAR :
-            case JavaTokenTypes.LNOT :
-            case JavaTokenTypes.BNOT :
-            case JavaTokenTypes.UNARY_MINUS :
-            case JavaTokenTypes.UNARY_PLUS :
-            case JavaTokenTypes.DEC :
-            case JavaTokenTypes.INC :
-
-                for (
-                    AST child = operator.getFirstChild(); child != null;
-                    child = child.getNextSibling())
-                {
-                    switch (child.getType())
-                    {
-                        case JavaTokenTypes.BXOR_ASSIGN :
-                        case JavaTokenTypes.BAND_ASSIGN :
-                        case JavaTokenTypes.BSR_ASSIGN :
-                        case JavaTokenTypes.SR_ASSIGN :
-                        case JavaTokenTypes.SL_ASSIGN :
-                        case JavaTokenTypes.MINUS_ASSIGN :
-                        case JavaTokenTypes.PLUS_ASSIGN :
-                        case JavaTokenTypes.MOD_ASSIGN :
-                        case JavaTokenTypes.DIV_ASSIGN :
-                        case JavaTokenTypes.STAR_ASSIGN :
-                        case JavaTokenTypes.ASSIGN :
-                        case JavaTokenTypes.COLON :
-                        case JavaTokenTypes.QUESTION :
-                        case JavaTokenTypes.LOR :
-                        case JavaTokenTypes.LAND :
-                        case JavaTokenTypes.BOR :
-                        case JavaTokenTypes.BXOR :
-                        case JavaTokenTypes.BAND :
-                        case JavaTokenTypes.NOT_EQUAL :
-                        case JavaTokenTypes.EQUAL :
-                        case JavaTokenTypes.GE :
-                        case JavaTokenTypes.LE :
-                        case JavaTokenTypes.GT :
-                        case JavaTokenTypes.LT :
-                        case JavaTokenTypes.SR :
-                        case JavaTokenTypes.SL :
-                        case JavaTokenTypes.MINUS :
-                        case JavaTokenTypes.PLUS :
-                        case JavaTokenTypes.MOD :
-                        case JavaTokenTypes.DIV :
-                        case JavaTokenTypes.STAR :
-                            //case JavaTokenTypes.LNOT :
-                            //case JavaTokenTypes.BNOT :
-                            //case JavaTokenTypes.UNARY_MINUS :
-                            //case JavaTokenTypes.UNARY_PLUS :
-                            //case JavaTokenTypes.DEC :
-                            //case JavaTokenTypes.INC :
-                            return true;
-                    }
-                }
-
-                return false;
-
-            default : // no parent operator
-
-                return true;
-        }
-    }
+//    TODO private static boolean isHigherLevel(JavaNode operator)
+//    {
+//        switch (operator.getParent().getType())
+//        {
+//            case JavaTokenTypes.BXOR_ASSIGN :
+//            case JavaTokenTypes.BAND_ASSIGN :
+//            case JavaTokenTypes.BSR_ASSIGN :
+//            case JavaTokenTypes.SR_ASSIGN :
+//            case JavaTokenTypes.SL_ASSIGN :
+//            case JavaTokenTypes.MINUS_ASSIGN :
+//            case JavaTokenTypes.PLUS_ASSIGN :
+//            case JavaTokenTypes.MOD_ASSIGN :
+//            case JavaTokenTypes.DIV_ASSIGN :
+//            case JavaTokenTypes.STAR_ASSIGN :
+//            case JavaTokenTypes.ASSIGN :
+//            case JavaTokenTypes.COLON :
+//            case JavaTokenTypes.QUESTION :
+//            case JavaTokenTypes.LOR :
+//            case JavaTokenTypes.LAND :
+//            case JavaTokenTypes.BOR :
+//            case JavaTokenTypes.BXOR :
+//            case JavaTokenTypes.BAND :
+//            case JavaTokenTypes.NOT_EQUAL :
+//            case JavaTokenTypes.EQUAL :
+//            case JavaTokenTypes.GE :
+//            case JavaTokenTypes.LE :
+//            case JavaTokenTypes.GT :
+//            case JavaTokenTypes.LT :
+//            case JavaTokenTypes.SR :
+//            case JavaTokenTypes.SL :
+//            case JavaTokenTypes.MINUS :
+//            case JavaTokenTypes.PLUS :
+//            case JavaTokenTypes.MOD :
+//            case JavaTokenTypes.DIV :
+//            case JavaTokenTypes.STAR :
+//            case JavaTokenTypes.LNOT :
+//            case JavaTokenTypes.BNOT :
+//            case JavaTokenTypes.UNARY_MINUS :
+//            case JavaTokenTypes.UNARY_PLUS :
+//            case JavaTokenTypes.DEC :
+//            case JavaTokenTypes.INC :
+//
+//                for (
+//                    AST child = operator.getFirstChild(); child != null;
+//                    child = child.getNextSibling())
+//                {
+//                    switch (child.getType())
+//                    {
+//                        case JavaTokenTypes.BXOR_ASSIGN :
+//                        case JavaTokenTypes.BAND_ASSIGN :
+//                        case JavaTokenTypes.BSR_ASSIGN :
+//                        case JavaTokenTypes.SR_ASSIGN :
+//                        case JavaTokenTypes.SL_ASSIGN :
+//                        case JavaTokenTypes.MINUS_ASSIGN :
+//                        case JavaTokenTypes.PLUS_ASSIGN :
+//                        case JavaTokenTypes.MOD_ASSIGN :
+//                        case JavaTokenTypes.DIV_ASSIGN :
+//                        case JavaTokenTypes.STAR_ASSIGN :
+//                        case JavaTokenTypes.ASSIGN :
+//                        case JavaTokenTypes.COLON :
+//                        case JavaTokenTypes.QUESTION :
+//                        case JavaTokenTypes.LOR :
+//                        case JavaTokenTypes.LAND :
+//                        case JavaTokenTypes.BOR :
+//                        case JavaTokenTypes.BXOR :
+//                        case JavaTokenTypes.BAND :
+//                        case JavaTokenTypes.NOT_EQUAL :
+//                        case JavaTokenTypes.EQUAL :
+//                        case JavaTokenTypes.GE :
+//                        case JavaTokenTypes.LE :
+//                        case JavaTokenTypes.GT :
+//                        case JavaTokenTypes.LT :
+//                        case JavaTokenTypes.SR :
+//                        case JavaTokenTypes.SL :
+//                        case JavaTokenTypes.MINUS :
+//                        case JavaTokenTypes.PLUS :
+//                        case JavaTokenTypes.MOD :
+//                        case JavaTokenTypes.DIV :
+//                        case JavaTokenTypes.STAR :
+//                            //case JavaTokenTypes.LNOT :
+//                            //case JavaTokenTypes.BNOT :
+//                            //case JavaTokenTypes.UNARY_MINUS :
+//                            //case JavaTokenTypes.UNARY_PLUS :
+//                            //case JavaTokenTypes.DEC :
+//                            //case JavaTokenTypes.INC :
+//                            return true;
+//                    }
+//                }
+//
+//                return false;
+//
+//            default : // no parent operator
+//
+//                return true;
+//        }
+//    }
 
 
     /**
@@ -703,55 +700,55 @@ abstract class OperatorPrinter
      *
      * @return <code>true</code> if the given node is a lower level node.
      */
-    private static boolean isLowerLevel(JavaNode operator)
-    {
-        for (
-            AST child = operator.getFirstChild(); child != null;
-            child = child.getNextSibling())
-        {
-            switch (child.getType())
-            {
-                case JavaTokenTypes.BXOR_ASSIGN :
-                case JavaTokenTypes.BAND_ASSIGN :
-                case JavaTokenTypes.BSR_ASSIGN :
-                case JavaTokenTypes.SR_ASSIGN :
-                case JavaTokenTypes.SL_ASSIGN :
-                case JavaTokenTypes.MINUS_ASSIGN :
-                case JavaTokenTypes.PLUS_ASSIGN :
-                case JavaTokenTypes.MOD_ASSIGN :
-                case JavaTokenTypes.DIV_ASSIGN :
-                case JavaTokenTypes.STAR_ASSIGN :
-                case JavaTokenTypes.ASSIGN :
-                case JavaTokenTypes.COLON :
-                case JavaTokenTypes.QUESTION :
-                case JavaTokenTypes.LOR :
-                case JavaTokenTypes.LAND :
-                case JavaTokenTypes.BOR :
-                case JavaTokenTypes.BXOR :
-                case JavaTokenTypes.BAND :
-                case JavaTokenTypes.NOT_EQUAL :
-                case JavaTokenTypes.EQUAL :
-                case JavaTokenTypes.GE :
-                case JavaTokenTypes.LE :
-                case JavaTokenTypes.GT :
-                case JavaTokenTypes.LT :
-                case JavaTokenTypes.SR :
-                case JavaTokenTypes.SL :
-                case JavaTokenTypes.MINUS :
-                case JavaTokenTypes.PLUS :
-                case JavaTokenTypes.MOD :
-                case JavaTokenTypes.DIV :
-                case JavaTokenTypes.STAR :
-                case JavaTokenTypes.LNOT :
-                case JavaTokenTypes.BNOT :
-                case JavaTokenTypes.UNARY_MINUS :
-                case JavaTokenTypes.UNARY_PLUS :
-                case JavaTokenTypes.DEC :
-                case JavaTokenTypes.INC :
-                    return true;
-            }
-        }
-
-        return false;
-    }
+//    TODO private static boolean isLowerLevel(JavaNode operator)
+//    {
+//        for (
+//            AST child = operator.getFirstChild(); child != null;
+//            child = child.getNextSibling())
+//        {
+//            switch (child.getType())
+//            {
+//                case JavaTokenTypes.BXOR_ASSIGN :
+//                case JavaTokenTypes.BAND_ASSIGN :
+//                case JavaTokenTypes.BSR_ASSIGN :
+//                case JavaTokenTypes.SR_ASSIGN :
+//                case JavaTokenTypes.SL_ASSIGN :
+//                case JavaTokenTypes.MINUS_ASSIGN :
+//                case JavaTokenTypes.PLUS_ASSIGN :
+//                case JavaTokenTypes.MOD_ASSIGN :
+//                case JavaTokenTypes.DIV_ASSIGN :
+//                case JavaTokenTypes.STAR_ASSIGN :
+//                case JavaTokenTypes.ASSIGN :
+//                case JavaTokenTypes.COLON :
+//                case JavaTokenTypes.QUESTION :
+//                case JavaTokenTypes.LOR :
+//                case JavaTokenTypes.LAND :
+//                case JavaTokenTypes.BOR :
+//                case JavaTokenTypes.BXOR :
+//                case JavaTokenTypes.BAND :
+//                case JavaTokenTypes.NOT_EQUAL :
+//                case JavaTokenTypes.EQUAL :
+//                case JavaTokenTypes.GE :
+//                case JavaTokenTypes.LE :
+//                case JavaTokenTypes.GT :
+//                case JavaTokenTypes.LT :
+//                case JavaTokenTypes.SR :
+//                case JavaTokenTypes.SL :
+//                case JavaTokenTypes.MINUS :
+//                case JavaTokenTypes.PLUS :
+//                case JavaTokenTypes.MOD :
+//                case JavaTokenTypes.DIV :
+//                case JavaTokenTypes.STAR :
+//                case JavaTokenTypes.LNOT :
+//                case JavaTokenTypes.BNOT :
+//                case JavaTokenTypes.UNARY_MINUS :
+//                case JavaTokenTypes.UNARY_PLUS :
+//                case JavaTokenTypes.DEC :
+//                case JavaTokenTypes.INC :
+//                    return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 }

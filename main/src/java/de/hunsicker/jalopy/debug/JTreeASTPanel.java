@@ -74,7 +74,7 @@ public class JTreeASTPanel
         add(sp, BorderLayout.CENTER);
 
         final JPopupMenu popupMenu = new JPopupMenu();
-        popupMenu.setDefaultLightWeightPopupEnabled(true);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(true);
         popupMenu.setLightWeightPopupEnabled(true);
 
         final Action updateAction = new UpdateAction();

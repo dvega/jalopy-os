@@ -9,7 +9,9 @@ package de.hunsicker.jalopy.language;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
+import antlr.collections.AST;
 
 
 /**
@@ -260,6 +262,7 @@ final class NodeComparator
             {
                 case JavaTokenTypes.METHOD_DEF :
                 case JavaTokenTypes.CTOR_DEF :
+                case JavaTokenTypes.ANNOTATION_DEF :
                     return compareMethod(node1, node2);
 
                 case JavaTokenTypes.VARIABLE_DEF :
@@ -272,103 +275,134 @@ final class NodeComparator
                 // nothing to compare here
                 case JavaTokenTypes.STATIC_INIT :
                 case JavaTokenTypes.INSTANCE_INIT :
+                case JavaTokenTypes.ENUM_DEF:
                     return 0;
+                
 
                 default :
                     throw new IllegalArgumentException(
                         "Heck. I don't know about this type -- " + type1);
             }
         }
-        else
+        switch (type1)
         {
-            switch (type1)
-            {
-                case JavaTokenTypes.METHOD_DEF :
+            case JavaTokenTypes.METHOD_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.CTOR_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.VARIABLE_DEF :
+            // fall through
+            case JavaTokenTypes.VARIABLE_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                case JavaTokenTypes.CTOR_DEF :
+            case JavaTokenTypes.CTOR_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.CLASS_DEF :
-                    return 1;
+            // fall through
+            case JavaTokenTypes.CLASS_DEF :
+                return 1;
 
-                case JavaTokenTypes.INTERFACE_DEF :
+            case JavaTokenTypes.INTERFACE_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.METHOD_DEF :
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.CTOR_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ENUM_DEF:
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.STATIC_INIT :
+            case JavaTokenTypes.ANNOTATION_DEF :
 
-                    switch (type2)
-                    {
-                        default :
-                            return -1;
-                    }
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ENUM_DEF:
+                        return 1;
 
-                // fall through
-                case JavaTokenTypes.INSTANCE_INIT :
+                    default :
+                        return -1;
+                }
+            case JavaTokenTypes.ENUM_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ANNOTATION_DEF:
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                default :
-                    throw new IllegalArgumentException(
-                        "invalid node type given -- " + type1);
-            }
+            // fall through
+            case JavaTokenTypes.STATIC_INIT :
+
+                switch (type2)
+                {
+                    default :
+                        return -1;
+                }
+
+            // fall through
+            case JavaTokenTypes.INSTANCE_INIT :
+
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                        return 1;
+
+                    default :
+                        return -1;
+                }
+
+            // fall through
+            default :
+                throw new IllegalArgumentException(
+                    "invalid node type given -- " + type1);
         }
     }
 
@@ -637,9 +671,6 @@ final class NodeComparator
         {
             return ident;
         }
-        else
-        {
             return ident.substring(offset + 1);
-        }
     }
 }

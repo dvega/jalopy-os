@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -113,7 +113,7 @@ final class TryCatchFinallyPrinter
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                 JavaTokenTypes.WS);
@@ -122,7 +122,7 @@ final class TryCatchFinallyPrinter
         out.print(CATCH, JavaTokenTypes.LITERAL_catch);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
@@ -164,7 +164,7 @@ final class TryCatchFinallyPrinter
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                 JavaTokenTypes.WS);

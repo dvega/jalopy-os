@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -74,7 +74,7 @@ final class CasePrinter
                 PrinterFactory.create(expr).print(expr, out);
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_BEFORE_CASE_COLON,
                         ConventionDefaults.SPACE_BEFORE_CASE_COLON))
                 {
@@ -173,7 +173,7 @@ LOOP:
                 int offset = 1;
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_BEFORE_CASE_COLON, false))
                 {
                     offset =
@@ -215,7 +215,7 @@ LOOP:
             {
                 case JavaTokenTypes.SLIST :
                     result =
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT);
 

@@ -14,8 +14,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -55,7 +56,7 @@ public final class CodeInspector
         "de.hunsicker.jalopy.language.Bundle" /* NOI18N */;
 
     /** The code convention. */
-    private static final Convention _settings = Convention.getInstance();
+    protected static final Convention _settings = Convention.getInstance();
     private static final String STR_boolean = "boolean" /* NOI18N */;
     private static final String STR_Object = "Object" /* NOI18N */;
     private static final String STR_equals = "equals" /* NOI18N */;
@@ -90,8 +91,9 @@ public final class CodeInspector
 
     private static final String STR_REPLACE_STRUCTURE_WITH_CLASS =
         "REPLACE_STRUCTURE_WITH_CLASS" /* NOI18N */;
-    private static final String STR_ADHERE_TO_NAMING_CONVENTION =
-        "ADHERE_TO_NAMING_CONVENTION" /* NOI18N */;
+// TODO needed ?
+//    private static final String STR_ADHERE_TO_NAMING_CONVENTION =
+//        "ADHERE_TO_NAMING_CONVENTION" /* NOI18N */;
 
     private static final String STR_REFER_BY_INTERFACE =
         "REFER_BY_INTERFACE" /* NOI18N */;
@@ -188,10 +190,11 @@ public final class CodeInspector
     private final PatternMatcher _matcher = new Perl5Matcher();
 
     /** The file currently beeing processed. */
-    private String _file;
+    // TODO Needed ?
+    //private String _file;
 
     /** Helper array used to store the arguments for the message formatter. */
-    private final String[] _args = new String[3];
+    protected final String[] _args = new String[3];
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -218,7 +221,8 @@ public final class CodeInspector
         AST  tree,
         File file)
     {
-        _file = file.getAbsolutePath();
+        // TODO See above
+        //_file = file.getAbsolutePath();
         walk(tree);
     }
 
@@ -557,7 +561,7 @@ public final class CodeInspector
      * @param resourceKey resource key of the rule.
      * @param args the arguments for message formatting.
      */
-    private void addIssue(
+    protected void addIssue(
         AST      node,
         String   resourceKey,
         Object[] args)
@@ -616,13 +620,13 @@ public final class CodeInspector
                 TreeWalker walker =
                     new TreeWalker()
                     {
-                        public void visit(AST node)
+                        public void visit(AST newNode)
                         {
-                            switch (node.getType())
+                            switch (newNode.getType())
                             {
                                 case JavaTokenTypes.LITERAL_return :
 
-                                    AST child = node.getFirstChild();
+                                    AST child = newNode.getFirstChild();
                                     int retType = 0;
 
                                     switch (child.getType())
@@ -657,7 +661,7 @@ public final class CodeInspector
                                                     ConventionKeys.TIP_RETURN_ZERO_ARRAY,
                                                     false))
                                             {
-                                                addIssue(node, STR_RETURN_ZERO_ARRAY, _args);
+                                                addIssue(newNode, STR_RETURN_ZERO_ARRAY, _args);
                                             }
 
                                             stop();
@@ -813,7 +817,7 @@ public final class CodeInspector
         boolean foundEquals = false;
         AST equalsNode = null;
         boolean foundHashCode = false;
-        AST hashCodeNode = null;
+        //TODO AST hashCodeNode = null;
         boolean foundToString = false;
 
         for (AST child = body.getFirstChild(); child != null;
@@ -855,7 +859,7 @@ public final class CodeInspector
                     if (checkOverrideHashCode &&
                         !foundHashCode && isHashCodeMethod(method == null ? (method = new Method(child)): method))
                     {
-                        hashCodeNode = child;
+                        //TODO hashCodeNode = child;
                         foundHashCode = true;
                     }
 
@@ -970,8 +974,7 @@ public final class CodeInspector
                     _settings.getBoolean(
                         ConventionKeys.TIP_WRONG_COLLECTION_COMMENT, false))
                 {
-                    CommonHiddenStreamToken comment =
-                        (CommonHiddenStreamToken) node.getHiddenAfter();
+                    CommonHiddenStreamToken comment = node.getHiddenAfter();
 
                     switch (comment.getType())
                     {
@@ -1028,13 +1031,13 @@ public final class CodeInspector
                     TreeWalker walker =
                         new TreeWalker()
                         {
-                            public void visit(AST node)
+                            public void visit(AST newNode)
                             {
-                                switch (node.getType())
+                                switch (newNode.getType())
                                 {
                                     case JavaTokenTypes.LITERAL_throw :
 
-                                        addIssue(node, STR_OBEY_CONTRACT_EQUALS, _args);
+                                        addIssue(newNode, STR_OBEY_CONTRACT_EQUALS, _args);
                                         stop();
 
                                         break;

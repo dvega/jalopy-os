@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -86,7 +86,7 @@ final class IfElsePrinter
         }
 
         boolean spaceBefore =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN);
 
@@ -106,7 +106,7 @@ final class IfElsePrinter
         AST lparen = node.getFirstChild();
 
         boolean insertBraces =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_INSERT_IF_ELSE,
                 ConventionDefaults.BRACE_INSERT_IF_ELSE);
 
@@ -114,10 +114,10 @@ final class IfElsePrinter
         AST body = rparen.getNextSibling();
 
         boolean leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
         boolean rightBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_RIGHT, ConventionDefaults.BRACE_NEWLINE_RIGHT);
         boolean hasBraces = body.getType() == JavaTokenTypes.SLIST;
 
@@ -171,7 +171,7 @@ final class IfElsePrinter
             {
                 out.print(
                     out.getString(
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                             ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                     JavaTokenTypes.WS);

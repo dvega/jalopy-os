@@ -21,7 +21,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
@@ -187,7 +186,7 @@ public class SortingSettingsPage
             new StringTokenizer(
                 this.settings.get(ConventionKeys.SORT_ORDER, DeclarationType.getOrder()),
                 DELIMETER);
-        Object[][] data = new Object[7][2];
+        Object[][] data = new Object[9][2];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)
         {
@@ -244,6 +243,25 @@ public class SortingSettingsPage
                     new Boolean(
                         this.settings.getBoolean(
                             ConventionKeys.SORT_CLASS, ConventionDefaults.SORT_CLASS));
+            }
+            else if (DeclarationType.valueOf(token) == DeclarationType.ANNOTATION)
+            {
+                data[i][0] = DeclarationType.ANNOTATION;
+                data[i][1] =
+                    new Boolean(
+                        this.settings.getBoolean(
+                            ConventionKeys.SORT_ANNOTATION, ConventionDefaults.SORT_ANNOTATION));
+            }
+            else if (DeclarationType.valueOf(token) == DeclarationType.ENUM)
+            {
+                data[i][0] = DeclarationType.ENUM;
+                data[i][1] =
+                    new Boolean(
+                        this.settings.getBoolean(
+                            ConventionKeys.SORT_ENUM, ConventionDefaults.SORT_ENUM));
+            }
+            else {
+                System.out.println("Unknown !");
             }
         }
 
@@ -442,7 +460,7 @@ public class SortingSettingsPage
         Object[] columnNames = { this.bundle.getString("HDR_TYPE" /* NOI18N */) };
         DefaultTableModel d = new DataModel(data, columnNames);
         TableList modifiersTable = new TableList(d, TableList.TYPE_UP_DOWN);
-        JTable table = modifiersTable.getTable();
+        // TODO JTable table = modifiersTable.getTable();
         d.addTableModelListener(
             new TableModelListener()
             {
@@ -540,7 +558,7 @@ public class SortingSettingsPage
      * Sets the state (enabled/disabled) of the panels according to the selection state
      * of the sorting checkbox.
      */
-    private void refresh()
+    void refresh()
     {
         if (_sortCheckBox.isSelected())
         {
@@ -580,10 +598,7 @@ public class SortingSettingsPage
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
 

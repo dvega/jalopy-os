@@ -10,8 +10,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
-import de.hunsicker.antlr.BaseAST;
-import de.hunsicker.antlr.collections.AST;
+import antlr.BaseAST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaRecognizer;
 import de.hunsicker.jalopy.language.TreeWalker;
@@ -82,7 +82,7 @@ public final class Tree
             return;
         }
 
-        ((BaseAST) t).setVerboseStringConversion(true, tokenNames);
+        BaseAST.setVerboseStringConversion(true, tokenNames);
 
         final ASTFrame frame = new ASTFrame("Java AST", t);
         frame.pack();

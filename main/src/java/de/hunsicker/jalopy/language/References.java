@@ -6,6 +6,7 @@
  */
 package de.hunsicker.jalopy.language;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +15,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -46,7 +49,7 @@ final class References
      * Maps all variables with their references. <code>null</code> values means there
      * exist no references for a variable.
      */
-    private final Map _variables = new HashMap(); // Map of <JavaNode>:<List>
+    final Map _variables = new HashMap(); // Map of <JavaNode>:<List>
 
     /** The default scope represents the top of a compilation unit. */
     private final Scope _defaultScope = new Scope();
@@ -152,7 +155,7 @@ final class References
      */
     public void leaveScope()
     {
-        Scope s = (Scope) _scopesStack.removeFirst();
+        //Scope s = (Scope) _scopesStack.removeFirst();
         _curScope = (Scope) _scopesStack.getFirst();
 
         if (_curScope == _defaultScope)
@@ -202,8 +205,8 @@ final class References
 
             // constant, ignore
             if (
-                JavaNodeModifier.isFinal(modifierMask)
-                && JavaNodeModifier.isStatic(modifierMask))
+                Modifier.isFinal(modifierMask)
+                && Modifier.isStatic(modifierMask))
             {
                 continue;
             }
@@ -265,7 +268,7 @@ final class References
                                             /**
                                              * @todo make the level configurable
                                              */
-                                            if (JavaNodeModifier.isPrivate(modifierMask))
+                                            if (Modifier.isPrivate(modifierMask))
                                             {
                                                 System.out.println(
                                                     "XXX:" + node.startLine + ":"
@@ -285,7 +288,7 @@ final class References
 
                                 default :
 
-                                    if (!JavaNodeModifier.isFinal(modifierMask))
+                                    if (!Modifier.isFinal(modifierMask))
                                     {
                                         /**
                                          * @todo :" + node.startLine + ":" +
@@ -302,7 +305,7 @@ final class References
                         }
                         else
                         {
-                            if (!JavaNodeModifier.isFinal(modifierMask))
+                            if (!Modifier.isFinal(modifierMask))
                             {
                                 JavaNode assign =
                                     (JavaNode) JavaNodeHelper.getFirstChild(
@@ -558,20 +561,20 @@ LOOKUP:
                         {
                             Map.Entry variable = (Map.Entry) j.next();
                             String varName = (String) variable.getKey();
-                            Object value = variable.getValue();
+                            //Object value = variable.getValue();
 
                             if (refName.equals(varName))
                             {
                                 JavaNode varNode = (JavaNode) variable.getValue();
-                                List references = (List) _variables.get(varNode);
+                                List theReferences = (List) _variables.get(varNode);
 
-                                if (references == null)
+                                if (theReferences == null)
                                 {
-                                    references = new ArrayList();
-                                    _variables.put(varNode, references);
+                                    theReferences = new ArrayList();
+                                    _variables.put(varNode, theReferences);
                                 }
 
-                                references.add(refNode);
+                                theReferences.add(refNode);
 
                                 // the reference has been resolved, so remove
                                 // it from the map

@@ -52,15 +52,13 @@ import de.hunsicker.util.ResourceBundleFactory;
 class HistoryViewer
     extends JPanel
 {
-    //~ Instance variables ---------------------------------------------------------------
-
-    private DateFormat _dateFormatter =
+    DateFormat _dateFormatter =
         DateFormat.getDateTimeInstance(
             DateFormat.SHORT, DateFormat.SHORT, Locale.getDefault());
     private DefaultTreeModel _treeModel;
-    private HistoryTreeNode _rootNode;
-    private JTree _tree;
-    private boolean _caseSensitive;
+    HistoryTreeNode _rootNode;
+    JTree _tree;
+    boolean _caseSensitive;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -246,7 +244,7 @@ class HistoryViewer
         add(scrollPane, BorderLayout.CENTER);
 
         final JPopupMenu popupMenu = new JPopupMenu();
-        popupMenu.setDefaultLightWeightPopupEnabled(true);
+        JPopupMenu.setDefaultLightWeightPopupEnabled(true);
         popupMenu.setLightWeightPopupEnabled(true);
 
         final Action removeAction = new RemoveItemAction();
@@ -386,7 +384,7 @@ class HistoryViewer
      *
      * @param path path to remove.
      */
-    private void removePath(TreePath path)
+    void removePath(TreePath path)
     {
         TreePath parent = path.getParentPath();
 
@@ -419,21 +417,18 @@ class HistoryViewer
             boolean expanded,
             boolean leaf,
             int     row,
-            boolean hasFocus)
+            boolean newHasFocus)
         {
             if (row == 0)
             {
                 super.getTreeCellRendererComponent(
-                    tree, value, sel, expanded, leaf, row, hasFocus);
+                    tree, value, sel, expanded, leaf, row, newHasFocus);
                 setIcon(this.rootIcon);
 
                 return this;
             }
-            else
-            {
-                return super.getTreeCellRendererComponent(
-                    tree, value, sel, expanded, leaf, row, hasFocus);
-            }
+            return super.getTreeCellRendererComponent(
+                tree, value, sel, expanded, leaf, row, newHasFocus);
         }
     }
 
@@ -488,22 +483,13 @@ class HistoryViewer
                 {
                     return this.name.equals(o);
                 }
-                else
-                {
-                    return this.name.equalsIgnoreCase((String) o);
-                }
+                return this.name.equalsIgnoreCase((String) o);
             }
-            else
+            if (_caseSensitive)
             {
-                if (_caseSensitive)
-                {
-                    return this.name.equals(((HistoryTreeNode) o).name);
-                }
-                else
-                {
-                    return this.name.equalsIgnoreCase(((HistoryTreeNode) o).name);
-                }
+                return this.name.equals(((HistoryTreeNode) o).name);
             }
+            return this.name.equalsIgnoreCase(((HistoryTreeNode) o).name);
         }
 
 
@@ -513,10 +499,7 @@ class HistoryViewer
             {
                 return this.name.hashCode();
             }
-            else
-            {
-                return this.name.toLowerCase().hashCode();
-            }
+            return this.name.toLowerCase().hashCode();
         }
 
 
@@ -558,10 +541,7 @@ class HistoryViewer
 
                 return buf.toString();
             }
-            else
-            {
-                return this.name;
-            }
+            return this.name;
         }
     }
 

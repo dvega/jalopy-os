@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -61,7 +61,7 @@ final class TypeCastPrinter
         AST type = node.getFirstChild();
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
         {
             out.print(LPAREN_SPACE, JavaTokenTypes.LPAREN);
@@ -76,7 +76,7 @@ final class TypeCastPrinter
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_CAST, ConventionDefaults.SPACE_AFTER_CAST))
         {
             out.print(SPACE, out.last);

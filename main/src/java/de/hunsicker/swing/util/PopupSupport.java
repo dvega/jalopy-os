@@ -50,8 +50,8 @@ public class PopupSupport
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final Comparator COMPARATOR = new PartialStringComparator();
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final Comparator COMPARATOR = new PartialStringComparator();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     /** The name for ResourceBundle lookup. */
     private static final String BUNDLE_NAME =
@@ -84,7 +84,7 @@ public class PopupSupport
     private List _registeredComponents; // List of <ListenerSupport>
 
     /** List with the package names for which popup support should be enabled. */
-    private final List _supported; // List of <String>
+    final List _supported; // List of <String>
 
     //~ Constructors ---------------------------------------------------------------------
 

@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.language;
 
 import java.io.Reader;
 
-import de.hunsicker.antlr.TokenStream;
+import antlr.TokenStream;
 import de.hunsicker.io.FileFormat;
 
 

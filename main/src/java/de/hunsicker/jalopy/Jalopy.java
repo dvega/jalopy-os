@@ -36,7 +36,7 @@ import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaRecognizer;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
 import de.hunsicker.jalopy.storage.Convention;
@@ -48,6 +48,7 @@ import de.hunsicker.util.Version;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
 
@@ -225,7 +226,7 @@ public final class Jalopy
     private final SpyAppender _spy;
 
     /** Run status. */
-    private State _state = State.UNDEFINED;
+    State _state = State.UNDEFINED;
 
     /**
      * The encoding to use for formatting. If <code>null</code> the platform's default
@@ -306,7 +307,7 @@ public final class Jalopy
     public static void setConvention(File file)
       throws IOException
     {
-        Convention.getInstance().importSettings(file);
+        Convention.importSettings(file);
     }
 
 
@@ -320,7 +321,7 @@ public final class Jalopy
     public static void setConvention(URL url)
       throws IOException
     {
-        Convention.getInstance().importSettings(url);
+        Convention.importSettings(url);
     }
 
 
@@ -1026,12 +1027,10 @@ public final class Jalopy
 
                     return false;
                 }
-                else
-                {
+                    
                     /**
                      * @todo we need to reset the line info for the recognizer!!!
                      */
-                }
             }
             else
             {
@@ -1040,6 +1039,7 @@ public final class Jalopy
         }
         catch (Throwable ex)
         {
+            ex.printStackTrace();
             _state = State.ERROR;
             _args[0] = _inputFile;
             _args[1] =
@@ -1047,6 +1047,7 @@ public final class Jalopy
                                           : ex.getMessage();
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
+        System.out.println(getClass() + "Got tree , " +tree);
 
         return format(tree, _packageName, _inputFileFormat, false);
     }
@@ -1267,6 +1268,7 @@ public final class Jalopy
 
             return tree;
         }
+        
         finally
         {
             cleanupRecognizer();
@@ -1448,6 +1450,7 @@ public final class Jalopy
         }
         catch (Throwable ex)
         {
+            ex.printStackTrace();
             _state = State.ERROR;
             _args[0] = _inputFile;
             _args[1] =
@@ -1508,6 +1511,8 @@ public final class Jalopy
      *
      * @since 1.0b8
      */
+    /*
+    // TODO Appears unused
     private boolean hasOutput()
     {
         switch (_mode)
@@ -1530,7 +1535,7 @@ public final class Jalopy
         return false;
     }
 
-
+*/
     /**
      * Extracts the version information out of the package manifest.
      *
@@ -1613,13 +1618,10 @@ public final class Jalopy
             {
                 throw new IOException("could not create target directory -- " + buf);
             }
-            else
-            {
                 if (Loggers.IO.isDebugEnabled())
                 {
                     Loggers.IO.debug("directory " + test + " created");
                 }
-            }
         }
 
         buf.append(File.separator);
@@ -1845,10 +1847,7 @@ public final class Jalopy
             {
                 return true;
             }
-            else
-            {
                 return file.canWrite();
-            }
         }
 
         return false;
@@ -2201,6 +2200,9 @@ public final class Jalopy
                 throw new IllegalStateException(
                     "both input source and output target has to be specified");
         }
+        
+        System.out.println(getClass() +  " Start print  !");
+        
 
         _now = System.currentTimeMillis();
 
@@ -2219,6 +2221,7 @@ public final class Jalopy
             outputWriter = _outputWriter;
         }
 
+        System.out.println(getClass() +  " Node writer !");
         NodeWriter out =
             new NodeWriter(
                 outputWriter, _inputFile.getAbsolutePath(), _issues,
@@ -2245,7 +2248,9 @@ public final class Jalopy
                                            : _inputFile) + ":0:0:print");
 
                 start = System.currentTimeMillis();
+                System.out.println(getClass() + "Creating print job !");
                 PrinterFactory.create(tree).print(tree, out);
+                System.out.println(getClass() + "Done Creating print job !");
 
                 if (!isChecksum())
                 {
@@ -2259,7 +2264,9 @@ public final class Jalopy
             }
             else
             {
+                System.out.println(getClass() + "Creating print job !" + tree);
                 PrinterFactory.create(tree).print(tree, out);
+                System.out.println(getClass() + "Done Creating print job !");
             }
 
             if (isChecksum())
@@ -2444,7 +2451,7 @@ public final class Jalopy
         {
             switch (ev.getLevel().toInt())
             {
-                case Level.WARN_INT :
+                case Priority.WARN_INT :
 
                     if (_state != State.ERROR)
                     {
@@ -2453,8 +2460,8 @@ public final class Jalopy
 
                     break;
 
-                case Level.ERROR_INT :
-                case Level.FATAL_INT :
+                case Priority.ERROR_INT :
+                case Priority.FATAL_INT :
                     _state = State.ERROR;
 
                     break;

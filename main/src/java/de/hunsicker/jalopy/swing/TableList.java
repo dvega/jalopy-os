@@ -32,12 +32,12 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
@@ -72,7 +72,7 @@ class TableList
 
     /** List with ADD/REMOVE and UP/DOWN butttons */
     public static final int TYPE_BOTH = 3;
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     /** The name for ResourceBundle lookup. */
     private static final String BUNDLE_NAME =
@@ -97,13 +97,13 @@ class TableList
     JButton upButton;
 
     /** The used table model. */
-    private DefaultTableModel _tableModel;
+    DefaultTableModel _tableModel;
 
     /** The scroller. */
     private JScrollPane _scrollPane;
 
     /** Used table. */
-    private JTable _table;
+    JTable _table;
 
     /** Holds the constraints for the down action. */
     private List _downContraints; // List of <Constraint>
@@ -112,7 +112,7 @@ class TableList
     private List _upConstraints; // List of <Constraint>
 
     /** The list type, i.e. what buttons are available. */
-    private int _type;
+    // todo private int _type;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ class TableList
         layout.setConstraints(_scrollPane, c);
         add(_scrollPane);
 
-        _type = type;
+        // TODO _type = type;
 
         switch (type)
         {
@@ -589,7 +589,7 @@ class TableList
      * @param selectedRow the currently selected row, <code>-1</code> if no row is
      *        selected.
      */
-    private void updateButtons(
+    void updateButtons(
         int rows,
         int selectedRow)
     {
@@ -839,7 +839,7 @@ class TableList
 
         public BooleanRenderer()
         {
-            setHorizontalAlignment(JLabel.CENTER);
+            setHorizontalAlignment(SwingConstants.CENTER);
         }
 
         public Component getTableCellRendererComponent(
@@ -1048,7 +1048,7 @@ class TableList
         public NumberRenderer()
         {
             super();
-            setHorizontalAlignment(JLabel.RIGHT);
+            setHorizontalAlignment(SwingConstants.RIGHT);
         }
     }
 

@@ -9,9 +9,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -157,7 +157,7 @@ ITERATE:
         }
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
         boolean wrap = false; // actually perform line wrapping
 
@@ -174,7 +174,7 @@ ITERATE:
         else
         {
             boolean insertParentheses =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
                     ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS);
 
@@ -280,7 +280,7 @@ ITERATE:
 
         boolean continuation = out.continuation;
         boolean continuationIndent =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
 
@@ -309,7 +309,7 @@ ITERATE:
         }
 
         boolean wrapBeforeOperator =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
                 ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR);
         boolean commentAfter = operator.hasCommentsAfter();

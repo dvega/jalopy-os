@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -68,10 +68,10 @@ final class DotPrinter
              * @todo add switch to disable wrapping along dots alltogether
              */
             boolean wrapLines =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
             boolean forceWrappingForChainedCalls =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                     ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
@@ -166,17 +166,18 @@ final class DotPrinter
         NodeWriter out)
       throws IOException
     {
-        ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();
 
         boolean continuationIndent =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
 
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
-        if (scope.chainCall != null)
+        // TODO Modified to check parenScope.size - verify
+        if (out.state.parenScope.size()>0 &&  ((ParenthesesScope) out.state.parenScope.getFirst()).chainCall != null)
         {
+            ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();
             JavaNode parent = ((JavaNode) node).getParent();
 
             switch (parent.getType())
@@ -185,7 +186,7 @@ final class DotPrinter
                 case JavaTokenTypes.METHOD_CALL :
 
                     boolean align =
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.ALIGN_METHOD_CALL_CHAINS,
                             ConventionDefaults.ALIGN_METHOD_CALL_CHAINS);
 
@@ -193,7 +194,7 @@ final class DotPrinter
                     {
                         // force wrap after each call?
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                                 ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL))
                         {
@@ -229,7 +230,7 @@ final class DotPrinter
                         else
                         {
                             int lineLength =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.LINE_LENGTH,
                                     ConventionDefaults.LINE_LENGTH);
 
@@ -294,7 +295,7 @@ final class DotPrinter
             }
         }
         else if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
                 ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR))
         {
@@ -306,7 +307,7 @@ final class DotPrinter
                 case JavaTokenTypes.METHOD_CALL : // last link of the chain (first in the tree)
 
                     int lineLength =
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
                     if ((out.column + 1) > lineLength)
@@ -328,7 +329,7 @@ final class DotPrinter
                         {
                             case JavaTokenTypes.LPAREN :
 SEEK_FORWARD: 
-                                for (AST child = n; n != null; n = n.getNextSibling())
+                                for (; n != null; n = n.getNextSibling())
                                 {
                                     switch (n.getType())
                                     {
@@ -403,7 +404,7 @@ SEEK_FORWARD:
         else if (
             out.continuation
             || (!out.continuation
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR)))
         {

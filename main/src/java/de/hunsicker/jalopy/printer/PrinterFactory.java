@@ -6,8 +6,8 @@
  */
 package de.hunsicker.jalopy.printer;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -19,7 +19,7 @@ import de.hunsicker.jalopy.language.JavaTokenTypes;
 public final class PrinterFactory
 {
     //~ Constructors ---------------------------------------------------------------------
-
+public static AST lastChild = null;
     /**
      * Creates a new PrinterFactory object.
      */
@@ -43,6 +43,7 @@ public final class PrinterFactory
     {
         int type = node.getType();
         Printer result = null;
+        lastChild = node;
 
         switch (type)
         {
@@ -86,7 +87,7 @@ public final class PrinterFactory
 
                 break;
 
-            case JavaTokenTypes.LITERAL_assert :
+            case JavaTokenTypes.LITERAL_assert:
                 result = AssertionPrinter.getInstance();
 
                 break;
@@ -126,6 +127,7 @@ public final class PrinterFactory
                 result = VariableDeclarationPrinter.getInstance();
 
                 break;
+                
 
             case JavaTokenTypes.ARRAY_INIT :
                 result = ArrayInitializerPrinter.getInstance();
@@ -300,7 +302,7 @@ public final class PrinterFactory
             case JavaTokenTypes.NUM_DOUBLE :
             case JavaTokenTypes.ESC :
             case JavaTokenTypes.HEX_DIGIT :
-            case JavaTokenTypes.VOCAB :
+//            case JavaTokenTypes.VOCAB :
             case JavaTokenTypes.EXPONENT :
             case JavaTokenTypes.FLOAT_SUFFIX :
             case JavaTokenTypes.LITERAL_this :
@@ -310,6 +312,7 @@ public final class PrinterFactory
             case JavaTokenTypes.LITERAL_null :
             case JavaTokenTypes.LITERAL_class :
             case JavaTokenTypes.COLON :
+            case JavaTokenTypes.LITERAL_extends:
                 result = BasicPrinter.getInstance();
 
                 break;
@@ -394,6 +397,7 @@ public final class PrinterFactory
 
             case JavaTokenTypes.SLIST :
             case JavaTokenTypes.OBJBLOCK :
+            case JavaTokenTypes.ANNOTATION_ARRAY_INIT:
                 result = BlockPrinter.getInstance();
 
                 break;
@@ -404,6 +408,7 @@ public final class PrinterFactory
                 break;
 
             case JavaTokenTypes.IMPORT :
+            case JavaTokenTypes.STATIC_IMPORT :
                 result = ImportPrinter.getInstance();
 
                 break;
@@ -417,6 +422,43 @@ public final class PrinterFactory
                 result = PackagePrinter.getInstance();
 
                 break;
+                
+            case JavaTokenTypes.TYPE_ARGUMENTS:
+                //    This should wrap the results in a < ... > format
+                    result = TypeArgumentsPrinter.getInstance();
+                    break;
+                    
+            case JavaTokenTypes.ANNOTATIONS:
+                result = AnnotationsPrinter.getInstance();
+            	break;
+
+            case JavaTokenTypes.TYPE_PARAMETERS:
+                //    This should wrap the results in a < ... > format
+                    result = TypeParametersPrinter.getInstance();
+                    break;
+                    
+            case JavaTokenTypes.ANNOTATION_DEF :
+                result = AnnotationDefPrinter.getInstance();
+            	break;
+                case JavaTokenTypes.ANNOTATION_MEMBER_VALUE_PAIR:
+                
+                    result = AnnotationMemberValuePairPrinter.getInstance();
+                    break;
+                case JavaTokenTypes.ANNOTATION_FIELD_DEF:
+                    result = AnnotationFieldPrinter.getInstance();
+                break;
+                    
+            case JavaTokenTypes.ENUM_DEF:
+                result = EnumPrinter.getInstance();
+            	break;
+            	
+            case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                result = EnumConstantPrinter.getInstance();
+            	break;
+            case JavaTokenTypes.ANNOTATION:
+                result = AnnotatePrinter.getInstance();
+            break;
+                
 
             case JavaTokenTypes.ROOT :
                 result = JavaPrinter.getInstance();
@@ -429,8 +471,10 @@ public final class PrinterFactory
                 result = SkipPrinter.getInstance();
 
                 break;
+                
 
             default :
+                System.out.println("Bad !" +node.toString() + "," +node.getType());
                 throw new IllegalArgumentException("no viable printer for -- " + node);
         }
 

@@ -17,10 +17,6 @@ import java.util.Set;
 import de.hunsicker.util.ResourceBundleFactory;
 
 
-//J- needed only as a workaround for a Javadoc bug
-import org.apache.oro.io.RegexFilenameFilter;
-//J+
-
 /**
  * Class for scanning a directory for files/directories that match a certain filter.
  *
@@ -43,7 +39,7 @@ public class DirectoryScanner
     private Filters _filters;
 
     /** Object to synchronize processes on. */
-    private volatile Object _lock = new Object();
+    volatile Object _lock = new Object();
 
     /** Found files. */
     private Queue _queue;

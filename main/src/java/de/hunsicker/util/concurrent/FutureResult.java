@@ -243,14 +243,11 @@ public class FutureResult
                 {
                     return doGet();
                 }
-                else
-                {
-                    waitTime = msecs - (System.currentTimeMillis() - startTime);
+                waitTime = msecs - (System.currentTimeMillis() - startTime);
 
-                    if (waitTime <= 0)
-                    {
-                        throw new TimeoutException(msecs);
-                    }
+                if (waitTime <= 0)
+                {
+                    throw new TimeoutException(msecs);
                 }
             }
         }
@@ -271,9 +268,6 @@ public class FutureResult
         {
             throw exception_;
         }
-        else
-        {
-            return value_;
-        }
+        return value_;
     }
 }

@@ -6,7 +6,7 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
+import antlr.CommonHiddenStreamToken;
 
 
 /**
@@ -21,16 +21,17 @@ public class ExtendedToken
     //~ Instance variables ---------------------------------------------------------------
 
     /** Ending column. */
-    final int endColumn;
+    int endColumn;
 
     /** Ending line. */
-    final int endLine;
+    int endLine;
 
     /** The associated Javadoc comment. */
     Node comment;
 
     /** Token text. */
     String text;
+    boolean attached = false;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -241,4 +242,12 @@ public class ExtendedToken
 
         return buf.toString();
     }
+    public void setHiddenAfter(CommonHiddenStreamToken t) {
+        hiddenAfter = t;
+    }
+
+    public void setHiddenBefore(CommonHiddenStreamToken t) {
+        hiddenBefore = t;
+    }
+    
 }

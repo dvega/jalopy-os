@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.ExtendedToken;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -42,6 +42,8 @@ abstract class AbstractPrinter
 
     static final String[] EMPTY_STRING_ARRAY = new String[0];
 
+    static final String AT = "@";
+    static final String AT_INTERFACE_SPACE="@interface " /* NOI18N */;
     static final String ASSERT_SPACE = "assert " /* NOI18N */;
     static final String ASSIGN = "=" /* NOI18N */;
     static final String ASSIGN_PADDED = " = " /* NOI18N */;
@@ -63,6 +65,7 @@ abstract class AbstractPrinter
     static final String DO = "do" /* NOI18N */;
     static final String DOT = "." /* NOI18N */;
     static final String ELSE = "else" /* NOI18N */;
+    static final String ENUM_SPACE = "enum " /* NOI18N */;
     static final String EMPTY_STRING = "" /* NOI18N */.intern();
     static final String EXTENDS_SPACE = "extends " /* NOI18N */;
     static final String FINALLY = "finally" /* NOI18N */;
@@ -91,6 +94,7 @@ abstract class AbstractPrinter
     static final String SPACE_BRACKET_RIGHT = " ]" /* NOI18N */;
     static final String SPACE_BRACKETS = " []" /* NOI18N */;
     static final String SPACE_COLON_SPACE = " : " /* NOI18N */;
+    static final String SPACE_DEFAULT_SPACE = " default " /* NOI18N */;
     static final String SPACE_EXTENDS_SPACE = " extends " /* NOI18N */;
     static final String SPACE_LCURLY = " {" /* NOI18N */;
     static final String SPACE_IMPLEMENTS_SPACE = " implements " /* NOI18N */;
@@ -99,9 +103,11 @@ abstract class AbstractPrinter
     static final String SPACE_RPAREN = " )" /* NOI18N */;
     static final String SPACE_THROWS_SPACE = " throws " /* NOI18N */;
     static final String STATIC = "static" /* NOI18N */;
+    static final String STATIC_SPACE = "static " /* NOI18N */;
     static final String STRING = "String" /* NOI18N */;
     static final String SUPER = "super" /* NOI18N */;
     static final String SWITCH = "switch" /* NOI18N */;
+    static final String SUPER_SPACE = "super " /* NOI18N */;
     static final String SYNCHRONIZED = "synchronized" /* NOI18N */;
     static final String THIS = "this" /* NOI18N */;
     static final String THROW_SPACE = "throw " /* NOI18N */;
@@ -137,6 +143,14 @@ abstract class AbstractPrinter
 
     //~ Methods --------------------------------------------------------------------------
 
+    /**
+     * Prints all the children of the passed node
+     */
+    public final void printChildren(AST node, NodeWriter out) throws IOException  {
+        for(AST child = node.getFirstChild();child!=null;child=child.getNextSibling()) {
+            PrinterFactory.create(child).print(child,out);
+        }
+    }
     /**
      * {@inheritDoc}
      */
@@ -230,7 +244,7 @@ abstract class AbstractPrinter
                 out.print(out.getString(length), JavaTokenTypes.WS);
             }
             else if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP)
                 && out.state.markers.isMarked()) // deep indentation
             {
@@ -272,7 +286,7 @@ abstract class AbstractPrinter
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (
-                !this.settings.getBoolean(
+                !AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 /**
@@ -375,7 +389,7 @@ abstract class AbstractPrinter
     int getOriginalBlankLines(JavaNode node)
     {
         int keepLinesUpTo =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                 ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
@@ -453,7 +467,7 @@ abstract class AbstractPrinter
             case JavaTokenTypes.RCURLY :
 
                 int blankLinesBeforeRcurly =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                         ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
@@ -534,7 +548,7 @@ abstract class AbstractPrinter
 
                     for (int i = 0, size = issues.size(); i < size; i++)
                     {
-                        JavaNode n = (JavaNode) node;
+                        //JavaNode n = (JavaNode) node;
                         buf.append(out.filename);
                         buf.append(':');
                         buf.append(out.line);
@@ -649,7 +663,7 @@ abstract class AbstractPrinter
                  * @todo does this stuff still work in 1.0b9?
                  */
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.BRACE_NEWLINE_LEFT,
                         ConventionDefaults.BRACE_NEWLINE_LEFT))
                 {
@@ -723,7 +737,7 @@ abstract class AbstractPrinter
     {
         JavaNode n = (JavaNode) node;
 
-        if (n.getHiddenAfter() == null)
+        if (n.getHiddenAfter() == null || !n.hasCommentsAfter())
         {
             return false;
         }
@@ -734,13 +748,12 @@ abstract class AbstractPrinter
             // store the position where the first comment starts
             int offset =
                 out.column - 1
-                + this.settings.getInt(
+                + AbstractPrinter.settings.getInt(
                     ConventionKeys.INDENT_SIZE_COMMENT_ENDLINE,
                     ConventionDefaults.INDENT_SIZE_COMMENT_ENDLINE);
 
             CommonHiddenStreamToken firstComment =
                 n.getHiddenAfter();
-
             // if we have more than one comment
             if (firstComment.getHiddenAfter() != null)
             {
@@ -880,15 +893,19 @@ abstract class AbstractPrinter
             return false;
         }
 
+        /**
         int linesToKeep =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                 ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
         boolean keepLines = linesToKeep > -1;
 
 
         CommonHiddenStreamToken previousComment = null;
+        TODO Check if neccesary
+        */
         CommonHiddenStreamToken firstComment = n.getCommentBefore();
+        
 
         for (
             CommonHiddenStreamToken comment = firstComment; comment != null;
@@ -938,12 +955,16 @@ abstract class AbstractPrinter
                     }
 
                     break;
-
+                   
+                case JavaTokenTypes.WS:
+                    break;
+                
                 default :
                     throw new RuntimeException("" + comment);
             }
 
-            previousComment = comment;
+            // previousComment = comment;
+            // TODO See previous todo
         }
 
         return true;
@@ -1011,7 +1032,7 @@ abstract class AbstractPrinter
 
                         default :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_BEFORE_DECLARATION,
                                     ConventionDefaults.BLANK_LINES_BEFORE_DECLARATION);
 
@@ -1033,13 +1054,13 @@ abstract class AbstractPrinter
                             case JavaTokenTypes.CTOR_DEF :
                             case JavaTokenTypes.INSTANCE_INIT :
                             case JavaTokenTypes.STATIC_INIT :
-                                return this.settings.getInt(
+                                return AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                     ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                             default :
                                 result =
-                                    this.settings.getInt(
+                                    AbstractPrinter.settings.getInt(
                                         ConventionKeys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                         ConventionDefaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
@@ -1059,7 +1080,7 @@ abstract class AbstractPrinter
 
                         default :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
                                     ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
 
@@ -1091,7 +1112,7 @@ abstract class AbstractPrinter
 
                         default :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
                                     ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
 
@@ -1103,7 +1124,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.LITERAL_case :
                 case JavaTokenTypes.LITERAL_default :
                     result =
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.BLANK_LINES_BEFORE_CASE_BLOCK,
                             ConventionDefaults.BLANK_LINES_BEFORE_CASE_BLOCK);
 
@@ -1113,7 +1134,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.LITERAL_break :
                 case JavaTokenTypes.LITERAL_continue :
                     result =
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.BLANK_LINES_BEFORE_CONTROL,
                             ConventionDefaults.BLANK_LINES_BEFORE_CONTROL);
 
@@ -1124,7 +1145,7 @@ abstract class AbstractPrinter
                     if (JavaNodeHelper.isFreestandingBlock(node))
                     {
                         result =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
                                 ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
                     }
@@ -1136,7 +1157,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.LITERAL_finally :
 
                     if (
-                        !this.settings.getBoolean(
+                        !AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_RIGHT,
                             ConventionDefaults.BRACE_NEWLINE_RIGHT))
                     {
@@ -1153,7 +1174,6 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.SUPER_CTOR_CALL :
                 case JavaTokenTypes.LITERAL_throw :
                 case JavaTokenTypes.EMPTY_STAT :
-                case JavaTokenTypes.LITERAL_assert :
                 case JavaTokenTypes.PACKAGE_DEF :
                     break;
 
@@ -1175,7 +1195,7 @@ abstract class AbstractPrinter
 
                         case JavaTokenTypes.METHOD_DEF :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_METHOD,
                                     ConventionDefaults.BLANK_LINES_AFTER_METHOD);
 
@@ -1206,7 +1226,7 @@ abstract class AbstractPrinter
 
                         case JavaTokenTypes.CTOR_DEF :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_METHOD,
                                     ConventionDefaults.BLANK_LINES_AFTER_METHOD);
 
@@ -1250,7 +1270,7 @@ OUTER:
 
                         case JavaTokenTypes.CLASS_DEF :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_CLASS,
                                     ConventionDefaults.BLANK_LINES_AFTER_CLASS);
 
@@ -1283,7 +1303,7 @@ OUTER:
                         // fall-through
                         case JavaTokenTypes.IMPORT :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_IMPORT,
                                     ConventionDefaults.BLANK_LINES_AFTER_IMPORT);
 
@@ -1327,7 +1347,7 @@ OUTER:
 
                         case JavaTokenTypes.INTERFACE_DEF :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_INTERFACE,
                                     ConventionDefaults.BLANK_LINES_AFTER_INTERFACE);
 
@@ -1343,7 +1363,7 @@ OUTER:
 
                         case JavaTokenTypes.IMPORT :
                             result =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.BLANK_LINES_AFTER_IMPORT,
                                     ConventionDefaults.BLANK_LINES_AFTER_IMPORT);
 
@@ -1413,7 +1433,7 @@ OUTER:
                     default :
 
                         int blankLinesAfterBlock =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_AFTER_BLOCK,
                                 ConventionDefaults.BLANK_LINES_AFTER_BLOCK);
 
@@ -1423,7 +1443,7 @@ OUTER:
                         }
 
                         /*
-                           if (!this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_RIGHT,
+                           if (!AbstractPrinter.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_RIGHT,
                                                       ConventionDefaults.BRACE_NEWLINE_RIGHT))
                            {
                                switch (node.getPreviousSibling().getType())
@@ -1477,7 +1497,7 @@ OUTER:
                     default :
 
                         int blankLinesAfterDeclaration =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_AFTER_DECLARATION,
                                 ConventionDefaults.BLANK_LINES_AFTER_DECLARATION);
 
@@ -1498,7 +1518,7 @@ OUTER:
             case JavaTokenTypes.LCURLY :
 
                 int blankLinesAfterOpenCurly =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_AFTER_BRACE_LEFT,
                         ConventionDefaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
@@ -1566,7 +1586,7 @@ OUTER:
             case JavaTokenTypes.LCURLY :
 
                 int blankLinesAfterOpenCurly =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_AFTER_BRACE_LEFT,
                         ConventionDefaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
@@ -1594,7 +1614,7 @@ OUTER:
 
                     default :
                         result =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                                 ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
@@ -1605,7 +1625,7 @@ OUTER:
 
             case JavaTokenTypes.SPECIAL_COMMENT :
                 result =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                         ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
@@ -1622,7 +1642,7 @@ OUTER:
 
                     default :
                         result =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                                 ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE);
 
@@ -1642,7 +1662,7 @@ OUTER:
 
                     default :
                         result =
-                            this.settings.getInt(
+                            AbstractPrinter.settings.getInt(
                                 ConventionKeys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                                 ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC);
 
@@ -1674,7 +1694,7 @@ OUTER:
             case JavaTokenTypes.PACKAGE_DEF :
 
                 int linesAfterPackage =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_AFTER_PACKAGE,
                         ConventionDefaults.BLANK_LINES_AFTER_PACKAGE);
 
@@ -1691,7 +1711,7 @@ OUTER:
         }
 
         int keepLinesUpTo =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                 ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
@@ -2032,6 +2052,7 @@ OUTER:
      *
      * @throws IOException if an I/O error occured.
      */
+    /* TODO Unused method
     private void printBlankLinesBetweenComments(
         CommonHiddenStreamToken comment,
         CommonHiddenStreamToken previousComment,
@@ -2061,7 +2082,7 @@ OUTER:
             out.printBlankLines(lines);
         }
     }
-
+*/
 
     /**
      * Prints the given comment after the specified node.
@@ -2096,7 +2117,7 @@ OUTER:
 
         if (
             (comment.getColumn() == 1)
-            && (!this.settings.getBoolean(
+            && (!AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_FIRST_COLUMN_COMMENT,
                 ConventionDefaults.INDENT_FIRST_COLUMN_COMMENT)))
         {
@@ -2111,7 +2132,7 @@ OUTER:
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_COMMENT_ENDLINE,
                         ConventionDefaults.INDENT_SIZE_COMMENT_ENDLINE)),
                 JavaTokenTypes.WS);
@@ -2150,7 +2171,7 @@ OUTER:
                 out.print(comment.getText(), comment.getType());
 
                 break;
-
+                
             default :
                 throw new IllegalArgumentException("invalid type -- " + comment);
         }
@@ -2203,7 +2224,7 @@ OUTER:
         if (
             (comment.getType() == JavaTokenTypes.SPECIAL_COMMENT)
             || ((comment.getColumn() == 1)
-            && (!this.settings.getBoolean(
+            && (!AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_FIRST_COLUMN_COMMENT,
                 ConventionDefaults.INDENT_FIRST_COLUMN_COMMENT))))
         {
@@ -2219,7 +2240,7 @@ OUTER:
         switch (type)
         {
             case JavaTokenTypes.SL_COMMENT :
-                out.print(comment.getText(), type);
+                out.print(comment.getText() , type);
 
                 break;
 
@@ -2301,7 +2322,7 @@ OUTER:
         String[] lines = null;
 
         boolean format =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.COMMENT_FORMAT_MULTI_LINE,
                 ConventionDefaults.COMMENT_FORMAT_MULTI_LINE);
 
@@ -2393,7 +2414,7 @@ OUTER:
             case JavaTokenTypes.SEPARATOR_COMMENT :
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.BRACE_NEWLINE_LEFT,
                         ConventionDefaults.BRACE_NEWLINE_LEFT))
                 {

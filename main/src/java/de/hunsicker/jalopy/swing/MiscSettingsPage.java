@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -52,7 +53,7 @@ public class MiscSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
     private static final String FILENAME_BACKUP = "backup.dat" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -60,15 +61,15 @@ public class MiscSettingsPage
     private JCheckBox _arrayBracketsAfterIdentifierCheckBox;
     private JCheckBox _forceCheckBox;
     private JCheckBox _historyCommentCheckBox;
-    private JCheckBox _historyFileCheckBox;
+    JCheckBox _historyFileCheckBox;
     private JCheckBox _insertConditionalCheckBox;
     private JCheckBox _insertParenCheckBox;
     private JCheckBox _insertTrailingNewlineCheckBox;
     private JCheckBox _insertUIDCheckBox;
-    private JComboBox _historyMethodComboBox;
+    JComboBox _historyMethodComboBox;
     private JSlider _backupSlider;
     private JSlider _threadSlider;
-    private JTextField _directoryTextField;
+    JTextField _directoryTextField;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -181,7 +182,7 @@ public class MiscSettingsPage
 
         _backupSlider =
             new JSlider(
-                JSlider.HORIZONTAL, 0, 30,
+                SwingConstants.HORIZONTAL, 0, 30,
                 this.settings.getInt(
                     ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL));
         _backupSlider.setSnapToTicks(true);
@@ -491,7 +492,7 @@ public class MiscSettingsPage
 
         _threadSlider =
             new JSlider(
-                JSlider.HORIZONTAL, 1, 8,
+                SwingConstants.HORIZONTAL, 1, 8,
                 this.settings.getInt(
                     ConventionKeys.THREAD_COUNT, ConventionDefaults.THREAD_COUNT));
         _threadSlider.setLabelTable(_threadSlider.createStandardLabels(1, 1));

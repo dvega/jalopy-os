@@ -27,7 +27,7 @@ final class SwingLayout
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    // TODO private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final int MAX_LINE_LENGTH = 100;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -74,41 +74,35 @@ final class SwingLayout
             {
                 return StringHelper.wrapString(message, MAX_LINE_LENGTH, true);
             }
-            else
+            return message;
+        }
+        StringBuffer buf = new StringBuffer(100);
+
+        if (event.getThrowableStrRep() != null)
+        {
+            String[] lines = event.getThrowableStrRep();
+            String message = event.getRenderedMessage();
+
+            // first the message
+            buf.append(message);
+            buf.append('\n');
+
+            // append the stacktrace (if available)
+            for (int i = 0; i < lines.length; i++)
             {
-                return message;
+                buf.append(lines[i]);
+                buf.append('\n');
             }
+
+            // remove the last separator
+            buf.setLength(buf.length() - 1);
         }
         else
         {
-            StringBuffer buf = new StringBuffer(100);
-
-            if (event.getThrowableStrRep() != null)
-            {
-                String[] lines = event.getThrowableStrRep();
-                String message = event.getRenderedMessage();
-
-                // first the message
-                buf.append(message);
-                buf.append('\n');
-
-                // append the stacktrace (if available)
-                for (int i = 0; i < lines.length; i++)
-                {
-                    buf.append(lines[i]);
-                    buf.append('\n');
-                }
-
-                // remove the last separator
-                buf.setLength(buf.length() - 1);
-            }
-            else
-            {
-                buf.append(event.getRenderedMessage());
-            }
-
-            return buf.toString();
+            buf.append(event.getRenderedMessage());
         }
+
+        return buf.toString();
     }
 
 

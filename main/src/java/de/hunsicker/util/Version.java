@@ -264,10 +264,7 @@ public class Version
 
             return new Version(null, major, minor, micro, beta);
         }
-        else
-        {
-            throw new IllegalArgumentException(
-                "invalid version information -- " + version);
-        }
+        throw new IllegalArgumentException(
+            "invalid version information -- " + version);
     }
 }

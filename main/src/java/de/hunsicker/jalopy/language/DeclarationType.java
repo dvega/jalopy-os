@@ -48,6 +48,12 @@ public class DeclarationType
     /** The bit value for methods. */
     public static final int METHOD_INT = 32;
 
+    /** The bit value for annotations. */
+    public static final int ANNOTATION_INT = 64;
+
+    /** The bit value for enums. */
+    public static final int ENUM_INT = 128;
+
     /** The bit value for instance variables. */
     public static final int VARIABLE_INT = 1;
 
@@ -69,6 +75,20 @@ public class DeclarationType
             ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_CLASS" /* NOI18N */),
             CLASS_INT);
 
+    /** Represents an ANNOTATION declaration. TODO Add in bundle*/
+    public static final DeclarationType ANNOTATION =
+        new DeclarationType(
+            "annotation" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_ANNOTATION" /* NOI18N */),
+            ANNOTATION_INT);
+    
+    /** Represents an ENUM declaration. TODO Add in bundle */
+    public static final DeclarationType ENUM =
+        new DeclarationType(
+            "enum" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_ENUM" /* NOI18N */),
+            ENUM_INT);
+    
     /** Represents an interface declaration. */
     public static final DeclarationType INTERFACE =
         new DeclarationType(
@@ -120,6 +140,8 @@ public class DeclarationType
         _order.add(METHOD);
         _order.add(INTERFACE);
         _order.add(CLASS);
+        _order.add(ANNOTATION);
+        _order.add(ENUM);
 
         StringBuffer buf = new StringBuffer(100);
 
@@ -140,7 +162,7 @@ public class DeclarationType
     private final String _name;
 
     /** The bit value of the method type. */
-    private final int _key;
+    // TODO private final int _key;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -158,7 +180,7 @@ public class DeclarationType
     {
         _name = name;
         _displayName = displayName;
-        _key = key;
+        // TODO _key = key;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -355,6 +377,14 @@ public class DeclarationType
         else if (INTERFACE._name.equals(name))
         {
             return INTERFACE;
+        }
+        else if (ANNOTATION._name.equals(name))
+        {
+            return ANNOTATION;
+        }
+        else if (ENUM._name.equals(name))
+        {
+            return ENUM;
         }
 
         return null;

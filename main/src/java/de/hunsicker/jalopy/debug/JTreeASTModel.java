@@ -16,7 +16,7 @@ import javax.swing.tree.TreePath;
  *
  * $Id$
  */
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 
 
 /**

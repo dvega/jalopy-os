@@ -143,7 +143,7 @@ public class ModifierType
     private final String _name;
 
     /** The bit value of the type. */
-    private final int _key;
+    //TODO  private final int _key;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -158,7 +158,7 @@ public class ModifierType
         int    key)
     {
         _name = name;
-        _key = key;
+        // TODO _key = key;
     }
 
     //~ Methods --------------------------------------------------------------------------

@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -83,7 +83,7 @@ final class ParametersPrinter
             case JavaTokenTypes.PARAMETERS :
 
                 boolean newlineAfter =
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
                         ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF);
 
@@ -93,7 +93,7 @@ final class ParametersPrinter
                 if (out.mode == NodeWriter.MODE_DEFAULT)
                 {
                     boolean align =
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.ALIGN_PARAMS_METHOD_DEF,
                             ConventionDefaults.ALIGN_PARAMS_METHOD_DEF);
 
@@ -115,7 +115,7 @@ final class ParametersPrinter
                                 PrinterFactory.create(expr).print(expr, tester);
 
                                 int lineLength =
-                                    this.settings.getInt(
+                                    AbstractPrinter.settings.getInt(
                                         ConventionKeys.LINE_LENGTH,
                                         ConventionDefaults.LINE_LENGTH);
 
@@ -162,7 +162,7 @@ final class ParametersPrinter
         // wrap and align, if necessary
         if (
             wrapped
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                 ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
@@ -172,7 +172,7 @@ final class ParametersPrinter
             }
 
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
@@ -249,23 +249,23 @@ final class ParametersPrinter
      *
      * @since 1.0b8
      */
-    private boolean isConcat(AST node)
-    {
-        for (AST child = node.getFirstChild(); child != null;
-            child = child.getFirstChild())
-        {
-            switch (child.getType())
-            {
-                case JavaTokenTypes.PLUS :
-                    return true;
-
-                default :
-                    return isConcat(child);
-            }
-        }
-
-        return false;
-    }
+//    TODO private boolean isConcat(AST node)
+//    {
+//        for (AST child = node.getFirstChild(); child != null;
+//            child = child.getFirstChild())
+//        {
+//            switch (child.getType())
+//            {
+//                case JavaTokenTypes.PLUS :
+//                    return true;
+//
+//                default :
+//                    return isConcat(child);
+//            }
+//        }
+//
+//        return false;
+//    }
 
 
     private AST getFirstStringConcat(AST node)
@@ -319,37 +319,37 @@ SEARCH:
      * @todo fully implement the method in AbstractPrinter.java and use that method
      * @since 1.0b8
      */
-    private AST getLastChild(AST node)
-    {
-        AST result = null;
-
-        switch (node.getType())
-        {
-            case JavaTokenTypes.EXPR :
-                result = node.getFirstChild();
-
-                for (AST child = result; child != null; child = child.getFirstChild())
-                {
-                    result = child;
-                }
-
-                return result;
-
-            case JavaTokenTypes.PARAMETER_DEF :
-
-                for (
-                    AST child = node.getFirstChild(); child != null;
-                    child = child.getNextSibling())
-                {
-                    result = child;
-                }
-
-                return result;
-
-            default :
-                throw new IllegalArgumentException("invalid type -- " + node);
-        }
-    }
+//    TODO private AST getLastChild(AST node)
+//    {
+//        AST result = null;
+//
+//        switch (node.getType())
+//        {
+//            case JavaTokenTypes.EXPR :
+//                result = node.getFirstChild();
+//
+//                for (AST child = result; child != null; child = child.getFirstChild())
+//                {
+//                    result = child;
+//                }
+//
+//                return result;
+//
+//            case JavaTokenTypes.PARAMETER_DEF :
+//
+//                for (
+//                    AST child = node.getFirstChild(); child != null;
+//                    child = child.getNextSibling())
+//                {
+//                    result = child;
+//                }
+//
+//                return result;
+//
+//            default :
+//                throw new IllegalArgumentException("invalid type -- " + node);
+//        }
+//    }
 
 
     /**
@@ -460,35 +460,35 @@ SEARCH:
         }
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean indentDeep =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
         int deepIndentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_DEEP, ConventionDefaults.INDENT_SIZE_DEEP);
         boolean alignMethodCall =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
                 ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL);
         boolean alignMethodCallIfNested =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED,
                 ConventionDefaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED);
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         boolean preferWrapAfterLeftParen =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
                 ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN);
         boolean wrapIfFirst =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                 ConventionDefaults.LINE_WRAP_PARAMS_EXCEED);
 
@@ -498,7 +498,7 @@ SEARCH:
         int userAction = action;
         boolean firstWrapped = false; // was the first parameter wrapped?
 
-        if (out.mode == out.MODE_DEFAULT)
+        if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             out.state.paramList = true;
             out.state.paramLevel++;
@@ -902,7 +902,7 @@ SEARCH:
             parameter = next;
         }
 
-        if (out.mode == out.MODE_DEFAULT)
+        if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             out.state.paramList = false;
             out.state.paramLevel--;
@@ -1011,10 +1011,7 @@ SEARCH:
                     {
                         return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
 
                 case JavaTokenTypes.LITERAL_new :
@@ -1131,7 +1128,7 @@ SEARCH:
         boolean result = false;
 
         if (
-            !this.settings.getBoolean(
+            !AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP) || !last)
         {
             switch (out.state.paramLevel)

@@ -23,9 +23,9 @@ import javax.swing.tree.TreePath;
  *
  * $Id$
  */
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.CommonAST;
-import de.hunsicker.antlr.collections.AST;
+import antlr.ASTFactory;
+import antlr.CommonAST;
+import antlr.collections.AST;
 
 
 /**
@@ -59,7 +59,6 @@ public class ASTFrame
         super(lab);
 
         // Create the TreeSelectionListener
-        TreeSelectionListener listener = new MyTreeSelectionListener();
         JTreeASTPanel tp = new JTreeASTPanel(new JTreeASTModel(r), null);
         Container content = getContentPane();
         content.add(tp, BorderLayout.CENTER);
@@ -90,9 +89,9 @@ public class ASTFrame
         // Create the tree nodes
         ASTFactory factory = new ASTFactory();
         CommonAST r = (CommonAST) factory.create(0, "ROOT");
-        r.addChild((CommonAST) factory.create(0, "C1"));
-        r.addChild((CommonAST) factory.create(0, "C2"));
-        r.addChild((CommonAST) factory.create(0, "C3"));
+        r.addChild(factory.create(0, "C1"));
+        r.addChild(factory.create(0, "C2"));
+        r.addChild(factory.create(0, "C3"));
 
         ASTFrame frame = new ASTFrame("AST JTree Example", r);
         frame.setVisible(true);

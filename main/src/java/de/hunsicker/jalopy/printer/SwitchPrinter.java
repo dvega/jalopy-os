@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -102,7 +102,7 @@ final class SwitchPrinter
         trackPosition((JavaNode) node, out.line, offset, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
@@ -120,7 +120,7 @@ final class SwitchPrinter
 
         AST lcurly = rparen.getNextSibling();
         boolean leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
 
         boolean commentsAfter = ((JavaNode) lcurly).hasCommentsAfter();
@@ -142,7 +142,7 @@ final class SwitchPrinter
         }
 
         boolean indentCaseFromSwitch =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CASE_FROM_SWITCH,
                 ConventionDefaults.INDENT_CASE_FROM_SWITCH);
 

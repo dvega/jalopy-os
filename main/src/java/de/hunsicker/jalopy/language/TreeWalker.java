@@ -6,7 +6,7 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 
 
 /**

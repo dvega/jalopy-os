@@ -7,7 +7,6 @@
 package de.hunsicker.jalopy.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -47,8 +46,6 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -94,21 +91,21 @@ public class JavadocSettingsPage
     private AddRemoveList _inlineTagsList;
     private AddRemoveList _standardTagsList;
     private DataModel _tableModel;
-    private JCheckBox _checkTagsCheckBox;
-    private JCheckBox _checkThrowsTagsCheckBox;
+    JCheckBox _checkTagsCheckBox;
+    JCheckBox _checkThrowsTagsCheckBox;
     private JCheckBox _createInnerCheckBox;
-    private JCheckBox _parseCheckBox;
-    private JCheckBox _singleLineFieldCommentsCheckBox;
-    private final PatternMatcher _matcher = new Perl5Matcher();
-    private Pattern _bottomTextPattern;
-    private Pattern _exceptionPattern;
-    private Pattern _paramPattern;
-    private Pattern _returnPattern;
-    private Pattern _tagNamePattern;
-    private Pattern _templatePattern;
-    private Pattern _topTextPattern;
-    private TemplateContainer _templatesContainer;
-    private boolean _disposed;
+    JCheckBox _parseCheckBox;
+    JCheckBox _singleLineFieldCommentsCheckBox;
+    final PatternMatcher _matcher = new Perl5Matcher();
+    Pattern _bottomTextPattern;
+    Pattern _exceptionPattern;
+    Pattern _paramPattern;
+    Pattern _returnPattern;
+    Pattern _tagNamePattern;
+    Pattern _templatePattern;
+    Pattern _topTextPattern;
+    TemplateContainer _templatesContainer;
+    boolean _disposed;
     {
         PatternCompiler compiler = new Perl5Compiler();
 
@@ -778,20 +775,20 @@ public class JavadocSettingsPage
      *
      * @param table table to initialize
      */
-    private void initializeColumnSizes(JTable table)
-    {
-        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
-
-        for (int i = 1; i < 5; i++)
-        {
-            TableColumn column = table.getColumnModel().getColumn(i);
-            Component comp =
-                headerRenderer.getTableCellRendererComponent(
-                    null, column.getHeaderValue(), false, false, 0, 0);
-            int headerWidth = comp.getPreferredSize().width;
-            column.setPreferredWidth(headerWidth);
-        }
-    }
+// TODO    private void initializeColumnSizes(JTable table)
+//    {
+//        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+//
+//        for (int i = 1; i < 5; i++)
+//        {
+//            TableColumn column = table.getColumnModel().getColumn(i);
+//            Component comp =
+//                headerRenderer.getTableCellRendererComponent(
+//                    null, column.getHeaderValue(), false, false, 0, 0);
+//            int headerWidth = comp.getPreferredSize().width;
+//            column.setPreferredWidth(headerWidth);
+//        }
+//    }
 
     //~ Inner Interfaces -----------------------------------------------------------------
 
@@ -1129,10 +1126,7 @@ public class JavadocSettingsPage
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
 
@@ -1469,15 +1463,15 @@ public class JavadocSettingsPage
         /**
          * Removes the current panel from the container and add the given panel.
          *
-         * @param name name of the panel.
+         * @param newName name of the panel.
          */
-        public void switchPanels(String name)
+        public void switchPanels(String newName)
         {
             remove(0);
 
-            JPanel panel = getTemplatePanel(name);
+            JPanel panel = getTemplatePanel(newName);
             add(panel, BorderLayout.CENTER);
-            this.name = name;
+            this.name = newName;
         }
 
 
@@ -1505,72 +1499,72 @@ public class JavadocSettingsPage
         /**
          * Returns the template panel for the given name.
          *
-         * @param name name of the template panel.
+         * @param newName name of the template panel.
          *
          * @return the template panel for the given name.
          *
          * @throws IllegalArgumentException DOCUMENT ME!
          */
-        private JPanel getTemplatePanel(String name)
+        private JPanel getTemplatePanel(String newName)
         {
-            if (this.panels.containsKey(name))
+            if (this.panels.containsKey(newName))
             {
-                return (JPanel) this.panels.get(name);
+                return (JPanel) this.panels.get(newName);
             }
 
-            if (TPL_CLASS.equals(name))
+            if (TPL_CLASS.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_INTERFACE.equals(name))
+            else if (TPL_INTERFACE.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_CTOR.equals(name))
+            else if (TPL_CTOR.equals(newName))
             {
                 CtorTemplatePanel panel = new CtorTemplatePanel();
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_METHOD.equals(name))
+            else if (TPL_METHOD.equals(newName))
             {
                 MethodTemplatePanel panel = new MethodTemplatePanel();
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_FIELD.equals(name))
+            else if (TPL_FIELD.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
 
             // should never happen
-            throw new IllegalArgumentException("unknown template name -- " + name);
+            throw new IllegalArgumentException("unknown template name -- " + newName);
         }
     }
 }

@@ -6,10 +6,10 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.CommonASTWithHiddenTokens;
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonASTWithHiddenTokens;
+import antlr.CommonHiddenStreamToken;
+import antlr.Token;
+import antlr.collections.AST;
 
 
 //J-
@@ -371,20 +371,20 @@ public class Node
     /**
      * Checks whether this node contains the given position.
      *
-     * @param startLine start line to check.
-     * @param startColumn start column to check.
-     * @param endLine end line to check.
-     * @param endColumn end column to check.
+     * @param aStartLine start line to check.
+     * @param aStartColumn start column to check.
+     * @param aEndLine end line to check.
+     * @param aEndColumn end column to check.
      *
      * @return <code>true</code> if the given position is contained in this span.
      */
     public boolean contains(
-        int startLine,
-        int startColumn,
-        int endLine,
-        int endColumn)
+        int aStartLine,
+        int aStartColumn,
+        int aEndLine,
+        int aEndColumn)
     {
-        return contains(startLine, startColumn) && contains(endLine, endColumn);
+        return contains(aStartLine, aStartColumn) && contains(aEndLine, aEndColumn);
     }
 
 
@@ -450,9 +450,9 @@ public class Node
 
     public int hashCode()
     {
+       // TODO This really buggers up the tree view !!  
         return this.text.hashCode() + this.type;
     }
-
 
     /**
      * Compares the specified object with this object for equality. Returns
@@ -504,15 +504,15 @@ public class Node
     /**
      * Initializes this node with the given information.
      *
-     * @param type type to set.
-     * @param text text to set.
+     * @param newType type to set.
+     * @param newText text to set.
      */
     public void initialize(
-        int    type,
-        String text)
+        int    newType,
+        String newText)
     {
-        this.type = type;
-        this.text = text;
+        this.type = newType;
+        this.text = newText;
     }
 
 

@@ -59,13 +59,11 @@ public class ProjectSettingsPage
     //~ Static variables/initializers ----------------------------------------------------
 
     private static final String FILENAME_PROJECT = "project.dat" /* NOI18N */;
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
-    //~ Instance variables ---------------------------------------------------------------
-
-    private AddRemoveList _projectsList;
+    AddRemoveList _projectsList;
     private JButton _addButton;
-    private JButton _removeButton;
+    JButton _removeButton;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -99,7 +97,7 @@ public class ProjectSettingsPage
     }
 
 
-    private void setActive(ProjectListEntry entry)
+    void setActive(ProjectListEntry entry)
     {
         DefaultListModel model = (DefaultListModel) _projectsList.getModel();
 
@@ -130,10 +128,7 @@ public class ProjectSettingsPage
             {
                 return (Project) IoHelper.deserialize(file);
             }
-            else
-            {
-                return Convention.getDefaultProject();
-            }
+            return Convention.getDefaultProject();
         }
         catch (IOException ex)
         {
@@ -397,6 +392,7 @@ public class ProjectSettingsPage
             {
                 this.listenerList.remove(ListSelectionListener.class, listeners[i]);
             }
+            
         }
 
         protected JDialog getAddDialog(Frame owner)
@@ -433,10 +429,10 @@ public class ProjectSettingsPage
             }
 
             private void initialize(
-                String title,
-                String text)
+                String newTitle,
+                String newText)
             {
-                setTitle(title);
+                setTitle(newTitle);
                 setModal(true);
                 setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 

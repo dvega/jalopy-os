@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -76,10 +76,10 @@ final class LabelStatementPrinter
       throws IOException
     {
         boolean indentLabel =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_LABEL, ConventionDefaults.INDENT_LABEL);
         boolean lineWrapLabel =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_LABEL,
                 ConventionDefaults.LINE_WRAP_AFTER_LABEL);
         AST identifier = node.getFirstChild();

@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -91,6 +91,8 @@ LOOP:
             {
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
+                    //case JavaTokenTypes.ENUM_DEF:
+                    //case JavaTokenTypes.ANNOTATION_DEF:
                     first = child;
 
                     break LOOP;
@@ -167,7 +169,7 @@ LOOP:
         if (nodes.size() > 0)
         {
             JavaNode next = (JavaNode) nodes.get(0);
-            addChild((JavaNode) cur, next);
+            addChild(cur, next);
             cur = next;
 
             if (addSeparator)
@@ -178,8 +180,8 @@ LOOP:
                 if (next.hasCommentsBefore())
                 {
                     for (
-                        CommonHiddenStreamToken tok = next.getHiddenBefore();
-                        tok != null; tok = tok.getHiddenBefore())
+                            ExtendedToken tok = (ExtendedToken)next.getHiddenBefore();
+                        tok != null; tok = (ExtendedToken) tok.getHiddenBefore())
                     {
                         if (tok.getHiddenBefore() == null)
                         {
@@ -288,7 +290,7 @@ LOOP:
         for (int i = 1, size = nodes.size(); i < size; i++)
         {
             JavaNode next = (JavaNode) nodes.get(i);
-            addChild((JavaNode) cur, next);
+            addChild(cur, next);
             cur = next;
         }
 
@@ -350,16 +352,27 @@ LOOP:
         switch (node.getType())
         {
             case JavaTokenTypes.CLASS_DEF :
-                lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
-                                   .getNextSibling().getNextSibling();
+                lcurly = (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK);
+//                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
+//                                   .getNextSibling();
 
                 break;
 
             case JavaTokenTypes.INTERFACE_DEF :
                 lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
-                                   .getNextSibling();
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
+
+                break;
+            case JavaTokenTypes.ANNOTATION_DEF :
+                lcurly =
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
+            
+            case JavaTokenTypes.ENUM_DEF :
+                lcurly =
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
 
                 break;
 
@@ -381,6 +394,8 @@ LOOP:
         List methods = new ArrayList();
         List classes = new ArrayList(3);
         List interfaces = new ArrayList(3);
+        List annotations = new ArrayList(3);
+        List enums = new ArrayList(3);
         List names = new ArrayList(); // type names of all instance variables
 
         AST rcurly = null; // stores the last rcurly
@@ -443,6 +458,13 @@ LOOP:
                     rcurly = child;
 
                     break;
+                case JavaTokenTypes.ANNOTATION_DEF :
+                    annotations.add(child);
+                break;
+
+                case JavaTokenTypes.ENUM_DEF :
+                    enums.add(child);
+                break;
 
                 case JavaTokenTypes.SEMI :
                     // it is perfectly valid to use a SEMI and totally
@@ -492,7 +514,7 @@ LOOP:
             Collections.sort(interfaces, comp);
         }
 
-        Map nodes = new HashMap(8, 1.0f);
+        Map nodes = new HashMap(10, 1.0f);
         nodes.put(DeclarationType.STATIC_VARIABLE_INIT.getName(), staticStuff);
         nodes.put(DeclarationType.VARIABLE.getName(), variables);
         nodes.put(DeclarationType.INIT.getName(), initializers);
@@ -500,6 +522,8 @@ LOOP:
         nodes.put(DeclarationType.METHOD.getName(), methods);
         nodes.put(DeclarationType.INTERFACE.getName(), interfaces);
         nodes.put(DeclarationType.CLASS.getName(), classes);
+        nodes.put(DeclarationType.ANNOTATION.getName(), annotations);
+        nodes.put(DeclarationType.ENUM.getName(), enums);
 
         boolean addSeparator = false;
 

@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.ExtendedToken;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -74,17 +75,17 @@ final class JavaPrinter
     {
         out.environment.set(
             Environment.Variable.CONVENTION.getName(),
-            this.settings.get(
+            AbstractPrinter.settings.get(
                 ConventionKeys.CONVENTION_NAME, ConventionDefaults.CONVENTION_NAME));
 
         try
         {
             History.Policy historyPolicy =
                 History.Policy.valueOf(
-                    this.settings.get(
+                    AbstractPrinter.settings.get(
                         ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
             boolean useCommentHistory = (historyPolicy == History.Policy.COMMENT);
-            boolean useHeader = this.settings.getBoolean(ConventionKeys.HEADER, false);
+            boolean useHeader = AbstractPrinter.settings.getBoolean(ConventionKeys.HEADER, false);
 
             if (useHeader || useCommentHistory)
             {
@@ -97,7 +98,7 @@ final class JavaPrinter
             }
 
             boolean useFooter =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
 
             if (useFooter)
@@ -134,7 +135,7 @@ final class JavaPrinter
     private String[] getConventionKeys(Convention.Key key)
     {
         List keys = new ArrayList();
-        String str = this.settings.get(key, EMPTY_STRING);
+        String str = AbstractPrinter.settings.get(key, EMPTY_STRING);
 
         for (
             StringTokenizer tokens = new StringTokenizer(str, DELIMETER);
@@ -200,7 +201,7 @@ final class JavaPrinter
                     case JavaTokenTypes.IMPORT :
 
                         /**
-                         * @todo implement
+                         * TODO implement ??
                          */
                         return (JavaNode) declaration;
                 }
@@ -223,7 +224,7 @@ final class JavaPrinter
     {
         String text =
             out.environment.interpolate(
-                this.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
+                AbstractPrinter.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
         String[] footer = StringHelper.split(text, DELIMETER);
 
         if (footer.length > 0)
@@ -241,7 +242,7 @@ final class JavaPrinter
             }
 
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_BEFORE_FOOTER,
                     ConventionDefaults.BLANK_LINES_BEFORE_FOOTER));
 
@@ -256,7 +257,7 @@ final class JavaPrinter
             }
 
             int blankLinesAfter =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_AFTER_FOOTER,
                     ConventionDefaults.BLANK_LINES_AFTER_FOOTER);
 
@@ -285,13 +286,13 @@ final class JavaPrinter
     {
         String text =
             out.environment.interpolate(
-                this.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
+                AbstractPrinter.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
         String[] header = StringHelper.split(text, DELIMETER);
 
         if (header.length > 0)
         {
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_BEFORE_HEADER,
                     ConventionDefaults.BLANK_LINES_BEFORE_HEADER));
 
@@ -302,7 +303,7 @@ final class JavaPrinter
             }
 
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_AFTER_HEADER,
                     ConventionDefaults.BLANK_LINES_AFTER_HEADER));
 
@@ -327,7 +328,7 @@ final class JavaPrinter
             String[] keys = getConventionKeys(ConventionKeys.FOOTER_KEYS);
             int count = 0;
             int smartModeLines =
-                this.settings.getInt(ConventionKeys.FOOTER_SMART_MODE_LINES, 0);
+                AbstractPrinter.settings.getInt(ConventionKeys.FOOTER_SMART_MODE_LINES, 0);
             boolean smartMode = smartModeLines > 0;
 
             for (
@@ -381,11 +382,11 @@ final class JavaPrinter
 
         if (after != null)
         {
-            after.setHiddenBefore(before);
+            ((ExtendedToken)after).setHiddenBefore(before);
 
             if (before != null)
             {
-                before.setHiddenAfter(after);
+                ((ExtendedToken)before).setHiddenAfter(after);
             }
             else
             {
@@ -396,11 +397,11 @@ final class JavaPrinter
         }
         else if ((before != null) && (comment != node.getHiddenAfter()))
         {
-            before.setHiddenAfter(after);
+            ((ExtendedToken)before).setHiddenAfter(after);
 
             if (after != null)
             {
-                after.setHiddenBefore(before);
+                ((ExtendedToken)after).setHiddenBefore(before);
             }
         }
         else
@@ -408,8 +409,7 @@ final class JavaPrinter
             // it was the first comment
             node.setHiddenAfter(null);
         }
-
-        comment.setHiddenBefore(null);
+        ((ExtendedToken)comment).setHiddenBefore(null);
     }
 
 
@@ -423,14 +423,15 @@ final class JavaPrinter
      */
     private void removeHeader(AST node)
     {
-        History.Policy historyPolicy =
-            History.Policy.valueOf(
-                this.settings.get(
-                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
+        // TODO Can be removed ?
+//        History.Policy historyPolicy =
+//            History.Policy.valueOf(
+//                AbstractPrinter.settings.get(
+//                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
         JavaNode first = (JavaNode) node.getFirstChild();
         String[] keys = getConventionKeys(ConventionKeys.HEADER_KEYS);
         int smartModeLines =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.HEADER_SMART_MODE_LINES,
                 ConventionDefaults.HEADER_SMART_MODE_LINES);
         boolean smartMode = (smartModeLines > 0);
@@ -466,7 +467,7 @@ final class JavaPrinter
                         case JavaTokenTypes.SL_COMMENT :
 
                             /**
-                             * @todo this isn't really fool-proof?
+                             * TODO this isn't really fool-proof?
                              */
                             if (comment.getText().indexOf('%') > -1)
                             {
@@ -504,20 +505,20 @@ final class JavaPrinter
 
         if (after != null)
         {
-            after.setHiddenBefore(before);
+            ((ExtendedToken)after).setHiddenBefore(before);
 
             if (before != null)
             {
-                before.setHiddenAfter(after);
+                ((ExtendedToken)before).setHiddenAfter(after);
             }
         }
         else if (before != null)
         {
-            before.setHiddenAfter(after);
+            ((ExtendedToken)before).setHiddenAfter(after);
 
             if (after != null)
             {
-                after.setHiddenBefore(before);
+                ((ExtendedToken)after).setHiddenBefore(before);
             }
         }
         else

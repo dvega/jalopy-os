@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -67,28 +67,28 @@ final class ThrowsPrinter
         Marker marker = null;
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean indentDeep =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
         int indentLength = out.getIndentLength();
         int deepIndent =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_DEEP, ConventionDefaults.INDENT_SIZE_DEEP);
         int indentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_THROWS, ConventionDefaults.INDENT_SIZE_THROWS);
         boolean indentCustom = indentSize > -1;
 
         if (
             (out.mode == NodeWriter.MODE_DEFAULT)
             && (out.newline
-            || this.settings.getBoolean(
+            || AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_THROWS,
                 ConventionDefaults.LINE_WRAP_BEFORE_THROWS)
             || (wrapLines
@@ -136,14 +136,14 @@ final class ThrowsPrinter
         }
 
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         boolean forceWrapping =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS,
                 ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS);
         boolean wrapAll =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED,
                 ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED)
             && (out.mode == NodeWriter.MODE_DEFAULT);
@@ -276,7 +276,7 @@ final class ThrowsPrinter
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_TREAT_DIFFERENT_IF_WRAPPED,
                 ConventionDefaults.BRACE_TREAT_DIFFERENT_IF_WRAPPED)
             && (wrappedBefore || wrappedAfter || out.state.parametersWrapped))

@@ -6,11 +6,11 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.RecognitionException;
-import de.hunsicker.antlr.TokenBuffer;
-import de.hunsicker.antlr.TokenStreamException;
-import de.hunsicker.antlr.collections.AST;
+import antlr.ASTFactory;
+import antlr.RecognitionException;
+import antlr.TokenBuffer;
+import antlr.TokenStreamException;
+import antlr.collections.AST;
 
 
 /**

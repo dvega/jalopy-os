@@ -8,7 +8,9 @@ package de.hunsicker.jalopy.language;
 
 import java.lang.reflect.Modifier;
 
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
+import antlr.collections.AST;
 
 
 /**

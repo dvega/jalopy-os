@@ -6,6 +6,8 @@
  */
 package de.hunsicker.jalopy.storage;
 
+import de.hunsicker.jalopy.language.JavaLexer;
+import de.hunsicker.jalopy.language.JavaParser;
 import de.hunsicker.jalopy.language.JavaRecognizer;
 
 import org.apache.log4j.Level;
@@ -286,7 +288,7 @@ public final class ConventionDefaults
     public static final boolean COMMENT_REMOVE_SINGLE_LINE = false;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final int SOURCE_VERSION = JavaRecognizer.JDK_1_4;
+    public static final int SOURCE_VERSION = JavaParser.JDK_1_4;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean FOOTER = false;
@@ -527,6 +529,12 @@ public final class ConventionDefaults
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_CLASS = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_ANNOTATION = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_ENUM = false;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_CTOR = false;

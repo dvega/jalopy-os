@@ -6,10 +6,11 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.ASTPair;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.collections.AST;
+import antlr.ASTFactory;
+import antlr.ASTPair;
+import antlr.Token;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Loggers;
 
 
@@ -44,7 +45,9 @@ public class JavaNodeFactory
      *
      * @param currentAST root pair.
      * @param child new child to add.
+     * TODO Examine what this does ?
      */
+    
     public void addASTChild(
         ASTPair currentAST,
         AST     child)
@@ -283,9 +286,10 @@ public class JavaNodeFactory
      * </p>
      *
      * @param nodes the nodes to create the tree with.
-     *
+     * TODO Examine what this does
      * @return the generated tree.
      */
+    
     public AST make(AST[] nodes)
     {
         if ((nodes == null) || (nodes.length == 0))
@@ -360,7 +364,7 @@ public class JavaNodeFactory
             }
         }
 
-        if (root.isPositionKnown())
+        if (root.isPositionKnown() && tail!=null)
         {
             if (tail.isPositionKnown())
             {
@@ -386,6 +390,7 @@ public class JavaNodeFactory
      * @param currentAST DOCUMENT ME!
      * @param root DOCUMENT ME!
      */
+    
     public void makeASTRoot(
         ASTPair currentAST,
         AST     root)
@@ -428,7 +433,7 @@ public class JavaNodeFactory
         {
             case JavaTokenTypes.DOT :
             case JavaTokenTypes.METHOD_CALL :
-                return (JavaNode) getFirstNode(node.getFirstChild());
+                return getFirstNode(node.getFirstChild());
         }
 
         return (JavaNode) node;

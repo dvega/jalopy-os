@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -66,7 +66,7 @@ class BlockPrinter
         boolean forceNewlineBefore = out.state.newlineBeforeLeftBrace;
 
         boolean treatDifferent =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_TREAT_DIFFERENT,
                 ConventionDefaults.BRACE_TREAT_DIFFERENT);
 
@@ -78,6 +78,8 @@ class BlockPrinter
                 case JavaTokenTypes.CTOR_DEF :
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
+                case JavaTokenTypes.ENUM_DEF:
+                case JavaTokenTypes.ANNOTATION_DEF:
                     forceNewlineBefore = true;
 
                     break;
@@ -97,14 +99,14 @@ class BlockPrinter
 
         boolean freestanding = JavaNodeHelper.isFreestandingBlock(lcurly);
         boolean cuddleEmpty =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_EMPTY_CUDDLE, ConventionDefaults.BRACE_EMPTY_CUDDLE);
         boolean insertEmptyStatement =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_EMPTY_INSERT_STATEMENT,
                 ConventionDefaults.BRACE_EMPTY_INSERT_STATEMENT);
         boolean leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
 
         // do we print a SLIST or an OBJBLOCK?
@@ -123,6 +125,8 @@ class BlockPrinter
                     case JavaTokenTypes.CTOR_DEF :
                     case JavaTokenTypes.CLASS_DEF :
                     case JavaTokenTypes.INTERFACE_DEF :
+                    case JavaTokenTypes.ENUM_DEF:
+                    case JavaTokenTypes.ANNOTATION_DEF:
                         // it does not make sense to add the empty statement
                         // for class, ctor or method bodies
                         break;
@@ -198,7 +202,7 @@ class BlockPrinter
         boolean brace = true;
         boolean indent = false;
         boolean removeBlockBraces =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_REMOVE_BLOCK, ConventionDefaults.BRACE_REMOVE_BLOCK);
 
         if (freestanding)
@@ -245,7 +249,7 @@ class BlockPrinter
                 case JavaTokenTypes.LITERAL_if :
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_REMOVE_IF_ELSE,
                             ConventionDefaults.BRACE_REMOVE_IF_ELSE))
                     {
@@ -262,7 +266,7 @@ class BlockPrinter
                 case JavaTokenTypes.LITERAL_for :
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_REMOVE_FOR,
                             ConventionDefaults.BRACE_REMOVE_FOR))
                     {
@@ -279,7 +283,7 @@ class BlockPrinter
                 case JavaTokenTypes.LITERAL_while :
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_REMOVE_WHILE,
                             ConventionDefaults.BRACE_REMOVE_WHILE))
                     {
@@ -296,7 +300,7 @@ class BlockPrinter
                 case JavaTokenTypes.LITERAL_do :
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_REMOVE_DO_WHILE,
                             ConventionDefaults.BRACE_REMOVE_DO_WHILE))
                     {
@@ -309,6 +313,10 @@ class BlockPrinter
                     }
 
                     break;
+                case JavaTokenTypes.LITERAL_enum:
+                case JavaTokenTypes.AT:
+                    leftBraceNewline = true;
+                	break;
 
                 case JavaTokenTypes.LITERAL_case :
                 case JavaTokenTypes.LITERAL_default :
@@ -515,7 +523,7 @@ LOOP:
                     case JavaTokenTypes.LITERAL_catch : // catch block
                     case JavaTokenTypes.LITERAL_finally : // finally block
                         rightBraceNewline =
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.BRACE_NEWLINE_RIGHT,
                                 ConventionDefaults.BRACE_NEWLINE_RIGHT);
 
@@ -527,7 +535,7 @@ LOOP:
                         {
                             case JavaTokenTypes.LITERAL_do : // do-while block
                                 rightBraceNewline =
-                                    this.settings.getBoolean(
+                                    AbstractPrinter.settings.getBoolean(
                                         ConventionKeys.BRACE_NEWLINE_RIGHT,
                                         ConventionDefaults.BRACE_NEWLINE_RIGHT);
 
@@ -554,7 +562,7 @@ LOOP:
                                 case JavaTokenTypes.LITERAL_catch :
                                 case JavaTokenTypes.LITERAL_finally :
                                     rightBraceNewline =
-                                        this.settings.getBoolean(
+                                        AbstractPrinter.settings.getBoolean(
                                             ConventionKeys.BRACE_NEWLINE_RIGHT,
                                             ConventionDefaults.BRACE_NEWLINE_RIGHT);
 
@@ -633,7 +641,7 @@ LOOP:
     {
         out.print(
             out.getString(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.INDENT_SIZE_BRACE_CUDDLED,
                     ConventionDefaults.INDENT_SIZE_BRACE_CUDDLED)), JavaTokenTypes.WS);
         out.print(BRACES, type);

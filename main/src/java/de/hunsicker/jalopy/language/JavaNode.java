@@ -10,9 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
+import antlr.CommonHiddenStreamToken;
+import antlr.Token;
+import antlr.collections.AST;
 
 
 /**
@@ -48,6 +50,7 @@ public class JavaNode
      * @param endLine the ending line.
      * @param endColumn the ending column offset.
      */
+    
     public JavaNode(
         int startLine,
         int startColumn,
@@ -84,6 +87,7 @@ public class JavaNode
      * @param type the type of the node.
      * @param text the text of the node.
      */
+    
     public JavaNode(
         int    type,
         String text)
@@ -252,6 +256,7 @@ public class JavaNode
 
                     default :
                         result++;
+                        
 
                         break;
                 }
@@ -262,6 +267,9 @@ public class JavaNode
 
         return 0;
     }
+    
+
+
 
 
     /**
@@ -285,6 +293,7 @@ public class JavaNode
                 {
                     case JavaTokenTypes.WS :
                         break;
+                    
 
                     default :
                         result++;
@@ -332,8 +341,8 @@ public class JavaNode
         }
 
         n.parent = this;
-        this.endLine = n.endLine;
-        this.endColumn = n.endColumn;
+        //this.endLine = n.endLine;
+        //this.endColumn = n.endColumn;
     }
 
 
@@ -442,6 +451,7 @@ public class JavaNode
      */
     public String toString()
     {
+        
         StringBuffer buf = new StringBuffer(50);
         buf.append('"');
         buf.append(this.text);
@@ -476,8 +486,9 @@ public class JavaNode
         buf.append(getSizeCommentsBefore());
         buf.append(",");
         buf.append(getSizeCommentsAfter());
+       return buf.toString();
 
-        return buf.toString();
+        //return super.toString();
     }
 
 
@@ -507,4 +518,5 @@ public class JavaNode
             annotation.setLine(line);
         }
     }
+
 }

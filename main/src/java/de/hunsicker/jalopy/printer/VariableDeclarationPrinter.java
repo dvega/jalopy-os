@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -68,7 +68,7 @@ final class VariableDeclarationPrinter
         {
             if (
                 (!out.state.innerClass
-                || this.settings.getBoolean(
+                || AbstractPrinter.settings.getBoolean(
                     ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
                     ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS))
                 && !JavaNodeHelper.isLocalVariable(node))
@@ -92,7 +92,7 @@ final class VariableDeclarationPrinter
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS))
             {
                 newChunk = alignVariable(node, last, out);
@@ -192,7 +192,7 @@ final class VariableDeclarationPrinter
         JavaNode n = (JavaNode) node;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.CHUNKS_BY_COMMENTS, ConventionDefaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
@@ -206,7 +206,7 @@ final class VariableDeclarationPrinter
             case JavaTokenTypes.VARIABLE_DEF :
 
                 int maxLinesBetween =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                         ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
@@ -215,7 +215,7 @@ final class VariableDeclarationPrinter
                 if (maxLinesBetween > 0)
                 {
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.CHUNKS_BY_BLANK_LINES,
                             ConventionDefaults.CHUNKS_BY_BLANK_LINES))
                     {
@@ -253,7 +253,7 @@ final class VariableDeclarationPrinter
         boolean result = false;
         boolean possible = false;
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 LOOP: 
         for (AST child = node.getFirstChild(); child != null;
@@ -394,7 +394,7 @@ SEARCH:
                 {
                     case JavaTokenTypes.VARIABLE_DEF :
 
-                        if (isNewChunk((JavaNode) next, last))
+                        if (isNewChunk(next, last))
                         {
                             out.state.variableOffset = OFFSET_NONE;
                             result = true;

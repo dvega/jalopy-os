@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -70,7 +70,7 @@ final class WhilePrinter
         int offset = 1;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
@@ -84,7 +84,7 @@ final class WhilePrinter
         trackPosition((JavaNode) node, out.line, offset, out);
 
         boolean insertBraces =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_INSERT_WHILE, ConventionDefaults.BRACE_INSERT_WHILE);
 
         AST lparen = node.getFirstChild();
@@ -105,7 +105,7 @@ final class WhilePrinter
                 if (insertBraces)
                 {
                     out.printLeftBrace(
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
                     PrinterFactory.create(body).print(body, out);

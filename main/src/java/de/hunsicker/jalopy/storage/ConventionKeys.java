@@ -1164,6 +1164,14 @@ public final class ConventionKeys
     public static final Convention.Key SORT_CLASS =
         new Convention.Key("printer/sorting/declaration/class");
 
+    /** Sort annotation declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_ANNOTATION =
+        new Convention.Key("printer/sorting/declaration/annotation");
+
+    /** Sort enum declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_ENUM =
+        new Convention.Key("printer/sorting/declaration/enum");
+
     /** Sort constructors declarations? (<em>boolean</em>) */
     public static final Convention.Key SORT_CTOR =
         new Convention.Key("printer/sorting/declaration/constructor");

@@ -22,7 +22,7 @@ class CountLabel
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    // TODO private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Instance variables ---------------------------------------------------------------
 

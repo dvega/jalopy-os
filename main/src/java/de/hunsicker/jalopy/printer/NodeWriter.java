@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
+import antlr.CommonHiddenStreamToken;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -55,7 +55,7 @@ public class NodeWriter
     static final int MODE_TEST = 2;
     private static final String LCURLY = "{" /* NOI18N */.intern();
     private static final String RCURLY = "}" /* NOI18N */.intern();
-    private static final String SEMI = ";" /* NOI18N */.intern();
+    // TODO private static final String SEMI = ";" /* NOI18N */.intern();
     private static final String TAB = "\t" /* NOI18N */.intern();
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
@@ -194,35 +194,35 @@ public class NodeWriter
         this.lineSeparator = File.separator;
         this.settings = Convention.getInstance();
         this.indentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE, ConventionDefaults.INDENT_SIZE);
         this.insertTrailingEmpty =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INSERT_TRAILING_NEWLINE,
                 ConventionDefaults.INSERT_TRAILING_NEWLINE);
         this.continuationIndentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_CONTINUATION,
                 ConventionDefaults.INDENT_SIZE_CONTINUATION);
         this.leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
         this.leftBraceIndent =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_BRACE_LEFT,
                 ConventionDefaults.INDENT_SIZE_BRACE_LEFT);
         this.leadingIndentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_LEADING, ConventionDefaults.INDENT_SIZE_LEADING);
         this.useTabs =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_WITH_TABS, ConventionDefaults.INDENT_WITH_TABS);
         this.useLeadingTabs =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_WITH_TABS_ONLY_LEADING,
                 ConventionDefaults.INDENT_WITH_TABS_ONLY_LEADING);
         this.footer =
-            this.settings.getBoolean(ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
+            AbstractPrinter.settings.getBoolean(ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
         _indentChars = new char[150];
 
         for (int i = 0; i < _indentChars.length; i++)
@@ -861,7 +861,7 @@ public class NodeWriter
             StringBuffer buf = new StringBuffer(getIndentSize() + 1);
             buf.append(
                 generateIndentString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT)));
             buf.append(RCURLY);

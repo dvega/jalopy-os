@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -55,15 +56,13 @@ public class NamingSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     /** The name for ResourceBundle lookup. */
     private static final String BUNDLE_NAME =
         "de.hunsicker.jalopy.swing.Bundle" /* NOI18N */;
 
-    //~ Instance variables ---------------------------------------------------------------
-
-    private JList _patternList;
+    JList _patternList;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -104,7 +103,7 @@ public class NamingSettingsPage
     }
 
 
-    private RegexpDialog create(Window owner)
+    RegexpDialog create(Window owner)
     {
         if (owner instanceof Frame)
         {
@@ -392,7 +391,7 @@ public class NamingSettingsPage
             initialize();
         }
 
-        private void setPattern(String pattern)
+        void setPattern(String pattern)
         {
             PatternListEntry entry = (PatternListEntry) _patternList.getSelectedValue();
             entry.pattern = pattern;
@@ -415,7 +414,7 @@ public class NamingSettingsPage
                 ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                     "TLE_REGEXP_TESTER" /* NOI18N */));
             setModal(true);
-            setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
             final Container pane = getContentPane();
             final GridBagLayout layout = new GridBagLayout();
@@ -566,7 +565,7 @@ public class NamingSettingsPage
          *
          * @return <code>true</code> if the given pattern matches the given string.
          */
-        private boolean test(
+        boolean test(
             String pattern,
             String string)
         {
@@ -598,15 +597,12 @@ public class NamingSettingsPage
 
                 return true;
             }
-            else
-            {
-                this.messageLabel.setForeground(Color.red);
-                this.messageLabel.setText(
-                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
-                        "LBL_PATTERN_DOES_NOT_MATCH" /* NOI18N */));
+            this.messageLabel.setForeground(Color.red);
+            this.messageLabel.setText(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "LBL_PATTERN_DOES_NOT_MATCH" /* NOI18N */));
 
-                return false;
-            }
+            return false;
         }
     }
 }

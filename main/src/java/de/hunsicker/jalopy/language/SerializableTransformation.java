@@ -10,7 +10,9 @@ import java.io.ObjectStreamClass;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavadocTokenTypes;
 import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.Helper;
 
@@ -201,7 +203,7 @@ LOOP:
      *
      * @return <code>true</code> if the class is serializable.
      */
-    private static boolean isClassSerializable(AST node)
+    static boolean isClassSerializable(AST node)
     {
         AST clauses =
             JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IMPLEMENTS_CLAUSE);
@@ -324,6 +326,7 @@ LOOP:
         serialver.addChild(semi);
 
         // add a Javadoc comment
+        // TODO was JavadocTokenTypes.PCDATA
         Node description = new Node();
         description.setType(JavadocTokenTypes.PCDATA);
         description.setText("Use serialVersionUID for interoperability.");

@@ -315,10 +315,10 @@ class AddRemoveList
         }
 
         private void initialize(
-            String title,
-            String text)
+            String newTitle,
+            String newText)
         {
-            setTitle(title);
+            setTitle(newTitle);
             setModal(true);
             setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -327,7 +327,7 @@ class AddRemoveList
             GridBagConstraints c = new GridBagConstraints();
             contentPane.setLayout(layout);
 
-            JLabel valueLabel = new JLabel(text);
+            JLabel valueLabel = new JLabel(newText);
             c.insets.top = 10;
             c.insets.left = 5;
             c.insets.right = 5;

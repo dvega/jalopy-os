@@ -6,8 +6,8 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.collections.AST;
-
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.*;
 
 /**
  * Some common helpers for dealing with the nodes of a Java AST.
@@ -133,10 +133,7 @@ public final class JavaNodeHelper
                     {
                         return isBlockNext(implementsClause);
                     }
-                    else
-                    {
                         return false;
-                    }
 
                 case JavaTokenTypes.IMPLEMENTS_CLAUSE :
                     return isBlockNext(parent);
@@ -271,6 +268,8 @@ public final class JavaNodeHelper
             case JavaTokenTypes.SLIST :
             case JavaTokenTypes.CASESLIST :
             case JavaTokenTypes.OBJBLOCK :
+            case JavaTokenTypes.ANNOTATION_ARRAY_INIT :
+            case JavaTokenTypes.ANNOTATION :
                 break;
 
             default :
@@ -297,33 +296,15 @@ WALK:
                     {
                         return false;
                     }
-                    else
-                    {
                         // continue with the next sibling
                         continue WALK;
-                    }
 
                 case JavaTokenTypes.RCURLY :
-
-                    if (child.hasCommentsBefore())
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
+                    return !child.hasCommentsBefore();
 
                 default :
 
-                    if (child == null)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    return child == null;
             }
         }
 
@@ -483,16 +464,12 @@ SEARCH:
                 {
                     return (JavaNode) node;
                 }
-                else
-                {
                     AST second = first.getNextSibling();
 
                     if (second == null)
                     {
                         return (JavaNode) first;
                     }
-                    else
-                    {
                         AST last = second;
 
                         for (
@@ -503,14 +480,12 @@ SEARCH:
                         }
 
                         return getLastChild(last);
-                    }
-                }
         }
     }
 
 
     /**
-     * Determines wether the given node represents a local variable.
+     * Determines whether the given node represents a local variable.
      *
      * @param node a VARIABLE_DEF node.
      *
@@ -533,11 +508,11 @@ SEARCH:
     /**
      * Advance to the first non-LPAREN node for the rare case where both operands are
      * enclosed by several parenthesis groups, e.g. ((LA(4) >= '\u0003')), so we
-     * acutally skip unnecessary parentheses.
+     * actually skip unnecessary parentheses.
      *
      * @param lparen the first LPAREN child of an expression node.
      *
-     * @return the first non parentheses node or <code>null</code> if no such node
+     * @return the first NON parentheses node or <code>null</code> if no such node
      *         exists.
      *
      * @throws NullPointerException if <code><em>lparen</em> == null</code>

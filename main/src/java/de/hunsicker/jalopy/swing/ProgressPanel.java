@@ -24,7 +24,7 @@ import de.hunsicker.util.ResourceBundleFactory;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
 
@@ -62,13 +62,13 @@ public class ProgressPanel
     private transient Appender _progressAppender;
 
     /** Label to display the errors count. */
-    private CountLabel _errors;
+    CountLabel _errors;
 
     /** Label to display the files count. */
     private CountLabel _files;
 
     /** Label to display the warnings count. */
-    private CountLabel _warnings;
+    CountLabel _warnings;
 
     /** The cancel button to interrupt a time-consuming operation. */
     private JButton _stopButton;
@@ -80,7 +80,7 @@ public class ProgressPanel
     private JProgressBar _progressBar;
 
     /** Did the user pressed the stop button? */
-    private boolean _isStopped;
+    boolean _isStopped;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -347,13 +347,13 @@ public class ProgressPanel
         {
             switch (ev.getLevel().toInt())
             {
-                case Level.WARN_INT :
+                case Priority.WARN_INT :
                     _warnings.increase();
 
                     break;
 
-                case Level.ERROR_INT :
-                case Level.FATAL_INT :
+                case Priority.ERROR_INT :
+                case Priority.FATAL_INT :
                     _errors.increase();
 
                     break;

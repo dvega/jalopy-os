@@ -14,7 +14,7 @@ package de.hunsicker.jalopy.language;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  *
- * @see de.hunsicker.jalopy.language.JavaRecognizer#attachAnnotations
+ * @see de.hunsicker.jalopy.language.antlr.JavaRecognizer#attachAnnotations
  * @since 1.0b9
  */
 public final class Annotation

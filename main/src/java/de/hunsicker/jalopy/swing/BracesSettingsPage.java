@@ -66,20 +66,20 @@ public class BracesSettingsPage
     private JCheckBox _insertForCheckBox;
     private JCheckBox _insertIfElseCheckBox;
     private JCheckBox _insertWhileCheckBox;
-    private JCheckBox _newlineLeftCheckBox;
-    private JCheckBox _newlineRightCheckBox;
+    JCheckBox _newlineLeftCheckBox;
+    JCheckBox _newlineRightCheckBox;
     private JCheckBox _removeBlockCheckBox;
     private JCheckBox _removeDoWhileCheckBox;
     private JCheckBox _removeForCheckBox;
     private JCheckBox _removeIfElseCheckBox;
     private JCheckBox _removeWhileCheckBox;
     private JCheckBox _sunStyleCheckBox;
-    private JCheckBox _treatDifferentCheckBox;
-    private JCheckBox _treatDifferentIfWrappedCheckBox;
+    JCheckBox _treatDifferentCheckBox;
+    JCheckBox _treatDifferentIfWrappedCheckBox;
     private JComboBox _cuddleEmptyBracesComboBox;
-    private JComboBox _indentAfterRightBraceComboBox;
-    private JComboBox _indentLeftBraceComboBox;
-    private JComboBox _indentRightBraceComboBox;
+    JComboBox _indentAfterRightBraceComboBox;
+    JComboBox _indentLeftBraceComboBox;
+    JComboBox _indentRightBraceComboBox;
     private JTabbedPane _tabbedPane;
     private NumberComboBoxPanel _indentAfterRightBraceComboBoxPnl;
     private NumberComboBoxPanel _indentLeftBraceComboBoxPnl;
@@ -214,7 +214,7 @@ public class BracesSettingsPage
      *
      * @param enable if <code>true</code> this custom mode will be enabled.
      */
-    private void setCustomMode(boolean enable)
+    void setCustomMode(boolean enable)
     {
         _indentLeftBraceComboBoxPnl.setEnabled(enable);
         _indentRightBraceComboBoxPnl.setEnabled(enable);

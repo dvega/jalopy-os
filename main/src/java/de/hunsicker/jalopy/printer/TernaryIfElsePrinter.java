@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -187,11 +187,11 @@ final class TernaryIfElsePrinter
       throws IOException
     {
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         boolean wrapBeforeColon =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_VALUES,
                 ConventionDefaults.ALIGN_TERNARY_VALUES);
 
@@ -221,7 +221,7 @@ final class TernaryIfElsePrinter
 
             // only wrap and align if necessary
             if (
-                (tester.length + out.column) > this.settings.getInt(
+                (tester.length + out.column) > AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
@@ -310,7 +310,7 @@ final class TernaryIfElsePrinter
                         PrinterFactory.create(child).print(child, out);
                     }
                     else if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
                             ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS)
                         && needParentheses((JavaNode) child))
@@ -389,11 +389,11 @@ final class TernaryIfElsePrinter
       throws IOException
     {
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         boolean wrapBeforeQuestion =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_EXPRESSION,
                 ConventionDefaults.ALIGN_TERNARY_EXPRESSION);
 
@@ -416,7 +416,7 @@ final class TernaryIfElsePrinter
             // wrap and align if necessary (+3 for the colon between the
             // second and third operator)
             if (
-                (tester.length + out.column + 3) > this.settings.getInt(
+                (tester.length + out.column + 3) > AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
@@ -437,7 +437,7 @@ final class TernaryIfElsePrinter
         Marker marker = null;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_OPERATOR,
                 ConventionDefaults.ALIGN_TERNARY_OPERATOR)
             && (wrapLines || wrapBeforeQuestion))

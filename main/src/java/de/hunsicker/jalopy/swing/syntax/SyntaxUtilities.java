@@ -40,7 +40,7 @@ public class SyntaxUtilities
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static Color[] COLORS;
+    // TODO private static Color[] COLORS;
 
     //~ Constructors ---------------------------------------------------------------------
 

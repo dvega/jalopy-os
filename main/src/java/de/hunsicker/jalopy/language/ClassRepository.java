@@ -183,7 +183,7 @@ public class ClassRepository
      * @return the generated repository entry. Returns <code>null</code> if the location
      *         info is no package root.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      * @throws IllegalArgumentException if the location specified in the info object does
      *         not denote an existing file or directory.
      */
@@ -220,10 +220,7 @@ public class ClassRepository
                     // verification failed, location is no package root
                     throw new IOException("no package root directory -- " + location);
                 }
-                else
-                {
-                    verify = false;
-                }
+                verify = false;
             }
         }
         else
@@ -234,9 +231,9 @@ public class ClassRepository
             {
                 JarFile archive = new JarFile(location);
 
-                for (Enumeration enum = archive.entries(); enum.hasMoreElements();)
+                for (Enumeration enumerator = archive.entries(); enumerator.hasMoreElements();)
                 {
-                    JarEntry entry = (JarEntry) enum.nextElement();
+                    JarEntry entry = (JarEntry) enumerator.nextElement();
                     String path = entry.getName();
 
                     if (path.endsWith(EXT_CLASS))
@@ -293,7 +290,7 @@ public class ClassRepository
      * 
      * <p>
      * Directories will always be updated as there is no easy way to detect changes in
-     * such a case. You should perform logic to avoid unecessary loads in the Plug-in
+     * such a case. You should perform logic to avoid unnecessary loads in the Plug-in
      * code.
      * </p>
      * 
@@ -336,7 +333,7 @@ public class ClassRepository
      *
      * @param locations locations to add (of type {@link java.io.File &lt;File&gt;}).
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      */
     public synchronized void loadAll(List locations)
       throws IOException
@@ -382,7 +379,7 @@ public class ClassRepository
      *
      * @return the entry info.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      */
     public synchronized ClassRepositoryEntry.Info loadInfo(File file)
       throws IOException
@@ -393,11 +390,11 @@ public class ClassRepository
 
     /**
      * Unloads the given file from memory. If the given location was not registered, the
-     * call we be savely ignored.
+     * call we be safely ignored.
      *
      * @param location location to unload.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      *
      * @see ClassRepositoryEntry.Info#getLocation
      */
@@ -437,7 +434,7 @@ public class ClassRepository
      *
      * @param locations locations to unload (of type {@link java.io.File &lt;File&gt;}).
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      *
      * @see ClassRepositoryEntry.Info#getLocation
      */
@@ -638,20 +635,16 @@ public class ClassRepository
                 // for .jars this always means an error
                 throw new IOException("File not found -- " + location);
             }
-            else
+            
+            if (!location.mkdirs())
             {
-                if (!location.mkdirs())
-                {
-                    throw new IOException("Directory not found -- " + location);
-                }
-                else
-                {
-                    if (Loggers.IO.isDebugEnabled())
-                    {
-                        Loggers.IO.debug(
-                            "ClassRepository: Created new directory: " + location);
-                    }
-                }
+                throw new IOException("Directory not found -- " + location);
+            }
+            
+            if (Loggers.IO.isDebugEnabled())
+            {
+                Loggers.IO.debug(
+                    "ClassRepository: Created new directory: " + location);
             }
         }
 

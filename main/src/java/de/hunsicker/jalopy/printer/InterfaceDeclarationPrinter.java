@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeModifier;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -75,12 +75,13 @@ class InterfaceDeclarationPrinter
 
         PrinterFactory.create(modifiers).print(modifiers, out);
 
+        /*
         AST keyword = modifiers.getNextSibling();
 
         printCommentsBefore(keyword, NodeWriter.NEWLINE_NO, out);
-
+*/
         out.print(INTERFACE_SPACE, JavaTokenTypes.LITERAL_interface);
-
+/*
         if (printCommentsAfter(keyword, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
         {
             if (!out.newline)
@@ -88,6 +89,20 @@ class InterfaceDeclarationPrinter
         }
 
         AST identifier = keyword.getNextSibling();
+        */
+        for(AST child = modifiers.getNextSibling();child!=null;child = child.getNextSibling()) {
+            if (child.getType() == JavaTokenTypes.OBJBLOCK) {
+                out.state.extendsWrappedBefore = false;
+                out.last = JavaTokenTypes.LITERAL_class;
+            }
+            PrinterFactory.create(child).print(child, out);
+            if (child.getType() == JavaTokenTypes.EXTENDS_CLAUSE) {
+                out.state.extendsWrappedBefore = false;
+                printCommentsAfter(node, out);
+            }
+        }
+  /*      
+        AST identifier = modifiers.getNextSibling();
         PrinterFactory.create(identifier).print(identifier, out);
 
         AST extendsClause = identifier.getNextSibling();
@@ -99,7 +114,7 @@ class InterfaceDeclarationPrinter
 
         AST body = extendsClause.getNextSibling();
         PrinterFactory.create(body).print(body, out);
-
+*/
         out.state.innerClass = false;
         out.last = JavaTokenTypes.INTERFACE_DEF;
     }

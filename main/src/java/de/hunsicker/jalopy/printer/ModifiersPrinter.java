@@ -12,10 +12,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.ModifierType;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -68,7 +69,7 @@ final class ModifiersPrinter
       throws IOException
     {
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SORT_MODIFIERS, ConventionDefaults.SORT_MODIFIERS))
         {
             JavaNode firstModifier = (JavaNode) node.getFirstChild();
@@ -84,13 +85,25 @@ final class ModifiersPrinter
                     AST modifier = firstModifier; modifier != null;
                     modifier = modifier.getNextSibling())
                 {
-                    modifiers.add(modifier);
+                    if (modifier.getType() == JavaTokenTypes.ANNOTATION) {
+                        // TODO Sort the annotation modifiers ???
+                        if (firstComment!=null) {
+                            ((JavaNode)modifier).setHiddenBefore(firstComment);
+                            firstComment = null;
+                        }
+                        PrinterFactory.create(modifier).print(modifier,out);
+                    }
+                    else {
+                        modifiers.add(modifier);
+                    }
                 }
 
                 Collections.sort(modifiers, COMP_MODIFIERS);
 
-                firstModifier = (JavaNode) modifiers.get(0);
-                firstModifier.setHiddenBefore(firstComment);
+                if (!modifiers.isEmpty()) {
+	                firstModifier = (JavaNode) modifiers.get(0);
+	                firstModifier.setHiddenBefore(firstComment);
+                }
 
                 for (int i = 0, size = modifiers.size(); i < size; i++)
                 {

@@ -50,7 +50,7 @@ public abstract class AbstractSettingsPage
      * Our container. May be <code>null</code> if the code convention pages are directly
      * embedded into a Java appplication.
      */
-    private SettingsContainer _container;
+    SettingsContainer _container;
 
     /** The category of the page. */
     private String _category;

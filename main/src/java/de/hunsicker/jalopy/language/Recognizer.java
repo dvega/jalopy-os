@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 
-import de.hunsicker.antlr.RecognitionException;
-import de.hunsicker.antlr.TokenBuffer;
-import de.hunsicker.antlr.TokenStreamException;
-import de.hunsicker.antlr.TokenStreamRecognitionException;
-import de.hunsicker.antlr.collections.AST;
+import antlr.RecognitionException;
+import antlr.TokenBuffer;
+import antlr.TokenStreamException;
+import antlr.TokenStreamRecognitionException;
+import antlr.collections.AST;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.util.ChainingRuntimeException;
 

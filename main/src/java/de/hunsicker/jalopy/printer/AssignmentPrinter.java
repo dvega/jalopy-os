@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -87,26 +87,26 @@ final class AssignmentPrinter
         printCommentsBefore(node, out);
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         boolean preferWrapAfterLeftParen =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
                 ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN);
         boolean preferWrapAfterAssign =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_ASSIGN,
                 ConventionDefaults.LINE_WRAP_AFTER_ASSIGN);
         boolean padding =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_ASSIGNMENT_OPERATORS,
                 ConventionDefaults.PADDING_ASSIGNMENT_OPERATORS);
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean indentStandard =
-            !this.settings.getBoolean(
+            !AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
 
         AST expr = node.getFirstChild();
@@ -119,7 +119,7 @@ final class AssignmentPrinter
 
                 if (
                     !wrapAfterAssign
-                    && this.settings.getBoolean(
+                    && AbstractPrinter.settings.getBoolean(
                         ConventionKeys.ALIGN_VAR_ASSIGNS,
                         ConventionDefaults.ALIGN_VAR_ASSIGNS))
                 {
@@ -333,7 +333,7 @@ final class AssignmentPrinter
                 else
                 {
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.ALIGN_VAR_ASSIGNS,
                             ConventionDefaults.ALIGN_VAR_ASSIGNS))
                     {
@@ -455,7 +455,7 @@ final class AssignmentPrinter
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.CHUNKS_BY_COMMENTS, ConventionDefaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
@@ -465,7 +465,7 @@ final class AssignmentPrinter
         }
 
         int maxLinesBetween =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                 ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
@@ -474,7 +474,7 @@ final class AssignmentPrinter
         if (maxLinesBetween > 0)
         {
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.CHUNKS_BY_BLANK_LINES,
                     ConventionDefaults.CHUNKS_BY_BLANK_LINES))
             {
@@ -765,7 +765,7 @@ SEARCH:
                         //boolean lastAssign = false;
                         TestNodeWriter tester = out.testers.get();
                         boolean alignVariables =
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.ALIGN_VAR_IDENTS,
                                 ConventionDefaults.ALIGN_VAR_IDENTS);
 SEARCH:
@@ -916,9 +916,6 @@ SEARCH:
                     return canAlign(parent);
             }
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 }

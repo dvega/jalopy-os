@@ -62,21 +62,21 @@ public class EnvironmentSettingsPage
     //~ Static variables/initializers ----------------------------------------------------
 
     /** Used to track user actions (additions/removals). */
-    private static Map _changes = new HashMap(); // Map of <ListEntry>:<Object>
+    static Map _changes = new HashMap(); // Map of <ListEntry>:<Object>
 
     /** Indicates an addition to the list. */
-    private static final Object ACTION_ADD = new Object();
+    static final Object ACTION_ADD = new Object();
 
     /** Indicates a removal from the list. */
-    private static final Object ACTION_REMOVE = new Object();
+    static final Object ACTION_REMOVE = new Object();
     private static final char DELIM_PAIR = '^';
     private static final String EMPTY_STRING = "".intern(); /* NOI18N */
 
     /** The pattern to validate variables . */
-    private static Pattern _variablesPattern;
+    static Pattern _variablesPattern;
 
     /** The pattern matcher. */
-    private static final PatternMatcher _matcher = new Perl5Matcher();
+    static final PatternMatcher _matcher = new Perl5Matcher();
 
     static
     {
@@ -94,9 +94,7 @@ public class EnvironmentSettingsPage
         }
     }
 
-    //~ Instance variables ---------------------------------------------------------------
-
-    private AddRemoveList _variablesList;
+    AddRemoveList _variablesList;
     private JButton _addButton;
     private JButton _removeButton;
     private JTabbedPane _tabs;
@@ -365,10 +363,10 @@ public class EnvironmentSettingsPage
             }
 
             private void initialize(
-                String title,
-                String text)
+                String newTitle,
+                String newText)
             {
-                setTitle(title);
+                setTitle(newTitle);
                 setModal(true);
                 setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 

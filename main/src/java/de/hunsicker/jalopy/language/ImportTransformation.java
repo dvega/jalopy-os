@@ -18,8 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.ASTPair;
-import de.hunsicker.antlr.collections.AST;
+import antlr.ASTPair;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -72,7 +73,7 @@ final class ImportTransformation
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     /** The empty string array. */
-    private static final String[] EMPTY_STRING_ARRAY = new String[0];
+    // TODO private static final String[] EMPTY_STRING_ARRAY = new String[0];
     private static final String PACKAGE_JAVA_LANG = "java.lang." /* NOI18N */;
     private static final String STAR = "*" /* NOI18N */;
     static final String DOT = "." /* NOI18N */;
@@ -301,6 +302,7 @@ final class ImportTransformation
             }
 
             case JavaTokenTypes.IMPORT :
+            case JavaTokenTypes.STATIC_IMPORT:
             {
                 visit(node);
 
@@ -318,7 +320,13 @@ final class ImportTransformation
                 walkNode(node.getNextSibling());
 
                 break;
-
+            
+            // Annotation's and enums live outside the class also now
+            case JavaTokenTypes.ENUM_DEF :
+            case JavaTokenTypes.ANNOTATION_DEF :
+                _class = node;
+            
+            break;
             case JavaTokenTypes.CLASS_DEF :
             case JavaTokenTypes.INTERFACE_DEF :
                 _class = node;
@@ -418,7 +426,7 @@ final class ImportTransformation
     }
 
 
-    private static int getIndex(
+    static int getIndex(
         List   identifiers,
         String packageName)
     {
@@ -557,7 +565,9 @@ final class ImportTransformation
      *
      * @return list with the possible type names.
      */
-    private List getPossibleTypes(final List identifiers)
+    /*
+    
+    TODO private List getPossibleTypes(final List identifiers)
     {
         String[] contents = ClassRepository.getInstance().getContent();
         List result = new ArrayList();
@@ -566,9 +576,9 @@ final class ImportTransformation
         {
             String ident = (String) identifiers.get(i);
 
-            /**
-             * @todo use partial string matching indexOf() ???
-             */
+            
+            // todo use partial string matching indexOf() ???
+            
             if (Arrays.binarySearch(contents, ident) > -1)
             {
                 result.add(ident);
@@ -576,7 +586,7 @@ final class ImportTransformation
         }
 
         return result;
-    }
+    }*/
 
 
     /**
@@ -640,6 +650,7 @@ final class ImportTransformation
         JavaNode source,
         JavaNode target)
     {
+        // TODO Should this be removed ?
         /*if (source.hasCommentsBefore())
         {
             if (target.hasCommentsBefore())
@@ -960,7 +971,7 @@ final class ImportTransformation
             return;
         }
 
-        Convention settings = Convention.getInstance();
+        //Convention settings = Convention.getInstance();
         ImportPolicy importPolicy =
             ImportPolicy.valueOf(
                 Convention.getInstance().get(
@@ -978,6 +989,7 @@ final class ImportTransformation
             switch (imp.getType())
             {
                 case JavaTokenTypes.IMPORT :
+                case JavaTokenTypes.STATIC_IMPORT :
                     break;
 
                 default :
@@ -1024,6 +1036,7 @@ final class ImportTransformation
             switch (imp.getType())
             {
                 case JavaTokenTypes.IMPORT :
+                case JavaTokenTypes.STATIC_IMPORT :
                     break;
 
                 default :
@@ -1044,8 +1057,8 @@ final class ImportTransformation
             }
 
             node.setNextSibling(imp);
-            imp.prevSibling = (JavaNode) node;
-            imp.parent = (JavaNode) node;
+            imp.prevSibling = node;
+            imp.parent = node;
             node = imp;
         }
 
@@ -1508,20 +1521,17 @@ CHECK:
             {
                 return n1.text.compareTo(n2.text);
             }
+            if (n1.startLine > n2.startLine)
+            {
+                return 1;
+            }
+            else if (n1.startLine < n2.startLine)
+            {
+                return -1;
+            }
             else
             {
-                if (n1.startLine > n2.startLine)
-                {
-                    return 1;
-                }
-                else if (n1.startLine < n2.startLine)
-                {
-                    return -1;
-                }
-                else
-                {
-                    return 0;
-                }
+                return 0;
             }
         }
     }
