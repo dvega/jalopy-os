@@ -204,7 +204,7 @@ public class Recognizer
      * @param filename name of the file we parse.
      *
      * @throws IllegalStateException if the parser is currently running.
-     * @throws ParseException DOCUMENT ME!
+     * @throws ParseException if an unexpected error occured.
      */
     public void parse(
         Reader in,
@@ -325,9 +325,9 @@ public class Recognizer
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Indicates an error during the parsing of an input file or stream.
+     * Indicates an unexpected error during the parsing of an input file or stream.
      */
-    public static class ParseException
+    public final static class ParseException
         extends ChainingRuntimeException
     {
         /**

@@ -197,9 +197,9 @@ public final class JavaRecognizer
      * be associated with the parse tree node that matches their locations.
      *
      * @param annotations list with annotations (of type {@link
-     *        de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}).
+     *        de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}).
      *
-     * @see de.hunsicker.jalopy.plugin.Annotation
+     * @see de.hunsicker.jalopy.language.Annotation
      * @see #detachAnnotations
      * @since 1.0b9
      */
@@ -212,8 +212,8 @@ public final class JavaRecognizer
     /**
      * Detaches all annotations.
      *
-     * @return list with annotations (of type &lt;{@link
-     *         de.hunsicker.jalopy.plugin.Annotation}&gt;). Returns an empty list in
+     * @return list with annotations (of type {@link
+     *         de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}). Returns an empty list in
      *         case no annotations were attached for the input source.
      *
      * @see #attachAnnotations
@@ -264,17 +264,17 @@ public final class JavaRecognizer
 
 
     /**
-     * Marks a position in the given input source.
+     * Sets a position in the given input source that should be tracked.
      *
      * @param line a valid line number (<code>&gt;= 1</code>).
      * @param column a valid column offset (<code>&gt;= 1</code>).
      *
      * @throws IllegalArgumentException if either <em>line</em> or
-     *         <em>column</em><code>&lt; 1</code>
+     *         <em>column</em><code> &lt; 1</code>
      *
      * @since 1.0b9
      */
-    public void markPosition(
+    public void setPosition(
         int line,
         int column)
     {
@@ -592,7 +592,6 @@ public final class JavaRecognizer
 
                 if (line == _position.line)
                 {
-                    System.err.println("node to track " + n + " " + n.hashCode());
                     n.setPosition(_position);
                     _trackPosition = false;
 
@@ -601,12 +600,18 @@ public final class JavaRecognizer
                         stop();
                     }
                 }
-                else if (line < _position.line)
+                else if (line > _position.line)
                 {
-                    /**
-                     * @todo store the node next to the position, if no node could be be
-                     *       found in the positioned line, use this as position info
-                     */
+
+                    // no code in the current caret line, move the caret to the
+                    // first line with code
+                    n.setPosition(_position);
+                    _trackPosition = false;
+
+                    if (this.annotation == null)
+                    {
+                        stop();
+                    }
                 }
             }
         }

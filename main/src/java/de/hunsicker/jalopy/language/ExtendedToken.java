@@ -136,9 +136,9 @@ public class ExtendedToken
 
 
     /**
-     * DOCUMENT ME!
+     * Sets the comment for this token.
      *
-     * @param comment DOCUMENT ME!
+     * @param comment the comment to attach to this token.
      */
     public void setComment(Node comment)
     {
@@ -147,9 +147,10 @@ public class ExtendedToken
 
 
     /**
-     * DOCUMENT ME!
+     * Returns the comment that is attached to this token.
      *
-     * @return DOCUMENT ME!
+     * @return The attached comment of this token. Returns <code>null</code> if no comment
+     * is attached.
      */
     public Node getComment()
     {
@@ -213,17 +214,15 @@ public class ExtendedToken
 
 
     /**
-     * Returns a string representation of this object.
-     *
-     * @return a string representation of this object.
+     * {@inheritDoc}
      */
     public String toString()
     {
         StringBuffer buf = new StringBuffer(30);
         buf.append('[');
-        buf.append("\"");
+        buf.append('"');
         buf.append(this.text);
-        buf.append("\"");
+        buf.append('"');
         buf.append(',');
         buf.append('<');
         buf.append(getType());

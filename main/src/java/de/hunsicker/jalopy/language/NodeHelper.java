@@ -29,13 +29,13 @@ public final class NodeHelper
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Determines wether the given node represents an anonymous inner class or interface.
      *
-     * @param node DOCUMENT ME!
+     * @param node a CLASS_DEF or INTERFACE_DEF node.
      *
-     * @return DOCUMENT ME!
+     * @return <code>true</code> if the given node represents an anonymous inner class.
      *
-     * @throws IllegalArgumentException DOCUMENT ME!
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() != CLASS_DEF || INTERFACE_DEF</code>
      *
      * @since 1.0b8
      */
@@ -236,7 +236,7 @@ public final class NodeHelper
         }
 
         boolean result = false;
-WALK: 
+WALK:
         for (
             JavaNode child = (JavaNode) node.getFirstChild(); child != null;
             child = (JavaNode) child.getNextSibling())
@@ -350,7 +350,7 @@ WALK:
      *
      * @return <code>true</code> if the node represents an inner class or interface.
      *
-     * @throws IllegalArgumentException if <code>node.getType() != CLASS_DEF ||
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() != CLASS_DEF ||
      *         INTERFACE_DEF</code>
      *
      * @since 1.0b8
@@ -390,7 +390,7 @@ WALK:
             case JavaTokenTypes.DOT :
             {
                 AST last = node.getFirstChild();
-SEARCH: 
+SEARCH:
                 for (AST child = last; child != null; child = child.getFirstChild())
                 {
                     switch (child.getType())
@@ -447,7 +447,7 @@ SEARCH:
      *
      * @return <code>true</code> if the given node represents a local variable.
      *
-     * @throws IllegalArgumentException if <code>node.getType() !=
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() !=
      *         JavaTokenTypes.VARIABLE_DEF</code>.
      */
     public static boolean isLocalVariable(AST node)
@@ -471,8 +471,8 @@ SEARCH:
      * @return the first non parentheses node or <code>null</code> if no such node
      *         exists.
      *
-     * @throws NullPointerException if <code>lparen == null</code>
-     * @throws IllegalArgumentException if <code>lparen.getType() !=
+     * @throws NullPointerException if <code><em>lparen</em> == null</code>
+     * @throws IllegalArgumentException if <code><em>lparen</em>.getType() !=
      *         JavaTokenTypes.LPAREN</code>
      */
     public static AST advanceToFirstNonParen(AST lparen)
@@ -487,7 +487,7 @@ SEARCH:
             throw new IllegalArgumentException(lparen + " no LPAREN");
         }
 
-LOOP: 
+LOOP:
         for (AST next = lparen.getNextSibling(); next != null;
             next = next.getNextSibling())
         {

@@ -7,9 +7,7 @@
 package de.hunsicker.jalopy.language;
 
 /**
- * A class that wraps some application specific annotation data. This class can be used
- * to track the position information for things like debugger breakpoints, erroneous
- * lines, and so on.
+ * Represents a position in a Java Source file.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -33,18 +31,28 @@ public final class Position
 
     //~ Methods --------------------------------------------------------------------------
 
-
+    /**
+     * Returns the column information of this position.
+     * @return The column information of this position.
+     */
     public int getColumn()
     {
 
         return this.column;
         }
 
+    /**
+     * Returns the line information of this position.
+     * @return The line information of this position.
+     */
     public int getLine()
     {
         return this.line;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String toString()
     {
         return this.line + ":" + this.column;
