@@ -1,66 +1,39 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.ant;
-
-import de.hunsicker.io.FileFormat;
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.parser.ClassRepository;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.jalopy.storage.Loggers;
-import de.hunsicker.jalopy.storage.Convention;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import de.hunsicker.io.FileFormat;
+import de.hunsicker.jalopy.Jalopy;
+import de.hunsicker.jalopy.language.ClassRepository;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.jalopy.storage.Loggers;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
+
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
-import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -70,29 +43,33 @@ import org.apache.tools.ant.types.Reference;
 //import org.apache.tools.ant.types.selectors.FilenameSelector;
 
 /**
- * The Jalopy Ant Plug-in. Formats Java source files according to some user
- * configurable rules. For more information about the Jalopy Java Source Code
- * Formatter visit the official homepage: <a
- * href="http://jalopy.sf.net/">http://jalopy.sf.net/</a>
+ * The Jalopy Ant Plug-in. Formats Java source files according to some user configurable
+ * rules. For more information about the Jalopy Java Source Code Formatter visit the
+ * official homepage: <a href="http://jalopy.sf.net/">http://jalopy.sf.net/</a>
  *
- * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class AntPlugin
     extends Task
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** The .java file extension. */
-    private static final String EXT_JAVA = ".java";
+    private static final String EXT_JAVA = ".java" /* NOI18N */;
 
     /** Text to display if a run produced errors. */
-    private static final String FAIL_MSG = "Run failed, messages should have been provided.";
+    private static final String FAIL_MSG =
+        "Run failed, messages should have been provided." /* NOI18N */;
+    private static final ResourceBundle BUNDLE =
+        ResourceBundle.getBundle(
+            "de.hunsicker.jalopy.plugin.ant.Bundle" /* NOI18N */,
+            Convention.getInstance().getLocale());
 
     /** Did the user specified the &quot;history&quot; attribute? */
     private static final int HISTORY_UNSPECIFIED = -1;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Destination directory. */
     private File _destDir;
@@ -118,11 +95,11 @@ public class AntPlugin
     /** The history policy to apply. */
     private History.Policy _history;
 
-    /** Encoding to use. */
-    private String _encoding; // null means system default encoding
-
     /** File path of the convention to use. */
     private String _convention;
+
+    /** Encoding to use. */
+    private String _encoding; // null means system default encoding
 
     /** Should a backup of every file be kept? */
     private boolean _backup;
@@ -151,7 +128,7 @@ public class AntPlugin
     /** Number of processing threads. */
     private int _threads = 1;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new AntPlugin object.
@@ -160,13 +137,12 @@ public class AntPlugin
     {
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Sets whether a backup of an original file should be kept.
      *
-     * @param backup if <code>true</code> a backup of an original file will be
-     *        kept.
+     * @param backup if <code>true</code> a backup of an original file will be kept.
      */
     public void setBackup(boolean backup)
     {
@@ -190,8 +166,33 @@ public class AntPlugin
 
 
     /**
-     * Sets the destination directory into which the Java source files should
-     * be formatted.
+     * Sets the location of the code convention to use. This may either be an absolute
+     * path to both a local file or distributed url or a path relative to the base
+     * directory of the project.
+     *
+     * @param location absolute or relative path to load style convention from.
+     *
+     * @since 0.5.5
+     */
+    public void setConvention(String location)
+    {
+        File file = new File(location);
+
+        // if the given path does not exist, the user may have specified
+        // a path relative to the basedir
+        if (!file.exists())
+        {
+            File basedir = getProject().getBaseDir();
+            _convention = basedir.getAbsolutePath() + File.separator + location;
+        }
+
+        _convention = location;
+    }
+
+
+    /**
+     * Sets the destination directory into which the Java source files should be
+     * formatted.
      *
      * @param destDir destination directory.
      *
@@ -217,11 +218,10 @@ public class AntPlugin
 
 
     /**
-     * Sets whether an error will immediately cancel the run. Default is
-     * <em>false</em>.
+     * Sets whether an error will immediately cancel the run. Default is <em>false</em>.
      *
-     * @param fail if <code>true</code> an error will lead to an immediate
-     *        cancelation of the run.
+     * @param fail if <code>true</code> an error will lead to an immediate cancelation of
+     *        the run.
      */
     public void setFailOnError(boolean fail)
     {
@@ -242,7 +242,10 @@ public class AntPlugin
     {
         if (!file.exists())
         {
-            throw new IllegalArgumentException(file + " does not exist");
+            Object[] args = { file };
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    BUNDLE.getString("FILE_NOT_EXIST" /* NOI18N */), args));
         }
 
         _file = file;
@@ -262,34 +265,42 @@ public class AntPlugin
     {
         String format = fileFormat.trim().toLowerCase();
 
-        if (format.equals("dos") ||
-            format.equals(FileFormat.DOS.getLineSeparator()))
+        if (
+            format.equals("dos" /* NOI18N */)
+            || format.equals(FileFormat.DOS.getLineSeparator()))
         {
             _fileFormat = FileFormat.DOS;
         }
-        else if (format.equals("default") ||
-                 format.equals(FileFormat.DEFAULT.toString()))
+        else if (
+            format.equals("default" /* NOI18N */)
+            || format.equals(FileFormat.DEFAULT.toString()))
         {
             _fileFormat = FileFormat.DEFAULT;
         }
-        else if (format.equals("unix") ||
-                 format.equals(FileFormat.UNIX.getLineSeparator()))
+        else if (
+            format.equals("unix" /* NOI18N */)
+            || format.equals(FileFormat.UNIX.getLineSeparator()))
         {
             _fileFormat = FileFormat.UNIX;
         }
-        else if (format.equals("mac") ||
-                 format.equals(FileFormat.MAC.getLineSeparator()))
+        else if (
+            format.equals("mac" /* NOI18N */)
+            || format.equals(FileFormat.MAC.getLineSeparator()))
         {
             _fileFormat = FileFormat.MAC;
         }
-        else if (format.equals("auto") ||
-                 format.equals(FileFormat.AUTO.toString()))
+        else if (
+            format.equals("auto" /* NOI18N */)
+            || format.equals(FileFormat.AUTO.toString()))
         {
             _fileFormat = FileFormat.AUTO;
         }
         else
         {
-            throw new IllegalArgumentException("invalid file format specified");
+            Object[] args = { fileFormat };
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    BUNDLE.getString("INVALID_FILE_FORMAT" /* NOI18N */), args));
         }
     }
 
@@ -311,9 +322,9 @@ public class AntPlugin
     /**
      * Sets the fork attribute.
      *
-     * @param fork if <code>true</code> the task will be executed in a new
-     *        process.
-     * @since 1.0b8
+     * @param fork if <code>true</code> the task will be executed in a new process.
+     *
+     * @since 0.5.3
      */
     public void setFork(boolean fork)
     {
@@ -324,32 +335,33 @@ public class AntPlugin
     /**
      * Sets the history policy to use.
      *
-     * @param policy Either <ul><li><code>COMMENT</code> or</li>
-     *        <li><code>FILE</code> or</li> <li><code>NONE</code></li> </ul>
+     * @param policy Either <ul><li><code>COMMENT</code> or</li> <li><code>FILE</code>
+     *        or</li> <li><code>NONE</code></li> </ul>
      *
-     * @throws IllegalArgumentException if an invalid history policy is
-     *         specified.
+     * @throws IllegalArgumentException if an invalid history policy is specified.
      */
     public void setHistory(String policy)
     {
         policy = policy.trim().toLowerCase();
 
-        if ("comment".equals(policy))
+        if (policy.equals("comment" /* NOI18N */))
         {
             _history = History.Policy.COMMENT;
         }
-        else if ("file".equals(policy))
+        else if (policy.equals("file" /* NOI18N */))
         {
             _history = History.Policy.FILE;
         }
-        else if ("none".equals(policy))
+        else if (policy.equals("none" /* NOI18N */))
         {
             _history = History.Policy.DISABLED;
         }
         else
         {
-            throw new IllegalArgumentException("invalid history policy -- " +
-                                               policy);
+            Object[] args = { policy };
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    BUNDLE.getString("INVALID_HISTORY_POLICY" /* NOI18N */), args));
         }
     }
 
@@ -357,12 +369,12 @@ public class AntPlugin
     /**
      * Sets whether Javadoc related messages should be displayed. Default is
      * <em>true</em>.
-     *
+     * 
      * <p>
-     * Note that setting this switch to <code>false</code> means that
-     * <strong>no</strong> Javadoc related messages will be displayed no
-     * matter what ever happens! Even if formatting failed due to Javadoc
-     * parsing errors, there will be no output indicating this fact.
+     * Note that setting this switch to <code>false</code> means that <strong>no</strong>
+     * Javadoc related messages will be displayed no matter what ever happens! Even if
+     * formatting failed due to Javadoc parsing errors, there will be no output
+     * indicating this fact.
      * </p>
      *
      * @param javadoc if <code>true</code> Javadoc messages will be displayed.
@@ -375,11 +387,8 @@ public class AntPlugin
 
     /**
      * Sets the level to control logging output. The valid levels are
-     *
+     * 
      * <ul>
-     * <li>
-     * FATAL
-     * </li>
      * <li>
      * ERROR
      * </li>
@@ -393,54 +402,56 @@ public class AntPlugin
      * DEBUG
      * </li>
      * </ul>
-     *
-     * being <code>FATAL</code> the highest level and <code>DEBUG</code> the
-     * lowest level.
-     *
+     * 
+     * being <code>ERROR</code> the highest level and <code>DEBUG</code> the lowest
+     * level.
+     * 
      * <p>
-     * Enabling logging at a given level also enables logging at all higher
-     * levels.
+     * Enabling logging at a given level also enables logging at all higher levels.
      * </p>
      *
      * @param level the logging level to use.
      *
-     * @throws IllegalArgumentException if an invalid logging level has been
-     *         specified.
+     * @throws IllegalArgumentException if an invalid logging level has been specified.
      */
     public void setLoglevel(String level)
     {
         level = level.trim().toUpperCase();
 
-        if ("INFO".equals(level))
+        if (level.equals("INFO" /* NOI18N */))
         {
             _loglevel = Level.INFO;
         }
-        else if ("DEBUG".equals(level))
+        else if (level.equals("DEBUG" /* NOI18N */))
         {
             _loglevel = Level.DEBUG;
         }
-        else if ("WARN".equals(level))
+        else if (level.equals("WARN" /* NOI18N */))
         {
             _loglevel = Level.WARN;
         }
-        else if ("ERROR".equals(level))
+        else if (level.equals("ERROR" /* NOI18N */))
         {
             _loglevel = Level.ERROR;
         }
         else
         {
+            Object[] args = { level };
+
             throw new IllegalArgumentException(
-                  "invalid loglevel specified -- " + level);
+                MessageFormat.format(
+                    BUNDLE.getString("INVALID_LOGLEVEL" /* NOI18N */), args));
         }
     }
 
+
     /**
-     * Sets the location of the code convention to use. This may either be an absolute path to
-     * both a local file or distributed url or a path relative to the base
+     * Sets the location of the code convention to use. This may either be an absolute
+     * path to both a local file or distributed url or a path relative to the base
      * directory of the project.
      *
-     * @param location absolute or relative path to load style convention
-     *        from.
+     * @param location absolute or relative path to load style convention from.
+     *
      * @deprecated
      */
     public void setStyle(String location)
@@ -450,37 +461,12 @@ public class AntPlugin
 
 
     /**
-     * Sets the location of the code convention to use. This may either be an absolute path to
-     * both a local file or distributed url or a path relative to the base
-     * directory of the project.
-     *
-     * @param location absolute or relative path to load style convention
-     *        from.
-     * @since 1.0b9
-     */
-    public void setConvention(String location)
-    {
-        File file = new File(location);
-
-        // if the given path does not exist, the user may have specified
-        // a path relative to the basedir
-        if (!file.exists())
-        {
-            File basedir = getProject().getBaseDir();
-            _convention = basedir.getAbsolutePath() + File.separator + location;
-        }
-
-        _convention = location;
-    }
-
-
-    /**
      * Sets the number of processing threads to use.
      *
      * @param threads the thread count to use. A number between 1 and 8.
      *
-     * @throws IllegalArgumentException if <code>threads &lt; 1</code> or
-     *         <code>threads &gt; 8</code>
+     * @throws IllegalArgumentException if <code>threads &lt; 1</code> or <code>threads
+     *         &gt; 8</code>
      */
     public void setThreads(String threads)
     {
@@ -492,14 +478,20 @@ public class AntPlugin
 
             if ((_threads < 1) || (_threads > 8))
             {
-                throw new IllegalArgumentException("invalid thread count -- " +
-                                                   number);
+                Object[] args = { threads };
+
+                throw new IllegalArgumentException(
+                    MessageFormat.format(
+                        BUNDLE.getString("INVALID_TREAD_COUNT" /* NOI18N */), args));
             }
         }
         catch (NumberFormatException ex)
         {
-            throw new IllegalArgumentException("invalid thread count -- " +
-                                               number);
+            Object[] args = { threads };
+
+            throw new IllegalArgumentException(
+                MessageFormat.format(
+                    BUNDLE.getString("INVALID_TREAD_COUNT" /* NOI18N */), args));
         }
 
         _isThreads = true;
@@ -523,28 +515,31 @@ public class AntPlugin
      * @throws BuildException if someting goes wrong with the build.
      */
     public void execute()
-        throws BuildException
+      throws BuildException
     {
         if (_fork)
         {
-            if (System.getProperty("de.hunsicker.jalopy.plugin.ant.forked",
-                                   "false").equals("false"))
+            if (
+                System.getProperty(
+                    "de.hunsicker.jalopy.plugin.ant.forked" /* NOI18N */,
+                    "false" /* NOI18N */).equals("false" /* NOI18N */))
             {
                 try
                 {
                     CommandlineJava cmd = new CommandlineJava();
-                    cmd.createArgument()
-                       .setValue("-Dde.hunsicker.jalopy.plugin.ant.forked=true");
-                    cmd.createArgument().setValue("-classpath");
-                    cmd.createArgument()
-                       .setValue(System.getProperty("java.class.path"));
-                    cmd.createArgument().setValue("org.apache.tools.ant.Main");
-                    cmd.createArgument().setValue("-logger");
-                    cmd.createArgument()
-                       .setValue("org.apache.tools.ant.NoBannerLogger");
-                    cmd.createArgument().setValue("-f");
-                    cmd.createArgument()
-                       .setValue(this.project.getProperty("ant.file"));
+                    cmd.createArgument().setValue(
+                        "-Dde.hunsicker.jalopy.plugin.ant.forked=true" /* NOI18N */);
+                    cmd.createArgument().setValue("-classpath" /* NOI18N */);
+                    cmd.createArgument().setValue(
+                        System.getProperty("java.class.path" /* NOI18N */));
+                    cmd.createArgument().setValue(
+                        "org.apache.tools.ant.Main" /* NOI18N */);
+                    cmd.createArgument().setValue("-logger" /* NOI18N */);
+                    cmd.createArgument().setValue(
+                        "org.apache.tools.ant.NoBannerLogger" /* NOI18N */);
+                    cmd.createArgument().setValue("-f" /* NOI18N */);
+                    cmd.createArgument().setValue(
+                        this.project.getProperty("ant.file" /* NOI18N */));
                     cmd.createArgument().setValue(getOwningTarget().getName());
 
                     Execute exe = new Execute();
@@ -571,8 +566,7 @@ public class AntPlugin
         {
             if (_filesets.size() == 0)
             {
-                throw new BuildException(
-                      "Specify at least one source - a file or a fileset.");
+                throw new BuildException(BUNDLE.getString("MISSING_SOURCE" /* NOI18N */));
             }
         }
         else
@@ -582,16 +576,20 @@ public class AntPlugin
                 if (_file.isDirectory())
                 {
                     throw new BuildException(
-                          "Use a fileset to format directories.");
+                        BUNDLE.getString("USE_FILESET_FOR_DIRECTORIES" /* NOI18N */));
                 }
             }
             else
             {
-                throw new BuildException("File does not exist -- " + _file);
+                Object[] args = { _file };
+
+                throw new BuildException(
+                    MessageFormat.format(
+                        BUNDLE.getString("FILE_NOT_EXIST" /* NOI18N */), args));
             }
         }
 
-        log("Jalopy Java Source Code Formatter " + Jalopy.getVersion());
+        log("Jalopy Java Source Code Formatter " /* NOI18N */ + Jalopy.getVersion());
 
         // init the log4j logging facility
         AntAppender appender = new AntAppender();
@@ -612,9 +610,9 @@ public class AntPlugin
 
         if (!_isThreads)
         {
-            _threads = Convention.getInstance()
-                                  .getInt(Keys.THREAD_COUNT,
-                                          Defaults.THREAD_COUNT);
+            _threads =
+                Convention.getInstance().getInt(
+                    ConventionKeys.THREAD_COUNT, ConventionDefaults.THREAD_COUNT);
         }
 
         if (_threads == 1)
@@ -634,7 +632,7 @@ public class AntPlugin
      * @throws BuildException if the initialization failed.
      */
     public void init()
-        throws BuildException
+      throws BuildException
     {
         _filesets = new ArrayList(4);
     }
@@ -645,14 +643,13 @@ public class AntPlugin
      *
      * @param threads list with the worker threads.
      *
-     * @return <code>true</code> if either one of the given threads is still
-     *         running.
+     * @return <code>true</code> if either one of the given threads is still running.
      */
     private boolean isRunning(List threads)
     {
         for (int i = 0, size = threads.size(); i < size; i++)
         {
-            FormatThread thread = (FormatThread)threads.get(i);
+            FormatThread thread = (FormatThread) threads.get(i);
 
             if (thread.running)
             {
@@ -692,7 +689,8 @@ public class AntPlugin
         Convention settings = Convention.getInstance();
         jalopy.setEncoding(_encoding);
         jalopy.setFileFormat(_fileFormat);
-        jalopy.setInspect(settings.getBoolean(Keys.INSPECTOR, Defaults.INSPECTOR));
+        jalopy.setInspect(
+            settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
 
         if (_destDir != null)
         {
@@ -705,9 +703,10 @@ public class AntPlugin
         }
         else
         {
-            History.Policy historyPolicy = History.Policy.valueOf(settings.get(
-                                                                        Keys.HISTORY_POLICY,
-                                                                        Defaults.HISTORY_POLICY));
+            History.Policy historyPolicy =
+                History.Policy.valueOf(
+                    settings.get(
+                        ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
             jalopy.setHistoryPolicy(historyPolicy);
         }
 
@@ -718,7 +717,8 @@ public class AntPlugin
         else
         {
             jalopy.setBackup(
-                  settings.getInt(Keys.BACKUP_LEVEL, Defaults.BACKUP_LEVEL) > 0);
+                settings.getInt(
+                    ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL) > 0);
         }
 
         if (_isForce)
@@ -727,8 +727,9 @@ public class AntPlugin
         }
         else
         {
-            jalopy.setForce(settings.getBoolean(Keys.FORCE_FORMATTING,
-                                             Defaults.FORCE_FORMATTING));
+            jalopy.setForce(
+                settings.getBoolean(
+                    ConventionKeys.FORCE_FORMATTING, ConventionDefaults.FORCE_FORMATTING));
         }
 
         return jalopy;
@@ -745,8 +746,8 @@ public class AntPlugin
         List files = new ArrayList(200);
 
         /**
-         * @todo if we ever start relying on Ant 1.5 we can add a selector and
-         *       won't have to add a Java include pattern anymore
+         * @todo if we ever start relying on Ant 1.5 we can add a selector and won't have
+         *       to add a Java include pattern anymore
          */
 
         // FilenameSelector selector = new FilenameSelector();
@@ -754,7 +755,7 @@ public class AntPlugin
         // build the list with all files that are to be processed
         for (int i = 0, size = _filesets.size(); i < size; i++)
         {
-            FileSet fs = (FileSet)_filesets.get(i);
+            FileSet fs = (FileSet) _filesets.get(i);
 
             //fs.addFilename(selector);
             DirectoryScanner scanner = fs.getDirectoryScanner(this.project);
@@ -772,9 +773,7 @@ public class AntPlugin
             files.add(_file);
         }
 
-        log("Formatting " + files.size() + " source files " +
-            ((_destDir == null) ? ""
-                                : ("to " + _destDir)), Project.MSG_INFO);
+        logStart(files.size());
 
         int numThreads = _threads;
 
@@ -785,12 +784,16 @@ public class AntPlugin
 
         List threads = new ArrayList(numThreads);
 
+        Jalopy jalopy = null;
+
         // start the worker threads
         for (int j = 0; j < numThreads; j++)
         {
-            Thread thread = new FormatThread(files);
+            FormatThread thread = new FormatThread(files);
             threads.add(thread);
             thread.start();
+
+            jalopy = thread.jalopy;
         }
 
         try
@@ -810,7 +813,7 @@ public class AntPlugin
             // check for errors
             for (int i = 0, size = threads.size(); i < size; i++)
             {
-                FormatThread thread = (FormatThread)threads.get(i);
+                FormatThread thread = (FormatThread) threads.get(i);
                 count += thread.count;
 
                 if (!error)
@@ -819,9 +822,12 @@ public class AntPlugin
                 }
             }
 
-            log(count + " source files formatted " +
-                ((_destDir == null) ? ""
-                                    : ("to " + _destDir)), Project.MSG_INFO);
+            logEnd(count);
+
+            if (jalopy != null)
+            {
+                jalopy.cleanupBackupDirectory();
+            }
 
             if (error)
             {
@@ -860,8 +866,11 @@ public class AntPlugin
 
                     if (_failOnError)
                     {
-                        throw new BuildException("Error formatting " +
-                                                 _file);
+                        Object[] args = { _file };
+
+                        throw new BuildException(
+                            MessageFormat.format(
+                                BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
                     }
                 }
             }
@@ -876,8 +885,8 @@ public class AntPlugin
         try
         {
             /**
-             * @todo if we ever start relying on Ant 1.5 we can add a selector
-             *       and won't have to add a Java include pattern anymore
+             * @todo if we ever start relying on Ant 1.5 we can add a selector and won't
+             *       have to add a Java include pattern anymore
              */
 
             // FilenameSelector selector = new FilenameSelector();
@@ -885,16 +894,14 @@ public class AntPlugin
             // format filesets
             for (int i = 0, size = _filesets.size(); i < size; i++)
             {
-                FileSet fs = (FileSet)_filesets.get(i);
+                FileSet fs = (FileSet) _filesets.get(i);
 
                 //fs.addFilename(selector);
                 DirectoryScanner scanner = fs.getDirectoryScanner(this.project);
                 File fromDir = fs.getDir(this.project);
                 String[] srcFiles = scanner.getIncludedFiles();
-                log("Formatting " + srcFiles.length + " source files " +
-                    ((_destDir == null) ? ("in " + fromDir)
-                                        : ("to " + _destDir)),
-                    Project.MSG_INFO);
+
+                logStart(srcFiles.length);
 
                 int count = 0;
 
@@ -911,8 +918,11 @@ public class AntPlugin
 
                         if (_failOnError)
                         {
-                            throw new BuildException("Error formatting " +
-                                                     file);
+                            Object[] args = { _file };
+
+                            throw new BuildException(
+                                MessageFormat.format(
+                                    BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
                         }
                     }
                     else
@@ -921,21 +931,24 @@ public class AntPlugin
                     }
                 }
 
-                log(count + " source files formatted " +
-                    ((_destDir == null) ? ("in " + fromDir)
-                                        : ("to " + _destDir)),
-                    Project.MSG_INFO);
+                logEnd(count);
             }
 
             if (error)
             {
                 throw new BuildException(FAIL_MSG);
             }
+
+            jalopy.cleanupBackupDirectory();
         }
         catch (FileNotFoundException ex)
         {
             // should never happen as the DirectoryScanner reports only
             // existent files
+            throw new BuildException(ex);
+        }
+        catch (Throwable ex)
+        {
             throw new BuildException(ex);
         }
     }
@@ -948,9 +961,10 @@ public class AntPlugin
      * @param appender appender to add to the logger.
      * @param level level to set for the logger.
      */
-    private void initLogger(Logger   logger,
-                            Appender appender,
-                            Level    level)
+    private void initLogger(
+        Logger   logger,
+        Appender appender,
+        Level    level)
     {
         Object currentAppender = logger.getAppender(AntAppender.APPENDER_NAME);
 
@@ -968,14 +982,18 @@ public class AntPlugin
      * @param appender appender to add to all loggers.
      * @param level level to use for logging output.
      */
-    private void initLoggers(Appender appender,
-                             Level    level)
+    private void initLoggers(
+        Appender appender,
+        Level    level)
     {
         Loggers.ALL.removeAllAppenders();
 
-        ResourceBundle bundle = ResourceBundle.getBundle(
-                                      "de.hunsicker.jalopy.Bundle");
+        ResourceBundle bundle =
+            ResourceBundle.getBundle(
+                "de.hunsicker.jalopy.storage.Bundle" /* NOI18N */,
+                Convention.getInstance().getLocale());
         Loggers.ALL.setResourceBundle(bundle);
+
         initLogger(Loggers.IO, appender, level);
         initLogger(Loggers.PARSER, appender, level);
         initLogger(Loggers.PRINTER, appender, level);
@@ -1004,14 +1022,15 @@ public class AntPlugin
         }
 
         ClassRepository repository = ClassRepository.getInstance();
-        File javaRuntime = new File(System.getProperty("java.home") +
-                                    File.separator + "lib" + File.separator +
-                                    "rt.jar");
+
+        File javaRuntime =
+            new File(
+                System.getProperty("java.home" /* NOI18N */) + File.separator
+                + "lib" /* NOI18N */ + File.separator + "rt.jar" /* NOI18N */    );
 
         if (!javaRuntime.exists())
         {
-            log("Could not find the Java runtime library (rt.jar), import optimization feature will be disabled.",
-                Project.MSG_WARN);
+            log(BUNDLE.getString("RUNTIME_NOT_FOUND" /* NOI18N */), Project.MSG_WARN);
 
             return;
         }
@@ -1030,9 +1049,8 @@ public class AntPlugin
         }
         catch (Throwable ex)
         {
-            log("Could not load the import repository, import otimization feature will be disabled.",
-                Project.MSG_WARN);
-            ex.printStackTrace();
+            log(
+                BUNDLE.getString("REPOSITORY_NOT_LOADED" /* NOI18N */), Project.MSG_WARN);
 
             // make sure the repository is empty so that import optimization
             // will be disabled
@@ -1044,15 +1062,74 @@ public class AntPlugin
                 }
                 catch (Throwable e)
                 {
-                    log("Error cleaning up repository", Project.MSG_ERR);
+                    log(
+                        BUNDLE.getString("REPOSITORY_CLEANUP" /* NOI18N */),
+                        Project.MSG_ERR);
                 }
             }
-
-            System.err.println(repository.isEmpty());
         }
     }
 
-    //~ Inner Classes ·························································
+
+    /**
+     * Logs a message upon the process end.
+     *
+     * @param files the number of files that were formatted.
+     *
+     * @since 0.5.5
+     */
+    private void logEnd(int files)
+    {
+        if (_destDir == null)
+        {
+            Object[] args = { new Integer(files) };
+
+            log(
+                MessageFormat.format(
+                    BUNDLE.getString("FORMATTED_FILES" /* NOI18N */), args),
+                Project.MSG_INFO);
+        }
+        else
+        {
+            Object[] args = { new Integer(files), _destDir };
+
+            log(
+                MessageFormat.format(
+                    BUNDLE.getString("FORMATTED_FILES_DESTINATION" /* NOI18N */), args),
+                Project.MSG_INFO);
+        }
+    }
+
+
+    /**
+     * Logs a message upon the process start.
+     *
+     * @param files the number of files that are to be formatted.
+     *
+     * @since 0.5.5
+     */
+    private void logStart(int files)
+    {
+        if (_destDir == null)
+        {
+            Object[] args = { new Integer(files) };
+
+            log(
+                MessageFormat.format(
+                    BUNDLE.getString("FORMAT_FILES" /* NOI18N */), args), Project.MSG_INFO);
+        }
+        else
+        {
+            Object[] args = { new Integer(files), _destDir };
+
+            log(
+                MessageFormat.format(
+                    BUNDLE.getString("FORMAT_FILES_DESTINATION" /* NOI18N */), args),
+                Project.MSG_INFO);
+        }
+    }
+
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Handles all message output.
@@ -1060,7 +1137,7 @@ public class AntPlugin
     private class AntAppender
         extends AppenderSkeleton
     {
-        static final String APPENDER_NAME = "JalopyAntAppender";
+        static final String APPENDER_NAME = "JalopyAntAppender" /* NOI18N */;
 
         public AntAppender()
         {
@@ -1120,36 +1197,6 @@ public class AntPlugin
     }
 
 
-    private static class ForkLogger
-        extends DefaultLogger
-    {
-        /*public void buildStarted(BuildEvent event) {
-        }
-        public void buildFinished(BuildEvent event) {
-        }
-
-        public void targetStarted(BuildEvent event) {
-        }
-
-        public void targetFinished(BuildEvent event) {
-        }
-
-        public void taskStarted(BuildEvent event) {}
-        public void taskFinished(BuildEvent event) {}*/
-        /*public void messageLogged(BuildEvent event) {
-
-            PrintStream logTo = event.getPriority() == Project.MSG_ERR ? err : out;
-
-            // Filter out messages based on priority
-            if (event.getPriority() <= msgOutputLevel) {
-
-                // Print the message
-                logTo.println(event.getMessage());
-            }
-        }*/
-    }
-
-
     /**
      * Dedicated thread to be used on multi-processor machines.
      */
@@ -1175,6 +1222,7 @@ public class AntPlugin
         {
             this.files = files;
             this.jalopy = createJalopy();
+            this.running = true;
         }
 
         public void run()
@@ -1191,7 +1239,7 @@ public class AntPlugin
                     {
                         if (!this.files.isEmpty())
                         {
-                            file = (File)this.files.remove(0);
+                            file = (File) this.files.remove(0);
                         }
                         else
                         {
@@ -1220,8 +1268,11 @@ public class AntPlugin
 
                         if (_failOnError)
                         {
-                            throw new BuildException("Error formatting " +
-                                                     file);
+                            Object[] args = { _file };
+
+                            throw new BuildException(
+                                MessageFormat.format(
+                                    BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
                         }
                     }
                     else

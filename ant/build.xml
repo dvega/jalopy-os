@@ -7,11 +7,11 @@
 Module              : ant
 Module-Dependencies : build, main
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -23,7 +23,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
   <!-- load the global properties -->
   <property file="../build/build.properties" />
-  
+
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
   <property name="dir.src.res" value="${dir.src}/resources" />
@@ -59,10 +59,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <attribute name="Class-Path" value="jalopy-${BUILD.VERSION}.jar jdom-${LIB.VERSION.JDOM}.jar log4j-${LIB.VERSION.LOG4J}.jar oro-${LIB.VERSION.ORO}.jar" />
         <section name="de/hunsicker/jalopy/plugin/ant/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.ANT}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION.ANT}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.ant" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION.ANT}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.ANT}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -85,7 +85,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
            verbose="${BUILD.VERBOSE}"
            fork="true" >
       <classpath refid="project.classpath" />
-      <src path="${dir.src.java}" />      
+      <src path="${dir.src.java}" />
     </javac>
   </target>
 
@@ -115,6 +115,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="ant-init"
           depends="ant-check-modules" >
+    <native2ascii
+        src="${dir.src.java}"
+        dest="${DIR.COMPILE}"
+        includes="**/Bundle*.properties" />
   </target>
 
 
@@ -127,10 +131,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <!-- now we know module 'build' exists so we can use its targets -->
     <ant dir="../build" target="build-check-main" inheritAll="false" />
-    
+
     <!-- build the runtime .jar if necessary -->
     <ant dir="../main" target="main-jar" inheritAll="false" />
-    
+
     <property name="ant.check.modules" value="true" />
   </target>
 
@@ -157,13 +161,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="*" />
         <include name="de/hunsicker/io/*" />
         <include name="de/hunsicker/jalopy/*" />
-        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/language/*" />
         <include name="de/hunsicker/jalopy/plugin/*" />
         <include name="de/hunsicker/jalopy/prefs/*" />
         <include name="de/hunsicker/jalopy/printer/*" />
-        <include name="de/hunsicker/jalopy/ui/*" />
-        <include name="de/hunsicker/ui/*" />
-        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/jalopy/swing/*" />
+        <include name="de/hunsicker/swing/*" />
+        <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
         <include name="de/hunsicker/jalopy/plugin/ant/*" />
