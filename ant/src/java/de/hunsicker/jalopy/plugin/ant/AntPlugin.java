@@ -956,7 +956,8 @@ public class AntPlugin
                     File file = new File(fromDir, srcFiles[j]);
                     jalopy.setInput(file);
                     jalopy.setOutput(file);
-                    jalopy.format();
+
+                    boolean success = jalopy.format();
 
                     if (jalopy.getState() == Jalopy.State.ERROR)
                     {
@@ -971,7 +972,7 @@ public class AntPlugin
                                     BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
                         }
                     }
-                    else
+                    else if (success)
                     {
                         count++;
                     }
@@ -1305,7 +1306,8 @@ public class AntPlugin
                     }
 
                     this.jalopy.setOutput(file);
-                    this.jalopy.format();
+
+                    boolean success = this.jalopy.format();
 
                     if (jalopy.getState() == Jalopy.State.ERROR)
                     {
@@ -1320,7 +1322,7 @@ public class AntPlugin
                                     BUNDLE.getString("UNKNOWN_ERROR" /* NOI18N */), args));
                         }
                     }
-                    else
+                    else if (success)
                     {
                         this.count++;
                     }

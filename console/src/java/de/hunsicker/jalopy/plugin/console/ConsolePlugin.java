@@ -704,7 +704,8 @@ public final class ConsolePlugin
                     source = _scanner.take();
                     jalopy.setInput(source);
                     jalopy.setOutput(source);
-                    jalopy.format();
+
+                    boolean success = jalopy.format();
 
                     if (jalopy.getState() == Jalopy.State.ERROR)
                     {
@@ -714,7 +715,10 @@ public final class ConsolePlugin
                         System.exit(1);
                     }
 
-                    _numFiles++;
+                    if (success)
+                    {
+                        _numFiles++;
+                    }
                 }
                 catch (IOException ex)
                 {
