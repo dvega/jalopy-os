@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -168,7 +168,8 @@ public final class JavaNodeModifier
     /**
      * Returns the modifier mask of the given modifiers node.
      *
-     * @param modifiers MODIFIERS node.
+     * @param modifiers MODIFIERS node or one of the valid nodes representing modifiers
+     *        (e.g. LITERAL_public, LITERAL_synchronized etc.).
      *
      * @return modifier mask of the given modifiers.
      *
@@ -177,14 +178,56 @@ public final class JavaNodeModifier
      */
     public static int valueOf(AST modifiers)
     {
-        if (modifiers.getType() != JavaTokenTypes.MODIFIERS)
+        switch (modifiers.getType())
         {
-            modifiers = NodeHelper.getFirstChild(modifiers, JavaTokenTypes.MODIFIERS);
+            case JavaTokenTypes.MODIFIERS :
+                break;
 
-            if ((modifiers == null) || (modifiers.getType() != JavaTokenTypes.MODIFIERS))
-            {
-                throw new IllegalArgumentException(modifiers + " is no MODIFIERS type");
-            }
+            case JavaTokenTypes.LITERAL_public :
+                return Modifier.PUBLIC;
+
+            case JavaTokenTypes.LITERAL_protected :
+                return Modifier.PROTECTED;
+
+            case JavaTokenTypes.LITERAL_private :
+                return Modifier.PRIVATE;
+
+            case JavaTokenTypes.LITERAL_static :
+                return Modifier.STATIC;
+
+            case JavaTokenTypes.ABSTRACT :
+                return Modifier.ABSTRACT;
+
+            case JavaTokenTypes.FINAL :
+                return Modifier.FINAL;
+
+            case JavaTokenTypes.LITERAL_native :
+                return Modifier.NATIVE;
+
+            case JavaTokenTypes.LITERAL_transient :
+                return Modifier.TRANSIENT;
+
+            case JavaTokenTypes.LITERAL_synchronized :
+                return Modifier.SYNCHRONIZED;
+
+            case JavaTokenTypes.STRICTFP :
+                return Modifier.STRICT;
+
+            case JavaTokenTypes.LITERAL_volatile :
+                return Modifier.VOLATILE;
+
+            default :
+                modifiers = NodeHelper.getFirstChild(modifiers, JavaTokenTypes.MODIFIERS);
+
+                if (
+                    (modifiers == null)
+                    || (modifiers.getType() != JavaTokenTypes.MODIFIERS))
+                {
+                    throw new IllegalArgumentException(
+                        "no valid modidifier -- " + modifiers);
+                }
+
+                break;
         }
 
         int mod = 0;

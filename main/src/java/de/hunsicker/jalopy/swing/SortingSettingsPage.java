@@ -16,12 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
@@ -127,7 +127,7 @@ public class SortingSettingsPage
             buf.append(DELIMETER);
         }
 
-        // remove the last comma
+        // remove the last delimeter
         buf.deleteCharAt(buf.length() - 1);
 
         return buf.toString();
@@ -350,7 +350,8 @@ public class SortingSettingsPage
         StringTokenizer tokens =
             new StringTokenizer(
                 this.settings.get(
-                    ConventionKeys.SORT_ORDER_MODIFIERS, ModifierType.getOrder()), DELIMETER);
+                    ConventionKeys.SORT_ORDER_MODIFIERS, ModifierType.getOrder()),
+                DELIMETER);
         Object[][] data = new Object[11][1];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)

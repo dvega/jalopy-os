@@ -1,293 +1,387 @@
 <jalopy>
+    <general>
+        <compliance>
+            <version>14</version>
+        </compliance>
+        <style>
+            <description>Jalopy code convention with BSD header</description>
+            <name>jal-bsd</name>
+        </style>
+    </general>
     <inspector>
-        <tips>
-            <stringLiterallI18n>true</stringLiterallI18n>
-            <neverDeclareException>false</neverDeclareException>
-            <replaceStructureWithClass>false</replaceStructureWithClass>
-            <neverDeclareThrowable>false</neverDeclareThrowable>
-            <wrongCollectionComment>false</wrongCollectionComment>
-            <declareCollectionComment>false</declareCollectionComment>
-            <referToObjectsByInterface>false</referToObjectsByInterface>
-            <useInterfaceOnlyForTypes>false</useInterfaceOnlyForTypes>
-            <overrideToString>false</overrideToString>
-            <alwaysOverrideEquals>false</alwaysOverrideEquals>
-            <dontIgnoreExceptions>false</dontIgnoreExceptions>
-            <neverReturnZeroArrays>false</neverReturnZeroArrays>
-            <alwaysOverrideHashCode>false</alwaysOverrideHashCode>
-            <neverUseEmptyFinally>false</neverUseEmptyFinally>
-            <avoidThreadGroups>false</avoidThreadGroups>
-            <dontSubstituteObjectEquals>false</dontSubstituteObjectEquals>
-            <neverInvokeWaitOutsideLoop>false</neverInvokeWaitOutsideLoop>
-            <obeyContractEquals>false</obeyContractEquals>
-        </tips>
+        <enable>true</enable>
         <naming>
+            <classes>
+                <abstract>[A-Z][a-zA-Z0-9]+</abstract>
+                <general>[A-Z][a-zA-Z0-9]+</general>
+            </classes>
+            <fields>
+                <default>[a-z][\w]+</default>
+                <defaultStatic>[a-z][\w]+</defaultStatic>
+                <defaultStaticFinal>[a-zA-Z][\w]+</defaultStaticFinal>
+                <private>[a-z][\w]+</private>
+                <privateStatic>[a-z][\w]+</privateStatic>
+                <privateStaticFinal>[a-zA-Z][\w]+</privateStaticFinal>
+                <protected>[a-z][\w]+</protected>
+                <protectedStatic>[a-z][\w]+</protectedStatic>
+                <protectedStaticFinal>[a-zA-Z][\w]+</protectedStaticFinal>
+                <public>[a-z][\w]+</public>
+                <publicStatic>[a-z][\w]+</publicStatic>
+                <publicStaticFinal>[a-zA-Z][\w]+</publicStaticFinal>
+            </fields>
+            <interfaces>[A-Z][a-zA-Z0-9]+</interfaces>
+            <labels>[\w]+</labels>
+            <methods>
+                <default>[a-z][\w]+</default>
+                <defaultStatic>[a-z][\w]+</defaultStatic>
+                <defaultStaticFinal>[a-z][\w]+</defaultStaticFinal>
+                <private>[a-z][\w]+</private>
+                <privateStatic>[a-z][\w]+</privateStatic>
+                <privateStaticFinal>[a-z][\w]+</privateStaticFinal>
+                <protected>[a-z][\w]+</protected>
+                <protectedStatic>[a-z][\w]+</protectedStatic>
+                <protectedStaticFinal>[a-z][\w]+</protectedStaticFinal>
+                <public>[a-z][\w]+</public>
+                <publicStatic>[a-z][\w]+</publicStatic>
+                <publicStaticFinal>[a-z][\w]+</publicStaticFinal>
+            </methods>
             <packages>[a-z]+(?:\.[a-z]+)*</packages>
-            <classes>[A-Z][a-zA-Z0-9]*</classes>
-            <fieldPrivateStaticFinal>[a-zA-Z][\w]*</fieldPrivateStaticFinal>
-            <fieldPrivate>[a-z][\w]*</fieldPrivate>
-            <fieldPrivateStatic>[a-z][\w]*</fieldPrivateStatic>
-            <fieldPublicStatic>[a-z][\w]*</fieldPublicStatic>
-            <fieldPublic>[a-z][\w]*</fieldPublic>
-            <fieldPublicStaticFinal>[a-zA-Z][\w]*</fieldPublicStaticFinal>
-            <fieldProtectedStatic>[a-z][\w]*</fieldProtectedStatic>
-            <label>[a-zA-Z0-9_]+</label>
-            <fieldFriendlyStaticFinal>[a-zA-Z][\w]*</fieldFriendlyStaticFinal>
-            <fieldProtected>[a-z][\w]*</fieldProtected>
-            <fieldFriendlyStatic>[a-z][\w]*</fieldFriendlyStatic>
-            <fieldFriendly>[a-z][\w]*</fieldFriendly>
-            <fieldProtectedStaticFinal>[a-zA-Z][\w]*</fieldProtectedStaticFinal>
-            <interfaces>[A-Z][a-zA-Z0-9]*</interfaces>
-            <abstractClasses>[A-Z][a-zA-Z0-9]*</abstractClasses>
+            <parameters>
+                <default>[a-z][\w]+</default>
+                <final>[a-z][\w]+</final>
+            </parameters>
+            <variables>[a-z][\w]*</variables>
         </naming>
-        <enable>false</enable>
+        <tips>
+            <adhereToNamingConvention>true</adhereToNamingConvention>
+            <alwaysOverrideEquals>false</alwaysOverrideEquals>
+            <alwaysOverrideHashCode>false</alwaysOverrideHashCode>
+            <avoidThreadGroups>false</avoidThreadGroups>
+            <declareCollectionComment>false</declareCollectionComment>
+            <dontIgnoreExceptions>false</dontIgnoreExceptions>
+            <dontSubstituteObjectEquals>false</dontSubstituteObjectEquals>
+            <neverDeclareException>false</neverDeclareException>
+            <neverDeclareThrowable>false</neverDeclareThrowable>
+            <neverInvokeWaitOutsideLoop>false</neverInvokeWaitOutsideLoop>
+            <neverReturnZeroArrays>false</neverReturnZeroArrays>
+            <neverUseEmptyFinally>false</neverUseEmptyFinally>
+            <obeyContractEquals>false</obeyContractEquals>
+            <overrideToString>false</overrideToString>
+            <referToObjectsByInterface>false</referToObjectsByInterface>
+            <replaceStructureWithClass>false</replaceStructureWithClass>
+            <stringLiterallI18n>true</stringLiterallI18n>
+            <useInterfaceOnlyForTypes>false</useInterfaceOnlyForTypes>
+            <wrongCollectionComment>false</wrongCollectionComment>
+        </tips>
     </inspector>
+    <internal>
+        <version>6</version>
+    </internal>
+    <messages>
+        <priority>
+            <general>20000</general>
+            <parser>30000</parser>
+            <parserJavadoc>30000</parserJavadoc>
+            <printer>30000</printer>
+            <printerJavadoc>30000</printerJavadoc>
+            <transform>30000</transform>
+        </priority>
+        <showErrorStackTrace>true</showErrorStackTrace>
+    </messages>
+    <misc>
+        <threadCount>1</threadCount>
+    </misc>
     <printer>
-        <whitespace>
-            <paddingLogicalOperators>true</paddingLogicalOperators>
-            <padddingBraces>true</padddingBraces>
-            <beforeStatementParenthesis>true</beforeStatementParenthesis>
-            <padddingParenthesis>false</padddingParenthesis>
-            <beforeBraces>true</beforeBraces>
-            <paddingShiftOperators>true</paddingShiftOperators>
-            <beforeMethodCallParenthesis>false</beforeMethodCallParenthesis>
-            <beforeLogicalNot>false</beforeLogicalNot>
-            <beforeBracketsTypes>false</beforeBracketsTypes>
-            <paddingMathematicalOperators>true</paddingMathematicalOperators>
-            <afterComma>true</afterComma>
-            <afterCastingParenthesis>true</afterCastingParenthesis>
-            <paddingBitwiseOperators>true</paddingBitwiseOperators>
-            <padddingTypeCast>false</padddingTypeCast>
-            <beforeCaseColon>true</beforeCaseColon>
-            <beforeBrackets>false</beforeBrackets>
-            <padddingBrackets>false</padddingBrackets>
-            <paddingRelationalOperators>true</paddingRelationalOperators>
-            <paddingAssignmentOperators>true</paddingAssignmentOperators>
-            <beforeMethodDeclarationParenthesis>false</beforeMethodDeclarationParenthesis>
-            <afterSemiColon>true</afterSemiColon>
-        </whitespace>
-        <wrapping>
-            <beforeRightParen>false</beforeRightParen>
-            <paramsMethodDef>true</paramsMethodDef>
-            <beforeOperator>true</beforeOperator>
-            <afterImplementsTypesIfExceeded>false</afterImplementsTypesIfExceeded>
-            <use>true</use>
-            <afterExtendsTypes>false</afterExtendsTypes>
-            <parenGrouping>false</parenGrouping>
-            <arrayElements>0</arrayElements>
-            <beforeExtends>true</beforeExtends>
-            <ifFirst>false</ifFirst>
-            <afterLabel>true</afterLabel>
-            <paramsMethodCall>false</paramsMethodCall>
-            <afterExtendsTypesIfExceeded>false</afterExtendsTypesIfExceeded>
-            <afterThrowsTypes>false</afterThrowsTypes>
-            <beforeImplements>true</beforeImplements>
-            <afterThrowsTypesIfExceeded>false</afterThrowsTypesIfExceeded>
-            <afterLeftParen>true</afterLeftParen>
-            <beforeThrows>true</beforeThrows>
-            <afterImplementsTypes>false</afterImplementsTypes>
-            <paramsMethodCallIfCall>false</paramsMethodCallIfCall>
-            <afterChainedMethodCall>false</afterChainedMethodCall>
-            <afterAssign>true</afterAssign>
-            <lineLength>90</lineLength>
-        </wrapping>
-        <blankLines>
-            <afterClass>2</afterClass>
-            <beforeBraceRight>0</beforeBraceRight>
-            <beforeFooter>0</beforeFooter>
-            <afterInterface>2</afterInterface>
-            <beforeDeclaration>1</beforeDeclaration>
-            <beforeCommentMultiLine>1</beforeCommentMultiLine>
-            <afterDeclaration>0</afterDeclaration>
-            <afterPackage>1</afterPackage>
-            <afterBlock>1</afterBlock>
-            <afterFooter>0</afterFooter>
-            <beforeControl>1</beforeControl>
-            <beforeHeader>0</beforeHeader>
+        <alignment>
+            <methodCallChain>true</methodCallChain>
+            <parameterMethodDeclaration>true</parameterMethodDeclaration>
+            <ternaryOperator>true</ternaryOperator>
+            <variableAssignment>false</variableAssignment>
+            <variableIdentifier>false</variableIdentifier>
+        </alignment>
+        <backup>
+            <directory>bak</directory>
+            <level>0</level>
+        </backup>
+        <blanklines>
+            <after>
+                <block>1</block>
+                <braceLeft>0</braceLeft>
+                <class>2</class>
+                <declaration>0</declaration>
+                <footer>0</footer>
+                <header>0</header>
+                <interface>2</interface>
+                <lastImport>2</lastImport>
+                <method>2</method>
+                <package>1</package>
+            </after>
+            <before>
+                <block>1</block>
+                <braceRight>0</braceRight>
+                <caseBlock>1</caseBlock>
+                <comment>
+                    <javadoc>1</javadoc>
+                    <multiline>1</multiline>
+                    <singleline>0</singleline>
+                </comment>
+                <controlStatement>1</controlStatement>
+                <declaration>1</declaration>
+                <footer>0</footer>
+                <header>0</header>
+            </before>
             <keepUpTo>1</keepUpTo>
-            <afterMethod>2</afterMethod>
-            <beforeCaseBlock>1</beforeCaseBlock>
-            <beforeJavadoc>1</beforeJavadoc>
-            <beforeBlock>1</beforeBlock>
-            <afterBraceLeft>0</afterBraceLeft>
-            <beforeCommentSingleLine>0</beforeCommentSingleLine>
-            <afterLastImport>2</afterLastImport>
-            <afterHeader>0</afterHeader>
-        </blankLines>
-        <indentation>
-            <leading>0</leading>
-            <continationIfTernary>true</continationIfTernary>
-            <braceCuddled>1</braceCuddled>
-            <label>false</label>
-            <general>4</general>
-            <firstColumnComments>false</firstColumnComments>
-            <tabs>
-                <size>4</size>
-                <use>false</use>
-                <useOnlyLeading>false</useOnlyLeading>
-            </tabs>
-            <extends>-1</extends>
-            <caseFromSwitch>true</caseFromSwitch>
-            <braceLeft>0</braceLeft>
-            <continuation>4</continuation>
-            <continationOperator>false</continationOperator>
-            <deep>60</deep>
-            <parameter>-1</parameter>
-            <braceRight>0</braceRight>
-            <throws>2</throws>
-            <commentEndline>1</commentEndline>
-            <useMethodCallParams>false</useMethodCallParams>
-            <braceRightAfter>0</braceRightAfter>
-            <policyDeep>false</policyDeep>
-            <implements>-1</implements>
-            <continationIf>false</continationIf>
-        </indentation>
-        <sorting>
-            <class>true</class>
-            <modifiers>
-                <use>true</use>
-            </modifiers>
-            <method>true</method>
-            <constructor>true</constructor>
-            <use>true</use>
-            <order>Static Variables/Initializers,Instance Variables,Instance Initializers,Constructors,Methods,Interfaces,Classes</order>
-            <interface>true</interface>
-            <variable>true</variable>
-            <orderModifiers>public,protected,private,abstract,static,final,synchronized,transient,volatile,native,strictfp</orderModifiers>
-        </sorting>
+        </blanklines>
+        <braces>
+            <empty>
+                <cuddle>false</cuddle>
+                <insertStatement>true</insertStatement>
+            </empty>
+            <insert>
+                <dowhile>true</dowhile>
+                <for>true</for>
+                <ifelse>true</ifelse>
+                <while>true</while>
+            </insert>
+            <remove>
+                <block>true</block>
+                <dowhile>false</dowhile>
+                <for>false</for>
+                <ifelse>false</ifelse>
+                <while>false</while>
+            </remove>
+            <treatDifferent>
+                <methodClass>false</methodClass>
+                <methodClassIfWrapped>false</methodClassIfWrapped>
+            </treatDifferent>
+        </braces>
+        <chunks>
+            <blanklines>true</blanklines>
+            <comments>true</comments>
+        </chunks>
         <comments>
-            <separator>
-                <interface>Inner Interfaces</interface>
-                <instanceInit>Instance initializers</instanceInit>
-                <instanceVariable>Instance variables</instanceVariable>
-                <fillCharacter>-</fillCharacter>
-                <staticVariableInit>Static variables/initializers</staticVariableInit>
-                <ctor>Constructors</ctor>
-                <method>Methods</method>
-                <class>Inner Classes</class>
-            </separator>
-            <insertSeparator>true</insertSeparator>
+            <format>
+                <multiline>false</multiline>
+            </format>
             <javadoc>
-                <addCtor>5</addCtor>
-                <templates>
-                    <methods>
-                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
-                        <top>/**| * DOCUMENT ME!</top>
-                        <bottom> */</bottom>
-                        <return> * @return DOCUMENT ME!</return>
-                        <param> * @param $paramType$ DOCUMENT ME!</param>
-                    </methods>
-                    <interface>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</interface>
-                    <constructors>
-                        <param> * @param $paramType$ DOCUMENT ME!</param>
-                        <bottom> */</bottom>
-                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
-                        <top>/**| * Creates a new $objectType$ object.</top>
-                    </constructors>
-                    <classes>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</classes>
-                    <variables>/** DOCUMENT ME! */</variables>
-                </templates>
-                <tags>
-                    <standard />
-                    <in-line />
-                </tags>
-                <remove>false</remove>
-                <addMethod>5</addMethod>
-                <addClass>5</addClass>
-                <checkTags>true</checkTags>
-                <checkThrowsTags>true</checkThrowsTags>
-                <addField>5</addField>
+                <check>
+                    <innerclass>false</innerclass>
+                    <tags>true</tags>
+                    <throwsTags>true</throwsTags>
+                </check>
                 <fieldsShort>true</fieldsShort>
+                <generate>
+                    <class>5</class>
+                    <constructor>5</constructor>
+                    <field>5</field>
+                    <method>5</method>
+                </generate>
                 <parseComments>true</parseComments>
-                <checkInnerClass>false</checkInnerClass>
+                <tags>
+                    <in-line />
+                    <standard />
+                </tags>
+                <templates>
+                    <class>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</class>
+                    <constructor>
+                        <bottom> */</bottom>
+                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
+                        <param> * @param $paramType$ DOCUMENT ME!</param>
+                        <top>/**| * Creates a new $objectType$ object.</top>
+                    </constructor>
+                    <interface>/**| * DOCUMENT ME!| *| * @author $author$| * @version $Revision$| */</interface>
+                    <method>
+                        <bottom> */</bottom>
+                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
+                        <param> * @param $paramType$ DOCUMENT ME!</param>
+                        <return> * @return DOCUMENT ME!</return>
+                        <top>/**| * DOCUMENT ME!</top>
+                    </method>
+                    <variable>/** DOCUMENT ME! */</variable>
+                </templates>
             </javadoc>
-            <removeSingleLine>false</removeSingleLine>
-            <formatMultiLine>false</formatMultiLine>
-            <removeMultiLine>false</removeMultiLine>
-            <insertSeparatorRecursive>false</insertSeparatorRecursive>
+            <remove>
+                <javadoc>false</javadoc>
+                <multiline>false</multiline>
+                <singleline>false</singleline>
+            </remove>
+            <separator>
+                <fillCharacter>-</fillCharacter>
+                <insert>true</insert>
+                <insertRecursive>false</insertRecursive>
+                <text>
+                    <class>Inner Classes</class>
+                    <constructor>Constructors</constructor>
+                    <field>Instance variables</field>
+                    <initializer>Instance initializers</initializer>
+                    <interface>Inner Interfaces</interface>
+                    <method>Methods</method>
+                    <static>Static variables/initializers</static>
+                </text>
+            </separator>
         </comments>
+        <environment />
         <footer>
             <keys />
+            <smartMode>0</smartMode>
             <text />
             <use>false</use>
-            <smartModeLines>0</smartModeLines>
         </footer>
-        <braces>
-            <treatMethodClassDifferent>false</treatMethodClassDifferent>
-            <treatMethodClassDifferentIfWrapped>false</treatMethodClassDifferentIfWrapped>
-            <insertBracesWhile>true</insertBracesWhile>
-            <removeBracesWhile>false</removeBracesWhile>
-            <insertBracesFor>true</insertBracesFor>
-            <insertBracesDoWhile>true</insertBracesDoWhile>
-            <emptyInsertStatement>true</emptyInsertStatement>
-            <rightBraceNewLine>true</rightBraceNewLine>
-            <removeBracesFor>false</removeBracesFor>
-            <removeBracesIfElse>false</removeBracesIfElse>
-            <removeBracesBlock>true</removeBracesBlock>
-            <removeBracesDoWhile>false</removeBracesDoWhile>
-            <insertBracesIfElse>true</insertBracesIfElse>
-            <emptyCuddle>false</emptyCuddle>
-            <leftBraceNewLine>true</leftBraceNewLine>
-        </braces>
         <header>
-            <smartModeLines>0</smartModeLines>
-            <use>true</use>
             <keys>Marco Hunsicker|Jalopy Java Source Code Formatter|Sun Public License Notice|Common Public License|THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</keys>
+            <smartMode>0</smartMode>
             <text>/*| * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.| *| * This software is distributable under the BSD license. See the terms of the| * BSD license in the documentation provided with this software.| */</text>
+            <use>true</use>
         </header>
-        <chunks>
-            <byBlankLines>true</byBlankLines>
-            <byComments>true</byComments>
-        </chunks>
-        <alignment>
-            <methodCallChains>true</methodCallChains>
-            <varIdents>false</varIdents>
-            <ParamsMethodDef>true</ParamsMethodDef>
-            <varAssigns>false</varAssigns>
-            <ternaryOperator>true</ternaryOperator>
-            <ternaryExpresssion>false</ternaryExpresssion>
-            <ternaryValue>true</ternaryValue>
-        </alignment>
-        <misc>
-            <insertTrailingNewline>true</insertTrailingNewline>
-            <arrayBracketsAfterIdent>false</arrayBracketsAfterIdent>
-        </misc>
-        <environment />
         <history>
-            <policy>History.Policy [disabled]</policy>
+            <method>adler32</method>
+            <policy>file</policy>
         </history>
-    </printer>
-    <transform>
-        <misc>
-            <insertLoggingConditional>false</insertLoggingConditional>
-            <insertUID>false</insertUID>
-            <insertExpressionParenthesis>true</insertExpressionParenthesis>
-        </misc>
-        <import>
-            <policy>ImportPolicy [expand]</policy>
-            <grouping>*:1|java:1|javax:1|com.borland:2|de.hunsicker:2|gnu:2|org.apache:3|org.eclipse:2|org.netbeans:2|org.openide:2|oracle:1</grouping>
-            <groupingDepth>3</groupingDepth>
+        <imports>
+            <grouping>
+                <defaultDepth>3</defaultDepth>
+                <packages>*:1|java:1|javax:1|com.borland:2|de.hunsicker:2|gnu:2|org.apache:3|org.eclipse:2|org.netbeans:2|org.openide:2|oracle:1</packages>
+            </grouping>
+            <policy>expand</policy>
             <sort>true</sort>
-        </import>
-    </transform>
-    <messages>
-        <transformMsgPrio>10000</transformMsgPrio>
-        <printerMsgPrio>30000</printerMsgPrio>
-        <parserJavadocMsgPrio>30000</parserJavadocMsgPrio>
-        <parserMsgPrio>30000</parserMsgPrio>
-        <printerJavadocMsgPrio>30000</printerJavadocMsgPrio>
-        <showErrorStackTrace>true</showErrorStackTrace>
-        <ioMsgPrio>10000</ioMsgPrio>
-    </messages>
-    <general>
-        <styleDescription>Jalopy code convention with BSD header</styleDescription>
-        <backupDirectory>bak</backupDirectory>
-        <styleName>jal-bsd</styleName>
-        <sourceVersion>14</sourceVersion>
-        <threadCount>1</threadCount>
-        <backupLevel>0</backupLevel>
-        <forceFormatting>true</forceFormatting>
-    </general>
-    <internal>
-        <version>5</version>
-    </internal>
+        </imports>
+        <indentation>
+            <caseFromSwitch>true</caseFromSwitch>
+            <continuation>
+                <block>false</block>
+                <operator>false</operator>
+            </continuation>
+            <firstColumnComments>false</firstColumnComments>
+            <label>false</label>
+            <policy>
+                <deep>false</deep>
+            </policy>
+            <sizes>
+                <braceCuddled>1</braceCuddled>
+                <braceLeft>0</braceLeft>
+                <braceRight>0</braceRight>
+                <braceRightAfter>0</braceRightAfter>
+                <continuation>4</continuation>
+                <deep>60</deep>
+                <extends>-1</extends>
+                <general>4</general>
+                <implements>-1</implements>
+                <leading>0</leading>
+                <tabs>4</tabs>
+                <throws>2</throws>
+                <trailingComment>1</trailingComment>
+            </sizes>
+            <tabs>
+                <enable>false</enable>
+                <onlyLeading>false</onlyLeading>
+            </tabs>
+        </indentation>
+        <misc>
+            <arrayBracketsAfterIdent>false</arrayBracketsAfterIdent>
+            <forceFormatting>false</forceFormatting>
+            <insertExpressionParentheses>true</insertExpressionParentheses>
+            <insertLoggingConditional>false</insertLoggingConditional>
+            <insertTrailingNewline>true</insertTrailingNewline>
+            <insertUID>false</insertUID>
+        </misc>
+        <sorting>
+            <declaration>
+                <class>true</class>
+                <constructor>true</constructor>
+                <enable>true</enable>
+                <interface>true</interface>
+                <method>true</method>
+                <order>static|field|initializer|constructor|method|interface|class</order>
+                <variable>true</variable>
+            </declaration>
+            <modifier>
+                <enable>true</enable>
+                <order>public|protected|private|abstract|static|final|synchronized|transient|volatile|native|strictfp</order>
+            </modifier>
+        </sorting>
+        <whitespace>
+            <after>
+                <comma>true</comma>
+                <semicolon>true</semicolon>
+                <typeCast>true</typeCast>
+            </after>
+            <before>
+                <braces>true</braces>
+                <brackets>false</brackets>
+                <bracketsTypes>false</bracketsTypes>
+                <caseColon>true</caseColon>
+                <operator>
+                    <not>false</not>
+                </operator>
+                <parentheses>
+                    <methodCall>false</methodCall>
+                    <methodDeclaration>false</methodDeclaration>
+                    <statement>true</statement>
+                </parentheses>
+            </before>
+            <padding>
+                <braces>true</braces>
+                <brackets>false</brackets>
+                <operator>
+                    <assignment>true</assignment>
+                    <bitwise>true</bitwise>
+                    <logical>true</logical>
+                    <mathematical>true</mathematical>
+                    <relational>true</relational>
+                    <shift>true</shift>
+                </operator>
+                <parenthesis>false</parenthesis>
+                <typeCast>false</typeCast>
+            </padding>
+        </whitespace>
+        <wrapping>
+            <always>
+                <after>
+                    <arrayElement>0</arrayElement>
+                    <braceRight>true</braceRight>
+                    <extendsTypes>false</extendsTypes>
+                    <implementsTypes>false</implementsTypes>
+                    <label>true</label>
+                    <methodCallChained>false</methodCallChained>
+                    <ternaryOperator>
+                        <first>false</first>
+                        <second>true</second>
+                    </ternaryOperator>
+                    <throwsTypes>false</throwsTypes>
+                </after>
+                <before>
+                    <braceLeft>true</braceLeft>
+                    <extends>true</extends>
+                    <implements>true</implements>
+                    <throws>true</throws>
+                </before>
+                <parameter>
+                    <methodCall>false</methodCall>
+                    <methodCallNested>false</methodCallNested>
+                    <methodDeclaration>true</methodDeclaration>
+                </parameter>
+            </always>
+            <general>
+                <beforeOperator>true</beforeOperator>
+                <enable>true</enable>
+                <lineLength>90</lineLength>
+            </general>
+            <ondemand>
+                <after>
+                    <assignment>true</assignment>
+                    <leftParenthesis>true</leftParenthesis>
+                    <parameter>false</parameter>
+                    <types>
+                        <extends>false</extends>
+                        <implements>false</implements>
+                        <throws>false</throws>
+                    </types>
+                </after>
+                <before>
+                    <rightParenthesis>false</rightParenthesis>
+                </before>
+                <groupingParentheses>false</groupingParentheses>
+            </ondemand>
+        </wrapping>
+    </printer>
 </jalopy>

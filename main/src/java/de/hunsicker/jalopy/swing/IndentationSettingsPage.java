@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -65,7 +65,6 @@ public class IndentationSettingsPage
     private JComboBox _indentComboBox;
     private JComboBox _indentExtendsComboBox;
     private JComboBox _indentImplementsComboBox;
-    private JComboBox _indentParametersComboBox;
     private JComboBox _indentThrowsComboBox;
     private JComboBox _leadingIndentComboBox;
     private JComboBox _tabSizeComboBox;
@@ -116,10 +115,6 @@ public class IndentationSettingsPage
      */
     public void updateSettings()
     {
-        /*this.settings.putBoolean(ConventionKeys.INDENT_CONTINUATION_IF_TERNARY,
-                              _indentContinuationTernaryCheckBox.isSelected());*/
-        /*this.settings.putBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
-                              _indentMethodCallCheckBox.isSelected());*/
         this.settings.put(
             ConventionKeys.INDENT_SIZE, (String) _indentComboBox.getSelectedItem());
         this.settings.put(
@@ -136,7 +131,7 @@ public class IndentationSettingsPage
         this.settings.putBoolean(
             ConventionKeys.INDENT_LABEL, _indentLabelsCheckBox.isSelected());
         this.settings.putBoolean(
-            ConventionKeys.INDENT_CONTINUATION_IF,
+            ConventionKeys.INDENT_CONTINUATION_BLOCK,
             _indentContinuationCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.INDENT_FIRST_COLUMN_COMMENT,
@@ -199,16 +194,6 @@ public class IndentationSettingsPage
         {
             this.settings.put(ConventionKeys.INDENT_SIZE_THROWS, NONE);
         }
-
-        /*if (_indentParametersCheckBox.isSelected())
-        {
-            this.settings.put(ConventionKeys.INDENT_SIZE_PARAMETERS,
-                           (String)_indentParametersComboBox.getSelectedItem());
-        }
-        else
-        {
-            this.settings.put(ConventionKeys.INDENT_SIZE_PARAMETERS, NONE);
-        }*/
     }
 
 
@@ -387,8 +372,8 @@ public class IndentationSettingsPage
                 ConventionKeys.INDENT_SIZE_THROWS, ConventionDefaults.INDENT_SIZE_THROWS);
         NumberComboBoxPanelCheckBox indentThrowsComboCheckBox =
             new NumberComboBoxPanelCheckBox(
-                this.bundle.getString("CHK_THROWS_INDENT" /* NOI18N */),
-                indentThrows > -1, EMPTY_STRING, identItems,
+                this.bundle.getString("CHK_THROWS_INDENT" /* NOI18N */), indentThrows > -1,
+                EMPTY_STRING, identItems,
                 (indentThrows > -1) ? String.valueOf(indentThrows)
                                     : ZERO);
         _indentThrowsCheckBox = indentThrowsComboCheckBox.getCheckBox();
@@ -518,8 +503,8 @@ public class IndentationSettingsPage
             new JCheckBox(
                 this.bundle.getString("CHK_CONTINUATION_INDENT_BLOCKS" /* NOI18N */),
                 this.settings.getBoolean(
-                    ConventionKeys.INDENT_CONTINUATION_IF,
-                    ConventionDefaults.INDENT_CONTINUATION_IF));
+                    ConventionKeys.INDENT_CONTINUATION_BLOCK,
+                    ConventionDefaults.INDENT_CONTINUATION_BLOCK));
         _indentContinuationCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(
             c, 0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
@@ -540,26 +525,6 @@ public class IndentationSettingsPage
         continuationPanelLayout.setConstraints(_indentContinuationOperatorCheckBox, c);
         continuationPanel.add(_indentContinuationOperatorCheckBox);
 
-        /*_indentContinuationTernaryCheckBox = new JCheckBox("Continuation indent for ternary \"if-else\"",
-                                                           this.settings.getBoolean(
-                                                                                 ConventionKeys.INDENT_CONTINUATION_IF_TERNARY,
-                                                                                 ConventionDefaults.INDENT_CONTINUATION_IF_TERNARY));
-        _indentContinuationTernaryCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 4, GridBagConstraints.REMAINDER, 1,
-                                   1.0, 1.0, GridBagConstraints.WEST,
-                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        miscPanelLayout.setConstraints(_indentContinuationTernaryCheckBox, c);
-        miscPanel.add(_indentContinuationTernaryCheckBox);*/
-        /*_indentMethodCallCheckBox = new JCheckBox(
-            "Force indentation for parameters",
-            this.settings.getBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
-                                  ConventionDefaults.INDENT_USE_PARAMS_METHOD_CALL));
-        _indentMethodCallCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 5, GridBagConstraints.REMAINDER, 1,
-                                   1.0, 1.0, GridBagConstraints.WEST,
-                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        miscPanelLayout.setConstraints(_indentMethodCallCheckBox, c);
-        miscPanel.add(_indentMethodCallCheckBox);*/
         JPanel alignPanel = new JPanel();
         GridBagLayout alignPanelLayout = new GridBagLayout();
         alignPanel.setLayout(alignPanelLayout);
@@ -671,8 +636,7 @@ public class IndentationSettingsPage
         _tabbedPane = new JTabbedPane();
         _tabbedPane.add(
             createGeneralPane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
-        _tabbedPane.add(
-            createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
+        _tabbedPane.add(createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(_tabbedPane, BorderLayout.CENTER);

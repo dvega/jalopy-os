@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -30,7 +30,7 @@ import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * A component that can be used to display progress information to the user.
- *
+ * 
  * <p>
  * The panel displays the number of errors, warnings and processed files, along with a
  * short text message and an optional progress bar.
@@ -44,7 +44,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * |  |XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   |  |
  * +---------------------------------------------------------------&#043;
  * </pre>
- *
+ * 
  * <p>
  * The panel reflects the state of all logger channels as it increases its counters as
  * warnings or errors occurs.

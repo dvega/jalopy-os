@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -209,8 +209,8 @@ public class EnvironmentSettingsPage
         EnvironmentList envList = new EnvironmentList(EMPTY_STRING, null, variables);
         JScrollPane envListScrollPane = new JScrollPane(envList);
         SwingHelper.setConstraints(
-            c, 0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.BOTH, c.insets, 0, 0);
+            c, 0, 0, 1, 1, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+            c.insets, 0, 0);
         layout.setConstraints(envListScrollPane, c);
         panel.add(envListScrollPane);
 
@@ -235,8 +235,7 @@ public class EnvironmentSettingsPage
         panel.setLayout(layout);
 
         String variablesString =
-            this.settings.get(
-                ConventionKeys.ENVIRONMENT, ConventionDefaults.ENVIRONMENT);
+            this.settings.get(ConventionKeys.ENVIRONMENT, ConventionDefaults.ENVIRONMENT);
         List variables = Collections.EMPTY_LIST;
 
         if ((variablesString != null) && (!variablesString.trim().equals(EMPTY_STRING)))
@@ -244,8 +243,8 @@ public class EnvironmentSettingsPage
             variables = new ArrayList();
 
             for (
-                StringTokenizer tokens = new StringTokenizer(
-                        variablesString, DELIMETER); tokens.hasMoreElements();)
+                StringTokenizer tokens = new StringTokenizer(variablesString, DELIMETER);
+                tokens.hasMoreElements();)
             {
                 String v = tokens.nextToken();
                 int offset = v.indexOf(DELIM_PAIR);
@@ -387,8 +386,8 @@ public class EnvironmentSettingsPage
                 c.insets.right = 5;
                 SwingHelper.setConstraints(
                     c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                    c.insets, 0, 0);
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets,
+                    0, 0);
                 layout.setConstraints(variableLabel, c);
                 contentPane.add(variableLabel);
 
@@ -410,8 +409,8 @@ public class EnvironmentSettingsPage
                 c.insets.right = 5;
                 SwingHelper.setConstraints(
                     c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                    c.insets, 0, 0);
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets,
+                    0, 0);
                 layout.setConstraints(valueLabel, c);
                 contentPane.add(valueLabel);
 

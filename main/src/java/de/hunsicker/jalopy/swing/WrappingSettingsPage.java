@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -542,8 +542,7 @@ public class WrappingSettingsPage
             createItemList(new int[] { 50, 55, 60, 65, 70, 75 });
         ComboBoxPanel deepIndent =
             new NumberComboBoxPanel(
-                this.bundle.getString("CMB_DEEP_INDENT" /* NOI18N */),
-                deepIndentSizeItems,
+                this.bundle.getString("CMB_DEEP_INDENT" /* NOI18N */), deepIndentSizeItems,
                 this.settings.get(
                     ConventionKeys.INDENT_SIZE_DEEP,
                     String.valueOf(ConventionDefaults.INDENT_SIZE_DEEP)));
@@ -752,8 +751,7 @@ public class WrappingSettingsPage
             createGeneralPane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
         _tabbedPane.add(
             createAlwaysPane(), this.bundle.getString("TAB_ALWAYS" /* NOI18N */));
-        _tabbedPane.add(
-            createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
+        _tabbedPane.add(createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
 
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));

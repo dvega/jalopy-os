@@ -327,7 +327,7 @@ public class Recognizer
     /**
      * Indicates an unexpected error during the parsing of an input file or stream.
      */
-    public final static class ParseException
+    public static final class ParseException
         extends ChainingRuntimeException
     {
         /**

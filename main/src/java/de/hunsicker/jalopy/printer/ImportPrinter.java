@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -68,7 +68,7 @@ final class ImportPrinter
       throws IOException
     {
         printCommentsBefore(node, NodeWriter.NEWLINE_YES, out);
-        trackPosition((JavaNode)node, out);
+        trackPosition((JavaNode) node, out);
 
         out.print(IMPORT_SPACE, JavaTokenTypes.LITERAL_import);
 

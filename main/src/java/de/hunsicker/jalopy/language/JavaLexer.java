@@ -2669,9 +2669,7 @@ _loop305:
                                 }
 
                                 default :
-                                {
                                     ;
-                                }
                             }
 
                             break;
@@ -4831,9 +4829,7 @@ _loop254:
                 }
 
                 default :
-                {
                     ;
-                }
             }
 
             newline();
@@ -4928,9 +4924,7 @@ _loop260:
                 }
 
                 default :
-                {
                     ;
-                }
             }
 
             newline();

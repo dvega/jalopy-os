@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -43,7 +43,7 @@ import org.apache.log4j.PatternLayout;
  * The Jalopy settings dialog provides a graphical user interface to manage, display and
  * interactively test and edit the available code convention and asorted configuration
  * settings.
- *
+ * 
  * <p>
  * The dialog can be used from other Java applications as usual, in which case it acts
  * like any other JDialog (i.e. as a secondary window). But it may be also invoked

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -738,8 +738,7 @@ public class BracesSettingsPage
         _tabbedPane = new JTabbedPane();
         _tabbedPane.add(
             createStylePane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
-        _tabbedPane.add(
-            createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
+        _tabbedPane.add(createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(_tabbedPane, BorderLayout.CENTER);

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -328,7 +328,7 @@ final class References
                                     }
                                 }
 
-LOOP:
+LOOP: 
                                 for (int j = 0, size = references.size(); j < size;
                                     j++)
                                 {
@@ -467,7 +467,7 @@ LOOP:
             {
                 if ((scope.variables != null) && !scope.variables.isEmpty())
                 {
-LOOKUP:
+LOOKUP: 
                     for (Iterator i = this.references.entrySet().iterator(); i.hasNext();)
                     {
                         Map.Entry reference = (Map.Entry) i.next();

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -448,8 +448,8 @@ final class TernaryIfElsePrinter
         out.print(QUESTION, JavaTokenTypes.QUESTION);
 
         if (
-            !printCommentsAfter(
-                node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out) && !out.newline)
+            !printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out)
+            && !out.newline)
         {
             out.print(SPACE, JavaTokenTypes.COLON);
         }

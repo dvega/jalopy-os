@@ -160,8 +160,8 @@ final class ForPrinter
 
         out.continuation =
             this.settings.getBoolean(
-                ConventionKeys.INDENT_CONTINUATION_IF,
-                ConventionDefaults.INDENT_CONTINUATION_IF);
+                ConventionKeys.INDENT_CONTINUATION_BLOCK,
+                ConventionDefaults.INDENT_CONTINUATION_BLOCK);
 
         boolean secondWrap = false;
 

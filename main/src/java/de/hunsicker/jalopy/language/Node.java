@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -17,7 +17,7 @@ import java.lang.ClassCastException;
 //J+
 
 /**
- * An extended node. Stores information about the node's span.
+ * A node which stores information about its span.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -31,16 +31,16 @@ public class Node
     /** Node text. */
     protected String text;
 
-    /** Column number where the node ends. */
+    /** Column number where this node ends. */
     protected int endColumn;
 
-    /** Line number where the node ends. */
+    /** Line number where this node ends. */
     protected int endLine;
 
-    /** Column number where the node starts. */
+    /** Column number where this node starts. */
     protected int startColumn;
 
-    /** Line number where the node starts. */
+    /** Line number where this node starts. */
     protected int startLine;
 
     /** Node type. */
@@ -61,10 +61,10 @@ public class Node
      *
      * @param type node type
      * @param text node text.
-     * @param startLine line number where the node starts.
-     * @param startColumn column number where the node starts.
-     * @param endLine line number where the node ends.
-     * @param endColumn column number where the node ends.
+     * @param startLine line number where this node starts.
+     * @param startColumn column number where this node starts.
+     * @param endLine line number where this node ends.
+     * @param endColumn column number where this node ends.
      */
     public Node(
         int    type,
@@ -86,10 +86,10 @@ public class Node
     /**
      * Creates a new Node object.
      *
-     * @param startLine line number where the node starts.
-     * @param startColumn column number where the node starts.
-     * @param endLine line number where the node ends.
-     * @param endColumn column number where the node ends.
+     * @param startLine line number where this node starts.
+     * @param startColumn column number where this node starts.
+     * @param endLine line number where this node ends.
+     * @param endColumn column number where this node ends.
      */
     public Node(
         int startLine,
@@ -122,7 +122,7 @@ public class Node
     /**
      * Creates a new Node object from the given token.
      *
-     * @param tok token to initialize the node with.
+     * @param tok token to initialize this node with.
      */
     public Node(Token tok)
     {
@@ -154,9 +154,9 @@ public class Node
 
 
     /**
-     * Returns the column number where the node ends.
+     * Returns the column number where this node ends.
      *
-     * @return ending column number of the node.
+     * @return ending column number of this node.
      */
     public int getEndColumn()
     {
@@ -176,9 +176,9 @@ public class Node
 
 
     /**
-     * Returns the line number where the node ends.
+     * Returns the line number where this node ends.
      *
-     * @return ending line number of the node.
+     * @return ending line number of this node.
      */
     public int getEndLine()
     {
@@ -187,7 +187,7 @@ public class Node
 
 
     /**
-     * Sets the first hidden token that appears after the node.
+     * Sets the first hidden token that appears after this node.
      *
      * @param token a hidden token.
      */
@@ -198,7 +198,7 @@ public class Node
 
 
     /**
-     * Sets the first hidden token that appears before the node.
+     * Sets the first hidden token that appears before this node.
      *
      * @param token a hidden token.
      */
@@ -209,9 +209,9 @@ public class Node
 
 
     /**
-     * Indicates whether the node has location information set.
+     * Indicates whether this node has its location information set.
      *
-     * @return <code>true</code> if the node contains location information.
+     * @return <code>true</code> if this node has its location information set.
      */
     public boolean isPositionKnown()
     {
@@ -220,9 +220,9 @@ public class Node
 
 
     /**
-     * DOCUMENT ME!
+     * Sets the column where this node starts.
      *
-     * @param column DOCUMENT ME!
+     * @param column the column where this node starts.
      */
     public void setStartColumn(int column)
     {
@@ -231,9 +231,9 @@ public class Node
 
 
     /**
-     * Returns the column number where the node starts.
+     * Returns the column number where this node starts.
      *
-     * @return starting column number of the node.
+     * @return starting column number of this node.
      */
     public int getStartColumn()
     {
@@ -242,9 +242,9 @@ public class Node
 
 
     /**
-     * DOCUMENT ME!
+     * Sets the line where this node starts.
      *
-     * @param line DOCUMENT ME!
+     * @param line the line where this node starts.
      */
     public void setStartLine(int line)
     {
@@ -253,9 +253,9 @@ public class Node
 
 
     /**
-     * Returns the line number where the node starts.
+     * Returns the line number where this node starts.
      *
-     * @return starting line number of the node.
+     * @return starting line number of this node.
      */
     public int getStartLine()
     {
@@ -264,7 +264,7 @@ public class Node
 
 
     /**
-     * Sets the text of the node.
+     * Sets the text of this node.
      *
      * @param text text to set.
      */
@@ -277,7 +277,7 @@ public class Node
     /**
      * Get the token text for this node
      *
-     * @return the text of the node.
+     * @return the text of this node.
      */
     public String getText()
     {
@@ -286,7 +286,7 @@ public class Node
 
 
     /**
-     * Sets the type of the node.
+     * Sets the type of this node.
      *
      * @param type type to set.
      */
@@ -299,7 +299,7 @@ public class Node
     /**
      * Get the token type for this node
      *
-     * @return the type of the node.
+     * @return the type of this node.
      */
     public int getType()
     {
@@ -479,9 +479,9 @@ public class Node
 
 
     /**
-     * Initializes the node with information from the given node.
+     * Initializes this node with information from the given node.
      *
-     * @param node node to setup the node with.
+     * @param node node to setup this node with.
      */
     public void initialize(AST node)
     {
@@ -498,7 +498,7 @@ public class Node
 
 
     /**
-     * Initializes the node with the given information.
+     * Initializes this node with the given information.
      *
      * @param type type to set.
      * @param text text to set.
@@ -513,9 +513,9 @@ public class Node
 
 
     /**
-     * Initializes the node with information from the given token.
+     * Initializes this node with information from the given token.
      *
-     * @param tok token to setup the node with.
+     * @param tok token to setup this node with.
      */
     public void initialize(Token tok)
     {

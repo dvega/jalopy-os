@@ -281,9 +281,7 @@ public final class JavaParser
 
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * {@inheritDoc}
      */
     public AST getParseTree()
     {
@@ -6255,7 +6253,7 @@ _loop157:
 
 
     /**
-     * Resets the parser.
+     * {@inheritDoc}
      */
     public void reset()
     {

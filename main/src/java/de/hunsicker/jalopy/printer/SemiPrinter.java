@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -59,8 +59,7 @@ final class SemiPrinter
         boolean innerClass = (out.last == JavaTokenTypes.CLASS_DEF);
         out.print(SEMI, JavaTokenTypes.SEMI);
 
-        if (!printCommentsAfter(
-                node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
+        if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
         {
             out.printNewline();
         }

@@ -1,15 +1,15 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
 import javax.swing.JLabel;
 
 import de.hunsicker.util.ResourceBundleFactory;
-import java.text.MessageFormat;
+
 
 /**
  * A label which displays its label text along with an integer count.
@@ -26,8 +26,14 @@ class CountLabel
 
     //~ Instance variables ---------------------------------------------------------------
 
+    /** Used to construct the label text. */
+    private StringBuffer _buffer = new StringBuffer(20);
+
     /** The current count. */
     private int _count;
+
+    /** The index in the buffer where this counter's count number starts. */
+    private int _index;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -70,9 +76,6 @@ class CountLabel
         _buffer.append(getText());
     }
 
-    /** The index in the buffer where this counter's count number starts. */
-    private int _index;
-
     //~ Methods --------------------------------------------------------------------------
 
     /**
@@ -89,14 +92,20 @@ class CountLabel
         super.setText(_buffer.toString());
     }
 
-    /** Used to construct the label text.*/
-    private StringBuffer _buffer = new StringBuffer(20);
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @param text DOCUMENT ME!
+     */
     public final void setText(String text)
     {
         if (_index == 0)
+        {
             super.setText(text);
+        }
     }
+
 
     /**
      * Returns the current count.

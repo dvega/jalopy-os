@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -59,6 +59,7 @@ public class ModifierType
 
     /** The bit value for the strictfp modifier. */
     static final int STRICTFP_INT = 64;
+    private static final String DELIMETER = "|" /* NOI18N */;
 
     /** A string represenation of the current sort order. */
     private static String _sortOrder;
@@ -67,27 +68,32 @@ public class ModifierType
     private static List _order = new ArrayList(7); // List of <String>
 
     /** Represents the public modifier. */
-    public static final ModifierType PUBLIC = new ModifierType("public", PUBLIC_INT);
+    public static final ModifierType PUBLIC =
+        new ModifierType("public" /* NOI18N */, PUBLIC_INT);
 
     /** Represents the protected modifier. */
     public static final ModifierType PROTECTED =
         new ModifierType("protected", PROTECTED_INT);
 
     /** Represents the private modifier. */
-    public static final ModifierType PRIVATE = new ModifierType("private", PRIVATE_INT);
+    public static final ModifierType PRIVATE =
+        new ModifierType("private" /* NOI18N */, PRIVATE_INT);
 
     /** Represents the static modifier. */
-    public static final ModifierType STATIC = new ModifierType("static", STATIC_INT);
+    public static final ModifierType STATIC =
+        new ModifierType("static" /* NOI18N */, STATIC_INT);
 
     /** Represents the final modifier. */
-    public static final ModifierType FINAL = new ModifierType("final", FINAL_INT);
+    public static final ModifierType FINAL =
+        new ModifierType("final" /* NOI18N */, FINAL_INT);
 
     /** Represents the transient modifier. */
     public static final ModifierType TRANSIENT =
-        new ModifierType("transient", TRANSIENT_INT);
+        new ModifierType("transient" /* NOI18N */, TRANSIENT_INT);
 
     /** Represents the native modifier. */
-    public static final ModifierType NATIVE = new ModifierType("native", NATIVE_INT);
+    public static final ModifierType NATIVE =
+        new ModifierType("native" /* NOI18N */, NATIVE_INT);
 
     /** Represents the abstract modifier. */
     public static final ModifierType ABSTRACT =
@@ -95,15 +101,15 @@ public class ModifierType
 
     /** Represents the synchronized modifier. */
     public static final ModifierType SYNCHRONIZED =
-        new ModifierType("synchronized", SYNCHRONIZED_INT);
+        new ModifierType("synchronized" /* NOI18N */, SYNCHRONIZED_INT);
 
     /** Represents the volatile modifier. */
     public static final ModifierType VOLATILE =
-        new ModifierType("volatile", VOLATILE_INT);
+        new ModifierType("volatile" /* NOI18N */, VOLATILE_INT);
 
     /** Represents the strictfp modifier. */
     public static final ModifierType STRICTFP =
-        new ModifierType("strictfp", STRICTFP_INT);
+        new ModifierType("strictfp" /* NOI18N */, STRICTFP_INT);
 
     static
     {
@@ -124,7 +130,7 @@ public class ModifierType
         for (int i = 0, size = _order.size(); i < size; i++)
         {
             buf.append(((ModifierType) _order.get(i))._name);
-            buf.append(',');
+            buf.append(DELIMETER);
         }
 
         buf.setLength(buf.length() - 1);
@@ -184,7 +190,7 @@ public class ModifierType
             throw new IllegalArgumentException("order == " + str);
         }
 
-        StringTokenizer tokens = new StringTokenizer(str, ",");
+        StringTokenizer tokens = new StringTokenizer(str, DELIMETER);
         List temp = new ArrayList(_order.size());
         StringBuffer buf = new StringBuffer(50);
 
@@ -200,7 +206,7 @@ public class ModifierType
 
             temp.add(type);
             buf.append(type.toString());
-            buf.append(',');
+            buf.append(DELIMETER);
         }
 
         if (_order.size() != temp.size())

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.util;
 
@@ -788,8 +788,8 @@ WIDTHCHECK:
                                     if (prevStart > 0) // more than one line
                                     {
                                         lines.add(
-                                            workingSet[i].substring(
-                                                lineStart, prevStart).trim());
+                                            workingSet[i].substring(lineStart, prevStart)
+                                                         .trim());
                                         lines.add(
                                             workingSet[i].substring(prevStart).trim());
                                     }
@@ -806,8 +806,7 @@ WIDTHCHECK:
                                     if (prevStart > 0) // more than one line
                                     {
                                         lines.add(
-                                            workingSet[i].substring(
-                                                lineStart, prevStart));
+                                            workingSet[i].substring(lineStart, prevStart));
                                         lines.add(workingSet[i].substring(prevStart));
                                     }
                                     else

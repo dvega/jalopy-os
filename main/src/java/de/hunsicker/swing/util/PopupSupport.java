@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.swing.util;
 
@@ -29,10 +29,6 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.DefaultEditorKit;
@@ -63,20 +59,20 @@ public class PopupSupport
 
     //~ Instance variables ---------------------------------------------------------------
 
-    /** The copy action. */
-    private Action _copy;
+    /** The Copy action. */
+    private Action _copyAction;
 
-    /* The cut action. */
-    private Action _cut;
+    /* The Cut action. */
+    private Action _cutAction;
 
-    /** The delete action. */
-    private Action _delete;
+    /** The Delete action. */
+    private Action _deleteAction;
 
-    /** The paste action. */
-    private Action _paste;
+    /** The Paste action. */
+    private Action _pasteAction;
 
-    /** The select all action. */
-    private Action _selectAll;
+    /** The Select All action. */
+    private Action _selectAllAction;
 
     /** The focus event interceptor. */
     private FocusInterceptor _interceptor;
@@ -150,7 +146,7 @@ public class PopupSupport
         }
 
         _supported = new ArrayList(3);
-        _supported.add("javax." /* NOI18N */);
+        _supported.add("javax.swing." /* NOI18N */);
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -189,12 +185,12 @@ public class PopupSupport
             }
 
             _registeredComponents = null;
-            _copy = null;
-            _cut = null;
-            _selectAll = null;
-            _delete = null;
+            _copyAction = null;
+            _cutAction = null;
+            _selectAllAction = null;
+            _pasteAction = null;
+            _deleteAction = null;
             _menu = null;
-            _paste = null;
         }
     }
 
@@ -213,15 +209,13 @@ public class PopupSupport
 
         if (_registeredComponents == null)
         {
-            _registeredComponents = new ArrayList();
+            _registeredComponents = new ArrayList(10);
         }
 
         if (!_registeredComponents.contains(new ListenerSupport(component)))
         {
             ListenerSupport support =
-                new ListenerSupport(
-                    component, new MouseHandler(), new KeyHandler(), new CaretHandler(),
-                    new DocumentHandler());
+                new ListenerSupport(component, new MouseHandler(), new KeyHandler());
             _registeredComponents.add(support);
         }
         else
@@ -287,68 +281,72 @@ public class PopupSupport
 
                 if (value.equals(DefaultEditorKit.cutAction))
                 {
-                    _cut = actions[i];
-                    updateCopyCutAction(component);
+                    _cutAction = actions[i];
                 }
                 else if (value.equals(DefaultEditorKit.copyAction))
                 {
-                    _copy = actions[i];
-                    updateCopyCutAction(component);
+                    _copyAction = actions[i];
                 }
                 else if (value.equals(DefaultEditorKit.pasteAction))
                 {
-                    _paste = actions[i];
-                    updatePasteAction(component);
+                    _pasteAction = actions[i];
                 }
                 else if (value.equals(DefaultEditorKit.selectAllAction))
                 {
-                    _selectAll = actions[i];
-                    updateSelectAllAction(component.getDocument());
+                    _selectAllAction = actions[i];
                 }
             }
 
-            if (_cut != null)
+            if (_cutAction != null)
             {
-                JMenuItem item = new JMenuItem(_cut);
+                JMenuItem item = new JMenuItem(_cutAction);
                 item.setText(
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "MNU_CUT" /* NOI18N */));
                 _menu.add(item);
             }
 
-            if (_copy != null)
+            if (_copyAction != null)
             {
-                JMenuItem item = new JMenuItem(_copy);
+                JMenuItem item = new JMenuItem(_copyAction);
                 item.setText(
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "MNU_COPY" /* NOI18N */));
                 _menu.add(item);
             }
 
-            if (_paste != null)
+            if (_pasteAction != null)
             {
-                JMenuItem item = new JMenuItem(_paste);
+                JMenuItem item = new JMenuItem(_pasteAction);
                 item.setText(
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "MNU_PASTE" /* NOI18N */));
                 _menu.add(item);
             }
 
-            _delete = new DeleteAction();
-            updateDeleteAction(component);
-            _menu.add(_delete);
+            if (_deleteAction == null)
+            {
+                _deleteAction = new DeleteAction();
+            }
 
-            if (_selectAll != null)
+            _menu.add(_deleteAction);
+
+            if (_selectAllAction != null)
             {
                 _menu.add(new JPopupMenu.Separator());
 
-                JMenuItem item = new JMenuItem(_selectAll);
+                JMenuItem item = new JMenuItem(_selectAllAction);
                 item.setText(
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "MNU_SELECT_ALL" /* NOI18N */));
                 _menu.add(item);
             }
         }
+
+        updateCopyCutAction(component);
+        updatePasteAction(component);
+        updateDeleteAction(component);
+        updateSelectAllAction(component.getDocument());
 
         return _menu;
     }
@@ -366,7 +364,7 @@ public class PopupSupport
         int start,
         int end)
     {
-        if (start == end)
+        if (start >= end)
         {
             return false;
         }
@@ -375,107 +373,68 @@ public class PopupSupport
     }
 
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param component DOCUMENT ME!
-     */
     private void updateCopyCutAction(JTextComponent component)
     {
         int startOffset = component.getSelectionStart();
-        int stopOffset = component.getSelectionEnd();
+        int endOffset = component.getSelectionEnd();
 
-        if (isTextSelected(startOffset, stopOffset))
+        if (isTextSelected(startOffset, endOffset))
         {
-            if (_copy != null)
+            if (_copyAction != null)
             {
-                _copy.setEnabled(true);
+                _copyAction.setEnabled(true);
             }
 
-            if ((_cut != null) && component.isEditable())
+            if ((_cutAction != null) && component.isEditable())
             {
-                _cut.setEnabled(true);
+                _cutAction.setEnabled(true);
             }
         }
         else
         {
-            if (_copy != null)
+            if (_copyAction != null)
             {
-                _copy.setEnabled(false);
+                _copyAction.setEnabled(false);
             }
 
-            if (_cut != null)
+            if (_cutAction != null)
             {
-                _cut.setEnabled(false);
+                _cutAction.setEnabled(false);
             }
         }
     }
 
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param document DOCUMENT ME!
-     */
-    private void updateDeleteAction(Document document)
-    {
-        if (document.getLength() > 0)
-        {
-            if (_delete != null)
-            {
-                _delete.setEnabled(true);
-            }
-        }
-        else
-        {
-            if (_delete != null)
-            {
-                _delete.setEnabled(false);
-            }
-        }
-    }
-
-
-    /**
-     * DOCUMENT ME!
-     *
-     * @param component DOCUMENT ME!
-     */
     private void updateDeleteAction(JTextComponent component)
     {
-        if ((component.getDocument().getLength() > 0) && component.isEditable())
+        if (component.isEditable() && (component.getDocument().getLength() > 0))
         {
-            if (_delete != null)
+            if (_deleteAction != null)
             {
-                _delete.setEnabled(true);
+                _deleteAction.setEnabled(true);
             }
         }
         else
         {
-            if (_delete != null)
+            if (_deleteAction != null)
             {
-                _delete.setEnabled(false);
+                _deleteAction.setEnabled(false);
             }
         }
     }
 
 
-    /**
-     * DOCUMENT ME!
-     *
-     * @param component DOCUMENT ME!
-     */
     private void updatePasteAction(JTextComponent component)
     {
-        if (_paste != null)
+        if (_pasteAction != null)
         {
-            if (!isClipboardEmpty() && component.isEditable())
+            if (component.isEditable() && !isClipboardEmpty())
             {
-                _paste.setEnabled(true);
+                _pasteAction.setEnabled(true);
             }
             else
             {
-                _paste.setEnabled(false);
+                _pasteAction.setEnabled(false);
             }
         }
     }
@@ -491,16 +450,16 @@ public class PopupSupport
     {
         if (document.getLength() > 0)
         {
-            if (_selectAll != null)
+            if (_selectAllAction != null)
             {
-                _selectAll.setEnabled(true);
+                _selectAllAction.setEnabled(true);
             }
         }
         else
         {
-            if (_selectAll != null)
+            if (_selectAllAction != null)
             {
-                _selectAll.setEnabled(false);
+                _selectAllAction.setEnabled(false);
             }
         }
     }
@@ -508,139 +467,10 @@ public class PopupSupport
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
-     * Helper class to bundle a component and associated listeners so we are able to
-     * correctly remove listenes after we're done.
-     */
-    private static class ListenerSupport
-    {
-        CaretListener caretHandler;
-        DocumentListener documentHandler;
-        JTextComponent component;
-        KeyListener keyHandler;
-        MouseListener mouseHandler;
-
-        /**
-         * Creates a new ListenerSupport object.
-         *
-         * @param component the component to add popup support to.
-         */
-        public ListenerSupport(JTextComponent component)
-        {
-            this.component = component;
-        }
-
-
-        /**
-         * Creates a new ListenerSupport object.
-         *
-         * @param component the component to add popup support to.
-         * @param mouseListener mouse listener to add.
-         * @param keyListener key listener to add.
-         * @param caretListener caret listener to add.
-         * @param documentListener document listener to add.
-         */
-        public ListenerSupport(
-            JTextComponent   component,
-            MouseListener    mouseListener,
-            KeyListener      keyListener,
-            CaretListener    caretListener,
-            DocumentListener documentListener)
-        {
-            this(component);
-            this.mouseHandler = mouseListener;
-            this.keyHandler = keyListener;
-            this.caretHandler = caretListener;
-            this.documentHandler = documentListener;
-            add();
-        }
-
-        public void add()
-        {
-            this.component.addMouseListener(this.mouseHandler);
-            this.component.addKeyListener(this.keyHandler);
-            this.component.getDocument().addDocumentListener(this.documentHandler);
-            this.component.addCaretListener(this.caretHandler);
-        }
-
-
-        public boolean equals(Object o)
-        {
-            if (o instanceof JTextComponent)
-            {
-                return this.component.equals(o);
-            }
-            else if (o instanceof ListenerSupport)
-            {
-                return this.component.equals(((ListenerSupport) o).component);
-            }
-
-            return false;
-        }
-
-
-        public int hashCode()
-        {
-            return this.component.hashCode();
-        }
-
-
-        public void remove()
-        {
-            this.component.removeMouseListener(this.mouseHandler);
-            this.component.removeKeyListener(this.keyHandler);
-            this.component.getDocument().removeDocumentListener(this.documentHandler);
-            this.component.removeCaretListener(this.caretHandler);
-        }
-    }
-
-
-    private static class PartialStringComparator
-        implements Comparator
-    {
-        public int compare(
-            Object o1,
-            Object o2)
-        {
-            String s1 = (String) o1;
-            String s2 = (String) o1;
-
-            if (s2.startsWith(s1))
-            {
-                return 0;
-            }
-
-            return s1.compareTo(s2);
-        }
-    }
-
-
-    /**
-     * Handler to update the state of the actions for caret events.
-     */
-    private class CaretHandler
-        implements CaretListener
-    {
-        /**
-         * Creates a new CaretHandler object.
-         */
-        public CaretHandler()
-        {
-        }
-
-        public void caretUpdate(CaretEvent ev)
-        {
-            JTextComponent component = (JTextComponent) ev.getSource();
-            updatePasteAction(component);
-            updateCopyCutAction(component); // ,ev.getDot(), ev.getMark()
-        }
-    }
-
-
-    /**
      * Action which - depending on the selection state of a text component - either
      * deletes the selection or the whole text.
      */
-    private static class DeleteAction
+    private static final class DeleteAction
         extends TextAction
     {
         /**
@@ -698,29 +528,85 @@ public class PopupSupport
 
 
     /**
-     * Handler which updates the state of the action for document events.
+     * Helper class to bundle a component and associated listeners so we are able to
+     * correctly remove listenes after we're done.
      */
-    private class DocumentHandler
-        implements DocumentListener
+    private static final class ListenerSupport
     {
-        public void changedUpdate(DocumentEvent ev)
+        JTextComponent component;
+        KeyListener keyHandler;
+        MouseListener mouseHandler;
+
+        public ListenerSupport(JTextComponent component)
         {
-            updateSelectAllAction(ev.getDocument());
-            updateDeleteAction(ev.getDocument());
+            this.component = component;
         }
 
 
-        public void insertUpdate(DocumentEvent ev)
+        public ListenerSupport(
+            JTextComponent component,
+            MouseListener  mouseListener,
+            KeyListener    keyListener)
         {
-            updateSelectAllAction(ev.getDocument());
-            updateDeleteAction(ev.getDocument());
+            this(component);
+            this.mouseHandler = mouseListener;
+            this.keyHandler = keyListener;
+
+            add();
+        }
+
+        public void add()
+        {
+            this.component.addMouseListener(this.mouseHandler);
+            this.component.addKeyListener(this.keyHandler);
         }
 
 
-        public void removeUpdate(DocumentEvent ev)
+        public boolean equals(Object o)
         {
-            updateSelectAllAction(ev.getDocument());
-            updateDeleteAction(ev.getDocument());
+            if (o instanceof JTextComponent)
+            {
+                return this.component.equals(o);
+            }
+            else if (o instanceof ListenerSupport)
+            {
+                return this.component.equals(((ListenerSupport) o).component);
+            }
+
+            return false;
+        }
+
+
+        public int hashCode()
+        {
+            return this.component.hashCode();
+        }
+
+
+        public void remove()
+        {
+            this.component.removeMouseListener(this.mouseHandler);
+            this.component.removeKeyListener(this.keyHandler);
+        }
+    }
+
+
+    private static final class PartialStringComparator
+        implements Comparator
+    {
+        public int compare(
+            Object o1,
+            Object o2)
+        {
+            String s1 = (String) o1;
+            String s2 = (String) o1;
+
+            if (s2.startsWith(s1))
+            {
+                return 0;
+            }
+
+            return s1.compareTo(s2);
         }
     }
 
@@ -751,10 +637,7 @@ public class PopupSupport
     }
 
 
-    /**
-     * Handler which updates the state of the action for keyboard events.
-     */
-    private class KeyHandler
+    private final class KeyHandler
         extends KeyAdapter
     {
         public void keyPressed(KeyEvent ev)
@@ -783,7 +666,7 @@ public class PopupSupport
     /**
      * Handler which updates the state of the actions for mouse events.
      */
-    private class MouseHandler
+    private final class MouseHandler
         extends MouseAdapter
     {
         public void mousePressed(MouseEvent ev)

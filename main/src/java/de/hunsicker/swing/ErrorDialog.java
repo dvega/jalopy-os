@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.swing;
 
@@ -234,7 +234,7 @@ public class ErrorDialog
         if ((lines.length == 1) && (lines[0].length() == 0))
         {
             lines =
-                new String[] 
+                new String[]
                 {
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "MSG_NO_FURTHER_INFO" /* NOI18N */)

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -149,8 +149,8 @@ public class ExtendedToken
     /**
      * Returns the comment that is attached to this token.
      *
-     * @return The attached comment of this token. Returns <code>null</code> if no comment
-     * is attached.
+     * @return The attached comment of this token. Returns <code>null</code> if no
+     *         comment is attached.
      */
     public Node getComment()
     {

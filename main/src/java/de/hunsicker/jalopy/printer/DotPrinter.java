@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -272,8 +272,7 @@ final class DotPrinter
                             }
 
                             int length =
-                                getLengthOfChainedCall(
-                                    node, parent, first, out.testers);
+                                getLengthOfChainedCall(node, parent, first, out.testers);
 
                             // if this chain element would exceed the maximal
                             // line length, perform wrapping

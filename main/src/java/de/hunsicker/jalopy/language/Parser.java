@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -22,14 +22,6 @@ import de.hunsicker.antlr.collections.AST;
 public interface Parser
 {
     //~ Methods --------------------------------------------------------------------------
-
-    /**
-     * Returns the root node of the generated parse tree.
-     *
-     * @return root node of the generated parse tree.
-     */
-    public AST getParseTree();
-
 
     /**
      * Sets the factory used to create tree nodes.
@@ -61,6 +53,14 @@ public interface Parser
      * @return The currently processed filename.
      */
     public String getFilename();
+
+
+    /**
+     * Returns the root node of the generated parse tree.
+     *
+     * @return root node of the generated parse tree.
+     */
+    public AST getParseTree();
 
 
     /**

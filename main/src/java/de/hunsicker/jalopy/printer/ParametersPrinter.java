@@ -492,8 +492,6 @@ SEARCH:
                 ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                 ConventionDefaults.LINE_WRAP_PARAMS_EXCEED);
 
-        /*int indentation = this.settings.getInt(ConventionKeys.INDENT_SIZE_PARAMETERS,
-                                            ConventionDefaults.INDENT_SIZE_PARAMETERS);*/
         boolean result = false;
         int paramIndex = 0;
         boolean restoreAction = false;
@@ -1132,14 +1130,6 @@ SEARCH:
     {
         boolean result = false;
 
-        /*if ((indentation == -1)
-            || ((type == JavaTokenTypes.ELIST)
-                && !this.settings.getBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
-                                      ConventionDefaults.INDENT_USE_PARAMS_METHOD_CALL)))
-        if (((type == JavaTokenTypes.ELIST)
-                && !this.settings.getBoolean(ConventionKeys.INDENT_USE_PARAMS_METHOD_CALL,
-                                      ConventionDefaults.INDENT_USE_PARAMS_METHOD_CALL)))
-        {*/
         if (
             !this.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP) || !last)

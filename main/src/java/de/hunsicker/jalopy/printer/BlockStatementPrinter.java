@@ -178,8 +178,8 @@ abstract class BlockStatementPrinter
         // use continuation indentation within the parentheses?
         out.continuation =
             this.settings.getBoolean(
-                ConventionKeys.INDENT_CONTINUATION_IF,
-                ConventionDefaults.INDENT_CONTINUATION_IF);
+                ConventionKeys.INDENT_CONTINUATION_BLOCK,
+                ConventionDefaults.INDENT_CONTINUATION_BLOCK);
 
         PrinterFactory.create(expr).print(expr, out);
 

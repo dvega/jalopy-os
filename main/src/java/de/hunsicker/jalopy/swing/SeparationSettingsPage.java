@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -178,8 +178,7 @@ public class SeparationSettingsPage
             ConventionKeys.SEPARATOR_INSTANCE_VAR, _instanceVarTextField.getText());
         this.settings.put(
             ConventionKeys.SEPARATOR_INSTANCE_INIT, _instanceInitTextField.getText());
-        this.settings.put(
-            ConventionKeys.SEPARATOR_CTOR, _constructorTextField.getText());
+        this.settings.put(ConventionKeys.SEPARATOR_CTOR, _constructorTextField.getText());
         this.settings.put(ConventionKeys.SEPARATOR_METHOD, _methodTextField.getText());
         this.settings.put(
             ConventionKeys.SEPARATOR_INTERFACE, _interfaceTextField.getText());
@@ -627,7 +626,8 @@ public class SeparationSettingsPage
         _instanceVarTextField =
             new JTextField(
                 this.settings.get(
-                    ConventionKeys.SEPARATOR_INSTANCE_VAR, ConventionDefaults.SEPARATOR_INSTANCE_VAR), 30);
+                    ConventionKeys.SEPARATOR_INSTANCE_VAR,
+                    ConventionDefaults.SEPARATOR_INSTANCE_VAR), 30);
         SwingHelper.setConstraints(
             c, 1, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -644,7 +644,8 @@ public class SeparationSettingsPage
         _instanceInitTextField =
             new JTextField(
                 this.settings.get(
-                    ConventionKeys.SEPARATOR_INSTANCE_INIT, ConventionDefaults.SEPARATOR_INSTANCE_INIT), 30);
+                    ConventionKeys.SEPARATOR_INSTANCE_INIT,
+                    ConventionDefaults.SEPARATOR_INSTANCE_INIT), 30);
         SwingHelper.setConstraints(
             c, 1, 2, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -660,7 +661,8 @@ public class SeparationSettingsPage
         textPanel.add(constructorLabel);
         _constructorTextField =
             new JTextField(
-                this.settings.get(ConventionKeys.SEPARATOR_CTOR, ConventionDefaults.SEPARATOR_CTOR), 30);
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_CTOR, ConventionDefaults.SEPARATOR_CTOR), 30);
         SwingHelper.setConstraints(
             c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -676,7 +678,9 @@ public class SeparationSettingsPage
         textPanel.add(methodLabel);
         _methodTextField =
             new JTextField(
-                this.settings.get(ConventionKeys.SEPARATOR_METHOD, ConventionDefaults.SEPARATOR_METHOD), 30);
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_METHOD, ConventionDefaults.SEPARATOR_METHOD),
+                30);
         SwingHelper.setConstraints(
             c, 1, 4, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -692,7 +696,9 @@ public class SeparationSettingsPage
         textPanel.add(interfaceLabel);
         _interfaceTextField =
             new JTextField(
-                this.settings.get(ConventionKeys.SEPARATOR_INTERFACE, ConventionDefaults.SEPARATOR_INTERFACE), 30);
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_INTERFACE,
+                    ConventionDefaults.SEPARATOR_INTERFACE), 30);
         SwingHelper.setConstraints(
             c, 1, 5, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -707,7 +713,9 @@ public class SeparationSettingsPage
         textPanel.add(classLabel);
         _classTextField =
             new JTextField(
-                this.settings.get(ConventionKeys.SEPARATOR_CLASS, ConventionDefaults.SEPARATOR_CLASS), 30);
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_CLASS, ConventionDefaults.SEPARATOR_CLASS),
+                30);
         SwingHelper.setConstraints(
             c, 1, 6, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -937,8 +945,7 @@ public class SeparationSettingsPage
         _tabbedPane = new JTabbedPane();
         _tabbedPane.add(
             createBlankLinesPane(), this.bundle.getString("TAB_BLANK_LINES" /* NOI18N */));
-        _tabbedPane.add(
-            createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
+        _tabbedPane.add(createMiscPane(), this.bundle.getString("TAB_MISC" /* NOI18N */));
         _tabbedPane.add(
             createCommentsPane(), this.bundle.getString("TAB_COMMENTS" /* NOI18N */));
 

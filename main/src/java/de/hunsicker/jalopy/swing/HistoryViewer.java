@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -140,8 +140,8 @@ class HistoryViewer
             if (index > -1)
             {
                 addAsChild(
-                    (HistoryTreeNode) parent.getChildAt(index),
-                    path.substring(offset + 1), entry);
+                    (HistoryTreeNode) parent.getChildAt(index), path.substring(
+                        offset + 1), entry);
             }
             else
             {

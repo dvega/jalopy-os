@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -275,8 +275,7 @@ public class JavadocSettingsPage
         this.settings.putInt(ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, ctorMask);
         this.settings.putInt(ConventionKeys.COMMENT_JAVADOC_METHOD_MASK, methodMask);
         this.settings.putInt(ConventionKeys.COMMENT_JAVADOC_CLASS_MASK, classMask);
-        this.settings.putInt(
-            ConventionKeys.COMMENT_JAVADOC_VARIABLE_MASK, variableMask);
+        this.settings.putInt(ConventionKeys.COMMENT_JAVADOC_VARIABLE_MASK, variableMask);
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_FIELDS_SHORT,
             _singleLineFieldCommentsCheckBox.isSelected());
@@ -382,7 +381,6 @@ public class JavadocSettingsPage
                 }
             });
 
-
         _tableModel = new DataModel();
 
         JTable table = new JTable(_tableModel);
@@ -412,8 +410,8 @@ public class JavadocSettingsPage
 
         c.insets.top = 5;
         SwingHelper.setConstraints(
-            c, 0, 0, 8, 8, 1.0, 1.0, GridBagConstraints.NORTHWEST,
-            GridBagConstraints.BOTH, c.insets, 0, 0);
+            c, 0, 0, 8, 8, 1.0, 1.0, GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
+            c.insets, 0, 0);
         createLayout.setConstraints(scrollPane, c);
         createPanel.add(scrollPane);
 
@@ -765,12 +763,10 @@ public class JavadocSettingsPage
     private void initialize()
     {
         JTabbedPane tabs = new JTabbedPane();
-        tabs.add(
-            createGeneralPane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
+        tabs.add(createGeneralPane(), this.bundle.getString("TAB_GENERAL" /* NOI18N */));
         tabs.add(
             createTemplatesPane(), this.bundle.getString("TAB_TEMPLATES" /* NOI18N */));
-        tabs.add(
-            createTagsPane(), this.bundle.getString("TAB_CUSTOM_TAGS" /* NOI18N */));
+        tabs.add(createTagsPane(), this.bundle.getString("TAB_CUSTOM_TAGS" /* NOI18N */));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         add(tabs, BorderLayout.CENTER);
@@ -855,6 +851,7 @@ public class JavadocSettingsPage
             add(paramLabel);
 
             this.parameterTextArea = new JTextArea(getParameterTemplate());
+
             JScrollPane parameterScrollPane = new JScrollPane(this.parameterTextArea);
             c.insets.top = 0;
             SwingHelper.setConstraints(
@@ -1010,8 +1007,8 @@ public class JavadocSettingsPage
             return StringHelper.replace(
                 this.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
-                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION),
-                DELIMETER, LINE_SEPARATOR);
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION), DELIMETER,
+                LINE_SEPARATOR);
         }
 
 
@@ -1073,20 +1070,16 @@ public class JavadocSettingsPage
                     "LBL_CONSTRUCTORS" /* NOI18N */),
                 new Boolean(
                     Modifier.isPublic(
-                        this.settings.getInt(
-                            ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
+                        this.settings.getInt(ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
                 new Boolean(
                     Modifier.isProtected(
-                        this.settings.getInt(
-                            ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
+                        this.settings.getInt(ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
                 new Boolean(
                     Modifier.isFinal(
-                        this.settings.getInt(
-                            ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
+                        this.settings.getInt(ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0))),
                 new Boolean(
                     Modifier.isPrivate(
-                        this.settings.getInt(
-                            ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0)))
+                        this.settings.getInt(ConventionKeys.COMMENT_JAVADOC_CTOR_MASK, 0)))
             },
             {
                 JavadocSettingsPage.this.bundle.getString("LBL_METHODS" /* NOI18N */),
@@ -1325,8 +1318,8 @@ public class JavadocSettingsPage
             return StringHelper.replace(
                 this.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
-                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM),
-                DELIMETER, LINE_SEPARATOR);
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM), DELIMETER,
+                LINE_SEPARATOR);
         }
 
 

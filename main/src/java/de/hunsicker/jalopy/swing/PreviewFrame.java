@@ -1,15 +1,17 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
+import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -20,21 +22,23 @@ import java.util.ResourceBundle;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.PlainDocument;
 
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Loggers;
-import de.hunsicker.jalopy.swing.syntax.SyntaxTextArea;
+import de.hunsicker.jalopy.swing.syntax.SyntaxEditorKit;
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.ResourceBundleFactory;
 
@@ -72,7 +76,7 @@ final class PreviewFrame
     private final Action ACTION_FILE_OPEN = new FileOpenAction();
 
     /** Our text area. */
-    private JTextArea _textArea;
+    private JEditorPane _textArea;
 
     /** The Jalopy instance to format the preview files. */
     private Jalopy _jalopy = new Jalopy();
@@ -118,6 +122,13 @@ final class PreviewFrame
 
     //~ Methods --------------------------------------------------------------------------
 
+    /**
+     * DOCUMENT ME!
+     *
+     * @param owner DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
     public static PreviewFrame create(Window owner)
     {
         return create(owner, owner);
@@ -257,6 +268,7 @@ final class PreviewFrame
      * @param target DOCUMENT ME!
      *
      * @return a new preview frame.
+     *
      * @since 1.0b9
      */
     static PreviewFrame create(
@@ -307,8 +319,15 @@ final class PreviewFrame
 
         setJMenuBar(menuBar);
 
-        _textArea = new SyntaxTextArea();
+        SyntaxEditorKit kit = new SyntaxEditorKit();
+
+        _textArea = new JEditorPane();
+        _textArea.setFont(new Font("Monospaced" /* NOI18N */, Font.PLAIN, 12));
         _textArea.setEditable(false);
+        _textArea.setCaretPosition(0);
+        _textArea.setMargin(new Insets(2, 2, 2, 2));
+        _textArea.setOpaque(true);
+        _textArea.setEditorKit(kit);
 
         JScrollPane scrollPane = new JScrollPane(_textArea);
         getContentPane().add(scrollPane);
@@ -489,17 +508,22 @@ final class PreviewFrame
                     }
                 }
 
+                /*
                 int wrapGuideColumn =
                     _page.settings.getInt(
                         ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
-                /*if (wrapGuideColumn != _textArea.getWrapGuideColumn())
+                if (wrapGuideColumn != _textArea.getWrapGuideColumn())
                 {
                     _textArea.setWrapGuideColumn(wrapGuideColumn);
-                }*/
-                _textArea.setTabSize(
-                    _page.settings.getInt(
-                        ConventionKeys.INDENT_SIZE, ConventionDefaults.INDENT_SIZE));
+                }
+                */
+                _textArea.getDocument().putProperty(
+                    PlainDocument.tabSizeAttribute,
+                    new Integer(
+                        _page.settings.get(
+                            ConventionKeys.INDENT_SIZE,
+                            String.valueOf(ConventionDefaults.INDENT_SIZE))));
 
                 _jalopy.setForce(true);
 
@@ -507,18 +531,25 @@ final class PreviewFrame
                 {
                     _jalopy.setInput(this.text, _page.getCategory() + EXT_JAVA);
 
-                    StringBuffer buf = new StringBuffer(this.text.length());
+                    final StringBuffer buf = new StringBuffer(this.text.length());
                     _jalopy.setOutput(buf);
                     _jalopy.format();
 
-                    int offset = _textArea.getCaretPosition();
-                    String result = buf.toString();
-                    _textArea.setText(result);
+                    SwingUtilities.invokeLater(
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                int offset = _textArea.getCaretPosition();
 
-                    if (_textArea.getDocument().getLength() > offset)
-                    {
-                        _textArea.setCaretPosition(offset);
-                    }
+                                _textArea.setText(buf.toString());
+
+                                if (_textArea.getDocument().getLength() > offset)
+                                {
+                                    _textArea.setCaretPosition(offset);
+                                }
+                            }
+                        });
                 }
                 else
                 {
@@ -531,7 +562,7 @@ final class PreviewFrame
             }
             finally
             {
-                // restore the current active settings 'cause we want the user
+                // restore the current active settings because we want the user
                 // to explicitly enable the changes (either by pressing 'OK'
                 // or 'Apply')
                 _page.settings.revert();

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -26,36 +26,48 @@ public final class NodeHelper
     {
     }
 
+    //~ Methods --------------------------------------------------------------------------
+
     /**
      * Determines whether the given node represents an abstract method.
+     *
      * @param node a METHOD_DEF node.
+     *
      * @return <code>true</code> if the given node represents an abstract method.
-     * @throws IllegalArgumentException if <code><em>node</em>.getType() != METHOD_DEF</code>
+     *
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() !=
+     *         METHOD_DEF</code>
      */
-      public static boolean isAbstractMethod(AST node)
+    public static boolean isAbstractMethod(AST node)
     {
         boolean result = false;
+
         switch (node.getType())
         {
-            case JavaTokenTypes.METHOD_DEF:
-                for (AST child = node.getFirstChild(); child != null; child = child.getNextSibling())
+            case JavaTokenTypes.METHOD_DEF :
+
+                for (
+                    AST child = node.getFirstChild(); child != null;
+                    child = child.getNextSibling())
                 {
                     switch (child.getType())
                     {
-                        case JavaTokenTypes.SEMI:
+                        case JavaTokenTypes.SEMI :
                             result = true;
+
                             break;
                     }
                 }
+
                 break;
-            default:
+
+            default :
                 throw new IllegalArgumentException("no METHOD_DEF -- " + node);
         }
 
         return result;
     }
 
-    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Determines wether the given node represents an anonymous inner class or interface.
@@ -64,7 +76,8 @@ public final class NodeHelper
      *
      * @return <code>true</code> if the given node represents an anonymous inner class.
      *
-     * @throws IllegalArgumentException if <code><em>node</em>.getType() != CLASS_DEF || INTERFACE_DEF</code>
+     * @throws IllegalArgumentException if <code><em>node</em>.getType() != CLASS_DEF ||
+     *         INTERFACE_DEF</code>
      *
      * @since 1.0b8
      */
@@ -265,7 +278,7 @@ public final class NodeHelper
         }
 
         boolean result = false;
-WALK:
+WALK: 
         for (
             JavaNode child = (JavaNode) node.getFirstChild(); child != null;
             child = (JavaNode) child.getNextSibling())
@@ -419,7 +432,7 @@ WALK:
             case JavaTokenTypes.DOT :
             {
                 AST last = node.getFirstChild();
-SEARCH:
+SEARCH: 
                 for (AST child = last; child != null; child = child.getFirstChild())
                 {
                     switch (child.getType())
@@ -516,7 +529,7 @@ SEARCH:
             throw new IllegalArgumentException(lparen + " no LPAREN");
         }
 
-LOOP:
+LOOP: 
         for (AST next = lparen.getNextSibling(); next != null;
             next = next.getNextSibling())
         {

@@ -6,33 +6,29 @@
  */
 package de.hunsicker.jalopy.swing;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dialog;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Window;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.*;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.event.*;
-import javax.swing.table.*;
-import javax.swing.table.AbstractTableModel;
+import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -136,9 +132,6 @@ public class NamingSettingsPage
             new PatternListEntry(
                 this.bundle.getString("LBL_INTERFACES" /* NOI18N */), null,
                 ConventionKeys.REGEXP_INTERFACE, ConventionDefaults.REGEXP_INTERFACE),
-            new PatternListEntry(
-                this.bundle.getString("LBL_LABELS" /* NOI18N */), null,
-                ConventionKeys.REGEXP_LABEL, ConventionDefaults.REGEXP_LABEL),
             new PatternListEntry(
                 this.bundle.getString("LBL_FIELDS" /* NOI18N */), "public" /* NOI18N */,
                 ConventionKeys.REGEXP_FIELD_PUBLIC, ConventionDefaults.REGEXP_FIELD),
@@ -247,7 +240,10 @@ public class NamingSettingsPage
             new PatternListEntry(
                 this.bundle.getString("LBL_LOCAL_VARIABLE" /* NOI18N */), null,
                 ConventionKeys.REGEXP_LOCAL_VARIABLE,
-                ConventionDefaults.REGEXP_LOCAL_VARIABLE)
+                ConventionDefaults.REGEXP_LOCAL_VARIABLE),
+            new PatternListEntry(
+                this.bundle.getString("LBL_LABELS" /* NOI18N */), null,
+                ConventionKeys.REGEXP_LABEL, ConventionDefaults.REGEXP_LABEL)
         };
 
         _patternList = new JList(entries);

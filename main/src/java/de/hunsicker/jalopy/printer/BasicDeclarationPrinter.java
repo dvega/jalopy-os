@@ -22,9 +22,6 @@ import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;
-import de.hunsicker.jalopy.storage.Loggers;
-
-import org.apache.log4j.Level;
 
 
 /**

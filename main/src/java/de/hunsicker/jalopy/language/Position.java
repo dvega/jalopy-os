@@ -18,12 +18,14 @@ public final class Position
 {
     //~ Instance variables ---------------------------------------------------------------
 
-    int line = 1;
     int column = 1;
+    int line = 1;
 
     //~ Constructors ---------------------------------------------------------------------
 
-    Position(int line, int column)
+    Position(
+        int line,
+        int column)
     {
         this.line = line;
         this.column = column;
@@ -33,22 +35,25 @@ public final class Position
 
     /**
      * Returns the column information of this position.
+     *
      * @return The column information of this position.
      */
     public int getColumn()
     {
-
         return this.column;
-        }
+    }
+
 
     /**
      * Returns the line information of this position.
+     *
      * @return The line information of this position.
      */
     public int getLine()
     {
         return this.line;
     }
+
 
     /**
      * {@inheritDoc}

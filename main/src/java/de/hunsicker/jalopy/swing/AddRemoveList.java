@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -399,8 +399,8 @@ class AddRemoveList
             c.insets.top = 15;
             c.insets.bottom = 5;
             SwingHelper.setConstraints(
-                c, 9, 2, 1, 1, 1.0, 0.0, GridBagConstraints.EAST,
-                GridBagConstraints.NONE, c.insets, 0, 0);
+                c, 9, 2, 1, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+                c.insets, 0, 0);
             layout.setConstraints(okButton, c);
             contentPane.add(okButton);
 

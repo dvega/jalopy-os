@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -116,8 +116,7 @@ public class ClassRepositoryEntry
     /**
      * Sets the data of the entry.
      *
-     * @param data data (of type {@link
-     *         java.lang.String &lt;String&gt;}).
+     * @param data data (of type {@link java.lang.String &lt;String&gt;}).
      */
     public void setData(Set data)
     {
@@ -128,8 +127,7 @@ public class ClassRepositoryEntry
     /**
      * Returns the current data.
      *
-     * @return data (of type {@link
-     *         java.lang.String &lt;String&gt;}).
+     * @return data (of type {@link java.lang.String &lt;String&gt;}).
      */
     public Set getData()
     {
@@ -339,9 +337,10 @@ public class ClassRepositoryEntry
             return false;
         }
 
-    /**
-     * {@inheritDoc}
-     */
+
+        /**
+         * {@inheritDoc}
+         */
         public int hashCode()
         {
             return this.location.hashCode();

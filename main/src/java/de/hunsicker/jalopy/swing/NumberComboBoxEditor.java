@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -144,8 +144,7 @@ class NumberComboBoxEditor
                     }
                     else if (offs == 0)
                     {
-                        super.insertString(
-                            offs, String.valueOf(this.initialValue), atts);
+                        super.insertString(offs, String.valueOf(this.initialValue), atts);
 
                         return;
                     }

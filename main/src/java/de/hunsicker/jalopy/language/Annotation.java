@@ -7,15 +7,15 @@
 package de.hunsicker.jalopy.language;
 
 /**
- * A class that wraps some application specific annotation data. It can be used
- * to track the position information for things like debugger breakpoints, erroneous
- * lines, and so on.
+ * A class that wraps some application specific annotation data. It can be used to track
+ * the position information for things like debugger breakpoints, erroneous lines, and
+ * so on.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  *
- * @since 1.0b9
  * @see de.hunsicker.jalopy.language.JavaRecognizer#attachAnnotations
+ * @since 1.0b9
  */
 public final class Annotation
 {

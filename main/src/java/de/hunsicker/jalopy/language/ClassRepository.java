@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -42,7 +42,7 @@ import org.apache.log4j.Level;
  * Stores type names for Java packages. This information is needed in order to be able to
  * switch between <em>single-type-import declarations</em> and <em>type-import-on-demand
  * declarations</em>.
- *
+ * 
  * <p>
  * This class is thread-safe.
  * </p>
@@ -284,19 +284,19 @@ public class ClassRepository
 
     /**
      * Loads the contents of the given location into memory.
-     *
+     * 
      * <p>
      * If the given location is already registered, both persistent storage and memory
      * will be updated. If the location denotes a Java archive (JAR) an update will only
      * be performed if the archive actually changed.
      * </p>
-     *
+     * 
      * <p>
      * Directories will always be updated as there is no easy way to detect changes in
      * such a case. You should perform logic to avoid unecessary loads in the Plug-in
      * code.
      * </p>
-     *
+     * 
      * <p>
      * If no entry exits for the location, a new entry will be generated and its contents
      * loaded into memory.
@@ -334,8 +334,7 @@ public class ClassRepository
     /**
      * Loads the contents of the given locations into memory.
      *
-     * @param locations locations to add (of type {@link
-     *         java.io.File &lt;File&gt;}).
+     * @param locations locations to add (of type {@link java.io.File &lt;File&gt;}).
      *
      * @throws IOException if an I/O error occured.
      */
@@ -436,8 +435,7 @@ public class ClassRepository
      * Unloads the given locations from memory. If one of the given locations was not
      * registered, it will be ignored.
      *
-     * @param locations locations to unload (of type {@link
-     *         java.io.File &lt;File&gt;}).
+     * @param locations locations to unload (of type {@link java.io.File &lt;File&gt;}).
      *
      * @throws IOException if an I/O error occured.
      *
@@ -573,8 +571,7 @@ public class ClassRepository
             catch (ClassNotFoundException ex)
             {
                 Object[] args = { path, location };
-                Loggers.IO.l7dlog(
-                    Level.WARN, "REPOSITORY_NOT_PACKAGE_ROOT", args, null);
+                Loggers.IO.l7dlog(Level.WARN, "REPOSITORY_NOT_PACKAGE_ROOT", args, null);
 
                 return false;
             }
@@ -742,7 +739,8 @@ public class ClassRepository
                     // load from persistent storage
                     entry =
                         loadFromDisk(
-                            new File(getWorkingDir() + File.separator + info.getFilename()));
+                            new File(
+                                getWorkingDir() + File.separator + info.getFilename()));
                 }
             }
         }

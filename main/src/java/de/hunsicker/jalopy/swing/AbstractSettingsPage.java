@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -27,6 +27,11 @@ import de.hunsicker.util.ResourceBundleFactory;
 public abstract class AbstractSettingsPage
     extends JPanel
 {
+    //~ Static variables/initializers ----------------------------------------------------
+
+    /** DOCUMENT ME! */
+    protected static final String DELIMETER = "|" /* NOI18N */;
+
     //~ Instance variables ---------------------------------------------------------------
 
     /**
@@ -37,8 +42,6 @@ public abstract class AbstractSettingsPage
 
     /** The code convention to display/edit. */
     protected Convention settings;
-
-    protected final static String DELIMETER  = "|"/* NOI18N */;
 
     /** Listener used to trigger an update of the preview frame. */
     final ActionListener trigger = new UpdateTrigger();
@@ -159,7 +162,7 @@ public abstract class AbstractSettingsPage
     /**
      * Validates this page's settings. Pages that need their input validated should
      * override to provide the needed implementation.
-     *
+     * 
      * <p>
      * In case of any violation the implementation should simply display an error message
      * and throw a <code>ValidationException</code> to inform the caller about the

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EventListener;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -149,7 +151,7 @@ public class ProjectSettingsPage
 
         for (int i = 0; i < files.length; i++)
         {
-            if (files[i].isDirectory())
+            if (files[i].isDirectory() && !files[i].getName().equals("default"))
             {
                 File file = new File(files[i], FILENAME_PROJECT);
 
@@ -175,6 +177,7 @@ public class ProjectSettingsPage
             }
         }
 
+        // add the default project
         if (projects.isEmpty())
         {
             Project defaultProject = Convention.getDefaultProject();
@@ -185,38 +188,25 @@ public class ProjectSettingsPage
         else
         {
             boolean active = false; // is a project marked as active?
-            boolean standard = false; // is the default project contained?
 
             for (int i = 0, size = projects.size(); i < size; i++)
             {
                 ProjectListEntry e = (ProjectListEntry) projects.get(i);
 
-                if (e.active && e.standard)
+                if (e.active)
                 {
                     active = true;
                 }
-
-                if (e.standard)
-                {
-                    standard = true;
-                }
             }
 
-            if (!standard)
-            {
-                // determine whether the default project is the active one
-                if (!active && standard)
-                {
-                    active = true;
-                }
-
-                Project defaultProject = Convention.getDefaultProject();
-                projects.add(
-                    new ProjectListEntry(
-                        defaultProject.getName(), defaultProject.getDescription(),
-                        active, true));
-            }
+            Project defaultProject = Convention.getDefaultProject();
+            projects.add(
+                new ProjectListEntry(
+                    defaultProject.getName(), defaultProject.getDescription(), !active,
+                    true));
         }
+
+        Collections.sort(projects);
 
         return projects;
     }
@@ -245,6 +235,7 @@ public class ProjectSettingsPage
             c.insets, 0, 0);
         layout.setConstraints(keysScrollPane, c);
         add(keysScrollPane);
+
         c.insets.bottom = 2;
         c.insets.top = 10;
         c.insets.left = 10;
@@ -255,6 +246,7 @@ public class ProjectSettingsPage
         _addButton = _projectsList.getAddButton();
         layout.setConstraints(_addButton, c);
         add(_addButton);
+
         c.insets.left = 10;
         c.insets.right = 0;
         c.insets.bottom = 0;
@@ -332,14 +324,17 @@ public class ProjectSettingsPage
                         }
                         catch (Throwable ex)
                         {
-                            /**
-                             * @todo show error dialog
-                             */
-                            ex.printStackTrace();
+                            ErrorDialog dialog =
+                                ErrorDialog.create(
+                                    SwingUtilities.windowForComponent(
+                                        ProjectSettingsPage.this), ex);
+                            dialog.setVisible(true);
+                            dialog.dispose();
                         }
                     }
                 }
             });
+
         _projectsList.addListSelectionListener(
             new ListSelectionListener()
             {
@@ -385,7 +380,7 @@ public class ProjectSettingsPage
 
     //~ Inner Classes --------------------------------------------------------------------
 
-    private static class ProjectList
+    private static final class ProjectList
         extends AddRemoveList
     {
         public ProjectList(
@@ -458,8 +453,8 @@ public class ProjectSettingsPage
                 c.insets.right = 5;
                 SwingHelper.setConstraints(
                     c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                    c.insets, 0, 0);
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets,
+                    0, 0);
                 layout.setConstraints(nameLabel, c);
                 contentPane.add(nameLabel);
 
@@ -480,8 +475,8 @@ public class ProjectSettingsPage
                 c.insets.right = 5;
                 SwingHelper.setConstraints(
                     c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL,
-                    c.insets, 0, 0);
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets,
+                    0, 0);
                 layout.setConstraints(descriptionLabel, c);
                 contentPane.add(descriptionLabel);
 
@@ -614,7 +609,7 @@ public class ProjectSettingsPage
     }
 
 
-    private static class ProjectListCellRenderer
+    private static final class ProjectListCellRenderer
         extends DefaultListCellRenderer
     {
         public Component getListCellRendererComponent(
@@ -640,7 +635,7 @@ public class ProjectSettingsPage
     }
 
 
-    private static class ProjectListEntry
+    private static final class ProjectListEntry
         implements Comparable
     {
         final String description;
@@ -676,7 +671,7 @@ public class ProjectSettingsPage
                 return this.name.compareTo(((ProjectListEntry) o).name);
             }
 
-            return 0;
+            throw new ClassCastException();
         }
 
 

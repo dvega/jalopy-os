@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -851,8 +851,7 @@ final class ImportTransformation
             // finding the node's package name means we are
             // able to collapse the node's package...
             if (
-                Collections.binarySearch(
-                    newOnDemandImports, node, COMP_ON_DEMAND_SINGLE) > -1)
+                Collections.binarySearch(newOnDemandImports, node, COMP_ON_DEMAND_SINGLE) > -1)
             {
                 // therefore we remove it from the list with the single-types
                 JavaNode singleType = (JavaNode) singleTypeImports.remove(i);
@@ -1125,8 +1124,7 @@ final class ImportTransformation
     {
         // we're only interested in the identifiers which aren't already
         // imported via single-typed imports
-        List identifiers = getPossibleSingleTypeImports(
-                identifiers_, singleTypeImports);
+        List identifiers = getPossibleSingleTypeImports(identifiers_, singleTypeImports);
 
         if (identifiers.isEmpty())
         {
@@ -1183,8 +1181,7 @@ final class ImportTransformation
                         resolvableImport.setHiddenAfter(null);
 
                         // check for conflicts
-                        JavaNode other = (JavaNode) conflicts.put(
-                                unresolvedIdent, node);
+                        JavaNode other = (JavaNode) conflicts.put(unresolvedIdent, node);
 
                         if (other == null)
                         {
@@ -1421,6 +1418,72 @@ CHECK:
 
     //~ Inner Classes --------------------------------------------------------------------
 
+    private static final class ImportNodeComparator
+        implements Comparator
+    {
+        List identifiers;
+
+        public int compare(
+            Object o1,
+            Object o2)
+        {
+            if (o1 == o2)
+            {
+                return 0;
+            }
+
+            JavaNode n1 = (JavaNode) o1;
+            JavaNode n2 = (JavaNode) o2;
+
+            int i1 = getIndex(identifiers, n1.text);
+            int i2 = getIndex(identifiers, n2.text);
+
+            if (i1 > -1)
+            {
+                if (i2 > -1)
+                {
+                    if (i1 > i2)
+                    {
+                        return 1;
+                    }
+                    else if (i2 > i1)
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    i2 = getIndex(identifiers, STAR);
+
+                    if (i1 > i2)
+                    {
+                        return 1;
+                    }
+                    else if (i2 > i1)
+                    {
+                        return -1;
+                    }
+                }
+            }
+            else if (i2 > -1)
+            {
+                i1 = getIndex(identifiers, STAR);
+
+                if (i1 > i2)
+                {
+                    return 1;
+                }
+                else if (i2 > i1)
+                {
+                    return -1;
+                }
+            }
+
+            return n1.text.compareTo(n2.text);
+        }
+    }
+
+
     /**
      * Compares two nodes by their natural order (the order as given in the original Java
      * source file).
@@ -1491,72 +1554,6 @@ CHECK:
 
             return packagePath.text.compareTo(
                 StringHelper.getPackageName(importNode.text));
-        }
-    }
-
-
-    private static final class ImportNodeComparator
-        implements Comparator
-    {
-        List identifiers;
-
-        public int compare(
-            Object o1,
-            Object o2)
-        {
-            if (o1 == o2)
-            {
-                return 0;
-            }
-
-            JavaNode n1 = (JavaNode) o1;
-            JavaNode n2 = (JavaNode) o2;
-
-            int i1 = getIndex(identifiers, n1.text);
-            int i2 = getIndex(identifiers, n2.text);
-
-            if (i1 > -1)
-            {
-                if (i2 > -1)
-                {
-                    if (i1 > i2)
-                    {
-                        return 1;
-                    }
-                    else if (i2 > i1)
-                    {
-                        return -1;
-                    }
-                }
-                else
-                {
-                    i2 = getIndex(identifiers, STAR);
-
-                    if (i1 > i2)
-                    {
-                        return 1;
-                    }
-                    else if (i2 > i1)
-                    {
-                        return -1;
-                    }
-                }
-            }
-            else if (i2 > -1)
-            {
-                i1 = getIndex(identifiers, STAR);
-
-                if (i1 > i2)
-                {
-                    return 1;
-                }
-                else if (i2 > i1)
-                {
-                    return -1;
-                }
-            }
-
-            return n1.text.compareTo(n2.text);
         }
     }
 

@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 
@@ -52,40 +53,63 @@ public class DeclarationType
 
     /** The bit value for static variables/initializers. */
     public static final int STATIC_VAR_INIT_INT = 64;
+    private static final String DELIMETER = "|" /* NOI18N */;
 
     /** A string represenation of the current sort order. */
     private static String _sortOrder;
+    private static final String BUNDLE_NAME = "de.hunsicker.jalopy.language.Bundle";
 
     /** Holds the actual order of the method types. */
     private static final List _order = new ArrayList(7); // List of <String>
 
     /** Represents a class declaration. */
-    public static final DeclarationType CLASS = new DeclarationType(
-            "Classes", CLASS_INT);
+    public static final DeclarationType CLASS =
+        new DeclarationType(
+            "class" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_CLASS" /* NOI18N */),
+            CLASS_INT);
 
     /** Represents an interface declaration. */
     public static final DeclarationType INTERFACE =
-        new DeclarationType("Interfaces", INTERFACE_INT);
+        new DeclarationType(
+            "interface" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString(
+                "TYPE_INTERFACE" /* NOI18N */), INTERFACE_INT);
 
     /** Represents an instance variable declaration. */
     public static final DeclarationType VARIABLE =
-        new DeclarationType("Instance Variables", VARIABLE_INT);
+        new DeclarationType(
+            "field" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_FIELD" /* NOI18N */),
+            VARIABLE_INT);
 
     /** Represents an instance initializer. */
     public static final DeclarationType INIT =
-        new DeclarationType("Instance Initializers", INIT_INT);
+        new DeclarationType(
+            "initializer" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString(
+                "TYPE_INITIALIZER" /* NOI18N */), INIT_INT);
 
     /** Represents a constructor declaration. */
     public static final DeclarationType CTOR =
-        new DeclarationType("Constructors", CTOR_INT);
+        new DeclarationType(
+            "constructor" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString(
+                "TYPE_CONSTRUCTOR" /* NOI18N */), CTOR_INT);
 
     /** Represents a method declaration. */
     public static final DeclarationType METHOD =
-        new DeclarationType("Methods", METHOD_INT);
+        new DeclarationType(
+            "method" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_METHOD" /* NOI18N */),
+            METHOD_INT);
 
     /** Represents a static variable declaration or initializer. */
     public static final DeclarationType STATIC_VARIABLE_INIT =
-        new DeclarationType("Static Variables/Initializers", STATIC_VAR_INIT_INT);
+        new DeclarationType(
+            "static" /* NOI18N */,
+            ResourceBundle.getBundle(BUNDLE_NAME).getString("TYPE_STATIC" /* NOI18N */),
+            STATIC_VAR_INIT_INT);
 
     static
     {
@@ -102,7 +126,7 @@ public class DeclarationType
         for (int i = 0, size = _order.size(); i < size; i++)
         {
             buf.append(((DeclarationType) _order.get(i))._name);
-            buf.append(',');
+            buf.append(DELIMETER);
         }
 
         buf.setLength(buf.length() - 1);
@@ -112,6 +136,7 @@ public class DeclarationType
     //~ Instance variables ---------------------------------------------------------------
 
     /** A user-friendly string representation of the type. */
+    private final String _displayName;
     private final String _name;
 
     /** The bit value of the method type. */
@@ -123,13 +148,16 @@ public class DeclarationType
      * Creates a new DeclarationType object.
      *
      * @param name a string representing the declaration type.
+     * @param displayName DOCUMENT ME!
      * @param key a bit value representing the declaration type.
      */
     private DeclarationType(
         String name,
+        String displayName,
         int    key)
     {
         _name = name;
+        _displayName = displayName;
         _key = key;
     }
 
@@ -158,10 +186,10 @@ public class DeclarationType
     {
         if ((str == null) || (str.length() == 0))
         {
-            throw new IllegalArgumentException("order == " + str);
+            throw new IllegalArgumentException("invalid order string -- " + str);
         }
 
-        StringTokenizer tokens = new StringTokenizer(str, ",");
+        StringTokenizer tokens = new StringTokenizer(str, DELIMETER);
         List temp = new ArrayList(_order.size());
         StringBuffer buf = new StringBuffer(20);
 
@@ -172,17 +200,17 @@ public class DeclarationType
 
             if (temp.contains(type))
             {
-                throw new IllegalArgumentException("invalid order string " + temp);
+                throw new IllegalArgumentException("invalid order string -- " + temp);
             }
 
             temp.add(type);
             buf.append(type.toString());
-            buf.append(',');
+            buf.append(DELIMETER);
         }
 
         if (_order.size() != temp.size())
         {
-            throw new IllegalArgumentException("invalid order string " + temp);
+            throw new IllegalArgumentException("invalid order string -- " + temp);
         }
 
         if (
@@ -190,7 +218,7 @@ public class DeclarationType
             || !temp.contains(VARIABLE) || !temp.contains(METHOD) || !temp.contains(INIT)
             || !temp.contains(STATIC_VARIABLE_INIT))
         {
-            throw new IllegalArgumentException("invalid order string " + temp);
+            throw new IllegalArgumentException("invalid order string -- " + temp);
         }
 
         _order.clear();
@@ -213,6 +241,17 @@ public class DeclarationType
     public static synchronized String getOrder()
     {
         return _sortOrder;
+    }
+
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @return DOCUMENT ME!
+     */
+    public String getDisplayName()
+    {
+        return _displayName;
     }
 
 
@@ -267,7 +306,7 @@ public class DeclarationType
      */
     public String toString()
     {
-        return _name;
+        return _displayName;
     }
 
 
@@ -284,7 +323,7 @@ public class DeclarationType
     {
         if ((name == null) || (name.trim().length() == 0))
         {
-            throw new IllegalArgumentException("invalid method name " + name);
+            throw new IllegalArgumentException("invalid declaration name -- " + name);
         }
 
         name = name.trim();

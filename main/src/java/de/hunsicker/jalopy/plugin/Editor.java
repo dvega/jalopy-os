@@ -24,7 +24,10 @@ public interface Editor
      * Moves the caret to the given location.
      *
      * @param offset the text offset where the caret should be placed (absolute character
-     *        position, <code>&gt;= 0</code>).
+     *        position).
+     *
+     * @throws IllegalArgumentException if <code><em>offset</em> &lt; 0 ||
+     *         <em>offset</em> &gt; {@link #getLength}</code>
      */
     public void setCaretPosition(int offset);
 
@@ -32,8 +35,11 @@ public interface Editor
     /**
      * Moves the caret to the given location.
      *
-     * @param line line number (<code>&gt;= 1</code>).
-     * @param column column offset in the given line (<code>&gt;= 1</code>).
+     * @param line line number.
+     * @param column column offset in the given line.
+     *
+     * @throws IllegalArgumentException if <code><em>line</em> &lt; 1 || <em>column</em>
+     *         &lt; 1</code>
      */
     public void setCaretPosition(
         int line,
@@ -96,9 +102,12 @@ public interface Editor
      * Selects the specified text.
      *
      * @param startOffset the offset you wish to start selection on (absolute character
-     *        position, <code>&gt;= 0</code>).
+     *        position).
      * @param endOffset the offset you wish to end selection on (absolute character
-     *        position, <code>&gt;= 0</code>).
+     *        position).
+     *
+     * @throws IllegalArgumentException if <code><em>startOffset</em> &lt; 0 ||
+     *         <em>endOffset</em> &lt; 0</code>
      */
     public void setSelection(
         int startOffset,
@@ -157,8 +166,8 @@ public interface Editor
      * Detaches all existing annotations of this view.
      *
      * @return list with all annotations of this view (of type {@link
-     *         de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}). Returns an empty list, if no
-     *         annotations were attached.
+     *         de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}). Returns an
+     *         empty list, if no annotations were attached.
      *
      * @see #attachAnnotations
      * @since 1.0b9

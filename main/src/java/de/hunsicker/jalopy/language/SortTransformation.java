@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -242,8 +242,7 @@ LOOP:
                     case JavaTokenTypes.CLASS_DEF :
                         fillComment(
                             comment,
-                            settings.get(
-                                ConventionKeys.SEPARATOR_CLASS, "Inner classes"),
+                            settings.get(ConventionKeys.SEPARATOR_CLASS, "Inner classes"),
                             fillCharacter, indent, maxwidth);
 
                         break;
@@ -480,8 +479,7 @@ LOOP:
             Collections.sort(methods, comp);
         }
 
-        if (settings.getBoolean(
-                ConventionKeys.SORT_CLASS, ConventionDefaults.SORT_CLASS))
+        if (settings.getBoolean(ConventionKeys.SORT_CLASS, ConventionDefaults.SORT_CLASS))
         {
             Collections.sort(classes, comp);
         }
@@ -530,7 +528,7 @@ LOOP:
 
         // add the different declaration groups in the specified order
         for (
-            StringTokenizer tokens = new StringTokenizer(sortString, ",");
+            StringTokenizer tokens = new StringTokenizer(sortString, "|");
             tokens.hasMoreTokens();)
         {
             current =

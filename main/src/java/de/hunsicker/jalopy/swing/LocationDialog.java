@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -69,9 +69,7 @@ class LocationDialog
 
     /** The empty string array. */
     protected static final String[] EMPTY_STRING_ARRAY = new String[0];
-
-    private final static String DELIMETER = "|"/* NOI18N */;
-
+    private static final String DELIMETER = "|" /* NOI18N */;
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Instance variables ---------------------------------------------------------------
@@ -427,8 +425,7 @@ class LocationDialog
 
         GridBagConstraints c = new GridBagConstraints();
         JButton okButton =
-            SwingHelper.createButton(
-                this.bundle.getString("BTN_OK" /* NOI18N */), false);
+            SwingHelper.createButton(this.bundle.getString("BTN_OK" /* NOI18N */), false);
         okButton.addActionListener(
             new ActionListener()
             {

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -673,7 +673,7 @@ final class AssignmentPrinter
                         //boolean lastAssign = isNewChunk(next, JavaTokenTypes.ASSIGN); // last chunk
                         int length = 0;
                         TestNodeWriter tester = out.testers.get();
-SEARCH:
+SEARCH: 
                         for (AST def = parent; def != null; def = def.getNextSibling())
                         {
                             switch (def.getType())
@@ -747,7 +747,7 @@ SEARCH:
                             this.settings.getBoolean(
                                 ConventionKeys.ALIGN_VAR_IDENTS,
                                 ConventionDefaults.ALIGN_VAR_IDENTS);
-SEARCH:
+SEARCH: 
 
                         // determine the longest VARIABLE_DEF or ASSIGN
                         for (AST def = parent; def != null; def = def.getNextSibling())
@@ -790,8 +790,7 @@ SEARCH:
                                         defModifier, tester);
 
                                     AST defType = defModifier.getNextSibling();
-                                    PrinterFactory.create(defType).print(
-                                        defType, tester);
+                                    PrinterFactory.create(defType).print(defType, tester);
 
                                     // we have to adjust the length in case
                                     // variable alignment is performed

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -57,7 +57,6 @@ public class ImportsSettingsPage
 
     /** The delimeter for the value pair of an entry. */
     private static final String DELIMETER_ENTRY_PAIR = ":" /* NOI18N */;
-
     private static final String STAR = "*" /* NOI18N */;
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 

@@ -1,154 +1,451 @@
-// $ANTLR 2.7.2a2 (20020112-1): "main/src/java/de/hunsicker/jalopy/language/java.doc.g" -> "JavadocParser.java"$
+/*
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
+ *
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
+ */
 
+// $ANTLR 2.7.2a2 (20020112-1): "main/src/java/de/hunsicker/jalopy/language/java.doc.g" -> "JavadocParser.java"$
 package de.hunsicker.jalopy.language;
 
 /**
  * Token type constants for the Javadoc recognizer.
- *
- * <p>This is an <a href="http://www.antlr.org/">ANTLR</a> automated generated
- * file. <strong>DO NOT EDIT</strong> but rather change the associated grammar and rebuild.</p>
+ * 
+ * <p>
+ * This is an <a href="http://www.antlr.org/">ANTLR</a> automated generated file.
+ * <strong>DO NOT EDIT</strong> but rather change the associated grammar and rebuild.
+ * </p>
  */
-public final class JavadocTokenTypes {
-private JavadocTokenTypes(){}
-	public final static 	int EOF = 1;
-	public final static 	int NULL_TREE_LOOKAHEAD = 3;
-	public final static 	int JAVADOC_COMMENT = 6;
-	public final static 	int LCURLY = 7;
-	public final static 	int RCURLY = 8;
-	public final static 	int OTH = 9;
-	public final static 	int CTH = 10;
-	public final static 	int OTD = 11;
-	public final static 	int CTD = 12;
-	public final static 	int TAG_CUSTOM = 13;
-	public final static 	int TAG_AUTHOR = 14;
-	public final static 	int TAG_DEPRECATED = 15;
-	public final static 	int TAG_EXCEPTION = 16;
-	public final static 	int TAG_THROWS = 17;
-	public final static 	int TAG_PARAM = 18;
-	public final static 	int TAG_RETURN = 19;
-	public final static 	int TAG_SEE = 20;
-	public final static 	int TAG_SINCE = 21;
-	public final static 	int TAG_SERIAL = 22;
-	public final static 	int TAG_SERIAL_DATA = 23;
-	public final static 	int TAG_SERIAL_FIELD = 24;
-	public final static 	int TAG_VERSION = 25;
-	public final static 	int TAG_INLINE_CUSTOM = 26;
-	public final static 	int TAG_INLINE_DOCROOT = 27;
-	public final static 	int TAG_INLINE_INHERITDOC = 28;
-	public final static 	int TAG_INLINE_LINK = 29;
-	public final static 	int TAG_INLINE_LINKPLAIN = 30;
-	public final static 	int TAG_INLINE_VALUE = 31;
-	public final static 	int TAG_TODO = 32;
-	public final static 	int JAVADOC_OPEN = 33;
-	public final static 	int JAVADOC_CLOSE = 34;
-	public final static 	int HR = 35;
-	public final static 	int IMG = 36;
-	public final static 	int BR = 37;
-	public final static 	int TAG = 38;
-	public final static 	int COMMENT = 39;
-	public final static 	int PCDATA = 40;
-	public final static 	int OH1 = 41;
-	public final static 	int CH1 = 42;
-	public final static 	int OH2 = 43;
-	public final static 	int CH2 = 44;
-	public final static 	int OH3 = 45;
-	public final static 	int CH3 = 46;
-	public final static 	int OH4 = 47;
-	public final static 	int CH4 = 48;
-	public final static 	int OH5 = 49;
-	public final static 	int CH5 = 50;
-	public final static 	int OH6 = 51;
-	public final static 	int CH6 = 52;
-	public final static 	int OADDRESS = 53;
-	public final static 	int CADDRESS = 54;
-	public final static 	int OPARA = 55;
-	public final static 	int CPARA = 56;
-	public final static 	int OULIST = 57;
-	public final static 	int CULIST = 58;
-	public final static 	int OOLIST = 59;
-	public final static 	int COLIST = 60;
-	public final static 	int ODLIST = 61;
-	public final static 	int CDLIST = 62;
-	public final static 	int OLITEM = 63;
-	public final static 	int CLITEM = 64;
-	public final static 	int ODTERM = 65;
-	public final static 	int CDTERM = 66;
-	public final static 	int ODDEF = 67;
-	public final static 	int CDDEF = 68;
-	public final static 	int ODIR = 69;
-	public final static 	int CDIR = 70;
-	public final static 	int ODIV = 71;
-	public final static 	int CDIV = 72;
-	public final static 	int OCENTER = 73;
-	public final static 	int CCENTER = 74;
-	public final static 	int OBQUOTE = 75;
-	public final static 	int CBQUOTE = 76;
-	public final static 	int PRE = 77;
-	public final static 	int OTABLE = 78;
-	public final static 	int CTABLE = 79;
-	public final static 	int OCAP = 80;
-	public final static 	int CCAP = 81;
-	public final static 	int O_TR = 82;
-	public final static 	int C_TR = 83;
-	public final static 	int OTTYPE = 84;
-	public final static 	int CTTYPE = 85;
-	public final static 	int OITALIC = 86;
-	public final static 	int CITALIC = 87;
-	public final static 	int OBOLD = 88;
-	public final static 	int CBOLD = 89;
-	public final static 	int OCODE = 90;
-	public final static 	int CCODE = 91;
-	public final static 	int OUNDER = 92;
-	public final static 	int CUNDER = 93;
-	public final static 	int OSTRIKE = 94;
-	public final static 	int CSTRIKE = 95;
-	public final static 	int OBIG = 96;
-	public final static 	int CBIG = 97;
-	public final static 	int OSMALL = 98;
-	public final static 	int CSMALL = 99;
-	public final static 	int OSUB = 100;
-	public final static 	int CSUB = 101;
-	public final static 	int OSUP = 102;
-	public final static 	int CSUP = 103;
-	public final static 	int OEM = 104;
-	public final static 	int CEM = 105;
-	public final static 	int OSTRONG = 106;
-	public final static 	int CSTRONG = 107;
-	public final static 	int ODFN = 108;
-	public final static 	int CDFN = 109;
-	public final static 	int OSAMP = 110;
-	public final static 	int CSAMP = 111;
-	public final static 	int OKBD = 112;
-	public final static 	int CKBD = 113;
-	public final static 	int OVAR = 114;
-	public final static 	int CVAR = 115;
-	public final static 	int OCITE = 116;
-	public final static 	int CCITE = 117;
-	public final static 	int OACRO = 118;
-	public final static 	int CACRO = 119;
-	public final static 	int OANCHOR = 120;
-	public final static 	int CANCHOR = 121;
-	public final static 	int OFONT = 122;
-	public final static 	int CFONT = 123;
-	public final static 	int AT = 124;
-	public final static 	int CDIR_OR_CDIV = 125;
-	public final static 	int O_TH_OR_TD = 126;
-	public final static 	int C_TH_OR_TD = 127;
-	public final static 	int OSTRIKE_OR_OSTRONG = 128;
-	public final static 	int CSTRIKE_OR_CSTRONG = 129;
-	public final static 	int CSUB_OR_CSUP = 130;
-	public final static 	int STAR = 131;
-	public final static 	int COMMENT_DATA = 132;
-	public final static 	int WS = 133;
-	public final static 	int NEWLINE = 134;
-	public final static 	int ATTR = 135;
-	public final static 	int WORD = 136;
-	public final static 	int STRING = 137;
-	public final static 	int SPECIAL = 138;
-	public final static 	int HEXNUM = 139;
-	public final static 	int INT = 140;
-	public final static 	int HEXINT = 141;
-	public final static 	int DIGIT = 142;
-	public final static 	int HEXDIGIT = 143;
-	public final static 	int LCLETTER = 144;
+public final class JavadocTokenTypes
+{
+    //~ Static variables/initializers ----------------------------------------------------
+
+    /** DOCUMENT ME! */
+    public static final int EOF = 1;
+
+    /** DOCUMENT ME! */
+    public static final int NULL_TREE_LOOKAHEAD = 3;
+
+    /** DOCUMENT ME! */
+    public static final int JAVADOC_COMMENT = 6;
+
+    /** DOCUMENT ME! */
+    public static final int LCURLY = 7;
+
+    /** DOCUMENT ME! */
+    public static final int RCURLY = 8;
+
+    /** DOCUMENT ME! */
+    public static final int OTH = 9;
+
+    /** DOCUMENT ME! */
+    public static final int CTH = 10;
+
+    /** DOCUMENT ME! */
+    public static final int OTD = 11;
+
+    /** DOCUMENT ME! */
+    public static final int CTD = 12;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_CUSTOM = 13;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_AUTHOR = 14;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_DEPRECATED = 15;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_EXCEPTION = 16;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_THROWS = 17;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_PARAM = 18;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_RETURN = 19;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_SEE = 20;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_SINCE = 21;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_SERIAL = 22;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_SERIAL_DATA = 23;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_SERIAL_FIELD = 24;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_VERSION = 25;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_CUSTOM = 26;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_DOCROOT = 27;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_INHERITDOC = 28;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_LINK = 29;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_LINKPLAIN = 30;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_INLINE_VALUE = 31;
+
+    /** DOCUMENT ME! */
+    public static final int TAG_TODO = 32;
+
+    /** DOCUMENT ME! */
+    public static final int JAVADOC_OPEN = 33;
+
+    /** DOCUMENT ME! */
+    public static final int JAVADOC_CLOSE = 34;
+
+    /** DOCUMENT ME! */
+    public static final int HR = 35;
+
+    /** DOCUMENT ME! */
+    public static final int IMG = 36;
+
+    /** DOCUMENT ME! */
+    public static final int BR = 37;
+
+    /** DOCUMENT ME! */
+    public static final int TAG = 38;
+
+    /** DOCUMENT ME! */
+    public static final int COMMENT = 39;
+
+    /** DOCUMENT ME! */
+    public static final int PCDATA = 40;
+
+    /** DOCUMENT ME! */
+    public static final int OH1 = 41;
+
+    /** DOCUMENT ME! */
+    public static final int CH1 = 42;
+
+    /** DOCUMENT ME! */
+    public static final int OH2 = 43;
+
+    /** DOCUMENT ME! */
+    public static final int CH2 = 44;
+
+    /** DOCUMENT ME! */
+    public static final int OH3 = 45;
+
+    /** DOCUMENT ME! */
+    public static final int CH3 = 46;
+
+    /** DOCUMENT ME! */
+    public static final int OH4 = 47;
+
+    /** DOCUMENT ME! */
+    public static final int CH4 = 48;
+
+    /** DOCUMENT ME! */
+    public static final int OH5 = 49;
+
+    /** DOCUMENT ME! */
+    public static final int CH5 = 50;
+
+    /** DOCUMENT ME! */
+    public static final int OH6 = 51;
+
+    /** DOCUMENT ME! */
+    public static final int CH6 = 52;
+
+    /** DOCUMENT ME! */
+    public static final int OADDRESS = 53;
+
+    /** DOCUMENT ME! */
+    public static final int CADDRESS = 54;
+
+    /** DOCUMENT ME! */
+    public static final int OPARA = 55;
+
+    /** DOCUMENT ME! */
+    public static final int CPARA = 56;
+
+    /** DOCUMENT ME! */
+    public static final int OULIST = 57;
+
+    /** DOCUMENT ME! */
+    public static final int CULIST = 58;
+
+    /** DOCUMENT ME! */
+    public static final int OOLIST = 59;
+
+    /** DOCUMENT ME! */
+    public static final int COLIST = 60;
+
+    /** DOCUMENT ME! */
+    public static final int ODLIST = 61;
+
+    /** DOCUMENT ME! */
+    public static final int CDLIST = 62;
+
+    /** DOCUMENT ME! */
+    public static final int OLITEM = 63;
+
+    /** DOCUMENT ME! */
+    public static final int CLITEM = 64;
+
+    /** DOCUMENT ME! */
+    public static final int ODTERM = 65;
+
+    /** DOCUMENT ME! */
+    public static final int CDTERM = 66;
+
+    /** DOCUMENT ME! */
+    public static final int ODDEF = 67;
+
+    /** DOCUMENT ME! */
+    public static final int CDDEF = 68;
+
+    /** DOCUMENT ME! */
+    public static final int ODIR = 69;
+
+    /** DOCUMENT ME! */
+    public static final int CDIR = 70;
+
+    /** DOCUMENT ME! */
+    public static final int ODIV = 71;
+
+    /** DOCUMENT ME! */
+    public static final int CDIV = 72;
+
+    /** DOCUMENT ME! */
+    public static final int OCENTER = 73;
+
+    /** DOCUMENT ME! */
+    public static final int CCENTER = 74;
+
+    /** DOCUMENT ME! */
+    public static final int OBQUOTE = 75;
+
+    /** DOCUMENT ME! */
+    public static final int CBQUOTE = 76;
+
+    /** DOCUMENT ME! */
+    public static final int PRE = 77;
+
+    /** DOCUMENT ME! */
+    public static final int OTABLE = 78;
+
+    /** DOCUMENT ME! */
+    public static final int CTABLE = 79;
+
+    /** DOCUMENT ME! */
+    public static final int OCAP = 80;
+
+    /** DOCUMENT ME! */
+    public static final int CCAP = 81;
+
+    /** DOCUMENT ME! */
+    public static final int O_TR = 82;
+
+    /** DOCUMENT ME! */
+    public static final int C_TR = 83;
+
+    /** DOCUMENT ME! */
+    public static final int OTTYPE = 84;
+
+    /** DOCUMENT ME! */
+    public static final int CTTYPE = 85;
+
+    /** DOCUMENT ME! */
+    public static final int OITALIC = 86;
+
+    /** DOCUMENT ME! */
+    public static final int CITALIC = 87;
+
+    /** DOCUMENT ME! */
+    public static final int OBOLD = 88;
+
+    /** DOCUMENT ME! */
+    public static final int CBOLD = 89;
+
+    /** DOCUMENT ME! */
+    public static final int OCODE = 90;
+
+    /** DOCUMENT ME! */
+    public static final int CCODE = 91;
+
+    /** DOCUMENT ME! */
+    public static final int OUNDER = 92;
+
+    /** DOCUMENT ME! */
+    public static final int CUNDER = 93;
+
+    /** DOCUMENT ME! */
+    public static final int OSTRIKE = 94;
+
+    /** DOCUMENT ME! */
+    public static final int CSTRIKE = 95;
+
+    /** DOCUMENT ME! */
+    public static final int OBIG = 96;
+
+    /** DOCUMENT ME! */
+    public static final int CBIG = 97;
+
+    /** DOCUMENT ME! */
+    public static final int OSMALL = 98;
+
+    /** DOCUMENT ME! */
+    public static final int CSMALL = 99;
+
+    /** DOCUMENT ME! */
+    public static final int OSUB = 100;
+
+    /** DOCUMENT ME! */
+    public static final int CSUB = 101;
+
+    /** DOCUMENT ME! */
+    public static final int OSUP = 102;
+
+    /** DOCUMENT ME! */
+    public static final int CSUP = 103;
+
+    /** DOCUMENT ME! */
+    public static final int OEM = 104;
+
+    /** DOCUMENT ME! */
+    public static final int CEM = 105;
+
+    /** DOCUMENT ME! */
+    public static final int OSTRONG = 106;
+
+    /** DOCUMENT ME! */
+    public static final int CSTRONG = 107;
+
+    /** DOCUMENT ME! */
+    public static final int ODFN = 108;
+
+    /** DOCUMENT ME! */
+    public static final int CDFN = 109;
+
+    /** DOCUMENT ME! */
+    public static final int OSAMP = 110;
+
+    /** DOCUMENT ME! */
+    public static final int CSAMP = 111;
+
+    /** DOCUMENT ME! */
+    public static final int OKBD = 112;
+
+    /** DOCUMENT ME! */
+    public static final int CKBD = 113;
+
+    /** DOCUMENT ME! */
+    public static final int OVAR = 114;
+
+    /** DOCUMENT ME! */
+    public static final int CVAR = 115;
+
+    /** DOCUMENT ME! */
+    public static final int OCITE = 116;
+
+    /** DOCUMENT ME! */
+    public static final int CCITE = 117;
+
+    /** DOCUMENT ME! */
+    public static final int OACRO = 118;
+
+    /** DOCUMENT ME! */
+    public static final int CACRO = 119;
+
+    /** DOCUMENT ME! */
+    public static final int OANCHOR = 120;
+
+    /** DOCUMENT ME! */
+    public static final int CANCHOR = 121;
+
+    /** DOCUMENT ME! */
+    public static final int OFONT = 122;
+
+    /** DOCUMENT ME! */
+    public static final int CFONT = 123;
+
+    /** DOCUMENT ME! */
+    public static final int AT = 124;
+
+    /** DOCUMENT ME! */
+    public static final int CDIR_OR_CDIV = 125;
+
+    /** DOCUMENT ME! */
+    public static final int O_TH_OR_TD = 126;
+
+    /** DOCUMENT ME! */
+    public static final int C_TH_OR_TD = 127;
+
+    /** DOCUMENT ME! */
+    public static final int OSTRIKE_OR_OSTRONG = 128;
+
+    /** DOCUMENT ME! */
+    public static final int CSTRIKE_OR_CSTRONG = 129;
+
+    /** DOCUMENT ME! */
+    public static final int CSUB_OR_CSUP = 130;
+
+    /** DOCUMENT ME! */
+    public static final int STAR = 131;
+
+    /** DOCUMENT ME! */
+    public static final int COMMENT_DATA = 132;
+
+    /** DOCUMENT ME! */
+    public static final int WS = 133;
+
+    /** DOCUMENT ME! */
+    public static final int NEWLINE = 134;
+
+    /** DOCUMENT ME! */
+    public static final int ATTR = 135;
+
+    /** DOCUMENT ME! */
+    public static final int WORD = 136;
+
+    /** DOCUMENT ME! */
+    public static final int STRING = 137;
+
+    /** DOCUMENT ME! */
+    public static final int SPECIAL = 138;
+
+    /** DOCUMENT ME! */
+    public static final int HEXNUM = 139;
+
+    /** DOCUMENT ME! */
+    public static final int INT = 140;
+
+    /** DOCUMENT ME! */
+    public static final int HEXINT = 141;
+
+    /** DOCUMENT ME! */
+    public static final int DIGIT = 142;
+
+    /** DOCUMENT ME! */
+    public static final int HEXDIGIT = 143;
+
+    /** DOCUMENT ME! */
+    public static final int LCLETTER = 144;
+
+    //~ Constructors ---------------------------------------------------------------------
+
+    private JavadocTokenTypes()
+    {
+    }
 }
