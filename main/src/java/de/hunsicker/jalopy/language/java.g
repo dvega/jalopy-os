@@ -40,6 +40,7 @@ options {
         classHeaderSuffix = "Parser";
         importVocab = Common;
         ASTLabelType = JavaNode;
+        useTokenPrefix = true;
 }
 
 tokens {
@@ -142,6 +143,9 @@ tokens {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public AST getParseTree()
     {
         // insert the import nodes of the stripped identifiers to the tree
@@ -317,7 +321,7 @@ tokens {
     }
 
     /**
-     * Resets the parser.
+     * {@inheritDoc}
      */
     public void reset()
     {
@@ -342,7 +346,7 @@ tokens {
     /**
      * Random access list that prohibits duplicates or null-values.
      */
-    private static class NoList
+    private final static class NoList
         extends ArrayList
     {
         public NoList(int initialSize)
@@ -745,7 +749,7 @@ field!
         |       stat:"static"^ { _references.enterScope(); } s3:compoundStatement
                 {
                   #field = #(#stat, s3);
-                  #field.setType(STATIC_INIT);
+                  #field.setType(JavaTokenTypes.STATIC_INIT);
                 }
 
     // "{ ... }" instance initializer
@@ -1244,14 +1248,14 @@ unaryExpressionNotPlusMinus
                 :       // If typecast is built in type, must be numeric operand
                         // Also, no reason to backtrack if type keyword like int, float...
                         (LPAREN builtInTypeSpec[true] RPAREN unaryExpression)=>
-                        lpb:LPAREN^ {#lpb.setType(TYPECAST);} builtInTypeSpec[true] RPAREN!
+                        lpb:LPAREN^ {#lpb.setType(JavaTokenTypes.TYPECAST);} builtInTypeSpec[true] RPAREN!
                         unaryExpression
 
                         // Have to backtrack to see if operator follows.  If no operator
                         // follows, it's a typecast.  No semantic checking needed to parse.
                         // if it _looks_ like a cast, it _is_ a cast; else it's a "(expr)"
                 |       (LPAREN classTypeSpec[true] RPAREN unaryExpressionNotPlusMinus)=>
-                        lp:LPAREN^ {#lp.setType(TYPECAST);} classTypeSpec[true] RPAREN!
+                        lp:LPAREN^ {#lp.setType(JavaTokenTypes.TYPECAST);} classTypeSpec[true] RPAREN!
                         unaryExpressionNotPlusMinus
                 |       postfixExpression
                 )
@@ -1512,6 +1516,7 @@ options {
         codeGenBitsetTestThreshold=3;
         classHeaderSuffix = "Lexer";
         defaultErrorHandler = true;
+        useTokenPrefix = true;
 }
 {
     /** Indicates JDK version 1.3. */

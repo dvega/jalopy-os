@@ -66,6 +66,7 @@ options {
     defaultErrorHandler = true;
     codeGenMakeSwitchThreshold = 2;
     codeGenBitsetTestThreshold = 3;
+    useTokenPrefix = true;
 }
 
 tokens {
@@ -906,6 +907,7 @@ options {
     caseSensitive = false;
     classHeaderSuffix = "Lexer";
     defaultErrorHandler = true;
+    useTokenPrefix = true;
 }
 
 {

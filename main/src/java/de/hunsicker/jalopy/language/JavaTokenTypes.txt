@@ -1,4 +1,4 @@
-// $ANTLR 2.7.2a2 (20020112-1): src/java/de/hunsicker/jalopy/language/java.g -> JavaTokenTypes.txt$
+// $ANTLR 2.7.2a2 (20020112-1): main/src/java/de/hunsicker/jalopy/language/java.g -> JavaTokenTypes.txt$
 Java    // output token vocab name
 JAVADOC_COMMENT=6
 LCURLY=7

@@ -132,7 +132,7 @@ public class JavaNode
      *
      * @since 1.0b8
      */
-    public CommonHiddenStreamToken getFirstCommentBefore()
+    public CommonHiddenStreamToken getCommentBefore()
     {
         CommonHiddenStreamToken result = null;
 
@@ -359,7 +359,7 @@ public class JavaNode
      * Detaches and returns all annotations that are attached to this node.
      *
      * @return list of attached annotations (of type {@link
-     *         de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}). Returns an
+     *         de.hunsicker.jalopy.language.Annotation &lt;Annotation&gt;}). Returns an
      *         empty list in case no annotations were found.
      *
      * @since 1.0b9

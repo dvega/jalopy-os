@@ -5,10 +5,9 @@
  * BSD license in the documentation provided with this software.
  */
 
-// $ANTLR 2.7.2a2 (20020112-1): "src/java/de/hunsicker/jalopy/language/java.g" -> "JavaLexer.java"$
+// $ANTLR 2.7.2a2 (20020112-1): "main/src/java/de/hunsicker/jalopy/language/java.g" -> "JavaLexer.java"$
 package de.hunsicker.jalopy.language;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -17,30 +16,22 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import de.hunsicker.antlr.ANTLRException;
 import de.hunsicker.antlr.ANTLRHashString;
 import de.hunsicker.antlr.ByteBuffer;
 import de.hunsicker.antlr.CharBuffer;
-import de.hunsicker.antlr.CharScanner;
 import de.hunsicker.antlr.CharStreamException;
 import de.hunsicker.antlr.CharStreamIOException;
-import de.hunsicker.antlr.CommonToken;
 import de.hunsicker.antlr.InputBuffer;
 import de.hunsicker.antlr.LexerSharedInputState;
-import de.hunsicker.antlr.MismatchedCharException;
 import de.hunsicker.antlr.NoViableAltForCharException;
 import de.hunsicker.antlr.RecognitionException;
-import de.hunsicker.antlr.SemanticException;
 import de.hunsicker.antlr.Token;
 import de.hunsicker.antlr.TokenStream;
 import de.hunsicker.antlr.TokenStreamException;
 import de.hunsicker.antlr.TokenStreamIOException;
-import de.hunsicker.antlr.TokenStreamRecognitionException;
-import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.antlr.collections.impl.BitSet;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.util.StringHelper;
-import de.hunsicker.util.Version;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -70,7 +61,7 @@ import org.apache.log4j.Logger;
  */
 public final class JavaLexer
     extends de.hunsicker.antlr.CharScanner
-    implements JavaTokenTypes, TokenStream, Lexer
+    implements TokenStream, Lexer
 {
     //~ Static variables/initializers ----------------------------------------------------
 
@@ -500,7 +491,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = ASSIGN;
+        _ttype = JavaTokenTypes.ASSIGN;
 
         int _saveIndex;
 
@@ -540,7 +531,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BAND;
+        _ttype = JavaTokenTypes.BAND;
 
         int _saveIndex;
 
@@ -580,7 +571,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BAND_ASSIGN;
+        _ttype = JavaTokenTypes.BAND_ASSIGN;
 
         int _saveIndex;
 
@@ -620,7 +611,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BNOT;
+        _ttype = JavaTokenTypes.BNOT;
 
         int _saveIndex;
 
@@ -660,7 +651,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BOR;
+        _ttype = JavaTokenTypes.BOR;
 
         int _saveIndex;
 
@@ -700,7 +691,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BOR_ASSIGN;
+        _ttype = JavaTokenTypes.BOR_ASSIGN;
 
         int _saveIndex;
 
@@ -740,7 +731,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BSR;
+        _ttype = JavaTokenTypes.BSR;
 
         int _saveIndex;
 
@@ -780,7 +771,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BSR_ASSIGN;
+        _ttype = JavaTokenTypes.BSR_ASSIGN;
 
         int _saveIndex;
 
@@ -820,7 +811,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BXOR;
+        _ttype = JavaTokenTypes.BXOR;
 
         int _saveIndex;
 
@@ -860,7 +851,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = BXOR_ASSIGN;
+        _ttype = JavaTokenTypes.BXOR_ASSIGN;
 
         int _saveIndex;
 
@@ -900,7 +891,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = CHAR_LITERAL;
+        _ttype = JavaTokenTypes.CHAR_LITERAL;
 
         int _saveIndex;
 
@@ -956,7 +947,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = COLON;
+        _ttype = JavaTokenTypes.COLON;
 
         int _saveIndex;
 
@@ -996,7 +987,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = COMMA;
+        _ttype = JavaTokenTypes.COMMA;
 
         int _saveIndex;
 
@@ -1036,7 +1027,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = COMMENT;
+        _ttype = JavaTokenTypes.COMMENT;
 
         int _saveIndex;
         Token spec = null;
@@ -1102,7 +1093,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = DEC;
+        _ttype = JavaTokenTypes.DEC;
 
         int _saveIndex;
 
@@ -1142,7 +1133,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = DIV;
+        _ttype = JavaTokenTypes.DIV;
 
         int _saveIndex;
 
@@ -1182,7 +1173,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = DIV_ASSIGN;
+        _ttype = JavaTokenTypes.DIV_ASSIGN;
 
         int _saveIndex;
 
@@ -1222,7 +1213,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = EQUAL;
+        _ttype = JavaTokenTypes.EQUAL;
 
         int _saveIndex;
 
@@ -1262,7 +1253,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = GE;
+        _ttype = JavaTokenTypes.GE;
 
         int _saveIndex;
 
@@ -1302,7 +1293,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = GT;
+        _ttype = JavaTokenTypes.GT;
 
         int _saveIndex;
 
@@ -1342,7 +1333,7 @@ public final class JavaLexer
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = IDENT;
+        _ttype = JavaTokenTypes.IDENT;
 
         int _saveIndex;
 
@@ -1733,7 +1724,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = INC;
+        _ttype = JavaTokenTypes.INC;
 
         int _saveIndex;
 
@@ -1773,7 +1764,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LAND;
+        _ttype = JavaTokenTypes.LAND;
 
         int _saveIndex;
 
@@ -1813,7 +1804,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LBRACK;
+        _ttype = JavaTokenTypes.LBRACK;
 
         int _saveIndex;
 
@@ -1853,7 +1844,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LCURLY;
+        _ttype = JavaTokenTypes.LCURLY;
 
         int _saveIndex;
 
@@ -1893,7 +1884,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LE;
+        _ttype = JavaTokenTypes.LE;
 
         int _saveIndex;
 
@@ -1933,7 +1924,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LNOT;
+        _ttype = JavaTokenTypes.LNOT;
 
         int _saveIndex;
 
@@ -1973,7 +1964,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LOR;
+        _ttype = JavaTokenTypes.LOR;
 
         int _saveIndex;
 
@@ -2013,7 +2004,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LPAREN;
+        _ttype = JavaTokenTypes.LPAREN;
 
         int _saveIndex;
 
@@ -2053,7 +2044,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = LT;
+        _ttype = JavaTokenTypes.LT;
 
         int _saveIndex;
 
@@ -2093,7 +2084,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = MINUS;
+        _ttype = JavaTokenTypes.MINUS;
 
         int _saveIndex;
 
@@ -2133,7 +2124,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = MINUS_ASSIGN;
+        _ttype = JavaTokenTypes.MINUS_ASSIGN;
 
         int _saveIndex;
 
@@ -2173,7 +2164,7 @@ _loop292:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = ML_COMMENT;
+        _ttype = JavaTokenTypes.ML_COMMENT;
 
         int _saveIndex;
 
@@ -2355,7 +2346,7 @@ _loop268:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = MOD;
+        _ttype = JavaTokenTypes.MOD;
 
         int _saveIndex;
 
@@ -2395,7 +2386,7 @@ _loop268:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = MOD_ASSIGN;
+        _ttype = JavaTokenTypes.MOD_ASSIGN;
 
         int _saveIndex;
 
@@ -2435,7 +2426,7 @@ _loop268:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = NOT_EQUAL;
+        _ttype = JavaTokenTypes.NOT_EQUAL;
 
         int _saveIndex;
 
@@ -2475,7 +2466,7 @@ _loop268:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = NUM_INT;
+        _ttype = JavaTokenTypes.NUM_INT;
 
         int _saveIndex;
         Token f1 = null;
@@ -2880,7 +2871,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = PLUS;
+        _ttype = JavaTokenTypes.PLUS;
 
         int _saveIndex;
 
@@ -2920,7 +2911,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = PLUS_ASSIGN;
+        _ttype = JavaTokenTypes.PLUS_ASSIGN;
 
         int _saveIndex;
 
@@ -2960,7 +2951,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = QUESTION;
+        _ttype = JavaTokenTypes.QUESTION;
 
         int _saveIndex;
 
@@ -3000,7 +2991,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = RBRACK;
+        _ttype = JavaTokenTypes.RBRACK;
 
         int _saveIndex;
 
@@ -3040,7 +3031,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = RCURLY;
+        _ttype = JavaTokenTypes.RCURLY;
 
         int _saveIndex;
 
@@ -3080,7 +3071,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = RPAREN;
+        _ttype = JavaTokenTypes.RPAREN;
 
         int _saveIndex;
 
@@ -3120,7 +3111,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SEMI;
+        _ttype = JavaTokenTypes.SEMI;
 
         int _saveIndex;
 
@@ -3160,7 +3151,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SL;
+        _ttype = JavaTokenTypes.SL;
 
         int _saveIndex;
 
@@ -3200,7 +3191,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SL_ASSIGN;
+        _ttype = JavaTokenTypes.SL_ASSIGN;
 
         int _saveIndex;
 
@@ -3240,7 +3231,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SR;
+        _ttype = JavaTokenTypes.SR;
 
         int _saveIndex;
 
@@ -3280,7 +3271,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SR_ASSIGN;
+        _ttype = JavaTokenTypes.SR_ASSIGN;
 
         int _saveIndex;
 
@@ -3320,7 +3311,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = STAR;
+        _ttype = JavaTokenTypes.STAR;
 
         int _saveIndex;
 
@@ -3360,7 +3351,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = STAR_ASSIGN;
+        _ttype = JavaTokenTypes.STAR_ASSIGN;
 
         int _saveIndex;
 
@@ -3400,7 +3391,7 @@ _loop313:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = STRING_LITERAL;
+        _ttype = JavaTokenTypes.STRING_LITERAL;
 
         int _saveIndex;
 
@@ -3459,7 +3450,7 @@ _loop274:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = WS;
+        _ttype = JavaTokenTypes.WS;
 
         int _saveIndex;
 
@@ -4294,7 +4285,7 @@ tryAgain:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = ESC;
+        _ttype = JavaTokenTypes.ESC;
 
         int _saveIndex;
 
@@ -4503,7 +4494,7 @@ _loop278:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = EXPONENT;
+        _ttype = JavaTokenTypes.EXPONENT;
 
         int _saveIndex;
 
@@ -4622,7 +4613,7 @@ _loop321:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = FLOAT_SUFFIX;
+        _ttype = JavaTokenTypes.FLOAT_SUFFIX;
 
         int _saveIndex;
 
@@ -4696,7 +4687,7 @@ _loop321:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = HEX_DIGIT;
+        _ttype = JavaTokenTypes.HEX_DIGIT;
 
         int _saveIndex;
 
@@ -4782,7 +4773,7 @@ _loop321:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SEPARATOR_COMMENT;
+        _ttype = JavaTokenTypes.SEPARATOR_COMMENT;
 
         int _saveIndex;
 
@@ -4879,7 +4870,7 @@ _loop254:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SL_COMMENT;
+        _ttype = JavaTokenTypes.SL_COMMENT;
 
         int _saveIndex;
 
@@ -4976,7 +4967,7 @@ _loop260:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = SPECIAL_COMMENT;
+        _ttype = JavaTokenTypes.SPECIAL_COMMENT;
 
         int _saveIndex;
         int column = getColumn() - 1;
@@ -5088,7 +5079,7 @@ _loop250:
         int _ttype;
         Token _token = null;
         int _begin = text.length();
-        _ttype = VOCAB;
+        _ttype = JavaTokenTypes.VOCAB;
 
         int _saveIndex;
 
@@ -5128,13 +5119,11 @@ _loop250:
     }
 
 
-    private static final long[] mk_tokenSet_8()
+    private static final long[] mk_tokenSet_0()
     {
         long[] data = new long[1025];
-        data[0] = 70368744177664L;
-        data[1] = 481036337264L;
 
-        for (int i = 2; i <= 1024; i++)
+        for (int i = 0; i <= 1024; i++)
         {
             data[i] = 0L;
         }
@@ -5143,40 +5132,52 @@ _loop250:
     }
 
 
-    private static final long[] mk_tokenSet_7()
-    {
-        long[] data = new long[1025];
-        data[0] = 287948901175001088L;
-        data[1] = 541165879422L;
-
-        for (int i = 2; i <= 1024; i++)
-        {
-            data[i] = 0L;
-        }
-
-        return data;
-    }
-
-
-    private static final long[] mk_tokenSet_6()
-    {
-        long[] data = new long[1025];
-        data[0] = 0L;
-        data[1] = 343597383760L;
-
-        for (int i = 2; i <= 1024; i++)
-        {
-            data[i] = 0L;
-        }
-
-        return data;
-    }
-
-
-    private static final long[] mk_tokenSet_5()
+    private static final long[] mk_tokenSet_1()
     {
         long[] data = new long[2048];
-        data[0] = -17179869185L;
+        data[0] = -9217L;
+
+        for (int i = 1; i <= 1022; i++)
+        {
+            data[i] = -1L;
+        }
+
+        data[1023] = 9223372036854775807L;
+
+        for (int i = 1024; i <= 2047; i++)
+        {
+            data[i] = 0L;
+        }
+
+        return data;
+    }
+
+
+    private static final long[] mk_tokenSet_2()
+    {
+        long[] data = new long[2048];
+        data[0] = -4398046520321L;
+
+        for (int i = 1; i <= 1022; i++)
+        {
+            data[i] = -1L;
+        }
+
+        data[1023] = 9223372036854775807L;
+
+        for (int i = 1024; i <= 2047; i++)
+        {
+            data[i] = 0L;
+        }
+
+        return data;
+    }
+
+
+    private static final long[] mk_tokenSet_3()
+    {
+        long[] data = new long[2048];
+        data[0] = -549755813889L;
         data[1] = -268435457L;
 
         for (int i = 2; i <= 1022; i++)
@@ -5215,10 +5216,10 @@ _loop250:
     }
 
 
-    private static final long[] mk_tokenSet_3()
+    private static final long[] mk_tokenSet_5()
     {
         long[] data = new long[2048];
-        data[0] = -549755813889L;
+        data[0] = -17179869185L;
         data[1] = -268435457L;
 
         for (int i = 2; i <= 1022; i++)
@@ -5237,53 +5238,43 @@ _loop250:
     }
 
 
-    private static final long[] mk_tokenSet_2()
-    {
-        long[] data = new long[2048];
-        data[0] = -4398046520321L;
-
-        for (int i = 1; i <= 1022; i++)
-        {
-            data[i] = -1L;
-        }
-
-        data[1023] = 9223372036854775807L;
-
-        for (int i = 1024; i <= 2047; i++)
-        {
-            data[i] = 0L;
-        }
-
-        return data;
-    }
-
-
-    private static final long[] mk_tokenSet_1()
-    {
-        long[] data = new long[2048];
-        data[0] = -9217L;
-
-        for (int i = 1; i <= 1022; i++)
-        {
-            data[i] = -1L;
-        }
-
-        data[1023] = 9223372036854775807L;
-
-        for (int i = 1024; i <= 2047; i++)
-        {
-            data[i] = 0L;
-        }
-
-        return data;
-    }
-
-
-    private static final long[] mk_tokenSet_0()
+    private static final long[] mk_tokenSet_6()
     {
         long[] data = new long[1025];
+        data[0] = 0L;
+        data[1] = 343597383760L;
 
-        for (int i = 0; i <= 1024; i++)
+        for (int i = 2; i <= 1024; i++)
+        {
+            data[i] = 0L;
+        }
+
+        return data;
+    }
+
+
+    private static final long[] mk_tokenSet_7()
+    {
+        long[] data = new long[1025];
+        data[0] = 287948901175001088L;
+        data[1] = 541165879422L;
+
+        for (int i = 2; i <= 1024; i++)
+        {
+            data[i] = 0L;
+        }
+
+        return data;
+    }
+
+
+    private static final long[] mk_tokenSet_8()
+    {
+        long[] data = new long[1025];
+        data[0] = 70368744177664L;
+        data[1] = 481036337264L;
+
+        for (int i = 2; i <= 1024; i++)
         {
             data[i] = 0L;
         }
