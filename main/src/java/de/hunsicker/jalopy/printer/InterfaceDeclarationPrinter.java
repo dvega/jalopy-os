@@ -74,9 +74,20 @@ class InterfaceDeclarationPrinter
         }
 
         PrinterFactory.create(modifiers).print(modifiers, out);
+
+        AST keyword = modifiers.getNextSibling();
+
+        printCommentsBefore(keyword, NodeWriter.NEWLINE_NO, out);
+
         out.print(INTERFACE_SPACE, JavaTokenTypes.LITERAL_interface);
 
-        AST identifier = modifiers.getNextSibling();
+        if (printCommentsAfter(keyword, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
+        {
+            if (!out.newline)
+                out.print(SPACE, JavaTokenTypes.WS);
+        }
+
+        AST identifier = keyword.getNextSibling();
         PrinterFactory.create(identifier).print(identifier, out);
 
         AST extendsClause = identifier.getNextSibling();

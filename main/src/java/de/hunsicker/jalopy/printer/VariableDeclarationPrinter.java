@@ -352,7 +352,7 @@ SEARCH:
 
                                         if (
                                             isNewChunk(
-                                                (JavaNode) def.getNextSibling(),
+                                                def.getNextSibling(),
                                                 JavaTokenTypes.VARIABLE_DEF))
                                         {
                                             break SEARCH;

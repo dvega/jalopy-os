@@ -8,6 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
@@ -22,6 +23,8 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.StringHelper;
 
+import org.apache.oro.text.perl.Perl5Util;
+
 
 /**
  * Skeleton implementation of the printer interface. Provides comment printing and blank
@@ -34,6 +37,10 @@ abstract class AbstractPrinter
     implements Printer
 {
     //~ Static variables/initializers ----------------------------------------------------
+
+    static final Perl5Util REGEX_ENGINE = new Perl5Util();
+
+    static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     static final String ASSERT_SPACE = "assert " /* NOI18N */;
     static final String ASSIGN = "=" /* NOI18N */;
@@ -76,7 +83,7 @@ abstract class AbstractPrinter
     static final String PARENTHESES = "()" /* NOI18N */;
     static final String QUESTION_SPACE = "? " /* NOI18N */;
     static final String RCURLY = "}" /* NOI18N */;
-    static final String RCURLY_SPACE = " }" /* NOI18N */;
+    static final String SPACE_RCURLY = " }" /* NOI18N */;
     static final String RETURN = "return" /* NOI18N */;
     static final String RPAREN = ")" /* NOI18N */;
     static final String SEMI = ";" /* NOI18N */;
@@ -220,7 +227,6 @@ abstract class AbstractPrinter
                 int length =
                     (marker.column >= indentLength) ? (marker.column - indentLength)
                                                     : marker.column;
-
                 out.print(out.getString(length), JavaTokenTypes.WS);
             }
             else if (
@@ -733,7 +739,7 @@ abstract class AbstractPrinter
                     ConventionDefaults.INDENT_SIZE_COMMENT_ENDLINE);
 
             CommonHiddenStreamToken firstComment =
-                (CommonHiddenStreamToken) n.getHiddenAfter();
+                n.getHiddenAfter();
 
             // if we have more than one comment
             if (firstComment.getHiddenAfter() != null)
@@ -898,22 +904,22 @@ abstract class AbstractPrinter
 
                     if (n.getStartLine() != comment.getLine())
                     {
-                        switch (out.last)
+                        /*switch (out.last)
                         {
                             case JavaTokenTypes.SEPARATOR_COMMENT :
                                 break;
 
                             default :
 
-                                /*if (keepLines && (previousComment != null))
+                                if (keepLines && (previousComment != null))
                                 {
                                     printBlankLinesBetweenComments(comment,
                                                                    previousComment,
                                                                    linesToKeep,
                                                                    out);
-                                }*/
+                                }
                                 break;
-                        }
+                        }*/
 
                         printCommentBefore(
                             n, comment, comment == firstComment, newlineBefore,
@@ -1216,6 +1222,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.CLASS_DEF :
                 {
                     JavaNode prev = node.getPreviousSibling();
+///CLOVER:OFF
 OUTER:
                     switch (prev.getType())
                     {
@@ -1288,6 +1295,7 @@ OUTER:
 
                     break;
                 }
+///CLOVER:ON
 
                 case JavaTokenTypes.INTERFACE_DEF :
                 {
@@ -2186,7 +2194,8 @@ OUTER:
         NodeWriter              out)
       throws IOException
     {
-        printBlankLinesBefore(node, comment, first, out);
+        if (newlineBefore)
+            printBlankLinesBefore(node, comment, first, out);
 
         boolean retain = false;
         int indent = 0;
@@ -2286,24 +2295,29 @@ OUTER:
         NodeWriter              out)
       throws IOException
     {
+
+        // we always split the comment into several lines in order to indent
+        // the text correctly (and the proper eol characters are used)
         String[] lines = null;
+
         boolean format =
             this.settings.getBoolean(
                 ConventionKeys.COMMENT_FORMAT_MULTI_LINE,
                 ConventionDefaults.COMMENT_FORMAT_MULTI_LINE);
 
-        // we always split the comment into several lines in order to indent
-        // the text correctly (and the proper eol characters are used)
         if (format)
         {
             lines =
-                StringHelper.wrapStringToArray(
-                    comment.getText(), Integer.MAX_VALUE, out.lineSeparator, false,
+                StringHelper.wrap(comment.getText(), Integer.MAX_VALUE, false,
                     StringHelper.TRIM_LEADING);
         }
         else
         {
-            lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
+            List l =  new ArrayList(15);
+
+            REGEX_ENGINE.split(l, "/\r\n|\n|\r/" /* NOI18N */, comment.getText(), Perl5Util.SPLIT_ALL);
+
+            lines = (String[])l.toArray(EMPTY_STRING_ARRAY);
         }
 
         int lastLine = lines.length - 1;

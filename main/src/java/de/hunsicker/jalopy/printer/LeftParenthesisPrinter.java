@@ -138,7 +138,7 @@ final class LeftParenthesisPrinter
         AST rightParen = null;
         int count = 0;
 
-ITERATION: 
+ITERATION:
         for (AST child = leftParen; child != null; child = child.getNextSibling())
         {
             PrinterFactory.create(child).print(child, tester);

@@ -6,6 +6,7 @@
  */
 package de.hunsicker.jalopy.printer;
 
+
 import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
@@ -71,7 +72,7 @@ class InfixOperatorPrinter
 
         int count = 0; // number of brace pairs
 
-ITERATE: 
+ITERATE:
 
         // determine whether the operands already have or need parentheses
         for (AST child = node.getFirstChild(); child != null;
@@ -317,6 +318,11 @@ ITERATE:
         // whitespace around the operator
         if (!wrapBeforeOperator)
         {
+            if (printCommentsBefore(operator,NodeWriter.NEWLINE_NO, out) && out.newline)
+            {
+                printIndentation(out);
+            }
+
             if (paddOperator)
             {
                 out.print(SPACE, JavaTokenTypes.WS);
@@ -394,6 +400,11 @@ ITERATE:
 
         if (wrapBeforeOperator)
         {
+            if (printCommentsBefore(operator, NodeWriter.NEWLINE_NO, out) && out.newline)
+            {
+                printIndentation(out);
+            }
+
             if (paddOperator)
             {
                 if (!wrapped)
@@ -433,10 +444,31 @@ ITERATE:
         //
         if (rhs.hasCommentsAfter())
         {
-            // 'null' means no operator follows
-            if (operator.getNextSibling() == null)
+            JavaNode parent = operator.getParent();
+
+            switch (parent.getType())
             {
-                printIndentation(out);
+                case JavaTokenTypes.EXPR: // means this is the last operator
+                    AST next = parent.getNextSibling();
+
+                    if (next != null)
+                    {
+                        switch (next.getType())
+                        {
+                            case JavaTokenTypes.RPAREN:
+                                break;
+
+                            default:
+                                printIndentation(out);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        printIndentation(out);
+                    }
+
+                    break;
             }
         }
 

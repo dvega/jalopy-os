@@ -58,6 +58,8 @@ final class PrefixOperatorPrinter
         NodeWriter out)
       throws IOException
     {
+        printCommentsBefore(node, out);
+
         out.print(node.getText(), node.getType());
 
         switch (node.getType())

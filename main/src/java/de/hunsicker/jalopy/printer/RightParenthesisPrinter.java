@@ -96,6 +96,8 @@ final class RightParenthesisPrinter
             }
         }
 
+        printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
+
         if (
             this.settings.getBoolean(
                 ConventionKeys.PADDING_PAREN, ConventionDefaults.PADDING_PAREN))

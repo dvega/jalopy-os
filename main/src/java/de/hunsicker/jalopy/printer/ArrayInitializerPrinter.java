@@ -170,7 +170,14 @@ final class ArrayInitializerPrinter
                         }
                     }
 
+                    if (printCommentsBefore(node, NodeWriter.NEWLINE_NO, out) && out.newline)
+                    {
+                        printIndentation(out);
+                    }
+
                     out.print(LCURLY, JavaTokenTypes.LCURLY);
+
+                    printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 
                     Marker marker = null;
 
@@ -213,6 +220,8 @@ final class ArrayInitializerPrinter
 
                     int count = 0;
 
+                    AST rcurly = null;
+
                     // print the elements
                     for (
                         JavaNode child = firstElement; child != null;
@@ -239,6 +248,7 @@ final class ArrayInitializerPrinter
                                 break;
 
                             case JavaTokenTypes.RCURLY :
+                                rcurly = child;
                                 break;
 
                             default :
@@ -255,12 +265,12 @@ final class ArrayInitializerPrinter
                                         || (wrapAsNeeded
                                         && ((out.column + tester.length) > lineLength)))
                                     {
-                                        JavaNode n = (JavaNode) child;
+
 
                                         if (
-                                            n.hasCommentsBefore()
-                                            && (((CommonHiddenStreamToken) n
-                                            .getHiddenBefore()).getLine() == n
+                                            child.hasCommentsBefore()
+                                            && (child
+                                            .getHiddenBefore().getLine() == child
                                             .getStartLine()))
                                         {
                                             ;
@@ -336,7 +346,10 @@ final class ArrayInitializerPrinter
 
                     printIndentation(out);
 
+                    printCommentsBefore(rcurly, NodeWriter.NEWLINE_NO, out);
                     out.print(RCURLY, JavaTokenTypes.ARRAY_INIT);
+                    printCommentsAfter(rcurly, NodeWriter.NEWLINE_YES, NodeWriter.NEWLINE_NO, out);
+
                     out.testers.release(tester);
 
                     // we're done
@@ -363,7 +376,12 @@ final class ArrayInitializerPrinter
         }
 
         // print everything on one line
-        if (bracesPadding)
+        if (printCommentsBefore(node, NodeWriter.NEWLINE_NO, out) && out.newline)
+        {
+            printIndentation(out);
+            out.print(LCURLY, JavaTokenTypes.LCURLY);
+        }
+        else if (bracesPadding)
         {
             out.print(LCURLY_SPACE, JavaTokenTypes.LCURLY);
         }
@@ -378,6 +396,8 @@ final class ArrayInitializerPrinter
 
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
+
+        AST rcurly = null;
 
         for (
             JavaNode child = (JavaNode) node.getFirstChild(); child != null;
@@ -432,6 +452,15 @@ final class ArrayInitializerPrinter
 
                             break;
 
+                        case JavaTokenTypes.RCURLY:
+                            rcurly = child;
+
+                            if (child.hasCommentsBefore())
+                            {
+                                bracesPadding = false;
+                            }
+                            break;
+
                         default :
                             PrinterFactory.create(child).print(child, out);
 
@@ -449,14 +478,21 @@ final class ArrayInitializerPrinter
 
         out.unindent();
 
-        if (bracesPadding)
+        printCommentsBefore(rcurly, NodeWriter.NEWLINE_NO, out);
+
+        if (out.newline)
+            printIndentation(out);
+
+        if (!out.newline && bracesPadding)
         {
-            out.print(RCURLY_SPACE, JavaTokenTypes.RCURLY);
+            out.print(SPACE_RCURLY, JavaTokenTypes.RCURLY);
         }
         else
         {
             out.print(RCURLY, JavaTokenTypes.RCURLY);
         }
+
+        printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
     }
 
 

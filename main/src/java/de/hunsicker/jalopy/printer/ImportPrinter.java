@@ -67,7 +67,7 @@ final class ImportPrinter
         NodeWriter out)
       throws IOException
     {
-        printCommentsBefore(node, NodeWriter.NEWLINE_YES, out);
+        printCommentsBefore(node, out);
         trackPosition((JavaNode) node, out);
 
         out.print(IMPORT_SPACE, JavaTokenTypes.LITERAL_import);
