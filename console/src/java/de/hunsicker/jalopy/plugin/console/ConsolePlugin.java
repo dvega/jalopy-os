@@ -16,6 +16,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import de.hunsicker.io.DirectoryScanner;
 import de.hunsicker.io.ExtensionFilter;
@@ -47,7 +48,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 
 /**
  * The console Plug-in provides a powerful command line interface for the Jalopy engine.
- * 
+ *
  * <p>
  * Refer to the online manual for the list of valid command line options. You can find
  * the most recent version of the manual on the official Jalopy homepage: <a
@@ -61,14 +62,17 @@ public final class ConsolePlugin
 {
     //~ Static variables/initializers ----------------------------------------------------
 
+    /** Represents the --nobackup option. */
+    private static final int OPT_NOBACKUP = -10;
+
     /** Represents the --force option. */
     private static final int OPT_FORCE = -100;
 
     /** Represents the --disclaimer option. */
     private static final int OPT_DISCLAIMER = -1000;
 
-    /** Represents the --nobackup option. */
-    private static final int OPT_NOBACKUP = -10;
+    /** Represents the --classpath option. */
+    private static final int OPT_CLASSPATH = -10000;
 
     /** Indicates that we use a file as input source. */
     private static final int IO_FILE = 1;
@@ -101,6 +105,7 @@ public final class ConsolePlugin
     private static final LongOpt[] LONG_OPTIONS =
     {
         new LongOpt("convention" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+        new LongOpt("classpath" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, OPT_CLASSPATH),
         new LongOpt("destination" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'd'),
         new LongOpt("disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
         new LongOpt("encoding" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'e'),
@@ -744,9 +749,11 @@ public final class ConsolePlugin
     /**
      * Loads the repository
      */
-    private void loadRepository()
+    private void loadRepository(List files)
     {
         ClassRepository repository = ClassRepository.getInstance();
+
+        /*
         ClassRepositoryEntry.Info[] infos = repository.getInfo();
         List files = new ArrayList(infos.length);
 
@@ -754,6 +761,7 @@ public final class ConsolePlugin
         {
             files.add(infos[i].getLocation());
         }
+        */
 
         try
         {
@@ -905,6 +913,30 @@ public final class ConsolePlugin
 
                 case OPT_DISCLAIMER :
                     displayLicence();
+
+                    break;
+
+                case OPT_CLASSPATH:
+
+                    List files = new ArrayList();
+
+                    for (StringTokenizer tokens = new StringTokenizer(g.getOptarg(), ";"); tokens.hasMoreElements();)
+                    {
+                        File file = new File(tokens.nextToken()).getAbsoluteFile();
+
+                        if (!file.exists())
+                        {
+                            Object[] args = { file };
+                            System.out.println(
+                                MessageFormat.format(
+                                    BUNDLE.getString("INVALID_CLASSPATH" /* NOI18N */), args));
+                            System.exit(1);
+                        }
+
+                        files.add(file);
+                    }
+
+                    loadRepository(files);
 
                     break;
 
