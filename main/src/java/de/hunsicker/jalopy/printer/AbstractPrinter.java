@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -723,8 +723,8 @@ class AbstractPrinter
             {
                 // print the first comment directly after the node
                 printCommentAfter(
-                    n, firstComment, newlineBefore, NodeWriter.NEWLINE_YES,
-                    WHITESPACE_YES, true, out);
+                    n, firstComment, newlineBefore, NodeWriter.NEWLINE_YES, WHITESPACE_YES,
+                    true, out);
 
                 if (out.mode != NodeWriter.MODE_DEFAULT)
                 {
@@ -1823,8 +1823,7 @@ class AbstractPrinter
                         }
 
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1857,8 +1856,7 @@ class AbstractPrinter
 
                         //blankLinesForComment = 1;
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
 
@@ -1870,8 +1868,7 @@ class AbstractPrinter
                         }
 
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1908,8 +1905,7 @@ class AbstractPrinter
                         }
 
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1946,8 +1942,7 @@ class AbstractPrinter
                         }
 
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -1984,8 +1979,7 @@ class AbstractPrinter
                         }
 
                         blankLinesForComment =
-                            getCommentBlankLines(
-                                comment, node.getPreviousSibling(), out);
+                            getCommentBlankLines(comment, node.getPreviousSibling(), out);
 
                         break;
                 }
@@ -2338,8 +2332,7 @@ class AbstractPrinter
         NodeWriter              out)
       throws IOException
     {
-        String[] lines = StringHelper.split(
-                comment.getText(), out.originalLineSeparator);
+        String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
 
         int lastLine = lines.length - 1;
 

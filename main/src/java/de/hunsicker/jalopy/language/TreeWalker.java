@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -33,7 +33,7 @@ import de.hunsicker.antlr.collections.AST;
  * #walkNode} too.
  * </p>
  * <pre class="snippet">
- * // Visits only IMPORT nodes and quits after the last IMPORT node found
+ * // visits only IMPORT nodes and quits after the last IMPORT node found
  * protected void walkNode(AST node)
  * {
  *     switch (node.getType())
@@ -42,6 +42,7 @@ import de.hunsicker.antlr.collections.AST;
  *             // skip to next child
  *             walkNode(node.getFirstChild());
  *             break;
+ * 
  *         case JavaTokenTypes.PACKAGE_DEF:
  *             // skip to next child
  *             walkNode(node.getNextSibling());
@@ -50,9 +51,11 @@ import de.hunsicker.antlr.collections.AST;
  *        case JavaTokenTypes.IMPORT:
  *             // only visit root node, DON'T walk over it's children
  *             visit(node);
+ * 
  *             // continue with the next node
  *             walkNode(node.getNextSibling());
  *             break;
+ * 
  *         case JavaTokenTypes.CLASS_DEF:
  *             // quit after the first non-IMPORT node
  *             return;

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -34,8 +34,11 @@ public class Recognizer
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    /** Represents an unknown file. */
-    public static final String UNKNOWN_FILE = "<unknown>";
+    /**
+     * Represents an unknown filename that may be used for the <em>filename</em> argument
+     * with {@link #parse(Reader, String)} or {@link #parse(String, String)}.
+     */
+    public static final String UNKNOWN_FILE = "<unknown>" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -76,17 +79,6 @@ public class Recognizer
     }
 
     //~ Methods --------------------------------------------------------------------------
-
-    /**
-     * Returns the root node of the generated parse tree.
-     *
-     * @return root node of the generated parse tree.
-     */
-    public AST getParseTree()
-    {
-        return this.parser.getParseTree();
-    }
-
 
     /**
      * Sets the current column of the lexer.
@@ -169,6 +161,17 @@ public class Recognizer
     public int getLine()
     {
         return this.lexer.getLine();
+    }
+
+
+    /**
+     * Returns the root node of the generated parse tree.
+     *
+     * @return root node of the generated parse tree.
+     */
+    public AST getParseTree()
+    {
+        return this.parser.getParseTree();
     }
 
 

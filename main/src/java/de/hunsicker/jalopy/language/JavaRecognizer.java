@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -72,20 +72,6 @@ public final class JavaRecognizer
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Marks a position in the given input source.
-     *
-     * @param line a valid line number (<code>&gt;= 1</code>).
-     * @param line a valid column offset (<code>&gt;= 1</code>).
-     *
-     * @since 1.0b9
-     */
-    public void markPosition(int line, int column)
-    {
-        if (line < 1 || column < 1)
-            throw new IllegalArgumentException();
-    }
-
-    /**
      * Creates a new JavaRecognizer object.
      */
     public JavaRecognizer()
@@ -108,10 +94,30 @@ public final class JavaRecognizer
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns the root node of the generated parse tree. Note that every call to this method triggers the tree
-     * transformations, which could be quite expensive. So make sure to avoid
-     * unnecessary calls.
+     * Returns the package name of the parsed source file.
      *
+     * @return the package name of the parsed source file. Returns the empty String if
+     *         the source file contains no package information.
+     *
+     * @throws IllegalStateException if the parser is still running or wasn't started
+     *         yet.
+     */
+    public String getPackageName()
+    {
+        if (!this.finished)
+        {
+            throw new IllegalStateException("parser not started or still running");
+        }
+
+        return ((JavaParser) this.parser).getPackageName();
+    }
+
+
+    /**
+     * Returns the root node of the generated parse tree. Note that every call to this
+     * method triggers the tree transformations, which could be quite expensive. So make
+     * sure to avoid unnecessary calls.
+     * 
      * <p>
      * As we don't use checked exceptions to indicate runtime failures, one may check
      * successful execution of the transformations prior to perform further processing:
@@ -128,7 +134,8 @@ public final class JavaRecognizer
      * </pre>
      * </p>
      *
-     * @return root node of the generated AST.
+     * @return root node of the generated AST (of type {@link
+     *         de.hunsicker.jalopy.language.JavaNode &lt;JavaNode&gt;}).
      *
      * @throws IllegalStateException if the parser is still running or wasn't started
      *         yet.
@@ -203,26 +210,6 @@ public final class JavaRecognizer
 
 
     /**
-     * Returns the package name of the parsed source file.
-     *
-     * @return the package name of the parsed source file. Returns the empty String if
-     *         the source file contains no package information.
-     *
-     * @throws IllegalStateException if the parser is still running or wasn't started
-     *         yet.
-     */
-    public String getPackageName()
-    {
-        if (!this.finished)
-        {
-            throw new IllegalStateException("parser not started or still running");
-        }
-
-        return ((JavaParser) this.parser).getPackageName();
-    }
-
-
-    /**
      * Indicates whether the current tree contains annotations.
      *
      * @return <code>true</code> if the tree contains annotations.
@@ -232,6 +219,27 @@ public final class JavaRecognizer
     public boolean hasAnnotations()
     {
         return !_annotations.isEmpty();
+    }
+
+
+    /**
+     * Marks a position in the given input source.
+     *
+     * @param line a valid line number (<code>&gt;= 1</code>).
+     * @param line a valid column offset (<code>&gt;= 1</code>).
+     *
+     * @throws IllegalArgumentException DOCUMENT ME!
+     *
+     * @since 1.0b9
+     */
+    public void markPosition(
+        int line,
+        int column)
+    {
+        if ((line < 1) || (column < 1))
+        {
+            throw new IllegalArgumentException();
+        }
     }
 
 
@@ -428,8 +436,8 @@ public final class JavaRecognizer
                 case JavaTokenTypes.IMPLEMENTS_CLAUSE :
                 case JavaTokenTypes.MODIFIERS :
                 case JavaTokenTypes.TYPE :
-                case JavaTokenTypes.ASSIGN:
-                case JavaTokenTypes.DOT:
+                case JavaTokenTypes.ASSIGN :
+                case JavaTokenTypes.DOT :
                 case JavaTokenTypes.ARRAY_DECLARATOR :
                 case JavaTokenTypes.PARAMETERS :
                 case JavaTokenTypes.PARAMETER_DEF :
