@@ -295,11 +295,11 @@ public final class ConsolePlugin
      * Returns a string containing a list of the short-option characters for short
      * command line options.
      *
-     * @return <code>d:e:f:l:t:hcvr::s:</code>
+     * @return <code>c:d:e:f:hl:s:r::t:v</code>
      */
     private String getOptString()
     {
-        return "d:e:f:l:t:hcvr::s:" /* NOI18N */;
+        return "c:d:e:f:hl:s:r::t:v" /* NOI18N */;
     }
 
 
@@ -821,6 +821,9 @@ public final class ConsolePlugin
                     break;
 
                 case 'c' :
+                    _convention = g.getOptarg();
+                    break;
+
                 case 's' :
                     _convention = g.getOptarg();
 
