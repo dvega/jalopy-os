@@ -90,12 +90,6 @@ escaped if not used as part of another HTML or Javadoc tag.
   <entry>&nbsp;</entry>
   <entry>Commercial &quot;at&quot; sign</entry>
 </row>
-<row rowsep="1" valign="top">
-  <entry align="center">{</entry>
-  <entry align="center">&amp;123;</entry>
-  <entry>&nbsp;</entry>
-  <entry>Left curly brace</entry>
-</row>
 </tbody>
 </tgroup>
 </table>
@@ -262,7 +256,21 @@ Javadoc comments, and enable the auto-correction of misspelled custom tag names.
 <sect3 id="javadoc-tags-standard">
 <title>Standard Tags</title>
 <para>
-Allows the definition of custom Javadoc standard tag names.
+Allows the definition of custom Javadoc standard tag names. The current build-in Standard
+tags are:
+<literal>@author</literal>,
+<literal>@deprecated</literal>,
+<literal>@exception</literal>,
+<literal>@param</literal>,
+<literal>@return</literal>,
+<literal>@see</literal>,
+<literal>@serial</literal>,
+<literal>@serialData</literal>,
+<literal>@serialField</literal>,
+<literal>@since</literal>,
+<literal>@throws</literal>,
+<literal>@todo</literal>,
+<literal>@version</literal>
 </para>
 
 <para>
@@ -279,6 +287,12 @@ Valid standard tag names have the form
 <title>In-line Tags</title>
 <para>
 Allows the definition of custom Javadoc in-line tag names.
+The current build-in In-line tags are:
+<literal>@docRoot</literal>,
+<literal>@inheritDoc</literal>,
+<literal>@link</literal>,
+<literal>@linkPlain</literal>,
+<literal>@value</literal>
 </para>
 
 <para>

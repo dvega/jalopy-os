@@ -56,7 +56,8 @@ The output style for field Javadoc comments is now configurable. See
 </itemizedlist>
 
 <para>
-All aforementioned features were requested and sponsored by the german <ulink url="http://www.tk-online.de/">Techniker Krankenkasse</ulink>
+All aforementioned features were requested, sponsored and thoroughly tested by the German
+<ulink url="http://www.tk-online.de/">Techniker Krankenkasse</ulink>. Hurray!
 </para>
 
 <itemizedlist mark="square">
@@ -240,6 +241,15 @@ Eclipse Plug-in: upon startup of the IDE <classname>org.eclipse.swt.SWTException
 was thrown. Reportedy by Dirk Jacobs
 (<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=567314&amp;group_id=45216">#567314</ulink>)
 </listitem>
+<listitem>
+Backup files were always kept if the output target was not a file
+</listitem>
+
+<listitem>
+jEdit Plug-in: the <gui-label>Format current Buffer</gui-label> menu item was grayed out upon start-up if the buffer contained
+a non-Java file.
+</listitem>
+
 </itemizedlist>
 <para/>
 </listitem>
@@ -248,6 +258,11 @@ was thrown. Reportedy by Dirk Jacobs
 Changes
 
 <itemizedlist mark="square">
+<listitem>
+The sources have been internationalized. If you're willing to provide translations of the
+used message bundles, please <ulink url="./contact.html">contact</ulink> me.
+</listitem>
+
 <listitem>
 Eclipse Plug-in: the <guilabel>Format</guilabel> label in the project view context menu
 no longer appears at the end. Suggested by Davor Cengija and Vincent Massol
@@ -285,11 +300,6 @@ Thank you!
 Parameter alignment of method or constructor declarations now works regardless
 of the indentation settings (it did not work with custom indentation in
 earlier versions)
-</listitem>
-
-<listitem>
-The preview window is no longer a non-modal dialog but a floating frame; so you
-can stick it behind the main settings dialog.
 </listitem>
 
 <listitem>

@@ -14,12 +14,14 @@
 <title>System requirements</title>
 <para>
 The Jalopy Ant Plug-in requires Ant 1.4 or above. It has only been tested with
-Ant 1.5.
+Ant 1.5.1. See <xref linkend="installation-requirements" /> for the basic requirements to
+run Jalopy.
 </para>
 
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements to
-run Jalopy.
+To obtain more information about this wonderful build tool, visit the official
+Ant homepage at the Apache Jakarta site:
+<ulink url="http://jakarta.apache.org/ant/">http://jakarta.apache.org/ant/</ulink>
 </para>
 </sect2>
 

@@ -20,11 +20,16 @@
 <para>
 The Plug-in requires NetBeans 3.3 (or above) or Sun ONE Studio 4. It has been
 successfully tested with NetBeans 3.3.1 and 3.3.2.
+See <xref linkend="installation-requirements" /> for the basic requirements
+to run Jalopy.
 </para>
 
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements
-to run Jalopy.
+To obtain more information about this
+powerful IDE, visit the official NetBeans homepage:
+<ulink url="http://www.netbeans.org/">http://www.netbeans.org/</ulink> or the Sun ONE Studio
+pages at Sun:
+<ulink url="http://wwws.sun.com/software/sundev/jde/index.html">http://wwws.sun.com/software/sundev/jde/</ulink>
 </para>
 </sect2>
 

@@ -253,12 +253,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </font>]]></bottom>
 
       <package name="de.hunsicker.jalopy" />
+      <package name="de.hunsicker.jalopy.language" />
       <package name="de.hunsicker.jalopy.storage" />
       <package name="de.hunsicker.jalopy.swing" />
       <package name="de.hunsicker.jalopy.plugin" />
       <package name="de.hunsicker.jalopy.plugin.console" />
 
-      <group title="Core classes" packages="de.hunsicker.jalopy*" />
+      <group title="Core engine" packages="de.hunsicker.jalopy*" />
       <group title="Graphical user interface support" packages="de.hunsicker.jalopy.swing*" />
       <group title="Plug-in support" packages="de.hunsicker.jalopy.plugin*" />
       <group title="Console Plug-in" packages="de.hunsicker.jalopy.plugin.console*" />
@@ -267,8 +268,12 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <sourcepath path="${dir.src.main.java}" />
 
       <source file="${dir.src.main.java}/de/hunsicker/io/FileFormat.java" />
+      <!--<source file="${dir.src.main.java}/de/hunsicker/jalopy/language/Parser.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/Lexer.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/Recognizer.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/JavaRecognizer.java" />
       <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/Node.java" />
-      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/JavaNode.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/language/JavaNode.java" /> -->
       <source file="${dir.src.main.java}/de/hunsicker/util/ChainingRuntimeException.java" />
 
       <link offline="true" href="http://java.sun.com/products/jdk/1.4/docs/api"

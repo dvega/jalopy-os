@@ -704,7 +704,7 @@ You can control the space printed before each parameter with the
 
 <listitem>
 <para id="wrap-call-chained">
-Chained Method Calls
+Method Call chains
 </para>
 <para>
 Forces a line wrap after each chained method call.

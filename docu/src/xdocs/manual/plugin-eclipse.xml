@@ -16,11 +16,14 @@
 <title>System requirements</title>
 <para>
 This Plug-in requires Eclipse 2.0. It may or may not work with prior or
-later builds.
+later builds. See <xref linkend="installation-requirements" /> for the basic requirements
+to run Jalopy.
 </para>
 
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements to run Jalopy.
+To obtain more information about this powerful IDE, visit the official
+Eclipse homepage:
+<ulink url="http://www.eclipse.org/">http://www.eclipse.org/</ulink>
 </para>
 </sect2>
 

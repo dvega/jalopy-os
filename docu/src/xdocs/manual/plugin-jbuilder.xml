@@ -17,10 +17,14 @@
 <sect2 id="plugin-jbuilder-installation-requirements">
 <title>System requirements</title>
 <para>
-The JBuilder Plug-in requires JBuilder 5.0 or higher.
+The JBuilder Plug-in requires JBuilder 5.0 or higher. See <xref linkend="installation-requirements" />
+for the basic requirements to run Jalopy.
 </para>
+
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements to run Jalopy.
+To obtain more information about this
+powerful IDE, visit the official JBuilder homepage at the Borland site:
+<ulink url="http://www.borland.com/jbuilder/">http://www.borland.com/jbuilder/</ulink>
 </para>
 </sect2>
 

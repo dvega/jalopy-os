@@ -75,7 +75,8 @@ Deep indent
 
 <para>
 Deep indentation means that lines will be indented relative to the current
-parentheses or assignment offset.
+parentheses or assignment offset. This way consecutive code sections are somewhat easier
+to recognize at the downside of consuming more horizontal space.
 </para>
 
 <example id="indentation-method-decl-deep">

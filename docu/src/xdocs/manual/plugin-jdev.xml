@@ -17,11 +17,13 @@
 <title>System requirements</title>
 <para>
 The JDeveloper Plug-in requires JDeveloper 9i. It has only been tested with
-JDeveloper 9.0.2.
+JDeveloper 9.0.2. See <xref linkend="installation-requirements" /> for the basic
+requirements to run Jalopy.
 </para>
 <para>
-See <xref linkend="installation-requirements" /> for the basic requirements to
-run Jalopy.
+To obtain more information about this powerful IDE, visit the official JDeveloper homepage
+at the Oracle site:
+<ulink url="http://otn.oracle.com/products/jdev/">http://otn.oracle.com/products/jdev/</ulink>
 </para>
 </sect2>
 
@@ -48,54 +50,76 @@ working.
 
 <sect1 id="plugin-jdev-integration">
 <title>Integration</title>
-<sect2>
-<title>Navigator popu menu</title>
 
+<sect2>
+<title>Navigator context menu</title>
 <para>
-The software adds a new menu item into the popup menu of the Navigator:
+The software adds a new menu item into the context popup menu of the Navigator:
 </para>
 <itemizedlist>
+
 <listitem>
 <para>
 <menuchoice>
-  <guimenuitem>Format Java</guimenuitem>
+  <guimenuitem>Format [Workspace|Project]</guimenuitem>
 </menuchoice>
 </para>
 <para>
-By selecting the &quot;Format Java&quot; menu item, all Java sources of the
-selected node are formatted according to the Jalopy settings.
+By selecting the &quot;Format&quot; menu item, all Java sources of the
+selected node are formatted according to the current Jalopy preferences.
 </para>
 <para>
 The item appears in the popup menu if the user clicks the right mouse button on
 a Java source node or any other parent node that may contain Java sources
-(Project node, EJB node, BC4J node, package node)
+(such as Workspace, Project, Directory, EJB or BC4J nodes).
 </para>
 </listitem>
 </itemizedlist>
 </sect2>
 
 <sect2>
-<title>settings dialog</title>
+<title>Java editor context menu</title>
 <para>
-The Jalopy settings are integrated into the preferences dialog of
+The software adds a new menu item into the context popup menu of Java code editors:
+</para>
+<itemizedlist>
+
+<listitem>
+<para>
+<menuchoice>
+  <guimenuitem>Format</guimenuitem>
+</menuchoice>
+</para>
+<para>
+By selecting the &quot;Format&quot; menu item, the contents of the active code editor view
+are formatted according to the current Jalopy preferences.
+</para>
+</listitem>
+</itemizedlist>
+</sect2>
+
+<sect2>
+<title>Preferences dialog</title>
+<para>
+The Jalopy preferences are integrated into the preferences dialog of
 JDeveloper 9i which is reachable through the
 <menuchoice>
   <guimenu><accel>T</accel>ools</guimenu>
   <guimenuitem><accel>P</accel>references...</guimenuitem>
 </menuchoice>
 menu.
-Each Jalopy settings page is added as a subentry to the main Jalopy
-Preference entry.
+Each Jalopy preferences page is added as a subentry to the main Jalopy
+preferences entry.
 </para>
 
 <para>
-Jalopy settings are stored in the <filename>$HOME/.jalopy</filename> directory.
+Jalopy preferences are stored in the <filename>$HOME/.jalopy</filename> directory.
 This is in contrast to other JDeveloper preferences which are stored within the
 IDE configuration files. It is intentional in order to allow reuse of Jalopy
-settings between different IDEs. Note that in this release, Jalopy
-settings are stored whenever the user leaves a page. If the user moves to
+preferences between different IDEs. Note that in this release, Jalopy
+preferences are stored whenever the user leaves a page. If the user moves to
 another settings page, all settings are stored to disk even if the user
-chooses to cancel the settings dialog later on.
+chooses to cancel the preferences dialog later on.
 </para>
 </sect2>
 </sect1>

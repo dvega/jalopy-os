@@ -5,7 +5,7 @@
 
 <sect1 id="footer">
 <title>Footer</title>
-<indexterm><primary>footer</primary></indexterm>
+<indexterm><primary>Footer</primary></indexterm>
 <para>
 Controls the printing of footers. Refer to <xref linkend="header" /> for an
 explanation of the different options.
