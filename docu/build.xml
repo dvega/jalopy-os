@@ -7,11 +7,11 @@
 Module              : docu
 Module-Dependencies : build, main
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -41,8 +41,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   </path>
 
   <xmlcatalog id="DTDs">
-  <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
-       location="${DIR.DTD.DOCBOOK}"/>
+    <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
+         location="${DIR.DOCBOOK.DTD}"/>
   </xmlcatalog>
 
   <!-- ==================================================================== -->
@@ -69,7 +69,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Initializes the build                                                -->
   <!-- ==================================================================== -->
   <target name="docu-init" depends="docu-bootstrap">
-    <tstamp/>
+    <tstamp>
+        <format property="TODAY_SHORT" pattern="MM/dd/yyyy" locale="en" />
+    </tstamp>
+
     <mkdir dir="${DIR.DOCS}/manual" />
     <mkdir dir="${DIR.DOCS}/site" />
     <mkdir dir="${DIR.DOCS}/api" />
@@ -78,7 +81,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="docu-append-main"
           if="PRESENT.MAIN">
     <echo file="${dir.src}/javadoc/packages.txt"
-          message="de.hunsicker.jalopy  
+          message="de.hunsicker.jalopy
                    de.hunsicker.jalopy.parser
                    de.hunsicker.jalopy.plugin
                    de.hunsicker.jalopy.prefs
@@ -135,13 +138,13 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the complete API documentation                               -->
   <!-- ==================================================================== -->
   <target name="docu-javadoc-all"
-          description="Creates the complete Javadoc API documentation" 
+          description="Creates the complete Javadoc API documentation"
           depends="docu-init">
     <available file="../build/build.xml" property="present.build" />
     <antcall target="docu-check-build" />
     <javadoc locale="en_US"
              maxmemory="196m"
-             packagenames="de.hunsicker.jalopy,  
+             packagenames="de.hunsicker.jalopy,
                    de.hunsicker.jalopy.parser,
                    de.hunsicker.jalopy.plugin,
                    de.hunsicker.jalopy.prefs,
@@ -215,7 +218,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the distribution API documentation                           -->
   <!-- ==================================================================== -->
   <target name="docu-javadoc"
-          description="Creates the distribution Javadoc API documentation" 
+          description="Creates the distribution Javadoc API documentation"
           depends="docu-init, docu-compile, docu-uptodate-javadoc"
           unless="uptodate.javadoc">
     <javadoc locale="en_US"
@@ -236,8 +239,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
              private="false"
              nohelp="true"
              verbose="false"
+
              stylesheetfile="${dir.src}/javadoc/stylesheet.css">
-             <!--additionalparam="-breakiterator -noqualifier all" -->
+        <!--additionalparam="-breakiterator -noqualifier all"-->
 
       <bottom><![CDATA[<font size="-1" class="footer">
       <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br>
@@ -284,8 +288,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the user manual                                              -->
   <!-- ==================================================================== -->
   <target name="docu-manual"
-          description="Creates the user manual" 
-          depends="docu-init, docu-uptodate-manual" 
+          description="Creates the user manual"
+          depends="docu-init, docu-uptodate-manual"
           unless="uptodate.manual">
 
     <copy tofile="${dir.src}/xdocs/manual/manual.xsl"
@@ -304,6 +308,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
            includes="manual.xml">
       <param name="base.dir" expression="${DIR.DOCS}/manual/" />
       <param name="build.time" expression="${TODAY}" />
+      <param name="chunk.tocs.and.lots" expression="0" />
       <xmlcatalog refid="DTDs"/>
     </xslt>
     <copy todir="${DIR.DOCS}/manual"
@@ -315,24 +320,26 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the offline web site                                         -->
   <!-- ==================================================================== -->
   <target name="docu-site"
-          description="Creates the project web pages" 
+          description="Creates the project web pages"
           depends="docu-init, docu-uptodate-site"
           unless="uptodate.site">
 
-    <copy tofile="${dir.src}/xdocs/site/site.xsl"
-          file="${dir.src}/xdocs/site/site.src.xsl" filtering="true"
-          overwrite="true" preservelastmodified="true">
+    <copy file="${dir.src}/xdocs/site/site.src.xsl" filtering="true"
+          tofile="${dir.src}/xdocs/site/site.xsl"
+          overwrite="true"
+          preservelastmodified="true">
       <filterset>
         <filtersfile file="../build/build.properties" />
       </filterset>
     </copy>
 
-    <copy tofile="${dir.src}/xdocs/site/download.xml"
-          file="${dir.src}/xdocs/site/download.src.xml" filtering="true"
+    <copy file="${dir.src}/xdocs/site/download.src.xml"
+          tofile="${dir.src}/xdocs/site/download.xml"
+          filtering="true"
           overwrite="true" preservelastmodified="true">
       <filterset>
         <filtersfile file="../build/build.properties" />
-        <filter token="TODAY" value="${TODAY}" />
+        <filter token="TODAY" value="${TODAY_SHORT}" />
         <filter token="SIZE.ANT" value="???" />
         <filter token="SIZE.CONSOLE" value="???" />
         <filter token="SIZE.ECLIPSE" value="???" />
@@ -364,7 +371,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
   <!-- ==================================================================== -->
   <!-- Creates the online web site                                          -->
-  <!-- ==================================================================== -->  
+  <!-- ==================================================================== -->
   <target name="docu-website"
           description="Creates the online website"
           depends="docu-compile">
@@ -387,7 +394,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           overwrite="true" preservelastmodified="true">
       <filterset>
         <filtersfile file="../build/build.properties" />
-        <filter token="TODAY" value="${TODAY}" />
+        <filter token="TODAY" value="${TODAY_SHORT}" />
         <filter token="SIZE.ANT" value="${size.ant}" />
         <filter token="SIZE.CONSOLE" value="${size.console}" />
         <filter token="SIZE.ECLIPSE" value="${size.eclipse}" />
@@ -423,9 +430,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Creates the complete documentation set                               -->
   <!-- ==================================================================== -->
   <target name="docu-all"
-          description="Creates the complete documentation set" 
+          description="Creates the complete documentation set"
           depends="docu-javadoc, docu-manual, docu-site">
-  </target>  
+  </target>
 
 
   <!-- ==================================================================== -->
@@ -558,7 +565,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <!-- Checks whether the Javadoc needs to be generated                     -->
   <!-- ==================================================================== -->
-  <target name="docu-uptodate-javadoc" 
+  <target name="docu-uptodate-javadoc"
           depends="docu-init">
     <dependset>
       <srcfileset dir="${DIR.COMPILE}">
@@ -581,7 +588,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <!-- Checks whether the manual needs to be generated                      -->
   <!-- ==================================================================== -->
-  <target name="docu-uptodate-manual" 
+  <target name="docu-uptodate-manual"
           depends="docu-init">
     <dependset>
       <srcfileset dir="${dir.src}/xdocs/manual">
@@ -600,7 +607,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <!-- Checks whether the web site needs to be generated                    -->
   <!-- ==================================================================== -->
-  <target name="docu-uptodate-site" 
+  <target name="docu-uptodate-site"
           depends="docu-init">
     <dependset>
       <srcfileset dir="${dir.src}/xdocs/site">

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 
-<!-- 
+<!--
  $Id$
 -->
 
@@ -11,7 +11,7 @@
                 exclude-result-prefixes="#default xsl xhtml">
 
 <!-- load the main docbook stylesheet -->
-<xsl:import href="@DIR.DOCBOOK_XSL@/html/docbook.xsl" />
+<xsl:import href="@DIR.DOCBOOK.XSL@/html/docbook.xsl" />
 
 <xsl:param name="html.stylesheet">site.css</xsl:param>
 <xsl:param name="css.decoration">1</xsl:param>
@@ -62,7 +62,7 @@
       <xsl:with-param name="node" select="$doc" />
     </xsl:call-template>
   </head>
-  
+
   <!-- BODY STARTS HERE -->
 
   <body id="toppage">
@@ -114,7 +114,7 @@
                     <a href="./download.html" class="navlink">Download</a> &#149;
                     <a href="./docs.html" class="navlink">Documentation</a> &#149;
                     <a href="./plugins.html" class="navlink">Plug-ins</a> &#149;
-                    <a href="./links.html" class="navlink">Links</a> &#149; 
+                    <a href="./links.html" class="navlink">Links</a> &#149;
                     <a href="./contact.html" class="navlink">Contact</a>
                   </td>
                 </tr>
@@ -125,9 +125,9 @@
               </tbody>
             </table>
 
-            <xsl:choose> 
+            <xsl:choose>
               <xsl:when test="/article/@role='main'">
-                
+
                 <!-- add a navbar for the main section -->
                 <table cellpadding="0" cellspacing="0" width="100%">
                   <tbody>
@@ -141,7 +141,7 @@
                 </table>
               </xsl:when>
               <xsl:when test="/article/@role='docu'">
-                
+
                 <!-- add a navbar for the docu section -->
                 <table cellpadding="0" cellspacing="0" width="100%">
                   <tbody>
@@ -162,7 +162,7 @@
             <!-- NAVIGATION ENDS HERE -->
 
           </td>
-        </tr>          
+        </tr>
         <tr>
           <td height="20" bgcolor="#ffffff">
           </td>
@@ -174,7 +174,7 @@
         </tr>
         <tr valign="top">
           <td valign="top" bgcolor="#fffff0">
-          
+
             <!-- CONTENT STARTS HERE -->
 
             <table border="0" width="100%" cellspacing="0" cellpadding="5">
@@ -216,7 +216,7 @@
         <tr>
           <td height="1">
           </td>
-        </tr>        
+        </tr>
         <tr>
           <td bgcolor="#336699" height="16">
           </td>

@@ -5,7 +5,7 @@
                 exclude-result-prefixes="#default xsl xhtml" >
 
 <!-- load the main docbook stylesheet -->
-<xsl:import href="@DIR.DOCBOOK_XSL@/html/profile-docbook.xsl" />
+<xsl:import href="@DIR.DOCBOOK.XSL@/html/profile-docbook.xsl" />
 
 <xsl:param name="html.stylesheet">./docs/site.css</xsl:param>
 <xsl:param name="css.decoration">1</xsl:param>
@@ -28,7 +28,7 @@
     <xsl:call-template name="user.header.content">
       <xsl:with-param name="node" select="$doc"/>
     </xsl:call-template>
-    
+
     <table width="700" border="0" cellpadding="0" cellspacing="0" align="center">
       <tr>
         <td>
@@ -72,7 +72,7 @@
                     <a href="./docs/download.html" class="navlink">Download</a> &#149;
                     <a href="./docs/docs.html" class="navlink">Documentation</a> &#149;
                     <a href="./docs/plugins.html" class="navlink">Plug-ins</a> &#149;
-                    <a href="./docs/links.html" class="navlink">Links</a> &#149; 
+                    <a href="./docs/links.html" class="navlink">Links</a> &#149;
                     <a href="./docs/contact.html" class="navlink">Contact</a>
                   </td>
                 </tr>
@@ -94,7 +94,7 @@
         </tr>
         <tr valign="top">
           <td valign="top" bgcolor="#fffff0">
-          
+
             <!-- CONTENT STARTS HERE -->
 
             <table border="0" width="100%" cellspacing="0" cellpadding="5">
@@ -136,7 +136,7 @@
         <tr>
           <td height="1">
           </td>
-        </tr>        
+        </tr>
         <tr>
           <td bgcolor="#336699" height="16">
           </td>
