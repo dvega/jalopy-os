@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.Icon;
+
 import com.borland.jbuilder.debugger.BreakpointTreeModel;
 import com.borland.jbuilder.node.JBProject;
 import com.borland.primetime.editor.BookmarkManager;
@@ -17,8 +19,10 @@ import com.borland.primetime.editor.EditorDocument;
 import com.borland.primetime.editor.EditorManager;
 import com.borland.primetime.editor.EditorPane;
 import com.borland.primetime.editor.Gutter;
+import com.borland.primetime.editor.GutterMark;
 import com.borland.primetime.editor.LineMark;
 import com.borland.primetime.ide.Browser;
+import com.borland.primetime.ide.GutterIcons;
 import com.borland.primetime.node.FileNode;
 import com.borland.primetime.viewer.NodeViewMap;
 
@@ -194,6 +198,8 @@ final class JbEditor
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.7.5
      */
     public void attachAnnotations(List annotations)
     {
@@ -206,15 +212,16 @@ final class JbEditor
         {
             Annotation annotation = (Annotation) annotations.get(i);
 
-            String classname = (String) annotation.getData();
+            Object data = annotation.getData();
 
-            if (MARK_BREAKPOINT.equals(classname))
+            if (MARK_BREAKPOINT.equals(data))
             {
                 model.toggleBreakpoint(gutter, annotation.getLine());
             }
-            else if (MARK_BOOK.equals(classname))
+            else
             {
-                BookmarkManager.toggleBookmark(annotation.getLine(), pane);
+                Bookmark bookmark = (Bookmark)data;
+                BookmarkManager.addBookmark(pane.calcCaretPosition(annotation.getLine(), 1), bookmark.number, pane);
             }
         }
 
@@ -224,6 +231,8 @@ final class JbEditor
 
     /**
      * {@inheritDoc}
+     *
+     * @since 0.7.5
      */
     public List detachAnnotations()
     {
@@ -249,6 +258,8 @@ final class JbEditor
                 {
                     String classname = marks[j].getClass().getName();
 
+                    // this String comparison is plain ugly, but class
+                    // BookmarkManager.EditorMark is protected, so we have no real choice
                     if (MARK_BREAKPOINT.equals(classname))
                     {
                         model.toggleBreakpoint(gutter, i + 1);
@@ -256,8 +267,8 @@ final class JbEditor
                     }
                     else if (MARK_BOOK.equals(classname))
                     {
-                        //BookmarkManager.toggleBookmark(i + 1, pane);
-                        result.add(new Annotation(i + 1, MARK_BOOK));
+                        GutterMark mark = (GutterMark)marks[j];
+                        result.add(new Annotation(i + 1, new Bookmark(getBookmarkNumber(mark))));
                     }
                 }
             }
@@ -268,6 +279,48 @@ final class JbEditor
         return result;
     }
 
+    private final static class Bookmark
+    {
+        int number;
+
+        public Bookmark(int number)
+        {
+            this.number = number;
+        }
+    }
+
+    /**
+     * Returns the mark number for the given bookmark.
+     *
+     * @param mark a bookmark.
+     *
+     * @return the mark number for the given bookmark.
+     */
+    private int getBookmarkNumber(GutterMark mark)
+    {
+        Icon icon = mark.getIcon();
+
+        if (icon == GutterIcons.ICON_BOOKMARK1)
+            return 1;
+        else if (icon == GutterIcons.ICON_BOOKMARK2)
+            return 2;
+        else if (icon == GutterIcons.ICON_BOOKMARK3)
+            return 3;
+        else if (icon == GutterIcons.ICON_BOOKMARK4)
+            return 4;
+        else if (icon == GutterIcons.ICON_BOOKMARK5)
+            return 5;
+        else if (icon == GutterIcons.ICON_BOOKMARK6)
+            return 6;
+        else if (icon == GutterIcons.ICON_BOOKMARK7)
+            return 7;
+        else if (icon == GutterIcons.ICON_BOOKMARK8)
+            return 8;
+        else if (icon == GutterIcons.ICON_BOOKMARK9)
+            return 9;
+        else
+            return 10; // returning invalid value causes bookmark to be ignored
+    }
 
     /**
      * {@inheritDoc}
