@@ -230,11 +230,6 @@ final class AssignmentPrinter
 
                     PrinterFactory.create(expr).print(expr, out);
 
-                    if (indent)
-                    {
-                        out.unindent();
-                    }
-
                     out.testers.release(tester);
 
                     if (marker != null)
@@ -254,6 +249,11 @@ final class AssignmentPrinter
                     }
 
                     PrinterFactory.create(expr).print(expr, out);
+                }
+
+                if (indent)
+                {
+                    out.unindent();
                 }
             }
             else // never perform wrapping
@@ -673,7 +673,7 @@ final class AssignmentPrinter
                         //boolean lastAssign = isNewChunk(next, JavaTokenTypes.ASSIGN); // last chunk
                         int length = 0;
                         TestNodeWriter tester = out.testers.get();
-SEARCH: 
+SEARCH:
                         for (AST def = parent; def != null; def = def.getNextSibling())
                         {
                             switch (def.getType())
@@ -747,7 +747,7 @@ SEARCH:
                             this.settings.getBoolean(
                                 ConventionKeys.ALIGN_VAR_IDENTS,
                                 ConventionDefaults.ALIGN_VAR_IDENTS);
-SEARCH: 
+SEARCH:
 
                         // determine the longest VARIABLE_DEF or ASSIGN
                         for (AST def = parent; def != null; def = def.getNextSibling())
