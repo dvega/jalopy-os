@@ -6,10 +6,22 @@
  */
 package de.hunsicker.util;
 
+import org.apache.oro.text.regex.MalformedPatternException;
+import org.apache.oro.text.regex.MatchResult;
+import org.apache.oro.text.regex.Pattern;
+import org.apache.oro.text.regex.PatternCompiler;
+import org.apache.oro.text.regex.PatternMatcher;
+import org.apache.oro.text.regex.Perl5Compiler;
+import org.apache.oro.text.regex.Perl5Matcher;
+
+
 /**
  * A class that represents version information. Version numbering follows the &quot;Dewey
  * Decimal&quot; syntax that consists of positive decimal integers separated by periods
  * &quot;.&quot;
+ *
+ * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+ * @version $Revision$
  */
 public class Version
 {
@@ -26,23 +38,9 @@ public class Version
     /**
      * Creates a new Version object.
      *
-     * @param name DOCUMENT ME!
-     * @param number DOCUMENT ME!
-     */
-    public Version(
-        String name,
-        int    number)
-    {
-        this(name, number, 0);
-    }
-
-
-    /**
-     * Creates a new Version object.
-     *
-     * @param name DOCUMENT ME!
-     * @param major DOCUMENT ME!
-     * @param minor DOCUMENT ME!
+     * @param name a product version name, may be <code>null</code>
+     * @param major the major version number.
+     * @param minor the minor version number.
      */
     public Version(
         String name,
@@ -56,28 +54,10 @@ public class Version
     /**
      * Creates a new Version object.
      *
-     * @param name DOCUMENT ME!
-     * @param major DOCUMENT ME!
-     * @param minor DOCUMENT ME!
-     * @param beta DOCUMENT ME!
-     */
-    public Version(
-        String  name,
-        int     major,
-        int     minor,
-        boolean beta)
-    {
-        this(name, major, minor, 0, beta);
-    }
-
-
-    /**
-     * Creates a new Version object.
-     *
-     * @param name DOCUMENT ME!
-     * @param major DOCUMENT ME!
-     * @param minor DOCUMENT ME!
-     * @param micro DOCUMENT ME!
+     * @param name a product version name, may be <code>null</code>
+     * @param major the major version number.
+     * @param minor the minor version number.
+     * @param micro the micro version number.
      */
     public Version(
         String name,
@@ -92,11 +72,11 @@ public class Version
     /**
      * Creates a new Version object.
      *
-     * @param name DOCUMENT ME!
-     * @param major DOCUMENT ME!
-     * @param minor DOCUMENT ME!
-     * @param micro DOCUMENT ME!
-     * @param beta DOCUMENT ME!
+     * @param name a product version name, may be <code>null</code>
+     * @param major the major version number.
+     * @param minor the minor version number.
+     * @param micro the micro version number.
+     * @param beta <code>true</code> indicates that this is a beta version.
      */
     public Version(
         String  name,
@@ -161,7 +141,8 @@ public class Version
     /**
      * Returns the version name.
      *
-     * @return version name.
+     * @return version name. Returns <code>null</code> if no product version name was
+     *         specified.
      */
     public String getName()
     {
@@ -170,11 +151,7 @@ public class Version
 
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param o DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * {@inheritDoc}
      */
     public boolean equals(Object o)
     {
@@ -197,9 +174,7 @@ public class Version
 
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * {@inheritDoc}
      */
     public int hashCode()
     {
@@ -215,9 +190,7 @@ public class Version
 
 
     /**
-     * DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
+     * {@inheritDoc}
      */
     public String toString()
     {
@@ -238,5 +211,63 @@ public class Version
         buf.append(_micro);
 
         return buf.toString();
+    }
+
+
+    /**
+     * Returns the version object for the given string.
+     *
+     * @param version a string representing version information. The string must consist
+     *        of multiple (up to three) positive decimal integers separated by periods
+     *        and may contain the character '<code>b</code>' instead of the last period
+     *        (indicating a beta version). E.g. <code>1.0</code>, <code>1.4.1</code>,
+     *        <code>1.0b5</code> are valid, <code>1</code>, <code>1b5</code>,
+     *        <code>1.3.3.1</code> are not.
+     *
+     * @return version version object for the given string.
+     *
+     * @throws IllegalArgumentException if <em>version</em> represents no valid version
+     *         information.
+     */
+    public static Version valueOf(String version)
+    {
+        PatternMatcher matcher = new Perl5Matcher();
+        PatternCompiler compiler = new Perl5Compiler();
+        Pattern regexp = null;
+
+        try
+        {
+            regexp =
+                compiler.compile(
+                    "(\\d).(\\d)(?:([.b])(\\d+))?" /* NOI18N */,
+                    Perl5Compiler.SINGLELINE_MASK);
+        }
+        catch (MalformedPatternException neverOccurs)
+        {
+            // I know that the regexp is valid
+        }
+
+        if (matcher.matches(version, regexp))
+        {
+            MatchResult result = matcher.getMatch();
+            int major = Integer.parseInt(result.group(1));
+            int minor = Integer.parseInt(result.group(2));
+
+            int micro = 0;
+            boolean beta = false;
+
+            if (result.groups() == 5)
+            {
+                beta = result.group(3).indexOf('b') > -1;
+                micro = Integer.parseInt(result.group(4));
+            }
+
+            return new Version(null, major, minor, micro, beta);
+        }
+        else
+        {
+            throw new IllegalArgumentException(
+                "invalid version information -- " + version);
+        }
     }
 }
