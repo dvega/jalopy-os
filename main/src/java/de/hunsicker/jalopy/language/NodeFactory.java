@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -20,6 +20,11 @@ import de.hunsicker.antlr.collections.AST;
 public class NodeFactory
     extends ASTFactory
 {
+    //~ Static variables/initializers ----------------------------------------------------
+
+    /** The empty string constant. */
+    protected static final String EMPTY_STRING = "" /* NOI18N */.intern();
+
     //~ Constructors ---------------------------------------------------------------------
 
     /**
@@ -27,7 +32,7 @@ public class NodeFactory
      */
     public NodeFactory()
     {
-        this.theASTNodeType = "Node";
+        this.theASTNodeType = "Node" /* NOI18N */;
         this.theASTNodeTypeClass = Node.class;
     }
 
@@ -56,7 +61,7 @@ public class NodeFactory
     public AST create(int type)
     {
         AST t = create();
-        t.initialize(type, "");
+        t.initialize(type, EMPTY_STRING);
 
         return t;
     }

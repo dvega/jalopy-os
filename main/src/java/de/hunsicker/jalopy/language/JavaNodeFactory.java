@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -14,7 +14,7 @@ import de.hunsicker.jalopy.storage.Loggers;
 
 
 /**
- * Central facility to create the nodes for the Java parse tree.
+ * Central facility to create the nodes for Java parse trees.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -24,7 +24,7 @@ public class JavaNodeFactory
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = ""/* NOI18N */.intern() ;
+    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ public class JavaNodeFactory
      */
     public JavaNodeFactory()
     {
-        this.theASTNodeType = "JavaNode"/* NOI18N */;
+        this.theASTNodeType = "JavaNode" /* NOI18N */;
         this.theASTNodeTypeClass = JavaNode.class;
     }
 
@@ -232,8 +232,8 @@ public class JavaNodeFactory
 
 
     /**
-     * Duplicate a tree, assuming this is a root node of a tree -- duplicates that node and
-     * what's below; ignore siblings of root node.
+     * Duplicate a tree, assuming this is a root node of a tree -- duplicates that node
+     * and what's below; ignore siblings of root node.
      *
      * @param t the root node of the tree (or tree portion)
      *
@@ -277,7 +277,7 @@ public class JavaNodeFactory
      * tree. Handles <code>null</code> children nodes correctly. For example,
      * <code>build(a, b,  null, c)</code> yields <code>tree (a b c)</code>.
      * <code>build(null,a,b)</code> yields tree <code>(nil a b)</code>.
-     *
+     * 
      * <p>
      * Sets also the line/column info of the root node.
      * </p>

@@ -18,7 +18,7 @@ import org.apache.log4j.Level;
  * Parser for the Sun Java language. Heavily based on the public domain grammar written by
  * <a href="mailto:parrt@jguru.com">Terence Parr
  * </a> et al. See <a href="http://www.antlr.org/resources.html">
- * http://www.antlr.org/resources.html</a> for more infos.
+ * http://www.antlr.org/resources.html</a> for more info.
  *
  * <p>This is an <a href="http://www.antlr.org">ANTLR</a> automated generated
  * file. <strong>DO NOT EDIT</strong> but rather change the associated grammar
@@ -1472,7 +1472,6 @@ constant
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.util.StringHelper;
 import de.hunsicker.io.FileFormat;
-import de.hunsicker.util.Version;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -1486,7 +1485,7 @@ import org.apache.log4j.Level;
  * Token lexer for the Java parser. Heavily based on the public domain
  * grammar file written by <a href="mailto:parrt@jguru.com">Terence Parr
  * </a> et al. See <a href="http://www.antlr.org/resources.html">
- * http://www.antlr.org/resources.html</a> for more infos.
+ * http://www.antlr.org/resources.html</a> for more info.
  *
  * <p>Note that this parser relies on a patched version of ANTLR 2.7.2. It
  * currently won't work with any other version.</p>
