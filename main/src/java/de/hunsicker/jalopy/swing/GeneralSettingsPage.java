@@ -409,7 +409,6 @@ public class GeneralSettingsPage
                                     Convention.getProjectSettingsDirectory(),
                                     FILENAME_EXPORT)));
 
-                    dialog.addFilter(FILTER_JAL);
                     dialog.addFilter(FILTER_XML, true);
                     dialog.setVisible(true);
 
@@ -428,28 +427,11 @@ public class GeneralSettingsPage
                                             Convention.getProjectSettingsDirectory(),
                                             FILENAME_EXPORT), dialog.getHistoryString());
 
-                                    FileFilter filter = dialog.getFileFilter();
-                                    String extension = Convention.EXTENSION_JAL;
+                                    String extension = Convention.EXTENSION_XML;
 
-                                    if (
-                                        (filter == FILTER_JAL)
-                                        || location.endsWith(Convention.EXTENSION_JAL))
+                                    if (!location.endsWith(Convention.EXTENSION_XML))
                                     {
-                                        if (!location.endsWith(Convention.EXTENSION_JAL))
-                                        {
-                                            location += Convention.EXTENSION_JAL;
-                                        }
-                                    }
-                                    else if (
-                                        (filter == FILTER_XML)
-                                        || location.endsWith(Convention.EXTENSION_XML))
-                                    {
-                                        if (!location.endsWith(Convention.EXTENSION_XML))
-                                        {
-                                            location += Convention.EXTENSION_XML;
-                                        }
-
-                                        extension = Convention.EXTENSION_XML;
+                                        location += Convention.EXTENSION_XML;
                                     }
 
                                     // export the Convention

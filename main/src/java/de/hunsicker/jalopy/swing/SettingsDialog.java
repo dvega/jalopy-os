@@ -175,7 +175,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            return ((SettingsFrame) c).getHeight();
+            return c.getHeight();
         }
         else
         {
@@ -196,7 +196,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            ((SettingsFrame) c).setLocation(x, y);
+            c.setLocation(x, y);
         }
         else
         {
@@ -215,7 +215,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            return ((SettingsFrame) c).getLocation();
+            return c.getLocation();
         }
         else
         {
@@ -234,7 +234,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            return ((SettingsFrame) c).getWidth();
+            return c.getWidth();
         }
         else
         {
@@ -253,7 +253,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            return ((SettingsFrame) c).getX();
+            return c.getX();
         }
         else
         {
@@ -272,7 +272,7 @@ public class SettingsDialog
 
         if (c instanceof SettingsFrame)
         {
-            return ((SettingsFrame) c).getY();
+            return c.getY();
         }
         else
         {

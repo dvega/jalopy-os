@@ -42,7 +42,6 @@ public class CodeInspectorSettingsPage
     private JCheckBox _tipNeverExceptionCheckBox;
     private JCheckBox _tipNeverThrowableCheckBox;
     private JCheckBox _tipObeyEqualsCheckBox;
-    private JCheckBox _tipOverrideEqualsCheckBox;
     private JCheckBox _tipOverrideHashCodeCheckBox;
     private JCheckBox _tipOverrideStringCheckBox;
     private JCheckBox _tipReferByInterfaceCheckBox;
@@ -117,8 +116,6 @@ public class CodeInspectorSettingsPage
             ConventionKeys.TIP_OVERRIDE_HASHCODE,
             _tipOverrideHashCodeCheckBox.isSelected());
         this.settings.putBoolean(
-            ConventionKeys.TIP_OVERRIDE_EQUALS, _tipOverrideEqualsCheckBox.isSelected());
-        this.settings.putBoolean(
             ConventionKeys.TIP_OVERRIDE_TO_STRING, _tipOverrideStringCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.TIP_INTERFACE_ONLY_FOR_TYPE,
@@ -169,22 +166,22 @@ public class CodeInspectorSettingsPage
                     this.bundle.getString("BDR_TIPS" /* NOI18N */)),
                 BorderFactory.createEmptyBorder(0, 5, 5, 5)));
 
-        _tipDontSubstituteCheckBox =
+        _tipObeyEqualsCheckBox =
             new JCheckBox(
                 "1" /* NOI18N */,
+                this.settings.getBoolean(ConventionKeys.TIP_OBEY_CONTRACT_EQUALS, false));
+        _tipObeyEqualsCheckBox.setToolTipText(
+            this.bundle.getString("TIP_OBEY_CONTRACT_EQUALS" /* NOI18N */));
+        tipsPanel.add(_tipObeyEqualsCheckBox);
+
+        _tipDontSubstituteCheckBox =
+            new JCheckBox(
+                "2" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_DONT_SUBSTITUTE_OBJECT_EQUALS, false));
         _tipDontSubstituteCheckBox.setToolTipText(
             this.bundle.getString("TIP_DONT_SUBSTITUTE_OBJECT_EQUALS" /* NOI18N */));
         tipsPanel.add(_tipDontSubstituteCheckBox);
-
-        _tipObeyEqualsCheckBox =
-            new JCheckBox(
-                "2" /* NOI18N */,
-                this.settings.getBoolean(ConventionKeys.TIP_OBEY_CONTRACT_EQUALS, false));
-        _tipObeyEqualsCheckBox.setToolTipText(
-            this.bundle.getString("TIP_OBEY_CONTRACT_EQUALS" /* NOI18N */));
-        tipsPanel.add(_tipObeyEqualsCheckBox);
 
         _tipOverrideHashCodeCheckBox =
             new JCheckBox(
@@ -194,17 +191,9 @@ public class CodeInspectorSettingsPage
             this.bundle.getString("TIP_OVERRIDE_HASHCODE" /* NOI18N */));
         tipsPanel.add(_tipOverrideHashCodeCheckBox);
 
-        _tipOverrideEqualsCheckBox =
-            new JCheckBox(
-                "4" /* NOI18N */,
-                this.settings.getBoolean(ConventionKeys.TIP_OVERRIDE_EQUALS, false));
-        _tipOverrideEqualsCheckBox.setToolTipText(
-            this.bundle.getString("TIP_OVERRIDE_EQUALS" /* NOI18N */));
-        tipsPanel.add(_tipOverrideEqualsCheckBox);
-
         _tipOverrideStringCheckBox =
             new JCheckBox(
-                "5" /* NOI18N */,
+                "4" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_OVERRIDE_TO_STRING, false));
         _tipOverrideStringCheckBox.setToolTipText(
             this.bundle.getString("TIP_OVERRIDE_TO_STRING" /* NOI18N */));
@@ -212,7 +201,7 @@ public class CodeInspectorSettingsPage
 
         _tipInterfaceTypeCheckBox =
             new JCheckBox(
-                "6" /* NOI18N */,
+                "5" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_INTERFACE_ONLY_FOR_TYPE, false));
         _tipInterfaceTypeCheckBox.setToolTipText(
@@ -221,7 +210,7 @@ public class CodeInspectorSettingsPage
 
         _tipReplaceStructCheckBox =
             new JCheckBox(
-                "7" /* NOI18N */,
+                "6" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_REPLACE_STRUCTURE_WITH_CLASS, false));
         _tipReplaceStructCheckBox.setToolTipText(
@@ -230,7 +219,7 @@ public class CodeInspectorSettingsPage
 
         _tipZeroArrayCheckBox =
             new JCheckBox(
-                "8" /* NOI18N */,
+                "7" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_RETURN_ZERO_ARRAY, false));
         _tipZeroArrayCheckBox.setToolTipText(
             this.bundle.getString("TIP_RETURN_ZERO_ARRAY" /* NOI18N */));
@@ -238,7 +227,7 @@ public class CodeInspectorSettingsPage
 
         _tipAdhereNamingConventionCheckBox =
             new JCheckBox(
-                "9" /* NOI18N */,
+                "8" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false));
         _tipAdhereNamingConventionCheckBox.setToolTipText(
@@ -247,7 +236,7 @@ public class CodeInspectorSettingsPage
 
         _tipReferByInterfaceCheckBox =
             new JCheckBox(
-                "10" /* NOI18N */,
+                "9" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_REFER_BY_INTERFACE, false));
         _tipReferByInterfaceCheckBox.setToolTipText(
             this.bundle.getString("TIP_REFER_BY_INTERFACE" /* NOI18N */));
@@ -255,7 +244,7 @@ public class CodeInspectorSettingsPage
 
         _tipNeverExceptionCheckBox =
             new JCheckBox(
-                "11" /* NOI18N */,
+                "10" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_NEVER_THROW_EXCEPTION, false));
         _tipNeverExceptionCheckBox.setToolTipText(
             this.bundle.getString("TIP_NEVER_THROW_EXCEPTION" /* NOI18N */));
@@ -263,7 +252,7 @@ public class CodeInspectorSettingsPage
 
         _tipNeverThrowableCheckBox =
             new JCheckBox(
-                "12" /* NOI18N */,
+                "11" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_NEVER_THROW_THROWABLE, false));
         _tipNeverThrowableCheckBox.setToolTipText(
             this.bundle.getString("TIP_NEVER_THROW_THROWABLE" /* NOI18N */));
@@ -271,7 +260,7 @@ public class CodeInspectorSettingsPage
 
         _tipDontIgnoreExceptionCheckBox =
             new JCheckBox(
-                "13" /* NOI18N */,
+                "12" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_DONT_IGNORE_EXCEPTION, false));
         _tipDontIgnoreExceptionCheckBox.setToolTipText(
             this.bundle.getString("TIP_DONT_IGNORE_EXCEPTION" /* NOI18N */));
@@ -279,7 +268,7 @@ public class CodeInspectorSettingsPage
 
         _tipWaitOutsideLoopCheckBox =
             new JCheckBox(
-                "14" /* NOI18N */,
+                "13" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_NEVER_WAIT_OUTSIDE_LOOP, false));
         _tipWaitOutsideLoopCheckBox.setToolTipText(
@@ -288,7 +277,7 @@ public class CodeInspectorSettingsPage
 
         _tipAvoidThreadGroupsCheckBox =
             new JCheckBox(
-                "15" /* NOI18N */,
+                "14" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_AVOID_THREAD_GROUPS, false));
         _tipAvoidThreadGroupsCheckBox.setToolTipText(
             this.bundle.getString("TIP_AVOID_THREAD_GROUPS" /* NOI18N */));
@@ -296,7 +285,7 @@ public class CodeInspectorSettingsPage
 
         _tipDeclareListCommentCheckBox =
             new JCheckBox(
-                "16" /* NOI18N */,
+                "15" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_DECLARE_COLLECTION_COMMENT, false));
         _tipDeclareListCommentCheckBox.setToolTipText(
@@ -305,7 +294,7 @@ public class CodeInspectorSettingsPage
 
         _tipWrongListCommentCheckBox =
             new JCheckBox(
-                "17" /* NOI18N */,
+                "16" /* NOI18N */,
                 this.settings.getBoolean(
                     ConventionKeys.TIP_WRONG_COLLECTION_COMMENT, false));
         _tipWrongListCommentCheckBox.setToolTipText(
@@ -314,20 +303,20 @@ public class CodeInspectorSettingsPage
 
         _tipEmptyFinallyCheckBox =
             new JCheckBox(
-                "18" /* NOI18N */,
+                "17" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_EMPTY_FINALLY, false));
         _tipEmptyFinallyCheckBox.setToolTipText(
             this.bundle.getString("TIP_EMPTY_FINALLY" /* NOI18N */));
         tipsPanel.add(_tipEmptyFinallyCheckBox);
 
-        _tip15CheckBox = new JCheckBox("19" /* NOI18N */, false);
+        _tip15CheckBox = new JCheckBox("18" /* NOI18N */, false);
         _tip15CheckBox.setToolTipText(
             this.bundle.getString("TIP_AVOID_VARIABLE_SHADOWING" /* NOI18N */));
         tipsPanel.add(_tip15CheckBox);
 
         _tipStringLiteralI18nCheckBox =
             new JCheckBox(
-                "20" /* NOI18N */,
+                "19" /* NOI18N */,
                 this.settings.getBoolean(ConventionKeys.TIP_STRING_LITERAL_I18N, false));
         _tipStringLiteralI18nCheckBox.setToolTipText(
             this.bundle.getString("TIP_STRING_LITERAL_I18N" /* NOI18N */));

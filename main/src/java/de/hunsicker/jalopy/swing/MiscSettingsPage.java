@@ -205,7 +205,7 @@ public class MiscSettingsPage
                 public void stateChanged(ChangeEvent ev)
                 {
                     JSlider source = (JSlider) ev.getSource();
-                    int level = (int) source.getValue();
+                    int level = source.getValue();
                     backupLevelLabel.setLevel(level);
                 }
             });
@@ -520,7 +520,7 @@ public class MiscSettingsPage
                 public void stateChanged(ChangeEvent ev)
                 {
                     JSlider source = (JSlider) ev.getSource();
-                    int level = (int) source.getValue();
+                    int level = source.getValue();
                     backupLevelLabel.setLevel(level);
                 }
             });

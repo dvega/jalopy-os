@@ -567,7 +567,7 @@ final class PreviewFrame
                 // or 'Apply')
                 _page.settings.revert();
 
-                if (_textArea.getText().equals(EMPTY_STRING))
+                if (EMPTY_STRING.equals(_textArea.getText()))
                 {
                     _textArea.setText(this.text);
                 }

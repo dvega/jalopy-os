@@ -486,7 +486,7 @@ class HistoryViewer
             {
                 if (_caseSensitive)
                 {
-                    return this.name.equals((String) o);
+                    return this.name.equals(o);
                 }
                 else
                 {

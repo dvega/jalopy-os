@@ -664,7 +664,7 @@ public class ImportsSettingsPage
                 return EMPTY_STRING;
             }
 
-            return new Integer((String) value);
+            return new Integer(value);
         }
 
 
@@ -781,10 +781,10 @@ public class ImportsSettingsPage
         public boolean stopCellEditing()
         {
             String s = (String) super.getCellEditorValue();
-            Perl5Util regex = new Perl5Util();
+            Perl5Util engine = new Perl5Util();
 
             // only allow package/type names
-            if (!regex.match("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
+            if (!engine.match("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
             {
                 ((JComponent) getComponent()).setBorder(
                     BorderFactory.createLineBorder(Color.red));
@@ -805,7 +805,7 @@ public class ImportsSettingsPage
 
                     DefaultCellEditor cellEditor =
                         (DefaultCellEditor) _table.getCellEditor();
-                    Component cell = (Component) cellEditor.getComponent();
+                    Component cell = cellEditor.getComponent();
                     cell.requestFocus();
                 }
                 else
