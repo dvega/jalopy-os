@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+
+<!-- ==========================================================================
+
+Module              : jbuilder
+Module-Dependencies : ant, build, main
+
+This build script is part of the Jalopy build system. It is not meant to be 
+directly invoked by the user but should only be used in conjunction with the 
+master build script that controls the whole build process.
+
+For detailed instructions on how to obtain the needed modules and build a 
+Jalopy distribution from scratch please refer to the manual available at the
+official Jalopy homepage under <http://jalopy.sf.net/build.html>.
+
+If you need further assistance, check <http://jalopy.sf.net/contact.html>.
+
+=========================================================================== -->
+
+<project name="jalopy-jbuilder" default="jbuilder-jar" basedir="." >
+
+  <!-- load the global properties -->
+  <property file="../build/build.properties" />
+
+  <property name="dir.src" value="src" />
+  <property name="dir.src.java" value="${dir.src}/java" />
+  <property name="dir.src.res" value="${dir.src}/resources" />
+
+  <!-- ==================================================================== -->
+  <!-- Defines the project classpath                                        -->
+  <!-- ==================================================================== -->
+  <path id="project.classpath" >
+    <fileset dir="${DIR.LIB}" >
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="${LIB.PATH.JBUILDER}" />
+    <pathelement path="${LIB.PATH.JBUILDER.OLD}" />
+    <pathelement path="${DIR.COMPILE}" />
+  </path>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the binary JBuilder Plug-in .jar                             -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-jar"
+          description="Creates the JBuilder .jar"
+          depends="jbuilder-compile, jbuilder-uptodate-jar"
+          unless="jar.jbuilder.uptodate">
+    <property name="jar.name" value="jalopy-jbuilder" />
+
+    <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION.JBUILDER}.jar"
+         duplicate="fail"
+         index="false" >
+      <fileset dir="${DIR.COMPILE}" >
+        <patternset>
+          <include name="**/plugin/jbuilder/**" />
+        </patternset>
+      </fileset>
+      <manifest>
+        <attribute name="OpenTools-UI" value="de.hunsicker.jalopy.plugin.jbuilder.JbPlugin de.hunsicker.jalopy.plugin.jbuilder.BuildHandler de.hunsicker.jalopy.plugin.jbuilder.OldBuildHandler" />
+        <section name="de/hunsicker/jalopy/plugin/jbuilder/">
+          <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
+          <attribute name="Specification-Version" value="${SPEC.VERSION.JBUILDER}" /> 
+          <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.jbuilder" />
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.JBUILDER}" /> 
+          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-URL" value="${HOMEPAGE}" />
+        </section>
+      </manifest>
+    </jar>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Compiles the project sources                                   -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-compile"
+          depends="jbuilder-init, jbuilder-compile-old" >
+    <javac compiler="${BUILD.COMPILER}"
+           destdir="${DIR.COMPILE}"
+           debug="${BUILD.DEBUG}"
+           deprecation="${BUILD.DEPRECATION}"
+           optimize="${BUILD.OPTIMIZE}"
+           target="${BUILD.TARGET.VM}"
+           verbose="${BUILD.VERBOSE}"
+           fork="true" >
+      <classpath refid="project.classpath" />
+      <src path="${dir.src.java}" />
+      <exclude name="**/OldBuildHandler*" />
+    </javac>
+  </target>
+
+
+  <target name="jbuilder-compile-old">
+    <javac compiler="${BUILD.COMPILER}"
+           destdir="${DIR.COMPILE}"
+           debug="${BUILD.DEBUG}"
+           deprecation="${BUILD.DEPRECATION}"
+           optimize="${BUILD.OPTIMIZE}"
+           target="${BUILD.TARGET.VM}"
+           verbose="${BUILD.VERBOSE}"
+           fork="true" >
+      <classpath>
+        <pathelement path="${LIB.PATH.JBUILDER.OLD}" />
+        <path refid="project.classpath" />
+      </classpath>
+      <src path="${dir.src.java}" />
+      <exclude name="**/BuildHandler*" />
+    </javac>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Formats the project sources                                          -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-format" depends="jbuilder-compile">
+
+    <!-- we checked the module's existence -->
+    <ant dir="../ant" target="ant-compile" inheritAll="false" />
+
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+      <classpath refid="project.classpath" />
+    </taskdef>
+
+    <jalopy classpathref="project.classpath"
+            style="${dir.src.res}/jal-bsd.xml">
+      <fileset dir="${dir.src.java}">
+        <include name="**/*.java" />
+      </fileset>
+    </jalopy>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Initializes the build                                                -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-init"
+          depends="jbuilder-check-modules" >
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether all module dependencies are satisfied                 -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-check-modules" unless="jbuilder.check.modules">
+    <available file="../build/build.xml" property="present.build" />
+    <antcall target="jbuilder-check-build" />
+
+    <!-- now we know module 'build' exists so we can use its targets -->
+    <ant dir="../build" target="build-check-ant" inheritAll="false" />
+    <ant dir="../build" target="build-check-main" inheritAll="false" />
+    
+    <!-- build the runtime .jar if necessary -->
+    <ant dir="../main" target="main-jar" inheritAll="false" />
+    
+    <property name="jbuilder.check.modules" value="true" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'build' exists                             -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-check-build"
+          unless="present.build" >
+    <echo message="ERROR 10: Module 'build' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'build' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the .jar needs to be generated                        -->
+  <!-- ==================================================================== -->
+  <target name="jbuilder-uptodate-jar" >
+    <dependset>
+      <srcfileset dir="${DIR.COMPILE}">
+        <include name="*" />
+        <include name="de/hunsicker/io/*" />
+        <include name="de/hunsicker/jalopy/*" />
+        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/plugin/*" />
+        <include name="de/hunsicker/jalopy/prefs/*" />
+        <include name="de/hunsicker/jalopy/printer/*" />
+        <include name="de/hunsicker/jalopy/ui/*" />
+        <include name="de/hunsicker/ui/*" />
+        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/util/*" />
+        <include name="de/hunsicker/util/concurrent/*" />
+        <include name="de/hunsicker/jalopy/plugin/jbuilder/*" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+      </srcfileset>
+      <srcfileset dir="${basedir}">
+        <include name="build.xml" />
+      </srcfileset>
+      <srcfileset dir="..\build">
+        <include name="build.xml" />
+        <include name="build.properties" />
+      </srcfileset>
+      <targetfileset dir="${DIR.JARS}"
+                     includes="jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar"/>
+    </dependset>
+
+    <available property="jar.jbuilder.uptodate"
+               file="${DIR.JARS}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+  </target>
+</project>

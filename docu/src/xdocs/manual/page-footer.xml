@@ -1,0 +1,13 @@
+<?xml version="1.0"
+      encoding="iso-8859-1" ?>
+
+<!-- $Id$ -->
+
+<sect1 id="footer">
+<title>Footer</title>
+<indexterm><primary>footer</primary></indexterm>
+<para>
+Controls the printing of footers. Refer to <xref linkend="header" /> for an 
+explanation of the different options.
+</para>
+</sect1>

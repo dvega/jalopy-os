@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+<!-- This file contains links to several other projects or related information  -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
+  [ <!ENTITY keywords SYSTEM "_keywords.xml"> ] >
+
+<article>
+<articleinfo>
+<title>Jalopy - Links</title>
+&keywords;
+</articleinfo>
+
+<simplesect id="related">
+<title>Related Open Source projects</title>
+
+<variablelist>
+<varlistentry>
+<term>Artistic Style - C/C++, Java Source Code Formatter</term>
+<listitem>
+<ulink url="http://astyle.sf.net/">http://astyle.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Barat - Code Parser/Analyser</term>
+<listitem>
+<ulink url="http://sf.net/projects/barat">http://sf.net/projects/barat/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Checkstyle - Java Coding Convention Checker</term>
+<listitem>
+<ulink url="http://checkstyle.sf.net/">http://checkstyle.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>ImportScrubber - Java Import Optimizer</term>
+<listitem>
+<ulink url="http://importscrubber.sf.net/">http://importscrubber.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Jacobe - Java Source Code Formatter (not Open Source, but free)</term>
+<listitem>
+<ulink url="http://www.tiobe.com/jacobe.htm">http://www.tiobe.com/jacobe.htm</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>JCSC - Java Coding Convention Checker</term>
+<listitem>
+<ulink url="http://jcsc.sf.net/">http://jcsc.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>JRefactory - Java Refactoring Tool</term>
+<listitem>
+<ulink url="http://jrefactory.sf.net/">http://jrefactory.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Mozart Development Environment - framework for user-extensible compilers and development tools</term>
+<listitem>
+<ulink url="http://mozart-dev.sf.net/">http://mozart-dev.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>PMD - Java Coding Style Checker</term>
+<listitem>
+<ulink url="http://pmd.sf.net/">http://pmd.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Recoder - Source Code Metaprogramming Framework</term>
+<listitem>
+<ulink url="http://recoder.sf.net/">http://recoder.sf.net/</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Transmogrify - Java Refactoring Tool</term>
+<listitem>
+<ulink url="http://transmogrify.sf.net/">http://transmogrify.sf.net/</ulink>
+</listitem>
+</varlistentry>
+</variablelist>
+</simplesect>
+
+<simplesect>
+<title>Related commercial projects</title>
+<variablelist>
+<varlistentry>
+<term>CodeCompanion - Java Coding Convention Checker</term>
+<listitem>
+<ulink url="http://www.jenssoft.com/">http://www.jenssoft.com/</ulink>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Jindent - Java Source Code Formatter</term>
+<listitem>
+<ulink url="http://www.jindent.com/">http://www.jindent.com/</ulink>
+</listitem>
+</varlistentry>
+</variablelist>
+</simplesect>
+
+<simplesect>
+<title>Code Conventions and Style Guides</title>
+
+<variablelist>
+<varlistentry>
+<term>Sun Java Code Convention</term>
+<listitem>
+<ulink url="http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html">http://java.sun.com/docs/codeconv/html/CodeConvTOC.doc.html</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Java Programming Style Guidelines</term>
+<listitem>
+<ulink url="http://geosoft.no/javastyle.html">http://geosoft.no/javastyle.html</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>AmbySoft Coding Standards for Java</term>
+<listitem>
+<ulink url="http://www.ambysoft.com/javaCodingStandards.html">http://www.ambysoft.com/javaCodingStandards.html</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Infospheres Java Coding Standard</term>
+<listitem>
+<ulink url="http://www.infospheres.caltech.edu/resources/code_standards/java_standard.html">http://www.infospheres.caltech.edu/resources/code_standards/java_standard.html</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>JavaRanch Java Programming Style Guide</term>
+<listitem>
+<ulink url="http://www.javaranch.com/style.jsp">http://www.javaranch.com/style.jsp</ulink>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>Netscape's Software Coding Standards for Java</term>
+<listitem>
+<ulink url="http://developer.netscape.com/docs/technote/java/codestyle.html">http://developer.netscape.com/docs/technote/java/codestyle.html</ulink>
+</listitem>
+</varlistentry>
+</variablelist>
+</simplesect>
+</article>

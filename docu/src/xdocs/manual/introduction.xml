@@ -1,0 +1,35 @@
+<?xml version="1.0"
+      encoding="iso-8859-1" ?>
+
+<!-- $Id$ -->
+<!-- Contains the introduction preface -->
+
+<preface id="introduction">
+<title>Introduction</title>
+<indexterm><primary>Introduction</primary></indexterm>
+<para>
+Jalopy is a source code formatting tool for the Sun Java Programming Language.
+It can insert and remove indentation, enforce brace styles, wrap lines, sort
+and group imports, add headers and footers, handle whitespace, insert/remove
+and correct Javadoc entries to match method signatures and much more.
+</para>
+
+<para>
+If your development team can agree on a coding style, Jalopy can help you 
+maintain it, without any browbeating or bloodletting. With a simple Ant target, 
+you can format all the source into the style, as often as you like.
+</para>
+
+<para>
+Jalopy is written in Java, and comes in several &quot;flavors&quot;, including
+an Ant task and Plug-ins for Eclipse, JBuilder, JDeveloper, jEdit and
+NetBeans/Sun ONE Studio.
+</para>
+
+<para>
+Jalopy is &quot;<emphasis role="bold"><ulink url="http://opensource.org/docs/certification_mark.php">OSI Certified Open Source Software</ulink></emphasis>&quot;,
+released under a <ulink url="./license-bsd.html">BSD License</ulink>.
+For the individual license terms of the provided Plug-ins, please refer to the
+different Plug-in chapters in <xref linkend="part-plugins" />.
+</para>
+</preface>

@@ -1,0 +1,1028 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+
+<!-- ==========================================================================
+
+This is the master build script for the Jalopy project.
+
+The main targets are:
+ 
+ build-clean-all      Removes all temporary build files
+ build-dist-all       Creates all binary distributions
+ build-dist-ant       Creates the Ant Plug-in distribution
+ build-dist-console   Creates the Console Plug-in distribution
+ build-dist-eclipse   Creates the Eclipse Plug-in distribution
+ build-dist-jbuilder  Creates the JBuilder Plug-in distribution
+ build-dist-jdev      Creates the JDeveloper Plug-in distribution
+ build-dist-jedit     Creates the jEdit Plug-in distribution
+ build-dist-main      Creates the Jalopy runtime distribution
+ build-dist-netbeans  Creates the NetBeans Plug-in distribution
+ build-dist-src       Creates the Jalopy source distribution
+ build-dist-upload    Uploads the distributions to SourceForge 
+
+For detailed instructions on how to obtain the needed modules and build a 
+Jalopy distribution from scratch please refer to the manual available at the
+official Jalopy homepage under <http://jalopy.sf.net/build.html>.
+
+If you need further assistance, check <http://jalopy.sf.net/contact.html>.
+
+=========================================================================== -->
+
+<project name="jalopy" default="build-dist-main" basedir=".">
+
+  <!-- load the global properties -->
+  <property file="build.properties" />
+
+  <property name="dir.res" value="src/resources" />
+
+  <!-- ==================================================================== -->
+  <!-- Creates all binary distributions                                     -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-all"
+          description="Creates all binary distributions"
+          depends="build-dist-ant, build-dist-console,
+                   build-dist-eclipse, build-dist-jbuilder,
+                   build-dist-jedit, build-dist-main, build-dist-netbeans,
+                   build-dist-src" />
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy Ant Plug-in distribution                          -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-ant"
+          description="Creates the Ant Plug-in distribution"
+          depends="build-check-ant, build-jar-ant, build-docu-ant,
+                   build-docu, build-uptodate-ant" 
+          if="present.ant"
+          unless="uptodate.ant">
+
+    <copy todir="${DIR.TMP}/ant/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/ant/bin" >
+      <fileset dir="src/resources" >
+        <include name="preferences.bat" />
+        <include name="lcp.bat" />
+        <include name="preferences.sh" />
+      </fileset>
+      <fileset dir="${DIR.LIB}" >
+        <include name="aelfred-*.jar" />
+        <include name="jaxp-*.jar" />
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+        <include name="sax-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-ant*.jar" />
+        <include name="jalopy-${BUILD.VERSION}*.jar" />
+      </fileset>
+    </copy>
+
+    <tar tarfile="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.tar.gz"
+         basedir="${DIR.TMP}/ant"
+         compression="gzip" />
+    <zip zipfile="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.zip"
+         basedir="${DIR.TMP}/ant" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy Console Plug-in distribution                      -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-console"
+          description="Creates the Console Plug-in distribution"
+          depends="build-check-console, build-jar-console, build-docu-console,
+                   build-docu, build-uptodate-console" 
+          if="present.console"
+          unless="uptodate.console">
+
+    <copy todir="${DIR.TMP}/console/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/console/bin" >
+      <fileset dir="${dir.res}" >
+        <include name="lcp.bat" />
+        <include name="preferences.bat" />
+        <include name="preferences.sh" />
+        <include name="jalopy.sh" />
+        <include name="jalopy.bat" />
+      </fileset>
+      <fileset dir="${DIR.LIB}" >
+        <include name="aelfred-*.jar" />
+        <include name="getopt-*.jar" />
+        <include name="jaxp-*.jar" />
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+        <include name="sax-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-console*.jar" />
+        <include name="jalopy-${BUILD.VERSION}*.jar" />
+      </fileset>
+    </copy>
+
+    <tar tarfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.tar.gz"
+         basedir="${DIR.TMP}/console"
+         compression="gzip" />
+    <zip zipfile="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip"
+         basedir="${DIR.TMP}/console" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy Eclipse Plug-in distribution                      -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-eclipse"
+          description="Creates the Eclipse Plug-in distribution"
+          depends="build-check-eclipse, build-jar-eclipse,
+                   build-docu-eclipse, build-docu, build-uptodate-eclipse" 
+          if="present.eclipse"
+          unless="uptodate.eclipse">
+
+    <delete dir="${DIR.TMP}/eclipse/bin" quiet="true" />
+
+    <copy todir="${DIR.TMP}/eclipse/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <tstamp>
+      <format property="content.date" pattern="d MMMM, yyyy" locale="en"/>
+    </tstamp>
+
+    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" 
+          filtering="true">
+      <fileset dir="../eclipse/src/resources" >
+        <include name="about.html" />
+        <include name="plugin.*" />
+      </fileset>
+      <filterset>
+        <filtersfile file="build.properties"/>
+        <filter token="DATE" value="${content.date}"/>
+      </filterset>
+    </copy>
+
+    <copy todir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" >
+      <fileset dir="${DIR.LIB}" >
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-eclipse*.jar" />
+        <include name="jalopy-${BUILD.VERSION}*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.tar.gz"
+         basedir="${DIR.TMP}/eclipse"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.zip"
+         basedir="${DIR.TMP}/eclipse" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy JBuilder Plug-in distribution                     -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-jbuilder"
+          description="Creates the JBuilder Plug-in distribution"
+          depends="build-check-jbuilder, build-jar-jbuilder,
+                   build-docu-jbuilder, build-docu, build-uptodate-jbuilder" 
+          if="present.jbuilder"
+          unless="uptodate.jbuilder">
+
+    <copy todir="${DIR.TMP}/jbuilder/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/jbuilder/bin" >
+      <fileset dir="${DIR.LIB}" >
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-jbuilder*.jar" />
+        <include name="jalopy-${BUILD.VERSION}*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.tar.gz"
+         basedir="${DIR.TMP}/jbuilder"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.zip"
+         basedir="${DIR.TMP}/jbuilder" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy JDeveloper Plug-in distribution                   -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-jdev"
+          description="Creates the JDeveloper Plug-in distribution"
+          depends="build-check-jdev, build-jar-jdev,
+                   build-docu-jdev, build-docu, build-uptodate-jdev" 
+          if="present.jdeveloper"
+          unless="uptodate.jdeveloper">
+
+    <copy todir="${DIR.TMP}/jdeveloper/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/jdeveloper/bin" >
+      <fileset dir="${DIR.LIB}" >
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-jdev*.jar" />
+        <include name="jalopy-${BUILD.VERSION}*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.tar.gz"
+         basedir="${DIR.TMP}/jdeveloper"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip"
+         basedir="${DIR.TMP}/jdeveloper" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy jEdit Plug-in distribution                        -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-jedit"
+          description="Creates the jEdit Plug-in distribution"
+          depends="build-check-jedit, build-jar-jedit, build-docu-jedit,
+                   build-docu, build-uptodate-jedit" 
+          if="present.jedit"
+          unless="uptodate.jedit">
+
+    <copy todir="${DIR.TMP}/jedit/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/jedit/bin" >
+      <fileset dir="${DIR.LIB}" >
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </fileset>
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-jedit*.jar" />
+      </fileset>
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.tar.gz"
+         basedir="${DIR.TMP}/jedit"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.zip"
+         basedir="${DIR.TMP}/jedit" />
+  </target>
+
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy core runtime distribution                         -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-main"
+          description="Creates the Jalopy runtime distribution"
+          depends="build-check-main, build-jar-main, build-docu-main,
+                   build-docu, build-uptodate-main" 
+          if="present.main"
+          unless="uptodate.main">
+
+    <copy todir="${DIR.TMP}/main/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <copy todir="${DIR.TMP}/main/docs/api" >
+        <fileset dir="${DIR.DOCS}/api" />
+    </copy>
+
+    <!-- <copy todir="${DIR.TMP}/main/bin" >
+      <fileset dir="../main/ext/lib" >
+      </fileset>
+    </copy> -->
+
+    <copy todir="${DIR.TMP}/main/bin" >
+      <fileset dir="${DIR.JARS}" >
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+      </fileset>
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.tar.gz"
+         basedir="${DIR.TMP}/main"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.zip"
+         basedir="${DIR.TMP}/main" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy NetBeans Plug-in distribution                     -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-netbeans"
+          description="Creates the NetBeans Plug-in distribution"
+          depends="build-check-netbeans, build-jar-netbeans, 
+                   build-docu-netbeans, build-docu, build-uptodate-netbeans" 
+          if="present.netbeans"
+          unless="uptodate.netbeans">
+
+    <copy todir="${DIR.TMP}/netbeans/docs" >
+        <fileset dir="${DIR.DOCS}/site" />
+        <fileset dir="${DIR.DOCS}/manual" />
+    </copy>
+
+    <!-- <tar tarfile="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.tar.gz"
+         basedir="${DIR.TMP}/netbeans"
+         compression="gzip" /> -->
+    <zip zipfile="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.zip"
+         basedir="${DIR.TMP}/netbeans" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy source distribution                               -->
+  <!-- ==================================================================== -->
+  <target name="build-dist-src"
+          description="Creates the Jalopy source distribution">
+
+    <zip zipfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.zip"
+         basedir=".." >
+      <exclude name="**/*.*~" />
+      <exclude name="**/*.zip" />
+      <exclude name="**/*.gz" />
+      <exclude name="**/*.tar" />
+      <exclude name="**/tmp~/**" />
+    </zip>
+    
+    <tar tarfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.tar.gz"
+         basedir=".."
+         compression="gzip" >
+      <exclude name="**/*.*~" />
+      <exclude name="**/*.zip" />
+      <exclude name="**/*.gz" />
+      <exclude name="**/*.tar" />
+      <exclude name="**/tmp~/**" />
+      <exclude name="**/kawa/**" />
+      <exclude name="**/together/**" />
+    </tar>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Cleans the build directories                                         -->
+  <!-- ==================================================================== -->
+  <target name="build-clean-all"
+          description="Removes all temporary build files">
+    <delete dir="${DIR.TMP}" includeEmptyDirs="true" >
+    </delete>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Updates the modification time of all files in the build directory    -->
+  <!-- ==================================================================== -->
+  <target name="build-touch">
+    <tstamp>
+      <format property="build.time.stamp" pattern="MM/dd/yyyy hh:mm aa" />
+    </tstamp>
+    <touch datetime="${build.time.stamp}" >
+      <fileset dir=".." >
+      </fileset>
+    </touch>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Initializes the build                                                -->
+  <!-- ==================================================================== -->
+  <target name="build-init" unless="build.init">
+
+    <!-- determine what modules are present -->
+    <available file="../ant/build.xml" property="present.ant" />
+    <available file="../console/build.xml" property="present.console" />
+    <available file="../docu/build.xml" property="present.docu" />
+    <available file="../eclipse/build.xml" property="present.eclipse" />
+    <available file="../jbuilder/build.xml" property="present.jbuilder" />
+    <available file="../jdeveloper/build.xml" property="present.jdeveloper" />
+    <available file="../jedit/build.xml" property="present.jedit" />
+    <available file="../main/build.xml" property="present.main" />
+    <available file="../netbeans/build.xml" property="present.netbeans" />
+
+    <tstamp>
+      <format property="BUILD.TIME" pattern="yyyyMMddHHmm" />
+      <format property="BUILD.TIME.TOUCH" pattern="MM/dd/yyyy hh:mm aa" />
+    </tstamp>
+
+    <!-- create the needed build directories -->
+    <mkdir dir="${DIR.TMP}" />
+    <mkdir dir="${DIR.BUILD}" />
+    <mkdir dir="${DIR.COMPILE}" />
+    <mkdir dir="${DIR.JARS}" />
+    <mkdir dir="${DIR.DOCS}" />
+    <mkdir dir="${DIR.DIST}" />
+    
+    <property name="build.init" value="true" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the documentation                                            -->
+  <!-- ==================================================================== -->
+  <target name="build-docu" depends="build-init">
+    <ant dir="../docu" target="docu-all" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the Ant distribution                   -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-ant">
+    <ant dir="../docu" target="docu-readme-ant" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the Console distribution               -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-console">
+    <ant dir="../docu" target="docu-readme-console" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the core distribution                  -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-main">
+    <ant dir="../docu" target="docu-readme-main" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the Eclipse distribution               -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-eclipse">
+    <ant dir="../docu" target="docu-readme-eclipse" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the JBuilder distribution              -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-jbuilder">
+    <ant dir="../docu" target="docu-readme-jbuilder" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the JDeveloper distribution            -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-jdev">
+    <ant dir="../docu" target="docu-readme-jdev" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the jEdit distribution                 -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-jedit">
+    <ant dir="../docu" target="docu-readme-jedit" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme source for the NetBeans distribution              -->
+  <!-- ==================================================================== -->
+  <target name="build-docu-netbeans">
+    <ant dir="../docu" target="docu-readme-netbeans" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Ant Plug-in .jar                                         -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-ant">
+    <ant dir="../ant" target="ant-jar" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Console Plug-in .jar                                     -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-console">
+    <ant dir="../console" target="console-jar" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the core runtime .jars                                       -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-main">
+    <ant dir="../main" target="main-jar-all" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Eclipse Plug-in .jar                                     -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-eclipse">
+    <ant dir="../eclipse" target="eclipse-jar" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the JBuilder Plug-in .jar                                    -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-jbuilder">
+    <ant dir="../jbuilder" target="jbuilder-jar" inheritAll="false" />
+  </target>
+  
+  
+  <!-- ==================================================================== -->
+  <!-- Creates the JDeveloper Plug-in .jar                                  -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-jdev">
+    <ant dir="../jdeveloper" target="jdev-jar" inheritAll="false" />
+  </target>  
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the jEdit Plug-in .jar                                       -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-jedit">
+    <ant dir="../jedit" target="jedit-jar" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the NetBeans Plug-in .jar                                    -->
+  <!-- ==================================================================== -->
+  <target name="build-jar-netbeans">
+    <ant dir="../netbeans" target="netbeans-nbm" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'ant' exists                               -->
+  <!-- ==================================================================== -->
+  <target name="build-check-ant"
+          depends="build-init"
+          unless="present.ant" >
+    <echo message="ERROR 10: Module 'ant' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'ant' not found" />
+  </target>
+  
+  
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'console' exists                           -->
+  <!-- ==================================================================== -->
+  <target name="build-check-console"
+          depends="build-init"
+          unless="present.console" >
+    <echo message="ERROR 10: Module 'console' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'console' not found" />
+  </target>  
+  
+  
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'main' exists                              -->
+  <!-- ==================================================================== -->
+  <target name="build-check-main"
+          depends="build-init"
+          unless="present.main" >
+    <echo message="ERROR 10: Module 'main' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'main' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'docu' exists                              -->
+  <!-- ==================================================================== -->
+  <target name="build-check-docu"
+          depends="build-init"
+          unless="present.docu" >
+    <echo message="ERROR 10: Module 'docu' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'docu' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'eclipse' exists                           -->
+  <!-- ==================================================================== -->
+  <target name="build-check-eclipse"
+          depends="build-init"
+          unless="present.eclipse" >
+    <echo message="ERROR 10: Module 'eclipse' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'eclipse' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'jbuilder' exists                          -->
+  <!-- ==================================================================== -->
+  <target name="build-check-jbuilder"
+          depends="build-init"
+          unless="present.jbuilder" >
+    <echo message="ERROR 10: Module 'jbuilder' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'jbuilder' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'jdeveloperr' exists                       -->
+  <!-- ==================================================================== -->
+  <target name="build-check-jdev"
+          depends="build-init"
+          unless="present.jdeveloper" >
+    <echo message="ERROR 10: Module 'jdeveloper' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'jdeveloper' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'jedit' exists                             -->
+  <!-- ==================================================================== -->
+  <target name="build-check-jedit"
+          depends="build-init"
+          unless="present.jedit" >
+    <echo message="ERROR 10: Module 'jedit' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'jedit' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'netbeans' exists                          -->
+  <!-- ==================================================================== -->
+  <target name="build-check-netbeans"
+          depends="build-init"
+          unless="present.netbeans" >
+    <echo message="ERROR 10: Module 'netbeans' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'netbeans' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Ant distribution needs to be generated            -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-ant" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="aelfred-*.jar" />
+        <include name="jaxp-*.jar" />
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+        <include name="sax-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-ant-${BUILD.VERSION.ANT}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/ant/bin">
+        <include name="jalopy-ant-${BUILD.VERSION.ANT}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${dir.res}" >
+        <include name="lcp.bat" />
+        <include name="preferences.*" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/ant/bin">
+        <include name="lcp.bat" />
+        <include name="preferences.*" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/ant/docs" />
+    </dependset>
+
+    <condition property="uptodate.ant">
+      <and>
+        <available file="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.tar.gz" /> -->
+        <available file="${DIR.TMP}/ant/docs/index.html" />
+        <available file="${DIR.TMP}/ant/bin/preferences.bat" />
+        <available file="${DIR.TMP}/ant/bin/aelfred-${LIB.VERSION.AELFRED}.jar" />
+        <available file="${DIR.TMP}/ant/bin/jaxp-${LIB.VERSION.JAXP}.jar" />
+        <available file="${DIR.TMP}/ant/bin/jalopy-ant-${BUILD.VERSION.ANT}.jar" />
+        <available file="${DIR.TMP}/ant/bin/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/ant/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/ant/bin/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/ant/bin/sax-${LIB.VERSION.SAX}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Console distribution needs to be generated        -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-console" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="aelfred-*.jar" />
+        <include name="getopt-*.jar" />
+        <include name="jaxp-*.jar" />
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+        <include name="sax-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-console-${BUILD.VERSION}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/console/bin">
+        <include name="jalopy-ant-${BUILD.VERSION}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${dir.res}" >
+        <include name="jalopy.*" />
+        <include name="lcp.bat" />
+        <include name="preferences.*" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/console/bin">
+        <include name="jalopy.*" />
+        <include name="lcp.bat" />
+        <include name="preferences.*" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/console/docs" />
+    </dependset>
+
+    <condition property="uptodate.console">
+      <and>
+        <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.tar.gz" /> -->
+        <available file="${DIR.TMP}/console/docs/index.html" />
+        <available file="${DIR.TMP}/console/bin/preferences.bat" />
+        <available file="${DIR.TMP}/console/bin/aelfred-${LIB.VERSION.AELFRED}.jar" />
+        <available file="${DIR.TMP}/console/bin/getopt-${LIB.VERSION.GETOPT}.jar" />
+        <available file="${DIR.TMP}/console/bin/jaxp-${LIB.VERSION.JAXP}.jar" />
+        <available file="${DIR.TMP}/console/bin/jalopy-console-${BUILD.VERSION}.jar" />
+        <available file="${DIR.TMP}/console/bin/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/console/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/console/bin/oro-${LIB.VERSION.ORO}.jar" />
+        <available file="${DIR.TMP}/console/bin/sax-${LIB.VERSION.SAX}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Eclipse distribution needs to be generated        -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-eclipse" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}">
+        <include name="jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/eclipse/docs" />
+    </dependset>
+
+    <condition property="uptodate.eclipse">
+      <and>
+        <available file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.tar.gz" /> -->
+        <available file="${DIR.TMP}/eclipse/docs/index.html" />
+        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
+        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/eclipse/bin/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}/oro-${LIB.VERSION.ORO}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the JBuilder distribution needs to be generated       -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-jbuilder" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/jbuilder/bin">
+        <include name="jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/jbuilder/docs" />
+    </dependset>
+
+    <condition property="uptodate.jbuilder">
+      <and>
+        <available file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.tar.gz" /> -->
+        <available file="${DIR.TMP}/jbuilder/docs/index.html" />
+        <available file="${DIR.TMP}/jbuilder/bin/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+        <available file="${DIR.TMP}/jbuilder/bin/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jbuilder/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jbuilder/bin/oro-${LIB.VERSION.ORO}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the JDeveloper distribution needs to be generated     -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-jdev" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/jdeveloper/bin">
+        <include name="jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/jdeveloper/docs" />
+    </dependset>
+
+    <condition property="uptodate.jdeveloper">
+      <and>
+        <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.tar.gz" /> -->
+        <available file="${DIR.TMP}/jdeveloper/docs/index.html" />
+        <available file="${DIR.TMP}/jdeveloper/bin/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/bin/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jdeveloper/bin/oro-${LIB.VERSION.ORO}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the jEdit distribution needs to be generated          -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-jedit" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/jedit/bin">
+        <include name="jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/jedit/docs" />
+    </dependset>
+
+    <condition property="uptodate.jedit">
+      <and>
+        <available file="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.tar.gz" /> -->
+        <available file="${DIR.TMP}/jedit/docs/index.html" />
+        <available file="${DIR.TMP}/jedit/bin/jalopy-jedit-${BUILD.VERSION.JEDIT}.jar" />
+        <available file="${DIR.TMP}/jedit/bin/jdom-${LIB.VERSION.JDOM}.jar" />
+        <available file="${DIR.TMP}/jedit/bin/log4j-${LIB.VERSION.LOG4J}.jar" />
+        <available file="${DIR.TMP}/jedit/bin/oro-${LIB.VERSION.ORO}.jar" />
+      </and>
+    </condition>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the runtime distribution needs to be generated        -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-main" >
+    <dependset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <srcfileset dir="${DIR.TMP}/main" >
+        <include name="readme.html" />
+      </srcfileset>
+      <targetfileset dir="${DIR.DIST}"
+                     includes="jalopy-${BUILD.VERSION}.*"/>
+    </dependset>
+    <available property="uptodate.main"
+               file="${DIR.DIST}/jalopy-${BUILD.VERSION}.zip" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the NetBeans distribution needs to be generated       -->
+  <!-- ==================================================================== -->
+  <target name="build-uptodate-netbeans" >
+    <dependset>
+      <srcfileset dir="${DIR.LIB}">
+        <include name="jdom-*.jar" />
+        <include name="log4j-*.jar" />
+        <include name="oro-*.jar" />
+      </srcfileset>
+      <srcfileset dir="${DIR.JARS}/">
+        <include name="jalopy-${BUILD.VERSION}.jar" />
+        <include name="jalopy-netbeans-${BUILD.VERSION.NETBEANS}.jar" />
+      </srcfileset>
+      <targetfileset dir="${DIR.TMP}/netbeans/bin">
+        <include name="jalopy-netbeans-${BUILD.VERSION.NETBEANS}.jar" />
+      </targetfileset>
+    </dependset>
+
+    <dependset>
+      <srcfileset dir="${DIR.DOCS}" />
+      <targetfileset dir="${DIR.TMP}/netbeans/docs" />
+    </dependset>
+
+    <condition property="uptodate.netbeans">
+      <and>
+        <available file="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.zip" />
+        <!-- <available file="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.tar.gz" /> -->
+        <available file="${DIR.TMP}/netbeans/docs/index.html" />
+        <available file="${DIR.TMP}/netbeans/bin/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.nbm" />
+      </and>
+    </condition>
+  </target>
+</project>

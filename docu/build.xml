@@ -1,0 +1,624 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+
+<!-- ==========================================================================
+
+Module              : docu
+Module-Dependencies : build, main
+
+This build script is part of the Jalopy build system. It is not meant to be 
+directly invoked by the user but should only be used in conjunction with the 
+master build script that controls the whole build process.
+
+For detailed instructions on how to obtain the needed modules and build a 
+Jalopy distribution from scratch please refer to the manual available at the
+official Jalopy homepage under <http://jalopy.sf.net/build.html>.
+
+If you need further assistance, check <http://jalopy.sf.net/contact.html>.
+
+=========================================================================== -->
+
+<project name="jalopy-docu" default="docu-all" basedir=".">
+
+  <!-- load the global properties -->
+  <property file="../build/build.properties" />
+
+  <property name="dir.src" value="${basedir}/src" />
+  <property name="dir.src.java" value="${dir.src}/java" />
+  <property name="dir.src.main.java" value="${basedir}/../main/src/java" />
+
+  <!-- ==================================================================== -->
+  <!-- Defines the project classpath                                        -->
+  <!-- ==================================================================== -->
+  <path id="project.classpath">
+    <!-- needed 3rd party libraries -->
+    <fileset dir="${DIR.LIB}">
+      <include name="*.jar" />
+    </fileset>
+
+    <pathelement location="${DIR.COMPILE}" />
+  </path>
+
+  <xmlcatalog id="DTDs">
+  <dtd publicId="-//OASIS//DTD DocBook XML V4.2//EN"
+       location="${DIR.DTD.DOCBOOK}"/>
+  </xmlcatalog>
+
+  <!-- ==================================================================== -->
+  <!-- Compiles the bootstrap classes and creates needed taskdefs           -->
+  <!-- ==================================================================== -->
+  <target name="docu-bootstrap">
+    <javac compiler="${BUILD.COMPILER}"
+           destdir="${DIR.COMPILE}"
+           debug="${BUILD.DEBUG}"
+           deprecation="${BUILD.DEPRECATION}"
+           optimize="${BUILD.OPTIMIZE}"
+           target="${BUILD.TARGET.VM}"
+           verbose="${BUILD.VERBOSE}">
+      <src path="${dir.src.java}" />
+    </javac>
+
+    <taskdef name="filesize" classname="org.apache.tools.ant.taskdefs.FileSize">
+      <classpath refid="project.classpath" />
+    </taskdef>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Initializes the build                                                -->
+  <!-- ==================================================================== -->
+  <target name="docu-init" depends="docu-bootstrap">
+    <tstamp/>
+    <mkdir dir="${DIR.DOCS}/manual" />
+    <mkdir dir="${DIR.DOCS}/site" />
+    <mkdir dir="${DIR.DOCS}/api" />
+  </target>
+
+  <target name="docu-append-main"
+          if="PRESENT.MAIN">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message="de.hunsicker.jalopy  
+                   de.hunsicker.jalopy.parser
+                   de.hunsicker.jalopy.plugin
+                   de.hunsicker.jalopy.prefs
+                   de.hunsicker.jalopy.printer
+                   de.hunsicker.jalopy.ui
+                   de.hunsicker.io
+                   de.hunsicker.ui
+                   de.hunsicker.util"
+          append="true" />
+  </target>
+
+  <target name="docu-append-ant"
+          if="PRESENT.ANT">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message=" de.hunsicker.jalopy.plugin.ant "
+          append="true" />
+  </target>
+
+  <target name="docu-append-eclipse"
+          if="PRESENT.ECLIPSE">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message=" de.hunsicker.jalopy.plugin.eclipse "
+          append="true" />
+  </target>
+
+  <target name="docu-append-jbuilder"
+          if="PRESENT.JBUILDER">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message=" de.hunsicker.jalopy.plugin.jbuilder "
+          append="true" />
+  </target>
+
+  <target name="docu-append-jedit"
+          if="PRESENT.JEDIT">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message=" de.hunsicker.jalopy.plugin.jedit "
+          append="true" />
+  </target>
+
+  <target name="docu-append-netbeans"
+          if="PRESENT.NETBEANS">
+    <echo file="${dir.src}/javadoc/packages.txt"
+          message=" de.hunsicker.jalopy.plugin.netbeans "
+          append="true" />
+  </target>
+
+  <target name="docu-create-packages"
+          depends="docu-append-ant, docu-append-main, docu-append-eclipse,
+                   docu-append-jbuilder, docu-append-jedit, docu-append-netbeans">
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the complete API documentation                               -->
+  <!-- ==================================================================== -->
+  <target name="docu-javadoc-all"
+          description="Creates the complete Javadoc API documentation" 
+          depends="docu-init">
+    <available file="../build/build.xml" property="present.build" />
+    <antcall target="docu-check-build" />
+    <javadoc locale="en_US"
+             maxmemory="196m"
+             packagenames="de.hunsicker.jalopy,  
+                   de.hunsicker.jalopy.parser,
+                   de.hunsicker.jalopy.plugin,
+                   de.hunsicker.jalopy.prefs,
+                   de.hunsicker.jalopy.printer,
+                   de.hunsicker.jalopy.ui,
+                   de.hunsicker.io,
+                   de.hunsicker.ui,
+                   de.hunsicker.util"
+             classpathref="project.classpath"
+             sourcepath="${dir.src.main.java}"
+             destdir="${DIR.DOCS}/api"
+             author="true"
+             version="true"
+             windowtitle="${NAME} ${BUILD.VERSION} API"
+             doctitle="${NAME} ${BUILD.VERSION} API Specification"
+             use="false"
+             notree="true"
+             noindex="true"
+             splitindex="false"
+             private="true"
+             nohelp="true"
+             verbose="false"
+             stylesheetfile="${dir.src}/javadoc/stylesheet.css">
+      <bottom><![CDATA[<font size="-1" class="footer">
+      <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br>
+      For further information and documentation, visit the <a href="${HOMEPAGE}" target="_top">official Jalopy website</a>.
+      <br>Last modified: <strong>${TODAY}</strong>
+      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All Rights Reserved.</p>
+      </font>]]></bottom>
+      <group title="Core runtime" packages="de.hunsicker.jalopy*" />
+      <group title="Plug-in API" packages="de.hunsicker.jalopy.plugin*" />
+      <group title="Support libraries" packages="de.hunsicker.*" />
+      <link offline="true" href="http://java.sun.com/products/jdk/1.4/docs/api"
+            packagelistLoc="${PACKAGE.PATH.JDK}" />
+      <link offline="true" href="http://www.antlr.org/"
+            packagelistLoc="${PACKAGE.PATH.ANTLR}" />
+      <link offline="true" href="http://jakarta.apache.org/log4j/docs/apidocs"
+            packagelistLoc="${PACKAGE.PATH.LOG4J}" />
+      <link offline="true" href="http://jakarta.apache.org/oro/apidocs"
+            packagelistLoc="${PACKAGE.PATH.ORO}" />
+      <link offline="true" href="http://jakarta.apache.org/ant/manual/api"
+            packagelistLoc="${PACKAGE.PATH.ANT}" />
+      <link offline="true" href="http://www.borland.com/techpubs/jbuilder/jbuilder5/opentools/ref/OpenToolsAPI/"
+            packagelistLoc="${PACKAGE.PATH.JBUILDER}" />
+      <link offline="true" href="http://www.cacas.org/~wes/java/api/"
+            packagelistLoc="${PACKAGE.PATH.GETOPT}" />
+      <link offline="true" href="http://www.junit.org/javadoc"
+            packagelistLoc="${PACKAGE.PATH.JUNIT}" />
+    </javadoc>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Compiles the sources if necessary                                    -->
+  <!-- ==================================================================== -->
+  <target name="docu-compile"
+          depends="docu-init">
+    <!-- check for module 'build' -->
+    <available file="../build/build.xml" property="present.build" />
+    <antcall target="docu-check-build" />
+
+    <!-- check for module 'main' -->
+    <ant dir="../build" target="build-check-main" inheritAll="false" />
+
+    <!-- make sure we document the latest changes -->
+    <ant dir="../main" target="main-compile" inheritAll="false" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the distribution API documentation                           -->
+  <!-- ==================================================================== -->
+  <target name="docu-javadoc"
+          description="Creates the distribution Javadoc API documentation" 
+          depends="docu-init, docu-compile, docu-uptodate-javadoc"
+          unless="uptodate.javadoc">
+    <javadoc locale="en_US"
+             maxmemory="196m"
+             classpathref="project.classpath"
+             charset="iso-8859-1"
+             failonerror="true"
+             sourcepath="${dir.src.main.java}"
+             destdir="${DIR.DOCS}/api"
+             author="true"
+             version="true"
+             windowtitle="${NAME} ${BUILD.VERSION} API"
+             doctitle="${NAME} ${BUILD.VERSION} API Specification"
+             use="true"
+             notree="false"
+             noindex="false"
+             splitindex="true"
+             private="false"
+             nohelp="true"
+             verbose="false"
+             stylesheetfile="${dir.src}/javadoc/stylesheet.css">
+             <!--additionalparam="-breakiterator -noqualifier all" -->
+
+      <bottom><![CDATA[<font size="-1" class="footer">
+      <a href="http://jalopy.sf.net/contact.html" target="_top">Submit a bug or feature</a>.<br>
+      For further information and documentation, visit the <a href="${HOMEPAGE}" target="_top">official Jalopy website</a>.
+      <br>Last modified: <strong>${TODAY}</strong>
+      <p class="footer">Copyright &#169; ${YEAR} <a href="${AUTHOR.MAIL}">${AUTHOR.NAME}</a>. All Rights Reserved.</p>
+      </font>]]></bottom>
+
+      <package name="de.hunsicker.jalopy" />
+      <package name="de.hunsicker.jalopy.plugin" />
+      <package name="de.hunsicker.jalopy.prefs" />
+      <package name="de.hunsicker.jalopy.ui" />
+
+      <group title="Runtime library" packages="de.hunsicker.jalopy*" />
+      <group title="Plug-in API" packages="de.hunsicker.jalopy.plugin*" />
+      <source file="${dir.src.main.java}/de/hunsicker/io/FileFormat.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/parser/Node.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/jalopy/parser/JavaNode.java" />
+      <source file="${dir.src.main.java}/de/hunsicker/util/ChainingRuntimeException.java" />
+
+      <link offline="true" href="http://java.sun.com/products/jdk/1.4/docs/api"
+            packagelistLoc="${PACKAGE.PATH.JDK}" />
+      <link offline="true" href="http://www.antlr.org/"
+            packagelistLoc="${PACKAGE.PATH.ANTLR}" />
+      <link offline="true" href="http://jakarta.apache.org/log4j/docs/apidocs"
+            packagelistLoc="${PACKAGE.PATH.LOG4J}" />
+      <link offline="true" href="http://jakarta.apache.org/oro/apidocs"
+            packagelistLoc="${PACKAGE.PATH.ORO}" />
+      <link offline="true" href="http://jakarta.apache.org/ant/manual/api"
+            packagelistLoc="${PACKAGE.PATH.ANT}" />
+      <link offline="true" href="http://www.jdom.org/docs/apidocs"
+            packagelistLoc="${PACKAGE.PATH.JDOM}" />
+      <link offline="true" href="http://www.borland.com/techpubs/jbuilder/jbuilder5/opentools/ref/OpenToolsAPI/"
+            packagelistLoc="${PACKAGE.PATH.JBUILDER}" />
+      <link offline="true" href="http://www.cacas.org/~wes/java/api/"
+            packagelistLoc="${PACKAGE.PATH.GETOPT}" />
+      <link offline="true" href="http://www.junit.org/javadoc"
+            packagelistLoc="${PACKAGE.PATH.JUNIT}" />
+    </javadoc>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the user manual                                              -->
+  <!-- ==================================================================== -->
+  <target name="docu-manual"
+          description="Creates the user manual" 
+          depends="docu-init, docu-uptodate-manual" 
+          unless="uptodate.manual">
+
+    <copy tofile="${dir.src}/xdocs/manual/manual.xsl"
+          file="${dir.src}/xdocs/manual/manual.src.xsl" filtering="true"
+          overwrite="true" preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+      </filterset>
+    </copy>
+
+    <xslt basedir="${dir.src}/xdocs/manual"
+           destdir="${DIR.DOCS}/manual"
+           style="${dir.src}/xdocs/manual/manual.xsl"
+           processor="trax"
+           force="false"
+           includes="manual.xml">
+      <param name="base.dir" expression="${DIR.DOCS}/manual/" />
+      <param name="build.time" expression="${TODAY}" />
+      <xmlcatalog refid="DTDs"/>
+    </xslt>
+    <copy todir="${DIR.DOCS}/manual"
+          file="${dir.src}/xdocs/site/site.css" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the offline web site                                         -->
+  <!-- ==================================================================== -->
+  <target name="docu-site"
+          description="Creates the project web pages" 
+          depends="docu-init, docu-uptodate-site"
+          unless="uptodate.site">
+
+    <copy tofile="${dir.src}/xdocs/site/site.xsl"
+          file="${dir.src}/xdocs/site/site.src.xsl" filtering="true"
+          overwrite="true" preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+      </filterset>
+    </copy>
+
+    <copy tofile="${dir.src}/xdocs/site/download.xml"
+          file="${dir.src}/xdocs/site/download.src.xml" filtering="true"
+          overwrite="true" preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+        <filter token="TODAY" value="${TODAY}" />
+        <filter token="SIZE.ANT" value="???" />
+        <filter token="SIZE.CONSOLE" value="???" />
+        <filter token="SIZE.ECLIPSE" value="???" />
+        <filter token="SIZE.JBUILDER" value="???" />
+        <filter token="SIZE.JDEVELOPER" value="???" />
+        <filter token="SIZE.JEDIT" value="???" />
+        <filter token="SIZE.MAIN" value="???" />
+        <filter token="SIZE.NETBEANS" value="???" />
+        <filter token="SIZE.SOURCE" value="???" />
+      </filterset>
+    </copy>
+
+    <xslt basedir="${dir.src}/xdocs/site"
+           destdir="${DIR.DOCS}/site"
+           processor="trax"
+           force="false"
+           style="${dir.src}/xdocs/site/site.xsl"
+           includes="*.xml"
+           excludes="*.src.xml, _*">
+      <param name="base.dir" expression="${DIR.DOCS}/site/" />
+      <param name="build.time" expression="${TODAY}" />
+      <xmlcatalog refid="DTDs"/>
+    </xslt>
+
+    <copy todir="${DIR.DOCS}/site"
+          file="${dir.src}/xdocs/site/site.css" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the online web site                                          -->
+  <!-- ==================================================================== -->  
+  <target name="docu-website"
+          description="Creates the online website"
+          depends="docu-compile">
+
+    <!-- make sure everything was build -->
+    <ant dir="../build" target="build-dist-all" inheritAll="false" />
+
+    <filesize name="size.main" file="${DIR.DIST}/jalopy-${BUILD.VERSION}.zip" />
+    <filesize name="size.ant" file="${DIR.DIST}/jalopy-ant-${BUILD.VERSION.ANT}.zip" />
+    <filesize name="size.console" file="${DIR.DIST}/jalopy-console-${BUILD.VERSION}.zip" />
+    <filesize name="size.eclipse" file="${DIR.DIST}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.zip" />
+    <filesize name="size.jbuilder" file="${DIR.DIST}/jalopy-jbuilder-${BUILD.VERSION.JBUILDER}.zip" />
+    <filesize name="size.jdeveloper" file="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip" />
+    <filesize name="size.jedit" file="${DIR.DIST}/jalopy-jedit-${BUILD.VERSION.JEDIT}.zip" />
+    <filesize name="size.netbeans" file="${DIR.DIST}/jalopy-netbeans-${BUILD.VERSION.NETBEANS}.zip" />
+    <filesize name="size.source" file="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.tar.gz" />
+
+    <copy tofile="${dir.src}/xdocs/site/download.xml"
+          file="${dir.src}/xdocs/site/download.src.xml" filtering="true"
+          overwrite="true" preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+        <filter token="TODAY" value="${TODAY}" />
+        <filter token="SIZE.ANT" value="${size.ant}" />
+        <filter token="SIZE.CONSOLE" value="${size.console}" />
+        <filter token="SIZE.ECLIPSE" value="${size.eclipse}" />
+        <filter token="SIZE.JBUILDER" value="${size.jbuilder}" />
+        <filter token="SIZE.JDEVELOPER" value="${size.jdeveloper}" />
+        <filter token="SIZE.JEDIT" value="${size.jedit}" />
+        <filter token="SIZE.MAIN" value="${size.main}" />
+        <filter token="SIZE.NETBEANS" value="${size.netbeans}" />
+        <filter token="SIZE.SOURCE" value="${size.source}" />
+      </filterset>
+    </copy>
+
+    <mkdir dir="${DIR.DOCS}/online/" />
+
+    <xslt basedir="${dir.src}/xdocs/site"
+           destdir="${DIR.DOCS}/online"
+           processor="trax"
+           force="true"
+           style="${dir.src}/xdocs/site/site.xsl"
+           includes="*.xml"
+           excludes="*.src.xml, _*">
+      <param name="base.dir" expression="${DIR.DOCS}/online/" />
+      <param name="build.time" expression="${TODAY}" />
+      <xmlcatalog refid="DTDs"/>
+    </xslt>
+
+    <copy todir="${DIR.DOCS}/online"
+          file="${dir.src}/xdocs/site/site.css" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the complete documentation set                               -->
+  <!-- ==================================================================== -->
+  <target name="docu-all"
+          description="Creates the complete documentation set" 
+          depends="docu-javadoc, docu-manual, docu-site">
+  </target>  
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the Ant distribution                          -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-ant">
+    <antcall target="docu-readme">
+      <param name="plugin" value="ant"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the Console distribution                      -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-console">
+    <antcall target="docu-readme">
+      <param name="plugin" value="console"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the Eclipse distribution                      -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-eclipse">
+    <antcall target="docu-readme">
+      <param name="plugin" value="eclipse"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the JBuilder distribution                     -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-jbuilder">
+    <antcall target="docu-readme">
+      <param name="plugin" value="jbuilder"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the JDeveloper distribution                   -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-jdev">
+    <antcall target="docu-readme">
+      <param name="plugin" value="jdeveloper"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the jEdit distribution                        -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-jedit">
+    <antcall target="docu-readme">
+      <param name="plugin" value="jedit"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the core distribution                         -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-main">
+    <antcall target="docu-readme">
+      <param name="plugin" value="main"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the readme for the NetBeans distribution                     -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme-netbeans">
+    <antcall target="docu-readme">
+      <param name="plugin" value="netbeans"/>
+    </antcall>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the distribution readme                                      -->
+  <!-- ==================================================================== -->
+  <target name="docu-readme"
+          depends="docu-init">
+    <copy file="${dir.src}/xdocs/readme/readme.src.xml"
+          tofile="${dir.src}/xdocs/readme/readme.xml"
+          filtering="true" overwrite="true"
+          preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+      </filterset>
+    </copy>
+
+    <copy tofile="${dir.src}/xdocs/readme/readme.xsl"
+          file="${dir.src}/xdocs/readme/readme.src.xsl" filtering="true"
+          overwrite="true" preservelastmodified="true">
+      <filterset>
+        <filtersfile file="../build/build.properties" />
+      </filterset>
+    </copy>
+
+    <xslt basedir="${dir.src}/xdocs/readme"
+           destdir="${DIR.TMP}/${plugin}"
+           processor="trax"
+           style="${dir.src}/xdocs/readme/readme.xsl"
+           includes="readme.xml">
+      <param name="base.dir" expression="${DIR.TMP}/${plugin}/" />
+      <param name="profile.condition" expression="${plugin}" />
+      <xmlcatalog refid="DTDs"/>
+    </xslt>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'build' exists                             -->
+  <!-- ==================================================================== -->
+  <target name="docu-check-build"
+          unless="present.build">
+    <echo message="ERROR 10: Module 'build' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'build' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Javadoc needs to be generated                     -->
+  <!-- ==================================================================== -->
+  <target name="docu-uptodate-javadoc" 
+          depends="docu-init">
+    <dependset>
+      <srcfileset dir="${DIR.COMPILE}">
+        <include name="**/*.class" />
+        <exclude name="**/ant/**" />
+        <exclude name="**/eclipse/**" />
+        <exclude name="**/jbuilder/**" />
+        <exclude name="**/jedit/**" />
+        <exclude name="**/netbeans/**" />
+      </srcfileset>
+      <targetfileset dir="${DIR.DOCS}/api"
+                     includes="index.html" />
+    </dependset>
+
+    <available property="uptodate.javadoc"
+               file="${DIR.DOCS}/api/index.html" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the manual needs to be generated                      -->
+  <!-- ==================================================================== -->
+  <target name="docu-uptodate-manual" 
+          depends="docu-init">
+    <dependset>
+      <srcfileset dir="${dir.src}/xdocs/manual">
+        <include name="**/*.xml" />
+        <include name="**/*.xsl" />
+      </srcfileset>
+      <targetfileset dir="${DIR.DOCS}/manual">
+        <include name="**/*.html" />
+      </targetfileset>
+    </dependset>
+    <available property="uptodate.manual"
+               file="${DIR.DOCS}/manual/manual.html" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the web site needs to be generated                    -->
+  <!-- ==================================================================== -->
+  <target name="docu-uptodate-site" 
+          depends="docu-init">
+    <dependset>
+      <srcfileset dir="${dir.src}/xdocs/site">
+        <include name="**/*.xml" />
+        <include name="**/*.xsl" />
+      </srcfileset>
+      <srcfileset dir="${basedir}">
+        <include name="build.xml" />
+      </srcfileset>
+      <srcfileset dir="..\build">
+        <include name="build.xml" />
+        <include name="build.properties" />
+      </srcfileset>
+      <targetfileset dir="${DIR.DOCS}/site">
+        <include name="**/*.html" />
+      </targetfileset>
+    </dependset>
+    <available property="uptodate.site"
+               file="${DIR.DOCS}/site/index.html" />
+  </target>
+</project>

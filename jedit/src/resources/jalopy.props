@@ -1,0 +1,42 @@
+# $Id$
+#
+# Plugin properties
+#
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.name=Jalopy Java Source Code Formatter
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.author=Marco Hunsicker
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.version=@BUILD.VERSION.JEDIT@
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.docs=docs/jedit.html
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.0=jdk 1.3
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.1=jedit @LIB.VERSION.JEDIT@
+#plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.2=plugin org.gjt.sp.jedit.view.message.MessageViewPlugin @LIB.VERSION.MESSAGEVIEW@
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.jars = jalopy-@BUILD.VERSION@.jar jdom-@LIB.VERSION.JDOM@.jar log4j-@LIB.VERSION.LOG4J@.jar oro-@LIB.VERSION.ORO@.jar textarea-@LIB.VERSION.TEXTAREA@.jar
+
+#
+# Menu properties
+#
+jalopy-menu=jalopy.format - jalopy.options
+jalopy-menu.label=Jalopy
+
+jalopy.format.label=$Format active Buffer
+jalopy.formatopen.label=Format all $Buffers
+jalopy.options.label = Jalopy Options...
+
+#
+# Option panes
+#
+options.jalopy.label=Jalopy
+options.jalopy.general.label = General
+options.jalopy.braces.label = Braces
+options.jalopy.whitespace.label = Whitespace
+options.jalopy.indentation.label = Indentation
+options.jalopy.wrapping.label = Line wrapping
+options.jalopy.separation.label = Separation
+options.jalopy.comments.label = Comments
+options.jalopy.javadoc.label = Javadoc
+options.jalopy.misc.label = Misc
+options.jalopy.sort.label = Sort
+options.jalopy.header.label = Header
+options.jalopy.environment.label = Environment
+options.jalopy.footer.label = Footer
+options.jalopy.imports.label = Imports
+options.jalopy.messages.label = Messages

@@ -1,0 +1,253 @@
+<jalopy>
+    <printer>
+        <whitespace>
+            <paddingLogicalOperators>true</paddingLogicalOperators>
+            <padddingBraces>true</padddingBraces>
+            <beforeStatementParenthesis>true</beforeStatementParenthesis>
+            <padddingParenthesis>false</padddingParenthesis>
+            <beforeBraces>true</beforeBraces>
+            <paddingShiftOperators>true</paddingShiftOperators>
+            <beforeMethodCallParenthesis>false</beforeMethodCallParenthesis>
+            <beforeLogicalNot>false</beforeLogicalNot>
+            <beforeBracketsTypes>false</beforeBracketsTypes>
+            <paddingMathematicalOperators>true</paddingMathematicalOperators>
+            <afterComma>true</afterComma>
+            <afterCastingParenthesis>false</afterCastingParenthesis>
+            <paddingBitwiseOperators>true</paddingBitwiseOperators>
+            <beforeCaseColon>true</beforeCaseColon>
+            <padddingTypeCast>false</padddingTypeCast>
+            <beforeBrackets>false</beforeBrackets>
+            <padddingBrackets>false</padddingBrackets>
+            <paddingRelationalOperators>true</paddingRelationalOperators>
+            <paddingAssignmentOperators>true</paddingAssignmentOperators>
+            <beforeMethodDeclarationParenthesis>false</beforeMethodDeclarationParenthesis>
+            <afterSemiColon>true</afterSemiColon>
+        </whitespace>
+        <blankLines>
+            <afterClass>2</afterClass>
+            <beforeBraceRight>0</beforeBraceRight>
+            <beforeFooter>0</beforeFooter>
+            <afterInterface>2</afterInterface>
+            <beforeDeclaration>1</beforeDeclaration>
+            <beforeCommentMultiLine>1</beforeCommentMultiLine>
+            <afterDeclaration>0</afterDeclaration>
+            <afterPackage>1</afterPackage>
+            <afterBlock>1</afterBlock>
+            <afterFooter>0</afterFooter>
+            <beforeControl>1</beforeControl>
+            <beforeHeader>0</beforeHeader>
+            <keepUpTo>1</keepUpTo>
+            <afterMethod>2</afterMethod>
+            <beforeCaseBlock>1</beforeCaseBlock>
+            <beforeJavadoc>1</beforeJavadoc>
+            <beforeBlock>1</beforeBlock>
+            <afterBraceLeft>0</afterBraceLeft>
+            <beforeCommentSingleLine>1</beforeCommentSingleLine>
+            <afterLastImport>2</afterLastImport>
+            <afterHeader>0</afterHeader>
+        </blankLines>
+        <indentation>
+            <leading>0</leading>
+            <continationIfTernary>true</continationIfTernary>
+            <braceCuddled>1</braceCuddled>
+            <label>false</label>
+            <general>4</general>
+            <firstColumnComments>false</firstColumnComments>
+            <tabs>
+                <size>8</size>
+                <use>false</use>
+            </tabs>
+            <extends>-1</extends>
+            <caseFromSwitch>true</caseFromSwitch>
+            <braceLeft>0</braceLeft>
+            <continuation>2</continuation>
+            <deep>60</deep>
+            <parameter>-1</parameter>
+            <braceRight>0</braceRight>
+            <throws>4</throws>
+            <commentEndline>1</commentEndline>
+            <useMethodCallParams>false</useMethodCallParams>
+            <braceRightAfter>0</braceRightAfter>
+            <implements>-1</implements>
+            <continationIf>false</continationIf>
+        </indentation>
+        <sorting>
+            <class>true</class>
+            <modifiers>
+                <use>true</use>
+            </modifiers>
+            <method>true</method>
+            <constructor>true</constructor>
+            <use>true</use>
+            <order>Static Variables/Initializers,Instance Variables,Instance Initializers,Constructors,Methods,Interfaces,Classes</order>
+            <interface>true</interface>
+            <variable>true</variable>
+            <orderModifiers>public,protected,private,abstract,static,final,synchronized,transient,volatile,native,strictfp</orderModifiers>
+        </sorting>
+        <wrapping>
+            <paramsMethodDef>true</paramsMethodDef>
+            <beforeOperator>false</beforeOperator>
+            <use>true</use>
+            <afterExtendsTypes>true</afterExtendsTypes>
+            <arrayElements>0</arrayElements>
+            <beforeExtends>true</beforeExtends>
+            <afterLabel>true</afterLabel>
+            <paramsMethodCall>false</paramsMethodCall>
+            <afterThrowsTypes>true</afterThrowsTypes>
+            <beforeImplements>true</beforeImplements>
+            <beforeThrows>true</beforeThrows>
+            <afterImplementsTypes>true</afterImplementsTypes>
+            <paramsMethodCallIfCall>false</paramsMethodCallIfCall>
+            <afterChainedMethodCall>false</afterChainedMethodCall>
+            <lineLength>79</lineLength>
+        </wrapping>
+        <comments>
+            <separator>
+                <interface>Inner Interfaces</interface>
+                <instanceInit>Instance initializers</instanceInit>
+                <instanceVariable>Instance variables</instanceVariable>
+                <fillCharacter>·</fillCharacter>
+                <staticVariableInit>Static variables/initializers</staticVariableInit>
+                <ctor>Constructors</ctor>
+                <method>Methods</method>
+                <class>Inner Classes</class>
+            </separator>
+            <insertSeparator>true</insertSeparator>
+            <javadoc>
+                <addCtor>5</addCtor>
+                <templates>
+                    <methods>
+                        <exception> * @throws $exceptionType$ DOCUMENT ME!</exception>
+                        <top>/**| * DOCUMENT ME!</top>
+                        <bottom> */</bottom>
+                        <return> * @return DOCUMENT ME!</return>
+                        <param> * @param $paramType$ DOCUMENT ME!</param>
+                    </methods>
+                </templates>
+                <tags>
+                    <standard>@todo</standard>
+                    <in-line />
+                </tags>
+                <remove>false</remove>
+                <addMethod>5</addMethod>
+                <addClass>5</addClass>
+                <checkTags>true</checkTags>
+                <addField>5</addField>
+                <parseComments>true</parseComments>
+                <checkInnerClass>false</checkInnerClass>
+            </javadoc>
+            <removeSingleLine>false</removeSingleLine>
+            <formatMultiLine>false</formatMultiLine>
+            <removeMultiLine>false</removeMultiLine>
+            <insertSeparatorRecursive>false</insertSeparatorRecursive>
+        </comments>
+        <footer>
+            <keys />
+            <text></text>
+            <use>false</use>
+            <smartModeLines>0</smartModeLines>
+        </footer>
+        <braces>
+            <treatMethodClassDifferent>false</treatMethodClassDifferent>
+            <insertBracesWhile>true</insertBracesWhile>
+            <removeBracesWhile>false</removeBracesWhile>
+            <insertBracesFor>true</insertBracesFor>
+            <insertBracesDoWhile>true</insertBracesDoWhile>
+            <emptyInsertStatement>true</emptyInsertStatement>
+            <rightBraceNewLine>true</rightBraceNewLine>
+            <removeBracesFor>false</removeBracesFor>
+            <removeBracesIfElse>false</removeBracesIfElse>
+            <removeBracesBlock>true</removeBracesBlock>
+            <removeBracesDoWhile>false</removeBracesDoWhile>
+            <insertBracesIfElse>true</insertBracesIfElse>
+            <emptyCuddle>false</emptyCuddle>
+            <leftBraceNewLine>true</leftBraceNewLine>
+        </braces>
+        <header>
+            <smartModeLines>0</smartModeLines>
+            <use>true</use>
+            <keys>Jalopy Java Source Code Formatter|Sun Public License Notice|Common Public License|THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS</keys>
+            <text>/*
+ * Copyright (c) 2002, InformatikAtelier GmbH, Germany. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright 
+ *    notice, this list of conditions and the following disclaimer. 
+ * 
+ * 2.  Redistributions in binary form must reproduce the above copyright 
+ *    notice, this list of conditions and the following disclaimer in 
+ *    the documentation and/or other materials provided with the 
+ *    distribution. 
+ *
+ * 3. Neither the name of the Jalopy project nor the names of its 
+ *    contributors may be used to endorse or promote products derived 
+ *    from this software without specific prior written permission. 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */</text>
+        </header>
+        <chunks>
+            <byBlankLines>true</byBlankLines>
+            <byComments>true</byComments>
+        </chunks>
+        <environment />
+        <alignment>
+            <varIdents>false</varIdents>
+            <ParamsMethodDef>true</ParamsMethodDef>
+            <varAssigns>false</varAssigns>
+            <ternaryExpresssion>false</ternaryExpresssion>
+            <ternaryValue>true</ternaryValue>
+        </alignment>
+        <history>
+            <policy>History.Policy [disabled]</policy>
+        </history>
+    </printer>
+    <transform>
+        <misc>
+            <insertLoggingConditional>false</insertLoggingConditional>
+            <insertUID>false</insertUID>
+            <insertExpressionParenthesis>true</insertExpressionParenthesis>
+        </misc>
+        <import>
+            <policy>ImportPolicy [expand]</policy>
+            <grouping>javax:1|java:1|gnu:2|com.borland:2|org.apache:2|de.hunsicker:2|org.openide:2|org.eclipse:2</grouping>
+            <groupingDepth>3</groupingDepth>
+            <sort>true</sort>
+        </import>
+    </transform>
+    <messages>
+        <transformMsgPrio>30000</transformMsgPrio>
+        <printerMsgPrio>30000</printerMsgPrio>
+        <parserJavadocMsgPrio>30000</parserJavadocMsgPrio>
+        <parserMsgPrio>30000</parserMsgPrio>
+        <printerJavadocMsgPrio>30000</printerJavadocMsgPrio>
+        <showErrorStackTrace>true</showErrorStackTrace>
+        <ioMsgPrio>30000</ioMsgPrio>
+    </messages>
+    <general>
+        <styleDescription>Jalopy code convention with InformatikAtelier BSD header</styleDescription>
+        <backupDirectory>bak</backupDirectory>
+        <styleName>jal-atelier</styleName>
+        <sourceVersion>14</sourceVersion>
+        <threadCount>1</threadCount>
+        <backupLevel>0</backupLevel>
+        <forceFormatting>false</forceFormatting>
+    </general>
+    <internal>
+        <version>4</version>
+    </internal>
+</jalopy>

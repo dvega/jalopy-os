@@ -1,0 +1,471 @@
+<?xml version="1.0"?>
+
+<!-- 
+     $Id$
+ -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
+  [
+  <!ENTITY dedication SYSTEM "dedication.xml">    
+  <!ENTITY introduction SYSTEM "introduction.xml">    
+  <!ENTITY page-general SYSTEM "page-general.xml">    
+  <!ENTITY page-project SYSTEM "page-project.xml">
+  <!ENTITY page-braces SYSTEM "page-braces.xml"> 
+  <!ENTITY page-whitespace SYSTEM "page-whitespace.xml">  
+  <!ENTITY page-indentation SYSTEM "page-indentation.xml">
+  <!ENTITY page-wrapping SYSTEM "page-wrapping.xml">
+  <!ENTITY page-separation SYSTEM "page-separation.xml">
+  <!ENTITY page-comments SYSTEM "page-comments.xml">
+  <!ENTITY page-javadoc SYSTEM "page-javadoc.xml">
+  <!ENTITY page-misc SYSTEM "page-misc.xml">
+  <!ENTITY page-sorting SYSTEM "page-sorting.xml">
+  <!ENTITY page-header SYSTEM "page-header.xml">
+  <!ENTITY page-footer SYSTEM "page-footer.xml">
+  <!ENTITY page-environment SYSTEM "page-environment.xml">
+  <!ENTITY page-imports SYSTEM "page-imports.xml">
+  <!ENTITY page-messages SYSTEM "page-messages.xml">
+  <!ENTITY plugin-ant SYSTEM "plugin-ant.xml">    
+  <!ENTITY plugin-ant-params SYSTEM "plugin-ant-params.xml">
+  <!ENTITY plugin-console SYSTEM "plugin-console.xml">  
+  <!ENTITY plugin-eclipse SYSTEM "plugin-eclipse.xml">  
+  <!ENTITY plugin-jbuilder SYSTEM "plugin-jbuilder.xml">
+  <!ENTITY plugin-jdev SYSTEM "plugin-jdev.xml">
+  <!ENTITY plugin-jedit SYSTEM "plugin-jedit.xml">
+  <!ENTITY plugin-netbeans SYSTEM "plugin-netbeans.xml">
+  <!ENTITY dependencies SYSTEM "dependencies.xml"> 
+  <!ENTITY license-apache SYSTEM "license-apache.xml"> 
+  <!ENTITY license-bsd SYSTEM "license-bsd.xml">
+  <!ENTITY license-common-public SYSTEM "license-common-public.xml">
+  <!ENTITY license-sun-public SYSTEM "license-sun-public.xml">
+  <!ENTITY license-gnu SYSTEM "license-gnu.xml">
+  <!ENTITY license-gnu-doc SYSTEM "license-gnu-doc.xml">
+  ] >
+
+<book>
+<bookinfo>
+<title>Jalopy User Manual</title>
+<author>
+<firstname>Larry</firstname>
+<surname>Hamel</surname>
+</author>
+<author>
+<firstname>Marco</firstname>
+<surname>Hunsicker</surname>
+</author>
+<copyright>
+<year>2002</year>
+<holder>Marco Hunsicker</holder>
+</copyright>
+<legalnotice>
+<title>Legal Notice</title>
+
+<para>
+Permission is granted to copy, distribute and/or modify this document under 
+the terms of the GNU Free Documentation License, Version 1.1 or any later 
+version published by the Free Software Foundation; with no "Invariant Sections", 
+"Front-Cover Texts" or "Back-Cover Texts", each as defined in the license. For 
+a copy of the license terms refer to <xref linkend="license-gnu-doc" />.
+</para>
+
+<para>
+This product includes software developed by
+<ulink url="http://www.antlr.org/">jGuru.com (MageLang Institute)</ulink>, the 
+<ulink url="http://www.apache.org/">Apache Software Foundation</ulink>, the 
+<ulink url="http://www.jdom.org">JDOM group</ulink> and other 
+individuals. Please refer to <xref linkend="dependencies" /> for a detailed list 
+and the licensing terms.
+</para>
+</legalnotice>
+</bookinfo>
+
+<!-- ====================================================================== -->
+
+&dedication;
+
+<!-- ====================================================================== -->
+
+&introduction;
+
+<!-- ====================================================================== -->
+
+<part id="part-core">
+<title>Jalopy core</title>
+
+<partintro>
+<para>
+This part of the manual covers the core Jalopy engine: generic installation and 
+usage instructions along with a detailed discussion of the available switches 
+to customize formatting output.
+</para>
+</partintro>
+
+<chapter id="installation">
+<title>Installation</title>
+<sect1 id="installation-requirements">
+<title>System requirements</title>
+<indexterm zone="installation-requirements"><primary>System requrirements</primary></indexterm>
+
+<para>
+Jalopy requires a properly configured JDK or JRE version 1.3 or later on
+your system.
+</para>
+
+<para id="installation-dependencies">
+Jalopy depends on several freely available Java libraries. For more information
+regarding this 3rd party libraries refer to <xref linkend="dependencies" />.
+</para>
+
+<indexterm zone="installation-dependencies"><primary>Dependencies</primary></indexterm>
+</sect1>
+
+<caution>
+<title>Incompatibility with Sun JDK 1.4</title>
+<para>
+The contained Javadoc parser may not work properly under Sun JDK 1.4. Refer to
+<xref linkend="javadoc" /> for more information regarding this issue.
+</para>
+</caution>
+
+<sect1 id="installation-installation">
+<title>Installing Jalopy</title>
+<indexterm zone="installation-installation"><primary>Installation</primary></indexterm>
+
+<para>
+Installation depends on the distribution you received. Please refer to the individual
+Plug-in chapters in <xref linkend="part-plugins" /> for detailed information.
+</para>
+</sect1>
+</chapter>
+
+<!-- ====================================================================== -->
+
+<chapter id="build">
+<title>Building from the sources</title>
+
+<sect1 id="build-prerequisites">
+<title>Prerequisites</title>
+
+<para>
+The following software must be installed separately, in order to build from the
+sources:
+</para>
+
+<itemizedlist mark="square">
+<listitem>
+<para>
+Jakarta Ant. Jalopy comes with a simple, Ant-based build 
+system. So you first need to obtain and install Ant as outlined in the 
+<ulink url="http://jakarta.apache.org/ant/manual/install.html">Ant manual</ulink>. 
+The build system is only tested against the Ant 1.5 release, but later nightly 
+builds of Ant may also work.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Oasis DocBook XML DTD. You can get it from the
+<ulink url="http://www.oasis-open.org/committees/docbook/xml/4.2/index.shtml">OASIS website</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Norman Walsh's DocBook XSL Stylesheets. Download the latest release from SourceForge
+(<ulink url="http://docbook.sf.net">http://docbook.sf.net</ulink>).
+You have to copy the file <filename>extensions/saxon65.jar</filename> that
+comes with the distribution into the <filename>/lib</filename> folder of your
+Ant installation directory as this file is needed for sophisticated table
+generation.
+</para>
+</listitem>
+
+<listitem>
+<para>
+An XSLT processor. The only one I found working with the DocBook XSL release 
+I'm using is Michael Kay's Saxon. You should download the current stable 
+production release from SourceForge 
+(<ulink url="http://saxon.sf.net">http://saxon.sf.net</ulink>)
+and extract the file <filename>saxon.jar</filename> into the <filename>/lib</filename> 
+folder of your Ant installation directory.
+</para>
+</listitem>
+
+</itemizedlist>
+<para/>
+</sect1>
+
+<sect1 id="build-build">
+<title>Building</title>
+<para>
+The basic steps to build Jalopy from the sources are:
+</para>
+
+<orderedlist>
+<listitem>
+<para>
+Get and install the needed software as outlined in <xref linkend="build-prerequisites" />.
+Make sure Ant is set up correctly.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Get the sources. Currently you don't have a choice but to download the 
+<ulink url="./download.html#source">Jalopy source distribution</ulink> which 
+contains the complete Jalopy sources. Unpack the sources into a directory of
+your choice.</para>
+</listitem>
+
+<listitem>
+<para>
+Change to the directory where the Jalopy sources reside. You should find a
+directory layout somewhat similar to the following:
+</para>
+
+<screen>
+&lt;DIR&gt;          ant
+&lt;DIR&gt;          build
+&lt;DIR&gt;          docu
+&lt;DIR&gt;          eclipse
+&lt;DIR&gt;          jbuilder
+&lt;DIR&gt;          jdeveloper
+&lt;DIR&gt;          jedit
+&lt;DIR&gt;          main
+&lt;DIR&gt;          netbeans  
+</screen>
+
+<para>
+<firstterm>main</firstterm> contains the core Jalopy runtime sources,
+<firstterm>docu</firstterm> all documentation, <firstterm>build</firstterm> 
+contains the build system and files related to installation and maintainance, 
+the other (optional) directories contain the sources of the different Plug-ins.
+</para>
+
+<para>
+Change directory into <filename>/build</filename> where the master build script
+lurks.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Adjust the global build properties to match your installation. The build 
+system uses quite a few properties to control the behaviour and
+specify additional needed resources. You will find these properties in the file
+<filename>build.properties</filename>.
+</para>
+
+<para>
+Common properties that have to changed include:
+</para>
+
+<variablelist><title>Common build properties</title>
+<varlistentry>
+<term>DIR.DOCBOOK.XSL</term>
+<listitem>
+<para>
+Specifies the installation directory of the DocBook XSL stylesheets package.
+Note that you have to specify a protocol, e.g. <filename>file:///G:/Programme/docbook-xsl-1.54.0</filename>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>DIR.DOCBOOK.DTD</term>
+<listitem>
+<para>
+Specifies the path where to find the DocBook XSL DTD.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>LIB.PATH.<replaceable>&lt;modulename&gt;</replaceable></term>
+<listitem>
+<para>
+Specifies additional library path(s) needed to build a certain module.
+Adjust the default path(s) to match your installation.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>PACKAGE.PATH.<replaceable>&lt;libraryname&gt;</replaceable></term>
+<listitem>
+<para>
+Specifies the location to a directory containing the package-list file for a
+given library. This is optional and only needed by Javadoc to resolve links to
+documentation for external referenced classes. Change the default path(s)
+to match your installation.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</listitem>
+
+<listitem>
+<para>
+Once everything is set up, you can start a build by using <command>ant</command> <parameter>target</parameter> 
+where <parameter>target</parameter> describes one of the main build targets (those with a
+description, use <command>ant</command> <parameter>-projecthelp</parameter> to display
+the available targets). Just typing <command>ant</command> will build the Jalopy
+core runtime distribution.
+</para>
+</listitem>
+
+<listitem>
+<para>
+When a build is done, you can find the created distribution(s) in the
+<filename>tmp~/dist</filename> folder. The build system creates and stores all
+intermediate files and subdirectories under the <filename>tmp~</filename>
+directory.
+</para>
+</listitem>
+
+<listitem>
+<para>
+If you make changes to the source code, just run Ant again; this will perform a
+faster <firstterm>incremental</firstterm> rebuild of the target.
+</para>
+</listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!-- ====================================================================== -->
+
+<chapter id="usage">
+
+<title>Usage</title>
+
+<para>Usage depends on the distribution you received. Please refer to the
+individual Plug-in chapters in <xref linkend="part-plugins" /> for details.
+</para>
+
+</chapter>
+
+<!-- ====================================================================== -->
+
+<chapter id="preferences">
+<title>Preferences</title>
+
+<indexterm><primary>Preferences</primary></indexterm>
+
+<para id="settings-directory">
+Jalopy stores all preferences settings as files inside its 
+<firstterm>settings directory</firstterm> (or subdirectories thereof).
+This directory is located in the user home directory (<filename>$HOME/.jalopy</filename>).
+</para>
+
+<indexterm zone="settings-directory"><primary>Settings directory</primary></indexterm>
+
+<para>
+A graphical user interface is provided to easily configure the preferences. 
+Please refer to the individual Plug-in chapters in <xref linkend="part-plugins"/>
+for information on how to display it from within the Plug-in you received. 
+</para>
+
+&page-general;
+
+&page-project;
+
+&page-braces;
+
+&page-whitespace;
+
+&page-indentation;
+
+&page-wrapping;
+
+&page-separation;
+
+&page-comments;
+
+&page-imports;
+
+&page-environment;
+
+&page-javadoc;
+
+&page-header;
+
+&page-footer;
+
+&page-sorting;
+
+&page-misc;
+
+&page-messages;
+
+</chapter>
+</part>
+
+<part id="part-plugins">
+<title>Plug-ins</title>
+
+<partintro>
+<para>
+This part of the manual covers the different Plug-ins available.
+</para>
+</partintro>
+
+<chapter id="plugin-ant">
+&plugin-ant;
+</chapter>
+
+<chapter id="plugin-console">
+&plugin-console;
+</chapter>
+
+<chapter id="plugin-eclipse">
+&plugin-eclipse;
+</chapter>
+
+<chapter id="plugin-jbuilder">
+&plugin-jbuilder;
+</chapter>
+
+<chapter id="plugin-jdev">
+&plugin-jdev;
+</chapter>
+
+<chapter id="plugin-jedit">
+&plugin-jedit;
+</chapter>
+
+<chapter id="plugin-netbeans">
+&plugin-netbeans;
+</chapter>
+</part>
+
+<appendix id="dependencies">
+&dependencies;
+</appendix>
+
+<appendix id="license-bsd">
+&license-bsd;
+</appendix>
+
+<appendix id="license-apache">
+&license-apache;
+</appendix>
+
+<appendix id="license-gnu">
+&license-gnu;
+</appendix>
+
+<appendix id="license-gnu-doc">
+&license-gnu-doc;
+</appendix>
+
+<appendix id="license-common-public">
+&license-common-public;
+</appendix>
+
+<appendix id="license-sun-public">
+&license-sun-public;
+</appendix>
+
+<index/>
+</book>

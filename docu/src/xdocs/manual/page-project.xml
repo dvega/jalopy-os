@@ -1,0 +1,38 @@
+<?xml version="1.0"
+      encoding="iso-8859-1" ?>
+
+<!-- $Id$ -->
+
+<sect1 id="project">
+<title>Projects</title>
+<indexterm><primary>Projects</primary></indexterm>
+
+<para>
+Enables you to manage your Jalopy settings in a project-like manner. For every
+project you define, Jalopy creates a new subdirectory where all related files
+will be stored.
+
+<itemizedlist>
+<listitem>
+<para><guibutton>Add...</guibutton></para>
+<para>Displays a dialog that lets you define a new project. The project
+meta-information consists of a name and a short description. The name defines
+the subdirectory where all project settings will reside, therefore you should
+avoid characters that your platform does not allow to be used in file paths.
+</para>
+</listitem>
+
+<listitem>
+<para><guibutton>Remove</guibutton></para>
+<para>Lets you remove the selected project. A project may only be removed if it
+is not active. The default project cannot be removed.</para>
+</listitem>
+
+<listitem>
+<para><guibutton>Activate</guibutton></para>
+<para>Activates the selected project.</para>
+</listitem>
+</itemizedlist>
+</para>
+
+</sect1>

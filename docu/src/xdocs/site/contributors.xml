@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+<!-- Lists of contributors -->
+
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
+  [ <!ENTITY keywords SYSTEM "_keywords.xml"> ] >
+
+<article>
+<articleinfo>
+<title>Jalopy - Contributors</title>
+&keywords;
+</articleinfo>
+
+<simplesect id="contributors">
+<title>Contributors</title>
+
+<para>
+The following people have contributed to the Jalopy project:
+</para>
+
+<itemizedlist mark="square">
+<listitem>
+Denis N. Antonioli    &lt;antonioli@users.sourceforge.net&gt;
+</listitem>
+
+<listitem>
+David Beutel    &lt;jdb@getsu.com&gt;
+</listitem>
+<listitem>
+Larry Hamel    &lt;jalopy@codeguild.com&gt;
+</listitem>
+<listitem>
+Frank Klomp    &lt;info@informatikatelier.com&gt;
+</listitem>
+<listitem>
+Kees Kuip    &lt;keeskuip@users.sourceforge.net&gt;
+</listitem>
+<listitem>
+Roman Sarychev    &lt;romario@gorod.ru&gt;
+</listitem>
+</itemizedlist>
+</simplesect>
+</article>

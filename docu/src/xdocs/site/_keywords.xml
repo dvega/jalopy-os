@@ -1,0 +1,33 @@
+<?xml version="1.0"
+      encoding="iso-8859-1" ?>
+
+<!-- $Id$ -->
+<!-- This file contains the keywords to be included in all documents -->
+
+<keywordset>
+<keyword>Java</keyword>
+<keyword>open</keyword>
+<keyword>source</keyword>
+<keyword>code</keyword>
+<keyword>convention</keyword>
+<keyword>formatter</keyword>
+<keyword>beautifier</keyword>
+<keyword>pretty</keyword>
+<keyword>printer</keyword>
+<keyword>format</keyword>
+<keyword>beautify</keyword>
+<keyword>layout</keyword>
+<keyword>coding</keyword>
+<keyword>style</keyword>
+<keyword>standard</keyword>
+<keyword>transform</keyword>
+<keyword>parser</keyword>
+<keyword>sun</keyword>
+<keyword>antlr</keyword>
+<keyword>ant</keyword>
+<keyword>eclipse</keyword>
+<keyword>jbuilder</keyword>
+<keyword>netbeans</keyword>
+<keyword>jedit</keyword>
+<keyword>jakarta</keyword>
+</keywordset>
