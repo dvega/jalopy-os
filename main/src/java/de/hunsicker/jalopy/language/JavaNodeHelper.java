@@ -384,6 +384,7 @@ WALK:
         {
             case JavaTokenTypes.SLIST :
             case JavaTokenTypes.INSTANCE_INIT :
+            case JavaTokenTypes.ANNOTATION:
                 result = true;
 
                 break;
