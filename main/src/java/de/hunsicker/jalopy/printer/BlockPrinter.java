@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -97,8 +97,10 @@ class BlockPrinter
 
         JavaNode lcurly = (JavaNode)node;
 
-        if (this.prefs.getBoolean(Keys.BRACE_TREAT_DIFFERENT,
-                                  Defaults.BRACE_TREAT_DIFFERENT))
+        boolean treatDifferent = this.prefs.getBoolean(Keys.BRACE_TREAT_DIFFERENT,
+                                  Defaults.BRACE_TREAT_DIFFERENT);
+
+        if (treatDifferent)
         {
             switch (lcurly.getParent().getType())
             {
@@ -107,11 +109,11 @@ class BlockPrinter
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
                 case JavaTokenTypes.CASESLIST :
-                {
                     forceNewlineBefore = true;
-
                     break;
-                }
+                default:
+                    treatDifferent = false;
+                    break;
             }
         }
 
@@ -200,7 +202,7 @@ class BlockPrinter
                          * @todo handle class/ifc/method/ctor different
                          */
                         out.printOpenBrace();
-                        out.printCloseBrace();
+                        out.printRightBrace(JavaTokenTypes.RCURLY, !treatDifferent, NodeWriter.NEWLINE_YES);
                         out.last = closeBraceType;
                     }
 
@@ -218,19 +220,18 @@ class BlockPrinter
         {
             if (removeBlockBraces && canRemoveBraces(lcurly))
             {
+                /**
+                 * @todo implement for HiddenStreamToken
+                 */
+                /*
                 if (lcurly.hasCommentsBefore())
                 {
                     JavaNode statement = (JavaNode)lcurly.getFirstChild();
 
                     if (statement.hasCommentsBefore())
                     {
-                        /**
-                         * DOCUMENT ME!
-                         *
-                         * @todo implement for HiddenStreamToken
-                         */
 
-                        /*List braceComments = lcurly.getCommentsBefore();
+                        List braceComments = lcurly.getCommentsBefore();
                         List statementComments = statement.getCommentsBefore();
 
                         for (int i = 0, size = braceComments.size();
@@ -240,9 +241,10 @@ class BlockPrinter
                             statementComments.add(i, braceComments.get(i));
                         }
 
-                        lcurly.setCommentsBefore(null);*/
+                        lcurly.setCommentsBefore(null);
                     }
                 }
+                */
 
                 brace = false;
             }
@@ -353,7 +355,7 @@ class BlockPrinter
         }
 
         JavaNode rcurly = null;
-LOOP: 
+LOOP:
 
         // print everything despite the closing curly brace
         for (AST child = node.getFirstChild();
@@ -382,7 +384,7 @@ LOOP:
                                                             closeBraceType,
                                                             freestanding);
 
-            out.printCloseBrace(closeBraceType, rightBraceNewline);
+            out.printRightBrace(closeBraceType, !treatDifferent, rightBraceNewline);
 
             printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, rightBraceNewline,
                                out);
@@ -578,7 +580,7 @@ LOOP:
 
     /**
      * Determines whether the braces of the given node may be savely removed.
-     * 
+     *
      * <p>
      * If we want to omit braces we have to check whether there is a
      * VARIABLE_DEF in the given scope, in which case we have to print braces
