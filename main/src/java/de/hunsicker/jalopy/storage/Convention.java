@@ -6,14 +6,6 @@
  */
 package de.hunsicker.jalopy.storage;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
-import org.jdom.input.SAXBuilder;
-
-import org.jdom.output.XMLOutputter;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -36,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import de.hunsicker.io.Copy;
 import de.hunsicker.io.ExtensionFilter;
@@ -49,17 +42,23 @@ import org.apache.log4j.Level;
 
 import org.apache.oro.text.perl.Perl5Util;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
+
 
 //J- needed only as a workaround for a Javadoc bug
 import java.lang.Long;
-import java.lang.Object;
 import java.lang.NullPointerException;
+import java.lang.Object;
 //J+
 
 /**
  * Represents a code convention: the settings that describe the desired coding style for
  * Java source files.
- *
+ * 
  * <p>
  * To ensure type-safety, valid key access, two accompanying classes are provided:
  * </p>
@@ -579,8 +578,8 @@ public final class Convention
 
             try
             {
-                String encoding = System.getProperty("file.encoding" /* NOI18N */);
-                isr = new InputStreamReader(new BufferedInputStream(in), encoding);
+                isr = new InputStreamReader(
+                        new BufferedInputStream(in), "UTF-8" /* NOI18N */);
 
                 SAXBuilder builder = new SAXBuilder();
                 Document document = builder.build(isr);
@@ -764,7 +763,7 @@ public final class Convention
 
     /**
      * Returns the boolean value associated with the given key.
-     *
+     * 
      * <p>
      * This implementation invokes {@link #get(Convention.Key,String) <tt>get(key,
      * null)</tt>}. If the return value is non-null, it is compared with <tt>"true"</tt>
@@ -910,10 +909,9 @@ public final class Convention
         {
             try
             {
-                String encoding = System.getProperty("file.encoding" /* NOI18N */);
-                XMLOutputter outputter =
-                    new XMLOutputter("    " /* NOI18N */, true, encoding);
-                outputter.output(convertMapToXml(_values), new BufferedOutputStream(out));
+                XMLOutputter outputter = new XMLOutputter("    " /* NOI18N */, true);
+                Document document = new Document(convertMapToXml(_values));
+                outputter.output(document, out);
             }
             finally
             {
@@ -960,7 +958,7 @@ public final class Convention
 
     /**
      * Returns the value associated with the given key.
-     *
+     * 
      * <p>
      * This implementation first checks to see if <tt>key</tt> is <tt>null</tt> throwing
      * a <tt>NullPointerException</tt> if this is the case.
@@ -1026,7 +1024,7 @@ public final class Convention
     /**
      * Implements the <tt>putBoolean</tt> method as per the specification in {@link
      * Convention#putBoolean(Convention.Key,boolean)}.
-     *
+     * 
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
      * String#valueOf(boolean)} and invokes {@link #put(Convention.Key,String)} on the
@@ -1047,7 +1045,7 @@ public final class Convention
     /**
      * Implements the <tt>putInt</tt> method as per the specification in {@link
      * Convention#putInt(Convention.Key,int)}.
-     *
+     * 
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
      * Integer#toString(int)} and invokes {@link #put(Convention.Key,String)} on the
@@ -1342,6 +1340,7 @@ public final class Convention
             /**
              * @todo use logger
              */
+
             //System.err.println("[WARN] could not found key -- " + oldName);
         }
     }
@@ -1510,21 +1509,48 @@ public final class Convention
         String sortOrder =
             settings.get(ConventionKeys.SORT_ORDER, DeclarationType.getOrder());
 
-        // the keys for the sort order changed; rename them
-        Perl5Util regexp = new Perl5Util();
-        sortOrder = regexp.substitute("s/Class/Classes/" /* NOI18N */, sortOrder);
-        sortOrder = regexp.substitute("s/Interface/Interfaces/" /* NOI18N */, sortOrder);
-        sortOrder = regexp.substitute("s/Method/Methods/" /* NOI18N */, sortOrder);
-        sortOrder =
-            regexp.substitute("s/Constructor/Constructors/" /* NOI18N */, sortOrder);
-        sortOrder =
-            regexp.substitute(
-                "s/Initializer/Instance Initializers/" /* NOI18N */, sortOrder);
-        sortOrder =
-            regexp.substitute("s/Variable/Instance Variables/" /* NOI18N */, sortOrder);
-        sortOrder = "Static Variables/Initializers," /* NOI18N */ + sortOrder;
+        StringBuffer newSortOrder = new StringBuffer(150);
 
-        settings._values.put(ConventionKeys.SORT_ORDER, sortOrder);
+        for (
+            StringTokenizer tokens = new StringTokenizer(sortOrder, "," /* NOI18N */);
+            tokens.hasMoreElements();)
+        {
+            String value = tokens.nextToken();
+
+            if ("Variable" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append("Static Variables/Initializers," /* NOI18N */);
+            }
+            else if ("Initializer" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append(
+                    "Instance Variables,Instance Initializers," /* NOI18N */);
+            }
+            else if ("Constructor" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append("Constructors," /* NOI18N */);
+            }
+            else if ("Method" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append("Methods," /* NOI18N */);
+            }
+            else if ("Interface" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append("Interfaces," /* NOI18N */);
+            }
+            else if ("Class" /* NOI18N */.equals(value))
+            {
+                newSortOrder.append("Classes," /* NOI18N */);
+            }
+        }
+
+        // remove the last comma in case we performed substitution
+        if (',' == newSortOrder.charAt(newSortOrder.length() - 1))
+        {
+            newSortOrder = newSortOrder.deleteCharAt(newSortOrder.length() - 1);
+        }
+
+        settings._values.put(ConventionKeys.SORT_ORDER, newSortOrder.toString());
         settings._values.put(
             ConventionKeys.HISTORY_POLICY,
             getHistoryPolicy(
@@ -2397,6 +2423,7 @@ public final class Convention
                     /**
                      * @todo use logger
                      */
+
                     //System.err.println("[WARN] remove invalid key -- " + key);
                     settings._values.remove(key);
                 }
