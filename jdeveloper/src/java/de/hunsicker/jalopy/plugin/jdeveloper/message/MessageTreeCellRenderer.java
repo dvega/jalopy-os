@@ -48,18 +48,9 @@ public class MessageTreeCellRenderer
         new ImageIcon(
             MessageTreeCellRenderer.class.getResource(
                 "/oracle/ide/resource/images/filenode.gif" /* NOI18N */));
-    static final String PROP_SELECTION_BACKGROUND =
-        "Tree.selectionBackground" /* NOI18N */;
-    static final String PROP_SELECTION_FOREGROUND =
-        "Tree.selectionForeground" /* NOI18N */;
-    static final String PROP_TEXT_BACKGROUND = "Tree.textBackground" /* NOI18N */;
-    static final String PROP_TEXT_FOREGROUND = "Tree.textForeground" /* NOI18N */;
     static final String DEFAULT_PATTERN =
         "{0} ({1,choice,0#0 messages|1#1 message|1<{1,number,integer} messages}, {2,choice,0#0 warnings|1#1 warning|1<{2,number,integer} warnings}, {3,choice,0#0 errors|1#1 error|1<{3,number,integer} errors})";
 
-    //ResourceBundle.getBundle(
-    //    "de.hunsicker.jalopy.plugin.jdeveloper.Bundle" /* NOI18N */).getString(
-    //    "LBL_PARENT_MESSAGE" /* NOI18N */);
     static
     {
         plainFont = UIManager.getFont("Tree.font" /* NOI18N */);
@@ -125,13 +116,13 @@ public class MessageTreeCellRenderer
 
         if (sel)
         {
-            setBackground(UIManager.getColor(PROP_SELECTION_BACKGROUND));
-            setForeground(UIManager.getColor(PROP_SELECTION_FOREGROUND));
+            setBackground(UIManager.getColor("Tree.selectionBackground" /* NOI18N */));
+            setForeground(UIManager.getColor("Tree.selectionForeground" /* NOI18N */));
         }
         else
         {
-            setBackground(UIManager.getColor(PROP_TEXT_BACKGROUND));
-            setForeground(UIManager.getColor(PROP_TEXT_FOREGROUND));
+            setBackground(UIManager.getColor("Tree.textBackground" /* NOI18N */));
+            setForeground(UIManager.getColor("Tree.textForeground" /* NOI18N */));
         }
 
         if (node.type == MessageTreeNode.Type.FILE) // parent

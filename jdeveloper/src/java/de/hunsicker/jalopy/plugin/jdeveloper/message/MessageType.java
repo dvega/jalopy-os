@@ -18,16 +18,16 @@ public class MessageType
     //~ Static variables/initializers ----------------------------------------------------
 
     /** Represents an error message. */
-    public static final MessageType ERROR = new MessageType("error");
+    public static final MessageType ERROR = new MessageType("error" /* NOI18N */);
 
     /** Represents a warning message. */
-    public static final MessageType WARN = new MessageType("warn");
+    public static final MessageType WARN = new MessageType("warn" /* NOI18N */);
 
     /** Represents an informational message (this should be the default). */
-    public static final MessageType INFO = new MessageType("info");
+    public static final MessageType INFO = new MessageType("info" /* NOI18N */);
 
     /** Represents a debugging message. */
-    public static final MessageType DEBUG = new MessageType("debug");
+    public static final MessageType DEBUG = new MessageType("debug" /* NOI18N */);
 
     //~ Instance variables ---------------------------------------------------------------
 
