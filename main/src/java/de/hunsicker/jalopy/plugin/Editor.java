@@ -1,53 +1,30 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin;
 
+import java.util.List;
+
+
 /**
- * Represents an editor view used to display and interactively modify the
- * contents of a Java source file.
+ * Represents an editor view used to display and interactively modify the contents of a
+ * Java source file.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public interface Editor
 {
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Moves the caret to the given location.
      *
-     * @param offset absolute character position.
+     * @param offset the text offset where the caret should be placed (absolute character
+     *        position, <code>&gt;= 0</code>).
      */
     public void setCaretPosition(int offset);
 
@@ -55,17 +32,19 @@ public interface Editor
     /**
      * Moves the caret to the given location.
      *
-     * @param line line number.
-     * @param column column offset in the given line.
+     * @param line line number (<code>&gt;= 1</code>).
+     * @param column column offset in the given line (<code>&gt;= 1</code>).
      */
-    public void setCaretPosition(int line,
-                                 int column);
+    public void setCaretPosition(
+        int line,
+        int column);
 
 
     /**
      * Returns the current location of the caret.
      *
-     * @return current caret position (absolute character position).
+     * @return current caret position (absolute character position, <code>&gt;=
+     *         0</code>).
      */
     public int getCaretPosition();
 
@@ -73,7 +52,7 @@ public interface Editor
     /**
      * Returns the column offset in the current line.
      *
-     * @return current column offset.
+     * @return current column offset (<code>&gt;= 1</code>).
      */
     public int getColumn();
 
@@ -89,7 +68,7 @@ public interface Editor
     /**
      * Returns the number of characters in the editor document.
      *
-     * @return The document length.
+     * @return the document length (<code>&gt;= 0</code>).
      *
      * @since 1.0b8
      */
@@ -99,7 +78,7 @@ public interface Editor
     /**
      * Returns the current line number.
      *
-     * @return current line.
+     * @return current line (<code>&gt;= 1</code>).
      */
     public int getLine();
 
@@ -107,8 +86,8 @@ public interface Editor
     /**
      * Returns the selected text contained in this editor.
      *
-     * @return selected text. If no text is selected or the document is empty,
-     *         returns <code>null</code>.
+     * @return selected text. If no text is selected or the document is empty, returns
+     *         <code>null</code>.
      */
     public String getSelectedText();
 
@@ -116,21 +95,22 @@ public interface Editor
     /**
      * Selects the specified text.
      *
-     * @param startOffset the offset you wish to start selection on (absolute
-     *        character position).
-     * @param endOffset the offset you wish to end selection on (absolute
-     *        character position).
+     * @param startOffset the offset you wish to start selection on (absolute character
+     *        position, <code>&gt;= 0</code>).
+     * @param endOffset the offset you wish to end selection on (absolute character
+     *        position, <code>&gt;= 0</code>).
      */
-    public void setSelection(int startOffset,
-                             int endOffset);
+    public void setSelection(
+        int startOffset,
+        int endOffset);
 
 
     /**
      * Returns the selected text's end position.
      *
      * @return the selected text's end position (<code>&gt;=0</code>). Returns
-     *         <code>0</code> if the document is empty,  or the position of
-     *         the caret if there is no selection.
+     *         <code>0</code> if the document is empty, or the position of the caret if
+     *         there is no selection.
      */
     public int getSelectionEnd();
 
@@ -138,17 +118,15 @@ public interface Editor
     /**
      * Returns the selected text's start position.
      *
-     * @return the start position (<code>&gt;=0</code>). Returns
-     *         <code>0</code> for an empty document, or the position of the
-     *         caret if there is no selection.
+     * @return the start position (<code>&gt;=0</code>). Returns <code>0</code> for an
+     *         empty document, or the position of the caret if there is no selection.
      */
     public int getSelectionStart();
 
 
     /**
      * Sets the text of this editor to the specified text. If the text is
-     * <code>null</code> or empty, has the effect of simply deleting the old
-     * text.
+     * <code>null</code> or empty, has the effect of simply deleting the old text.
      *
      * @param text the new text to be set.
      */
@@ -164,10 +142,34 @@ public interface Editor
 
 
     /**
-     * Replaces the currently selected content with new content represented by
-     * the given string. If there is no selection this amounts to an insert
-     * of the given text. If there is no replacement text this amounts to a
-     * removal of the current selection.
+     * Attaches the given annotations to this view.
+     *
+     * @param annotations list of annotations (of type &lt;{@link
+     *        de.hunsicker.jalopy.plugin.Annotation}&gt;) to attach.
+     *
+     * @see de.hunsicker.jalopy.plugin.Annotation
+     * @since 1.0b9
+     */
+    public void attachAnnotations(List annotations);
+
+
+    /**
+     * Detaches all existing annotations of this view.
+     *
+     * @return list with all annotations of this view (of type &lt;{@link
+     *         de.hunsicker.jalopy.plugin.Annotation}&gt;). Returns an empty list, if no
+     *         annotations exist.
+     *
+     * @see #attachAnnotations
+     * @since 1.0b9
+     */
+    public List detachAnnotations();
+
+
+    /**
+     * Replaces the currently selected content with new content represented by the given
+     * string. If there is no selection this amounts to an insert of the given text. If
+     * there is no replacement text this amounts to a removal of the current selection.
      *
      * @param text the string to replace the selection with.
      */

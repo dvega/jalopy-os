@@ -1,50 +1,10 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin;
-
-import de.hunsicker.io.FileFormat;
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.jalopy.storage.Loggers;
-import de.hunsicker.jalopy.storage.Convention;
-import de.hunsicker.jalopy.ui.ProgressMonitor;
-import de.hunsicker.jalopy.ui.ProgressPanel;
-import de.hunsicker.ui.ErrorDialog;
-import de.hunsicker.ui.util.SwingWorker;
-import de.hunsicker.util.ChainingRuntimeException;
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
@@ -58,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -67,6 +28,20 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+
+import de.hunsicker.io.FileFormat;
+import de.hunsicker.jalopy.Jalopy;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.swing.ProgressMonitor;
+import de.hunsicker.jalopy.swing.ProgressPanel;
+import de.hunsicker.swing.ErrorDialog;
+import de.hunsicker.swing.util.SwingWorker;
+import de.hunsicker.util.ChainingRuntimeException;
+import de.hunsicker.util.ResourceBundleFactory;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
@@ -79,29 +54,36 @@ import javax.swing.SwingUtilities;
 //J+
 
 /**
- * Skeleton implementation of a Jalopy Plug-in for integrated development
- * environments.
+ * Skeleton implementation of a Jalopy Plug-in for integrated development environments.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public abstract class AbstractPlugin
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     /** The default status bar does nothing. */
     private static final StatusBar DEFAULT_STATUS_BAR = new DummyStatusBar();
 
     /** Cursor to display whilst long-running operations. */
-    private static final Cursor WAIT_CURSOR = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
+    private static final Cursor WAIT_CURSOR =
+        Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 
-    //~ Instance variables ····················································
+    /** The name for ResourceBundle lookup. */
+    protected static final String BUNDLE_NAME =
+        "de.hunsicker.jalopy.plugin.Bundle" /* NOI18N */;
+
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The main Jalopy instance. */
     protected Jalopy jalopy;
 
     /** Appender to write messages to. */
-    protected VisualAppender appender;
+    protected SwingAppender appender;
+    int offset = 0;
 
     /** The action that was last performed. */
     private Action _lastAction;
@@ -120,6 +102,7 @@ public abstract class AbstractPlugin
 
     /** Progress monitor for long running operations. */
     private ProgressMonitor _progressMonitor;
+    private final Object[] _args = new Object[3];
 
     /** Number of running formatting threads. */
     private int _threadCount;
@@ -127,11 +110,11 @@ public abstract class AbstractPlugin
     /** When did the worker thread start? */
     private long _start;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new AbstractPlugin object. Uses a default appender which
-     * outputs all messages to <code>System.out</code>.
+     * Creates a new AbstractPlugin object. Uses a default appender which outputs all
+     * messages to <code>System.out</code>.
      */
     public AbstractPlugin()
     {
@@ -142,16 +125,16 @@ public abstract class AbstractPlugin
     /**
      * Creates a new AbstractPlugin object.
      *
-     * @param appender appender to use for logging; if <code>null</code> all
-     *        logging output goes to <code>System.out</code>.
+     * @param appender appender to use for logging; if <code>null</code> all logging
+     *        output goes to <code>System.out</code>.
      */
-    public AbstractPlugin(VisualAppender appender)
+    public AbstractPlugin(SwingAppender appender)
     {
         this.appender = appender;
         initLogging();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the currently active project.
@@ -183,8 +166,8 @@ public abstract class AbstractPlugin
     /**
      * Returns the action that was performed last.
      *
-     * @return Last performed action. Returns <code>null</code> if no action
-     *         was ever performed.
+     * @return Last performed action. Returns <code>null</code> if no action was ever
+     *         performed.
      */
     public final Action getLastAction()
     {
@@ -193,8 +176,8 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Returns the state info of Plug-in. Use this method to query the state
-     * after a run finished.
+     * Returns the state info of Plug-in. Use this method to query the state after a run
+     * finished.
      *
      * @return The run state.
      *
@@ -227,11 +210,10 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Returns the active status bar. Override to provide access to the status
-     * bar of the used application.
+     * Returns the active status bar. Override to provide access to the status bar of the
+     * used application.
      *
-     * @return the active status bar. The default implementation returns a
-     *         dummy.
+     * @return the active status bar. The default implementation returns a dummy.
      */
     public StatusBar getStatusBar()
     {
@@ -241,10 +223,10 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread after an action was performed.
-     *
+     * 
      * <p>
-     * Override this method to perform any custom work after the formatting
-     * process finished.
+     * Override this method to perform any custom work after the formatting process
+     * finished.
      * </p>
      */
     public void afterEnd()
@@ -253,12 +235,11 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Called on the event dispatching thread before an action will be
-     * started.
-     *
+     * Called on the event dispatching thread before an action will be started.
+     * 
      * <p>
-     * Override this method to perform any custom work before the formatting
-     * process starts.
+     * Override this method to perform any custom work before the formatting process
+     * starts.
      * </p>
      */
     public void beforeStart()
@@ -285,29 +266,33 @@ public abstract class AbstractPlugin
      *
      * @param action action to perform.
      */
-    public final synchronized void performAction(AbstractPlugin.Action action)
+    public final synchronized void performAction(final AbstractPlugin.Action action)
     {
         // clear the message window
         this.appender.clear();
+
         _worker = new ActionWorker(action);
         _worker.start();
+
         _lastAction = action;
     }
 
 
     /**
-     * Returns the file format to use.
+     * Returns the file format to use for writing Java source files.
      *
-     * @return The file format
+     * @return the file format to use.
      */
     protected abstract FileFormat getFileFormat();
 
 
     /**
-     * Returns a Jalopy instance. The instance will be configured according to
-     * the current code convention.
+     * Returns a Jalopy instance. The instance will be configured according to the
+     * current code convention.
      *
      * @return a Jalopy instance.
+     *
+     * @since 1.0b8
      */
     protected Jalopy getJalopy()
     {
@@ -315,10 +300,14 @@ public abstract class AbstractPlugin
         {
             if (_progressMonitor != null)
             {
-                _progressMonitor.setText("Initialization...");
+                _progressMonitor.setText(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MSG_INITIALIZATION" /* NOI18N */));
             }
 
-            getStatusBar().setText("Initialization...");
+            getStatusBar().setText(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "MSG_INITIALIZATION" /* NOI18N */));
             this.jalopy = new Jalopy();
         }
 
@@ -345,20 +334,18 @@ public abstract class AbstractPlugin
      * @param error the throwable which caused the error.
      * @param parent parent frame of the dialog (used to position the dialog).
      */
-    protected void displayError(Throwable error,
-                                Frame     parent)
+    protected void displayError(
+        Throwable error,
+        Frame     parent)
     {
-        boolean modal = true;
-        ErrorDialog d = new ErrorDialog(error, getMainWindow(), modal);
+        ErrorDialog d = ErrorDialog.create(getMainWindow(), error);
         d.setVisible(true);
         d.dispose();
-        d = null;
     }
 
 
     /**
-     * Executes the given runnable asynchronously on the AWT event dispatching
-     * thread.
+     * Executes the given runnable asynchronously on the AWT event dispatching thread.
      *
      * @param operation runnable to be invoked asynchronously on the AWT event
      *        dispatching thread.
@@ -372,22 +359,18 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Executes the given runnable synchronously on the AWT event dispatching
-     * thread.
+     * Executes the given runnable synchronously on the AWT event dispatching thread.
      *
-     * @param operation runnable to be invoked synchronously on the AWT event
-     *        dispatching thread.
+     * @param operation runnable to be invoked synchronously on the AWT event dispatching
+     *        thread.
      *
-     * @throws InterruptedException if another thread has interrupted this
-     *         thread
-     * @throws InvocationTargetException if an exception is thrown when
-     *         running runnable
+     * @throws InterruptedException if another thread has interrupted this thread
+     * @throws InvocationTargetException if an exception is thrown when running runnable
      *
      * @see javax.swing.SwingUtilities#invokeAndWait
      */
     protected void execSync(Runnable operation)
-        throws InterruptedException,
-               InvocationTargetException
+      throws InterruptedException, InvocationTargetException
     {
         EventQueue.invokeAndWait(operation);
     }
@@ -407,7 +390,7 @@ public abstract class AbstractPlugin
 
             if ((window != null) && window instanceof JFrame)
             {
-                JFrame w = (JFrame)window;
+                JFrame w = (JFrame) window;
 
                 // restore the original glass pane
                 w.getRootPane().setGlassPane(_oldGlassPane);
@@ -417,8 +400,8 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Shows the wait cursor to indicate a long-running operation. Keyboard
-     * and mouse input will be blocked.
+     * Shows the wait cursor to indicate a long-running operation. Keyboard and mouse
+     * input will be blocked.
      */
     protected void showWaitCursor()
     {
@@ -437,7 +420,7 @@ public abstract class AbstractPlugin
             // actions will be blocked and a wait cursor displayed;
             // the pane will be made hidden in the afterEnd() method that
             // is always called after the run has finished
-            JFrame w = (JFrame)window;
+            JFrame w = (JFrame) window;
             _oldGlassPane = w.getRootPane().getGlassPane();
             w.getRootPane().setGlassPane(_glassPane);
             _glassPane.setCursor(WAIT_CURSOR);
@@ -446,28 +429,118 @@ public abstract class AbstractPlugin
     }
 
 
+    private void action(Action action)
+    {
+        beforeStart();
+        _start = System.currentTimeMillis();
+
+        try
+        {
+            if (action == Action.FORMAT_ACTIVE)
+            {
+                // wait cursor indicates running operation
+                showWaitCursor();
+
+                ProjectFile activeFile = getActiveProject().getActiveFile();
+                final Editor editor = activeFile.getEditor();
+
+                // store the current offset to reposition the caret
+                execSync(
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            offset = editor.getCaretPosition();
+                        }
+                    });
+
+                Jalopy jalopy = getJalopy();
+                format(activeFile, jalopy);
+
+                // only change if no errors showed up
+                if (getState() != Jalopy.State.ERROR)
+                {
+                    // move the cursor. Only provides expected results if
+                    // we're not in sorting mode
+                    //
+
+                    /**
+                                                                                                                         */
+                    execSync(
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                editor.requestFocus();
+
+                                if (editor.getLength() > offset)
+                                {
+                                    editor.setCaretPosition(offset);
+                                }
+                            }
+                        });
+                }
+            }
+            else if (action == Action.FORMAT_ALL)
+            {
+                Jalopy jalopy = getJalopy();
+                formatSeveral(jalopy, getActiveProject().getAllFiles());
+            }
+            else if (action == Action.FORMAT_SELECTED)
+            {
+                Jalopy jalopy = getJalopy();
+                formatSeveral(jalopy, getActiveProject().getSelectedFiles());
+            }
+            else if (action == Action.FORMAT_OPEN)
+            {
+                Jalopy jalopy = getJalopy();
+                formatSeveral(jalopy, getActiveProject().getOpenedFiles());
+            }
+
+            jalopy.cleanupBackupDirectory();
+            hideProgressMonitor();
+        }
+        catch (InterruptedException ex)
+        {
+            hideProgressMonitor();
+            notifyAll();
+        }
+        catch (Throwable ex)
+        {
+            hideProgressMonitor();
+            displayError(ex, getMainWindow());
+            notifyAll();
+        }
+    }
+
+
     /**
-     * Configures the given Jalopy instance to meet the current code
-     * convention.
+     * Configures the given Jalopy instance to meet the current code convention.
      *
      * @param jalopy Jalopy instance to configure.
      */
     private void configureJalopy(Jalopy jalopy)
     {
         Convention settings = Convention.getInstance();
-        int backupLevel = settings.getInt(Keys.BACKUP_LEVEL, Defaults.BACKUP_LEVEL);
+        int backupLevel =
+            settings.getInt(
+                ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL);
         jalopy.setBackup(backupLevel > 0);
-        jalopy.setBackupDirectory(settings.get(Keys.BACKUP_DIRECTORY,
-                                            Convention.getBackupDirectory()
-                                                       .getAbsolutePath()));
-        jalopy.setHistoryPolicy(History.Policy.valueOf(settings.get(
-                                                                 Keys.HISTORY_POLICY,
-                                                                 Defaults.HISTORY_POLICY)));
-        jalopy.setInspect(settings.getBoolean(Keys.INSPECTOR, Defaults.INSPECTOR));
+        jalopy.setBackupDirectory(
+            settings.get(
+                ConventionKeys.BACKUP_DIRECTORY,
+                Convention.getBackupDirectory().getAbsolutePath()));
+        jalopy.setHistoryPolicy(
+            History.Policy.valueOf(
+                settings.get(
+                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY)));
+        jalopy.setInspect(
+            settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
         jalopy.setBackupLevel(backupLevel);
         jalopy.setFileFormat(getFileFormat());
-        jalopy.setForce(settings.getBoolean(Keys.FORCE_FORMATTING,
-                                         Defaults.FORCE_FORMATTING));
+        jalopy.setForce(
+            settings.getBoolean(
+                ConventionKeys.FORCE_FORMATTING, ConventionDefaults.FORCE_FORMATTING));
     }
 
 
@@ -478,48 +551,56 @@ public abstract class AbstractPlugin
      * @param jalopy Jalopy instance to use.
      *
      * @throws IOException if an I/O error occured.
-     * @throws InvocationTargetException if the updating of an editor window
-     *         failed.
+     * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void format(ProjectFile file,
-                        Jalopy      jalopy)
-        throws IOException,
-               InvocationTargetException
+    private void format(
+        ProjectFile  file,
+        final Jalopy jalopy)
+      throws IOException, InvocationTargetException
     {
         jalopy.setEncoding(file.getEncoding());
 
         if (_progressMonitor != null)
         {
-            StringBuffer buf = new StringBuffer(40);
-            buf.append("Formatting ");
-            buf.append(file.getName());
-            buf.append("...");
-            _progressMonitor.setText(buf.toString());
+            _args[0] = file.getName();
+
+            _progressMonitor.setText(
+                MessageFormat.format(
+                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                        "MSG_FORMATTING_FILE" /* NOI18N */), _args));
 
             if (_progressMonitor instanceof ProgressMonitorImpl)
             {
-                ((ProgressMonitorImpl)_progressMonitor).progressPanel.increaseFiles();
+                ((ProgressMonitorImpl) _progressMonitor).progressPanel.increaseFiles();
             }
         }
 
         // only update the file if available
         if (!file.isReadOnly())
         {
-            getStatusBar().setText("Formatting...");
+            getStatusBar().setText(
+                ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                    "MSG_FORMATTING" /* NOI18N */));
 
             if (file.isOpened()) // we're interacting with an editor view
             {
                 final Editor editor = file.getEditor();
+
                 String content = editor.getText();
+
                 jalopy.setInput(content, file.getFile().getAbsolutePath());
+
+                List annotations = editor.detachAnnotations();
+                jalopy.attachAnnotations(annotations);
 
                 final StringBuffer textBuf = new StringBuffer(content.length());
                 jalopy.setOutput(textBuf);
                 jalopy.format();
 
-                // no progress monitor available if we format an editor view
                 if ((_progressMonitor != null) && _progressMonitor.isCanceled())
                 {
+                    jalopy.detachAnnotations();
+
                     return;
                 }
 
@@ -528,17 +609,20 @@ public abstract class AbstractPlugin
                 {
                     try
                     {
-                        execSync(new Runnable()
+                        execSync(
+                            new Runnable()
                             {
                                 public void run()
                                 {
                                     editor.setText(textBuf.toString());
+                                    editor.attachAnnotations(jalopy.detachAnnotations());
                                 }
                             });
                     }
                     catch (InterruptedException ex)
                     {
                         editor.setText(content);
+                        editor.attachAnnotations(annotations);
                     }
                 }
             }
@@ -552,8 +636,8 @@ public abstract class AbstractPlugin
         }
         else
         {
-            Object[] args ={ file };
-            Loggers.IO.l7dlog(Level.INFO, "FILE_READ_ONLY", args, null);
+            Object[] args = { file };
+            Loggers.IO.l7dlog(Level.INFO, "FILE_READ_ONLY" /* NOI18N */, args, null);
         }
     }
 
@@ -565,13 +649,12 @@ public abstract class AbstractPlugin
      * @param files list with the files to format.
      *
      * @throws IOException if an I/O error occured.
-     * @throws InvocationTargetException if the updating of an editor window
-     *         failed.
+     * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void formatSeveral(Jalopy     jalopy,
-                               Collection files)
-        throws IOException,
-               InvocationTargetException
+    private void formatSeveral(
+        Jalopy     jalopy,
+        Collection files)
+      throws IOException, InvocationTargetException
     {
         formatSeveral(jalopy, files, true);
     }
@@ -582,21 +665,20 @@ public abstract class AbstractPlugin
      *
      * @param jalopy the Jalopy instance to use for formatting.
      * @param files list with the files to format.
-     * @param checkThreading if <code>true</code> checkes whether the user
-     *        enabled the multi-threaded execution and if so, performs the
-     *        formatting within multiple threads
+     * @param checkThreading if <code>true</code> checks whether the user enabled the
+     *        multi-threaded execution and if so, uses multiple threads to perform the
+     *        operation.
      *
      * @throws IOException if an I/O error occured.
-     * @throws InvocationTargetException if the updating of an editor window
-     *         failed.
+     * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void formatSeveral(Jalopy     jalopy,
-                               Collection files,
-                               boolean    checkThreading)
-        throws IOException,
-               InvocationTargetException
+    private void formatSeveral(
+        final Jalopy     jalopy,
+        final Collection files,
+        final boolean    checkThreading)
+      throws IOException, InvocationTargetException
     {
-        int size = files.size();
+        final int size = files.size();
 
         if (size > 0)
         {
@@ -605,17 +687,20 @@ public abstract class AbstractPlugin
                 if (_progressMonitor == null)
                 {
                     _progressMonitor = createProgressMonitor();
-                    _progressMonitor.begin(((jalopy == null)
-                                                ? "Initialization..."
-                                                : ""), files.size());
+
+                    _progressMonitor.begin(
+                        ((jalopy == null)
+                        ? ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            "MSG_INITIALIZATION" /* NOI18N */)
+                        : EMPTY_STRING), files.size());
                 }
             }
 
-            int numThreads = Convention.getInstance()
-                                        .getInt(Keys.THREAD_COUNT,
-                                                Defaults.THREAD_COUNT);
+            int numThreads =
+                Convention.getInstance().getInt(
+                    ConventionKeys.THREAD_COUNT, ConventionDefaults.THREAD_COUNT);
 
-            if ((!checkThreading) || (numThreads == 1) || (size == 1))
+            if (!checkThreading || (numThreads == 1) || (size == 1))
             {
                 for (Iterator i = files.iterator(); i.hasNext();)
                 {
@@ -625,21 +710,20 @@ public abstract class AbstractPlugin
                         return;
                     }
 
-                    ProjectFile file = (ProjectFile)i.next();
+                    ProjectFile file = (ProjectFile) i.next();
                     format(file, jalopy);
 
                     synchronized (_progressMonitor)
                     {
-                        int units = _progressMonitor.getProgress();
-                        _progressMonitor.setProgress(units + 1);
+                        _progressMonitor.setProgress(_progressMonitor.getProgress() + 1);
                     }
                 }
             }
             else
             {
-                List workList = (files instanceof List)
-                                    ? (List)files
-                                    : new ArrayList(files);
+                List workList =
+                    (files instanceof List) ? (List) files
+                                            : new ArrayList(files);
                 int amount = 1;
 
                 if (numThreads < size)
@@ -659,13 +743,11 @@ public abstract class AbstractPlugin
                     Jalopy j = new Jalopy();
                     configureJalopy(j);
 
-                    Collection part = workList.subList(i * amount,
-                                                       (i + 1) * amount);
+                    Collection part = workList.subList(i * amount, (i + 1) * amount);
                     new FormatThread(j, part).start();
                 }
 
-                Collection rest = workList.subList((numThreads - 1) * amount,
-                                                   size);
+                Collection rest = workList.subList((numThreads - 1) * amount, size);
                 formatSeveral(jalopy, rest, false);
 
                 try
@@ -687,9 +769,19 @@ public abstract class AbstractPlugin
     }
 
 
+    private synchronized void hideProgressMonitor()
+    {
+        if (_progressMonitor != null)
+        {
+            _progressMonitor.done();
+            _progressMonitor = null;
+        }
+    }
+
+
     /**
-     * Initializes the logging system. This method is called upon the creation
-     * of the object.
+     * Initializes the logging system. This method is called upon the creation of the
+     * object.
      */
     private void initLogging()
     {
@@ -702,7 +794,7 @@ public abstract class AbstractPlugin
         Loggers.initialize(this.appender);
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Represents an action that can be performed.
@@ -713,43 +805,48 @@ public abstract class AbstractPlugin
     public static final class Action
     {
         /** Indicates that no action was ever performed. */
-        public static final Action UNDEFINED = new Action("undefined");
+        public static final Action UNDEFINED = new Action("undefined" /* NOI18N */);
 
         /** Format the currently active (opened) file. */
-        public static final Action FORMAT_ACTIVE = new Action("format_active");
+        public static final Action FORMAT_ACTIVE =
+            new Action("format_active" /* NOI18N */);
 
         /** Format all Java Source files of the currently active project. */
-        public static final Action FORMAT_ALL = new Action("format_all");
+        public static final Action FORMAT_ALL = new Action("format_all" /* NOI18N */);
 
         /** Format all currently opened Java source files. */
-        public static final Action FORMAT_OPEN = new Action("format_open");
+        public static final Action FORMAT_OPEN = new Action("format_open" /* NOI18N */);
 
         /** Format the selected Java source file(s). */
-        public static final Action FORMAT_SELECTED = new Action("format_selected");
+        public static final Action FORMAT_SELECTED =
+            new Action("format_selected" /* NOI18N */);
 
         /** Parse the currently active (opened) file. */
-        public static final Action PARSE_ACTIVE = new Action("parse_active");
+        public static final Action PARSE_ACTIVE = new Action("parse_active" /* NOI18N */);
 
         /** Parse all Java Source files of the currently active project. */
-        public static final Action PARSE_ALL = new Action("parse_all");
+        public static final Action PARSE_ALL = new Action("parse_all" /* NOI18N */);
 
         /** Parse all currently opened Java source files. */
-        public static final Action PARSE_OPEN = new Action("parse_open");
+        public static final Action PARSE_OPEN = new Action("parse_open" /* NOI18N */);
 
         /** Parse the selected Java source file(s). */
-        public static final Action PARSE_SELECTED = new Action("parse_selected");
+        public static final Action PARSE_SELECTED =
+            new Action("parse_selected" /* NOI18N */);
 
         /** Inspect the currently active (opened) file. */
-        public static final Action INSPECT_ACTIVE = new Action("inspect_active");
+        public static final Action INSPECT_ACTIVE =
+            new Action("inspect_active" /* NOI18N */);
 
         /** Inspect all Java Source files of the currently active project. */
-        public static final Action INSPECT_ALL = new Action("inspect_all");
+        public static final Action INSPECT_ALL = new Action("inspect_all" /* NOI18N */);
 
         /** Inspect all currently opened Java source files. */
-        public static final Action INSPECT_OPEN = new Action("inspect_open");
+        public static final Action INSPECT_OPEN = new Action("inspect_open" /* NOI18N */);
 
         /** Inspect the selected Java source file(s). */
-        public static final Action INSPECT_SELECTED = new Action("inspect_selected");
+        public static final Action INSPECT_SELECTED =
+            new Action("inspect_selected" /* NOI18N */);
         final String name;
 
         private Action(String name)
@@ -760,22 +857,30 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Default appender to use if no custom appender was specified. All output
-     * goes to System.out.
+     * Default appender to use if no custom appender was specified. All output goes to
+     * System.out.
      */
     private static class DefaultAppender
         extends ConsoleAppender
-        implements VisualAppender
+        implements SwingAppender
     {
         /**
+         * DOCUMENT ME!
+         *
          * @todo overide format() to add stacktraces
          */
         public DefaultAppender()
         {
-            super(new PatternLayout("[%p] %m\n"), "System.out");
+            super(
+                new PatternLayout("[%p] %m\n" /* NOI18N */), "System.out" /* NOI18N */);
         }
 
         public void clear()
+        {
+        }
+
+
+        public void done()
         {
         }
     }
@@ -800,8 +905,8 @@ public abstract class AbstractPlugin
         Action action;
 
         /**
-         * Stores the initial position of the caret in case we're formatting
-         * an opened file.
+         * Stores the initial position of the caret in case we're formatting an opened
+         * file.
          */
         int offset;
 
@@ -827,7 +932,8 @@ public abstract class AbstractPlugin
 
                     // store the current offset to reposition the caret
                     // (synchronization needed to make Eclipse happy)
-                    execSync(new Runnable()
+                    execSync(
+                        new Runnable()
                         {
                             public void run()
                             {
@@ -846,15 +952,14 @@ public abstract class AbstractPlugin
                         //
 
                         /**
-                         * @todo this could be improved. Determine the
-                         *       location
+                         * @todo this could be improved. Determine the location prior
+                         *       formatting (relative to the next known node) and set
+                         *       the cursor to that position after formatting; quite
+                         *       involved, but possible (and only necessary if in
+                         *       sorting mode)
                          */
-
-                        // prior formatting (relative to the next known node)
-                        // and set the cursor to that position after
-                        // formatting; quite involved, but possible (and only
-                        // necessary if in sorting mode)
-                        execSync(new Runnable()
+                        execSync(
+                            new Runnable()
                             {
                                 public void run()
                                 {
@@ -867,32 +972,38 @@ public abstract class AbstractPlugin
                                 }
                             });
                     }
+
+                    jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_ALL)
                 {
-                    formatSeveral(getJalopy(), getActiveProject().getAllFiles());
+                    Jalopy jalopy = getJalopy();
+                    formatSeveral(jalopy, getActiveProject().getAllFiles());
+                    jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_SELECTED)
                 {
-                    formatSeveral(getJalopy(),
-                                  getActiveProject().getSelectedFiles());
+                    Jalopy jalopy = getJalopy();
+                    formatSeveral(jalopy, getActiveProject().getSelectedFiles());
+                    jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_OPEN)
                 {
-                    formatSeveral(getJalopy(),
-                                  getActiveProject().getOpenedFiles());
+                    Jalopy jalopy = getJalopy();
+                    formatSeveral(jalopy, getActiveProject().getOpenedFiles());
+                    jalopy.cleanupBackupDirectory();
                 }
             }
             catch (InterruptedException ex)
             {
+                hideProgressMonitor();
                 notifyAll();
-
-                return null;
             }
             catch (Throwable ex)
             {
                 hideProgressMonitor();
                 displayError(ex, getMainWindow());
+                notifyAll();
             }
 
             return null;
@@ -921,29 +1032,38 @@ public abstract class AbstractPlugin
 
                 if (statusBar != null)
                 {
-                    StringBuffer buf = new StringBuffer(100);
-                    buf.append((getState() == Jalopy.State.ERROR)
-                                   ? "Format failed."
-                                   : "Format succeeded.");
-                    buf.append(" Format took ");
+                    _args[0] =
+                        ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            (getState() == Jalopy.State.ERROR)
+                            ? "MSG_FORMAT_FAILED" /* NOI18N */
+                            : "MSG_FORMAT_SUCCEEDED" /* NOI18N */);
 
                     long time = getElapsed();
 
                     if (time > 999)
                     {
                         time /= 1000;
-                        buf.append(time);
-                        buf.append((time == 1) ? " second."
-                                               : " seconds.");
+                        _args[2] =
+                            ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                                (time == 1) ? "MSG_SECOND" /* NOI18N */
+                                            : "MSG_SECONDS" /* NOI18N */);
                     }
                     else
                     {
-                        buf.append(time);
-                        buf.append(" milliseconds.");
+                        _args[2] =
+                            ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                                "MSG_MILLI_SECONDS" /* NOI18N */);
                     }
 
-                    statusBar.setText(buf.toString());
+                    _args[1] = String.valueOf(time);
+
+                    statusBar.setText(
+                        MessageFormat.format(
+                            ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                                "MSG_FORMAT_FINISHED" /* NOI18N */), _args));
                 }
+
+                AbstractPlugin.this.appender.done();
 
                 // call the user hook
                 AbstractPlugin.this.afterEnd();
@@ -951,16 +1071,6 @@ public abstract class AbstractPlugin
             finally
             {
                 _worker = null;
-            }
-        }
-
-
-        private synchronized void hideProgressMonitor()
-        {
-            if (_progressMonitor != null)
-            {
-                _progressMonitor.done();
-                _progressMonitor = null;
             }
         }
     }
@@ -975,8 +1085,9 @@ public abstract class AbstractPlugin
         Collection files; // Collection of <ProjectFile>
         Jalopy jalopy;
 
-        public FormatThread(Jalopy     jalopy,
-                            Collection files)
+        public FormatThread(
+            Jalopy     jalopy,
+            Collection files)
         {
             this.files = files;
             this.jalopy = jalopy;
@@ -1005,8 +1116,7 @@ public abstract class AbstractPlugin
 
 
     /**
-     * GlassPane used to block input whilst formatting the currently active
-     * file.
+     * GlassPane used to block input whilst formatting the currently active file.
      */
     private class GlassPane
         extends JComponent
@@ -1026,13 +1136,11 @@ public abstract class AbstractPlugin
 
             if (visible)
             {
-                Toolkit.getDefaultToolkit()
-                       .addAWTEventListener(this,
-                                            AWTEvent.KEY_EVENT_MASK |
-                                            AWTEvent.MOUSE_EVENT_MASK |
-                                            AWTEvent.MOUSE_MOTION_EVENT_MASK |
-                                            AWTEvent.TEXT_EVENT_MASK |
-                                            AWTEvent.INPUT_METHOD_EVENT_MASK);
+                Toolkit.getDefaultToolkit().addAWTEventListener(
+                    this,
+                    AWTEvent.KEY_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK
+                    | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.TEXT_EVENT_MASK
+                    | AWTEvent.INPUT_METHOD_EVENT_MASK);
             }
             else
             {
@@ -1045,7 +1153,7 @@ public abstract class AbstractPlugin
         {
             if (ev instanceof KeyEvent)
             {
-                KeyEvent e = (KeyEvent)ev;
+                KeyEvent e = (KeyEvent) ev;
 
                 switch (e.getKeyCode())
                 {
@@ -1074,9 +1182,9 @@ public abstract class AbstractPlugin
 
 
     /**
-     * A concrete progress monitor implemenation.
+     * A concrete progress monitor implemenation for Swing-based applications.
      */
-    private class ProgressMonitorImpl
+    private final class ProgressMonitorImpl
         implements ProgressMonitor
     {
         JDialog dialog;
@@ -1126,24 +1234,31 @@ public abstract class AbstractPlugin
         }
 
 
-        public synchronized void begin(String text,
-                                       int    units)
+        public synchronized void begin(
+            String text,
+            int    units)
         {
             if (!this.running)
             {
-                dialog = new JDialog(getMainWindow(), "Format Progress", true);
+                dialog =
+                    new JDialog(
+                        getMainWindow(),
+                        ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
+                            "TLE_FORMAT_PROGRESS" /* NOI18N */), true);
                 dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                dialog.getContentPane()
-                      .add(this.progressPanel, BorderLayout.CENTER);
+                dialog.getContentPane().add(this.progressPanel, BorderLayout.CENTER);
                 dialog.pack();
                 dialog.setLocationRelativeTo(getMainWindow());
+
                 this.progressPanel.setText(text);
                 this.progressPanel.setMaximum(units);
-                this.running = true;
-                execAsync(new Runnable()
+
+                execAsync(
+                    new Runnable()
                     {
                         public void run()
                         {
+                            running = true;
                             dialog.setVisible(true);
                         }
                     });
@@ -1155,7 +1270,22 @@ public abstract class AbstractPlugin
         {
             if (this.running)
             {
-                this.progressPanel.setValue(this.progressPanel.getMaximum());
+                try
+                {
+                    execSync(
+                        new Runnable()
+                        {
+                            public void run()
+                            {
+                                progressPanel.setValue(progressPanel.getMaximum());
+                            }
+                        });
+                }
+                catch (Throwable ignored)
+                {
+                    ;
+                }
+
                 this.dialog.setVisible(false);
                 this.running = false;
                 this.progressPanel.dispose();
