@@ -45,6 +45,7 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.storage.History;
 import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.util.Version;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
@@ -141,19 +142,7 @@ public final class Jalopy
     private static final int WRITER_OUTPUT = 32;
 
     /** The version information. */
-    private static String _version;
-
-    /** Major version number. */
-    private static byte _majorVersion;
-
-    /** Minor version number. */
-    private static byte _minorVersion;
-
-    /** Micro version number. */
-    private static byte _microVersion;
-
-    /** Indicates whether this version is a beta version. */
-    private static boolean _isBeta;
+    private static Version _version;
 
     /** Indicates file to file mode. */
     private static final int FILE_FILE = FILE_INPUT | FILE_OUTPUT;
@@ -184,7 +173,7 @@ public final class Jalopy
 
     static
     {
-        setVersion(loadVersionString());
+        _version = Version.valueOf(loadVersionString());
     }
 
     //~ Instance variables ---------------------------------------------------------------
@@ -228,7 +217,7 @@ public final class Jalopy
     private Map _issues; // Map of <JavaNode>:<Object>
 
     /** What history method should be used if file policy is enabled? */
-    private History.Method _historyMethod = History.Method.ADLER32;
+    private History.Method _historyMethod = History.Method.TIMESTAMP;
 
     /** What history policy should be used? */
     private History.Policy _historyPolicy = History.Policy.DISABLED;
@@ -309,17 +298,6 @@ public final class Jalopy
     }
 
     //~ Methods --------------------------------------------------------------------------
-
-    /**
-     * Indicates whether this version is a beta release.
-     *
-     * @return <code>true</code> if this version is a beta release.
-     */
-    public static boolean isBeta()
-    {
-        return _isBeta;
-    }
-
 
     /**
      * Sets the code convention to be loaded from the given file (either a qualified file
@@ -451,9 +429,9 @@ public final class Jalopy
 
 
     /**
-     * Sets the history policy to use.
+     * Sets the history method to use.
      *
-     * @param method history policy.
+     * @param method a history method.
      *
      * @since 1.0b9
      */
@@ -466,7 +444,7 @@ public final class Jalopy
     /**
      * Sets the history policy to use.
      *
-     * @param policy history policy.
+     * @param policy a history policy.
      */
     public void setHistoryPolicy(History.Policy policy)
     {
@@ -476,10 +454,12 @@ public final class Jalopy
 
     /**
      * Enables or disables the code inspector during formatting runs. You can always
-     * perform inspection using {@link #inspect}.
+     * perform inspection using <code>inspect()</code> methods.
      *
      * @param enabled if <code>true</code> the code inspector will be enabled.
      *
+     * @see #inspect
+     * @see #inspect(JavaNode)
      * @since 1.0b8
      */
     public void setInspect(boolean enabled)
@@ -502,44 +482,11 @@ public final class Jalopy
 
 
     /**
-     * Returns the major version number.
-     *
-     * @return major version.
-     */
-    public static byte getMajorVersion()
-    {
-        return _majorVersion;
-    }
-
-
-    /**
-     * Returns the micro version number.
-     *
-     * @return micro version.
-     */
-    public static byte getMicroVersion()
-    {
-        return _microVersion;
-    }
-
-
-    /**
-     * Returns the minor version number.
-     *
-     * @return minor version.
-     */
-    public static byte getMinorVersion()
-    {
-        return _minorVersion;
-    }
-
-
-    /**
      * Returns the version number.
      *
      * @return the current version number.
      */
-    public static String getVersion()
+    public static Version getVersion()
     {
         return _version;
     }
@@ -1127,7 +1074,7 @@ public final class Jalopy
     /**
      * Inspects the (via {@link #setInput(File)}) specified input source for code
      * convention violations and coding weaknesses. If no parsing was performed yet, the
-     * input source will first be parsed.
+     * input source will be first parsed.
      *
      * @see #setInput(File)
      * @see #parse
@@ -1172,11 +1119,29 @@ public final class Jalopy
      *
      * @param tree root node of the Java AST that is to be inspected.
      *
+     * @throws NullPointerException if <code><em>tree</em> == null</code>
+     * @throws IllegalArgumentException if <em>tree</em> is not the root node of a Java
+     *         AST.
+     *
      * @see #parse
      * @since 1.0b8
      */
     public void inspect(JavaNode tree)
     {
+        if (tree == null)
+        {
+            throw new NullPointerException();
+        }
+
+        switch (tree.getType())
+        {
+            case JavaTokenTypes.ROOT :
+                break;
+
+            default :
+                throw new IllegalArgumentException("not a root node -- " + tree);
+        }
+
         long start = 0;
 
         if (Loggers.IO.isDebugEnabled())
@@ -1336,63 +1301,6 @@ public final class Jalopy
         _timeParsing = 0;
         _timePrinting = 0;
         _timeTransforming = 0;
-    }
-
-
-    /**
-     * Sets the current version information.
-     *
-     * @param version string with encoded version information.
-     *
-     * @throws IllegalArgumentException if <em>version</em> is not a valid version
-     *         string.
-     *
-     * @since 1.0b8
-     */
-    private static void setVersion(String version)
-    {
-        _version = version;
-
-        Perl5Util regexp = new Perl5Util();
-
-        /**
-         * @todo user Matcher.matches
-         */
-        if (regexp.match("m/(\\d).(\\d)(?:.(\\d+))?(b\\d+)?/", version))
-        {
-            MatchResult result = regexp.getMatch();
-            _majorVersion = (byte) Integer.parseInt(result.group(1));
-            _minorVersion = (byte) Integer.parseInt(result.group(2));
-
-            String betaString = result.group(4);
-
-            if (betaString != null)
-            {
-                _isBeta = true;
-                _microVersion = (byte) Integer.parseInt(result.group(3));
-            }
-            else
-            {
-                String microString = result.group(3);
-
-                if (microString != null)
-                {
-                    if (microString.indexOf('b') > -1)
-                    {
-                        _isBeta = true;
-                    }
-                    else
-                    {
-                        _microVersion = (byte) Integer.parseInt(result.group(3));
-                    }
-                }
-            }
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                "invalid version information -- " + version);
-        }
     }
 
 
@@ -1663,9 +1571,12 @@ public final class Jalopy
      */
     private boolean isChecksum()
     {
-        return (_historyPolicy == History.Policy.FILE)
-        && ((_historyMethod == History.Method.CRC32)
-        || (_historyMethod == History.Method.ADLER32));
+        boolean result =
+            (_outputFile != null) && (_historyPolicy == History.Policy.FILE)
+            && ((_historyMethod == History.Method.CRC32)
+            || (_historyMethod == History.Method.ADLER32));
+
+        return result;
     }
 
 
@@ -1986,9 +1897,7 @@ public final class Jalopy
     {
         if ((_historyPolicy == History.Policy.FILE) && (_inputFile != null))
         {
-            if (
-                (_historyMethod == History.Method.CRC32)
-                || (_historyMethod == History.Method.ADLER32))
+            if (isChecksum())
             {
                 History.getInstance().add(
                     _inputFile, packageName, checksumWriter.getChecksum().getValue());
@@ -2313,7 +2222,7 @@ public final class Jalopy
                 outputWriter, _inputFile.getAbsolutePath(), _issues,
                 getLineSeparator(_outputFileFormat, format), format.toString());
 
-        out.setAnnotation(_recognizer.hasAnnotations());
+        out.setTracking(_recognizer.hasAnnotations() || _recognizer.hasPosition());
 
         Environment environment = Environment.getInstance().copy();
         setLocalVariables(
