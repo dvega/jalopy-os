@@ -50,7 +50,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           unless="jar.console.uptodate">
     <property name="jar.name" value="jalopy-console" />
 
-    <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION}.jar"
+    <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION.CONSOLE}.jar"
          duplicate="fail"
          index="false" >
       <fileset dir="${DIR.COMPILE}" >
@@ -65,7 +65,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <attribute name="Specification-Version" value="${SPEC.VERSION.CONSOLE}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.console" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION}" />
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.CONSOLE}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -177,10 +177,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="build.properties" />
       </srcfileset>
       <targetfileset dir="${DIR.JARS}"
-                     includes="jalopy-console-${BUILD.VERSION}.jar"/>
+                     includes="jalopy-console-${BUILD.VERSION.CONSOLE}.jar"/>
     </dependset>
 
     <available property="jar.console.uptodate"
-               file="${DIR.JARS}/jalopy-console-${BUILD.VERSION}.jar" />
+               file="${DIR.JARS}/jalopy-console-${BUILD.VERSION.CONSOLE}.jar" />
   </target>
 </project>

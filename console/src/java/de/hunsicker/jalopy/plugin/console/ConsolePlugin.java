@@ -1,22 +1,8 @@
 /*
- * Jalopy Java Source Code Formatter
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Copyright (c) 2002, Marco Hunsicker. All rights reserved.
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License as published by the Free Software Foundation; either
- * version 2 of the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Library General Public License for more details.
- *
- * You should have received a copy of the GNU Library General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.console;
 
@@ -61,7 +47,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 
 /**
  * The console Plug-in provides a powerful command line interface for the Jalopy engine.
- *
+ * 
  * <p>
  * Refer to the online manual for the list of valid command line options. You can find
  * the most recent version of the manual on the official Jalopy homepage: <a
@@ -116,8 +102,7 @@ public final class ConsolePlugin
     {
         new LongOpt("convention" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'c'),
         new LongOpt("destination" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'd'),
-        new LongOpt(
-            "disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
+        new LongOpt("disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
         new LongOpt("encoding" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'e'),
         new LongOpt("format" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'f'),
         new LongOpt("force" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_FORCE),
@@ -174,6 +159,18 @@ public final class ConsolePlugin
     //~ Methods --------------------------------------------------------------------------
 
     /**
+     * Returns the version information of this Plug-in.
+     *
+     * @return version information of this Plug-in.
+     */
+    public static String getVersion()
+    {
+        return Package.getPackage("de.hunsicker.jalopy.plugin.console" /* NOI18N */)
+                      .getImplementationVersion();
+    }
+
+
+    /**
      * Starts Jalopy from the command line.
      *
      * @param argv command line arguments.  Refer to the online manual for the list of
@@ -208,7 +205,7 @@ public final class ConsolePlugin
             }
             catch (VersionMismatchException ex)
             {
-                Object[] args = { ex.getExpectedVersion(), ex.getFoundVersion() };
+                Object[] args = { ex.getExpected(), ex.getFound() };
                 System.out.println(
                     MessageFormat.format(
                         BUNDLE.getString("VERSION_MISMATCH" /* NOI18N */), args));
@@ -430,11 +427,14 @@ public final class ConsolePlugin
     private void displayCopyright()
     {
         System.out.println(
-            BUNDLE.getString("PROGRAM_NAME") + " " + Jalopy.getVersion()
-            + ", Copyright (c) " + BUNDLE.getString("COPYRIGHT_YEAR") + " "
-            + BUNDLE.getString("AUTHOR.1"));
+            "Jalopy Java Source Code Formatter " + Jalopy.getVersion()
+            + " Console Plug-in " /* NOI18N */ + getVersion());
         System.out.println(
-            BUNDLE.getString("PROGRAM_NAME") + " comes with ABSOLUTELY NO WARRANTY");
+            "Copyright (c) " /* NOI18N */
+            + BUNDLE.getString("COPYRIGHT_YEAR" /* NOI18N */) + " "
+            + BUNDLE.getString("AUTHOR.1" /* NOI18N */));
+        System.out.println();
+        System.out.println("Jalopy comes with ABSOLUTELY NO WARRANTY");
         System.out.println("Use '--disclaimer' to show the disclaimer");
     }
 
@@ -469,7 +469,8 @@ public final class ConsolePlugin
     private void displayLicence()
     {
         System.out.println(
-            " Jalopy Java Source Code Formatter Console Plug-in" /* NOI18N */);
+            " Jalopy Java Source Code Formatter " + Jalopy.getVersion()
+            + " Console Plug-in " /* NOI18N */ + getVersion());
         System.out.println(
             " Copyright (c) " /* NOI18N */
             + BUNDLE.getString("COPYRIGHT_YEAR" /* NOI18N */) + " "
@@ -648,6 +649,10 @@ public final class ConsolePlugin
                 History.Policy.valueOf(
                     settings.get(
                         ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY)));
+            jalopy.setHistoryMethod(
+                History.Method.valueOf(
+                    settings.get(
+                        ConventionKeys.HISTORY_METHOD, ConventionDefaults.HISTORY_METHOD)));
 
             if (_force)
             {
@@ -822,6 +827,7 @@ public final class ConsolePlugin
 
                 case 'c' :
                     _convention = g.getOptarg();
+
                     break;
 
                 case 's' :
