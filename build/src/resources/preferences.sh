@@ -8,9 +8,9 @@ case "`uname`" in
   Darwin*) darwin=true ;;
 esac
 
-if [ -z "$JAVACMD" ] ; then 
+if [ -z "$JAVACMD" ] ; then
   if [ -n "$JAVA_HOME"  ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then 
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
       # IBM's JDK on AIX uses strange locations for the executables
       JAVACMD=$JAVA_HOME/jre/sh/java
     else
@@ -20,7 +20,7 @@ if [ -z "$JAVACMD" ] ; then
     JAVACMD=java
   fi
 fi
- 
+
 if [ ! -x "$JAVACMD" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute $JAVACMD"
@@ -29,8 +29,8 @@ fi
 
 # add in the dependency .jar files
 # The jar-files are in the same directory as this scriptfile !
-# So remove the name of this script-file from the path and replace it 
-#   with *.jar 
+# So remove the name of this script-file from the path and replace it
+#   with *.jar
 DIRLIBS=${0%/*}/*.jar
 for i in ${DIRLIBS}
 do
