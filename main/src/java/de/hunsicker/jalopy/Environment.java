@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -59,7 +59,7 @@ import org.apache.oro.text.regex.Util;
 /**
  * Provides access to global and local environment variables (key/value
  * pairs).
- * 
+ *
  * <p>
  * This class is thread-safe.
  * </p>
@@ -86,7 +86,7 @@ public final class Environment
     {
         try
         {
-            _variablesPattern = REGEXP_COMPILER.compile("\\$([a-zA-Z_][a-zA-Z0-9_]+)\\$",
+            _variablesPattern = REGEXP_COMPILER.compile("\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$",
                                                         Perl5Compiler.READ_ONLY_MASK);
         }
         catch (MalformedPatternException ex)
@@ -182,43 +182,45 @@ public final class Environment
     public String interpolate(String str)
     {
         PatternMatcherInput input = new PatternMatcherInput(str);
-        Map keys = new HashMap();
+        Map keys = new HashMap(10);
 
-        // map all found varaiable expressions with their environment variable...
+        // map all found variable expressions with their environment variable
         while (_matcher.contains(input, _variablesPattern))
         {
             MatchResult result = _matcher.getMatch();
-            keys.put(result.group(0), (String)_variables.get(result.group(1)));
+            String value = (String)_variables.get(result.group(1));
+
+            // the value has to be set in order to  to be substituted
+            if (value != null && value.length() > 0)
+                keys.put(result.group(0), value);
         }
 
-        // ... and interpolate them
+        // and finally interpolate them
         for (Iterator i = keys.entrySet().iterator(); i.hasNext();)
         {
             Map.Entry entry = (Map.Entry)i.next();
+
+
+            String key = (String)entry.getKey();
             String value = (String)entry.getValue();
 
-            // the value has to be set to be substituted
-            if (value != null)
+            Substitution substitution = new StringSubstitution(value);
+            Pattern pattern = null;
+
+            try
             {
-                String key = (String)entry.getKey();
-                Substitution substitution = new StringSubstitution(value);
-                Pattern pattern = null;
-
-                try
-                {
-                    /**
-                     * @todo use a cache
-                     */
-                    pattern = REGEXP_COMPILER.compile(Perl5Compiler.quotemeta(key));
-                }
-                catch (MalformedPatternException ex)
-                {
-                    continue;
-                }
-
-                str = Util.substitute(_matcher, pattern, substitution, str,
-                                      Util.SUBSTITUTE_ALL);
+                /**
+                 * @todo use a cache
+                 */
+                pattern = REGEXP_COMPILER.compile(Perl5Compiler.quotemeta(key));
             }
+            catch (MalformedPatternException ex)
+            {
+                continue;
+            }
+
+            str = Util.substitute(_matcher, pattern, substitution, str,
+                                  Util.SUBSTITUTE_ALL);
         }
 
         return str;
@@ -335,9 +337,9 @@ public final class Environment
 
 
         /**
-         * Returns a string representation of the object.
+         * Returns a string representation of this object.
          *
-         * @return A string representation of the object.
+         * @return A string representation of this object.
          *
          * @see #getName
          */
