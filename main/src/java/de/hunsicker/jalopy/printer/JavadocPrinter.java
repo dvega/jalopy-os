@@ -1389,6 +1389,7 @@ LOOP:
                 case JavadocTokenTypes.OFONT :
                 case JavadocTokenTypes.OBQUOTE :
                 case JavadocTokenTypes.OULIST :
+                case JavadocTokenTypes.ODLIST :
                 case JavadocTokenTypes.OOLIST :
                     buf.append(child.getText());
                     buf.append(mergeChildren(child.getFirstChild()));
@@ -1396,6 +1397,8 @@ LOOP:
                     break;
 
                 case JavadocTokenTypes.OLITEM :
+                case JavadocTokenTypes.ODTERM :
+                case JavadocTokenTypes.ODDEF:
                     buf.append(child.getText());
                     buf.append(mergeChildren(child.getFirstChild()));
                     buf.append(SPACE);
