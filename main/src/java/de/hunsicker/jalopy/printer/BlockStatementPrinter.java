@@ -126,7 +126,6 @@ abstract class BlockStatementPrinter
                                 ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                                 ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                         {
-                            //out.state.wrap = true;
                             scope.wrap = true;
                         }
                     }
@@ -143,7 +142,6 @@ abstract class BlockStatementPrinter
                             ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                             ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                     {
-                        //out.state.wrap = true;
                         scope.wrap = true;
                     }
                 }
@@ -165,7 +163,6 @@ abstract class BlockStatementPrinter
                         ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                         ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                 {
-                    //out.state.wrap = true;
                     scope.wrap = true;
                 }
 

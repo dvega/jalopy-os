@@ -327,15 +327,10 @@ class BlockPrinter
 
         if (brace)
         {
-            /*boolean indentBrace = !leftBraceNewline;
+            boolean indentBrace = !freestanding && !forceNewlineBefore;
 
-            if (!leftBraceNewline &&
-                lcurly.getPreviousSibling().hasCommentsAfter())
-            {
-                indentBrace = false;
-            }*/
             printLeftBrace(
-                lcurly, leftBraceNewline, forceNewlineBefore, freestanding, out);
+                lcurly, leftBraceNewline, forceNewlineBefore, freestanding, indentBrace, out);
         }
         else if (indent)
         {
@@ -348,7 +343,7 @@ class BlockPrinter
 
         JavaNode rcurly = null;
 
-LOOP: 
+LOOP:
 
         // print everything despite the closing curly brace
         for (AST child = node.getFirstChild(); child != null;
@@ -377,13 +372,13 @@ LOOP:
 
             int offset =
                 out.printRightBrace(
-                    closeBraceType, !treatDifferent && !freestanding, rightBraceNewline);
+                    closeBraceType, !treatDifferent && !freestanding, rightBraceNewline && !rcurly.hasCommentsAfter());
 
             trackPosition(
                 rcurly, rightBraceNewline ? (out.line - 1)
                                           : out.line, offset, out);
 
-            printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, rightBraceNewline, out);
+            printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
         }
         else if (indent)
         {
@@ -578,7 +573,7 @@ LOOP:
 
     /**
      * Determines whether the braces of the given node may be savely removed.
-     * 
+     *
      * <p>
      * If we want to omit braces we have to check whether there is a VARIABLE_DEF in the
      * given scope, in which case we have to print braces as we don't know whether the
@@ -596,6 +591,11 @@ LOOP:
         {
             case JavaTokenTypes.INSTANCE_INIT :
                 return false;
+        }
+
+        if (lcurly.hasCommentsBefore())
+        {
+            return false;
         }
 
         for (
@@ -677,7 +677,7 @@ LOOP:
     {
         JavaNode rcurly = (JavaNode) lcurly.getFirstChild();
 
-        printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore, freestanding, out);
+        printLeftBrace(lcurly, leftBraceNewline, forceNewlineBefore, freestanding, true, out);
 
         if (out.state.newlineBeforeLeftBrace)
         {
@@ -722,6 +722,7 @@ LOOP:
         boolean    leftBraceNewline,
         boolean    forceNewlineBefore,
         boolean    freestanding,
+        boolean    indent,
         NodeWriter out)
       throws IOException
     {
@@ -759,7 +760,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            NodeWriter.NEWLINE_NO, !commentsAfter, NodeWriter.INDENT_YES);
+                            NodeWriter.NEWLINE_NO, !commentsAfter, indent && NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line
@@ -769,7 +770,7 @@ LOOP:
                 {
                     int offset =
                         out.printLeftBrace(
-                            leftBraceNewline, !commentsAfter, NodeWriter.INDENT_YES);
+                            leftBraceNewline, !commentsAfter, indent && NodeWriter.INDENT_YES);
 
                     trackPosition(
                         lcurly, commentsAfter ? out.line
