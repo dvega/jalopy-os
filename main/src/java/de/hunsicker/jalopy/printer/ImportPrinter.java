@@ -15,8 +15,8 @@ import java.util.StringTokenizer;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.util.StringHelper;
@@ -73,7 +73,7 @@ final class ImportPrinter
         out.print(IMPORT_SPACE, JavaTokenTypes.LITERAL_import);
 
         AST identifier = node.getFirstChild();
-        String name = NodeHelper.getDottedName(identifier);
+        String name = JavaNodeHelper.getDottedName(identifier);
         out.print(name, JavaTokenTypes.LITERAL_import);
 
         AST semi = identifier.getNextSibling();
@@ -93,7 +93,8 @@ final class ImportPrinter
                         this.settings.getBoolean(
                             ConventionKeys.IMPORT_SORT, ConventionDefaults.IMPORT_SORT))
                     {
-                        String nextName = NodeHelper.getDottedName(next.getFirstChild());
+                        String nextName =
+                            JavaNodeHelper.getDottedName(next.getFirstChild());
                         int depth = getImportDepth(name);
                         int offset = StringHelper.indexOf('.', name, depth);
 

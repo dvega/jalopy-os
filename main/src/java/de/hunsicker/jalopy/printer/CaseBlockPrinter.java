@@ -62,7 +62,6 @@ final class CaseBlockPrinter
 
         if (first != null)
         {
-
             // only increase indentation if we're not followed by a SLIST
             // which takes care for itself
             switch (first.getType())
@@ -72,6 +71,7 @@ final class CaseBlockPrinter
 
                 default :
                     indent = true;
+
                     break;
             }
         }

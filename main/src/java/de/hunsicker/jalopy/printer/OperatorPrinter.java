@@ -11,8 +11,8 @@ import java.io.IOException;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -501,7 +501,7 @@ abstract class OperatorPrinter
         NodeWriter out)
       throws IOException
     {
-        JavaNode n = NodeHelper.getLastChild(node);
+        JavaNode n = JavaNodeHelper.getLastChild(node);
 
         if ((n == null) && n.hasCommentsAfter())
         {

@@ -17,10 +17,10 @@ import java.util.Map;
 import de.hunsicker.antlr.CommonAST;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.language.JavadocTokenTypes;
 import de.hunsicker.jalopy.language.Node;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.language.TreeWalker;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -269,15 +269,15 @@ final class JavadocPrinter
                 List names = new ArrayList(4);
 
                 for (
-                    AST child = NodeHelper.getFirstChild(node, type).getFirstChild();
+                    AST child = JavaNodeHelper.getFirstChild(node, type).getFirstChild();
                     child != null; child = child.getNextSibling())
                 {
                     switch (child.getType())
                     {
                         case JavaTokenTypes.PARAMETER_DEF :
                             names.add(
-                                NodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
-                                          .getText());
+                                JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
+                                              .getText());
 
                             break;
                     }
@@ -289,7 +289,7 @@ final class JavadocPrinter
             case JavaTokenTypes.LITERAL_throws :
             {
                 final List names = new ArrayList(3);
-                AST exceptions = NodeHelper.getFirstChild(node, type);
+                AST exceptions = JavaNodeHelper.getFirstChild(node, type);
 
                 if (exceptions != null)
                 {
@@ -621,8 +621,9 @@ final class JavadocPrinter
 
         for (
             AST param =
-                NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS).getFirstChild();
-            param != null; param = param.getNextSibling())
+                JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS)
+                              .getFirstChild(); param != null;
+            param = param.getNextSibling())
         {
             count++;
         }
@@ -881,7 +882,7 @@ final class JavadocPrinter
                 return true;
 
             case JavaTokenTypes.VARIABLE_DEF :
-                return !NodeHelper.isLocalVariable(node);
+                return !JavaNodeHelper.isLocalVariable(node);
 
             default :
                 return false;
@@ -975,7 +976,7 @@ LOOP:
         {
             case JavaTokenTypes.METHOD_DEF :
 
-                if (NodeHelper.isAbstractMethod(node))
+                if (JavaNodeHelper.isAbstractMethod(node))
                 {
                     return;
                 }
@@ -2482,8 +2483,7 @@ SELECTION:
 
                 // @tag description
                 case JavadocTokenTypes.TAG_CUSTOM :
-                case JavadocTokenTypes.TAG_TODO :
-                default :
+                case JavadocTokenTypes.TAG_TODO :default :
                     printTagDescription(
                         tag.getFirstChild(), ident, asterix, maxwidth, false, out);
 

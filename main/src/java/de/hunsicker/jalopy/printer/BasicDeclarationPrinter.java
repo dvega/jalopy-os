@@ -14,11 +14,11 @@ import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.ExtendedToken;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaNodeModifier;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.language.JavadocTokenTypes;
 import de.hunsicker.jalopy.language.Node;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;
@@ -214,7 +214,7 @@ abstract class BasicDeclarationPrinter
         buf.append(topText);
         buf.append(DELIMETER);
 
-        AST parameters = NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        AST parameters = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
         String bottomText =
             this.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
@@ -234,7 +234,7 @@ abstract class BasicDeclarationPrinter
         }
 
         AST returnType =
-            NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE).getFirstChild();
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE).getFirstChild();
 
         if (!VOID.equals(returnType.getText()))
         {
@@ -247,7 +247,8 @@ abstract class BasicDeclarationPrinter
             buf.append(DELIMETER);
         }
 
-        AST exceptions = NodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
+        AST exceptions =
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
 
         if ((exceptions != null) && (exceptions.getFirstChild() != null))
         {
@@ -427,13 +428,13 @@ abstract class BasicDeclarationPrinter
 
         out.environment.set(
             Environment.Variable.TYPE_OBJECT.getName(),
-            NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText());
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText());
         buf.append(out.environment.interpolate(topText));
         out.environment.unset(Environment.Variable.TYPE_OBJECT.getName());
 
         buf.append(DELIMETER);
 
-        AST parameters = NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        AST parameters = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
         String bottomText =
             this.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
@@ -452,7 +453,8 @@ abstract class BasicDeclarationPrinter
                 out.environment);
         }
 
-        AST exceptions = NodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
+        AST exceptions =
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.LITERAL_throws);
 
         if ((exceptions != null) && (exceptions.getFirstChild() != null))
         {
@@ -533,7 +535,7 @@ abstract class BasicDeclarationPrinter
                 case JavaTokenTypes.PARAMETER_DEF :
 
                     String type =
-                        NodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
+                        JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
                     environment.set(Environment.Variable.TYPE_PARAM.getName(), type);
                     buf.append(environment.interpolate(text));
                     buf.append(DELIMETER);

@@ -14,8 +14,8 @@ import java.util.StringTokenizer;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -173,7 +173,7 @@ final class JavaPrinter
                     case JavaTokenTypes.INTERFACE_DEF :
 
                         AST block =
-                            NodeHelper.getFirstChild(
+                            JavaNodeHelper.getFirstChild(
                                 declaration, JavaTokenTypes.OBJBLOCK);
 
                         for (

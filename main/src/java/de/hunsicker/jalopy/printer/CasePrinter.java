@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -85,12 +85,14 @@ final class CasePrinter
 
                 AST colon = expr.getNextSibling();
 
+                AST block = node.getNextSibling();
+                boolean newline = isNewlineBefore(block);
+
                 if (
-                    !printCommentsAfter(
-                        colon, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
+                    !printCommentsAfter(colon, NodeWriter.NEWLINE_NO, newline, out)
+                    && newline)
                 {
-                    if (this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT))
-                        out.printNewline();
+                    out.printNewline();
                 }
 
                 out.last = JavaTokenTypes.LITERAL_case;
@@ -99,7 +101,7 @@ final class CasePrinter
             }
 
             case JavaTokenTypes.CASE_GROUP :
-LOOP:
+LOOP: 
                 for (
                     AST child = node.getFirstChild(); child != null;
                     child = child.getNextSibling())
@@ -108,13 +110,14 @@ LOOP:
                     {
                         case JavaTokenTypes.COLON :
 
+                            boolean newline = isNewlineBefore(child.getNextSibling());
+
                             if (
                                 !printCommentsAfter(
-                                    child, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO,
-                                    out))
+                                    child, NodeWriter.NEWLINE_NO, newline, out)
+                                && newline)
                             {
-                                if (this.settings.getBoolean(ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT))
-                                    out.printNewline();
+                                out.printNewline();
                             }
 
                             continue LOOP;
@@ -123,7 +126,7 @@ LOOP:
 
                             // don't print empty lists, as these would break
                             // our indentation
-                            if (NodeHelper.isEmptyBlock(child))
+                            if (JavaNodeHelper.isEmptyBlock(child))
                             {
                                 continue LOOP;
                             }
@@ -147,10 +150,12 @@ LOOP:
 
                                 default :
 
-                                    if (NodeHelper.isEmptyBlock(sibling))
+                                    if (JavaNodeHelper.isEmptyBlock(sibling))
                                     {
                                         break LOOP;
                                     }
+
+                                // fall-through
                             }
 
                             break;
@@ -186,5 +191,43 @@ LOOP:
                 break;
             }
         }
+    }
+
+
+    /**
+     * Determines whether a newline should be printed before the given block.
+     *
+     * @param node a SLIST node.
+     *
+     * @return <code>true</code> if a newline should be printed before the node.
+     *
+     * @since 1.0b10
+     */
+    private boolean isNewlineBefore(AST node)
+    {
+        boolean result = false;
+
+        AST child = node.getFirstChild();
+
+        if (child != null)
+        {
+            switch (child.getType())
+            {
+                case JavaTokenTypes.SLIST :
+                    result =
+                        this.settings.getBoolean(
+                            ConventionKeys.BRACE_NEWLINE_LEFT,
+                            ConventionDefaults.BRACE_NEWLINE_LEFT);
+
+                    break;
+
+                default :
+                    result = true;
+
+                    break;
+            }
+        }
+
+        return result;
     }
 }

@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -664,7 +664,7 @@ SEARCH:
                                                 // for chained method calls prefer wrapping
                                                 // along the dots
                                                 else if (
-                                                    !NodeHelper.isChained(
+                                                    !JavaNodeHelper.isChained(
                                                         ((JavaNode) node)
                                                         .getPreviousSibling()))
                                                 {
@@ -985,12 +985,12 @@ SEARCH:
                 {
                     AST name = child.getFirstChild();
 
-                    if ((out.column < deepIndent) && NodeHelper.isChained(name))
+                    if ((out.column < deepIndent) && JavaNodeHelper.isChained(name))
                     {
                         return true;
                     }
 
-                    String text = NodeHelper.getDottedName(name);
+                    String text = JavaNodeHelper.getDottedName(name);
 
                     if ((out.column + text.length()) > lineLength)
                     {

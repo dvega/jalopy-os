@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -104,9 +104,9 @@ final class MethodCallPrinter
 
             if (
                 (wrapLines || forceWrappingForChainedCalls)
-                && NodeHelper.isChained(first))
+                && JavaNodeHelper.isChained(first))
             {
-                AST firstLink = NodeHelper.getFirstChainLink(node);
+                AST firstLink = JavaNodeHelper.getFirstChainLink(node);
                 scope = (ParenthesesScope) out.state.parenScope.getFirst();
 
                 // if no chained call for the current parentheses scope exists,

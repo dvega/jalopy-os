@@ -424,7 +424,7 @@ public final class PrinterFactory
                 break;
 
             /**
-                                                 */
+                                                             */
             case JavaTokenTypes.RCURLY :
                 result = SkipPrinter.getInstance();
 

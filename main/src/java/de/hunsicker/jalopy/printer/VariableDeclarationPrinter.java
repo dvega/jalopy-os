@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -71,7 +71,7 @@ final class VariableDeclarationPrinter
                 || this.settings.getBoolean(
                     ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
                     ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS))
-                && !NodeHelper.isLocalVariable(node))
+                && !JavaNodeHelper.isLocalVariable(node))
             {
                 addComment(n, out);
             }
@@ -103,7 +103,7 @@ final class VariableDeclarationPrinter
 
                 if (
                     (next == null)
-                    || ((NodeHelper.getFirstChild(node, JavaTokenTypes.ASSIGN) == null)
+                    || ((JavaNodeHelper.getFirstChild(node, JavaTokenTypes.ASSIGN) == null)
                     && (next.getType() != JavaTokenTypes.VARIABLE_DEF)))
                 {
                     newChunk = true;

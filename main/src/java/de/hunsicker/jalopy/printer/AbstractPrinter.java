@@ -13,9 +13,9 @@ import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.ExtendedToken;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
 import de.hunsicker.jalopy.language.Node;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -656,7 +656,7 @@ abstract class AbstractPrinter
                 else
                 {
                     /*List comments = ((JavaNode)node).getCommentsAfter();
-                    JavaNode child = (JavaNode)NodeHelper.getFirstChild(node,
+                    JavaNode child = (JavaNode)JavaNodeHelper.getFirstChild(node,
                                                                         JavaTokenTypes.SLIST);
 
                     if (child != null)
@@ -1078,9 +1078,11 @@ abstract class AbstractPrinter
 
                     if (node.getParent().getType() == JavaTokenTypes.LITERAL_do)
                     {
+                        // no blank lines before the while part of do-while statements
                         break;
                     }
 
+                // fall-through
                 case JavaTokenTypes.LITERAL_for :
                 case JavaTokenTypes.LITERAL_try :
                 case JavaTokenTypes.LITERAL_switch :
@@ -1124,33 +1126,12 @@ abstract class AbstractPrinter
 
                 case JavaTokenTypes.SLIST :
 
-                    switch (node.getParent().getType())
+                    if (JavaNodeHelper.isFreestandingBlock(node))
                     {
-                        case JavaTokenTypes.LITERAL_if :
-                        case JavaTokenTypes.LITERAL_for :
-                        case JavaTokenTypes.LITERAL_do :
-                        case JavaTokenTypes.LITERAL_while :
-                        case JavaTokenTypes.LITERAL_try :
-                        case JavaTokenTypes.SYNBLOCK :
-                            break;
-
-                        default :
-
-                            switch (node.getPreviousSibling().getType())
-                            {
-                                case JavaTokenTypes.INSTANCE_INIT :
-                                    break;
-
-                                default : // means freestanding block
-                                    result =
-                                        this.settings.getInt(
-                                            ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
-                                            ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
-
-                                    break;
-                            }
-
-                            break;
+                        result =
+                            this.settings.getInt(
+                                ConventionKeys.BLANK_LINES_BEFORE_BLOCK,
+                                ConventionDefaults.BLANK_LINES_BEFORE_BLOCK);
                     }
 
                     break;
@@ -1246,7 +1227,7 @@ abstract class AbstractPrinter
                 case JavaTokenTypes.CLASS_DEF :
                 {
                     JavaNode prev = node.getPreviousSibling();
-
+OUTER: 
                     switch (prev.getType())
                     {
                         case JavaTokenTypes.METHOD_DEF :
@@ -1287,6 +1268,23 @@ abstract class AbstractPrinter
 
                             break;
 
+                        case JavaTokenTypes.SEMI :
+
+                            // we ignore additional semis in import statements, so if we
+                            // find one here, we know we are behind the last import
+                            // statement
+                            switch (node.getParent().getType())
+                            {
+                                case JavaTokenTypes.ROOT :
+                                case JavaTokenTypes.PACKAGE_DEF :
+                                case JavaTokenTypes.IMPORT :
+                                    break;
+
+                                default :
+                                    break OUTER;
+                            }
+
+                        // fall-through
                         case JavaTokenTypes.IMPORT :
                             result =
                                 this.settings.getInt(
@@ -2396,7 +2394,7 @@ abstract class AbstractPrinter
                         ConventionKeys.BRACE_NEWLINE_LEFT,
                         ConventionDefaults.BRACE_NEWLINE_LEFT))
                 {
-                    return (!NodeHelper.isBlockNext(node));
+                    return (!JavaNodeHelper.isBlockNext(node));
                 }
 
                 return true;

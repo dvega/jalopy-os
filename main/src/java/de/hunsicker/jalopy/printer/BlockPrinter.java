@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeHelper;
 import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.jalopy.language.NodeHelper;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -95,18 +95,7 @@ class BlockPrinter
             }
         }
 
-        // is this a freestanding block?
-        boolean freestanding = false;
-
-        switch (lcurly.getParent().getType())
-        {
-            case JavaTokenTypes.SLIST :
-            case JavaTokenTypes.INSTANCE_INIT :
-                freestanding = true;
-
-                break;
-        }
-
+        boolean freestanding = JavaNodeHelper.isFreestandingBlock(lcurly);
         boolean cuddleEmpty =
             this.settings.getBoolean(
                 ConventionKeys.BRACE_EMPTY_CUDDLE, ConventionDefaults.BRACE_EMPTY_CUDDLE);
@@ -123,7 +112,7 @@ class BlockPrinter
             ((node.getType() == JavaTokenTypes.SLIST) ? JavaTokenTypes.RCURLY
                                                       : JavaTokenTypes.OBJBLOCK);
 
-        if (NodeHelper.isEmptyBlock(node))
+        if (JavaNodeHelper.isEmptyBlock(node))
         {
             // only insert empty statement for SLIST, not for OBJBLOCK
             if (insertEmptyStatement)
@@ -359,7 +348,7 @@ class BlockPrinter
 
         JavaNode rcurly = null;
 
-LOOP:
+LOOP: 
 
         // print everything despite the closing curly brace
         for (AST child = node.getFirstChild(); child != null;
@@ -387,7 +376,8 @@ LOOP:
                 isCloseBraceNewline(lcurly, closeBraceType, freestanding);
 
             int offset =
-                out.printRightBrace(closeBraceType, !treatDifferent && !freestanding, rightBraceNewline);
+                out.printRightBrace(
+                    closeBraceType, !treatDifferent && !freestanding, rightBraceNewline);
 
             trackPosition(
                 rcurly, rightBraceNewline ? (out.line - 1)
@@ -588,7 +578,7 @@ LOOP:
 
     /**
      * Determines whether the braces of the given node may be savely removed.
-     *
+     * 
      * <p>
      * If we want to omit braces we have to check whether there is a VARIABLE_DEF in the
      * given scope, in which case we have to print braces as we don't know whether the
@@ -721,7 +711,8 @@ LOOP:
      * @param leftBraceNewline issue a line break before the brace.
      * @param forceNewlineBefore force a line break.
      * @param freestanding <code>true</code> indicates a freestanding block. For
-     *        freestanding blocks, we never want to ouput additional leading indentation.
+     *        freestanding blocks, we never want to ouput additional leading
+     *        indentation.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
@@ -734,7 +725,7 @@ LOOP:
         NodeWriter out)
       throws IOException
     {
-        if (lcurly.hasCommentsBefore())
+        if (lcurly.hasCommentsBefore() || freestanding)
         {
             printCommentsBefore(lcurly, NodeWriter.NEWLINE_NO, out);
         }

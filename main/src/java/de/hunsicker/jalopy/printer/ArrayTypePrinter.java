@@ -80,15 +80,13 @@ final class ArrayTypePrinter
                                 ConventionDefaults.PADDING_BRACKETS))
                         {
                             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child.getFirstChild()).print(
-                                child.getFirstChild(), out);
+                            PrinterFactory.create(child).print(child, out);
                             out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
                         else
                         {
                             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child.getFirstChild()).print(
-                                child.getFirstChild(), out);
+                            PrinterFactory.create(child).print(child, out);
                             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
 
