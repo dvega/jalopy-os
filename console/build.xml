@@ -7,11 +7,11 @@
 Module              : console
 Module-Dependencies : ant, build, main
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -62,10 +62,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <attribute name="Class-Path" value="aelfred-${LIB.VERSION.AELFRED}.jar getopt-${LIB.VERSION.GETOPT}.jar jalopy-${BUILD.VERSION}.jar jaxp-${LIB.VERSION.JAXP}.jar jdom-${LIB.VERSION.JDOM}.jar log4j-${LIB.VERSION.LOG4J}.jar oro-${LIB.VERSION.ORO}.jar sax-${LIB.VERSION.SAX}.jar" />
         <section name="de/hunsicker/jalopy/plugin/console/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.CONSOLE}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION.CONSOLE}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.console" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -121,8 +121,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="console-init"
           depends="console-check-modules" >
-    <copy file="${dir.src}/resources/ConsolePlugin.properties"
-          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/plugin/console/ConsolePlugin.properties" />
+    <native2ascii
+        src="${dir.src.java}"
+        dest="${DIR.COMPILE}"
+        includes="**/Bundle*.properties" />
   </target>
 
 
@@ -136,10 +138,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <!-- now we know module 'build' exists so we can use its targets -->
     <ant dir="../build" target="build-check-ant" inheritAll="false" />
     <ant dir="../build" target="build-check-main" inheritAll="false" />
-    
+
     <!-- build the runtime .jar if necessary -->
     <ant dir="../main" target="main-jar"  inheritAll="false" />
-    
+
     <property name="console.check.modules" value="true" />
   </target>
 
