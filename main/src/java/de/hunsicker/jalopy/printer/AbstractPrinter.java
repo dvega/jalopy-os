@@ -2220,7 +2220,7 @@ class AbstractPrinter
         {
             if (lines[i].length() > 0)
             {
-                out.print(lines[i], type);
+                out.print(StringHelper.trimTrailing(lines[i]), type);
             }
 
             if (i < lastLine)
@@ -2253,7 +2253,7 @@ class AbstractPrinter
         {
             if (lines[i].length() > 0)
             {
-                out.print(lines[i], JavaTokenTypes.SPECIAL_COMMENT);
+                out.print(StringHelper.trimTrailing(lines[i]), JavaTokenTypes.SPECIAL_COMMENT);
             }
 
             if (i < lastLine)

@@ -289,9 +289,17 @@ final class JavaPrinter
                 }
             }
 
-            out.printBlankLines(this.prefs.getInt(
+            int blankLinesAfter = this.prefs.getInt(
                                                   Keys.BLANK_LINES_AFTER_FOOTER,
-                                                  Defaults.BLANK_LINES_AFTER_FOOTER));
+                                                  Defaults.BLANK_LINES_AFTER_FOOTER);
+
+            // always print at least one empty line to be in sync with the
+            // Java specs in case the footer consists of several single-line
+            // comments
+            if (blankLinesAfter == 0)
+                blankLinesAfter = 1;
+
+            out.printBlankLines(blankLinesAfter);
         }
     }
 
