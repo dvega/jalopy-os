@@ -250,30 +250,32 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           if="present.jdeveloper"
           unless="uptodate.jdeveloper">
 
-    <delete dir="${DIR.TMP}/jdeveloper/bin" quiet="true" />
-    <delete dir="${DIR.TMP}/jdeveloper/docs" quiet="true" />
-    <delete dir="${DIR.TMP}/jdeveloper/lib" quiet="true" />
+    <delete dir="${DIR.TMP}/jdeveloper/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}/docs" quiet="true" />
+    <delete dir="${DIR.TMP}/jdeveloper/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}/lib" quiet="true" />
 
-    <copy todir="${DIR.TMP}/jdeveloper/docs" >
+    <copy todir="${DIR.TMP}/jdeveloper/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}/docs" >
         <fileset dir="${DIR.DOCS}/site" />
         <fileset dir="${DIR.DOCS}/manual" />
     </copy>
 
-    <copy todir="${DIR.TMP}/jdeveloper/lib" >
+    <copy todir="${DIR.TMP}/jdeveloper/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}/lib" >
       <fileset dir="${DIR.LIB}" >
         <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
         <include name="oro-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
-        <include name="jalopy-jdev*.jar" />
         <include name="jalopy-${BUILD.VERSION}*.jar" />
       </fileset>
     </copy>
 
-    <!-- <tar tarfile="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.tar.gz"
-         basedir="${DIR.TMP}/jdeveloper"
-         compression="gzip" /> -->
+    <!-- Put the main jar at the top level with all supporting jar's underneath.  -->
+    <copy todir="${DIR.TMP}/jdeveloper" >
+      <fileset dir="${DIR.JARS}" >
+        <include name="de.hunsicker.jalopy.plugin.jdeveloper*.jar" />
+      </fileset>
+    </copy>
+
     <zip zipfile="${DIR.DIST}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.zip"
          basedir="${DIR.TMP}/jdeveloper" />
   </target>
@@ -424,10 +426,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="build-dist-docu"
           description="Creates the documention distribution"
-          depends="build-dist-ant, build-dist-console,
-                   build-dist-eclipse, build-dist-jbuilder, build-dist-jdev,
-                   build-dist-jedit, build-dist-main, build-dist-netbeans,
-                   build-dist-src">
+          depends="build-dist-ant, build-dist-console, build-dist-main, build-dist-src">
 
     <ant dir="../docu" target="docu-website" inheritAll="false" />
 

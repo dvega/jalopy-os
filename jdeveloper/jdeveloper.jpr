@@ -1,0 +1,125 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<jpr:project xmlns:jpr="http://xmlns.oracle.com/ide/project">
+   <hash n="component-versions">
+      <value n="oracle.ide.model.Project" v="10.1.3.0.1"/>
+   </hash>
+   <list n="contentSets">
+      <string v="oracle.jdeveloper.model.PathsConfiguration/javaContentSet"/>
+      <string v="oracle.jdeveloper.resources.ResourcePaths/resourcesContentSet"/>
+   </list>
+   <list n="listOfChildren">
+      <hash>
+         <value n="nodeClass" v="oracle.jdeveloper.compiler.ant.AntNode"/>
+         <url n="URL" path="build.xml"/>
+      </hash>
+   </list>
+   <hash n="oracle.jdeveloper.model.PathsConfiguration">
+      <hash n="javaContentSet">
+         <list n="pattern-filters">
+            <string v="+**"/>
+         </list>
+         <list n="url-path">
+            <url path="src/"/>
+         </list>
+      </hash>
+   </hash>
+   <hash n="oracle.jdeveloper.resources.ResourcePaths">
+      <hash n="resourcesContentSet">
+         <list n="constituent-sets">
+            <hash>
+               <list n="pattern-filters">
+                  <string v="+**"/>
+               </list>
+               <list n="url-path">
+                  <url path="."/>
+               </list>
+            </hash>
+            <hash>
+               <list n="pattern-filters">
+                  <string v="+**"/>
+               </list>
+               <list n="url-path">
+                  <url path="../build/"/>
+               </list>
+            </hash>
+         </list>
+         <list n="url-path"/>
+      </hash>
+   </hash>
+   <hash n="oracle.jdevimpl.config.JProjectLibraries">
+      <list n="exportedReferences">
+         <hash>
+            <value n="id" v="JDeveloper Extension SDK"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSR-198"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Aelfred-1.2"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Jalopy Extension Libs"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Jalopy TMP Classes Directory"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+      </list>
+      <hash n="internalDefinitions">
+         <list n="libraryDefinitions">
+            <hash>
+               <list n="classPath">
+                  <url path="../main/ext/lib/aelfred-1.2.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/antlr-2.7.2a2.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/antlr-all-2.7.2a2.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/getopt-1.0.9.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/jaxp-1.2.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/jdom-1.0b8.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/junit-3.8.1.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/log4j-1.2.6.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/oro-2.0.6.jar" jar-entry=""/>
+                  <url path="../main/ext/lib/sax-2.0.1.jar" jar-entry=""/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Jalopy Extension Libs"/>
+               <value n="id" v="Jalopy Extension Libs"/>
+               <value n="locked" v="false"/>
+            </hash>
+            <hash>
+               <list n="classPath">
+                  <url path="../tmp~/build/classes/"/>
+               </list>
+               <value n="deployedByDefault" v="true"/>
+               <value n="description" v="Jalopy TMP Classes Directory"/>
+               <value n="id" v="Jalopy TMP Classes Directory"/>
+            </hash>
+         </list>
+      </hash>
+      <list n="libraryReferences">
+         <hash>
+            <value n="id" v="JDeveloper Extension SDK"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="JSR-198"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Jalopy Extension Libs"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+         <hash>
+            <value n="id" v="Jalopy TMP Classes Directory"/>
+            <value n="isJDK" v="false"/>
+         </hash>
+      </list>
+   </hash>
+   <hash n="oracle.jdevimpl.config.JProjectPaths">
+      <url n="outputDirectory" path="../tmp~/build/classes/"/>
+   </hash>
+   <list n="ownerMap"/>
+</jpr:project>

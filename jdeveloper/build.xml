@@ -59,37 +59,28 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           description="Creates the JDeveloper .jar"
           depends="jdev-compile, jdev-uptodate-jar"
           unless="jar.jdev.uptodate">
-    <property name="jar.name" value="jalopy-jdeveloper" />
+    <property name="jar.name" value="de.hunsicker.jalopy.plugin.jdeveloper" />
     <mkdir dir="${dir.compile.metainf}" />
     <copy file="${dir.src.res}/jdev-ext.xml"
           tofile="${dir.compile.metainf}/jdev-ext.xml" />
+    <copy file="${dir.src.res}/extension.xml"
+          tofile="${dir.compile.metainf}/extension.xml" />
 
-    <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION.JDEVELOPER}.jar"
+    <jar jarfile="${DIR.JARS}/${jar.name}.${BUILD.VERSION.JDEVELOPER}.jar"
          duplicate="fail"
          index="false" >
       <fileset dir="${DIR.COMPILE}" >
         <patternset>
           <include name="de/**/plugin/jdeveloper/**" />
           <include name="META-INF/jdev-ext.xml" />
+          <include name="META-INF/extension.xml" />
         </patternset>
       </fileset>
-      <manifest>
-        <attribute name="AddinCount" value="1" />
-        <attribute name="Addin0" value="de.hunsicker.jalopy.plugin.jdeveloper.JDevPlugin" />
-        <section name="de/hunsicker/jalopy/plugin/jdeveloper/">
-          <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.JDEVELOPER}" />
-          <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
-          <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.jdeveloper" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION.JDEVELOPER}" />
-          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
-          <attribute name="Implementation-URL" value="${HOMEPAGE}" />
-        </section>
-      </manifest>
     </jar>
     <delete includeEmptyDirs="true" verbose="true" >
       <fileset dir="${dir.compile.metainf}" >
         <include name="jdev-ext.xml" />
+        <include name="extension.xml" />
       </fileset>
     </delete>
   </target>
@@ -210,10 +201,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="build.properties" />
       </srcfileset>
       <targetfileset dir="${DIR.JARS}"
-                     includes="jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar"/>
+                     includes="de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}.jar"/>
     </dependset>
 
     <available property="jar.jdev.uptodate"
-               file="${DIR.JARS}/jalopy-jdeveloper-${BUILD.VERSION.JDEVELOPER}.jar" />
+               file="${DIR.JARS}/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}.jar" />
   </target>
 </project>

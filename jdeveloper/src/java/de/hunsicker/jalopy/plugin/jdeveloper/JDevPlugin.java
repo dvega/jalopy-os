@@ -303,10 +303,19 @@ public final class JDevPlugin extends AbstractPlugin implements Addin,
 
         _formatMenuItem = Ide.getMenubar().createMenuItem(action);
 
-        NavigatorManager.getWorkspaceNavigatorManager().addContextMenuListener(this,
-            null);
-        NavigatorManager.getApplicationNavigatorManager()
-                        .addContextMenuListener(this, null);
+        NavigatorManager navigatorManager = null;
+        navigatorManager = NavigatorManager.getWorkspaceNavigatorManager();
+        if ( navigatorManager != null ) 
+        {
+          navigatorManager.addContextMenuListener(this, null);
+        }
+
+        navigatorManager = NavigatorManager.getWorkspaceNavigatorManager();
+        if ( navigatorManager != null ) 
+        {
+          navigatorManager.addContextMenuListener(this, null);
+        }
+
         EditorManager.getEditorManager().getContextMenu()
                      .addContextMenuListener(this, null);
 
@@ -439,12 +448,13 @@ public final class JDevPlugin extends AbstractPlugin implements Addin,
      * Called when shutting down the IDE.
      */
     public void shutdown() {
-        NavigatorManager.getApplicationNavigatorManager()
-                        .removeContextMenuListener(this);
-        NavigatorManager.getWorkspaceNavigatorManager()
-                        .removeContextMenuListener(this);
-        EditorManager.getEditorManager().getContextMenu()
-                     .removeContextMenuListener(this);
+      NavigatorManager nav = null;
+      nav = NavigatorManager.getApplicationNavigatorManager();
+      if ( nav != null ) { 
+        nav.removeContextMenuListener(this);      
+      }
+      nav = NavigatorManager.getWorkspaceNavigatorManager();
+      EditorManager.getEditorManager().getContextMenu().removeContextMenuListener(this);
     }
 
     /**
