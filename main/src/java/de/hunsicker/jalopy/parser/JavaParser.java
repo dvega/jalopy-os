@@ -87,7 +87,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
 
     /** Unqualified (wildcard) imports. */
     private Set _unqualImports = new HashSet(10); // Set of <String>
-    
+
     /** Logging. */
     private final Logger _logger = Logger.getLogger("de.hunsicker.jalopy.parser.java");
 
@@ -219,7 +219,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
     }
 
     /**
-     * Attaches the hidden tokens from the specified compound statement to its 
+     * Attaches the hidden tokens from the specified compound statement to its
      * imaginary node.
      *
      * @param node a INSTANCE_INIT node.
@@ -243,7 +243,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
                                    JavaNode type, ExtendedToken identifier)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -283,7 +283,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
     private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode keyword)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -302,7 +302,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
     private void attachStuffBeforeVariable(JavaNode node, JavaNode modifiers, JavaNode type)
     {
         JavaNode modifier = (JavaNode)modifiers.getFirstChild();
-        
+
         if (modifier != null)
         {
             node.setHiddenBefore(modifier.getHiddenBefore());
@@ -315,13 +315,13 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
                 if (child.getFirstChild() == null)
                 {
                     JavaNode t = (JavaNode)child;
-                    
+
                     if (t.getHiddenBefore() != null)
                     {
                         node.setHiddenBefore(t.getHiddenBefore());
                         t.setHiddenBefore(null);
                     }
-                    
+
                     break;
                 }
             }
@@ -383,7 +383,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
         {
             super(initialSize);
         }
-    
+
         public boolean add(Object element)
         {
             if (element == null)
@@ -416,7 +416,7 @@ public final class JavaParser extends de.hunsicker.antlr.LLkParser
 
             return super.set(index, element);
         }
-        
+
         // XXX implement addAll
     }
 
@@ -445,17 +445,17 @@ public JavaParser(ParserSharedInputState state) {
 }
 
 	public final void parse() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode parse_AST = null;
-		
+
 		JavaNode root = new JavaNode();
 		root.setType(JavaTokenTypes.ROOT);
 		root.setText(getFilename());
 		currentAST.root = root;
-		
-		
+
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -500,7 +500,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop4;
 				}
-				
+
 			} while (true);
 			}
 			{
@@ -513,7 +513,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop6;
 				}
-				
+
 			} while (true);
 			}
 			match(Token.EOF_TYPE);
@@ -530,9 +530,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = parse_AST;
 	}
-	
+
 	public final void packageDefinition() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode packageDefinition_AST = null;
@@ -540,7 +540,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode p_AST = null;
 		Token  semi = null;
 		JavaNode semi_AST = null;
-		
+
 		try {      // for error handling
 			p = LT(1);
 			p_AST = (JavaNode)astFactory.create(p);
@@ -568,9 +568,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = packageDefinition_AST;
 	}
-	
+
 	public final void importDefinition() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode importDefinition_AST = null;
@@ -578,7 +578,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode i_AST = null;
 		Token  semi = null;
 		JavaNode semi_AST = null;
-		
+
 		try {      // for error handling
 			i = LT(1);
 			i_AST = (JavaNode)astFactory.create(i);
@@ -606,14 +606,14 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = importDefinition_AST;
 	}
-	
+
 	public final void typeDefinition() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode typeDefinition_AST = null;
 		JavaNode m_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case FINAL:
@@ -681,13 +681,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = typeDefinition_AST;
 	}
-	
+
 /**
  * Our qualified package identifier. We need this rule because all other
  * identifiers will be made unqualified (depending on the stripQualification switch).
  */
 	public final void identifierPackage() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode identifierPackage_AST = null;
@@ -695,10 +695,10 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode id1_AST = null;
 		Token  id2 = null;
 		JavaNode id2_AST = null;
-		
-		_buf.setLength(0);        
-		
-		
+
+		_buf.setLength(0);
+
+
 		try {      // for error handling
 			id1 = LT(1);
 			id1_AST = (JavaNode)astFactory.create(id1);
@@ -720,16 +720,16 @@ public JavaParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, id2_AST);
 					match(IDENT);
 					if ( inputState.guessing==0 ) {
-						
+
 						_buf.append('.');
 						_buf.append(id2_AST.getText());
-						
+
 					}
 				}
 				else {
 					break _loop26;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -748,9 +748,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = identifierPackage_AST;
 	}
-	
+
 	public final void identifierStar() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode identifierStar_AST = null;
@@ -758,11 +758,11 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode id1_AST = null;
 		Token  id2 = null;
 		JavaNode id2_AST = null;
-		
+
 		_buf.setLength(0);
 		boolean star = false;
-		
-		
+
+
 		try {      // for error handling
 			id1 = LT(1);
 			id1_AST = (JavaNode)astFactory.create(id1);
@@ -784,16 +784,16 @@ public JavaParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, id2_AST);
 					match(IDENT);
 					if ( inputState.guessing==0 ) {
-						
+
 						_buf.append('.');
 						_buf.append(id2.getText());
-						
+
 					}
 				}
 				else {
 					break _loop29;
 				}
-				
+
 			} while (true);
 			}
 			{
@@ -824,12 +824,12 @@ public JavaParser(ParserSharedInputState state) {
 			}
 			}
 			if ( inputState.guessing==0 ) {
-				
+
 				if (star)
 				_unqualImports.add(_buf.toString());
 				else
 				_qualImports.add(_buf.toString());
-				
+
 			}
 			identifierStar_AST = (JavaNode)currentAST.root;
 		}
@@ -844,13 +844,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = identifierStar_AST;
 	}
-	
+
 	public final void modifiers() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode modifiers_AST = null;
-		
+
 		try {      // for error handling
 			{
 			_loop33:
@@ -862,7 +862,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop33;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -886,11 +886,11 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = modifiers_AST;
 	}
-	
+
 	public final void classDefinition(
 		JavaNode modifiers
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode classDefinition_AST = null;
@@ -901,7 +901,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode sc_AST = null;
 		JavaNode ic_AST = null;
 		JavaNode cb_AST = null;
-		
+
 		try {      // for error handling
 			c = LT(1);
 			c_AST = (JavaNode)astFactory.create(c);
@@ -918,11 +918,11 @@ public JavaParser(ParserSharedInputState state) {
 			if ( inputState.guessing==0 ) {
 				classDefinition_AST = (JavaNode)currentAST.root;
 				classDefinition_AST = (JavaNode)astFactory.make( (new ASTArray(6)).add((JavaNode)astFactory.create(JavaTokenTypes.CLASS_DEF,"CLASS_DEF")).add(modifiers).add(id_AST).add(sc_AST).add(ic_AST).add(cb_AST));
-				
+
 				classDefinition_AST.setHiddenBefore(c_AST.getHiddenBefore());
 				classDefinition_AST.setHiddenAfter(c_AST.getHiddenAfter());
 				attachStuffBefore(classDefinition_AST, modifiers, c_AST);
-				
+
 				currentAST.root = classDefinition_AST;
 				currentAST.child = classDefinition_AST!=null &&classDefinition_AST.getFirstChild()!=null ?
 					classDefinition_AST.getFirstChild() : classDefinition_AST;
@@ -940,11 +940,11 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = classDefinition_AST;
 	}
-	
+
 	public final void interfaceDefinition(
 		JavaNode modifiers
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode interfaceDefinition_AST = null;
@@ -954,7 +954,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode id_AST = null;
 		JavaNode ie_AST = null;
 		JavaNode cb_AST = null;
-		
+
 		try {      // for error handling
 			i = LT(1);
 			i_AST = (JavaNode)astFactory.create(i);
@@ -970,7 +970,7 @@ public JavaParser(ParserSharedInputState state) {
 				interfaceDefinition_AST = (JavaNode)currentAST.root;
 				interfaceDefinition_AST = (JavaNode)astFactory.make( (new ASTArray(5)).add((JavaNode)astFactory.create(JavaTokenTypes.INTERFACE_DEF,"INTERFACE_DEF")).add(modifiers).add(id_AST).add(ie_AST).add(cb_AST));
 				attachStuffBefore(interfaceDefinition_AST, modifiers, i_AST);
-				
+
 				currentAST.root = interfaceDefinition_AST;
 				currentAST.child = interfaceDefinition_AST!=null &&interfaceDefinition_AST.getFirstChild()!=null ?
 					interfaceDefinition_AST.getFirstChild() : interfaceDefinition_AST;
@@ -988,19 +988,19 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = interfaceDefinition_AST;
 	}
-	
+
 /** A declaration is the creation of a reference or primitive-type variable
  *  Create a separate Type/Var tree for each var in the var list.
  */
 	public final void declaration() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode declaration_AST = null;
 		JavaNode m_AST = null;
 		JavaNode t_AST = null;
 		JavaNode v_AST = null;
-		
+
 		try {      // for error handling
 			modifiers();
 			m_AST = (JavaNode)returnAST;
@@ -1028,15 +1028,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = declaration_AST;
 	}
-	
+
 	public final void typeSpec(
 		boolean addImagNode
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode typeSpec_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case IDENT:
@@ -1078,15 +1078,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = typeSpec_AST;
 	}
-	
+
 	public final void variableDefinitions(
 		JavaNode mods, JavaNode t
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode variableDefinitions_AST = null;
-		
+
 		try {      // for error handling
 			variableDeclarator((JavaNode)getASTFactory().dupTree(mods),
                                                    (JavaNode)getASTFactory().dupTree(t));
@@ -1103,7 +1103,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop65;
 				}
-				
+
 			} while (true);
 			}
 			variableDefinitions_AST = (JavaNode)currentAST.root;
@@ -1119,18 +1119,18 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = variableDefinitions_AST;
 	}
-	
+
 	public final void classTypeSpec(
 		boolean addImagNode
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode classTypeSpec_AST = null;
 		JavaNode i_AST = null;
 		Token  lb = null;
 		JavaNode lb_AST = null;
-		
+
 		try {      // for error handling
 			identifier();
 			i_AST = (JavaNode)returnAST;
@@ -1151,17 +1151,17 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop15;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
 				classTypeSpec_AST = (JavaNode)currentAST.root;
-				
+
 				if ( addImagNode ) {
 				classTypeSpec_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(classTypeSpec_AST));
 				}
 				_references.defineType(i_AST.getText().intern(), classTypeSpec_AST);
-				
+
 				currentAST.root = classTypeSpec_AST;
 				currentAST.child = classTypeSpec_AST!=null &&classTypeSpec_AST.getFirstChild()!=null ?
 					classTypeSpec_AST.getFirstChild() : classTypeSpec_AST;
@@ -1180,17 +1180,17 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = classTypeSpec_AST;
 	}
-	
+
 	public final void builtInTypeSpec(
 		boolean addImagNode
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode builtInTypeSpec_AST = null;
 		Token  lb = null;
 		JavaNode lb_AST = null;
-		
+
 		try {      // for error handling
 			builtInType();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -1210,16 +1210,16 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop18;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
 				builtInTypeSpec_AST = (JavaNode)currentAST.root;
-				
+
 				if ( addImagNode ) {
 				builtInTypeSpec_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(builtInTypeSpec_AST));
 				}
-				
+
 				currentAST.root = builtInTypeSpec_AST;
 				currentAST.child = builtInTypeSpec_AST!=null &&builtInTypeSpec_AST.getFirstChild()!=null ?
 					builtInTypeSpec_AST.getFirstChild() : builtInTypeSpec_AST;
@@ -1238,9 +1238,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = builtInTypeSpec_AST;
 	}
-	
+
 	public final void identifier() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode identifier_AST = null;
@@ -1248,10 +1248,10 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode id1_AST = null;
 		Token  id2 = null;
 		JavaNode id2_AST = null;
-		
-		_buf.setLength(0);        
-		
-		
+
+		_buf.setLength(0);
+
+
 		try {      // for error handling
 			id1 = LT(1);
 			id1_AST = (JavaNode)astFactory.create(id1);
@@ -1270,33 +1270,33 @@ public JavaParser(ParserSharedInputState state) {
 					id2_AST = (JavaNode)astFactory.create(id2);
 					match(IDENT);
 					if ( inputState.guessing==0 ) {
-						
+
 						_buf.append('.');
 						_buf.append(id2.getText());
-						
-						
+
+
 					}
 				}
 				else {
 					break _loop23;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
 				identifier_AST = (JavaNode)currentAST.root;
-				
+
 				identifier_AST = (JavaNode)astFactory.make( (new ASTArray(1)).add((JavaNode)astFactory.create(JavaTokenTypes.IDENT,_buf.toString())));
 				String text = identifier_AST.getText().intern();
 				addIdentifier(text);
-				
+
 				identifier_AST.setHiddenBefore(id1_AST.getHiddenBefore());
 				identifier_AST.setHiddenAfter(id1_AST.getHiddenAfter());
 				identifier_AST.startLine = id1_AST.startLine;
 				identifier_AST.startColumn = id1_AST.startColumn;
 				identifier_AST.endLine = id1_AST.startLine;
 				identifier_AST.endColumn = id1_AST.startColumn + text.length();
-				
+
 				currentAST.root = identifier_AST;
 				currentAST.child = identifier_AST!=null &&identifier_AST.getFirstChild()!=null ?
 					identifier_AST.getFirstChild() : identifier_AST;
@@ -1314,13 +1314,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = identifier_AST;
 	}
-	
+
 	public final void builtInType() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode builtInType_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case LITERAL_void:
@@ -1421,13 +1421,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = builtInType_AST;
 	}
-	
+
 	public final void type() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode type_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case IDENT:
@@ -1469,13 +1469,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = type_AST;
 	}
-	
+
 	public final void modifier() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode modifier_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case LITERAL_private:
@@ -1594,16 +1594,16 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = modifier_AST;
 	}
-	
+
 	public final void superClassClause() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode superClassClause_AST = null;
 		Token  e = null;
 		JavaNode e_AST = null;
 		JavaNode id_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -1631,8 +1631,8 @@ public JavaParser(ParserSharedInputState state) {
 				superClassClause_AST = (JavaNode)currentAST.root;
 				superClassClause_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.EXTENDS_CLAUSE,STR_EXTENDS_CLAUSE)).add(id_AST));
 				if (e_AST != null)
-				superClassClause_AST.setHiddenBefore(e_AST.getHiddenBefore());  
-				
+				superClassClause_AST.setHiddenBefore(e_AST.getHiddenBefore());
+
 				currentAST.root = superClassClause_AST;
 				currentAST.child = superClassClause_AST!=null &&superClassClause_AST.getFirstChild()!=null ?
 					superClassClause_AST.getFirstChild() : superClassClause_AST;
@@ -1650,15 +1650,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = superClassClause_AST;
 	}
-	
+
 	public final void implementsClause() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode implementsClause_AST = null;
 		Token  i = null;
 		JavaNode i_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -1680,7 +1680,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop49;
 					}
-					
+
 				} while (true);
 				}
 				break;
@@ -1699,8 +1699,8 @@ public JavaParser(ParserSharedInputState state) {
 				implementsClause_AST = (JavaNode)currentAST.root;
 				implementsClause_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE")).add(implementsClause_AST));
 				if (i_AST != null)
-				implementsClause_AST.setHiddenBefore(i_AST.getHiddenBefore());                              
-				
+				implementsClause_AST.setHiddenBefore(i_AST.getHiddenBefore());
+
 				currentAST.root = implementsClause_AST;
 				currentAST.child = implementsClause_AST!=null &&implementsClause_AST.getFirstChild()!=null ?
 					implementsClause_AST.getFirstChild() : implementsClause_AST;
@@ -1719,9 +1719,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = implementsClause_AST;
 	}
-	
+
 	public final void classBlock() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode classBlock_AST = null;
@@ -1729,7 +1729,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode lc_AST = null;
 		Token  rc = null;
 		JavaNode rc_AST = null;
-		
+
 		try {      // for error handling
 			lc = LT(1);
 			lc_AST = (JavaNode)astFactory.create(lc);
@@ -1809,15 +1809,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = classBlock_AST;
 	}
-	
+
 	public final void interfaceExtends() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode interfaceExtends_AST = null;
 		Token  e = null;
 		JavaNode e_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -1839,7 +1839,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop45;
 					}
-					
+
 				} while (true);
 				}
 				break;
@@ -1875,9 +1875,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = interfaceExtends_AST;
 	}
-	
+
 	public final void field() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode field_AST = null;
@@ -1906,7 +1906,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode stat_AST = null;
 		JavaNode s3_AST = null;
 		JavaNode s4_AST = null;
-		
+
 		try {      // for error handling
 			if ((_tokenSet_13.member(LA(1))) && (_tokenSet_17.member(LA(2)))) {
 				modifiers();
@@ -1957,7 +1957,7 @@ public JavaParser(ParserSharedInputState state) {
 							field_AST = (JavaNode)currentAST.root;
 							field_AST = (JavaNode)astFactory.make( (new ASTArray(4)).add((JavaNode)astFactory.create(JavaTokenTypes.CTOR_DEF,"CTOR_DEF")).add(mods_AST).add(h_AST).add(s_AST));
 							attachStuffBefore(field_AST, mods_AST, h_AST);
-							
+
 							currentAST.root = field_AST;
 							currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
 								field_AST.getFirstChild() : field_AST;
@@ -2032,7 +2032,7 @@ public JavaParser(ParserSharedInputState state) {
 								field_AST = (JavaNode)currentAST.root;
 								field_AST = (JavaNode)astFactory.make( (new ASTArray(10)).add((JavaNode)astFactory.create(JavaTokenTypes.METHOD_DEF,"METHOD_DEF")).add(mods_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(rt_AST))).add(idd_AST).add(lp_AST).add(param_AST).add(rp_AST).add(tc_AST).add(s2_AST).add(semim_AST));
 								attachStuffBefore(field_AST, mods_AST, t_AST);
-								
+
 								currentAST.root = field_AST;
 								currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
 									field_AST.getFirstChild() : field_AST;
@@ -2047,26 +2047,26 @@ public JavaParser(ParserSharedInputState state) {
 							match(SEMI);
 							if ( inputState.guessing==0 ) {
 								field_AST = (JavaNode)currentAST.root;
-								
+
 								field_AST = v_AST;
 								field_AST.addChild(semi_AST);
-								
+
 								AST next = field_AST.getNextSibling();
-								// HACK for multiple variable declaration in one statement 
+								// HACK for multiple variable declaration in one statement
 								//      e.g float  x, y, z;
 								// the semicolon will only be added to the first statement so
 								// we have to add it manually to all others
 								if (next != null)
 								{
 								AST ssemi = NodeHelper.getFirstChild(field_AST, JavaTokenTypes.SEMI);
-								
+
 								for (AST var = next; var != null; var = var.getNextSibling())
 								{
 								var.addChild(astFactory.create(ssemi));
 								}
 								}
-								
-								
+
+
 								currentAST.root = field_AST;
 								currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
 									field_AST.getFirstChild() : field_AST;
@@ -2076,7 +2076,7 @@ public JavaParser(ParserSharedInputState state) {
 						else {
 							throw new NoViableAltException(LT(1), getFilename());
 						}
-						
+
 						}
 					}
 				else {
@@ -2096,10 +2096,10 @@ public JavaParser(ParserSharedInputState state) {
 				s3_AST = (JavaNode)returnAST;
 				if ( inputState.guessing==0 ) {
 					field_AST = (JavaNode)currentAST.root;
-					
+
 					field_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add(stat_AST).add(s3_AST));
 					field_AST.setType(STATIC_INIT);
-					
+
 					currentAST.root = field_AST;
 					currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
 						field_AST.getFirstChild() : field_AST;
@@ -2116,7 +2116,7 @@ public JavaParser(ParserSharedInputState state) {
 					field_AST = (JavaNode)currentAST.root;
 					field_AST = (JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.INSTANCE_INIT,STR_INSTANCE_INIT)).add(s4_AST));
 					attachStuffBefore(field_AST, s4_AST);
-					
+
 					currentAST.root = field_AST;
 					currentAST.child = field_AST!=null &&field_AST.getFirstChild()!=null ?
 						field_AST.getFirstChild() : field_AST;
@@ -2126,7 +2126,7 @@ public JavaParser(ParserSharedInputState state) {
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			
+
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
@@ -2139,13 +2139,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = field_AST;
 	}
-	
+
 	public final void ctorHead() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode ctorHead_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp34_AST = null;
 			tmp34_AST = (JavaNode)astFactory.create(LT(1));
@@ -2192,15 +2192,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = ctorHead_AST;
 	}
-	
+
 	public final void constructorBody() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode constructorBody_AST = null;
 		Token  lc = null;
 		JavaNode lc_AST = null;
-		
+
 		try {      // for error handling
 			lc = LT(1);
 			lc_AST = (JavaNode)astFactory.create(lc);
@@ -2235,7 +2235,7 @@ public JavaParser(ParserSharedInputState state) {
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			
+
 			}
 			{
 			_loop60:
@@ -2247,7 +2247,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop60;
 				}
-				
+
 			} while (true);
 			}
 			JavaNode tmp37_AST = null;
@@ -2267,13 +2267,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = constructorBody_AST;
 	}
-	
+
 	public final void parameterDeclarationList() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode parameterDeclarationList_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -2305,7 +2305,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop86;
 					}
-					
+
 				} while (true);
 				}
 				break;
@@ -2341,17 +2341,17 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = parameterDeclarationList_AST;
 	}
-	
+
 	public final void declaratorBrackets(
 		JavaNode typ
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode declaratorBrackets_AST = null;
 		Token  lb = null;
 		JavaNode lb_AST = null;
-		
+
 		try {      // for error handling
 			if ( inputState.guessing==0 ) {
 				declaratorBrackets_AST = (JavaNode)currentAST.root;
@@ -2377,7 +2377,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop69;
 				}
-				
+
 			} while (true);
 			}
 			declaratorBrackets_AST = (JavaNode)currentAST.root;
@@ -2393,13 +2393,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = declaratorBrackets_AST;
 	}
-	
+
 	public final void throwsClause() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode throwsClause_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp40_AST = null;
 			tmp40_AST = (JavaNode)astFactory.create(LT(1));
@@ -2421,7 +2421,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop82;
 				}
-				
+
 			} while (true);
 			}
 			throwsClause_AST = (JavaNode)currentAST.root;
@@ -2437,15 +2437,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = throwsClause_AST;
 	}
-	
+
 	public final void compoundStatement() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode compoundStatement_AST = null;
 		Token  lc = null;
 		JavaNode lc_AST = null;
-		
+
 		try {      // for error handling
 			lc = LT(1);
 			lc_AST = (JavaNode)astFactory.create(lc);
@@ -2464,7 +2464,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop92;
 				}
-				
+
 			} while (true);
 			}
 			JavaNode tmp42_AST = null;
@@ -2487,9 +2487,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = compoundStatement_AST;
 	}
-	
+
 	public final void explicitConstructorInvocation() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode explicitConstructorInvocation_AST = null;
@@ -2500,7 +2500,7 @@ public JavaParser(ParserSharedInputState state) {
 		Token  lp3 = null;
 		JavaNode lp3_AST = null;
 		Token t = null;
-		
+
 		try {      // for error handling
 			{
 			if ((LA(1)==LITERAL_this) && (LA(2)==LPAREN)) {
@@ -2578,7 +2578,7 @@ public JavaParser(ParserSharedInputState state) {
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			
+
 			}
 			explicitConstructorInvocation_AST = (JavaNode)currentAST.root;
 		}
@@ -2593,9 +2593,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = explicitConstructorInvocation_AST;
 	}
-	
+
 	public final void statement() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode statement_AST = null;
@@ -2616,7 +2616,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode synBlock_AST = null;
 		Token  emptyStat = null;
 		JavaNode emptyStat_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case LCURLY:
@@ -2673,7 +2673,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					throw new NoViableAltException(LT(1), getFilename());
 				}
-				
+
 				}
 				statement_AST = (JavaNode)currentAST.root;
 				break;
@@ -2977,7 +2977,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop102;
 					}
-					
+
 				} while (true);
 				}
 				if ( inputState.guessing==0 ) {
@@ -3049,26 +3049,26 @@ public JavaParser(ParserSharedInputState state) {
 					semi1_AST = (JavaNode)astFactory.create(semi1);
 					match(SEMI);
 					if ( inputState.guessing==0 ) {
-						
+
 						// add semicolon to the AST
 						decl_AST.addChild(semi1_AST);
-						
+
 						AST next = currentAST.root.getNextSibling();
-						
-						// HACK for multiple variable declaration in one statement 
+
+						// HACK for multiple variable declaration in one statement
 						//      e.g float x, y, z;
 						// the semicolon will only be added to the first statement so
 						// we have to add it manually to all others
 						if (next != null)
 						{
 						AST semi = NodeHelper.getFirstChild(currentAST.root, JavaTokenTypes.SEMI);
-						
+
 						for (AST var = next; var != null; var = var.getNextSibling())
 						{
 						var.addChild(astFactory.create(semi));
 						}
 						}
-						
+
 					}
 					statement_AST = (JavaNode)currentAST.root;
 				}
@@ -3146,13 +3146,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = statement_AST;
 	}
-	
+
 	public final void argList() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode argList_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -3221,10 +3221,10 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = argList_AST;
 	}
-	
+
 	public final Token  primaryExpression() throws RecognitionException, TokenStreamException {
 		Token t;
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode primaryExpression_AST = null;
@@ -3240,7 +3240,7 @@ public JavaParser(ParserSharedInputState state) {
 		Token  lbt = null;
 		JavaNode lbt_AST = null;
 		t=null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case IDENT:
@@ -3319,6 +3319,7 @@ public JavaParser(ParserSharedInputState state) {
 				lp_AST = (JavaNode)astFactory.create(lp);
 				astFactory.addASTChild(currentAST, lp_AST);
 				match(LPAREN);
+
 				assignmentExpression();
 				a_AST = (JavaNode)returnAST;
 				astFactory.addASTChild(currentAST, returnAST);
@@ -3366,7 +3367,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop186;
 					}
-					
+
 				} while (true);
 				}
 				JavaNode tmp94_AST = null;
@@ -3398,7 +3399,7 @@ public JavaParser(ParserSharedInputState state) {
 		returnAST = primaryExpression_AST;
 		return t;
 	}
-	
+
 /** Declaration of a variable.  This can be a class/instance variable,
  *   or a local variable in a method
  * It can also include possible initialization.
@@ -3406,7 +3407,7 @@ public JavaParser(ParserSharedInputState state) {
 	public final void variableDeclarator(
 		JavaNode mods, JavaNode t
 	) throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode variableDeclarator_AST = null;
@@ -3414,7 +3415,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode id_AST = null;
 		JavaNode d_AST = null;
 		JavaNode v_AST = null;
-		
+
 		try {      // for error handling
 			id = LT(1);
 			id_AST = (JavaNode)astFactory.create(id);
@@ -3425,11 +3426,11 @@ public JavaParser(ParserSharedInputState state) {
 			v_AST = (JavaNode)returnAST;
 			if ( inputState.guessing==0 ) {
 				variableDeclarator_AST = (JavaNode)currentAST.root;
-				
+
 				variableDeclarator_AST = (JavaNode)astFactory.make( (new ASTArray(5)).add((JavaNode)astFactory.create(JavaTokenTypes.VARIABLE_DEF,"VARIABLE_DEF")).add(mods).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(d_AST))).add(id_AST).add(v_AST));
 				attachStuffBeforeVariable(variableDeclarator_AST, mods, t);
 				_references.defineVariable(id.getText().intern(), variableDeclarator_AST);
-				
+
 				currentAST.root = variableDeclarator_AST;
 				currentAST.child = variableDeclarator_AST!=null &&variableDeclarator_AST.getFirstChild()!=null ?
 					variableDeclarator_AST.getFirstChild() : variableDeclarator_AST;
@@ -3447,13 +3448,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = variableDeclarator_AST;
 	}
-	
+
 	public final void varInitializer() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode varInitializer_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -3491,13 +3492,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = varInitializer_AST;
 	}
-	
+
 	public final void initializer() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode initializer_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case LITERAL_void:
@@ -3559,15 +3560,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = initializer_AST;
 	}
-	
+
 	public final void arrayInitializer() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode arrayInitializer_AST = null;
 		Token  lc = null;
 		JavaNode lc_AST = null;
-		
+
 		try {      // for error handling
 			lc = LT(1);
 			lc_AST = (JavaNode)astFactory.create(lc);
@@ -3625,7 +3626,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop75;
 					}
-					
+
 				} while (true);
 				}
 				{
@@ -3677,13 +3678,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = arrayInitializer_AST;
 	}
-	
+
 	public final void expression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode expression_AST = null;
-		
+
 		try {      // for error handling
 			assignmentExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -3708,9 +3709,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = expression_AST;
 	}
-	
+
 	public final void parameterDeclaration() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode parameterDeclaration_AST = null;
@@ -3719,7 +3720,7 @@ public JavaParser(ParserSharedInputState state) {
 		Token  id = null;
 		JavaNode id_AST = null;
 		JavaNode pd_AST = null;
-		
+
 		try {      // for error handling
 			parameterModifier();
 			pm_AST = (JavaNode)returnAST;
@@ -3733,9 +3734,9 @@ public JavaParser(ParserSharedInputState state) {
 			if ( inputState.guessing==0 ) {
 				parameterDeclaration_AST = (JavaNode)currentAST.root;
 				parameterDeclaration_AST = (JavaNode)astFactory.make( (new ASTArray(4)).add((JavaNode)astFactory.create(JavaTokenTypes.PARAMETER_DEF,"PARAMETER_DEF")).add(pm_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(JavaTokenTypes.TYPE,STR_TYPE)).add(pd_AST))).add(id_AST));
-				
+
 				_references.defineVariable(id.getText().intern(), parameterDeclaration_AST);
-				
+
 				currentAST.root = parameterDeclaration_AST;
 				currentAST.child = parameterDeclaration_AST!=null &&parameterDeclaration_AST.getFirstChild()!=null ?
 					parameterDeclaration_AST.getFirstChild() : parameterDeclaration_AST;
@@ -3753,15 +3754,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = parameterDeclaration_AST;
 	}
-	
+
 	public final void parameterModifier() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode parameterModifier_AST = null;
 		Token  f = null;
 		JavaNode f_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -3813,13 +3814,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = parameterModifier_AST;
 	}
-	
+
 	public final void forInit() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode forInit_AST = null;
-		
+
 		try {      // for error handling
 			{
 			boolean synPredMatched114 = false;
@@ -3851,7 +3852,7 @@ public JavaParser(ParserSharedInputState state) {
 			else {
 				throw new NoViableAltException(LT(1), getFilename());
 			}
-			
+
 			}
 			if ( inputState.guessing==0 ) {
 				forInit_AST = (JavaNode)currentAST.root;
@@ -3874,13 +3875,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = forInit_AST;
 	}
-	
+
 	public final void forCond() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode forCond_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -3949,13 +3950,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = forCond_AST;
 	}
-	
+
 	public final void forIter() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode forIter_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -4024,13 +4025,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = forIter_AST;
 	}
-	
+
 	public final void casesGroup() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode casesGroup_AST = null;
-		
+
 		try {      // for error handling
 			{
 			int _cnt105=0;
@@ -4043,7 +4044,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					if ( _cnt105>=1 ) { break _loop105; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
-				
+
 				_cnt105++;
 			} while (true);
 			}
@@ -4070,13 +4071,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = casesGroup_AST;
 	}
-	
+
 	public final void tryBlock() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode tryBlock_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp100_AST = null;
 			tmp100_AST = (JavaNode)astFactory.create(LT(1));
@@ -4097,7 +4098,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop121;
 				}
-				
+
 			} while (true);
 			}
 			{
@@ -4188,13 +4189,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = tryBlock_AST;
 	}
-	
+
 	public final void aCase() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode aCase_AST = null;
-		
+
 		try {      // for error handling
 			{
 			switch ( LA(1)) {
@@ -4239,13 +4240,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = aCase_AST;
 	}
-	
+
 	public final void caseSList() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode caseSList_AST = null;
-		
+
 		try {      // for error handling
 			{
 			_loop110:
@@ -4257,7 +4258,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop110;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -4281,13 +4282,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = caseSList_AST;
 	}
-	
+
 	public final void expressionList() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode expressionList_AST = null;
-		
+
 		try {      // for error handling
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4305,7 +4306,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop128;
 				}
-				
+
 			} while (true);
 			}
 			if ( inputState.guessing==0 ) {
@@ -4329,13 +4330,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = expressionList_AST;
 	}
-	
+
 	public final void handler() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode handler_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp105_AST = null;
 			tmp105_AST = (JavaNode)astFactory.create(LT(1));
@@ -4369,13 +4370,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = handler_AST;
 	}
-	
+
 	public final void finallyBlock() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode finallyBlock_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp108_AST = null;
 			tmp108_AST = (JavaNode)astFactory.create(LT(1));
@@ -4399,13 +4400,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = finallyBlock_AST;
 	}
-	
+
 	public final void assignmentExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode assignmentExpression_AST = null;
-		
+
 		try {      // for error handling
 			conditionalExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4560,13 +4561,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = assignmentExpression_AST;
 	}
-	
+
 	public final void conditionalExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode conditionalExpression_AST = null;
-		
+
 		try {      // for error handling
 			logicalOrExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4628,13 +4629,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = conditionalExpression_AST;
 	}
-	
+
 	public final void logicalOrExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode logicalOrExpression_AST = null;
-		
+
 		try {      // for error handling
 			logicalAndExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4652,7 +4653,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop136;
 				}
-				
+
 			} while (true);
 			}
 			logicalOrExpression_AST = (JavaNode)currentAST.root;
@@ -4668,13 +4669,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = logicalOrExpression_AST;
 	}
-	
+
 	public final void logicalAndExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode logicalAndExpression_AST = null;
-		
+
 		try {      // for error handling
 			inclusiveOrExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4692,7 +4693,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop139;
 				}
-				
+
 			} while (true);
 			}
 			logicalAndExpression_AST = (JavaNode)currentAST.root;
@@ -4708,13 +4709,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = logicalAndExpression_AST;
 	}
-	
+
 	public final void inclusiveOrExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode inclusiveOrExpression_AST = null;
-		
+
 		try {      // for error handling
 			exclusiveOrExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4732,7 +4733,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop142;
 				}
-				
+
 			} while (true);
 			}
 			inclusiveOrExpression_AST = (JavaNode)currentAST.root;
@@ -4748,13 +4749,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = inclusiveOrExpression_AST;
 	}
-	
+
 	public final void exclusiveOrExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode exclusiveOrExpression_AST = null;
-		
+
 		try {      // for error handling
 			andExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4772,7 +4773,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop145;
 				}
-				
+
 			} while (true);
 			}
 			exclusiveOrExpression_AST = (JavaNode)currentAST.root;
@@ -4788,13 +4789,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = exclusiveOrExpression_AST;
 	}
-	
+
 	public final void andExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode andExpression_AST = null;
-		
+
 		try {      // for error handling
 			equalityExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4812,7 +4813,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop148;
 				}
-				
+
 			} while (true);
 			}
 			andExpression_AST = (JavaNode)currentAST.root;
@@ -4828,13 +4829,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = andExpression_AST;
 	}
-	
+
 	public final void equalityExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode equalityExpression_AST = null;
-		
+
 		try {      // for error handling
 			relationalExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4872,7 +4873,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop152;
 				}
-				
+
 			} while (true);
 			}
 			equalityExpression_AST = (JavaNode)currentAST.root;
@@ -4888,13 +4889,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = equalityExpression_AST;
 	}
-	
+
 	public final void relationalExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode relationalExpression_AST = null;
-		
+
 		try {      // for error handling
 			shiftExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4981,7 +4982,7 @@ public JavaParser(ParserSharedInputState state) {
 					else {
 						break _loop157;
 					}
-					
+
 				} while (true);
 				}
 				break;
@@ -5015,13 +5016,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = relationalExpression_AST;
 	}
-	
+
 	public final void shiftExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode shiftExpression_AST = null;
-		
+
 		try {      // for error handling
 			additiveExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -5067,7 +5068,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop161;
 				}
-				
+
 			} while (true);
 			}
 			shiftExpression_AST = (JavaNode)currentAST.root;
@@ -5083,13 +5084,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = shiftExpression_AST;
 	}
-	
+
 	public final void additiveExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode additiveExpression_AST = null;
-		
+
 		try {      // for error handling
 			multiplicativeExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -5127,7 +5128,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop165;
 				}
-				
+
 			} while (true);
 			}
 			additiveExpression_AST = (JavaNode)currentAST.root;
@@ -5143,13 +5144,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = additiveExpression_AST;
 	}
-	
+
 	public final void multiplicativeExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode multiplicativeExpression_AST = null;
-		
+
 		try {      // for error handling
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -5195,7 +5196,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					break _loop169;
 				}
-				
+
 			} while (true);
 			}
 			multiplicativeExpression_AST = (JavaNode)currentAST.root;
@@ -5211,13 +5212,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = multiplicativeExpression_AST;
 	}
-	
+
 	public final void unaryExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode unaryExpression_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case INC:
@@ -5318,9 +5319,9 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = unaryExpression_AST;
 	}
-	
+
 	public final void unaryExpressionNotPlusMinus() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode unaryExpressionNotPlusMinus_AST = null;
@@ -5328,7 +5329,7 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode lpb_AST = null;
 		Token  lp = null;
 		JavaNode lp_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case BNOT:
@@ -5474,9 +5475,9 @@ public JavaParser(ParserSharedInputState state) {
 			}
 			returnAST = unaryExpressionNotPlusMinus_AST;
 		}
-		
+
 	public final void postfixExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode postfixExpression_AST = null;
@@ -5494,20 +5495,20 @@ public JavaParser(ParserSharedInputState state) {
 		JavaNode in_AST = null;
 		Token  de = null;
 		JavaNode de_AST = null;
-		Token t; _buildList.clear(); 
+		Token t; _buildList.clear();
 		StringBuffer buf = new StringBuffer(50);
-		
-		
+
+
 		try {      // for error handling
 			t=primaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
 			if ( inputState.guessing==0 ) {
-				
+
 				if (t != null)
 				{
 				buf.append(t.getText().intern());
 				}
-				
+
 			}
 			{
 			_loop182:
@@ -5520,15 +5521,15 @@ public JavaParser(ParserSharedInputState state) {
 					astFactory.makeASTRoot(currentAST, tmp151_AST);
 					match(DOT);
 					if ( inputState.guessing==0 ) {
-						
+
 						if (t != null && _buildList.isEmpty())
 						{
 						String text = t.getText().intern();
 						addIdentifier(text);
 						_buildList.add(text);
-						
+
 						}
-						
+
 					}
 					{
 					switch ( LA(1)) {
@@ -5540,13 +5541,13 @@ public JavaParser(ParserSharedInputState state) {
 						match(IDENT);
 						if ( inputState.guessing==0 ) {
 							_buildList.add(id.getText().intern());
-							
+
 							if (t != null)
 							{
 							buf.append(".".intern());
 							buf.append(id.getText().intern());
 							}
-							
+
 						}
 						break;
 					}
@@ -5630,7 +5631,7 @@ public JavaParser(ParserSharedInputState state) {
 							else {
 								if ( _cnt181>=1 ) { break _loop181; } else {throw new NoViableAltException(LT(1), getFilename());}
 							}
-							
+
 							_cnt181++;
 						} while (true);
 						}
@@ -5737,16 +5738,16 @@ public JavaParser(ParserSharedInputState state) {
 			}
 			}
 			if ( inputState.guessing==0 ) {
-				
+
 				if (t != null)
 				{
 				_references.addReference(buf.toString().intern(), (JavaNode)currentAST.root);
 				}
-				
+
 				if (!_buildList.isEmpty())
 				{
 				_buf.setLength(0);
-				
+
 				for (int i = 0, size = _buildList.size(); i < size; i++)
 				{
 				_buf.append((String)_buildList.get(i));
@@ -5755,7 +5756,7 @@ public JavaParser(ParserSharedInputState state) {
 				_buf.setLength(_buf.length() - 1);
 				addIdentifier(_buf.toString());
 				}
-				
+
 			}
 			postfixExpression_AST = (JavaNode)currentAST.root;
 		}
@@ -5770,24 +5771,24 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = postfixExpression_AST;
 	}
-	
+
 /** object instantiation.
  *  Trees are built as illustrated by the following input/tree pairs:
  *  <pre>
  *  new T()
- *  
+ *
  *  new
  *   |
  *   T --  ELIST
  *           |
  *          arg1 -- arg2 -- .. -- argn
- *  
+ *
  *  new int[]
  *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR
- *  
+ *
  *  new int[] {1,2}
  *
  *  new
@@ -5797,7 +5798,7 @@ public JavaParser(ParserSharedInputState state) {
  *                                EXPR -- EXPR
  *                                  |      |
  *                                  1      2
- *  
+ *
  *  new int[3]
  *  new
  *   |
@@ -5806,9 +5807,9 @@ public JavaParser(ParserSharedInputState state) {
  *              EXPR
  *                |
  *                3
- *  
+ *
  *  new int[1][2]
- *  
+ *
  *  new
  *   |
  *  int -- ARRAY_DECLARATOR
@@ -5821,11 +5822,11 @@ public JavaParser(ParserSharedInputState state) {
  *  </pre>
  */
 	public final void newExpression() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode newExpression_AST = null;
-		
+
 		try {      // for error handling
 			JavaNode tmp159_AST = null;
 			tmp159_AST = (JavaNode)astFactory.create(LT(1));
@@ -5996,13 +5997,13 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = newExpression_AST;
 	}
-	
+
 	public final void constant() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode constant_AST = null;
-		
+
 		try {      // for error handling
 			switch ( LA(1)) {
 			case NUM_INT:
@@ -6076,15 +6077,15 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = constant_AST;
 	}
-	
+
 	public final void newArrayDeclarator() throws RecognitionException, TokenStreamException {
-		
+
 		returnAST = null;
 		ASTPair currentAST = new ASTPair();
 		JavaNode newArrayDeclarator_AST = null;
 		Token  lb = null;
 		JavaNode lb_AST = null;
-		
+
 		try {      // for error handling
 			{
 			int _cnt196=0;
@@ -6149,7 +6150,7 @@ public JavaParser(ParserSharedInputState state) {
 				else {
 					if ( _cnt196>=1 ) { break _loop196; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
-				
+
 				_cnt196++;
 			} while (true);
 			}
@@ -6166,8 +6167,8 @@ public JavaParser(ParserSharedInputState state) {
 		}
 		returnAST = newArrayDeclarator_AST;
 	}
-	
-	
+
+
 	public static final String[] _tokenNames = {
 		"<0>",
 		"EOF",
@@ -6334,7 +6335,7 @@ public JavaParser(ParserSharedInputState state) {
 		"EXPONENT",
 		"FLOAT_SUFFIX"
 	};
-	
+
 	private static final long[] mk_tokenSet_0() {
 		long[] data = { 72180739340238848L, 392960L, 0L, 0L};
 		return data;
@@ -6670,5 +6671,5 @@ public JavaParser(ParserSharedInputState state) {
 		return data;
 	}
 	private static final BitSet _tokenSet_66 = new BitSet(mk_tokenSet_66());
-	
+
 	}

@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -67,6 +67,7 @@ public class IndentationPanel
     private JCheckBox _alignMethodCallChainsCheckBox;
     private JCheckBox _alignMethodDefParamsCheckBox;
     private JCheckBox _alignVariablesCheckBox;
+    private JCheckBox _alignTernaryOperatorCheckBox;
     private JCheckBox _indentCaseSwitchCheckBox;
     private JCheckBox _indentContinuationCheckBox;
     private JCheckBox _indentContinuationOperatorCheckBox;
@@ -167,8 +168,10 @@ public class IndentationPanel
                               _alignAssignmentsCheckBox.isSelected());
         this.prefs.putBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
                               _alignMethodDefParamsCheckBox.isSelected());
+        this.prefs.putBoolean(Keys.ALIGN_TERNARY_OPERATOR,
+                              _alignTernaryOperatorCheckBox.isSelected());
 
-        /*this.prefs.putBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+        /*this.prefs.putBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                               _indentMethodCallCheckBox.isSelected());*/
         this.prefs.putBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
                               _indentContinuationOperatorCheckBox.isSelected());
@@ -209,7 +212,7 @@ public class IndentationPanel
 
         /*if (_indentParametersCheckBox.isSelected())
         {
-            this.prefs.put(Keys.INDENT_SIZE_PARAMETERS, 
+            this.prefs.put(Keys.INDENT_SIZE_PARAMETERS,
                            (String)_indentParametersComboBox.getSelectedItem());
         }
         else
@@ -396,11 +399,11 @@ public class IndentationPanel
         indentPanelLayout.setConstraints(indentThrowsComboCheckBox, c);
         indentPanel.add(indentThrowsComboCheckBox);
 
-        /*int indentParams = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS, 
+        /*int indentParams = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
                                              Defaults.INDENT_SIZE_PARAMETERS);
-        NumberComboBoxPanelCheckBox indentParametersComboCheckBox = 
-        new NumberComboBoxPanelCheckBox("Parameters indent:", 
-                                        indentParams > -1, "", identItems, 
+        NumberComboBoxPanelCheckBox indentParametersComboCheckBox =
+        new NumberComboBoxPanelCheckBox("Parameters indent:",
+                                        indentParams > -1, "", identItems,
                                         (indentParams > -1)
                                             ? String.valueOf(indentParams)
                                             : "0");
@@ -409,8 +412,8 @@ public class IndentationPanel
                                                                  .getComboBox();
         _indentParametersCheckBox.addActionListener(this.trigger);
         _indentParametersComboBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 8, GridBagConstraints.REMAINDER, 1, 
-                                   1.0, 1.0, GridBagConstraints.NORTHWEST, 
+        SwingHelper.setConstraints(c, 0, 8, GridBagConstraints.REMAINDER, 1,
+                                   1.0, 1.0, GridBagConstraints.NORTHWEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         indentPanelLayout.setConstraints(indentParametersComboCheckBox, c);
         indentPanel.add(indentParametersComboCheckBox);*/
@@ -538,12 +541,12 @@ public class IndentationPanel
         miscPanel.add(_indentContinuationTernaryCheckBox);
 
         /*_indentMethodCallCheckBox = new JCheckBox(
-            "Force indentation for parameters", 
-            this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+            "Force indentation for parameters",
+            this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                   Defaults.INDENT_USE_PARAMS_METHOD_CALL));
         _indentMethodCallCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 5, GridBagConstraints.REMAINDER, 1, 
-                                   1.0, 1.0, GridBagConstraints.WEST, 
+        SwingHelper.setConstraints(c, 0, 5, GridBagConstraints.REMAINDER, 1,
+                                   1.0, 1.0, GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         miscPanelLayout.setConstraints(_indentMethodCallCheckBox, c);
         miscPanel.add(_indentMethodCallCheckBox);*/
@@ -580,7 +583,7 @@ public class IndentationPanel
                                                                             Keys.ALIGN_PARAMS_METHOD_DEF,
                                                                             Defaults.ALIGN_PARAMS_METHOD_DEF));
         _alignMethodDefParamsCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(c, 0, 1, 1, 1, 1.0, 1.0,
+        SwingHelper.setConstraints(c, 0, 1, 1, 1, 1.0, 0.0,
                                    GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         alignPanelLayout.setConstraints(_alignMethodDefParamsCheckBox, c);
@@ -596,6 +599,21 @@ public class IndentationPanel
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         alignPanelLayout.setConstraints(_alignMethodCallChainsCheckBox, c);
         alignPanel.add(_alignMethodCallChainsCheckBox);
+
+
+        _alignTernaryOperatorCheckBox       = new JCheckBox("Ternary operator",
+                                                       this.prefs.getBoolean(
+                                                                             Keys.ALIGN_TERNARY_OPERATOR,
+                                                                             Defaults.ALIGN_TERNARY_OPERATOR));
+        _alignTernaryOperatorCheckBox      .addActionListener(this.trigger);
+        SwingHelper.setConstraints(c, 0, 2, GridBagConstraints.REMAINDER, 1,
+                                   1.0, 1.0, GridBagConstraints.WEST,
+                                   GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        alignPanelLayout.setConstraints(_alignTernaryOperatorCheckBox      , c);
+        alignPanel.add(_alignTernaryOperatorCheckBox      );
+
+
+
 
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
