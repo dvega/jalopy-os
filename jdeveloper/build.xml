@@ -24,6 +24,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- load the global properties -->
   <property file="../build/build.properties" />
 
+  <property name="dir.lib" value="lib" />
   <property name="dir.src" value="src" />
   <property name="dir.src.java" value="${dir.src}/java" />
   <property name="dir.src.res" value="${dir.src}/resources" />
@@ -32,8 +33,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Defines the project classpath                                        -->
   <!-- ==================================================================== -->
   <path id="project.classpath" >
-    <pathelement path="${LIB.PATH.JDEVELOPER}" />
     <fileset dir="${DIR.LIB}" >
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${dir.lib}" >
       <include name="*.jar" />
     </fileset>
     <pathelement path="${DIR.COMPILE}" />
