@@ -14,7 +14,7 @@
 </articleinfo>
 
 <simplesect>
-<title>1.0 Beta 9 (2002-11-10)</title>
+<title>1.0 Beta 9 (2002-11-11)</title>
 <orderedlist numeration="lowerroman">
 <listitem>
 New Features
@@ -67,7 +67,7 @@ used message bundles, please <ulink url="./contact.html">contact</ulink> me
 </listitem>
 
 <listitem>
-Jalopy now contains a simple Code Inspector that is able to inspector your sources for
+Jalopy now contains a simple Code Inspector that is able to inspect your sources for
 naming convention violations and possible code weaknesses. See the
 <ulink url="./inspector.html">Code Inspector</ulink> chapter in the manual
 </listitem>
