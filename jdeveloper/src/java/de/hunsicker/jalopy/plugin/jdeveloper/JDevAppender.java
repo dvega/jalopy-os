@@ -149,7 +149,7 @@ final class JDevAppender
             }
             catch (NumberFormatException ex)
             {
-                // never happens as the regexp already validated the numbers
+                // never happens as the regex already validated the numbers
             }
 
             _page.log(new Message(text, new File(filename), line, column, 0, type));

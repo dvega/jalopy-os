@@ -121,7 +121,7 @@ final class JEditAppender
             }
             catch (NumberFormatException ex)
             {
-                // never happens as the regexp already validated the numbers
+                // never happens as the regex already validated the numbers
             }
 
             MessageView.getInstance().addMessage(
