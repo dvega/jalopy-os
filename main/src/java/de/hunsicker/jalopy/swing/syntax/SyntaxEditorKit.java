@@ -1,24 +1,22 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
-/*
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- *
- * The Original Code is SATC. The Initial Developer of the Original Code is
- * Bogdan Mitu.
- *
- * Copyright(C) 2001-2002 Bogdan Mitu.
+
+/**
+ * MoeSyntaxEditorKit.java - adapted from SyntaxEditorKit.java - jEdit's own editor kit
+ * to add Syntax highlighting to the BlueJ programming environment. Copyright (C) 1998,
+ * 1999 Slava Pestov This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at your option)
+ * any later version. This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+ * details. You should have received a copy of the GNU Lesser General Public License
+ * along with this library; if not, write to the Free Software Foundation, Inc., 59
+ * Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 package de.hunsicker.jalopy.swing.syntax;
 
@@ -26,65 +24,64 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.View;
-
-import de.hunsicker.antlr.CharScanner;
-import de.hunsicker.jalopy.language.JavaLexer;
+import javax.swing.text.ViewFactory;
 
 
 /**
- * DOCUMENT ME!
+ * An implementation of <code>EditorKit</code> used for syntax colorizing. It implements
+ * a view factory that maps elements to syntax colorizing views.
+ * 
+ * <p>
+ * This editor kit can be plugged into text components to give them colorization
+ * features. It can be used in other applications, not just jEdit. The syntax colorizing
+ * package doesn't depend on any jEdit classes.
+ * </p>
  *
- * @author Bogdan Mitu
- * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
- *
- * @since 1.0b9
+ * @author Slava Pestov
+ * @author Bruce Quig (BlueJ specific modifications)
  */
-final class SyntaxEditorKit
+public final class SyntaxEditorKit
     extends DefaultEditorKit
+    implements ViewFactory
 {
-    //~ Constructors ---------------------------------------------------------------------
-
-    public SyntaxEditorKit()
-    {
-    }
-
     //~ Methods --------------------------------------------------------------------------
 
-    public Document createDefaultDocument()
-    {
-        Document doc = new SyntaxDocument();
-        installEditorKit(doc);
-
-        return doc;
-    }
-
-
     /**
-     * DOCUMENT ME!
-     *
-     * @param elem DOCUMENT ME!
+     * Returns an instance of a view factory that can be used for creating views from
+     * elements. This implementation returns the current instance, because this class
+     * already implements <code>ViewFactory</code>.
      *
      * @return DOCUMENT ME!
      */
-    public View createView(Element elem)
+    public ViewFactory getViewFactory()
     {
-        SyntaxView view = new SyntaxView(elem);
-
-        return view;
+        return this;
     }
 
 
     /**
-     * Installs this editor kit into a document.
+     * Creates a view from an element that can be used for painting that element.
      *
-     * @param doc DOCUMENT ME!
+     * @param elem The element
+     *
+     * @return a new SyntaxView for an element
      */
-    public void installEditorKit(Document doc)
+    public View create(Element elem)
     {
-        SyntaxStream stream = new SyntaxStream(doc);
-        CharScanner lexer = new JavaLexer(stream);
+        return new SyntaxView(elem);
+    }
 
-        doc.putProperty("stream" /* NOI18N */, stream);
-        doc.putProperty("lexer" /* NOI18N */, lexer);
+
+    /**
+     * Creates a new instance of the default document for this editor kit.
+     *
+     * @return DOCUMENT ME!
+     */
+    public Document createDefaultDocument()
+    {
+        SyntaxDocument document = new DefaultSyntaxDocument();
+        document.setTokenMarker(new JavaTokenMarker());
+
+        return document;
     }
 }

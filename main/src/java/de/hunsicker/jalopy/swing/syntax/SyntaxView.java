@@ -1,515 +1,497 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
-/*
- * The contents of this file are subject to the Mozilla Public
- * License Version 1.1 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.mozilla.org/MPL/
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- *
- * The Original Code is SATC. The Initial Developer of the Original Code is
- * Bogdan Mitu.
- *
- * Copyright(C) 2001-2002 Bogdan Mitu.
- */
+
+// Copyright (c) 2000 BlueJ Group, Monash University
+//
+// This software is made available under the terms of the "MIT License"
+// A copy of this license is included with this source distribution
+// in "license.txt" and is also available at:
+// http://www.opensource.org/licenses/mit-license.html
+// Any queries should be directed to Michael Kolling: mik@mip.sdu.dk
 package de.hunsicker.jalopy.swing.syntax;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import javax.swing.JTextArea;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
+
+/**
+ * SyntaxView.java - adapted from SyntaxView.java - jEdit's own Swing view implementation
+ * to add Syntax highlighting to the BlueJ programming environment.
+ */
 import javax.swing.text.PlainView;
+import javax.swing.text.Position;
 import javax.swing.text.Segment;
 import javax.swing.text.Utilities;
 
-import de.hunsicker.antlr.CharScanner;
-import de.hunsicker.antlr.CharStreamException;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.TokenStreamException;
-import de.hunsicker.antlr.TokenStreamIOException;
-import de.hunsicker.jalopy.language.JavaLexer;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
-import de.hunsicker.util.StringHelper;
-
 
 /**
- * A View for simple multi-line text with support for syntax highlight. When a line is to
- * be rendered, the document lexer is called to break the line into tokens, and each
- * token is rendered according to its type.
+ * A Swing view implementation that colorizes lines of a SyntaxDocument using a
+ * TokenMarker. This class should not be used directly; a SyntaxEditorKit should be used
+ * instead.
  *
- * @author Bogdan Mitu
- * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
- *
- * @since 1.0b9
+ * @author Slava Pestov
+ * @author Bruce Quig
+ * @author Michael Kolling
+ * @version $Id$
  */
-final class SyntaxView
+public final class SyntaxView
     extends PlainView
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final Color COLOR_KEYWORD = Color.blue;
-    private static final Color COLOR_COMMENT = new Color(0, 128, 128);
-    private static final Color COLOR_NUMBER = Color.red;
-    private static final Color COLOR_LITERAL = Color.gray;
-    private static final Color COLOR_OPERATOR = new Color(0, 0, 128);
+    static final short TAG_WIDTH = 0;
+    static final int BREAKPOINT_OFFSET = TAG_WIDTH + 2;
 
     //~ Instance variables ---------------------------------------------------------------
 
-    /** DOCUMENT ME! */
-    protected int tabBase;
-    private DrawLineAction drawLineAction = new DrawLineAction();
-    private Segment lineSegment = new Segment();
+    FontMetrics lineNumberMetrics;
+    private Font defaultFont;
 
-    /** Make this global to avoid creating a new one for each line parsed. */
-    private Segment tokenSegment = new Segment();
+    // protected FontMetrics metrics;  is inherited from PlainView
+    private Font lineNumberFont;
+    private Font smallLineNumberFont;
+
+    // private members
+    private Segment line;
+    private boolean initialised = false;
 
     //~ Constructors ---------------------------------------------------------------------
 
+    /**
+     * Creates a new <code>SyntaxView</code> for painting the specified element.
+     *
+     * @param elem The element
+     */
     public SyntaxView(Element elem)
     {
         super(elem);
+        line = new Segment();
     }
 
     //~ Methods --------------------------------------------------------------------------
 
-    public int getTabSize()
-    {
-        return ((JTextArea) getContainer()).getTabSize();
-    }
-
-
     /**
-     * DOCUMENT ME!
+     * Paints the specified line. This method performs the following: - Gets the token
+     * marker and color table from the current document, typecast to a SyntaxDocument. -
+     * Tokenizes the required line by calling the markTokens() method of the token
+     * marker. - Paints each token, obtaining the color by looking up the the Token.id
+     * value in the color table. If either the document doesn't implement
+     * SyntaxDocument, or if the returned token marker is null, the line will be painted
+     * with no colorization. Currently, we assume that the whole document uses the same
+     * font. To support font changes, some of the code from "initilise" needs to be here
+     * to be done repeatedly for each line.
      *
-     * @param g DOCUMENT ME!
-     * @param x DOCUMENT ME!
-     * @param y DOCUMENT ME!
-     * @param p0 DOCUMENT ME!
-     * @param p1 DOCUMENT ME!
-     *
-     * @return DOCUMENT ME!
-     *
-     * @throws BadLocationException DOCUMENT ME!
+     * @param lineIndex The line number
+     * @param g The graphics context
+     * @param x The x co-ordinate where the line should be painted
+     * @param y The y co-ordinate where the line should be painted
      */
-    public int drawUnselectedText(
+    public void drawLine(
+        int      lineIndex,
         Graphics g,
         int      x,
-        int      y,
-        int      p0,
-        int      p1)
-      throws BadLocationException
+        int      y)
     {
-        SyntaxDocument document = (SyntaxDocument) getDocument();
-        Element root = document.getDefaultRootElement();
-
-        int lineIndex = root.getElementIndex(p0);
-        SyntaxDocument.LeafElement line =
-            (SyntaxDocument.LeafElement) root.getElement(lineIndex);
-
-        // no need to tokenize commnent
-        if (line.comment)
+        if (!initialised)
         {
-            return drawCommentUnselectedText(g, x, y, p0, p1);
+            initialise(g);
         }
 
-        int result = 0;
+        SyntaxDocument document = (SyntaxDocument) getDocument();
+        TokenMarker tokenMarker = document.getTokenMarker();
+
+        Color def = getDefaultColor();
 
         try
         {
-            document.getText(p0, p1 - p0, lineSegment);
-            drawLineAction.initialize(g, x, y, lineSegment, p0);
+            Element lineElement = getElement().getElement(lineIndex);
+            int start = lineElement.getStartOffset();
+            int end = lineElement.getEndOffset();
 
-            SyntaxStream stream =
-                (SyntaxStream) document.getProperty("stream" /* NOI18N */);
-            stream.setRange(p0, p1);
+            document.getText(start, end - (start + 1), line);
 
-            JavaLexer lexer = (JavaLexer) document.getProperty("lexer" /* NOI18N */);
-            lexer.getInputState().reset();
-            lexer.setLine(lineIndex);
+            g.setColor(def);
 
-            if (isCommentNext(lexer))
+            //drawLineNumber(g, lineIndex + 1, x, y);
+            // if no tokenMarker just paint as plain text
+            if (tokenMarker == null)
             {
-                return drawCommentUnselectedText(
-                    stream, document, lexer, lineIndex, g, x, y, p0, p1);
+                Utilities.drawTabbedText(line, x + BREAKPOINT_OFFSET, y, g, this, 0);
             }
-
-            /**
-             * @todo the call nextToken() may fail if we draw a partial line, i.e. part
-             *       of a selection
-             */
-            for (
-                Token token = lexer.nextToken(); token.getType() != Token.EOF_TYPE;
-                token = lexer.nextToken())
+            else
             {
-                drawLineAction.action(token);
-                result = drawLineAction.x;
-
-                if (isCommentNext(lexer))
-                {
-                    return drawCommentUnselectedText(
-                        stream, document, lexer, lineIndex, g, x, y, p0, p1);
-                }
+                paintSyntaxLine(
+                    line, lineIndex, x + BREAKPOINT_OFFSET, y, g, document, tokenMarker,
+                    def);
             }
         }
-        catch (TokenStreamIOException ex)
+        catch (BadLocationException bl)
         {
-            ;
+            // shouldn't happen
+            bl.printStackTrace();
         }
-        catch (TokenStreamException ex)
-        {
-            ;
-        }
-        catch (RuntimeException ex)
-        {
-            System.err.println(ex.getClass().getName());
-            ex.printStackTrace();
-        }
-        catch (Exception ex)
-        {
-            System.err.println(ex.getClass().getName());
-            ex.printStackTrace();
-        }
-
-        return result;
     }
 
 
     /**
-     * DOCUMENT ME!
+     * redefined from PlainView private method to allow for redefinition of modelToView
+     * method
      *
-     * @param x DOCUMENT ME!
-     * @param tabOffset DOCUMENT ME!
+     * @param a DOCUMENT ME!
+     * @param line DOCUMENT ME!
      *
      * @return DOCUMENT ME!
+     */
+    public Rectangle lineToRect(
+        Shape a,
+        int   line)
+    {
+        Rectangle r = null;
+
+        if (metrics != null)
+        {
+            Rectangle alloc = a.getBounds();
+            r = new Rectangle(
+                    alloc.x, alloc.y + (line * metrics.getHeight()), alloc.width,
+                    metrics.getHeight());
+        }
+
+        return r;
+    }
+
+
+    /**
+     * Provides a mapping from the document model coordinate space to the coordinate
+     * space of the view mapped to it.  This is a redefined method from PlainView that
+     * adds an offset for the view to allow for a breakpoint area in the associated
+     * editor.
+     *
+     * @param pos the position to convert >= 0
+     * @param a the allocated region to render into
+     * @param b DOCUMENT ME!
+     *
+     * @return the bounding box of the given position
+     *
+     * @exception BadLocationException if the given position does not represent a valid
+     *            location in the associated document
+     *
+     * @see View#modelToView
+     */
+    public Shape modelToView(
+        int           pos,
+        Shape         a,
+        Position.Bias b)
+      throws BadLocationException
+    {
+        // line coordinates
+        Document doc = getDocument();
+        Element map = getElement();
+        int lineIndex = map.getElementIndex(pos);
+        Rectangle lineArea = lineToRect(a, lineIndex);
+
+        // determine span from the start of the line
+        int tabBase = lineArea.x + TAG_WIDTH + 2;
+
+        Element line = map.getElement(lineIndex);
+        int p0 = line.getStartOffset();
+        Segment buffer = getLineBuffer();
+        doc.getText(p0, pos - p0, buffer);
+
+        int xOffs = Utilities.getTabbedTextWidth(buffer, metrics, tabBase, this, p0);
+
+        // fill in the results and return, include breakpoint area offset
+        lineArea.x += (xOffs + (TAG_WIDTH + 2));
+        lineArea.width = 1;
+        lineArea.height = metrics.getHeight();
+
+        return lineArea;
+    }
+
+
+    // --- TabExpander interface methods -----------------------------------
+
+    /**
+     * Returns the next tab stop position after a given reference position. This
+     * implementation does not support things like centering so it ignores the tabOffset
+     * argument.
+     *
+     * @param x the current position >= 0
+     * @param tabOffset the position within the text stream that the tab occurred at >=
+     *        0.
+     *
+     * @return the tab stop, measured in points >= 0
      */
     public float nextTabStop(
         float x,
         int   tabOffset)
     {
-        int tabSize = getTabSize() * this.metrics.charWidth('m');
+        // calculate tabsize using fontwidth and tab spaces
+        int tabSize = getTabSize() * metrics.charWidth('m');
 
         if (tabSize == 0)
         {
             return x;
         }
 
-        int ntabs = (((int) x) - this.tabBase) / tabSize;
+        int tabStopNumber = (int) ((x - BREAKPOINT_OFFSET) / tabSize) + 1;
 
-        return this.tabBase + ((ntabs + 1) * tabSize);
+        return (tabStopNumber * tabSize) + BREAKPOINT_OFFSET + 2;
+    }
+
+
+    /*
+ * redefined paint method to paint breakpoint area
+ *
+ * @param g DOCUMENT ME!
+ * @param allocation DOCUMENT ME!
+ *
+public void paint(
+    Graphics g,
+    Shape    allocation)
+{
+    // paint the lines
+    super.paint(g, allocation);
+
+    // paint the tag separator line
+    g.setColor(Color.gray);
+
+    Rectangle bounds = allocation.getBounds();
+
+    g.drawLine(
+        bounds.x + TAG_WIDTH, 0, bounds.x + TAG_WIDTH,
+        bounds.y + bounds.height + 1);
+}*/
+
+    /**
+     * Provides a mapping from the view coordinate space to the logical coordinate space
+     * of the model.
+     *
+     * @param fx the X coordinate >= 0
+     * @param fy the Y coordinate >= 0
+     * @param a the allocated region to render into
+     * @param bias DOCUMENT ME!
+     *
+     * @return the location within the model that best represents the given point in the
+     *         view >= 0
+     *
+     * @see View#viewToModel
+     */
+    public int viewToModel(
+        float           fx,
+        float           fy,
+        Shape           a,
+        Position.Bias[] bias)
+    {
+        // PENDING(prinz) properly calculate bias
+        bias[0] = Position.Bias.Forward;
+
+        Rectangle alloc = a.getBounds();
+        Document doc = getDocument();
+        int x = (int) fx;
+        int y = (int) fy;
+
+        if (y < alloc.y)
+        {
+            // above the area covered by this icon, so the the position
+            // is assumed to be the start of the coverage for this view.
+            return getStartOffset();
+        }
+        else if (y > (alloc.y + alloc.height))
+        {
+            // below the area covered by this icon, so the the position
+            // is assumed to be the end of the coverage for this view.
+            return getEndOffset() - 1;
+        }
+        else
+        {
+            // positioned within the coverage of this view vertically,
+            // so we figure out which line the point corresponds to.
+            // if the line is greater than the number of lines contained, then
+            // simply use the last line as it represents the last possible place
+            // we can position to.
+            Element map = doc.getDefaultRootElement();
+            int lineIndex = Math.abs((y - alloc.y) / metrics.getHeight());
+
+            if (lineIndex >= map.getElementCount())
+            {
+                return getEndOffset() - 1;
+            }
+
+            Element line = map.getElement(lineIndex);
+
+            if (x < alloc.x)
+            {
+                // point is to the left of the line
+                return line.getStartOffset();
+            }
+            else if (x > (alloc.x + alloc.width))
+            {
+                // point is to the right of the line
+                return line.getEndOffset() - 1;
+            }
+            else
+            {
+                // Determine the offset into the text
+                try
+                {
+                    Segment buffer = getLineBuffer();
+                    int p0 = line.getStartOffset();
+                    int p1 = line.getEndOffset() - 1;
+                    doc.getText(p0, p1 - p0, buffer);
+
+                    // add Moe breakpoint offset area width
+                    int tabBase = alloc.x + TAG_WIDTH + 2;
+                    int offs =
+                        p0
+                        + Utilities.getTabbedTextOffset(
+                            buffer, metrics, tabBase, x, this, p0);
+
+                    return offs;
+                }
+                catch (BadLocationException e)
+                {
+                    // should not happen
+                    return -1;
+                }
+            }
+        }
     }
 
 
     /**
-     * DOCUMENT ME!
+     * Return default foreground colour
+     *
+     * @return DOCUMENT ME!
+     */
+    protected Color getDefaultColor()
+    {
+        return getContainer().getForeground();
+    }
+
+
+    /**
+     * Draw the line number in front of the line
      *
      * @param g DOCUMENT ME!
-     * @param a DOCUMENT ME!
+     * @param lineNumber DOCUMENT ME!
+     * @param x DOCUMENT ME!
+     * @param y DOCUMENT ME!
      */
-    public void paint(
+    private void drawLineNumber(
         Graphics g,
-        Shape    a)
+        int      lineNumber,
+        int      x,
+        int      y)
     {
-        Rectangle alloc = (Rectangle) a;
-        this.tabBase = alloc.x;
-        super.paint(g, a);
-    }
+        String number = Integer.toString(lineNumber);
+        int stringWidth = lineNumberMetrics.stringWidth(number);
+        int xoffset = BREAKPOINT_OFFSET - stringWidth - 4;
 
-
-    /**
-     * Determines whether the next token in the stream represents a multi-line comment.
-     *
-     * @param lexer the token lexer.
-     *
-     * @return <code>true</code> if the next token represents a multi-line comment.
-     *
-     * @throws CharStreamException DOCUMENT ME!
-     */
-    private boolean isCommentNext(CharScanner lexer)
-      throws CharStreamException
-    {
-        switch (lexer.LA(1))
+        if (xoffset < -2) // if it doesn't fit, shift one pixel over.
         {
-            case '/' :
-
-                switch (lexer.LA(2))
-                {
-                    case '*' :
-                        return true;
-                }
-
-                break;
+            xoffset++;
         }
 
-        return false;
+        if (xoffset < -2)
+        { // if it still doesn't fit...
+            g.setFont(smallLineNumberFont);
+            g.drawString(number, x - 3, y);
+        }
+        else
+        {
+            g.setFont(lineNumberFont);
+            g.drawString(number, x + xoffset, y);
+        }
+
+        g.setFont(defaultFont);
     }
 
 
     /**
-     * Renders the given range in the model as unselected comment text.
+     * Initialise some fields after we get a graphics context for the first time
      *
-     * @param g the graphics context
-     * @param x the starting X coordinate >= 0
-     * @param y the starting Y coordinate >= 0
-     * @param p0 the beginning position in the model >= 0
-     * @param p1 the ending position in the model >= 0
-     *
-     * @return the X location of the end of the range >= 0
-     *
-     * @exception BadLocationException if the range is invalid
+     * @param g DOCUMENT ME!
      */
-    private int drawCommentUnselectedText(
-        Graphics g,
-        int      x,
-        int      y,
-        int      p0,
-        int      p1)
-      throws BadLocationException
+    private void initialise(Graphics g)
     {
-        g.setColor(COLOR_COMMENT);
+        defaultFont = g.getFont();
+        lineNumberFont = defaultFont.deriveFont(9.0f);
+        smallLineNumberFont = defaultFont.deriveFont(7.0f);
 
-        Document document = getDocument();
-        document.getText(p0, p1 - p0, lineSegment);
-
-        int ret = Utilities.drawTabbedText(lineSegment, x, y, g, this, p0);
-
-        return ret;
+        Component c = getContainer();
+        lineNumberMetrics = c.getFontMetrics(lineNumberFont);
+        initialised = true;
     }
 
 
-    private int drawCommentUnselectedText(
-        SyntaxStream   stream,
-        SyntaxDocument document,
-        JavaLexer      lexer,
+    /**
+     * paints a line with syntax highlighting, redefined from DefaultSyntaxDocument.
+     *
+     * @param line DOCUMENT ME!
+     * @param lineIndex DOCUMENT ME!
+     * @param x DOCUMENT ME!
+     * @param y DOCUMENT ME!
+     * @param g DOCUMENT ME!
+     * @param document DOCUMENT ME!
+     * @param tokenMarker DOCUMENT ME!
+     * @param def DOCUMENT ME!
+     */
+    private void paintSyntaxLine(
+        Segment        line,
         int            lineIndex,
-        Graphics       g,
         int            x,
         int            y,
-        int            p0,
-        int            p1)
-      throws CharStreamException, BadLocationException
+        Graphics       g,
+        SyntaxDocument document,
+        TokenMarker    tokenMarker,
+        Color          def)
     {
-        stream.setRange(p0, document.getLength());
-        lexer.getInputState().reset();
-        lexer.setLine(lineIndex);
-        lexer.getInputBuffer().mark();
-        lexer.consume();
+        Color[] colors = document.getColors();
+        Token tokens = tokenMarker.markTokens(line, lineIndex);
+        int offset = 0;
 
-        int l = lexer.getLine();
-
-        int c = JavaLexer.EOF_CHAR;
-SEEK_FORWARD: 
-        while ((c = lexer.LA(1)) != JavaLexer.EOF_CHAR)
+        for (;;)
         {
-            lexer.consume();
+            byte id = tokens.id;
 
-            switch (c)
+            if (id == Token.END)
             {
-                case '*' :
-
-                    switch (lexer.LA(1))
-                    {
-                        case '/' :
-                            lexer.consume();
-                            lexer.consume();
-
-                            break SEEK_FORWARD;
-                    }
-
-                    break;
-            }
-        }
-
-        String comment = lexer.getInputBuffer().getMarkedChars();
-        int lineBreaks = StringHelper.occurs('\n', comment);
-        lexer.getInputBuffer().commit();
-
-        Element root = document.getDefaultRootElement();
-
-        for (int i = l, size = i + lineBreaks; i <= size; i++)
-        {
-            SyntaxDocument.LeafElement el =
-                (SyntaxDocument.LeafElement) root.getElement(i);
-            el.comment = true;
-        }
-
-        return drawCommentUnselectedText(g, x, y, p0, p1);
-    }
-
-    //~ Inner Classes --------------------------------------------------------------------
-
-    final class DrawLineAction
-    {
-        Graphics g;
-        int docOffset;
-        int x;
-        int y;
-
-        public void action(Token token)
-        {
-            switch (token.getType())
-            {
-                // keywords
-                case JavaTokenTypes.LITERAL_void :
-                case JavaTokenTypes.LITERAL_boolean :
-                case JavaTokenTypes.LITERAL_byte :
-                case JavaTokenTypes.LITERAL_char :
-                case JavaTokenTypes.LITERAL_short :
-                case JavaTokenTypes.LITERAL_int :
-                case JavaTokenTypes.LITERAL_float :
-                case JavaTokenTypes.LITERAL_long :
-                case JavaTokenTypes.LITERAL_double :
-                case JavaTokenTypes.LITERAL_package :
-                case JavaTokenTypes.LITERAL_import :
-                case JavaTokenTypes.LITERAL_private :
-                case JavaTokenTypes.LITERAL_public :
-                case JavaTokenTypes.LITERAL_protected :
-                case JavaTokenTypes.LITERAL_static :
-                case JavaTokenTypes.LITERAL_transient :
-                case JavaTokenTypes.LITERAL_native :
-                case JavaTokenTypes.LITERAL_synchronized :
-                case JavaTokenTypes.LITERAL_volatile :
-                case JavaTokenTypes.LITERAL_class :
-                case JavaTokenTypes.LITERAL_extends :
-                case JavaTokenTypes.LITERAL_implements :
-                case JavaTokenTypes.LITERAL_interface :
-                case JavaTokenTypes.LITERAL_this :
-                case JavaTokenTypes.LITERAL_super :
-                case JavaTokenTypes.LITERAL_throws :
-                case JavaTokenTypes.LITERAL_if :
-                case JavaTokenTypes.LITERAL_else :
-                case JavaTokenTypes.LITERAL_for :
-                case JavaTokenTypes.LITERAL_while :
-                case JavaTokenTypes.LITERAL_do :
-                case JavaTokenTypes.LITERAL_break :
-                case JavaTokenTypes.LITERAL_assert :
-                case JavaTokenTypes.LITERAL_continue :
-                case JavaTokenTypes.LITERAL_return :
-                case JavaTokenTypes.LITERAL_switch :
-                case JavaTokenTypes.LITERAL_throw :
-                case JavaTokenTypes.LITERAL_case :
-                case JavaTokenTypes.LITERAL_default :
-                case JavaTokenTypes.LITERAL_try :
-                case JavaTokenTypes.LITERAL_catch :
-                case JavaTokenTypes.LITERAL_finally :
-                case JavaTokenTypes.LITERAL_instanceof :
-                case JavaTokenTypes.LITERAL_true :
-                case JavaTokenTypes.LITERAL_false :
-                case JavaTokenTypes.LITERAL_null :
-                case JavaTokenTypes.LITERAL_new :
-                    this.g.setColor(COLOR_KEYWORD);
-
-                    break;
-
-                case JavaTokenTypes.SL_COMMENT :
-                case JavaTokenTypes.ML_COMMENT :
-                case JavaTokenTypes.JAVADOC_COMMENT :
-                case JavaTokenTypes.SEPARATOR_COMMENT :
-                case JavaTokenTypes.SPECIAL_COMMENT :
-                    this.g.setColor(COLOR_COMMENT);
-
-                    break;
-
-                case JavaTokenTypes.NUM_INT :
-                case JavaTokenTypes.NUM_FLOAT :
-                case JavaTokenTypes.NUM_DOUBLE :
-                case JavaTokenTypes.NUM_LONG :
-                case JavaTokenTypes.FLOAT_SUFFIX :
-                    this.g.setColor(COLOR_NUMBER);
-
-                    break;
-
-                case JavaTokenTypes.STRING_LITERAL :
-                    this.g.setColor(COLOR_LITERAL);
-
-                    break;
-
-                case JavaTokenTypes.DOT :
-                case JavaTokenTypes.QUESTION :
-                case JavaTokenTypes.COLON :
-                case JavaTokenTypes.ASSIGN :
-                case JavaTokenTypes.EQUAL :
-                case JavaTokenTypes.LNOT :
-                case JavaTokenTypes.BNOT :
-                case JavaTokenTypes.NOT_EQUAL :
-                case JavaTokenTypes.DIV :
-                case JavaTokenTypes.DIV_ASSIGN :
-                case JavaTokenTypes.PLUS :
-                case JavaTokenTypes.PLUS_ASSIGN :
-                case JavaTokenTypes.INC :
-                case JavaTokenTypes.MINUS :
-                case JavaTokenTypes.MINUS_ASSIGN :
-                case JavaTokenTypes.DEC :
-                case JavaTokenTypes.STAR :
-                case JavaTokenTypes.STAR_ASSIGN :
-                case JavaTokenTypes.MOD :
-                case JavaTokenTypes.MOD_ASSIGN :
-                case JavaTokenTypes.SR :
-                case JavaTokenTypes.SR_ASSIGN :
-                case JavaTokenTypes.BSR :
-                case JavaTokenTypes.BSR_ASSIGN :
-                case JavaTokenTypes.GE :
-                case JavaTokenTypes.GT :
-                case JavaTokenTypes.SL :
-                case JavaTokenTypes.SL_ASSIGN :
-                case JavaTokenTypes.LE :
-                case JavaTokenTypes.LT :
-                case JavaTokenTypes.BXOR :
-                case JavaTokenTypes.BXOR_ASSIGN :
-                case JavaTokenTypes.BOR :
-                case JavaTokenTypes.BOR_ASSIGN :
-                case JavaTokenTypes.LOR :
-                case JavaTokenTypes.LAND :
-                    this.g.setColor(COLOR_OPERATOR);
-
-                    break;
-
-                default :
-                    this.g.setColor(Color.black);
-
-                    break;
+                break;
             }
 
-            try
-            {
-                tokenSegment.count = token.getText().length();
-                this.x =
-                    Utilities.drawTabbedText(
-                        tokenSegment, this.x, this.y, this.g, SyntaxView.this, docOffset);
-                docOffset += tokenSegment.count;
-                tokenSegment.offset += tokenSegment.count;
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-        }
+            int length = tokens.length;
+            Color color;
 
+            if (id == Token.NULL)
+            {
+                color = def;
+            }
+            else
+            {
+                color = colors[id];
+            }
 
-        public void initialize(
-            Graphics g,
-            int      x,
-            int      y,
-            Segment  lineSegment,
-            int      startOffset)
-        {
-            this.g = g;
-            this.x = x;
-            this.y = y;
-            tokenSegment = lineSegment;
-            docOffset = startOffset;
+            g.setColor((color == null) ? def
+                                       : color);
+
+            line.count = length;
+            x = Utilities.drawTabbedText(line, x, y, g, this, offset);
+            line.offset += length;
+            offset += length;
+
+            tokens = tokens.next;
         }
     }
 }
