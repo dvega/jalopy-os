@@ -120,7 +120,7 @@ LOOP:
     private boolean isStatic(AST node)
     {
         return JavaNodeModifier.isStatic(
-            NodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS));
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS));
     }
 
 
@@ -407,7 +407,8 @@ LOOP:
                     {
                         // store the name of the variable types
                         names.add(
-                            NodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText());
+                            JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
+                                          .getText());
                         variables.add(child);
                     }
 

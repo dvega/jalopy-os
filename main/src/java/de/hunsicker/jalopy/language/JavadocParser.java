@@ -165,6 +165,7 @@ public final class JavadocParser
 
     /** Last modification stamp of the property file for standard Javadoc tags. */
     private long _standardStamp;
+
     {
         loadTokenTypeInfo();
         loadTagInfo(true);
@@ -317,6 +318,7 @@ public final class JavadocParser
             tmp70_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp70_AST);
             match(JavadocTokenTypes.OACRO);
+
             {
                 int _cnt162 = 0;
 _loop162: 
@@ -597,6 +599,7 @@ _loop165:
             tmp46_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp46_AST);
             match(JavadocTokenTypes.OBIG);
+
             {
                 int _cnt129 = 0;
 _loop129: 
@@ -1028,6 +1031,7 @@ _loop80:
             tmp40_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp40_AST);
             match(JavadocTokenTypes.OBOLD);
+
             {
                 int _cnt117 = 0;
 _loop117: 
@@ -1220,6 +1224,7 @@ _loop77:
             tmp68_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp68_AST);
             match(JavadocTokenTypes.OCITE);
+
             {
                 int _cnt159 = 0;
 _loop159: 
@@ -1292,6 +1297,7 @@ _loop159:
             tmp60_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp60_AST);
             match(JavadocTokenTypes.OCODE);
+
             {
                 int _cnt120 = 0;
 _loop120: 
@@ -1364,6 +1370,7 @@ _loop120:
             tmp96_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp96_AST);
             match(JavadocTokenTypes.ODDEF);
+
             {
                 int _cnt64 = 0;
 _loop64: 
@@ -1533,6 +1540,7 @@ _loop46:
                 }
             }
             while (true);
+
             {
                 int _cnt48 = 0;
 _loop48: 
@@ -1666,6 +1674,7 @@ _loop48:
             tmp58_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp58_AST);
             match(JavadocTokenTypes.ODFN);
+
             {
                 int _cnt147 = 0;
 _loop147: 
@@ -1738,6 +1747,7 @@ _loop147:
             tmp99_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp99_AST);
             match(JavadocTokenTypes.ODIR);
+
             {
                 int _cnt70 = 0;
 _loop70: 
@@ -1885,6 +1895,7 @@ _loop74:
             tmp93_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp93_AST);
             match(JavadocTokenTypes.ODTERM);
+
             {
                 int _cnt58 = 0;
 _loop58: 
@@ -1990,6 +2001,7 @@ _loop61:
             tmp54_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp54_AST);
             match(JavadocTokenTypes.OEM);
+
             {
                 int _cnt141 = 0;
 _loop141: 
@@ -2843,6 +2855,7 @@ _loop176:
             tmp38_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp38_AST);
             match(JavadocTokenTypes.OITALIC);
+
             {
                 int _cnt114 = 0;
 _loop114: 
@@ -2915,6 +2928,7 @@ _loop114:
             tmp64_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp64_AST);
             match(JavadocTokenTypes.OKBD);
+
             {
                 int _cnt153 = 0;
 _loop153: 
@@ -3055,6 +3069,7 @@ _loop153:
             tmp90_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp90_AST);
             match(JavadocTokenTypes.OLITEM);
+
             {
                 int _cnt51 = 0;
 _loop51: 
@@ -3226,6 +3241,7 @@ _loop41:
                 }
             }
             while (true);
+
             {
                 int _cnt43 = 0;
 _loop43: 
@@ -3769,6 +3785,7 @@ _loop5:
             tmp62_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp62_AST);
             match(JavadocTokenTypes.OSAMP);
+
             {
                 int _cnt150 = 0;
 _loop150: 
@@ -3841,6 +3858,7 @@ _loop150:
             tmp48_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp48_AST);
             match(JavadocTokenTypes.OSMALL);
+
             {
                 int _cnt132 = 0;
 _loop132: 
@@ -4131,6 +4149,7 @@ _loop173:
             tmp44_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp44_AST);
             match(JavadocTokenTypes.OSTRIKE);
+
             {
                 int _cnt126 = 0;
 _loop126: 
@@ -4203,6 +4222,7 @@ _loop126:
             tmp56_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp56_AST);
             match(JavadocTokenTypes.OSTRONG);
+
             {
                 int _cnt144 = 0;
 _loop144: 
@@ -4275,6 +4295,7 @@ _loop144:
             tmp50_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp50_AST);
             match(JavadocTokenTypes.OSUB);
+
             {
                 int _cnt135 = 0;
 _loop135: 
@@ -4347,6 +4368,7 @@ _loop135:
             tmp52_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp52_AST);
             match(JavadocTokenTypes.OSUP);
+
             {
                 int _cnt138 = 0;
 _loop138: 
@@ -4454,6 +4476,7 @@ _loop85:
                 }
             }
             while (true);
+
             {
                 int _cnt87 = 0;
 _loop87: 
@@ -4523,6 +4546,7 @@ _loop87:
             tmp36_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp36_AST);
             match(JavadocTokenTypes.OTTYPE);
+
             {
                 int _cnt111 = 0;
 _loop111: 
@@ -5118,6 +5142,7 @@ _loop100:
             tmp42_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp42_AST);
             match(JavadocTokenTypes.OUNDER);
+
             {
                 int _cnt123 = 0;
 _loop123: 
@@ -5206,6 +5231,7 @@ _loop36:
                 }
             }
             while (true);
+
             {
                 int _cnt38 = 0;
 _loop38: 
@@ -5278,6 +5304,7 @@ _loop38:
             tmp66_AST = astFactory.create(LT(1));
             astFactory.makeASTRoot(currentAST, tmp66_AST);
             match(JavadocTokenTypes.OVAR);
+
             {
                 int _cnt156 = 0;
 _loop156: 

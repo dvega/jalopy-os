@@ -2933,7 +2933,7 @@ _loop128:
                                     if (next != null)
                                     {
                                         AST ssemi =
-                                            NodeHelper.getFirstChild(
+                                            JavaNodeHelper.getFirstChild(
                                                 field_AST, JavaTokenTypes.SEMI);
 
                                         for (
@@ -6945,7 +6945,7 @@ _loop102:
                             if (next != null)
                             {
                                 AST semi =
-                                    NodeHelper.getFirstChild(
+                                    JavaNodeHelper.getFirstChild(
                                         currentAST.root, JavaTokenTypes.SEMI);
 
                                 for (AST var = next; var != null;

@@ -10,19 +10,19 @@ import de.hunsicker.antlr.collections.AST;
 
 
 /**
- * Some common helpers.
+ * Some common helpers for dealing with the nodes of a Java AST.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public final class NodeHelper
+public final class JavaNodeHelper
 {
     //~ Constructors ---------------------------------------------------------------------
 
     /**
-     * Creates a new NodeHelper object.
+     * Creates a new JavaNodeHelper object.
      */
-    private NodeHelper()
+    private JavaNodeHelper()
     {
     }
 
@@ -379,6 +379,33 @@ WALK:
 
                 break;
             }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * Determines whether the given node represents a freestanding block. A freestanding
+     * block is a block without associated block statement.
+     *
+     * @param node a node representing a block.
+     *
+     * @return <code>true</code> if <em>node</em> represents a freestanding block.
+     *
+     * @since 1.0b10
+     */
+    public static boolean isFreestandingBlock(JavaNode node)
+    {
+        boolean result = false;
+
+        switch (node.getParent().getType())
+        {
+            case JavaTokenTypes.SLIST :
+            case JavaTokenTypes.INSTANCE_INIT :
+                result = true;
+
+                break;
         }
 
         return result;

@@ -141,7 +141,7 @@ LOOP:
                     break;
 
                 case JavaTokenTypes.PACKAGE_DEF :
-                    _packageName = NodeHelper.getDottedName(node.getFirstChild());
+                    _packageName = JavaNodeHelper.getDottedName(node.getFirstChild());
 
                 // fall through
                 case JavaTokenTypes.METHOD_DEF :
@@ -203,7 +203,8 @@ LOOP:
      */
     private static boolean isClassSerializable(AST node)
     {
-        AST clauses = NodeHelper.getFirstChild(node, JavaTokenTypes.IMPLEMENTS_CLAUSE);
+        AST clauses =
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IMPLEMENTS_CLAUSE);
 
         for (
             AST clause = clauses.getFirstChild(); clause != null;
@@ -234,7 +235,7 @@ LOOP:
         String ident = null;
         ident =
             _packageName + "."
-            + NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
+            + JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
 
         if (count > 0)
         {
@@ -246,7 +247,8 @@ LOOP:
                 {
                     ident =
                         previousInfo.name + "$"
-                        + NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
+                        + JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT)
+                                        .getText();
 
                     break;
                 }
@@ -340,7 +342,7 @@ LOOP:
         serialver.setHiddenBefore(token);
 
         JavaNode objblock =
-            (JavaNode) NodeHelper.getFirstChild(info.node, JavaTokenTypes.OBJBLOCK);
+            (JavaNode) JavaNodeHelper.getFirstChild(info.node, JavaTokenTypes.OBJBLOCK);
         JavaNode lcurly = (JavaNode) objblock.getFirstChild();
         JavaNode next = (JavaNode) lcurly.getNextSibling();
         lcurly.setNextSibling(serialver);

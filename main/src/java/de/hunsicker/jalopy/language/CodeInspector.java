@@ -204,7 +204,7 @@ public final class CodeInspector
         {
             case JavaTokenTypes.VARIABLE_DEF :
 
-                AST type = NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE);
+                AST type = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE);
                 String returnType = type.getFirstChild().getText();
 
                 if (
@@ -615,7 +615,7 @@ public final class CodeInspector
                                     case JavaTokenTypes.LPAREN :
 
                                         AST expr =
-                                            NodeHelper.advanceToFirstNonParen(child);
+                                            JavaNodeHelper.advanceToFirstNonParen(child);
 
                                         switch (expr.getType())
                                         {
@@ -650,7 +650,7 @@ public final class CodeInspector
                     }
                 };
 
-            walker.walk(NodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
+            walker.walk(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
         }
     }
 
@@ -691,7 +691,7 @@ public final class CodeInspector
                                         case JavaTokenTypes.VARIABLE_DEF :
 
                                             String name =
-                                                NodeHelper.getFirstChild(
+                                                JavaNodeHelper.getFirstChild(
                                                     child, JavaTokenTypes.IDENT).getText();
 
                                             if (name.equals(lhs.getText()))
@@ -793,10 +793,11 @@ public final class CodeInspector
             return;
         }
 
-        AST classModifierMask = NodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
+        AST classModifierMask =
+            JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
         boolean isPublicClass =
             Modifier.isPublic(JavaNodeModifier.valueOf(classModifierMask));
-        AST body = NodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
+        AST body = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
         boolean violate = isPublicClass;
         boolean foundEquals = false;
         AST equalsNode = null;
@@ -906,7 +907,7 @@ public final class CodeInspector
      */
     private void checkClassName(AST node)
     {
-        String name = NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
+        String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
 
         if (!JavaNodeModifier.isAbstract(node))
         {
@@ -967,7 +968,7 @@ public final class CodeInspector
         JavaNode node,
         String   returnType)
     {
-        if (!NodeHelper.isLocalVariable(node))
+        if (!JavaNodeHelper.isLocalVariable(node))
         {
             if (_collectionTypes.contains(returnType))
             {
@@ -1045,7 +1046,7 @@ public final class CodeInspector
                 }
             };
 
-        walker.walk(NodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
+        walker.walk(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.SLIST));
     }
 
 
@@ -1079,7 +1080,7 @@ public final class CodeInspector
     {
         if (_settings.getBoolean(ConventionKeys.TIP_INTERFACE_ONLY_FOR_TYPE, false))
         {
-            AST body = NodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
+            AST body = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
             boolean violate = true;
 SEARCH: 
             for (
@@ -1131,7 +1132,7 @@ SEARCH:
      */
     private void checkInterfaceName(AST node)
     {
-        String name = NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
+        String name = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.IDENT).getText();
         Pattern pattern =
             _patterns.getPattern(
                 _settings.get(
@@ -1199,9 +1200,10 @@ SEARCH:
 
             case JavaTokenTypes.DOT :
 
-                if (NodeHelper.isChained(child))
+                if (JavaNodeHelper.isChained(child))
                 {
-                    name = NodeHelper.getFirstChainLink(node).getNextSibling().getText();
+                    name =
+                        JavaNodeHelper.getFirstChainLink(node).getNextSibling().getText();
                 }
                 else
                 {
@@ -1259,7 +1261,7 @@ SEARCH:
         AST    node,
         Method method)
     {
-        AST modifiers = NodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
+        AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
         int modifierMask = JavaNodeModifier.valueOf(modifiers);
 
         String name = method.name;
@@ -1531,7 +1533,7 @@ SEARCH:
      */
     private void checkPackageName(AST node)
     {
-        String name = NodeHelper.getDottedName(node.getFirstChild());
+        String name = JavaNodeHelper.getDottedName(node.getFirstChild());
         Pattern pattern =
             _patterns.getPattern(
                 _settings.get(
@@ -1716,7 +1718,7 @@ SEARCH:
         AST    node,
         String name)
     {
-        if (NodeHelper.isLocalVariable(node))
+        if (JavaNodeHelper.isLocalVariable(node))
         {
             Pattern pattern =
                 _patterns.getPattern(
@@ -1736,7 +1738,7 @@ SEARCH:
         }
         else
         {
-            AST modifiers = NodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
+            AST modifiers = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.MODIFIERS);
             int modifierMask = JavaNodeModifier.valueOf(modifiers);
 
             if (Modifier.isStatic(modifierMask)) // static fields

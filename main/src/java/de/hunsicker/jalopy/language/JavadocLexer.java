@@ -2209,6 +2209,7 @@ _loop246:
         { // for error handling
             match("<img");
             mWS(false);
+
             {
                 int _cnt351 = 0;
 _loop351: 
@@ -2558,6 +2559,7 @@ _loop351:
         { // for error handling
             match("<a");
             mWS(false);
+
             {
                 int _cnt346 = 0;
 _loop346: 
@@ -3686,6 +3688,7 @@ _loop256:
         { // for error handling
             match("<font");
             mWS(false);
+
             {
                 int _cnt354 = 0;
 _loop354: 
@@ -5491,6 +5494,7 @@ _loop262:
 
         try
         { // for error handling
+
             {
                 int _cnt377 = 0;
 _loop377: 
@@ -5820,6 +5824,7 @@ _loop373:
         try
         { // for error handling
             mAT(false);
+
             {
                 int _cnt363 = 0;
 _loop363: 
@@ -7454,6 +7459,7 @@ _loop381:
 
         try
         { // for error handling
+
             {
                 int _cnt413 = 0;
 _loop413: 
@@ -7560,6 +7566,7 @@ _loop413:
 
         try
         { // for error handling
+
             {
                 int _cnt410 = 0;
 _loop410: 
@@ -8039,6 +8046,7 @@ _loop405:
                     throw new NoViableAltForCharException(
                         (char) LA(1), getFilename(), getLine(), getColumn());
             }
+
             {
                 int _cnt400 = 0;
 _loop400: 
@@ -8150,6 +8158,7 @@ _loop400:
 
         try
         { // for error handling
+
             {
                 int _cnt386 = 0;
 _loop386: 

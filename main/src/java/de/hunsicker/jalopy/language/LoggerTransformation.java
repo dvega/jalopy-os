@@ -134,7 +134,7 @@ final class LoggerTransformation
                     return false;
             }
 
-            AST params = NodeHelper.getFirstChild(node, JavaTokenTypes.ELIST);
+            AST params = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.ELIST);
             AST expr = params.getFirstChild();
 
             // we need at least one parameter
@@ -147,7 +147,7 @@ final class LoggerTransformation
         }
         else if (LOCALIZED_LOG.equals(name))
         {
-            AST params = NodeHelper.getFirstChild(node, JavaTokenTypes.ELIST);
+            AST params = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.ELIST);
             AST expr = params.getFirstChild();
 
             if (expr != null)
@@ -158,7 +158,7 @@ final class LoggerTransformation
                 {
                     case JavaTokenTypes.DOT :
 
-                        String n = NodeHelper.getDottedName(param);
+                        String n = JavaNodeHelper.getDottedName(param);
 
                         if (LEVEL_DEBUG.equals(n) || PRIORITY_DEBUG.equals(n))
                         {

@@ -217,7 +217,8 @@ public final class JavaNodeModifier
                 return Modifier.VOLATILE;
 
             default :
-                modifiers = NodeHelper.getFirstChild(modifiers, JavaTokenTypes.MODIFIERS);
+                modifiers =
+                    JavaNodeHelper.getFirstChild(modifiers, JavaTokenTypes.MODIFIERS);
 
                 if (
                     (modifiers == null)

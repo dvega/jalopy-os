@@ -215,7 +215,7 @@ final class References
                     case JavaTokenTypes.VARIABLE_DEF :
 
                         JavaNode assign =
-                            (JavaNode) NodeHelper.getFirstChild(
+                            (JavaNode) JavaNodeHelper.getFirstChild(
                                 node, JavaTokenTypes.ASSIGN);
 
                         if (assign != null)
@@ -223,8 +223,8 @@ final class References
                             System.out.println(
                                 "XXX:" + node.startLine + ":" + node.startColumn
                                 + ": Variable "
-                                + NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT)
-                                            .getText()
+                                + JavaNodeHelper.getFirstChild(
+                                    node, JavaTokenTypes.IDENT).getText()
                                 + " is declared but never assigned");
                         }
                         else
@@ -232,8 +232,8 @@ final class References
                             System.out.println(
                                 "XXX:" + node.startLine + ":" + node.startColumn
                                 + ": Variable "
-                                + NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT)
-                                            .getText()
+                                + JavaNodeHelper.getFirstChild(
+                                    node, JavaTokenTypes.IDENT).getText()
                                 + " is assigned but never accessed");
                         }
 
@@ -270,9 +270,9 @@ final class References
                                                 System.out.println(
                                                     "XXX:" + node.startLine + ":"
                                                     + node.startColumn + ": Variable "
-                                                    + NodeHelper.getFirstChild(
+                                                    + JavaNodeHelper.getFirstChild(
                                                         node, JavaTokenTypes.IDENT)
-                                                                .getText()
+                                                                    .getText()
                                                     + " is assigned but never accessed (assigned at "
                                                     + usage.startLine + ":"
                                                     + usage.startColumn + ")");
@@ -290,7 +290,7 @@ final class References
                                         /**
                                          * @todo :" + node.startLine + ":" +
                                          *       node.startColumn + ": Variable " +
-                                         *       NodeHelper.getFirstChild(node,
+                                         *       JavaNodeHelper.getFirstChild(node,
                                          *       JavaTokenTypes.IDENT).getText() + " is
                                          *       only assigned once, consider making it
                                          *       final");
@@ -305,7 +305,7 @@ final class References
                             if (!JavaNodeModifier.isFinal(modifierMask))
                             {
                                 JavaNode assign =
-                                    (JavaNode) NodeHelper.getFirstChild(
+                                    (JavaNode) JavaNodeHelper.getFirstChild(
                                         node, JavaTokenTypes.ASSIGN);
                                 int assignments = 0;
 
@@ -353,7 +353,7 @@ LOOP:
                                     /**
                                      * @todo :" + node.startLine + ":" + node.startColumn
                                      *       + ": Variable " +
-                                     *       NodeHelper.getFirstChild(node,
+                                     *       JavaNodeHelper.getFirstChild(node,
                                      *       JavaTokenTypes.IDENT).getText() + " is only
                                      *       assigned once, consider making it final");
                                      */

@@ -155,7 +155,7 @@ final class NodeComparator
      */
     protected int getParamCount(AST node)
     {
-        AST params = NodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        AST params = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
 
         if (params == null)
         {
@@ -207,8 +207,10 @@ final class NodeComparator
         AST node1,
         AST node2)
     {
-        String name1 = NodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
-        String name2 = NodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
+        String name1 =
+            JavaNodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
+        String name2 =
+            JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
         MethodType type1 = MethodType.valueOf(name1);
         MethodType type2 = MethodType.valueOf(name2);
 
@@ -666,8 +668,10 @@ final class NodeComparator
         AST node1,
         AST node2)
     {
-        String ident1 = NodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
-        String ident2 = NodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
+        String ident1 =
+            JavaNodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
+        String ident2 =
+            JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
 
         return ident1.compareTo(ident2);
     }
@@ -706,7 +710,7 @@ final class NodeComparator
      */
     private static String getType(AST node)
     {
-        AST type = NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE);
+        AST type = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE);
         String ident = type.getFirstChild().getText();
         int offset = ident.lastIndexOf('.');
 

@@ -733,7 +733,7 @@ field!
                                     // we have to add it manually to all others
                                     if (next != null)
                                     {
-                                        AST ssemi = NodeHelper.getFirstChild(#field, JavaTokenTypes.SEMI);
+                                        AST ssemi = JavaNodeHelper.getFirstChild(#field, JavaTokenTypes.SEMI);
 
                                         for (AST var = next; var != null; var = var.getNextSibling())
                                         {
@@ -932,7 +932,7 @@ statement
                     // we have to add it manually to all others
                     if (next != null)
                     {
-                        AST semi = NodeHelper.getFirstChild(currentAST.root, JavaTokenTypes.SEMI);
+                        AST semi = JavaNodeHelper.getFirstChild(currentAST.root, JavaTokenTypes.SEMI);
 
                         for (AST var = next; var != null; var = var.getNextSibling())
                         {

@@ -70,15 +70,17 @@ final class VariableDefNodeComparator
 
         AST node1 = (AST) o1;
         AST node2 = (AST) o2;
-        String name1 = NodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
-        String name2 = NodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
+        String name1 =
+            JavaNodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
+        String name2 =
+            JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
 
         // first make sure we don't introduce forward references
         //
         //      private short indentSize = 4;
         //      private short currentIndent = indentSize;
         //
-        AST assign = NodeHelper.getFirstChild(node2, JavaTokenTypes.ASSIGN);
+        AST assign = JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.ASSIGN);
 
         if (assign != null)
         {

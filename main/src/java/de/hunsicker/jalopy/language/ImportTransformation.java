@@ -196,7 +196,7 @@ final class ImportTransformation
      */
     public void visit(AST node)
     {
-        String identifier = NodeHelper.getDottedName(node.getFirstChild());
+        String identifier = JavaNodeHelper.getDottedName(node.getFirstChild());
         JavaNode importNode = (JavaNode) node;
 
         if (_line == 0)
@@ -286,7 +286,7 @@ final class ImportTransformation
 
             case JavaTokenTypes.PACKAGE_DEF :
             {
-                _packageName = NodeHelper.getDottedName(node.getFirstChild());
+                _packageName = JavaNodeHelper.getDottedName(node.getFirstChild());
                 _packageNameNode = (JavaNode) node;
 
                 AST next = node.getNextSibling();
