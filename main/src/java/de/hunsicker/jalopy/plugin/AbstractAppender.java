@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin;
 
@@ -38,6 +11,7 @@ import de.hunsicker.util.ChainingRuntimeException;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
+
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
@@ -48,17 +22,16 @@ import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
- * Skeleton implementation of an appender which outputs messages in a visual
- * component.
+ * Skeleton implementation of an appender which outputs messages in a visual component.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public abstract class AbstractAppender
     extends AppenderSkeleton
-    implements VisualAppender
+    implements SwingAppender
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Position of the filename in the regex result. */
     public static final int POS_FILENAME = 1;
@@ -73,27 +46,26 @@ public abstract class AbstractAppender
     public static final int POS_COLUMN = 3;
 
     /** Name of the appender for output messages. */
-    private static final String APPENDER_NAME = "JalopyAppender";
+    private static final String APPENDER_NAME = "JalopyAppender" /* NOI18N */;
 
     /**
      * Regex to apply for Emacs-style messages. Messages must comply to the
      * filename:line:column:text pattern.
      */
-    private static final String PATTERN = "(.+?):(\\d+):(\\d+):\\s*(.+)";
+    private static final String PATTERN = "(.+?):(\\d+):(\\d+):\\s*(.+)" /* NOI18N */;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /**
-     * The regex to parse the messages. If messages have a format similiar to
-     * Emacs messages (<code>filename:lineno:text</code>) the pattern will
-     * match.
+     * The regex to parse the messages. If messages have a format similiar to Emacs
+     * messages (<code>filename:lineno:text</code>) the pattern will match.
      */
     protected final Pattern regex;
 
     /** Matcher instance. */
     private PatternMatcher _matcher;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new AbstractAppender object.
@@ -103,7 +75,7 @@ public abstract class AbstractAppender
     public AbstractAppender()
     {
         this.name = APPENDER_NAME;
-        this.layout = new VisualLayout();
+        this.layout = new SwingLayout();
         setThreshold(Level.DEBUG);
         _matcher = new Perl5Matcher();
 
@@ -111,8 +83,7 @@ public abstract class AbstractAppender
 
         try
         {
-            this.regex = compiler.compile(PATTERN,
-                                          Perl5Compiler.SINGLELINE_MASK);
+            this.regex = compiler.compile(PATTERN, Perl5Compiler.SINGLELINE_MASK);
         }
         catch (MalformedPatternException ex)
         {
@@ -120,7 +91,7 @@ public abstract class AbstractAppender
         }
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Does the actual outputting.
@@ -131,8 +102,8 @@ public abstract class AbstractAppender
 
 
     /**
-     * Sets the name of the appender. Overidden so that the initial name can't
-     * be changed.
+     * Sets the name of the appender. Overidden so that the initial name can't be
+     * changed.
      *
      * @param name appender name (ignored).
      */
@@ -150,9 +121,16 @@ public abstract class AbstractAppender
 
 
     /**
-     * Parses the given message. To access the parsed information one may
-     * typically use:
-     * <pre style="background:lightgrey">
+     * {@inheritDoc}
+     */
+    public void done()
+    {
+    }
+
+
+    /**
+     * Parses the given message. To access the parsed information one may typically use:
+     * <pre class="snippet">
      * MatchResult result = parseMessage(message);
      * if (result == null)
      * {
@@ -173,9 +151,8 @@ public abstract class AbstractAppender
      *
      * @param ev logging event.
      *
-     * @return parsing result. Returns <code>null</code> if the message
-     *         doesn't match the Emacs format
-     *         <code>filename:line:column:text</code>.
+     * @return parsing result. Returns <code>null</code> if the message doesn't match the
+     *         Emacs format <code>filename:line:column:text</code>.
      */
     public MatchResult parseMessage(LoggingEvent ev)
     {
@@ -189,8 +166,8 @@ public abstract class AbstractAppender
 
 
     /**
-     * Determines if the appender requires a layout. Returns <code>true</code>
-     * by default.
+     * Determines if the appender requires a layout. Returns <code>true</code> by
+     * default.
      *
      * @return always <code>true</code>.
      */

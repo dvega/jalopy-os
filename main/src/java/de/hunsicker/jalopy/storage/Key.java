@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -45,19 +18,21 @@ import java.io.Serializable;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  *
- * @see de.hunsicker.jalopy.storage.Convention
- * @see de.hunsicker.jalopy.storage.Keys
+ * @see de.hunsicker.jalopy.storage.ConventionKeys
  * @since 1.0b8
+ * @deprecated Replaced by {@link de.hunsicker.jalopy.storage.Convention.Key}. Only
+ *             provided for backwards compatibility with earlier versions. Will be
+ *             removed with a future release.
  */
 public final class Key
     implements Serializable
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Use serialVersionUID for interoperability. */
     static final long serialVersionUID = -7320495354745545260L;
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** Our name. */
     private transient String _name;
@@ -65,7 +40,7 @@ public final class Key
     /** Pre-computed hash code value. */
     private transient int _hashCode;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new Key object.
@@ -78,15 +53,14 @@ public final class Key
         _hashCode = _name.hashCode();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Indicates whether some other object is &quot;equal to&quot; this one.
      *
      * @param o the reference object with which to compare.
      *
-     * @return <code>true</code> if this object is the same as the obj
-     *         argument.
+     * @return <code>true</code> if this object is the same as the obj argument.
      */
     public boolean equals(Object o)
     {
@@ -95,14 +69,14 @@ public final class Key
             return true;
         }
 
-        return _name == ((Key)o)._name;
+        return _name == ((Key) o)._name;
     }
 
 
     /**
-     * Returns a hash code value for the object.
+     * Returns a hash code value for this object.
      *
-     * @return A hash code value for this object.
+     * @return a hash code value for this object.
      */
     public int hashCode()
     {
@@ -127,18 +101,17 @@ public final class Key
      * @param in stream to read the object from.
      *
      * @throws IOException if an I/O error occured.
-     * @throws ClassNotFoundException if a class that should be read could not
-     *         be found (Should never happen actually).
+     * @throws ClassNotFoundException if a class that should be read could not be found
+     *         (Should never happen actually).
      */
     private void readObject(ObjectInputStream in)
-        throws IOException,
-               ClassNotFoundException
+      throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
 
         // that's why we have to provide custom serialization: we want to be
         // able to compare two keys by identity
-        _name = ((String)in.readObject()).intern();
+        _name = ((String) in.readObject()).intern();
         _hashCode = in.readInt();
     }
 
@@ -150,11 +123,11 @@ public final class Key
      *
      * @throws IOException if an I/O error occured.
      *
-     * @serialData Emits the name of the key, followed by its pre-computed
-     *             hash code value.
+     * @serialData Emits the name of the key, followed by its pre-computed hash code
+     *             value.
      */
     private void writeObject(ObjectOutputStream out)
-        throws IOException
+      throws IOException
     {
         out.defaultWriteObject();
         out.writeObject(_name);

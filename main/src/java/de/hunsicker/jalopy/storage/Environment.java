@@ -1,47 +1,17 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
-
-import de.hunsicker.jalopy.storage.Defaults;
-import de.hunsicker.jalopy.storage.Keys;
-import de.hunsicker.jalopy.storage.Convention;
-import de.hunsicker.util.ChainingRuntimeException;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import de.hunsicker.util.ChainingRuntimeException;
 
 import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.MatchResult;
@@ -57,9 +27,8 @@ import org.apache.oro.text.regex.Util;
 
 
 /**
- * Provides access to global and local environment variables (key/value
- * pairs).
- *
+ * Provides access to global and local environment variables (key/value pairs).
+ * 
  * <p>
  * This class is thread-safe.
  * </p>
@@ -71,7 +40,7 @@ import org.apache.oro.text.regex.Util;
  */
 public final class Environment
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     /** Delimeter for the encoded variables string. */
     private static final String DELIMETER = "|";
@@ -86,8 +55,9 @@ public final class Environment
     {
         try
         {
-            _variablesPattern = REGEXP_COMPILER.compile("\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$",
-                                                        Perl5Compiler.READ_ONLY_MASK);
+            _variablesPattern =
+                REGEXP_COMPILER.compile(
+                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$", Perl5Compiler.READ_ONLY_MASK);
         }
         catch (MalformedPatternException ex)
         {
@@ -97,7 +67,7 @@ public final class Environment
 
     private static final Environment INSTANCE = new Environment(true);
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     /** The pattern matcher. */
     private final PatternMatcher _matcher = new Perl5Matcher();
@@ -105,7 +75,7 @@ public final class Environment
     /** The current environment variables. */
     private Map _variables; // Map of <String:String>
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new Environment object.
@@ -120,13 +90,15 @@ public final class Environment
             _variables.putAll(System.getProperties());
 
             Convention settings = Convention.getInstance();
-            String variables = settings.get(Keys.ENVIRONMENT, Defaults.ENVIRONMENT);
+            String variables =
+                settings.get(
+                    ConventionKeys.ENVIRONMENT, ConventionDefaults.ENVIRONMENT);
 
             if (!"".equals(variables))
             {
-                for (StringTokenizer tokens = new StringTokenizer(variables,
-                                                                  DELIMETER);
-                     tokens.hasMoreElements();)
+                for (
+                    StringTokenizer tokens = new StringTokenizer(variables, DELIMETER);
+                    tokens.hasMoreElements();)
                 {
                     String pair = tokens.nextToken();
                     int delimOffset = pair.indexOf('^');
@@ -138,11 +110,11 @@ public final class Environment
         }
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
-     * Returns an instance of this class. This method is guarantueed to return
-     * a unique instance for each thread that invokes it.
+     * Returns an instance of this class. This method is guarantueed to return a unique
+     * instance for each thread that invokes it.
      *
      * @return An instance of this class.
      */
@@ -167,11 +139,10 @@ public final class Environment
 
 
     /**
-     * Performs variable interpolation for the given input string. All
-     * environment variable expressions
-     * (<code>\$[a-zA-Z_][a-zA-Z0-9_.]+\$</code>, e.g. $fileName$ or $author$)
-     * in the given string are replaced with their corresponding environment
-     * value.
+     * Performs variable interpolation for the given input string. All environment
+     * variable expressions (<code>\$[a-zA-Z_][a-zA-Z0-9_.]+\$</code>, e.g. $fileName$
+     * or $author$) in the given string are replaced with their corresponding
+     * environment value.
      *
      * @param str string to perform variable interpolation for.
      *
@@ -188,20 +159,22 @@ public final class Environment
         while (_matcher.contains(input, _variablesPattern))
         {
             MatchResult result = _matcher.getMatch();
-            String value = (String)_variables.get(result.group(1));
+            String value = (String) _variables.get(result.group(1));
 
             // the value has to be set in order to be substituted
-            if (value != null && value.length() > 0)
+            if ((value != null) && (value.length() > 0))
+            {
                 keys.put(result.group(0), value);
+            }
         }
 
         // and finally interpolate them
         for (Iterator i = keys.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)i.next();
+            Map.Entry entry = (Map.Entry) i.next();
 
-            String key = (String)entry.getKey();
-            String value = (String)entry.getValue();
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
 
             Substitution substitution = new StringSubstitution(value);
             Pattern pattern = null;
@@ -218,8 +191,8 @@ public final class Environment
                 continue;
             }
 
-            str = Util.substitute(_matcher, pattern, substitution, str,
-                                  Util.SUBSTITUTE_ALL);
+            str = Util.substitute(
+                    _matcher, pattern, substitution, str, Util.SUBSTITUTE_ALL);
         }
 
         return str;
@@ -230,22 +203,22 @@ public final class Environment
      * Sets the given variable to the given value.
      *
      * @param variable variable name. Valid variable names have the form
-     *        <nobr><code>[a-zA-Z_][a-zA-Z0-9_.]+</code></nobr>
+     *        <code>[a-zA-Z_][a-zA-Z0-9_.]+</code>
      * @param value value to associate.
      *
      * @see #unset
      */
-    public void set(String variable,
-                    String value)
+    public void set(
+        String variable,
+        String value)
     {
         _variables.put(variable, value);
     }
 
 
     /**
-     * Returns a string representation of this object. The string
-     * representation consists of a list of key-value mappings in no
-     * particular order.
+     * Returns a string representation of this object. The string representation consists
+     * of a list of key-value mappings in no particular order.
      *
      * @return a string representation of this object.
      */
@@ -267,7 +240,7 @@ public final class Environment
         _variables.remove(variable);
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Represents a local environment variable.
@@ -319,6 +292,7 @@ public final class Environment
             return this.name;
         }
 
+
         public boolean equals(Object o)
         {
             if (this == o)
@@ -328,7 +302,7 @@ public final class Environment
 
             if (o instanceof Environment.Variable)
             {
-                return this.name == ((Environment.Variable)o).name;
+                return this.name == ((Environment.Variable) o).name;
             }
 
             return false;

@@ -1,42 +1,13 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
-import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.storage.Convention;
-
 import java.io.BufferedOutputStream;
+import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,19 +15,23 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Adler32;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
+
+import de.hunsicker.io.IoHelper;
 
 
 /**
  * History serves as a tracker for file modifications.
- *
+ * 
  * <p>
- * The {@link #flush} method may be used to synchronously force updates to the
- * backing store. Normal termination of the Java Virtual Machine will
- * <em>not</em> result in the loss of pending updates - an explicit flushing
- * is <em>not</em> required upon termination to ensure that pending updates
- * are made persistent.
+ * The {@link #flush} method may be used to synchronously force updates to the backing
+ * store. Normal termination of the Java Virtual Machine will <em>not</em> result in the
+ * loss of pending updates - an explicit flushing is <em>not</em> required upon
+ * termination to ensure that pending updates are made persistent.
  * </p>
- *
+ * 
  * <p>
  * This class is thread-safe.
  * </p>
@@ -66,22 +41,25 @@ import java.util.Map;
  */
 public final class History
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
+    /** Singleton. */
     private static final History INSTANCE = new History();
+
+    /** Holds the history entries. */
     private static Map _history; // Map of <String>:<History.Entry>
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new History object.
      */
     private History()
     {
-        init();
+        initialize();
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the sole instance of this class.
@@ -95,25 +73,25 @@ public final class History
 
 
     /**
-     * Adds the given file to the history. It will only be added, if it exists
-     * and indeed denotes a file (not a directory).
+     * Adds the given file to the history. It will only be added, if it exists and indeed
+     * denotes a file (not a directory).
      *
      * @param file file to add.
      * @param packageName the package name of the file to add.
-     * @param timestamp the time the file given was last processed.
+     * @param modification the time the file given was last processed.
      *
-     * @throws IOException if an I/O error occured, which is possible because
-     *         a canonical pathname will be constructed.
+     * @throws IOException if an I/O error occured, which is possible because a canonical
+     *         pathname will be constructed.
      */
-    public synchronized void add(File   file,
-                                 String packageName,
-                                 long   timestamp)
-        throws IOException
+    public synchronized void add(
+        File   file,
+        String packageName,
+        long   modification)
+      throws IOException
     {
         if (file.exists() && file.isFile())
         {
-            _history.put(file.getCanonicalPath(),
-                         new Entry(packageName, timestamp));
+            _history.put(file.getCanonicalPath(), new Entry(packageName, modification));
         }
     }
 
@@ -133,7 +111,7 @@ public final class History
      * @throws IOException if an I/O error occured.
      */
     public synchronized void flush()
-        throws IOException
+      throws IOException
     {
         File file = Convention.getHistoryFile();
         BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
@@ -158,16 +136,16 @@ public final class History
      *
      * @param file the file to get the corresponding history entry for.
      *
-     * @return the history entry for the given file or <code>null</code> if no
-     *         entry for the given file exists.
+     * @return the history entry for the given file or <code>null</code> if no entry for
+     *         the given file exists.
      *
-     * @throws IOException if an I/O error occured, which is possible because
-     *         a canonical pathname will be constructed.
+     * @throws IOException if an I/O error occured, which is possible because a canonical
+     *         pathname will be constructed.
      */
     public synchronized Entry get(File file)
-        throws IOException
+      throws IOException
     {
-        return (Entry)_history.get(file.getCanonicalPath());
+        return (Entry) _history.get(file.getCanonicalPath());
     }
 
 
@@ -176,11 +154,11 @@ public final class History
      *
      * @param file file to remove.
      *
-     * @throws IOException if an I/O error occured, which is possible because
-     *         a canonical pathname will be constructed.
+     * @throws IOException if an I/O error occured, which is possible because a canonical
+     *         pathname will be constructed.
      */
     public synchronized void remove(File file)
-        throws IOException
+      throws IOException
     {
         _history.remove(file.getCanonicalPath());
     }
@@ -189,7 +167,7 @@ public final class History
     /**
      * Initialization. Loads the history from the backing store.
      */
-    private synchronized void init()
+    private synchronized void initialize()
     {
         try
         {
@@ -197,7 +175,7 @@ public final class History
 
             if (file.exists())
             {
-                _history = (Map)IoHelper.deserialize(file);
+                _history = (Map) IoHelper.deserialize(file);
             }
             else
             {
@@ -212,76 +190,141 @@ public final class History
         Runtime.getRuntime().addShutdownHook(new TerminationHandler());
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
+
+    public static final class ChecksumCharArrayWriter
+        extends CharArrayWriter
+    {
+        private Checksum _checksum;
+
+        public ChecksumCharArrayWriter(Method method)
+        {
+            if (method == History.Method.ADLER32)
+            {
+                _checksum = new Adler32();
+            }
+            else if (method == History.Method.CRC32)
+            {
+                _checksum = new CRC32();
+            }
+            else
+            {
+                throw new IllegalArgumentException(
+                    "invalid check sum history method -- " + method.toString());
+            }
+        }
+
+        public Checksum getChecksum()
+        {
+            return _checksum;
+        }
+
+
+        public void write(
+            char[] c,
+            int    off,
+            int    len)
+        {
+            super.write(c, off, len);
+
+            String string = new String(c, off, len);
+            byte[] bytes = string.getBytes();
+            _checksum.update(bytes, 0, bytes.length);
+        }
+    }
+
 
     /**
-     * Represents a history policy.
+     * Represents the method used to identify dirty files and changed files.
      *
-     * @since 1.0b8
+     * @author Michael Callum
+     *
+     * @since 1.0b9
      */
-    public static final class Policy
+    public static final class Method
     {
-        /** Don't use the history. */
-        public static final Policy DISABLED = new Policy("History.Policy [disabled]");
+        /** Use simple, last modified timestamp. */
+        public static final Method TIMESTAMP =
+            new Method("History.Method [timestamp]" /* NOI18N */, "Timestamp");
+
+        /** Use CRC32 checksum. */
+        public static final Method CRC32 =
+            new Method("History.Method [crc32]" /* NOI18N */, "CRC32 Checksum");
+
+        /** Use Adler32 checksum. */
+        public static final Method ADLER32 =
+            new Method("History.Method [adler32]" /* NOI18N */, "Adler32 Checksum");
+        private String _displayName;
+        private String _name;
 
         /**
-         * Insert a single line comment header at the top of every formatted
-         * file.
+         * Creates a new Method object.
+         *
+         * @param name the name of the method.
+         * @param displayName a possibly localized, descriptive name suitable for display
+         *        presentation purposes.
          */
-        public static final Policy COMMENT = new Policy("History.Policy [comment]");
-
-        /**
-         * Track file modifications in a binary file stored in the Jalopy
-         * settings directory.
-         */
-        public static final Policy FILE = new Policy("History.Policy [file]");
-        final String name;
-
-        private Policy(String name)
+        private Method(
+            String name,
+            String displayName)
         {
-            this.name = name.intern();
+            _name = name.intern();
+            _displayName = displayName;
         }
 
         /**
-         * Returns the policy for the given name.
+         * Returns the history method for the given name.
          *
-         * @param name a valid policy name. Either &quot;none&quot;,
-         *        &quot;file&quot; or &quot;comment&quot; (case-sensitive).
+         * @param name a valid policy name. Either &quot;timestamp&quot;,
+         *        &quot;crc32&quot; or &quot;adler32&quot; (case-sensitive).
          *
          * @return The policy for the given name.
          *
          * @throws IllegalArgumentException if an invalid name specified.
          */
-        public static Policy valueOf(String name)
+        public static Method valueOf(String name)
         {
-            String n = name.intern();
+            name = name.intern();
 
-            if (FILE.name == n)
+            if (name == TIMESTAMP._name)
             {
-                return FILE;
+                return TIMESTAMP;
             }
-            else if (COMMENT.name == n)
+            else if (name == CRC32._name)
             {
-                return COMMENT;
+                return CRC32;
             }
-            else if (DISABLED.name == n)
+            else if (name == ADLER32._name)
             {
-                return DISABLED;
+                return ADLER32;
             }
-
-            throw new IllegalArgumentException("no valid history policy name -- " +
-                                               name);
+            else
+            {
+                throw new IllegalArgumentException(
+                    "no valid history method name -- " + name);
+            }
         }
 
 
         /**
-         * Returns a string representation of this object.
+         * Returns the name of this method.
          *
-         * @return A string representation of this object.
+         * @return the name of this method.
+         */
+        public String getName()
+        {
+            return _name;
+        }
+
+
+        /**
+         * Returns a string representation of this method.
+         *
+         * @return a string representation of this method.
          */
         public String toString()
         {
-            return this.name;
+            return _displayName;
         }
     }
 
@@ -305,19 +348,21 @@ public final class History
          * Creates a new entry object.
          *
          * @param packageName the package name of the entry.
-         * @param time the time this entry was last processed.
+         * @param modification the value calculated for the last processing of this
+         *        entry.
          */
-        public Entry(String packageName,
-                     long   time)
+        public Entry(
+            String packageName,
+            long   modification)
         {
             this.packageName = packageName;
-            this.lastmod = time;
+            this.lastmod = modification;
         }
 
         /**
-         * Returns the last modification time stamp.
+         * Returns the last modification value (could be timestamp or crc).
          *
-         * @return last modification time stamp.
+         * @return last modification value.
          */
         public long getModification()
         {
@@ -351,6 +396,76 @@ public final class History
             buf.append('%');
 
             return buf.toString();
+        }
+    }
+
+
+    /**
+     * Represents a history policy.
+     *
+     * @since 1.0b8
+     */
+    public static final class Policy
+    {
+        /** Don't use the history. */
+        public static final Policy DISABLED = new Policy("History.Policy [disabled]");
+
+        /** Insert a single line comment header at the top of every formatted file. */
+        public static final Policy COMMENT = new Policy("History.Policy [comment]");
+
+        /**
+         * Track file modifications in a binary file stored in the Jalopy settings
+         * directory.
+         */
+        public static final Policy FILE = new Policy("History.Policy [file]");
+
+        /** The name of the history. */
+        final String name;
+
+        private Policy(String name)
+        {
+            this.name = name.intern();
+        }
+
+        /**
+         * Returns the policy for the given name.
+         *
+         * @param name a valid policy name. Either &quot;none&quot;, &quot;file&quot; or
+         *        &quot;comment&quot; (case-sensitive).
+         *
+         * @return The policy for the given name.
+         *
+         * @throws IllegalArgumentException if an invalid name specified.
+         */
+        public static Policy valueOf(String name)
+        {
+            String n = name.intern();
+
+            if (FILE.name == n)
+            {
+                return FILE;
+            }
+            else if (COMMENT.name == n)
+            {
+                return COMMENT;
+            }
+            else if (DISABLED.name == n)
+            {
+                return DISABLED;
+            }
+
+            throw new IllegalArgumentException("no valid history policy name -- " + name);
+        }
+
+
+        /**
+         * Returns a string representation of this object.
+         *
+         * @return A string representation of this object.
+         */
+        public String toString()
+        {
+            return this.name;
         }
     }
 

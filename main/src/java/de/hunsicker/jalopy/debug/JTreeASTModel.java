@@ -1,38 +1,14 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.debug;
 
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 
 /* ANTLR Translator Generator
  * Project led by Terence Parr at http://www.jGuru.com
@@ -41,10 +17,6 @@ package de.hunsicker.jalopy.debug;
  * $Id$
  */
 import de.hunsicker.antlr.collections.AST;
-
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
 
 
 /**
@@ -56,11 +28,11 @@ import javax.swing.tree.TreePath;
 public class JTreeASTModel
     implements TreeModel
 {
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
 
     AST root = null;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JTreeASTModel object.
@@ -79,7 +51,7 @@ public class JTreeASTModel
         root = t;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
@@ -91,15 +63,16 @@ public class JTreeASTModel
      *
      * @throws ArrayIndexOutOfBoundsException DOCUMENT ME!
      */
-    public Object getChild(Object parent,
-                           int    index)
+    public Object getChild(
+        Object parent,
+        int    index)
     {
         if (parent == null)
         {
             return null;
         }
 
-        AST p = (AST)parent;
+        AST p = (AST) parent;
         AST c = p.getFirstChild();
 
         if (c == null)
@@ -135,7 +108,7 @@ public class JTreeASTModel
             throw new IllegalArgumentException("root is null");
         }
 
-        AST p = (AST)parent;
+        AST p = (AST) parent;
         AST c = p.getFirstChild();
         int i = 0;
 
@@ -161,15 +134,16 @@ public class JTreeASTModel
      * @throws ArrayIndexOutOfBoundsException DOCUMENT ME!
      * @throws java.util.NoSuchElementException DOCUMENT ME!
      */
-    public int getIndexOfChild(Object parent,
-                               Object child)
+    public int getIndexOfChild(
+        Object parent,
+        Object child)
     {
         if ((parent == null) || (child == null))
         {
             throw new IllegalArgumentException("root or child is null");
         }
 
-        AST p = (AST)parent;
+        AST p = (AST) parent;
         AST c = p.getFirstChild();
 
         if (c == null)
@@ -210,7 +184,7 @@ public class JTreeASTModel
             throw new IllegalArgumentException("node is null");
         }
 
-        AST t = (AST)node;
+        AST t = (AST) node;
 
         return t.getFirstChild() == null;
     }
@@ -253,8 +227,9 @@ public class JTreeASTModel
      * @param path DOCUMENT ME!
      * @param newValue DOCUMENT ME!
      */
-    public void valueForPathChanged(TreePath path,
-                                    Object   newValue)
+    public void valueForPathChanged(
+        TreePath path,
+        Object   newValue)
     {
         System.out.println("heh, who is calling this mystery method?");
     }

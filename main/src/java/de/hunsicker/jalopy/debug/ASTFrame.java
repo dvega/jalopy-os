@@ -1,48 +1,10 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
- *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.debug;
-
-
-/* ANTLR Translator Generator
- * Project led by Terence Parr at http://www.jGuru.com
- * Software rights: http://www.antlr.org/RIGHTS.html
- *
- * $Id$
- */
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.CommonAST;
-import de.hunsicker.antlr.collections.AST;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -55,6 +17,16 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+/* ANTLR Translator Generator
+ * Project led by Terence Parr at http://www.jGuru.com
+ * Software rights: http://www.antlr.org/RIGHTS.html
+ *
+ * $Id$
+ */
+import de.hunsicker.antlr.ASTFactory;
+import de.hunsicker.antlr.CommonAST;
+import de.hunsicker.antlr.collections.AST;
+
 
 /**
  * DOCUMENT ME!
@@ -65,14 +37,14 @@ import javax.swing.tree.TreePath;
 public class ASTFrame
     extends JFrame
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
     static final int HEIGHT = 300;
 
     // The initial width and height of the frame
     static final int WIDTH = 200;
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new ASTFrame object.
@@ -80,8 +52,9 @@ public class ASTFrame
      * @param lab DOCUMENT ME!
      * @param r DOCUMENT ME!
      */
-    public ASTFrame(String lab,
-                    AST    r)
+    public ASTFrame(
+        String lab,
+        AST    r)
     {
         super(lab);
 
@@ -90,11 +63,12 @@ public class ASTFrame
         JTreeASTPanel tp = new JTreeASTPanel(new JTreeASTModel(r), null);
         Container content = getContentPane();
         content.add(tp, BorderLayout.CENTER);
-        addWindowListener(new WindowAdapter()
+        addWindowListener(
+            new WindowAdapter()
             {
                 public void windowClosing(WindowEvent e)
                 {
-                    Frame f = (Frame)e.getSource();
+                    Frame f = (Frame) e.getSource();
                     f.setVisible(false);
                     f.dispose();
 
@@ -104,7 +78,7 @@ public class ASTFrame
         setSize(WIDTH, HEIGHT);
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * DOCUMENT ME!
@@ -115,16 +89,16 @@ public class ASTFrame
     {
         // Create the tree nodes
         ASTFactory factory = new ASTFactory();
-        CommonAST r = (CommonAST)factory.create(0, "ROOT");
-        r.addChild((CommonAST)factory.create(0, "C1"));
-        r.addChild((CommonAST)factory.create(0, "C2"));
-        r.addChild((CommonAST)factory.create(0, "C3"));
+        CommonAST r = (CommonAST) factory.create(0, "ROOT");
+        r.addChild((CommonAST) factory.create(0, "C1"));
+        r.addChild((CommonAST) factory.create(0, "C2"));
+        r.addChild((CommonAST) factory.create(0, "C3"));
 
         ASTFrame frame = new ASTFrame("AST JTree Example", r);
         frame.setVisible(true);
     }
 
-    //~ Inner Classes ·························································
+    //~ Inner Classes --------------------------------------------------------------------
 
     class MyTreeSelectionListener
         implements TreeSelectionListener

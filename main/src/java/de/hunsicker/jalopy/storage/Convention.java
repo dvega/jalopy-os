@@ -1,35 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. Neither the name of the Jalopy project nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * $Id$
+ * This software is distributable under the BSD license. See the terms of the BSD license
+ * in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.storage;
 
@@ -41,14 +14,6 @@ import org.jdom.input.SAXBuilder;
 
 import org.jdom.output.XMLOutputter;
 
-import de.hunsicker.io.Copy;
-import de.hunsicker.io.ExtensionFilter;
-import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.storage.History;
-import de.hunsicker.jalopy.parser.DeclarationType;
-import de.hunsicker.util.ChainingRuntimeException;
-import de.hunsicker.util.StringHelper;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -58,17 +23,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import de.hunsicker.io.Copy;
+import de.hunsicker.io.ExtensionFilter;
+import de.hunsicker.io.IoHelper;
+import de.hunsicker.jalopy.language.DeclarationType;
+import de.hunsicker.util.ChainingRuntimeException;
+import de.hunsicker.util.StringHelper;
+
 import org.apache.log4j.Level;
+
 import org.apache.oro.text.perl.Perl5Util;
 
 
@@ -79,37 +56,33 @@ import java.lang.NullPointerException;
 //J+
 
 /**
- * Represents a source code convention: the settings that describe
- * the style Java source files should look like.
- *
- * <p>To ensure type-safety, valid key access, two accompanying classes are provided:</p>
- *
- * <pre style="background:lightgrey">
+ * Represents a code convention: the settings that describe the desired coding style for
+ * Java source files.
+ * 
+ * <p>
+ * To ensure type-safety, valid key access, two accompanying classes are provided:
+ * </p>
+ * <pre class="snippet">
  * {@link Convention} settings = {@link Convention}.getInstance();
- * int numThreads = settings.getInt({@link Keys}.THREAD_COUNT,
- *                                  {@link Defaults}.THREAD_COUNT));
+ * int numThreads = settings.getInt({@link ConventionKeys}.THREAD_COUNT,
+ *                                  {@link ConventionDefaults}.THREAD_COUNT));
  * </pre>
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @author <a href="http://jalopy.sf.net/contact.html">Roman Sarychev</a>
  * @version $Revision$
  *
- * @see de.hunsicker.jalopy.storage.Keys
- * @see de.hunsicker.jalopy.storage.Defaults
+ * @see de.hunsicker.jalopy.storage.ConventionKeys
+ * @see de.hunsicker.jalopy.storage.ConventionDefaults
  */
-public class Convention
+public final class Convention
 {
-    //~ Static variables/initializers ·········································
+    //~ Static variables/initializers ----------------------------------------------------
 
-    /**
-     * The file extension for Jalopy binary code convention files
-     * (&quot;.jal&quot;).
-     */
+    /** The file extension for Jalopy binary code convention files (&quot;.jal&quot;). */
     public static final String EXTENSION_JAL = ".jal";
 
-    /**
-     * The file extension for Jalopy XML code convention files (&quot;.xml&quot;).
-     */
+    /** The file extension for Jalopy XML code convention files (&quot;.xml&quot;). */
     public static final String EXTENSION_XML = ".xml";
 
     /**
@@ -137,7 +110,7 @@ public class Convention
     private static final String NAME_BACKUP = "bak";
 
     /** The empty map, effectively means the default values. */
-    private static final Map EMPTY_MAP = new HashMap(); // Map of <Key>:<String>
+    private static final Map EMPTY_MAP = new HashMap(); // Map of <Convention.Key>:<String>
 
     /** The current version number. */
     private static final String VERSION = "5";
@@ -150,15 +123,15 @@ public class Convention
 
     /**
      * The empty code convention, used if no code convention could be loaded from
-     * persistent storage. This either means no code convention were ever stored
-     * or something went wrong during the loading process. In either way
-     * the build-in defaults will be used.
+     * persistent storage. This either means no code convention were ever stored or
+     * something went wrong during the loading process. In either way the build-in
+     * defaults will be used.
      */
     private static final Convention EMPTY_PREFERENCES = new Convention(EMPTY_MAP);
 
     /** Our default project. */
-    private static final Project DEFAULT_PROJECT = new Project("default",
-                                                               "The Jalopy default project space.");
+    private static final Project DEFAULT_PROJECT =
+        new Project("default", "The Jalopy default project space.");
 
     /** The default project. */
     private static Project _project = DEFAULT_PROJECT;
@@ -183,8 +156,8 @@ public class Convention
 
     static
     {
-        _settingsDirectory = new File(System.getProperty("user.home") +
-                                      File.separator + ".jalopy");
+        _settingsDirectory =
+            new File(System.getProperty("user.home") + File.separator + ".jalopy");
 
         Project project = loadProject();
         _project = project;
@@ -208,7 +181,7 @@ public class Convention
                 INSTANCE = EMPTY_PREFERENCES;
             }
 
-            String location = INSTANCE.get(Keys.STYLE_LOCATION, "");
+            String location = INSTANCE.get(ConventionKeys.STYLE_LOCATION, "");
 
             // if the user specified a distributed location to load
             // code convention from, try to sync
@@ -219,24 +192,23 @@ public class Convention
                     importSettings(new URL(location));
 
                     // update the location, so we keep synchronizing further on
-                    INSTANCE.put(Keys.STYLE_LOCATION, location);
+                    INSTANCE.put(ConventionKeys.STYLE_LOCATION, location);
                     INSTANCE.flush();
                 }
                 catch (IOException ex)
                 {
-                    Object[] args ={ location };
-                    Loggers.IO.l7dlog(Level.WARN, "PREF_COULD_NOT_CONNECT",
-                                      args, null);
+                    Object[] args = { location };
+                    Loggers.IO.l7dlog(Level.WARN, "PREF_COULD_NOT_CONNECT", args, null);
                 }
             }
             else
             {
-                sync(INSTANCE);
+                syncronize(INSTANCE);
             }
         }
         catch (Throwable ex)
         {
-            Object[] args ={ settingsFile };
+            Object[] args = { settingsFile };
             Loggers.IO.l7dlog(Level.WARN, "PREF_ERROR_LOADING", args, ex);
 
             // actually means the build-in defaults will be used
@@ -260,8 +232,9 @@ public class Convention
         if (project.getName().equals(DEFAULT_PROJECT.getName()))
         {
             // update to our new
-            if ((!_projectSettingsDirectory.exists()) ||
-                new File(_settingsDirectory, "preferences.jal").exists())
+            if (
+                !_projectSettingsDirectory.exists()
+                || new File(_settingsDirectory, "preferences.jal").exists())
             {
                 if (IoHelper.ensureDirectoryExists(_projectSettingsDirectory))
                 {
@@ -273,9 +246,10 @@ public class Convention
                         {
                             try
                             {
-                                Copy.file(files[i],
-                                          new File(_projectSettingsDirectory,
-                                                   FILENAME_PREFERENCES));
+                                Copy.file(
+                                    files[i],
+                                    new File(
+                                        _projectSettingsDirectory, FILENAME_PREFERENCES));
                                 files[i].delete();
                             }
                             catch (IOException ex)
@@ -285,9 +259,10 @@ public class Convention
                         }
                         else if (!files[i].getName().equals(FILENAME_PROJECT))
                         {
-                            if (files[i].isDirectory() &&
-                                (files[i].getName().equals(NAME_BACKUP) || files[i].getName()
-                                                                                   .equals(NAME_REPOSITORY)))
+                            if (
+                                files[i].isDirectory()
+                                && (files[i].getName().equals(NAME_BACKUP)
+                                || files[i].getName().equals(NAME_REPOSITORY)))
                             {
                                 IoHelper.delete(files[i], true);
                             }
@@ -296,9 +271,9 @@ public class Convention
 
                     try
                     {
-                        IoHelper.serialize(project,
-                                           new File(_projectSettingsDirectory,
-                                                    FILENAME_PROJECT));
+                        IoHelper.serialize(
+                            project, new File(
+                                _projectSettingsDirectory, FILENAME_PROJECT));
                     }
                     catch (IOException ex)
                     {
@@ -309,15 +284,17 @@ public class Convention
         }
     }
 
-    //~ Instance variables ····················································
+    //~ Instance variables ---------------------------------------------------------------
+
+    private Locale _locale;
 
     /** Holds the last snapshot. */
-    private Map _snapshot; // Map of <Key>:<String>
+    private Map _snapshot; // Map of <Convention.Key>:<String>
 
     /** The map which holds the actual values. */
-    private Map _values = EMPTY_MAP; // Map of <Key>:<String>
+    private Map _values = EMPTY_MAP; // Map of <Convention.Key>:<String>
 
-    //~ Constructors ··························································
+    //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new code convention object.
@@ -335,11 +312,25 @@ public class Convention
             if (key instanceof de.hunsicker.jalopy.prefs.Key)
             {
                 Map t = new HashMap(values.size());
-                for (Iterator i = values.entrySet().iterator();i.hasNext();)
+
+                for (Iterator i = values.entrySet().iterator(); i.hasNext();)
                 {
-                    Map.Entry entry = (Map.Entry)i.next();
+                    Map.Entry entry = (Map.Entry) i.next();
                     t.put(new Key(entry.getKey().toString()), entry.getValue());
                 }
+
+                values = t;
+            }
+            else if (key instanceof de.hunsicker.jalopy.storage.Key)
+            {
+                Map t = new HashMap(values.size());
+
+                for (Iterator i = values.entrySet().iterator(); i.hasNext();)
+                {
+                    Map.Entry entry = (Map.Entry) i.next();
+                    t.put(new Key(entry.getKey().toString()), entry.getValue());
+                }
+
                 values = t;
             }
         }
@@ -347,7 +338,7 @@ public class Convention
         _values = values;
     }
 
-    //~ Methods ·······························································
+    //~ Methods --------------------------------------------------------------------------
 
     /**
      * Returns the current project's backup directory path.
@@ -398,15 +389,15 @@ public class Convention
 
 
     /**
-     * Returns the local code convention file.
+     * Returns the preferred locale.
      *
-     * @return local code convention file.
+     * @return the preferred locale.
      *
-     * @since 1.0b8
+     * @since 1.0b9
      */
-    public static File getSettingsFile()
+    public Locale getLocale()
     {
-        return _settingsFile;
+        return _locale;
     }
 
 
@@ -500,9 +491,21 @@ public class Convention
 
 
     /**
-     * Adds a new project. Adding a project means that the settings of the
-     * currently active project will be duplicated to the new project
-     * settings directory.
+     * Returns the local code convention file.
+     *
+     * @return local code convention file.
+     *
+     * @since 1.0b8
+     */
+    public static File getSettingsFile()
+    {
+        return _settingsFile;
+    }
+
+
+    /**
+     * Adds a new project. Adding a project means that the settings of the currently
+     * active project will be duplicated to the new project settings directory.
      *
      * @param project the project information.
      *
@@ -511,20 +514,21 @@ public class Convention
      * @since 1.0b8
      */
     public static void addProject(Project project)
-        throws IOException
+      throws IOException
     {
         synchronized (_lock)
         {
-            File projectDirectory = new File(getSettingsDirectory(),
-                                             project.getName());
-            File activeProjectDirectory = new File(getSettingsDirectory(),
-                                                   _project.getName());
+            File projectDirectory = new File(getSettingsDirectory(), project.getName());
+            File activeProjectDirectory =
+                new File(getSettingsDirectory(), _project.getName());
 
             try
             {
                 if (activeProjectDirectory.exists())
                 {
-                    File[] files = activeProjectDirectory.listFiles(new ExtensionFilter(EXTENSION_DAT));
+                    File[] files =
+                        activeProjectDirectory.listFiles(
+                            new ExtensionFilter(EXTENSION_DAT));
 
                     // copy the settings files from the active project directory
                     // into the new one
@@ -532,18 +536,17 @@ public class Convention
                     {
                         if (files[i].isFile())
                         {
-                            Copy.file(files[i],
-                                      new File(projectDirectory,
-                                               files[i].getName()));
+                            Copy.file(
+                                files[i], new File(
+                                    projectDirectory, files[i].getName()));
                         }
                     }
                 }
 
                 if (IoHelper.ensureDirectoryExists(projectDirectory))
                 {
-                    IoHelper.serialize(project,
-                                       new File(projectDirectory,
-                                                FILENAME_PROJECT));
+                    IoHelper.serialize(
+                        project, new File(projectDirectory, FILENAME_PROJECT));
                 }
             }
             catch (IOException ex)
@@ -559,20 +562,21 @@ public class Convention
      * Imports the code convention from the specified input stream.
      *
      * @param in the input stream from which to read the code convention.
-     * @param extension file extension indicating the format of the saved
-     *        code convention.
+     * @param extension file extension indicating the format of the saved code
+     *        convention.
      *
      * @throws IOException if an I/O error occured.
      * @throws IllegalArgumentException if an invalid extension was specified.
      */
-    public static void importSettings(InputStream in,
-                                         String      extension)
-        throws IOException
+    public static void importSettings(
+        InputStream in,
+        String      extension)
+      throws IOException
     {
         if (EXTENSION_DAT.equals(extension) || EXTENSION_JAL.equals(extension))
         {
-            INSTANCE._values = (Map)IoHelper.deserialize(in);
-            sync(INSTANCE);
+            INSTANCE._values = (Map) IoHelper.deserialize(in);
+            syncronize(INSTANCE);
         }
         else if (EXTENSION_XML.equals(extension))
         {
@@ -581,14 +585,13 @@ public class Convention
             try
             {
                 String encoding = System.getProperty("file.encoding");
-                isr = new InputStreamReader(new BufferedInputStream(in),
-                                            encoding);
+                isr = new InputStreamReader(new BufferedInputStream(in), encoding);
 
                 SAXBuilder builder = new SAXBuilder();
                 Document document = builder.build(isr);
                 INSTANCE._values = new HashMap();
                 convertXmlToMap(INSTANCE._values, document.getRootElement());
-                sync(INSTANCE);
+                syncronize(INSTANCE);
             }
             catch (JDOMException ex)
             {
@@ -611,8 +614,7 @@ public class Convention
         }
         else
         {
-            throw new IllegalArgumentException("invalid extension -- " +
-                                               extension);
+            throw new IllegalArgumentException("invalid extension -- " + extension);
         }
     }
 
@@ -626,7 +628,7 @@ public class Convention
      * @throws ChainingRuntimeException DOCUMENT ME!
      */
     public static void importSettings(URL url)
-        throws IOException
+      throws IOException
     {
         InputStream in = null;
 
@@ -638,8 +640,7 @@ public class Convention
         catch (MalformedURLException ex)
         {
             throw new ChainingRuntimeException(
-                                               "Could not load code convention from the given url -- " +
-                                               url, ex);
+                "Could not load code convention from the given url -- " + url, ex);
         }
         finally
         {
@@ -666,7 +667,7 @@ public class Convention
      * @throws IOException if an I/O error occured.
      */
     public static void importSettings(File file)
-        throws IOException
+      throws IOException
     {
         InputStream in = null;
 
@@ -677,8 +678,8 @@ public class Convention
                 // if no explicit path was given
                 if (file.getAbsolutePath().indexOf(File.separatorChar) < 0)
                 {
-                    file = new File(System.getProperty("user.dir") +
-                                    File.separator + file);
+                    file =
+                        new File(System.getProperty("user.dir") + File.separator + file);
 
                     if (file.exists()) // first search the current directory
                     {
@@ -686,8 +687,9 @@ public class Convention
                     }
                     else // then the user's home directory
                     {
-                        file = new File(System.getProperty("user.home") +
-                                        File.separator + file);
+                        file =
+                            new File(
+                                System.getProperty("user.home") + File.separator + file);
 
                         if (file.exists())
                         {
@@ -695,12 +697,13 @@ public class Convention
                         }
                         else // and finally the Jalopy .jar
                         {
-                            in = Convention.class.getResourceAsStream(file.getAbsolutePath());
+                            in = Convention.class.getResourceAsStream(
+                                    file.getAbsolutePath());
 
                             if (in == null)
                             {
-                                throw new FileNotFoundException("file not found -- " +
-                                                                file.getAbsolutePath());
+                                throw new FileNotFoundException(
+                                    "file not found -- " + file.getAbsolutePath());
                             }
                         }
                     }
@@ -716,8 +719,8 @@ public class Convention
             }
             else
             {
-                throw new IllegalArgumentException("no valid file -- " +
-                                                   file.getAbsolutePath());
+                throw new IllegalArgumentException(
+                    "no valid file -- " + file.getAbsolutePath());
             }
 
             importSettings(in, getExtension(file));
@@ -749,12 +752,11 @@ public class Convention
      * @since 1.0b8
      */
     public static void removeProject(Project project)
-        throws IOException
+      throws IOException
     {
         synchronized (_lock)
         {
-            File projectDirectory = new File(getSettingsDirectory(),
-                                             project.getName());
+            File projectDirectory = new File(getSettingsDirectory(), project.getName());
             IoHelper.delete(projectDirectory, true);
         }
     }
@@ -762,31 +764,30 @@ public class Convention
 
     /**
      * Returns the boolean value associated with the given key.
-     *
+     * 
      * <p>
-     * This implementation invokes {@link
-     * #get(Key,String) <tt>get(key,
-     * null)</tt>}. If the return value is non-null, it is compared with
-     * <tt>"true"</tt> using {@link String#equalsIgnoreCase(String)}. If the
-     * comparison returns <tt>true</tt>, this invocation returns
-     * <tt>true</tt>. Otherwise, the original return value is compared with
-     * <tt>"false"</tt>, again using {@link String#equalsIgnoreCase(String)}.
-     * If the comparison returns <tt>true</tt>, this invocation returns
-     * <tt>false</tt>. Otherwise, this invocation returns <tt>def</tt>.
+     * This implementation invokes {@link #get(Convention.Key,String) <tt>get(key,
+     * null)</tt>}. If the return value is non-null, it is compared with <tt>"true"</tt>
+     * using {@link String#equalsIgnoreCase(String)}. If the comparison returns
+     * <tt>true</tt>, this invocation returns <tt>true</tt>. Otherwise, the original
+     * return value is compared with <tt>"false"</tt>, again using {@link
+     * String#equalsIgnoreCase(String)}. If the comparison returns <tt>true</tt>, this
+     * invocation returns <tt>false</tt>. Otherwise, this invocation returns
+     * <tt>def</tt>.
      * </p>
      *
      * @param key key whose associated value is to be returned as a boolean.
-     * @param def the value to be returned in the event that this preference
-     *        node has no value associated with <tt>key</tt> or the
-     *        associated value cannot be interpreted as a boolean.
+     * @param def the value to be returned in the event that this preference node has no
+     *        value associated with <tt>key</tt> or the associated value cannot be
+     *        interpreted as a boolean.
      *
-     * @return the boolean value represented by the string associated with
-     *         <tt>key</tt> in this preference node, or <tt>def</tt> if the
-     *         associated value does not exist or cannot be interpreted as a
-     *         boolean.
+     * @return the boolean value represented by the string associated with <tt>key</tt>
+     *         in this preference node, or <tt>def</tt> if the associated value does not
+     *         exist or cannot be interpreted as a boolean.
      */
-    public boolean getBoolean(Key     key,
-                              boolean def)
+    public boolean getBoolean(
+        Key     key,
+        boolean def)
     {
         boolean result = def;
         String value = get(key, null);
@@ -808,31 +809,29 @@ public class Convention
 
 
     /**
-     * Returns the int value represented by the string associated with the
-     * specified key in this preference node. The string is converted to an
-     * integer as by {@link Integer#parseInt(String)}. Returns the specified
-     * default if there is no value associated with the key, the backing
-     * store is inaccessible, or if {@link Integer#parseInt(String)} would
-     * throw a {@link NumberFormatException} if the associated value were
-     * passed. This method is intended for use in conjunction with {@link
-     * #putInt}.
+     * Returns the int value represented by the string associated with the specified key
+     * in this preference node. The string is converted to an integer as by {@link
+     * Integer#parseInt(String)}. Returns the specified default if there is no value
+     * associated with the key, the backing store is inaccessible, or if {@link
+     * Integer#parseInt(String)} would throw a {@link NumberFormatException} if the
+     * associated value were passed. This method is intended for use in conjunction with
+     * {@link #putInt}.
      *
      * @param key key whose associated value is to be returned as an int.
-     * @param def the value to be returned in the event that this preference
-     *        node has no value associated with <tt>key</tt> or the
-     *        associated value cannot be interpreted as an int, or the
-     *        backing store is inaccessible.
+     * @param def the value to be returned in the event that this preference node has no
+     *        value associated with <tt>key</tt> or the associated value cannot be
+     *        interpreted as an int, or the backing store is inaccessible.
      *
-     * @return the int value represented by the string associated with
-     *         <tt>key</tt> in this preference node, or <tt>def</tt> if the
-     *         associated value does not exist or cannot be interpreted as an
-     *         int.
+     * @return the int value represented by the string associated with <tt>key</tt> in
+     *         this preference node, or <tt>def</tt> if the associated value does not
+     *         exist or cannot be interpreted as an int.
      *
-     * @see #putInt(Key,int)
-     * @see #get(Key,String)
+     * @see #putInt(Convention.Key,int)
+     * @see #get(Convention.Key,String)
      */
-    public int getInt(Key key,
-                      int def)
+    public int getInt(
+        Key key,
+        int def)
     {
         int result = def;
 
@@ -865,38 +864,38 @@ public class Convention
        }*/
 
     /**
-     * Exports the code convention to the given file. The file extension
-     * determines the format in which the code convention will be written.
+     * Exports the code convention to the given file. The file extension determines the
+     * format in which the code convention will be written.
      *
      * @param file file to export the code convention to.
      *
      * @throws IOException if writing to the specified output stream failed.
      */
     public void exportSettings(File file)
-        throws IOException
+      throws IOException
     {
         exportSettings(new FileOutputStream(file), getExtension(file));
     }
 
 
     /**
-     * Emits the code convention in a format indicated by the given extension. If
-     * no extension is given, the default format will be used (the binary
-     * <code>.jal</code> format).
+     * Emits the code convention in a format indicated by the given extension. If no
+     * extension is given, the default format will be used (the binary <code>.jal</code>
+     * format).
      *
      * @param out the output stream on which to emit the code convention.
-     * @param extension output format to use. Either {@link #EXTENSION_JAL} or
-     *        {@link #EXTENSION_XML}.
+     * @param extension output format to use. Either {@link #EXTENSION_JAL} or {@link
+     *        #EXTENSION_XML}.
      *
      * @throws IOException if an I/O error occured.
-     * @throws IllegalArgumentException if <em>extension</em> is no valid file
-     *         extension.
+     * @throws IllegalArgumentException if <em>extension</em> is no valid file extension.
      */
-    public void exportSettings(OutputStream out,
-                                  String       extension)
-        throws IOException
+    public void exportSettings(
+        OutputStream out,
+        String       extension)
+      throws IOException
     {
-        _values.put(Keys.INTERNAL_VERSION, VERSION);
+        _values.put(ConventionKeys.INTERNAL_VERSION, VERSION);
 
         if (extension == null)
         {
@@ -912,10 +911,9 @@ public class Convention
             try
             {
                 String encoding = System.getProperty("file.encoding");
-                XMLOutputter outputter = new XMLOutputter("    ", true,
-                                                          encoding);
-                outputter.output(convertMapToXml(_values),
-                                 new BufferedOutputStream(out));
+                XMLOutputter outputter = new XMLOutputter("    ", true, encoding);
+                outputter.output(
+                    convertMapToXml(_values), new BufferedOutputStream(out));
             }
             finally
             {
@@ -924,8 +922,7 @@ public class Convention
         }
         else
         {
-            throw new IllegalArgumentException("invalid file extension -- " +
-                                               extension);
+            throw new IllegalArgumentException("invalid file extension -- " + extension);
         }
     }
 
@@ -936,47 +933,52 @@ public class Convention
      * @throws IOException if an I/O error occured.
      */
     public void flush()
-        throws IOException
+      throws IOException
     {
         File directory = getProjectSettingsDirectory();
 
         if (!IoHelper.ensureDirectoryExists(directory))
         {
-            throw new IOException("could not create settings directory -- " +
-                                  directory);
+            throw new IOException("could not create settings directory -- " + directory);
         }
 
-        _values.put(Keys.INTERNAL_VERSION, VERSION);
+        _values.put(ConventionKeys.INTERNAL_VERSION, VERSION);
 
         // write the values to disk
         IoHelper.serialize(_values, getSettingsFile());
 
         // update the project file in the current project directory
         storeProject(_project);
+
+        //Writer writer = new BufferedWriter(new FileWriter("c:/test.xml"));
+
+        /*ObjOut out = new ObjOut(writer, false, new Config().aliasID(false));
+        out.writeObject(_values);
+        writer.close();*/
     }
 
 
     /**
      * Returns the value associated with the given key.
-     *
+     * 
      * <p>
-     * This implementation first checks to see if <tt>key</tt> is
-     * <tt>null</tt> throwing a <tt>NullPointerException</tt> if this is the
-     * case.
+     * This implementation first checks to see if <tt>key</tt> is <tt>null</tt> throwing
+     * a <tt>NullPointerException</tt> if this is the case.
      * </p>
      *
      * @param key key whose associated value is to be returned.
-     * @param def the value to be returned in the event that this preference
-     *        node has no value associated with <tt>key</tt>.
+     * @param def the value to be returned in the event that this preference node has no
+     *        value associated with <tt>key</tt>.
      *
-     * @return the value associated with <tt>key</tt>, or <tt>def</tt> if no
-     *         value is associated with <tt>key</tt>.
+     * @return the value associated with <tt>key</tt>, or <tt>def</tt> if no value is
+     *         associated with <tt>key</tt>.
      *
-     * @throws NullPointerException if key is<tt>null</tt>.  (A <tt>null</tt>
-     *         default <i>is</i> permitted.)
+     * @throws NullPointerException if key is <tt>null</tt>. (A <tt>null</tt> default
+     *         <i>is</i> permitted.)
      */
-    public String get(Key    key,
-                      String def)
+    public String get(
+        Key    key,
+        String def)
     {
         if (key == null)
         {
@@ -987,7 +989,7 @@ public class Convention
 
         try
         {
-            result = (String)_values.get(key);
+            result = (String) _values.get(key);
         }
         catch (Exception ignored)
         {
@@ -1001,15 +1003,16 @@ public class Convention
 
     /**
      * Implements the <tt>put</tt> method as per the specification in {@link
-     * Convention#put(Key,String)}.
+     * Convention#put(Convention.Key,String)}.
      *
      * @param key key with which the specified value is to be associated.
      * @param value value to be associated with the specified key.
      *
-     * @throws NullPointerException if key or value is<tt>null</tt>.
+     * @throws NullPointerException if key or value is <tt>null</tt>.
      */
-    public void put(Key    key,
-                    String value)
+    public void put(
+        Key    key,
+        String value)
     {
         if ((key == null) || (value == null))
         {
@@ -1021,48 +1024,50 @@ public class Convention
 
 
     /**
-     * Implements the <tt>putBoolean</tt> method as per the specification in
-     * {@link Convention#putBoolean(Key,boolean)}.
-     *
+     * Implements the <tt>putBoolean</tt> method as per the specification in {@link
+     * Convention#putBoolean(Convention.Key,boolean)}.
+     * 
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
-     * String#valueOf(boolean)} and invokes {@link #put(Key,String)} on the
+     * String#valueOf(boolean)} and invokes {@link #put(Convention.Key,String)} on the
      * result.
      * </p>
      *
      * @param key key with which the string form of value is to be associated.
      * @param value value whose string form is to be associated with key.
      */
-    public void putBoolean(Key     key,
-                           boolean value)
+    public void putBoolean(
+        Key     key,
+        boolean value)
     {
         put(key, String.valueOf(value));
     }
 
 
     /**
-     * Implements the <tt>putInt</tt> method as per the specification in
-     * {@link Convention#putInt(Key,int)}.
-     *
+     * Implements the <tt>putInt</tt> method as per the specification in {@link
+     * Convention#putInt(Convention.Key,int)}.
+     * 
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
-     * Integer#toString(int)} and invokes {@link #put(Key,String)} on the
+     * Integer#toString(int)} and invokes {@link #put(Convention.Key,String)} on the
      * result.
      * </p>
      *
      * @param key key with which the string form of value is to be associated.
      * @param value value whose string form is to be associated with key.
      */
-    public void putInt(Key key,
-                       int value)
+    public void putInt(
+        Key key,
+        int value)
     {
         put(key, Integer.toString(value));
     }
 
 
     /**
-     * Reverts the code convention to the state of the last snapshot. If no
-     * snapshots exists, the call will be ignored.
+     * Reverts the code convention to the state of the last snapshot. If no snapshots
+     * exists, the call will be ignored.
      *
      * @see #snapshot
      * @since 1.0b8
@@ -1082,9 +1087,9 @@ public class Convention
 
 
     /**
-     * Creates an internal snapshot of the current code convention.  You can use
-     * {@link #revert} at any time to revert the code convention to the state of
-     * the last snapshot.
+     * Creates an internal snapshot of the current code convention.  You can then use
+     * {@link #revert} at any time to revert the code convention to the state of the
+     * last snapshot.
      *
      * @see #revert
      * @since 1.0b8
@@ -1116,13 +1121,10 @@ public class Convention
      */
     private static void setDirectories(Project project)
     {
-        _projectSettingsDirectory = new File(_settingsDirectory,
-                                             project.getName());
+        _projectSettingsDirectory = new File(_settingsDirectory, project.getName());
         _backupDirectory = new File(_projectSettingsDirectory, NAME_BACKUP);
-        _repositoryDirectory = new File(_projectSettingsDirectory,
-                                        NAME_REPOSITORY);
-        _settingsFile = new File(_projectSettingsDirectory,
-                                    FILENAME_PREFERENCES);
+        _repositoryDirectory = new File(_projectSettingsDirectory, NAME_REPOSITORY);
+        _settingsFile = new File(_projectSettingsDirectory, FILENAME_PREFERENCES);
         _historyFile = new File(_projectSettingsDirectory, FILENAME_HISTORY);
     }
 
@@ -1134,14 +1136,13 @@ public class Convention
      *
      * @return file extension of the given file.
      *
-     * @throws IOException if the given location does not denote a valid
-     *         code convention file.
-     * @throws IllegalArgumentException if <em>location</em> does not have a
-     *         valid extension (Either {@link #EXTENSION_JAL} or {@link
-     *         #EXTENSION_XML}).
+     * @throws IOException if the given location does not denote a valid code convention
+     *         file.
+     * @throws IllegalArgumentException if <em>location</em> does not have a valid
+     *         extension (Either {@link #EXTENSION_JAL} or {@link #EXTENSION_XML}).
      */
     private static String getExtension(String location)
-        throws IOException
+      throws IOException
     {
         int offset = location.lastIndexOf('.');
 
@@ -1149,9 +1150,9 @@ public class Convention
         {
             String extension = location.substring(offset);
 
-            if ((extension == null) && (!EXTENSION_JAL.equals(extension)) &&
-                EXTENSION_DAT.equals(extension) &&
-                (!(EXTENSION_XML.equals(extension))))
+            if (
+                (extension == null) && !EXTENSION_JAL.equals(extension)
+                && EXTENSION_DAT.equals(extension) && !EXTENSION_XML.equals(extension))
             {
                 throw new IOException("no valid location given -- " + location);
             }
@@ -1159,8 +1160,7 @@ public class Convention
             return extension;
         }
 
-        throw new IllegalArgumentException("invalid file extension -- " +
-                                           location);
+        throw new IllegalArgumentException("invalid file extension -- " + location);
     }
 
 
@@ -1171,11 +1171,11 @@ public class Convention
      *
      * @return file extension of the given file.
      *
-     * @throws IOException if the given file does not denote a valid
-     *         code convention file.
+     * @throws IOException if the given file does not denote a valid code convention
+     *         file.
      */
     private static String getExtension(File file)
-        throws IOException
+      throws IOException
     {
         return getExtension(file.getName());
     }
@@ -1188,11 +1188,10 @@ public class Convention
      *
      * @return file extension of the given url.
      *
-     * @throws IOException if the given url does not denote a valid
-     *         code convention file.
+     * @throws IOException if the given url does not denote a valid code convention file.
      */
     private static String getExtension(URL url)
-        throws IOException
+      throws IOException
     {
         return getExtension(url.getFile());
     }
@@ -1230,8 +1229,9 @@ public class Convention
      * @param map the map to hold the values.
      * @param element root element of the JDOM tree.
      */
-    private static void convertXmlToMap(Map     map,
-                                        Element element)
+    private static void convertXmlToMap(
+        Map     map,
+        Element element)
     {
         List children = element.getChildren();
 
@@ -1263,7 +1263,7 @@ public class Convention
 
         for (int i = 0, i_len = children.size(); i < i_len; i++)
         {
-            Element childElement = (Element)children.get(i);
+            Element childElement = (Element) children.get(i);
             convertXmlToMap(map, childElement);
         }
     }
@@ -1284,7 +1284,7 @@ public class Convention
 
             if (file.exists())
             {
-                Project project = (Project)IoHelper.deserialize(file);
+                Project project = (Project) IoHelper.deserialize(file);
 
                 return project;
             }
@@ -1311,10 +1311,9 @@ public class Convention
      * @throws ClassNotFoundException if a class could not be found.
      */
     private static Convention readFromStream(InputStream in)
-        throws IOException,
-               ClassNotFoundException
+      throws IOException, ClassNotFoundException
     {
-        return new Convention((Map)IoHelper.deserialize(new BufferedInputStream(in)));
+        return new Convention((Map) IoHelper.deserialize(new BufferedInputStream(in)));
     }
 
 
@@ -1326,8 +1325,9 @@ public class Convention
      *
      * @since 1.0b6
      */
-    private static void renameKey(String oldName,
-                                  Key    newKey)
+    private static void renameKey(
+        String oldName,
+        Key    newKey)
     {
         Object value = INSTANCE._values.remove(oldName);
         INSTANCE._values.put(newKey, value);
@@ -1344,7 +1344,7 @@ public class Convention
      * @since 1.0b8
      */
     private static void storeProject(Project project)
-        throws IOException
+      throws IOException
     {
         File file = new File(getProjectSettingsDirectory(), FILENAME_PROJECT);
         IoHelper.serialize(project, file);
@@ -1352,73 +1352,14 @@ public class Convention
         if (!project.getName().equals(DEFAULT_PROJECT.getName()))
         {
             // don't forget to keep track of the active project
-            IoHelper.serialize(project,
-                               new File(getSettingsDirectory(),
-                                        FILENAME_PROJECT));
+            IoHelper.serialize(
+                project, new File(getSettingsDirectory(), FILENAME_PROJECT));
         }
         else
         {
             File f = new File(getSettingsDirectory(), FILENAME_PROJECT);
             f.delete();
         }
-    }
-
-
-    /**
-     * Updates the given code convention to be compatible with the current
-     * (latest) version.
-     *
-     * @param settings code convention settings to synchronize.
-     * @param version version number of the given code convention settings.
-     *
-     * @since 1.0b8
-     */
-    private static void sync(Convention settings,
-                             int         version)
-    {
-        switch (version)
-        {
-            case -1 : // before 1.0b6
-                sync0To1(settings);
-
-                break;
-
-            case 1 : // 1.0b6
-                sync1To2(settings);
-                sync(settings, 2);
-
-                break;
-
-            case 2 : // 1.0b7
-                sync2To3(settings);
-                sync(settings, 3);
-
-                break;
-
-            case 3 : // 1.0b8
-                sync3To4(settings);
-                sync(settings, 4);
-
-                break;
-
-            case 4: // 1.0b9
-                sync4To5(settings);
-        }
-    }
-
-
-    /**
-     * Updates the given code convention settings to the the current code convention format.
-     *
-     * @param settings code convention settings to synchronize against the latest version.
-     *
-     * @since 1.0b6
-     */
-    private static void sync(Convention settings)
-    {
-        int version = settings.getInt(Keys.INTERNAL_VERSION, -1);
-        sync(settings, version);
-        INSTANCE.put(Keys.INTERNAL_VERSION, VERSION);
     }
 
 
@@ -1446,12 +1387,13 @@ public class Convention
      */
     private static void sync1To2(Convention settings)
     {
-        renameKey("printer/alignment/throwsTypes",
-                  Keys.LINE_WRAP_AFTER_TYPES_THROWS);
-        renameKey("printer/alignment/implementsTypes",
-                  Keys.LINE_WRAP_AFTER_TYPES_IMPLEMENTS);
-        renameKey("printer/alignment/extendsTypes",
-                  Keys.LINE_WRAP_AFTER_TYPES_EXTENDS);
+        renameKey(
+            "printer/alignment/throwsTypes", ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS);
+        renameKey(
+            "printer/alignment/implementsTypes",
+            ConventionKeys.LINE_WRAP_AFTER_TYPES_IMPLEMENTS);
+        renameKey(
+            "printer/alignment/extendsTypes", ConventionKeys.LINE_WRAP_AFTER_TYPES_EXTENDS);
 
         Object collapse = INSTANCE._values.get("transform/import/collapse");
 
@@ -1461,7 +1403,7 @@ public class Convention
 
             if ("true".equals(collapse))
             {
-                INSTANCE.putInt(Keys.IMPORT_POLICY, 2);
+                INSTANCE.putInt(ConventionKeys.IMPORT_POLICY, 2);
             }
         }
 
@@ -1473,7 +1415,7 @@ public class Convention
 
             if ("true".equals(expand))
             {
-                INSTANCE.putInt(Keys.IMPORT_POLICY, 1);
+                INSTANCE.putInt(ConventionKeys.IMPORT_POLICY, 1);
             }
         }
     }
@@ -1488,62 +1430,15 @@ public class Convention
      */
     private static void sync2To3(Convention settings)
     {
-        int historyPolicy = INSTANCE.getInt(Keys.HISTORY_POLICY, 0);
+        int historyPolicy = INSTANCE.getInt(ConventionKeys.HISTORY_POLICY, 0);
 
         switch (historyPolicy)
         {
             case -1 :
-                INSTANCE.putInt(Keys.HISTORY_POLICY, 0);
+                INSTANCE.putInt(ConventionKeys.HISTORY_POLICY, 0);
 
                 break;
         }
-    }
-
-    /**
-     * Changes the code convention settings format from version 4 to version 5.
-     *
-     * @param settings code convention settings to update.
-     *
-     * @since 1.0b9
-     */
-    private static void sync4To5(Convention settings)
-    {
-        String header = settings.get(Keys.HEADER_TEXT, "").trim();
-        String[] lines = StringHelper.split(header, "\n");
-
-        StringBuffer buf = new StringBuffer(header.length());
-
-        for (int i = 0; i < lines.length; i++)
-        {
-            buf.append(StringHelper.trimTrailing(lines[i]));
-            buf.append('|');
-        }
-
-        if (lines.length > 0)
-        {
-            buf.deleteCharAt(buf.length() - 1);
-        }
-
-        settings.put(Keys.HEADER_TEXT, buf.toString());
-
-
-        String footer = settings.get(Keys.FOOTER_TEXT, "").trim();
-        lines = StringHelper.split(footer, "\n");
-
-        buf = new StringBuffer(footer.length());
-
-        for (int i = 0; i < lines.length; i++)
-        {
-            buf.append(StringHelper.trimTrailing(lines[i]));
-            buf.append('|');
-        }
-
-        if (lines.length > 0)
-        {
-            buf.deleteCharAt(buf.length() - 1);
-        }
-
-        settings.put(Keys.FOOTER_TEXT, buf.toString());
     }
 
 
@@ -1561,11 +1456,11 @@ public class Convention
         // make sure we don't use String based keys anymore
         for (Iterator i = settings._values.entrySet().iterator(); i.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)i.next();
+            Map.Entry entry = (Map.Entry) i.next();
 
             if (entry.getKey() instanceof String)
             {
-                Key key = new Key((String)entry.getKey());
+                Key key = new Key((String) entry.getKey());
                 values.put(key, entry.getValue());
             }
             else
@@ -1574,7 +1469,7 @@ public class Convention
             }
         }
 
-        INSTANCE._values = values;
+        settings._values = values;
         settings._values.remove(new Key("printer/comments/javadoc/templateDescription"));
         settings._values.remove(new Key("printer/comments/javadoc/templateParam"));
         settings._values.remove(new Key("printer/comments/javadoc/templateReturn"));
@@ -1593,55 +1488,173 @@ public class Convention
         settings._values.remove(new Key("messages/showPrinterJavadocMsg"));
         settings._values.remove(new Key("messages/showPrinterMsg"));
 
-        String sortOrder = INSTANCE.get(Keys.SORT_ORDER,
-                                        DeclarationType.getOrder());
+        String sortOrder =
+            settings.get(ConventionKeys.SORT_ORDER, DeclarationType.getOrder());
+
+        // the keys for the sort order changed; rename them
         Perl5Util regexp = new Perl5Util();
         sortOrder = regexp.substitute("s/Class/Classes/", sortOrder);
         sortOrder = regexp.substitute("s/Interface/Interfaces/", sortOrder);
         sortOrder = regexp.substitute("s/Method/Methods/", sortOrder);
         sortOrder = regexp.substitute("s/Constructor/Constructors/", sortOrder);
-        sortOrder = regexp.substitute("s/Initializer/Instance Initializers/",
-                                      sortOrder);
-        sortOrder = regexp.substitute("s/Variable/Instance Variables/",
-                                      sortOrder);
+        sortOrder = regexp.substitute(
+                "s/Initializer/Instance Initializers/", sortOrder);
+        sortOrder = regexp.substitute("s/Variable/Instance Variables/", sortOrder);
         sortOrder = "Static Variables/Initializers," + sortOrder;
-        INSTANCE.put(Keys.SORT_ORDER, sortOrder);
-        INSTANCE.put(Keys.HISTORY_POLICY,
-                     getHistoryPolicy(INSTANCE.get(Keys.HISTORY_POLICY, "0"))
-                         .toString());
 
-        int importPolicy = INSTANCE.getInt(Keys.IMPORT_POLICY, 0);
+        settings._values.put(ConventionKeys.SORT_ORDER, sortOrder);
+        settings._values.put(
+            ConventionKeys.HISTORY_POLICY,
+            getHistoryPolicy(settings.get(ConventionKeys.HISTORY_POLICY, "0")).toString());
+
+        int importPolicy = settings.getInt(ConventionKeys.IMPORT_POLICY, 0);
 
         switch (importPolicy)
         {
             case 1 : // EXPAND
-                INSTANCE.put(Keys.IMPORT_POLICY, ImportPolicy.EXPAND.toString());
+                settings._values.put(
+                    ConventionKeys.IMPORT_POLICY, ImportPolicy.EXPAND.toString());
 
                 break;
 
-            case 2 : // COLLAPPSE
-                INSTANCE.put(Keys.IMPORT_POLICY,
-                             ImportPolicy.COLLAPSE.toString());
+            case 2 : // COLLAPSE
+                settings._values.put(
+                    ConventionKeys.IMPORT_POLICY, ImportPolicy.COLLAPSE.toString());
 
                 break;
 
             case 0 : // DISABLED
-
             // fall through
             default :
-                INSTANCE.put(Keys.IMPORT_POLICY,
-                             ImportPolicy.DISABLED.toString());
+                settings._values.put(
+                    ConventionKeys.IMPORT_POLICY, ImportPolicy.DISABLED.toString());
 
                 break;
         }
 
-        String backupDirectory = INSTANCE.get(Keys.BACKUP_DIRECTORY, "").trim();
+        String backupDirectory = settings.get(ConventionKeys.BACKUP_DIRECTORY, "").trim();
 
-        if (backupDirectory.endsWith(".jalopy/bak") ||
-            backupDirectory.endsWith(".jalopy\\bak"))
+        // make the backup directory a relative path
+        if (
+            backupDirectory.endsWith(".jalopy/bak")
+            || backupDirectory.endsWith(".jalopy\\bak"))
         {
-            INSTANCE.put(Keys.BACKUP_DIRECTORY, NAME_BACKUP);
+            settings._values.put(ConventionKeys.BACKUP_DIRECTORY, NAME_BACKUP);
         }
+    }
+
+
+    /**
+     * Changes the code convention settings format from version 4 to version 5.
+     *
+     * @param settings code convention settings to update.
+     *
+     * @since 1.0b9
+     */
+    private static void sync4To5(Convention settings)
+    {
+        String header = settings.get(ConventionKeys.HEADER_TEXT, "").trim();
+        String[] lines = StringHelper.split(header, "\n");
+
+        StringBuffer buf = new StringBuffer(header.length());
+
+        for (int i = 0; i < lines.length; i++)
+        {
+            buf.append(StringHelper.trimTrailing(lines[i]));
+            buf.append('|');
+        }
+
+        if (lines.length > 0)
+        {
+            buf.deleteCharAt(buf.length() - 1);
+        }
+
+        settings.put(ConventionKeys.HEADER_TEXT, buf.toString());
+
+        String footer = settings.get(ConventionKeys.FOOTER_TEXT, "").trim();
+        lines = StringHelper.split(footer, "\n");
+
+        buf = new StringBuffer(footer.length());
+
+        for (int i = 0; i < lines.length; i++)
+        {
+            buf.append(StringHelper.trimTrailing(lines[i]));
+            buf.append('|');
+        }
+
+        if (lines.length > 0)
+        {
+            buf.deleteCharAt(buf.length() - 1);
+        }
+
+        settings.put(ConventionKeys.FOOTER_TEXT, buf.toString());
+    }
+
+
+    /**
+     * Updates the given code convention to be compatible with the current (latest)
+     * version.
+     *
+     * @param settings code convention settings to synchronize.
+     * @param version version number of the given code convention settings.
+     *
+     * @since 1.0b8
+     */
+    private static void syncronize(
+        Convention settings,
+        int        version)
+    {
+        switch (version)
+        {
+            case -1 : // before 1.0b6
+                sync0To1(settings);
+
+                break;
+
+            case 1 : // 1.0b6
+                sync1To2(settings);
+                syncronize(settings, 2);
+
+                break;
+
+            case 2 : // 1.0b7
+                sync2To3(settings);
+                syncronize(settings, 3);
+
+                break;
+
+            case 3 : // 1.0b8
+                sync3To4(settings);
+                syncronize(settings, 4);
+
+                break;
+
+            case 4 : // 1.0b9
+                sync4To5(settings);
+        }
+    }
+
+
+    /**
+     * Updates the given code convention settings to the current code convention format.
+     *
+     * @param settings code convention settings to synchronize against the latest
+     *        version.
+     *
+     * @since 1.0b6
+     */
+    private static void syncronize(Convention settings)
+    {
+        int version = settings.getInt(ConventionKeys.INTERNAL_VERSION, -1);
+        syncronize(settings, version);
+
+        INSTANCE._locale =
+            new Locale(
+                settings.get(ConventionKeys.LANGUAGE, ConventionDefaults.LANGUAGE),
+                settings.get(ConventionKeys.COUNTRY, ConventionDefaults.COUNTRY));
+
+        INSTANCE._values = settings._values;
+        INSTANCE.put(ConventionKeys.INTERNAL_VERSION, VERSION);
     }
 
 
@@ -1658,15 +1671,15 @@ public class Convention
 
         for (Iterator it = map.entrySet().iterator(); it.hasNext();)
         {
-            Map.Entry entry = (Map.Entry)it.next();
-            Key key = (Key)entry.getKey();
+            Map.Entry entry = (Map.Entry) it.next();
+            Key key = (Key) entry.getKey();
             Object value = entry.getValue();
             List pathList = splitPath(key.toString());
             Element go = root;
 
             for (int i = 0, i_len = pathList.size(); i < i_len; i++)
             {
-                String elName = (String)pathList.get(i);
+                String elName = (String) pathList.get(i);
                 Element child = go.getChild(elName);
 
                 if (child == null)
@@ -1730,5 +1743,119 @@ public class Convention
         }
 
         return result;
+    }
+
+    //~ Inner Classes --------------------------------------------------------------------
+
+    /**
+     * A key for storing a value in a code convention.
+     *
+     * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
+     * @version $Revision$
+     *
+     * @see de.hunsicker.jalopy.storage.ConventionKeys
+     * @since 1.0b9
+     */
+    public static final class Key
+        implements Serializable
+    {
+        /** Use serialVersionUID for interoperability. */
+        static final long serialVersionUID = -7320495354745545260L;
+
+        /** Our name. */
+        private transient String _name;
+
+        /** Pre-computed hash code value. */
+        private transient int _hashCode;
+
+        /**
+         * Creates a new Key object.
+         *
+         * @param name the name of the key.
+         */
+        Key(String name)
+        {
+            _name = name.intern();
+            _hashCode = _name.hashCode();
+        }
+
+        /**
+         * Indicates whether some other object is &quot;equal to&quot; this one.
+         *
+         * @param o the reference object with which to compare.
+         *
+         * @return <code>true</code> if this object is the same as the obj argument.
+         */
+        public boolean equals(Object o)
+        {
+            if (this == o)
+            {
+                return true;
+            }
+
+            return _name == ((Key) o)._name;
+        }
+
+
+        /**
+         * Returns a hash code value for this object.
+         *
+         * @return a hash code value for this object.
+         */
+        public int hashCode()
+        {
+            return _hashCode;
+        }
+
+
+        /**
+         * Returns a string representation of this object.
+         *
+         * @return A string representation of this object.
+         */
+        public String toString()
+        {
+            return _name;
+        }
+
+
+        /**
+         * Deserializes a key from the given stream.
+         *
+         * @param in stream to read the object from.
+         *
+         * @throws IOException if an I/O error occured.
+         * @throws ClassNotFoundException if a class that should be read could not be
+         *         found (Should never happen actually).
+         */
+        private void readObject(ObjectInputStream in)
+          throws IOException, ClassNotFoundException
+        {
+            in.defaultReadObject();
+
+            // that's why we have to provide custom serialization: we want to be
+            // able to compare two keys by identity
+            _name = ((String) in.readObject()).intern();
+            _hashCode = in.readInt();
+        }
+
+
+        /**
+         * Serializes this instance.
+         *
+         * @param out stream to write the object to.
+         *
+         * @throws IOException if an I/O error occured.
+         *
+         * @serialData Emits the name of the key, followed by its pre-computed hash code
+         *             value.
+         */
+        private void writeObject(ObjectOutputStream out)
+          throws IOException
+        {
+            out.defaultWriteObject();
+            out.writeObject(_name);
+            out.writeInt(_hashCode);
+        }
     }
 }
