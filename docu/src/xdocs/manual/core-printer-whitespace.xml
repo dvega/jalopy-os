@@ -4,12 +4,12 @@
 <!-- $Id$ -->
 
 <sect2 id="whitespace">
-<title>Whitespace</title>
+<title>White Space</title>
 
-<indexterm zone="whitespace"><primary>Whitespace</primary></indexterm>
+<indexterm zone="whitespace"><primary>White Space</primary></indexterm>
 
 <para>
-Controls the whitespace handling for the individual components of Java statements.
+Controls the white space handling for the individual components of Java statements.
 </para>
 <sect3 id="whitespace-before">
 <title>Space before</title>
@@ -23,10 +23,10 @@ Lets you choose the components that should get one leading space inserted before
 <itemizedlist>
 <listitem>
 <para>
-Method Def parentheses
+Method declaration parentheses
 </para>
 <example id="ex-space-before-method-paren">
-<title>Method Definition parentheses</title>
+<title>Method declaration parentheses</title>
 <programlisting>
 public void someMethod<emphasis role="bold">(</emphasis>)) {
   ...
@@ -42,13 +42,13 @@ public void someMethod <emphasis role="bold">(</emphasis>)) {
 
 <listitem>
 <para id="whitespace-before-parentheses">
-Method Call parentheses
+Method call parentheses
 </para>
 <indexterm zone="whitespace-before-parentheses"><primary>Whitespace</primary><secondary>before</secondary><tertiary>parentheses</tertiary></indexterm>
 <indexterm zone="whitespace-before-parentheses"><primary>Parentheses</primary></indexterm>
 
 <example id="ex-space-before-method-call-paren">
-<title>Method Call parentheses</title>
+<title>Method call parentheses</title>
 <programlisting>
 for (Iterator i = pointList.iterator<emphasis role="bold">(</emphasis>); i.hasNext<emphasis role="bold">(</emphasis>);) {
     ...

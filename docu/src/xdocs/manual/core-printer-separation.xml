@@ -4,13 +4,17 @@
 <!-- $Id$ -->
 
 <sect2 id="separation">
-<title>Separation</title>
+<title>Blank Lines</title>
 <para>
-Controls the Jalopy separation settings: the insertion of blank lines to
+Controls the Jalopy Blank Lines settings: the insertion of blank lines to
 separate statements or declarations with different functions or meanings.
 </para>
 <sect3 id="separation-blank-lines">
-<title>Blank lines</title>
+<title>General</title>
+
+<para>
+Lets you specify the general blank lines sizes for different Java source file elements.
+</para>
 
 <itemizedlist>
 <listitem>

@@ -39,6 +39,10 @@
 
 <xsl:param name="build.time" select="-1"/>
 
+<xsl:attribute-set name="shade.verbatim.style">
+  <xsl:attribute name="class">shade</xsl:attribute>
+</xsl:attribute-set>
+
 <xsl:template match="*" mode="process.root">
   <xsl:if test="$build.time='-1'">
     <xsl:message>ERROR: You must supply the stylesheet parameter "build.time"</xsl:message>
@@ -150,6 +154,7 @@
                         <a href="./features.html" class="navlink2">Features</a> |
                         <a href="./history.html" class="navlink2">History</a> |
                         <a href="./manual.html" class="navlink2">Manual</a> |
+                        <a href="./faq.html" class="navlink2">FAQ</a> |
                         <a href="./api/index.html" class="navlink2">Javadoc</a>
                       </td>
                     </tr>

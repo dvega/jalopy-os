@@ -14,6 +14,87 @@
 </articleinfo>
 
 <simplesect>
+<title>1.0 Beta 10 (2002-11-14)</title>
+<orderedlist numeration="lowerroman">
+<listitem>
+New Features
+
+<itemizedlist mark="square">
+<listitem>
+Work started to provide a FAQ. There is currently only one topic: How one should submit a
+bug report
+</listitem>
+<listitem>
+
+</listitem>
+</itemizedlist>
+<para/>
+</listitem>
+
+<listitem>
+Bug fixes
+
+<itemizedlist mark="square">
+<listitem>
+Newlines after case statements were not printed (as always: only with Sun brace style)
+Reported by Sebastian Eigner
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=638369&amp;group_id=45216">#638369</ulink>)
+</listitem>
+
+<listitem>
+Array types were not correctly printed when they contained more complicated expressions.
+Reported by Benni Mas
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=638355&amp;group_id=45216">#638355</ulink>)
+</listitem>
+
+<listitem>
+The settings format was not correctly updated from 1.0b7 to 1.0b8. Reported by
+Marc Gerstmair
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=637864&amp;group_id=45216">#637864</ulink>)
+</listitem>
+
+<listitem>
+Code conventions were exported with platform specific encodings which could easily cause
+harm. Additionally no XML declaration was printed. Now <literal>UTF-8</literal> is used
+and the declaration printed. Reported by Tim Moore
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=637262&amp;group_id=45216">#637262</ulink>)
+</listitem>
+
+<listitem>
+The wrapper scripts only worked when the full pathname to the script-files were used.
+Reported and fixed by Kees Kuip
+(<ulink url="http://sf.net/tracker/?func=detail&amp;atid=442212&amp;aid=637915&amp;group_id=45216">#637915</ulink>).
+Thanks
+</listitem>
+
+<listitem>
+Blank lines before blocks without associated block statements
+(I call them <emphasis>freestanding blocks</emphasis>) were not printed
+</listitem>
+
+<listitem>
+Additional semicolon(s) after the last import statement caused the blank lines logic to
+fail, no blank lines were printed for such a (rare) case
+</listitem>
+
+</itemizedlist>
+
+<para/>
+
+<itemizedlist mark="square">
+<listitem>
+Changes
+<para>
+None
+</para>
+</listitem>
+</itemizedlist>
+<para/>
+</listitem>
+</orderedlist>
+</simplesect>
+
+<simplesect>
 <title>1.0 Beta 9 (2002-11-12)</title>
 <orderedlist numeration="lowerroman">
 <listitem>
@@ -335,7 +416,7 @@ formatting the whole Project a confirmation message box appears
 </listitem>
 
 <listitem>
-The <literal>@todo</literal> tag is now part of the build-in tag list.
+The <literal>@todo</literal> tag is now part of the build-in tag list
 </listitem>
 
 <listitem>
