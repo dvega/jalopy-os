@@ -73,6 +73,12 @@ naming convention violations and possible code weaknesses. See the
 </listitem>
 
 <listitem>
+New history method that use checksum to better handle chang detection for files.
+See <ulink url="./misc.html#misc-history">History section</ulink>. Very cool feature
+contributed by Michael Callum
+</listitem>
+
+<listitem>
 Javadoc tag checking for <literal>@throws</literal> tags can now be enabled
 separately. See <ulink url="./javadoc.html#javadoc-correct-throws">Correct @throws tags</ulink>
 </listitem>
