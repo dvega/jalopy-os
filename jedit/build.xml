@@ -33,13 +33,14 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- Defines the project classpath                                        -->
   <!-- ==================================================================== -->
   <path id="project.classpath" >
-    <fileset dir="${DIR.LIB}" >
-      <include name="*.jar" />
-    </fileset>
+    <pathelement path="${DIR.COMPILE}" />
+    <pathelement path="${DIR.LIB.JEDIT}" />
     <fileset dir="${dir.lib}" >
       <include name="*.jar" />
     </fileset>
-    <pathelement path="${DIR.COMPILE}" />
+    <fileset dir="${DIR.LIB}" >
+      <include name="*.jar" />
+    </fileset>
   </path>
 
 
