@@ -26,15 +26,15 @@ import de.hunsicker.io.DirScanner;
 import de.hunsicker.io.ExtensionFilter;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.Filters;
-import de.hunsicker.jalopy.History;
+import de.hunsicker.jalopy.storage.History;
 import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.VersionMismatchException;
 import de.hunsicker.jalopy.parser.ClassRepository;
 import de.hunsicker.jalopy.parser.ClassRepositoryEntry;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.util.StringHelper;
 
 import gnu.getopt.Getopt;
@@ -63,7 +63,7 @@ import org.apache.oro.text.regex.Perl5Compiler;
 /**
  * The console Plug-in provides a powerful command line interface for the
  * Jalopy engine.
- * 
+ *
  * @version $Revision$
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  */
@@ -103,19 +103,19 @@ public final class ConsolePlugin
     private static final int OPT_FORCE = 4444;
 
     /** Holds the longoptions to use. */
-    private static final LongOpt[] LONG_OPTIONS = 
+    private static final LongOpt[] LONG_OPTIONS =
     {
-        new LongOpt("dest", LongOpt.REQUIRED_ARGUMENT, null, 'd'), 
-        new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'e'), 
-        new LongOpt("format", LongOpt.REQUIRED_ARGUMENT, null, 'f'), 
-        new LongOpt("force", LongOpt.NO_ARGUMENT, null, OPT_FORCE), 
-        new LongOpt("log", LongOpt.REQUIRED_ARGUMENT, null, 'l'), 
-        new LongOpt("nobackup", LongOpt.NO_ARGUMENT, null, NOBACKUP), 
-        new LongOpt("thread", LongOpt.REQUIRED_ARGUMENT, null, 't'), 
-        new LongOpt("recursive", LongOpt.OPTIONAL_ARGUMENT, null, 'r'), 
-        new LongOpt("style", LongOpt.REQUIRED_ARGUMENT, null, 's'), 
-        new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v'), 
-        new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'), 
+        new LongOpt("dest", LongOpt.REQUIRED_ARGUMENT, null, 'd'),
+        new LongOpt("encoding", LongOpt.REQUIRED_ARGUMENT, null, 'e'),
+        new LongOpt("format", LongOpt.REQUIRED_ARGUMENT, null, 'f'),
+        new LongOpt("force", LongOpt.NO_ARGUMENT, null, OPT_FORCE),
+        new LongOpt("log", LongOpt.REQUIRED_ARGUMENT, null, 'l'),
+        new LongOpt("nobackup", LongOpt.NO_ARGUMENT, null, NOBACKUP),
+        new LongOpt("thread", LongOpt.REQUIRED_ARGUMENT, null, 't'),
+        new LongOpt("recursive", LongOpt.OPTIONAL_ARGUMENT, null, 'r'),
+        new LongOpt("style", LongOpt.REQUIRED_ARGUMENT, null, 's'),
+        new LongOpt("version", LongOpt.NO_ARGUMENT, null, 'v'),
+        new LongOpt("help", LongOpt.NO_ARGUMENT, null, 'h'),
         new LongOpt("disclaimer", LongOpt.NO_ARGUMENT, null, 'c')
     };
 
@@ -130,8 +130,8 @@ public final class ConsolePlugin
     /** The encoding to use to read files. */
     private String _encoding;
 
-    /** File to use load preferences from. */
-    private String _style;
+    /** File to use load code convention from. */
+    private String _convention;
 
     /** Should formatting be forced? */
     private boolean _force;
@@ -158,7 +158,7 @@ public final class ConsolePlugin
 
     /**
      * Starts Jalopy from the command line.
-     * 
+     *
      * @param argv command line arguments. Type
      */
     public static void main(String[] argv)
@@ -167,14 +167,14 @@ public final class ConsolePlugin
         ConsolePlugin console = new ConsolePlugin();
         console.initializeLogging();
         console.parseArgs(argv);
-        
+
         if ((console._ioMode != IO_SYSTEM) && !console.scan()) // no files found
         {
             if (_argString != null)
             {
                 Object[] args = { _argString };
                 System.out.println(MessageFormat.format(console.getResourceBundle()
-                                                               .getString("NON_MATCHING_EXPRESSION"), 
+                                                               .getString("NON_MATCHING_EXPRESSION"),
                                                         args));
                 System.exit(1);
             }
@@ -190,7 +190,7 @@ public final class ConsolePlugin
             {
                 Object[] args = { ex.getExpectedVersion(), ex.getFoundVersion() };
                 System.out.println(MessageFormat.format(console.getResourceBundle()
-                                                               .getString("VERSION_MISMATCH"), 
+                                                               .getString("VERSION_MISMATCH"),
                                                         args));
                 System.exit(1);
             }
@@ -226,9 +226,9 @@ public final class ConsolePlugin
                 }
             }
 
-            Object[] args = 
+            Object[] args =
             {
-                new Integer(console._numFiles), new Integer(console._numFiles), 
+                new Integer(console._numFiles), new Integer(console._numFiles),
                 console.getRuntime(System.currentTimeMillis() - start)
             };
             _logger.l7dlog(Level.INFO, "RUN_INFO", args, null);
@@ -238,7 +238,7 @@ public final class ConsolePlugin
 
     /**
      * Returns the exit code.
-     * 
+     *
      * @return exit code.
      */
     public int getExitCode()
@@ -249,7 +249,7 @@ public final class ConsolePlugin
 
     /**
      * Sets the exit code of the program.
-     * 
+     *
      * @param code exit code to use.
      */
     protected void setExitCode(int code)
@@ -261,7 +261,7 @@ public final class ConsolePlugin
     /**
      * Returns an array of objects describing the long command line options
      * (those options normally of the form <code>--option</code>).
-     * 
+     *
      * @return objects containing all the necessary info about the long
      *         command line options.
      */
@@ -274,7 +274,7 @@ public final class ConsolePlugin
     /**
      * Returns a string containing a list of the short-option characters for
      * short command line options.
-     * 
+     *
      * @return <code>d:e:f:l:t:hcvr::s:</code>
      */
     protected String getOptString()
@@ -285,7 +285,7 @@ public final class ConsolePlugin
 
     /**
      * Returns the resource bundle were localized strings are stored.
-     * 
+     *
      * @return resource bundle to use.
      */
     protected ResourceBundle getResourceBundle()
@@ -300,13 +300,13 @@ public final class ConsolePlugin
     protected void displayCopyright()
     {
         ResourceBundle b = getResourceBundle();
-        System.out.println(b.getString("PROGRAM_NAME") + " " + 
-                           Jalopy.getVersion() + ", Copyright (c) " + 
-                           b.getString("COPYRIGHT_YEAR") + " " + 
+        System.out.println(b.getString("PROGRAM_NAME") + " " +
+                           Jalopy.getVersion() + ", Copyright (c) " +
+                           b.getString("COPYRIGHT_YEAR") + " " +
                            b.getString("AUTHOR.1"));
-        System.out.println(b.getString("PROGRAM_NAME") + 
+        System.out.println(b.getString("PROGRAM_NAME") +
                            " comes with ABSOLUTELY NO WARRANTY");
-        System.out.println("Type 'java " + b.getString("PROGRAM_CMD") + 
+        System.out.println("Type 'java " + b.getString("PROGRAM_CMD") +
                            " -c' to show the disclaimer");
         System.out.println();
     }
@@ -346,21 +346,21 @@ public final class ConsolePlugin
         ResourceBundle b = getResourceBundle();
         System.out.println(
               " Jalopy Java Source Code Formatter Console Plug-in");
-        System.out.println(" Copyright (c) " + 
-                           b.getString("COPYRIGHT_YEAR") + " " + 
+        System.out.println(" Copyright (c) " +
+                           b.getString("COPYRIGHT_YEAR") + " " +
                            b.getString("AUTHOR.1"));
         System.out.println();
         System.out.println(
-              " This program is free software; you can redistribute it and/or modify\n" + 
-              " it under the terms of the GNU General Public License as published by\n" + 
-              " the Free Software Foundation; either version 2 of the License, or\n" + 
-              " (at your option) any later version.\n\n" + 
-              " This program is distributed in the hope that it will be useful,\n" + 
-              " but WITHOUT ANY WARRANTY; without even the implied warranty of\n" + 
-              " MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" + 
-              " GNU General Public License for more details.\n\n" + 
-              " You should have received a copy of the GNU General Public License\n" + 
-              " along with this program; if not, write to the Free Software Foundation,\n" + 
+              " This program is free software; you can redistribute it and/or modify\n" +
+              " it under the terms of the GNU General Public License as published by\n" +
+              " the Free Software Foundation; either version 2 of the License, or\n" +
+              " (at your option) any later version.\n\n" +
+              " This program is distributed in the hope that it will be useful,\n" +
+              " but WITHOUT ANY WARRANTY; without even the implied warranty of\n" +
+              " MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" +
+              " GNU General Public License for more details.\n\n" +
+              " You should have received a copy of the GNU General Public License\n" +
+              " along with this program; if not, write to the Free Software Foundation,\n" +
               " Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.");
         System.out.println();
         System.exit(getExitCode());
@@ -373,7 +373,7 @@ public final class ConsolePlugin
     protected void displayUsage()
     {
         ResourceBundle b = getResourceBundle();
-        System.out.println("Usage: java " + b.getString("PROGRAM_CMD") + 
+        System.out.println("Usage: java " + b.getString("PROGRAM_CMD") +
                            " [-options] [args...]");
         System.out.println();
         System.out.println(
@@ -388,8 +388,8 @@ public final class ConsolePlugin
               "  -e, --encoding=WORD     assume WORD as encoding of input files where WORD");
         System.out.println(
               "                          describes one of the JDK supported encodings");
-        System.out.println("                          (defaults to " + 
-                           System.getProperty("file.encoding") + 
+        System.out.println("                          (defaults to " +
+                           System.getProperty("file.encoding") +
                            " if omitted)");
         System.out.println(
               "  -f, --format=WORD       use WORD as output file format where WORD can be");
@@ -406,7 +406,7 @@ public final class ConsolePlugin
         System.out.println(
               "                          if NUM is omitted, recurses indefinitely");
         System.out.println(
-              "  -s, --style=FILE        use FILE as preferences file");
+              "  -c, --convention=FILE        use FILE as code convention file");
         System.out.println(
               "  -t, --thread=NUM        use NUM processing threads");
         System.out.println(
@@ -429,7 +429,7 @@ public final class ConsolePlugin
 
     /**
      * Parses the given command line arguments and decodes the options.
-     * 
+     *
      * @param argv command line arguments.
      */
     protected void parseArgs(String[] argv)
@@ -454,7 +454,7 @@ public final class ConsolePlugin
                             Object[] args = { _destDir };
                             System.out.println(MessageFormat.format(
                                                      getResourceBundle()
-                                                         .getString("ERROR_CREATING_DESTINATION_DIRECTORY"), 
+                                                         .getString("ERROR_CREATING_DESTINATION_DIRECTORY"),
                                                      args));
                             System.exit(1);
                         }
@@ -464,7 +464,7 @@ public final class ConsolePlugin
                         Object[] args = { _destDir };
                         System.out.println(MessageFormat.format(
                                                  getResourceBundle()
-                                                     .getString("INVALID_DESTINATION_DIRECTORY"), 
+                                                     .getString("INVALID_DESTINATION_DIRECTORY"),
                                                  args));
                         System.exit(1);
                     }
@@ -472,7 +472,7 @@ public final class ConsolePlugin
                     break;
 
                 case 's' :
-                    _style = g.getOptarg();
+                    _convention = g.getOptarg();
 
                     break;
 
@@ -487,7 +487,7 @@ public final class ConsolePlugin
                         Object[] args = { g.getOptarg() };
                         System.out.println(MessageFormat.format(
                                                  getResourceBundle()
-                                                     .getString("INVALID_ENCODING"), 
+                                                     .getString("INVALID_ENCODING"),
                                                  args));
                         System.exit(1);
                     }
@@ -498,27 +498,27 @@ public final class ConsolePlugin
 
                     String format = g.getOptarg().trim().toLowerCase();
 
-                    if (format.equals("dos") || 
+                    if (format.equals("dos") ||
                         format.equals(FileFormat.DOS.getLineSeparator()))
                     {
                         _fileFormat = FileFormat.DOS;
                     }
-                    else if (format.equals("default") || 
+                    else if (format.equals("default") ||
                              format.equals(FileFormat.DEFAULT.toString()))
                     {
                         _fileFormat = FileFormat.DEFAULT;
                     }
-                    else if (format.equals("unix") || 
+                    else if (format.equals("unix") ||
                              format.equals(FileFormat.UNIX.getLineSeparator()))
                     {
                         _fileFormat = FileFormat.UNIX;
                     }
-                    else if (format.equals("mac") || 
+                    else if (format.equals("mac") ||
                              format.equals(FileFormat.MAC.getLineSeparator()))
                     {
                         _fileFormat = FileFormat.MAC;
                     }
-                    else if (format.equals("auto") || 
+                    else if (format.equals("auto") ||
                              format.equals(FileFormat.AUTO.toString()))
                     {
                         _fileFormat = FileFormat.AUTO;
@@ -528,7 +528,7 @@ public final class ConsolePlugin
                         Object[] args = { format };
                         System.out.println(MessageFormat.format(
                                                  getResourceBundle()
-                                                     .getString("INVALID_FILE_FORMAT"), 
+                                                     .getString("INVALID_FILE_FORMAT"),
                                                  args));
                         setExitCode(1);
                         displayHint();
@@ -582,7 +582,7 @@ public final class ConsolePlugin
                                 Object[] args = { level };
                                 System.out.println(MessageFormat.format(
                                                          getResourceBundle()
-                                                             .getString("INVALID_RECURSION_NUMBER"), 
+                                                             .getString("INVALID_RECURSION_NUMBER"),
                                                          args));
                                 setExitCode(1);
                                 displayHint();
@@ -593,7 +593,7 @@ public final class ConsolePlugin
                             Object[] args = { level };
                             System.out.println(MessageFormat.format(
                                                      getResourceBundle()
-                                                         .getString("INVALID_RECURSION_LEVEL"), 
+                                                         .getString("INVALID_RECURSION_LEVEL"),
                                                      args));
                             setExitCode(1);
                             displayHint();
@@ -617,7 +617,7 @@ public final class ConsolePlugin
                             Object[] args = { new Integer(threads) };
                             System.out.println(MessageFormat.format(
                                                      getResourceBundle()
-                                                         .getString("INVALID_THREAD_NUMBER"), 
+                                                         .getString("INVALID_THREAD_NUMBER"),
                                                      args));
                             setExitCode(1);
                             displayHint();
@@ -628,7 +628,7 @@ public final class ConsolePlugin
                         Object[] args = { g.getOptarg() };
                         System.out.println(MessageFormat.format(
                                                  getResourceBundle()
-                                                     .getString("INVALID_THREAD_NUMBER"), 
+                                                     .getString("INVALID_THREAD_NUMBER"),
                                                  args));
                         setExitCode(1);
                         displayHint();
@@ -678,7 +678,7 @@ public final class ConsolePlugin
 
                         if (argv[i].indexOf(File.separatorChar) > -1)
                         {
-                            String path = argv[i].substring(0, 
+                            String path = argv[i].substring(0,
                                                             argv[i].lastIndexOf(
                                                                   File.separatorChar) + 1);
                             target = new File(path);
@@ -687,7 +687,7 @@ public final class ConsolePlugin
                             {
                                 String pattern = argv[i].substring(
                                                        path.length());
-                                
+
                                 _logger.debug("Add filter " + pattern);
                                 compiler.compile(argv[i]);
                                 _scanner.addFilter(
@@ -716,7 +716,7 @@ public final class ConsolePlugin
                         Object[] args = { ex.getMessage(), argv[i] };
                         System.out.println(MessageFormat.format(
                                                  getResourceBundle()
-                                                     .getString("MALFORMED_EXPRESSION"), 
+                                                     .getString("MALFORMED_EXPRESSION"),
                                                  args));
                         System.exit(1);
                     }
@@ -724,7 +724,7 @@ public final class ConsolePlugin
                     Object[] args = { argv[i] };
                     System.out.println(MessageFormat.format(
                                              getResourceBundle()
-                                                 .getString("INPUT_SOURCE_NOT_EXIST"), 
+                                                 .getString("INPUT_SOURCE_NOT_EXIST"),
                                              args));
                 }
             }
@@ -759,9 +759,9 @@ public final class ConsolePlugin
 
     /**
      * Gets a formatted string with runtime info for the given time.
-     * 
+     *
      * @param time processing time.
-     * 
+     *
      * @return formatted string.
      */
     private String getRuntime(long time)
@@ -860,9 +860,9 @@ public final class ConsolePlugin
 
     /**
      * Indicates whether the given encoding is supported on the used platform.
-     * 
+     *
      * @param enc encoding name.
-     * 
+     *
      * @return <code>true</code> if <em>enc</em> is a valid encoding.
      */
     private boolean isValidEncoding(String enc)
@@ -887,11 +887,11 @@ public final class ConsolePlugin
     {
         Jalopy jalopy = new Jalopy();
 
-        if (_style != null)
+        if (_convention != null)
         {
             try
             {
-                jalopy.setPreferences(_style);
+                jalopy.setConvention(_convention);
             }
             catch (IOException ex)
             {
@@ -958,8 +958,8 @@ public final class ConsolePlugin
         }
         else
         {
-            Preferences prefs = Preferences.getInstance();
-            int backupLevel = prefs.getInt(Keys.BACKUP_LEVEL, 
+            Convention settings = Convention.getInstance();
+            int backupLevel = settings.getInt(Keys.BACKUP_LEVEL,
                                            Defaults.BACKUP_LEVEL);
 
             if (_noBackup)
@@ -973,10 +973,10 @@ public final class ConsolePlugin
                 jalopy.setBackupLevel(backupLevel);
             }
 
-            jalopy.setInspect(prefs.getBoolean(Keys.INSPECTOR, 
+            jalopy.setInspect(settings.getBoolean(Keys.INSPECTOR,
                                                Defaults.INSPECTOR));
-            jalopy.setHistoryPolicy(History.Policy.valueOf(prefs.get(
-                                                                 Keys.HISTORY_POLICY, 
+            jalopy.setHistoryPolicy(History.Policy.valueOf(settings.get(
+                                                                 Keys.HISTORY_POLICY,
                                                                  Defaults.HISTORY_POLICY)));
 
             if (_force)
@@ -985,12 +985,12 @@ public final class ConsolePlugin
             }
             else
             {
-                jalopy.setForce(prefs.getBoolean(Keys.FORCE_FORMATTING, 
+                jalopy.setForce(settings.getBoolean(Keys.FORCE_FORMATTING,
                                                  Defaults.FORCE_FORMATTING));
             }
 
-            jalopy.setBackupDirectory(prefs.get(Keys.BACKUP_DIRECTORY, 
-                                                Preferences.getBackupDirectory()
+            jalopy.setBackupDirectory(settings.get(Keys.BACKUP_DIRECTORY,
+                                                Convention.getBackupDirectory()
                                                            .getAbsolutePath()));
 
             if (_destDir != null)
@@ -1054,7 +1054,7 @@ public final class ConsolePlugin
     private void initializeLogging()
     {
         Loggers.initialize(
-              new ConsoleAppender(new PatternLayout("[%p] %m\n"), 
+              new ConsoleAppender(new PatternLayout("[%p] %m\n"),
                                   (_ioMode == IO_FILE)
                                       ? "System.out"
                                       : "System.err"));
@@ -1103,9 +1103,9 @@ public final class ConsolePlugin
     /**
      * Scans the given targets. This method must be called
      * <strong>AFTER</strong> the parsing of the command line arguments.
-     * 
+     *
      * @return <code>true</code> if any matching file(s) could be found.
-     * 
+     *
      * @see #parseArgs
      */
     private boolean scan()

@@ -47,4 +47,4 @@ if $cygwin; then
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 fi
 
-$JAVACMD -classpath "$LOCALCLASSPATH" de.hunsicker.jalopy.ui.PreferencesDialog
+$JAVACMD -classpath "$LOCALCLASSPATH" de.hunsicker.jalopy.ui.SettingsDialog

@@ -27,7 +27,7 @@ SHIFT
 GOTO setupArgs
 
 :doneStart
-REM This label provides a place for the argument list loop to break out 
+REM This label provides a place for the argument list loop to break out
 REM and for NT handling to skip to.
 
 :checkJava
@@ -48,7 +48,7 @@ ECHO   to the installation directory of Java.
 ECHO.
 
 :runJalopy
-"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" de.hunsicker.jalopy.ui.PreferencesDialog %JALOPY_CMD_LINE_ARGS%
+"%_JAVACMD%" -classpath "%LOCALCLASSPATH%" de.hunsicker.jalopy.ui.SettingsDialog %JALOPY_CMD_LINE_ARGS%
 GOTO end
 
 :end

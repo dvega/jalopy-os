@@ -63,11 +63,11 @@ import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.ImportPolicy;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
-import de.hunsicker.jalopy.ui.PreferencesDialog;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.ImportPolicy;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.ui.SettingsDialog;
 import de.hunsicker.ui.ErrorDialog;
 
 import java.awt.Event;
@@ -229,7 +229,7 @@ public final class JbPlugin
      */
     static boolean isImportOptimizationEnabled()
     {
-        ImportPolicy importPolicy = ImportPolicy.valueOf(Preferences.getInstance()
+        ImportPolicy importPolicy = ImportPolicy.valueOf(Convention.getInstance()
                                                                     .get(Keys.IMPORT_POLICY,
                                                                          Defaults.IMPORT_POLICY));
 
@@ -465,9 +465,9 @@ public final class JbPlugin
         EditorActions.addBindableEditorAction(formatSingleAction);
         ProjectView.registerContextActionProvider(new JbContextActionProvider());
 
-        PreferencesAction displayPreferencesAction = new PreferencesAction();
-        getToolsGroup().add(2, displayPreferencesAction);
-        EditorManager.registerContextActionProvider(displayPreferencesAction);
+        SettingsAction displaySettingsAction = new SettingsAction();
+        getToolsGroup().add(2, displaySettingsAction);
+        EditorManager.registerContextActionProvider(displaySettingsAction);
     }
 
     //~ Inner Classes ·························································
@@ -1056,14 +1056,14 @@ public final class JbPlugin
     /**
      * Displays the configuration dialog.
      */
-    private class PreferencesAction
+    private class SettingsAction
         extends EditorAction
         implements EditorContextActionProvider
     {
         /**
-         * Creates a new PreferencesAction object.
+         * Creates a new SettingsAction object.
          */
-        public PreferencesAction()
+        public SettingsAction()
         {
             super("config-jalopy");
             putValue(BrowserAction.SMALL_ICON,
@@ -1100,7 +1100,7 @@ public final class JbPlugin
          */
         public void actionPerformed(ActionEvent ev)
         {
-            PreferencesDialog dlg = new PreferencesDialog(Browser.getActiveBrowser());
+            SettingsDialog dlg = new SettingsDialog(Browser.getActiveBrowser());
             dlg.pack();
             dlg.setLocationRelativeTo(Browser.getActiveBrowser());
             dlg.setVisible(true);

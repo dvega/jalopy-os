@@ -13,7 +13,7 @@
   </ACTION> -->
   <ACTION NAME="jalopy.options">
     <CODE>
-      de.hunsicker.jalopy.plugin.jedit.JEditPlugin.displayPreferencesDialog(view);
+      de.hunsicker.jalopy.plugin.jedit.JEditPlugin.displaySettingsDialog(view);
     </CODE>
   </ACTION>
 </ACTIONS>

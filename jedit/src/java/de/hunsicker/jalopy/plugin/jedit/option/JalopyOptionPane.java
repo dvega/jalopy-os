@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.plugin.jedit.option;
 
 import org.gjt.sp.jedit.AbstractOptionPane;
 
-import de.hunsicker.jalopy.prefs.Preferences;
-import de.hunsicker.jalopy.ui.AbstractPreferencesPanel;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.ui.AbstractSettingsPanel;
 import de.hunsicker.jalopy.ui.ValidationException;
 import de.hunsicker.ui.util.SwingHelper;
 
@@ -46,7 +46,7 @@ import java.awt.GridBagLayout;
 
 
 /**
- * Abstract class to make embedding a Jalopy preferences panel into the JEdit
+ * Abstract class to make embedding a Jalopy settings panel into the jEdit
  * Global Options dialog easy.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
@@ -58,7 +58,7 @@ abstract class JalopyOptionPane
     //~ Instance variables ····················································
 
     /** The actual settings panel to embed. */
-    protected AbstractPreferencesPanel panel;
+    protected AbstractSettingsPanel panel;
 
     //~ Constructors ··························································
 
@@ -109,7 +109,7 @@ abstract class JalopyOptionPane
             return;
         }
 
-        // save the preferences
+        // save the code convention
         try
         {
             /**
@@ -117,10 +117,10 @@ abstract class JalopyOptionPane
              *       dialog, this results in calling this method as often as
              *       settings panel were added to the option dialog which is
              *       wasteful Implement the flush() method so that the
-             *       preferences will only be saved if indeed something
+             *       convention will only be saved if indeed something
              *       changed
              */
-            Preferences.getInstance().flush();
+            Convention.getInstance().flush();
         }
         catch (Exception ex)
         {

@@ -21,19 +21,19 @@
 
     <folder name="Tools">
 
-      <!-- add the Jalopy menu item 'Jalopy Options...' 
+      <!-- add the Jalopy menu item 'Jalopy Options...'
             and position after 'Options...' -->
-      <attr name="org-netbeans-core-actions-OptionsAction.instance/de-hunsicker-jalopy-plugin-netbeans-PreferencesAction.instance"
+      <attr name="org-netbeans-core-actions-OptionsAction.instance/de-hunsicker-jalopy-plugin-netbeans-SettingsAction.instance"
             boolvalue="true" />
-      <file name="de-hunsicker-jalopy-plugin-netbeans-PreferencesAction.instance"/>
-      <attr name="de-hunsicker-jalopy-plugin-netbeans-PreferencesAction.instance/Separator3[javax-swing-JSeparator].instance"
+      <file name="de-hunsicker-jalopy-plugin-netbeans-SettingsAction.instance"/>
+      <attr name="de-hunsicker-jalopy-plugin-netbeans-SettingsAction.instance/Separator3[javax-swing-JSeparator].instance"
             boolvalue="true"/>
     </folder>
   </folder>
 
   <folder name="System">
     <file name="de-hunsicker-jalopy-plugin-netbeans-FormatAction.instance"/>
-    <file name="de-hunsicker-jalopy-plugin-netbeans-PreferencesAction.instance"/>
+    <file name="de-hunsicker-jalopy-plugin-netbeans-SettingsAction.instance"/>
   </folder>
 
   <folder name="Shortcuts">
