@@ -132,7 +132,6 @@ class AbstractPrinter
     static final String WHILE = "while";
     static final String WHILE_SPACE = "while ";
     static final String QUESTION = "?";
-    static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /** The user preferences. */
     protected static final Preferences prefs = Preferences.getInstance();
@@ -2212,7 +2211,7 @@ class AbstractPrinter
         }
         else
         {
-            lines = split(comment.getText(), out.originalLineSeparator);
+            lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
         }
 
         int lastLine = lines.length - 1;
@@ -2246,7 +2245,7 @@ class AbstractPrinter
                                      NodeWriter              out)
         throws IOException
     {
-        String[] lines = split(comment.getText(), out.originalLineSeparator);
+        String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
 
         int lastLine = lines.length - 1;
 
@@ -2295,42 +2294,5 @@ class AbstractPrinter
             default :
                 return false;
         }
-    }
-
-
-    /**
-     * Returns the individual lines of the given multi-line comment.
-     *
-     * @param str a multi-line comment.
-     * @param delim the line separator.
-     *
-     * @return the individual lines of the comment.
-     *
-     * @todo move this into de.hunsicker.util.StringHelper
-     */
-    private String[] split(String str,
-                           String delim)
-    {
-        int startOffset = 0;
-        int endOffset = -1;
-        int sepLength = delim.length();
-        List lines = new ArrayList(15);
-
-        while ((endOffset = str.indexOf(delim, startOffset)) > -1)
-        {
-            lines.add(str.substring(startOffset, endOffset));
-            startOffset = endOffset + sepLength;
-        }
-
-        if (startOffset > 0)
-        {
-            lines.add(str.substring(startOffset));
-        }
-        else
-        {
-            lines.add(str);
-        }
-
-        return (String[])lines.toArray(EMPTY_STRING_ARRAY);
     }
 }

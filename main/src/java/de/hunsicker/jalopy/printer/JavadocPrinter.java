@@ -187,7 +187,7 @@ final class JavadocPrinter
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText()))
         {
-            String[] lines = split(comment.getFirstChild().getText(), DELIMETER);
+            String[] lines = StringHelper.split(comment.getFirstChild().getText(), DELIMETER);
 
             if (lines.length > 0)
             {
@@ -204,7 +204,7 @@ final class JavadocPrinter
         else if (!this.prefs.getBoolean(Keys.COMMENT_JAVADOC_PARSE,
                                         Defaults.COMMENT_JAVADOC_PARSE))
         {
-            String[] lines = split(comment.getText(), out.originalLineSeparator);
+            String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
 
             for (int i = 0, size = lines.length - 1; i < size; i++)
             {
@@ -1862,7 +1862,7 @@ SELECTION:
     {
         if (shouldHaveNewlineBefore(tag, last))
         {
-            out.print(trimTrailing(asterix), JavadocTokenTypes.PCDATA);
+            out.print(StringHelper.trimTrailing(asterix), JavadocTokenTypes.PCDATA);
             out.printNewline();
         }
 
@@ -3143,7 +3143,7 @@ LOOP:
      *
      * @param str string to split into tokens.
      * @param delim the delimeter to use for splitting.
-     * @param character character > -1 all leading whitespace before the
+     * @param character if <code>character > -1</code> all leading whitespace before the
      *        character will be removed.
      *
      * @return 1.0b8
@@ -3181,45 +3181,8 @@ LOOP:
         }
         else
         {
-            return split(str, delim);
+            return StringHelper.split(str, delim);
         }
-    }
-
-
-    /**
-     * Splits the given string into tokens.
-     *
-     * @param str string to split into tokens.
-     * @param delim the delimeter to use for splitting.
-     *
-     * @return array with the tokens.
-     *
-     * @since 1.0b8
-     */
-    private String[] split(String str,
-                           String delim)
-    {
-        int startOffset = 0;
-        int endOffset = -1;
-        int sepLength = delim.length();
-        List lines = new ArrayList(15);
-
-        while ((endOffset = str.indexOf(delim, startOffset)) > -1)
-        {
-            lines.add(str.substring(startOffset, endOffset));
-            startOffset = endOffset + sepLength;
-        }
-
-        if (startOffset > 0)
-        {
-            lines.add(str.substring(startOffset));
-        }
-        else
-        {
-            lines.add(str);
-        }
-
-        return (String[])lines.toArray(EMPTY_STRING_ARRAY);
     }
 
 
@@ -3364,36 +3327,6 @@ MOVE_FORWARD:
         }
 
         return str;
-    }
-
-
-    /**
-     * Removes trailing whitespace from the given str.
-     *
-     * @param str the string to trim.
-     *
-     * @return a copy of the string with trailing whitespace removed, or the
-     *         string if it has no trailing whitespace.
-     */
-    private String trimTrailing(String str)
-    {
-        int index = str.length();
-
-        for (;
-             (index > 0) && Character.isWhitespace(str.charAt(index - 1));
-             index--)
-        {
-            ;
-        }
-
-        if (index != str.length())
-        {
-            return str.substring(0, index);
-        }
-        else
-        {
-            return str;
-        }
     }
 
     //~ Inner Classes ·························································

@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -286,6 +286,43 @@ public final class StringHelper
         return -1;
     }
 
+    /**
+     * Splits the given string into chunks.
+     *
+     * @param str string to split into chunks.
+     * @param delim the delimeter to use for splitting.
+     *
+     * @return array with the individual chunks.
+     *
+     * @since 1.0b8
+     */
+    public static String[] split(String str,
+                                 String delim)
+    {
+        int startOffset = 0;
+        int endOffset = -1;
+        int sepLength = delim.length();
+        List lines = new ArrayList(15);
+
+        while ((endOffset = str.indexOf(delim, startOffset)) > -1)
+        {
+            lines.add(str.substring(startOffset, endOffset));
+            startOffset = endOffset + sepLength;
+        }
+
+        if (startOffset > 0)
+        {
+            lines.add(str.substring(startOffset));
+        }
+        else
+        {
+            lines.add(str);
+        }
+
+        return (String[])lines.toArray(EMPTY_STRING_ARRAY);
+    }
+
+    private final static String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * Left pad a String with spaces. Pad to a size of n.
@@ -488,49 +525,6 @@ public final class StringHelper
         return isUppercase(str.charAt(0));
     }
 
-
-    /**
-     * Strip any of a supplied string from the start of a String. If the strip
-     * string is null, whitespace is stripped.
-     *
-     * @param str the string to remove characters from
-     * @param strip the string to remove
-     *
-     * @return the stripped string
-     */
-    public static String stripStart(String str,
-                                    String strip)
-    {
-        if (str == null)
-        {
-            return null;
-        }
-
-        int start = 0;
-
-        int sz = str.length();
-
-        if (strip == null)
-        {
-            while ((start != sz) && Character.isWhitespace(str.charAt(start)))
-            {
-                start++;
-            }
-        }
-        else
-        {
-            char chr = strip.charAt(0);
-
-            while ((start != sz) && (strip.indexOf(str.charAt(start)) != -1))
-            {
-                start++;
-            }
-        }
-
-        return str.substring(start);
-    }
-
-
     /**
      * Wraps multi-line strings.
      *
@@ -580,6 +574,33 @@ public final class StringHelper
     {
         return wrapStringToArray(str, width, new SpaceBreakIterator(),
                                  lineSeparator, removeNewLines, trimPolicy);
+    }
+
+    /**
+     * Removes trailing whitespace from the given string.
+     *
+     * @param str the string to trim.
+     *
+     * @return a copy of the string with trailing whitespace removed, or the
+     *         original string if no trailing whitespace could be removed.
+     */
+    public static String trimTrailing(String str)
+    {
+        int index = str.length();
+
+        while((index > 0) && Character.isWhitespace(str.charAt(index - 1)))
+        {
+            index--;
+        }
+
+        if (index != str.length())
+        {
+            return str.substring(0, index);
+        }
+        else
+        {
+            return str;
+        }
     }
 
 
@@ -635,7 +656,7 @@ public final class StringHelper
 
                 if (trimPolicy == TRIM_LEADING)
                 {
-LOOP: 
+LOOP:
                     for (int j = 0; j < token.length(); j++)
                     {
                         switch (token.charAt(j))
@@ -703,7 +724,7 @@ LOOP:
 
 
 // check if all lines are within the given max width
-WIDTHCHECK: 
+WIDTHCHECK:
         {
             boolean ok = true;
 
