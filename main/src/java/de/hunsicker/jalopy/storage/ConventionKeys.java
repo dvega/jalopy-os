@@ -6,6 +6,9 @@
  */
 package de.hunsicker.jalopy.storage;
 
+import java.lang.reflect.Field;
+
+
 /**
  * Provides the valid keys for accessing the values in a code convention.
  * 
@@ -30,1062 +33,301 @@ public final class ConventionKeys
     //~ Static variables/initializers ----------------------------------------------------
 
     /**
-     * Specifies whether method declaration parameters should be aligned
-     * (<em>boolean</em>).
-     */
-    public static final Convention.Key ALIGN_PARAMS_METHOD_DEF =
-        new Convention.Key("printer/alignment/ParamsMethodDef");
-
-    /** Force alignment of ternary expression? (<em>boolean</em>) */
-    public static final Convention.Key ALIGN_TERNARY_EXPRESSION =
-        new Convention.Key("printer/alignment/ternaryExpresssion");
-
-    /** Force alignment of ternary values? (<em>boolean</em>) */
-    public static final Convention.Key ALIGN_TERNARY_VALUES =
-        new Convention.Key("printer/alignment/ternaryValue");
-
-    /**
-     * Force alignment of indiviual method call chains? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key ALIGN_METHOD_CALL_CHAINS =
-        new Convention.Key("printer/alignment/methodCallChains");
-
-    /**
-     * Align the indiviual parts of the ternar operator? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key ALIGN_TERNARY_OPERATOR =
-        new Convention.Key("printer/alignment/ternaryOperator");
-
-    /** Specifies whether variable assignments should be aligned (<em>boolean</em>). */
-    public static final Convention.Key ALIGN_VAR_ASSIGNS =
-        new Convention.Key("printer/alignment/varAssigns");
-
-    /** Specifies whether variable identifiers should be aligned (<em>boolean</em>). */
-    public static final Convention.Key ALIGN_VAR_IDENTS =
-        new Convention.Key("printer/alignment/varIdents");
-
-    /**
-     * Should the brackets for array types be printed after the type or after the
-     * identifier? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key ARRAY_BRACKETS_AFTER_IDENT =
-        new Convention.Key("printer/misc/arrayBracketsAfterIdent");
-
-    /** The directory where file backups are to be stored (<em>String</em>). */
-    public static final Convention.Key BACKUP_DIRECTORY =
-        new Convention.Key("general/backupDirectory");
-
-    /** Number of backup files to hold (<em>int</em>). */
-    public static final Convention.Key BACKUP_LEVEL =
-        new Convention.Key("general/backupLevel");
-
-    /** Number of blank lines after a block (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_BLOCK =
-        new Convention.Key("printer/blankLines/afterBlock");
-
-    /** Force the given number of blank lines after left curly braces (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_BRACE_LEFT =
-        new Convention.Key("printer/blankLines/afterBraceLeft");
-
-    /** Number of blank lines after classes (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_CLASS =
-        new Convention.Key("printer/blankLines/afterClass");
-
-    /** Number of blank lines after declarations (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_DECLARATION =
-        new Convention.Key("printer/blankLines/afterDeclaration");
-
-    /** Number of blank lines after the footer (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_FOOTER =
-        new Convention.Key("printer/blankLines/afterFooter");
-
-    /** Number of blank lines after the header (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_HEADER =
-        new Convention.Key("printer/blankLines/afterHeader");
-
-    /** Number of blank lines after the last import statement (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_IMPORT =
-        new Convention.Key("printer/blankLines/afterLastImport");
-
-    /** Number of blank lines after interfaces (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_INTERFACE =
-        new Convention.Key("printer/blankLines/afterInterface");
-
-    /** Number of blank lines after methods (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_METHOD =
-        new Convention.Key("printer/blankLines/afterMethod");
-
-    /** Number of blank lines after the package statement (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_AFTER_PACKAGE =
-        new Convention.Key("printer/blankLines/afterPackage");
-
-    /** Number of blank lines before a block (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_BLOCK =
-        new Convention.Key("printer/blankLines/beforeBlock");
-
-    /** Force the given number of blank lines before right curly braces (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_BRACE_RIGHT =
-        new Convention.Key("printer/blankLines/beforeBraceRight");
-
-    /** Number of blank lines before a case block (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_CASE_BLOCK =
-        new Convention.Key("printer/blankLines/beforeCaseBlock");
-
-    /** Number of blank lines before Javadoc comments (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_JAVADOC =
-        new Convention.Key("printer/blankLines/beforeJavadoc");
-
-    /** Number of blank lines before multi-line comments (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_MULTI_LINE =
-        new Convention.Key("printer/blankLines/beforeCommentMultiLine");
-
-    /** Number of blank lines before single-line commenents (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE =
-        new Convention.Key("printer/blankLines/beforeCommentSingleLine");
-
-    /** Number of blank lines before a flow control statement (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_CONTROL =
-        new Convention.Key("printer/blankLines/beforeControl");
-
-    /** Number of blank lines before declarations (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_DECLARATION =
-        new Convention.Key("printer/blankLines/beforeDeclaration");
-
-    /** Number of blank lines before the footer (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_FOOTER =
-        new Convention.Key("printer/blankLines/beforeFooter");
-
-    /** Number of blank lines before the header (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_BEFORE_HEADER =
-        new Convention.Key("printer/blankLines/beforeHeader");
-
-    /** Number of blank lines to keep up to (<em>int</em>). */
-    public static final Convention.Key BLANK_LINES_KEEP_UP_TO =
-        new Convention.Key("printer/blankLines/keepUpTo");
-
-    /** Cuddle empty braces? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_EMPTY_CUDDLE =
-        new Convention.Key("printer/braces/emptyCuddle");
-
-    /** Insert an empty statement into empty braces? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_EMPTY_INSERT_STATEMENT =
-        new Convention.Key("printer/braces/emptyInsertStatement");
-
-    /** Insert braces around single do-while statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_INSERT_DO_WHILE =
-        new Convention.Key("printer/braces/insertBracesDoWhile");
-
-    /** Insert unneccessary  braces around single for statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_INSERT_FOR =
-        new Convention.Key("printer/braces/insertBracesFor");
-
-    /** Insert braces around single if-else statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_INSERT_IF_ELSE =
-        new Convention.Key("printer/braces/insertBracesIfElse");
-
-    /** Insert braces around single while statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_INSERT_WHILE =
-        new Convention.Key("printer/braces/insertBracesWhile");
-
-    /** Print left braces on a new line? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_NEWLINE_LEFT =
-        new Convention.Key("printer/braces/leftBraceNewLine");
-
-    /** Print right braces on a new line? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_NEWLINE_RIGHT =
-        new Convention.Key("printer/braces/rightBraceNewLine");
-
-    /** Print a newline after the last curly brace? (<em>boolean</em>) */
-    public static final Convention.Key INSERT_TRAILING_NEWLINE =
-        new Convention.Key("printer/misc/insertTrailingNewline");
-
-    /** Remove unneccessary braces for blocks? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_REMOVE_BLOCK =
-        new Convention.Key("printer/braces/removeBracesBlock");
-
-    /** Remove braces around single do-while statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_REMOVE_DO_WHILE =
-        new Convention.Key("printer/braces/removeBracesDoWhile");
-
-    /** Remove unneccessary  braces around single for statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_REMOVE_FOR =
-        new Convention.Key("printer/braces/removeBracesFor");
-
-    /** Remove unneccessary braces around single if-else statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_REMOVE_IF_ELSE =
-        new Convention.Key("printer/braces/removeBracesIfElse");
-
-    /** Remove braces around single while statements? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_REMOVE_WHILE =
-        new Convention.Key("printer/braces/removeBracesWhile");
-
-    /** Should class and method blocks be treated different? (<em>boolean</em>) */
-    public static final Convention.Key BRACE_TREAT_DIFFERENT =
-        new Convention.Key("printer/braces/treatMethodClassDifferent");
-
-    /**
-     * Print left braces of class/interface/ctor/method declarations on a new line if
-     * either the parameter list or extends, implements or throws clause is wrapped?
-     * (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key BRACE_TREAT_DIFFERENT_IF_WRAPPED =
-        new Convention.Key("printer/braces/treatMethodClassDifferentIfWrapped");
-
-    /** Enable chunk detection by blank lines (<em>boolean</em>). */
-    public static final Convention.Key CHUNKS_BY_BLANK_LINES =
-        new Convention.Key("printer/chunks/byBlankLines");
-
-    /** Enable chunk detection by comments (<em>boolean</em>). */
-    public static final Convention.Key CHUNKS_BY_COMMENTS =
-        new Convention.Key("printer/chunks/byComments");
-
-    /** Directory to store class repository files (<em>String</em>). */
-    public static final Convention.Key CLASS_REPOSITORY_DIRECTORY =
-        new Convention.Key("transform/import/classRepositoryDirectory");
-
-    /** Format multi-line comments? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_FORMAT_MULTI_LINE =
-        new Convention.Key("printer/comments/formatMultiLine");
-
-    /**
-     * Insert separator comments between the different tree portions (
-     * class/interface/variable/method/constructor/initialiation declarations)?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key COMMENT_INSERT_SEPARATOR =
-        new Convention.Key("printer/comments/insertSeparator");
-
-    /**
-     * Insert separator comments between the different tree portions of inner
-     * classes/interfaces (a.k.a recursively)? (<em>boolean</em>)
-     */
-    public static final Convention.Key COMMENT_INSERT_SEPARATOR_RECURSIVE =
-        new Convention.Key("printer/comments/insertSeparatorRecursive");
-
-    /** Check Javadoc standard tags? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_CHECK_TAGS =
-        new Convention.Key("printer/comments/javadoc/checkTags");
-
-    /**
-     * Should Javadoc &064;throws tags be checked or not? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key COMMENT_JAVADOC_CHECK_TAGS_THROWS =
-        new Convention.Key("printer/comments/javadoc/checkThrowsTags");
-
-    /**
-     * Print Javadoc comments for fields in one line if possible? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key COMMENT_JAVADOC_FIELDS_SHORT =
-        new Convention.Key("printer/comments/javadoc/fieldsShort");
-
-    /**
-     * Javadoc template for interfaces (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_INTERFACE =
-        new Convention.Key("printer/comments/javadoc/templates/interface");
-
-    /**
-     * Javadoc template for classes (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CLASS =
-        new Convention.Key("printer/comments/javadoc/templates/classes");
-
-    /**
-     * Javadoc template for variables (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_VARIABLE =
-        new Convention.Key("printer/comments/javadoc/templates/variables");
-
-    /**
-     * Javadoc template for methods, top part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_TOP =
-        new Convention.Key("printer/comments/javadoc/templates/methods/top");
-
-    /**
-     * Javadoc template for methods, parameter part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM =
-        new Convention.Key("printer/comments/javadoc/templates/methods/param");
-
-    /**
-     * Javadoc template for methods, exceptions part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION =
-        new Convention.Key("printer/comments/javadoc/templates/methods/exception");
-
-    /**
-     * Javadoc template for methods, return part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN =
-        new Convention.Key("printer/comments/javadoc/templates/methods/return");
-
-    /**
-     * Javadoc template for methods, bottom part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM =
-        new Convention.Key("printer/comments/javadoc/templates/methods/bottom");
-
-    /**
-     * Javadoc template for constructors, top part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_TOP =
-        new Convention.Key("printer/comments/javadoc/templates/constructors/top");
-
-    /**
-     * Javadoc template for constructors, exceptions part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION =
-        new Convention.Key("printer/comments/javadoc/templates/constructors/exception");
-
-    /**
-     * Javadoc template for constructors, parameters part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM =
-        new Convention.Key("printer/comments/javadoc/templates/constructors/param");
-
-    /**
-     * Javadoc template for constructors, bottom part (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM =
-        new Convention.Key("printer/comments/javadoc/templates/constructors/bottom");
-
-    /** Insert missing Javadoc comment for classes/interfaces? (<em>int</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_CLASS_MASK =
-        new Convention.Key("printer/comments/javadoc/addClass");
-
-    /** Insert missing Javadoc comment for constructors? (<em>int</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_CTOR_MASK =
-        new Convention.Key("printer/comments/javadoc/addCtor");
-
-    /** Insert missing Javadoc comment for variables? (<em>int</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_VARIABLE_MASK =
-        new Convention.Key("printer/comments/javadoc/addField");
-
-    /** Insert missing Javadoc comments for inner classes too? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_INNER_CLASS =
-        new Convention.Key("printer/comments/javadoc/checkInnerClass");
-
-    /** Insert missing Javadoc comment for methods? (<em>int</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_METHOD_MASK =
-        new Convention.Key("printer/comments/javadoc/addMethod");
-
-    /** Parse Javadoc comments or add AS IS? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_PARSE =
-        new Convention.Key("printer/comments/javadoc/parseComments");
-
-    /** Remove Javadoc comments? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_REMOVE =
-        new Convention.Key("printer/comments/javadoc/remove");
-
-    /** Transform non-Javadoc comments to Javadoc comments? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_JAVADOC_TRANSFORM =
-        new Convention.Key("printer/comments/javadoc/transform");
-
-    /** Remove multi-line comments? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_REMOVE_MULTI_LINE =
-        new Convention.Key("printer/comments/removeMultiLine");
-
-    /** Remove single-line comments? (<em>boolean</em>) */
-    public static final Convention.Key COMMENT_REMOVE_SINGLE_LINE =
-        new Convention.Key("printer/comments/removeSingleLine");
-
-    /** Insert a footer? (<em>boolean</em>) */
-    public static final Convention.Key FOOTER = new Convention.Key("printer/footer/use");
-
-    /** Identify keys of the footers that are to be deleted (<em>String</em>). */
-    public static final Convention.Key FOOTER_KEYS =
-        new Convention.Key("printer/footer/keys");
-
-    /** The footer text (<em>String</em>). */
-    public static final Convention.Key FOOTER_TEXT =
-        new Convention.Key("printer/footer/text");
-
-    /**
-     * Should the processing of a source file be forced although the file hasn't changed?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key FORCE_FORMATTING =
-        new Convention.Key("general/forceFormatting");
-
-    /** Insert a header? (<em>boolean</em>) */
-    public static final Convention.Key HEADER = new Convention.Key("printer/header/use");
-
-    /**
-     * Number of comments before the first node (an opening curly brace) that should be
-     * treated as header comments (<em>int</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key HEADER_SMART_MODE_LINES =
-        new Convention.Key("printer/header/smartModeLines");
-
-    /**
-     * Number of comments after the last node (a closing curly brace) that should be
-     * treated as footer comments (<em>int</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key FOOTER_SMART_MODE_LINES =
-        new Convention.Key("printer/footer/smartModeLines");
-
-    /** Identify keys of the headers that are to be deleted (<em>String</em>). */
-    public static final Convention.Key HEADER_KEYS =
-        new Convention.Key("printer/header/keys");
-
-    /** The header text (<em>String</em>). */
-    public static final Convention.Key HEADER_TEXT =
-        new Convention.Key("printer/header/text");
-
-    /**
-     * The history policy to use (<em>String</em>). Either &quot;none&quot;,
-     * &quot;file&quot; or &quot;comment&quot;.
-     */
-    public static final Convention.Key HISTORY_POLICY =
-        new Convention.Key("printer/history/policy");
-
-    /**
-     * The method used to identify changed files.
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key HISTORY_METHOD =
-        new Convention.Key("printer/history/method");
-
-    /** Specifies the import optimization policy (<em>String</em>). */
-    public static final Convention.Key IMPORT_POLICY =
-        new Convention.Key("transform/import/policy");
-
-    /** Holds grouping info for distinct package names (<em>String</em>). */
-    public static final Convention.Key IMPORT_GROUPING =
-        new Convention.Key("transform/import/grouping");
-
-    /** Default import grouping depth (<em>int</em>). */
-    public static final Convention.Key IMPORT_GROUPING_DEPTH =
-        new Convention.Key("transform/import/groupingDepth");
-
-    /** Sort import statements? (<em>boolean</em>) */
-    public static final Convention.Key IMPORT_SORT =
-        new Convention.Key("transform/import/sort");
-
-    /** Indent case block in switch statements? (<em>boolean</em>) */
-    public static final Convention.Key INDENT_CASE_FROM_SWITCH =
-        new Convention.Key("printer/indentation/caseFromSwitch");
-
-    /**
-     * Should continuation indentation be used for <code>if</code> blocks?
-     * (<em>boolean</em>).
-     */
-    public static final Convention.Key INDENT_CONTINUATION_IF =
-        new Convention.Key("printer/indentation/continationIf");
-
-    /**
-     * Should standard indentation be used to indent wrapped lines, or rather the deep
-     * indentation policy? (<em>boolean</em>).
-     */
-    public static final Convention.Key INDENT_DEEP =
-        new Convention.Key("printer/indentation/policyDeep");
-
-    /** Should continuation indentation be used for operators? (<em>boolean</em>). */
-    public static final Convention.Key INDENT_CONTINUATION_OPERATOR =
-        new Convention.Key("printer/indentation/continationOperator");
-
-    /**
-     * Should continuation indentation be used for ternary "if-else"? (<em>boolean</em>).
-     */
-    public static final Convention.Key INDENT_CONTINUATION_IF_TERNARY =
-        new Convention.Key("printer/indentation/continationIfTernary");
-
-    /** Indent first column comments? (<em>boolean</em>) */
-    public static final Convention.Key INDENT_FIRST_COLUMN_COMMENT =
-        new Convention.Key("printer/indentation/firstColumnComments");
-
-    /** Indent labels? (<em>boolean</em>) */
-    public static final Convention.Key INDENT_LABEL =
-        new Convention.Key("printer/indentation/label");
-
-    /** Amount of space to use for indentation (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE =
-        new Convention.Key("printer/indentation/general");
-
-    /** Indentation before cuddled braces (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_BRACE_CUDDLED =
-        new Convention.Key("printer/indentation/braceCuddled");
-
-    /** Indentation before a left curly brace (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_BRACE_LEFT =
-        new Convention.Key("printer/indentation/braceLeft");
-
-    /** Indentation before a right curly brace (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_BRACE_RIGHT =
-        new Convention.Key("printer/indentation/braceRight");
-
-    /** Indentation after a right curly brace (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_BRACE_RIGHT_AFTER =
-        new Convention.Key("printer/indentation/braceRightAfter");
-
-    /** Indentation before an endline comment (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_COMMENT_ENDLINE =
-        new Convention.Key("printer/indentation/commentEndline");
-
-    /** Continuation indent size (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_CONTINUATION =
-        new Convention.Key("printer/indentation/continuation");
-
-    /** Maximal amount of spaces for wrapping should be forced (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_DEEP =
-        new Convention.Key("printer/indentation/deep");
-
-    /**
-     * Indentation for extends types (<em>int</em>).
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key INDENT_SIZE_EXTENDS =
-        new Convention.Key("printer/indentation/extends");
-
-    /**
-     * Indentation for implements types (<em>int</em>).
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key INDENT_SIZE_IMPLEMENTS =
-        new Convention.Key("printer/indentation/implements");
-
-    /** Indentation before every line (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_LEADING =
-        new Convention.Key("printer/indentation/leading");
-
-    /** Number of spaces to assume for tabs (<em>int</em>). */
-    public static final Convention.Key INDENT_SIZE_TABS =
-        new Convention.Key("printer/indentation/tabs/size");
-
-    /**
-     * Indentation for throws types (<em>int</em>).
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key INDENT_SIZE_THROWS =
-        new Convention.Key("printer/indentation/throws");
-
-    /*
-     * Indentation for wrapped parameters (<em>int</em>).
-     *
-     * @since 1.0b8
-     *
-    public static final Convention.Key INDENT_SIZE_PARAMETERS =
-        new Convention.Key("printer/indentation/parameter");*/
-    /*
-     * Use the specified parameters indentation size for parameters of method
-     * calls? (<em>boolean</em>)
-     *
-     * @since 1.0b8
-     *
-    public static final Convention.Key INDENT_USE_PARAMS_METHOD_CALL =
-        new Convention.Key("printer/indentation/useMethodCallParams");*/
-
-    /** Fill gaps with tabs? (<em>boolean</em>) */
-    public static final Convention.Key INDENT_WITH_TABS =
-        new Convention.Key("printer/indentation/tabs/use");
-
-    /** Use spaces for continuation after tabs? (<em>boolean</em>) */
-    public static final Convention.Key INDENT_WITH_TABS_ONLY_LEADING =
-        new Convention.Key("printer/indentation/tabs/useOnlyLeading");
-
-    /**
-     * Insert parenthesis around expressions to make precedence clear? (<em>boolean</em>)
-     */
-    public static final Convention.Key INSERT_EXPRESSION_PARENTHESIS =
-        new Convention.Key("transform/misc/insertExpressionParenthesis");
-
-    /** Insert conditional expresssion for debug logging calls? (<em>boolean</em>) */
-    public static final Convention.Key INSERT_LOGGING_CONDITIONAL =
-        new Convention.Key("transform/misc/insertLoggingConditional");
-
-    /** Insert serial version UID for serializable classes? (<em>boolean</em>) */
-    public static final Convention.Key INSERT_SERIAL_UID =
-        new Convention.Key("transform/misc/insertUID");
-
-    /** For internal use only. */
-    public static final Convention.Key INTERNAL_VERSION =
-        new Convention.Key("internal/version");
-
-    /**
-     * Custom Javadoc in-line tags definitions (<em>String</em>).
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TAGS_INLINE =
-        new Convention.Key("printer/comments/javadoc/tags/in-line");
-
-    /**
-     * Custom Javadoc standard tags definitions (<em>String</em>).
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key COMMENT_JAVADOC_TAGS_STANDARD =
-        new Convention.Key("printer/comments/javadoc/tags/standard");
-
-    /** Number of characters in each line(<em>int</em>). */
-    public static final Convention.Key LINE_LENGTH =
-        new Convention.Key("printer/wrapping/lineLength");
-
-    /** Use line wrapping? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP =
-        new Convention.Key("printer/wrapping/use");
-
-    /**
-     * Force wrapping/alignment of chained method? (<em>boolean</em>)
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_CHAINED_METHOD_CALL =
-        new Convention.Key("printer/wrapping/afterChainedMethodCall");
-
-    /** Print newline after labels? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_AFTER_LABEL =
-        new Convention.Key("printer/wrapping/afterLabel");
-
-    /**
-     * Prefer wrapping after assignments? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_ASSIGN =
-        new Convention.Key("printer/wrapping/afterAssign");
-
-    /**
-     * Force wrapping/alignment of successive parameters/expression if the first
-     * parameter/expression was wrapped ? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_PARAMS_EXCEED =
-        new Convention.Key("printer/wrapping/ifFirst");
-
-    /**
-     * Wrap and indent expressions in grouping parentheses ? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_PAREN_GROUPING =
-        new Convention.Key("printer/wrapping/parenGrouping");
-
-    /** Force wrapping/alignment of params for method calls? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_CALL =
-        new Convention.Key("printer/wrapping/paramsMethodCall");
-
-    /** Force wrapping/alignment of params for method calls? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED =
-        new Convention.Key("printer/wrapping/paramsMethodCallIfCall");
-
-    /**
-     * Force wrapping/alignment of method params for method/constructor declarations?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_DEF =
-        new Convention.Key("printer/wrapping/paramsMethodDef");
-
-    /**
-     * Force alignment of extends types for class/interface declarations?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_EXTENDS =
-        new Convention.Key("printer/wrapping/afterExtendsTypes");
-
-    /**
-     * Force alignment of extends types for class/interface declarations?
-     * (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_EXTENDS_EXCEED =
-        new Convention.Key("printer/wrapping/afterExtendsTypesIfExceeded");
-
-    /**
-     * Force alignment of implements types for class/interface declarations?
-     * (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_IMPLEMENTS_EXCEED =
-        new Convention.Key("printer/wrapping/afterImplementsTypesIfExceeded");
-
-    /**
-     * Force alignment of throws types for method/ctor declarations? (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS_EXCEED =
-        new Convention.Key("printer/wrapping/afterThrowsTypesIfExceeded");
-
-    /**
-     * Force alignment of implements types for class/interface declarations?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_IMPLEMENTS =
-        new Convention.Key("printer/wrapping/afterImplementsTypes");
-
-    /**
-     * Force wrapping/alignment of exception types for method/ctor declarations?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS =
-        new Convention.Key("printer/wrapping/afterThrowsTypes");
-
-    /**
-     * Prefer line wrapping after the left parentheses of parameter/expressions lists?
-     * (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_AFTER_LEFT_PAREN =
-        new Convention.Key("printer/wrapping/afterLeftParen");
-
-    /**
-     * Insert a newline before the right parentheses of parameter/epxression lists?
-     * (<em>boolean</em>)
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LINE_WRAP_BEFORE_RIGHT_PAREN =
-        new Convention.Key("printer/wrapping/beforeRightParen");
-
-    /** Force wrapping/alignment after given number of array elements (<em>int</em>). */
-    public static final Convention.Key LINE_WRAP_ARRAY_ELEMENTS =
-        new Convention.Key("printer/wrapping/arrayElements");
-
-    /** Force line wrapping before array initialization? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_BEFORE_ARRAY_INIT =
-        new Convention.Key("printer/wrapping/beforeArrayInit");
-
-    /** Force line wrapping before extends? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_BEFORE_EXTENDS =
-        new Convention.Key("printer/wrapping/beforeExtends");
-
-    /** Force line wrapping before implements? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_BEFORE_IMPLEMENTS =
-        new Convention.Key("printer/wrapping/beforeImplements");
-
-    /** Should line wrapping be performed before or after operators? (<em>boolean</em>) */
-    public static final Convention.Key LINE_WRAP_BEFORE_OPERATOR =
-        new Convention.Key("printer/wrapping/beforeOperator");
-
-    /**
-     * Force line wrapping before throws? (<em>boolean</em>)
-     *
-     * @since 1.0b7
-     */
-    public static final Convention.Key LINE_WRAP_BEFORE_THROWS =
-        new Convention.Key("printer/wrapping/beforeThrows");
-
-    /** Level of the {@link Loggers#IO} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_IO =
-        new Convention.Key("messages/ioMsgPrio");
-
-    /** Level of the {@link Loggers#PARSER} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_PARSER =
-        new Convention.Key("messages/parserMsgPrio");
-
-    /** Level of the {@link Loggers#PARSER_JAVADOC} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_PARSER_JAVADOC =
-        new Convention.Key("messages/parserJavadocMsgPrio");
-
-    /** Level of the {@link Loggers#PRINTER} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_PRINTER =
-        new Convention.Key("messages/printerMsgPrio");
-
-    /** Level of the {@link Loggers#PRINTER_JAVADOC} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_PRINTER_JAVADOC =
-        new Convention.Key("messages/printerJavadocMsgPrio");
-
-    /** Level of the {@link Loggers#TRANSFORM} (<em>int</em>). */
-    public static final Convention.Key MSG_PRIORITY_TRANSFORM =
-        new Convention.Key("messages/transformMsgPrio");
-
-    /** Display stacktrace for errors? (<em>boolean</em>) */
-    public static final Convention.Key MSG_SHOW_ERROR_STACKTRACE =
-        new Convention.Key("messages/showErrorStackTrace");
-
-    /** Pad assignment operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_ASSIGNMENT_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingAssignmentOperators");
-
-    /** Pad bitwise operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_BITWISE_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingBitwiseOperators");
-
-    /**
-     * Insert spaces after the left, and before the right curly brace for array
-     * initializations? (<em>boolean</em>)
-     */
-    public static final Convention.Key PADDING_BRACES =
-        new Convention.Key("printer/whitespace/padddingBraces");
-
-    /** Insert spaces after the left, and before the right bracket? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_BRACKETS =
-        new Convention.Key("printer/whitespace/padddingBrackets");
-
-    /**
-     * Insert spaces after the left, and before the right type cast parenthesis?
-     * (<em>boolean</em>)
-     */
-    public static final Convention.Key PADDING_CAST =
-        new Convention.Key("printer/whitespace/padddingTypeCast");
-
-    /** Pad logical operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_LOGICAL_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingLogicalOperators");
-
-    /** Pad mathematical operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_MATH_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingMathematicalOperators");
-
-    /**
-     * Insert spaces after the left, and before the right parenthesis? (<em>boolean</em>)
-     */
-    public static final Convention.Key PADDING_PAREN =
-        new Convention.Key("printer/whitespace/padddingParenthesis");
-
-    /** Pad relational operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_RELATIONAL_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingRelationalOperators");
-
-    /** Pad shift operators? (<em>boolean</em>) */
-    public static final Convention.Key PADDING_SHIFT_OPERATORS =
-        new Convention.Key("printer/whitespace/paddingShiftOperators");
-
-    /** Sort the different elements of a Java source file? (<em>boolean</em>) */
-    public static final Convention.Key SORT = new Convention.Key("printer/sorting/use");
-
-    /** Sort classes declarations? (<em>boolean</em>) */
-    public static final Convention.Key SORT_CLASS =
-        new Convention.Key("printer/sorting/class");
-
-    /** Sort constructors declarations? (<em>boolean</em>) */
-    public static final Convention.Key SORT_CTOR =
-        new Convention.Key("printer/sorting/constructor");
-
-    /** Sort interfaces declarations? (<em>boolean</em>) */
-    public static final Convention.Key SORT_INTERFACE =
-        new Convention.Key("printer/sorting/interface");
-
-    /** Sort methods declarations? (<em>boolean</em>) */
-    public static final Convention.Key SORT_METHOD =
-        new Convention.Key("printer/sorting/method");
-
-    /** Sort modifers? (<em>boolean</em>) */
-    public static final Convention.Key SORT_MODIFIERS =
-        new Convention.Key("printer/sorting/modifiers/use");
-
-    /** String indicating the declaration sort order (<em>String</em>). */
-    public static final Convention.Key SORT_ORDER =
-        new Convention.Key("printer/sorting/order");
-
-    /** String indicating the modifiers sort order (<em>String</em>). */
-    public static final Convention.Key SORT_ORDER_MODIFIERS =
-        new Convention.Key("printer/sorting/orderModifiers");
-
-    /** Sort variable declarations? (<em>boolean</em>) */
-    public static final Convention.Key SORT_VARIABLE =
-        new Convention.Key("printer/sorting/variable");
-
-    /**
-     * String encoded environment variables (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key ENVIRONMENT =
-        new Convention.Key("printer/environment");
-
-    /**
      * JDK source compatibility version (<em>String</em>).
      *
      * @since 1.0b8
      */
     public static final Convention.Key SOURCE_VERSION =
-        new Convention.Key("general/sourceVersion");
-
-    /**
-     * Lowercase two-letter ISO-639 code (<em>String</em>).
-     *
-     * @since 1.0b9
-     */
-    public static final Convention.Key LANGUAGE = new Convention.Key("general/lanuguage");
+        new Convention.Key("general/compliance/version");
 
     /**
      * Uppercase two-letter ISO-3166 code (<em>String</em>).
      *
      * @since 1.0b9
      */
-    public static final Convention.Key COUNTRY = new Convention.Key("general/country");
+    public static final Convention.Key COUNTRY =
+        new Convention.Key("general/locale/country");
 
-    /** Print a space after type casting? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_AFTER_CAST =
-        new Convention.Key("printer/whitespace/afterCastingParenthesis");
-
-    /** Print a space after a comma? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_AFTER_COMMA =
-        new Convention.Key("printer/whitespace/afterComma");
-
-    /** Print a space after a semicolon? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_AFTER_SEMICOLON =
-        new Convention.Key("printer/whitespace/afterSemiColon");
-
-    /** Print a space before braces (of arrays)? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_BRACES =
-        new Convention.Key("printer/whitespace/beforeBraces");
-
-    /** Print a space before brackets? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_BRACKETS =
-        new Convention.Key("printer/whitespace/beforeBrackets");
-
-    /** Print a space before types with brackets (<em>int</em>). */
-    public static final Convention.Key SPACE_BEFORE_BRACKETS_TYPES =
-        new Convention.Key("printer/whitespace/beforeBracketsTypes");
-
-    /** Print a space before the colon of a case block? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_CASE_COLON =
-        new Convention.Key("printer/whitespace/beforeCaseColon");
-
-    /** Print a space before the negation of boolean expressions? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_LOGICAL_NOT =
-        new Convention.Key("printer/whitespace/beforeLogicalNot");
-
-    /** Print a space before method call parenthesis? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_METHOD_CALL_PAREN =
-        new Convention.Key("printer/whitespace/beforeMethodCallParenthesis");
-
-    /** Print a space before method definition parenthesis? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_METHOD_DEF_PAREN =
-        new Convention.Key("printer/whitespace/beforeMethodDeclarationParenthesis");
-
-    /** Print a space before java statement parenthesis? (<em>boolean</em>) */
-    public static final Convention.Key SPACE_BEFORE_STATEMENT_PAREN =
-        new Convention.Key("printer/whitespace/beforeStatementParenthesis");
-
-    /** Strip qualification for identifiers? (<em>boolean</em>) */
-    public static final Convention.Key STRIP_QUALIFICATION =
-        new Convention.Key("parser/stripQualification");
+    /**
+     * Lowercase two-letter ISO-639 code (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LANGUAGE =
+        new Convention.Key("general/locale/lanuguage");
 
     /** Description of the code convention (<em>String</em>). */
     public static final Convention.Key CONVENTION_DESCRIPTION =
-        new Convention.Key("general/styleDescription");
-
-    /** The location where to load the code convention from (String). */
-    public static final Convention.Key STYLE_LOCATION =
-        new Convention.Key("general/styleLocation");
+        new Convention.Key("general/style/description");
 
     /** Name of the code convention (<em>String</em>). */
     public static final Convention.Key CONVENTION_NAME =
-        new Convention.Key("general/styleName");
+        new Convention.Key("general/style/name");
 
-    /** Number of processing threads to use (<em>int</em>). */
-    public static final Convention.Key THREAD_COUNT =
-        new Convention.Key("general/threadCount");
-
-    /**
-     * The fill character to use for the separator comments (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_FILL_CHARACTER =
-        new Convention.Key("printer/comments/separator/fillCharacter");
-
-    /**
-     * Separator text for the static variables and initalizers section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_STATIC_VAR_INIT =
-        new Convention.Key("printer/comments/separator/staticVariableInit");
-
-    /**
-     * Separator text for the instance variables section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_INSTANCE_VAR =
-        new Convention.Key("printer/comments/separator/instanceVariable");
-
-    /**
-     * Separator text for the instance initializers section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_INSTANCE_INIT =
-        new Convention.Key("printer/comments/separator/instanceInit");
-
-    /**
-     * Separator text for the constructors section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_CTOR =
-        new Convention.Key("printer/comments/separator/ctor");
-
-    /**
-     * Separator text for the methods section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_METHOD =
-        new Convention.Key("printer/comments/separator/method");
-
-    /**
-     * Separator text for the interfaces section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_INTERFACE =
-        new Convention.Key("printer/comments/separator/interface");
-
-    /**
-     * Separator text for the inner classes section (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key SEPARATOR_CLASS =
-        new Convention.Key("printer/comments/separator/class");
+    /** The location where to load the code convention from (String). */
+    public static final Convention.Key STYLE_LOCATION =
+        new Convention.Key("general/style/location");
 
     /** Enable the code inspector? (<em>boolean</em>) */
     public static final Convention.Key INSPECTOR = new Convention.Key("inspector/enable");
+
+    /**
+     * Regexp for package names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_PACKAGE =
+        new Convention.Key("inspector/naming/packages");
+
+    /**
+     * Regexp for class names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_CLASS =
+        new Convention.Key("inspector/naming/classes/general");
+
+    /**
+     * Regexp for abstract class names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_CLASS_ABSTRACT =
+        new Convention.Key("inspector/naming/classes/abstract");
+
+    /**
+     * Regexp for interface names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_INTERFACE =
+        new Convention.Key("inspector/naming/interfaces");
+
+    /**
+     * Regexp for local variables names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_LOCAL_VARIABLE =
+        new Convention.Key("inspector/naming/variables");
+
+    /**
+     * Regexp for method/ctor parameter names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_PARAM =
+        new Convention.Key("inspector/naming/parameters/default");
+
+    /**
+     * Regexp for final method/ctor parameter names (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_PARAM_FINAL =
+        new Convention.Key("inspector/naming/parameters/final");
+
+    /**
+     * Regexp for labels (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_LABEL =
+        new Convention.Key("inspector/naming/labels");
+
+    /**
+     * Regexp for public fields  (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PUBLIC =
+        new Convention.Key("inspector/naming/fields/public");
+
+    /**
+     * Regexp for protected fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PROTECTED =
+        new Convention.Key("inspector/naming/fields/protected");
+
+    /**
+     * Regexp for package protected (default access) fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_DEFAULT =
+        new Convention.Key("inspector/naming/fields/default");
+
+    /**
+     * Regexp for private fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PRIVATE =
+        new Convention.Key("inspector/naming/fields/private");
+
+    /**
+     * Regexp for public static fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PUBLIC_STATIC =
+        new Convention.Key("inspector/naming/fields/publicStatic");
+
+    /**
+     * Regexp for protected static  (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PROTECTED_STATIC =
+        new Convention.Key("inspector/naming/fields/protectedStatic");
+
+    /**
+     * Regexp for package protected (default access) static fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_DEFAULT_STATIC =
+        new Convention.Key("inspector/naming/fields/defaultStatic");
+
+    /**
+     * Regexp for private static fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PRIVATE_STATIC =
+        new Convention.Key("inspector/naming/fields/privateStatic");
+
+    /**
+     * Regexp for public static final fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PUBLIC_STATIC_FINAL =
+        new Convention.Key("inspector/naming/fields/publicStaticFinal");
+
+    /**
+     * Regexp for protected static final fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PROTECTED_STATIC_FINAL =
+        new Convention.Key("inspector/naming/fields/protectedStaticFinal");
+
+    /**
+     * Regexp for package protected (default access) static final fields
+     * (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_DEFAULT_STATIC_FINAL =
+        new Convention.Key("inspector/naming/fields/defaultStaticFinal");
+
+    /**
+     * Regexp for private static final fields (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key REGEXP_FIELD_PRIVATE_STATIC_FINAL =
+        new Convention.Key("inspector/naming/fields/privateStaticFinal");
+
+    /**
+     * Regexp for public methods  (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC =
+        new Convention.Key("inspector/naming/methods/public");
+
+    /**
+     * Regexp for protected methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED =
+        new Convention.Key("inspector/naming/methods/protected");
+
+    /**
+     * Regexp for package protected (default access) methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT =
+        new Convention.Key("inspector/naming/methods/default");
+
+    /**
+     * Regexp for private methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE =
+        new Convention.Key("inspector/naming/methods/private");
+
+    /**
+     * Regexp for public static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC =
+        new Convention.Key("inspector/naming/methods/publicStatic");
+
+    /**
+     * Regexp for protected static  (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC =
+        new Convention.Key("inspector/naming/methods/protectedStatic");
+
+    /**
+     * Regexp for package protected (default access) static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC =
+        new Convention.Key("inspector/naming/methods/defaultStatic");
+
+    /**
+     * Regexp for private static methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC =
+        new Convention.Key("inspector/naming/methods/privateStatic");
+
+    /**
+     * Regexp for public static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methods/publicStaticFinal");
+
+    /**
+     * Regexp for protected static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methods/protectedStaticFinal");
+
+    /**
+     * Regexp for package protected (default access) static final methods
+     * (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methods/defaultStaticFinal");
+
+    /**
+     * Regexp for private static final methods (<em>String</em>).
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC_FINAL =
+        new Convention.Key("inspector/naming/methods/privateStaticFinal");
 
     /**
      * Perform this code inspection? (<em>boolean</em>)
@@ -1255,263 +497,1007 @@ public final class ConventionKeys
     public static final Convention.Key TIP_WRONG_COLLECTION_COMMENT =
         new Convention.Key("inspector/tips/wrongCollectionComment");
 
-    /**
-     * Regexp for package names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_PACKAGE =
-        new Convention.Key("inspector/naming/packages");
+    /** The version number of the current code convention. For internal use only. */
+    public static final Convention.Key INTERNAL_VERSION =
+        new Convention.Key("internal/version");
+
+    /** Level of the {@link Loggers#IO} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_IO =
+        new Convention.Key("messages/priority/general");
+
+    /** Level of the {@link Loggers#PARSER} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_PARSER =
+        new Convention.Key("messages/priority/parser");
+
+    /** Level of the {@link Loggers#PARSER_JAVADOC} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_PARSER_JAVADOC =
+        new Convention.Key("messages/priority/parserJavadoc");
+
+    /** Level of the {@link Loggers#PRINTER} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_PRINTER =
+        new Convention.Key("messages/priority/printer");
+
+    /** Level of the {@link Loggers#PRINTER_JAVADOC} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_PRINTER_JAVADOC =
+        new Convention.Key("messages/priority/printerJavadoc");
+
+    /** Level of the {@link Loggers#TRANSFORM} (<em>int</em>). */
+    public static final Convention.Key MSG_PRIORITY_TRANSFORM =
+        new Convention.Key("messages/priority/transform");
+
+    /** Display stacktrace for errors? (<em>boolean</em>) */
+    public static final Convention.Key MSG_SHOW_ERROR_STACKTRACE =
+        new Convention.Key("messages/showErrorStackTrace");
+
+    /** Number of processing threads to use (<em>int</em>). */
+    public static final Convention.Key THREAD_COUNT =
+        new Convention.Key("misc/threadCount");
 
     /**
-     * Regexp for class names (<em>String</em>).
-     *
-     * @since 1.0b8
+     * Specifies whether method declaration parameters should be aligned
+     * (<em>boolean</em>).
      */
-    public static final Convention.Key REGEXP_CLASS =
-        new Convention.Key("inspector/naming/classes");
+    public static final Convention.Key ALIGN_PARAMS_METHOD_DEF =
+        new Convention.Key("printer/alignment/parameterMethodDeclaration");
 
     /**
-     * Regexp for abstract class names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_CLASS_ABSTRACT =
-        new Convention.Key("inspector/naming/abstractClasses");
-
-    /**
-     * Regexp for interface names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_INTERFACE =
-        new Convention.Key("inspector/naming/interfaces");
-
-    /**
-     * Regexp for local variables names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_LOCAL_VARIABLE =
-        new Convention.Key("inspector/naming/localVariable");
-
-    /**
-     * Regexp for method/ctor parameter names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_PARAM =
-        new Convention.Key("inspector/naming/param");
-
-    /**
-     * Regexp for final method/ctor parameter names (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_PARAM_FINAL =
-        new Convention.Key("inspector/naming/paramFinal");
-
-    /**
-     * Regexp for labels (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_LABEL =
-        new Convention.Key("inspector/naming/label");
-
-    /**
-     * Regexp for public fields  (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PUBLIC =
-        new Convention.Key("inspector/naming/fieldPublic");
-
-    /**
-     * Regexp for protected fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PROTECTED =
-        new Convention.Key("inspector/naming/fieldProtected");
-
-    /**
-     * Regexp for package protected (default access) fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_DEFAULT =
-        new Convention.Key("inspector/naming/fieldFriendly");
-
-    /**
-     * Regexp for private fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PRIVATE =
-        new Convention.Key("inspector/naming/fieldPrivate");
-
-    /**
-     * Regexp for public static fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PUBLIC_STATIC =
-        new Convention.Key("inspector/naming/fieldPublicStatic");
-
-    /**
-     * Regexp for protected static  (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PROTECTED_STATIC =
-        new Convention.Key("inspector/naming/fieldProtectedStatic");
-
-    /**
-     * Regexp for package protected (default access) static fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_DEFAULT_STATIC =
-        new Convention.Key("inspector/naming/fieldFriendlyStatic");
-
-    /**
-     * Regexp for private static fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PRIVATE_STATIC =
-        new Convention.Key("inspector/naming/fieldPrivateStatic");
-
-    /**
-     * Regexp for public static final fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PUBLIC_STATIC_FINAL =
-        new Convention.Key("inspector/naming/fieldPublicStaticFinal");
-
-    /**
-     * Regexp for protected static final fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PROTECTED_STATIC_FINAL =
-        new Convention.Key("inspector/naming/fieldProtectedStaticFinal");
-
-    /**
-     * Regexp for package protected (default access) static final fields
-     * (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_DEFAULT_STATIC_FINAL =
-        new Convention.Key("inspector/naming/fieldFriendlyStaticFinal");
-
-    /**
-     * Regexp for private static final fields (<em>String</em>).
-     *
-     * @since 1.0b8
-     */
-    public static final Convention.Key REGEXP_FIELD_PRIVATE_STATIC_FINAL =
-        new Convention.Key("inspector/naming/fieldPrivateStaticFinal");
-
-    /**
-     * Regexp for public methods  (<em>String</em>).
+     * Align the indiviual parts of the ternary operator? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PUBLIC =
-        new Convention.Key("inspector/naming/methodPublic");
+    public static final Convention.Key ALIGN_TERNARY_OPERATOR =
+        new Convention.Key("printer/alignment/ternaryOperator");
 
     /**
-     * Regexp for protected methods (<em>String</em>).
+     * Force alignment of indiviual method call chains? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PROTECTED =
-        new Convention.Key("inspector/naming/methodProtected");
+    public static final Convention.Key ALIGN_METHOD_CALL_CHAINS =
+        new Convention.Key("printer/alignment/methodCallChain");
+
+    /** Specifies whether variable assignments should be aligned (<em>boolean</em>). */
+    public static final Convention.Key ALIGN_VAR_ASSIGNS =
+        new Convention.Key("printer/alignment/variableAssignment");
+
+    /** Specifies whether variable identifiers should be aligned (<em>boolean</em>). */
+    public static final Convention.Key ALIGN_VAR_IDENTS =
+        new Convention.Key("printer/alignment/variableIdentifier");
+
+    /** The directory where backup files are to be stored (<em>String</em>). */
+    public static final Convention.Key BACKUP_DIRECTORY =
+        new Convention.Key("printer/backup/directory");
+
+    /** Number of backup files to hold (<em>int</em>). */
+    public static final Convention.Key BACKUP_LEVEL =
+        new Convention.Key("printer/backup/level");
+
+    /** Number of blank lines after a block (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_BLOCK =
+        new Convention.Key("printer/blanklines/after/block");
+
+    /** Force the given number of blank lines after left curly braces (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_BRACE_LEFT =
+        new Convention.Key("printer/blanklines/after/braceLeft");
+
+    /** Number of blank lines after classes (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_CLASS =
+        new Convention.Key("printer/blanklines/after/class");
+
+    /** Number of blank lines after declarations (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_DECLARATION =
+        new Convention.Key("printer/blanklines/after/declaration");
+
+    /** Number of blank lines after the footer (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_FOOTER =
+        new Convention.Key("printer/blanklines/after/footer");
+
+    /** Number of blank lines after the header (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_HEADER =
+        new Convention.Key("printer/blanklines/after/header");
+
+    /** Number of blank lines after the last import statement (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_IMPORT =
+        new Convention.Key("printer/blanklines/after/lastImport");
+
+    /** Number of blank lines after interfaces (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_INTERFACE =
+        new Convention.Key("printer/blanklines/after/interface");
+
+    /** Number of blank lines after methods (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_METHOD =
+        new Convention.Key("printer/blanklines/after/method");
+
+    /** Number of blank lines after the package statement (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_AFTER_PACKAGE =
+        new Convention.Key("printer/blanklines/after/package");
+
+    /** Number of blank lines before a block (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_BLOCK =
+        new Convention.Key("printer/blanklines/before/block");
+
+    /** Force the given number of blank lines before right curly braces (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_BRACE_RIGHT =
+        new Convention.Key("printer/blanklines/before/braceRight");
+
+    /** Number of blank lines before a case block (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_CASE_BLOCK =
+        new Convention.Key("printer/blanklines/before/caseBlock");
+
+    /** Number of blank lines before Javadoc comments (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_JAVADOC =
+        new Convention.Key("printer/blanklines/before/comment/javadoc");
+
+    /** Number of blank lines before multi-line comments (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_MULTI_LINE =
+        new Convention.Key("printer/blanklines/before/comment/multiline");
+
+    /** Number of blank lines before single-line commenents (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE =
+        new Convention.Key("printer/blanklines/before/comment/singleline");
+
+    /** Number of blank lines before a flow control statement (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_CONTROL =
+        new Convention.Key("printer/blanklines/before/controlStatement");
+
+    /** Number of blank lines before declarations (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_DECLARATION =
+        new Convention.Key("printer/blanklines/before/declaration");
+
+    /** Number of blank lines before the footer (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_FOOTER =
+        new Convention.Key("printer/blanklines/before/footer");
+
+    /** Number of blank lines before the header (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_BEFORE_HEADER =
+        new Convention.Key("printer/blanklines/before/header");
+
+    /** Number of blank lines to keep up to (<em>int</em>). */
+    public static final Convention.Key BLANK_LINES_KEEP_UP_TO =
+        new Convention.Key("printer/blanklines/keepUpTo");
+
+    /** Cuddle empty braces? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_EMPTY_CUDDLE =
+        new Convention.Key("printer/braces/empty/cuddle");
+
+    /** Insert an empty statement into empty braces? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_EMPTY_INSERT_STATEMENT =
+        new Convention.Key("printer/braces/empty/insertStatement");
+
+    /** Insert braces around single if-else statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_INSERT_IF_ELSE =
+        new Convention.Key("printer/braces/insert/ifelse");
+
+    /** Insert unneccessary  braces around single for statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_INSERT_FOR =
+        new Convention.Key("printer/braces/insert/for");
+
+    /** Insert braces around single while statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_INSERT_WHILE =
+        new Convention.Key("printer/braces/insert/while");
+
+    /** Insert braces around single do-while statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_INSERT_DO_WHILE =
+        new Convention.Key("printer/braces/insert/dowhile");
+
+    /** Remove unneccessary braces around single if-else statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_REMOVE_IF_ELSE =
+        new Convention.Key("printer/braces/remove/ifelse");
+
+    /** Remove unneccessary  braces around single for statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_REMOVE_FOR =
+        new Convention.Key("printer/braces/remove/for");
+
+    /** Remove braces around single while statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_REMOVE_WHILE =
+        new Convention.Key("printer/braces/remove/while");
+
+    /** Remove braces around single do-while statements? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_REMOVE_DO_WHILE =
+        new Convention.Key("printer/braces/remove/dowhile");
+
+    /** Remove unneccessary braces for blocks? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_REMOVE_BLOCK =
+        new Convention.Key("printer/braces/remove/block");
+
+    /** Print a newline after the last curly brace? (<em>boolean</em>) */
+    public static final Convention.Key INSERT_TRAILING_NEWLINE =
+        new Convention.Key("printer/misc/insertTrailingNewline");
+
+    /** Should class and method blocks be treated different? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_TREAT_DIFFERENT =
+        new Convention.Key("printer/braces/treatDifferent/methodClass");
 
     /**
-     * Regexp for package protected (default access) methods (<em>String</em>).
+     * Print left braces of class/interface/ctor/method declarations on a new line if
+     * either the parameter list or extends, implements or throws clause is wrapped?
+     * (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_DEFAULT =
-        new Convention.Key("inspector/naming/methodFriendly");
+    public static final Convention.Key BRACE_TREAT_DIFFERENT_IF_WRAPPED =
+        new Convention.Key("printer/braces/treatDifferent/methodClassIfWrapped");
 
     /**
-     * Regexp for private methods (<em>String</em>).
+     * Should the brackets for array types be printed after the type or after the
+     * identifier? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PRIVATE =
-        new Convention.Key("inspector/naming/methodPrivate");
+    public static final Convention.Key ARRAY_BRACKETS_AFTER_IDENT =
+        new Convention.Key("printer/misc/arrayBracketsAfterIdent");
+
+    /** Enable chunk detection by blank lines? (<em>boolean</em>) */
+    public static final Convention.Key CHUNKS_BY_BLANK_LINES =
+        new Convention.Key("printer/chunks/blanklines");
+
+    /** Enable chunk detection by comments? (<em>boolean</em>) */
+    public static final Convention.Key CHUNKS_BY_COMMENTS =
+        new Convention.Key("printer/chunks/comments");
+
+    /** Format multi-line comments? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_FORMAT_MULTI_LINE =
+        new Convention.Key("printer/comments/format/multiline");
+
+    /** Check Javadoc standard tags? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_CHECK_TAGS =
+        new Convention.Key("printer/comments/javadoc/check/tags");
 
     /**
-     * Regexp for public static methods (<em>String</em>).
+     * Should Javadoc &064;throws tags be checked or not? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC =
-        new Convention.Key("inspector/naming/methodPublicStatic");
+    public static final Convention.Key COMMENT_JAVADOC_CHECK_TAGS_THROWS =
+        new Convention.Key("printer/comments/javadoc/check/throwsTags");
 
     /**
-     * Regexp for protected static  (<em>String</em>).
+     * Print Javadoc comments for fields in one line if possible? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC =
-        new Convention.Key("inspector/naming/methodProtectedStatic");
+    public static final Convention.Key COMMENT_JAVADOC_FIELDS_SHORT =
+        new Convention.Key("printer/comments/javadoc/fieldsShort");
 
     /**
-     * Regexp for package protected (default access) static methods (<em>String</em>).
+     * Javadoc template for interfaces (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_INTERFACE =
+        new Convention.Key("printer/comments/javadoc/templates/interface");
+
+    /**
+     * Javadoc template for classes (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CLASS =
+        new Convention.Key("printer/comments/javadoc/templates/class");
+
+    /**
+     * Javadoc template for variables (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_VARIABLE =
+        new Convention.Key("printer/comments/javadoc/templates/variable");
+
+    /**
+     * Javadoc template for methods, top part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_TOP =
+        new Convention.Key("printer/comments/javadoc/templates/method/top");
+
+    /**
+     * Javadoc template for methods, parameter part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM =
+        new Convention.Key("printer/comments/javadoc/templates/method/param");
+
+    /**
+     * Javadoc template for methods, exceptions part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION =
+        new Convention.Key("printer/comments/javadoc/templates/method/exception");
+
+    /**
+     * Javadoc template for methods, return part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN =
+        new Convention.Key("printer/comments/javadoc/templates/method/return");
+
+    /**
+     * Javadoc template for methods, bottom part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM =
+        new Convention.Key("printer/comments/javadoc/templates/method/bottom");
+
+    /**
+     * Javadoc template for constructors, top part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_TOP =
+        new Convention.Key("printer/comments/javadoc/templates/constructor/top");
+
+    /**
+     * Javadoc template for constructors, exceptions part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION =
+        new Convention.Key("printer/comments/javadoc/templates/constructor/exception");
+
+    /**
+     * Javadoc template for constructors, parameters part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM =
+        new Convention.Key("printer/comments/javadoc/templates/constructor/param");
+
+    /**
+     * Javadoc template for constructors, bottom part (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM =
+        new Convention.Key("printer/comments/javadoc/templates/constructor/bottom");
+
+    /** Insert missing Javadoc comment for classes/interfaces? (<em>int</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_CLASS_MASK =
+        new Convention.Key("printer/comments/javadoc/generate/class");
+
+    /** Insert missing Javadoc comment for constructors? (<em>int</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_CTOR_MASK =
+        new Convention.Key("printer/comments/javadoc/generate/constructor");
+
+    /** Insert missing Javadoc comment for variables? (<em>int</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_VARIABLE_MASK =
+        new Convention.Key("printer/comments/javadoc/generate/field");
+
+    /** Insert missing Javadoc comment for methods? (<em>int</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_METHOD_MASK =
+        new Convention.Key("printer/comments/javadoc/generate/method");
+
+    /** Insert missing Javadoc comments for inner classes too? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_INNER_CLASS =
+        new Convention.Key("printer/comments/javadoc/check/innerclass");
+
+    /** Parse Javadoc comments or add AS IS? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_PARSE =
+        new Convention.Key("printer/comments/javadoc/parseComments");
+
+    /** Remove Javadoc comments? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_REMOVE =
+        new Convention.Key("printer/comments/remove/javadoc");
+
+    /** Transform non-Javadoc comments to Javadoc comments? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_JAVADOC_TRANSFORM =
+        new Convention.Key("printer/comments/javadoc/transform");
+
+    /** Remove multi-line comments? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_REMOVE_MULTI_LINE =
+        new Convention.Key("printer/comments/remove/multiline");
+
+    /** Remove single-line comments? (<em>boolean</em>) */
+    public static final Convention.Key COMMENT_REMOVE_SINGLE_LINE =
+        new Convention.Key("printer/comments/remove/singleline");
+
+    /** Insert a footer? (<em>boolean</em>) */
+    public static final Convention.Key FOOTER = new Convention.Key("printer/footer/use");
+
+    /** Identify keys of the footers that are to be deleted (<em>String</em>). */
+    public static final Convention.Key FOOTER_KEYS =
+        new Convention.Key("printer/footer/keys");
+
+    /** The footer text (<em>String</em>). */
+    public static final Convention.Key FOOTER_TEXT =
+        new Convention.Key("printer/footer/text");
+
+    /**
+     * Should the processing of a source file be forced although the file hasn't changed?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key FORCE_FORMATTING =
+        new Convention.Key("printer/misc/forceFormatting");
+
+    /** Insert a header? (<em>boolean</em>) */
+    public static final Convention.Key HEADER = new Convention.Key("printer/header/use");
+
+    /**
+     * Number of comments before the first node (an opening curly brace) that should be
+     * treated as header comments (<em>int</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key HEADER_SMART_MODE_LINES =
+        new Convention.Key("printer/header/smartMode");
+
+    /**
+     * Number of comments after the last node (a closing curly brace) that should be
+     * treated as footer comments (<em>int</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key FOOTER_SMART_MODE_LINES =
+        new Convention.Key("printer/footer/smartMode");
+
+    /** Identify keys of the headers that are to be deleted (<em>String</em>). */
+    public static final Convention.Key HEADER_KEYS =
+        new Convention.Key("printer/header/keys");
+
+    /** The header text (<em>String</em>). */
+    public static final Convention.Key HEADER_TEXT =
+        new Convention.Key("printer/header/text");
+
+    /**
+     * The history policy to use (<em>String</em>). Either &quot;none&quot;,
+     * &quot;file&quot; or &quot;comment&quot;.
+     */
+    public static final Convention.Key HISTORY_POLICY =
+        new Convention.Key("printer/history/policy");
+
+    /**
+     * The method used to identify changed files.
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC =
-        new Convention.Key("inspector/naming/methodFriendlyStatic");
+    public static final Convention.Key HISTORY_METHOD =
+        new Convention.Key("printer/history/method");
+
+    /** Directory to store class repository files (<em>String</em>). */
+    public static final Convention.Key CLASS_REPOSITORY_DIRECTORY =
+        new Convention.Key("printer/imports/classRepositoryDirectory");
+
+    /** Specifies the import optimization policy (<em>String</em>). */
+    public static final Convention.Key IMPORT_POLICY =
+        new Convention.Key("printer/imports/policy");
+
+    /** Holds grouping info for distinct package names (<em>String</em>). */
+    public static final Convention.Key IMPORT_GROUPING =
+        new Convention.Key("printer/imports/grouping/packages");
+
+    /** Default import grouping depth (<em>int</em>). */
+    public static final Convention.Key IMPORT_GROUPING_DEPTH =
+        new Convention.Key("printer/imports/grouping/defaultDepth");
+
+    /** Sort import statements? (<em>boolean</em>) */
+    public static final Convention.Key IMPORT_SORT =
+        new Convention.Key("printer/imports/sort");
+
+    /** Indent case block in switch statements? (<em>boolean</em>) */
+    public static final Convention.Key INDENT_CASE_FROM_SWITCH =
+        new Convention.Key("printer/indentation/caseFromSwitch");
 
     /**
-     * Regexp for private static methods (<em>String</em>).
+     * Should standard indentation be used to indent wrapped lines, or rather the deep
+     * indentation policy? (<em>boolean</em>).
+     */
+    public static final Convention.Key INDENT_DEEP =
+        new Convention.Key("printer/indentation/policy/deep");
+
+    /** Should continuation indentation be used for operators? (<em>boolean</em>). */
+    public static final Convention.Key INDENT_CONTINUATION_OPERATOR =
+        new Convention.Key("printer/indentation/continuation/operator");
+
+    /** Continuation indent size (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_CONTINUATION =
+        new Convention.Key("printer/indentation/sizes/continuation");
+
+    /**
+     * Should continuation indentation be used for statement blocks? (<em>boolean</em>).
+     */
+    public static final Convention.Key INDENT_CONTINUATION_BLOCK =
+        new Convention.Key("printer/indentation/continuation/block");
+
+    /** Indent first column comments? (<em>boolean</em>) */
+    public static final Convention.Key INDENT_FIRST_COLUMN_COMMENT =
+        new Convention.Key("printer/indentation/firstColumnComments");
+
+    /** Indent labels? (<em>boolean</em>) */
+    public static final Convention.Key INDENT_LABEL =
+        new Convention.Key("printer/indentation/label");
+
+    /** Amount of space to use for indentation (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE =
+        new Convention.Key("printer/indentation/sizes/general");
+
+    /** Indentation before cuddled braces (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_BRACE_CUDDLED =
+        new Convention.Key("printer/indentation/sizes/braceCuddled");
+
+    /** Indentation before a left curly brace (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_BRACE_LEFT =
+        new Convention.Key("printer/indentation/sizes/braceLeft");
+
+    /** Indentation before a right curly brace (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_BRACE_RIGHT =
+        new Convention.Key("printer/indentation/sizes/braceRight");
+
+    /** Indentation after a right curly brace (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_BRACE_RIGHT_AFTER =
+        new Convention.Key("printer/indentation/sizes/braceRightAfter");
+
+    /** Indentation before an endline comment (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_COMMENT_ENDLINE =
+        new Convention.Key("printer/indentation/sizes/trailingComment");
+
+    /** Maximal amount of spaces for wrapping should be forced (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_DEEP =
+        new Convention.Key("printer/indentation/sizes/deep");
+
+    /**
+     * Indentation for extends types (<em>int</em>).
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key INDENT_SIZE_EXTENDS =
+        new Convention.Key("printer/indentation/sizes/extends");
+
+    /**
+     * Indentation for implements types (<em>int</em>).
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key INDENT_SIZE_IMPLEMENTS =
+        new Convention.Key("printer/indentation/sizes/implements");
+
+    /** Indentation before every line (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_LEADING =
+        new Convention.Key("printer/indentation/sizes/leading");
+
+    /**
+     * Indentation for throws types (<em>int</em>).
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key INDENT_SIZE_THROWS =
+        new Convention.Key("printer/indentation/sizes/throws");
+
+    /** Number of spaces to assume for tabs (<em>int</em>). */
+    public static final Convention.Key INDENT_SIZE_TABS =
+        new Convention.Key("printer/indentation/sizes/tabs");
+
+    /** Fill gaps with tabs? (<em>boolean</em>) */
+    public static final Convention.Key INDENT_WITH_TABS =
+        new Convention.Key("printer/indentation/tabs/enable");
+
+    /** Use spaces for continuation after tabs? (<em>boolean</em>) */
+    public static final Convention.Key INDENT_WITH_TABS_ONLY_LEADING =
+        new Convention.Key("printer/indentation/tabs/onlyLeading");
+
+    /**
+     * Insert parenthesis around expressions to make precedence clear? (<em>boolean</em>)
+     */
+    public static final Convention.Key INSERT_EXPRESSION_PARENTHESIS =
+        new Convention.Key("printer/misc/insertExpressionParentheses");
+
+    /** Insert conditional expresssion for debug logging calls? (<em>boolean</em>) */
+    public static final Convention.Key INSERT_LOGGING_CONDITIONAL =
+        new Convention.Key("printer/misc/insertLoggingConditional");
+
+    /** Insert serial version UID for serializable classes? (<em>boolean</em>) */
+    public static final Convention.Key INSERT_SERIAL_UID =
+        new Convention.Key("printer/misc/insertUID");
+
+    /**
+     * Custom Javadoc in-line tags definitions (<em>String</em>).
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TAGS_INLINE =
+        new Convention.Key("printer/comments/javadoc/tags/in-line");
+
+    /**
+     * Custom Javadoc standard tags definitions (<em>String</em>).
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key COMMENT_JAVADOC_TAGS_STANDARD =
+        new Convention.Key("printer/comments/javadoc/tags/standard");
+
+    /** Pad assignment operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_ASSIGNMENT_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/assignment");
+
+    /** Pad bitwise operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_BITWISE_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/bitwise");
+
+    /**
+     * Insert spaces after the left, and before the right curly brace for array
+     * initializations? (<em>boolean</em>)
+     */
+    public static final Convention.Key PADDING_BRACES =
+        new Convention.Key("printer/whitespace/padding/braces");
+
+    /** Insert spaces after the left, and before the right bracket? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_BRACKETS =
+        new Convention.Key("printer/whitespace/padding/brackets");
+
+    /**
+     * Insert spaces after the left, and before the right type cast parenthesis?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key PADDING_CAST =
+        new Convention.Key("printer/whitespace/padding/typeCast");
+
+    /** Pad logical operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_LOGICAL_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/logical");
+
+    /** Pad mathematical operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_MATH_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/mathematical");
+
+    /**
+     * Insert spaces after the left, and before the right parenthesis? (<em>boolean</em>)
+     */
+    public static final Convention.Key PADDING_PAREN =
+        new Convention.Key("printer/whitespace/padding/parenthesis");
+
+    /** Pad relational operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_RELATIONAL_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/relational");
+
+    /** Pad shift operators? (<em>boolean</em>) */
+    public static final Convention.Key PADDING_SHIFT_OPERATORS =
+        new Convention.Key("printer/whitespace/padding/operator/shift");
+
+    /** Sort the different elements of a Java source file? (<em>boolean</em>) */
+    public static final Convention.Key SORT =
+        new Convention.Key("printer/sorting/declaration/enable");
+
+    /** Sort classes declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_CLASS =
+        new Convention.Key("printer/sorting/declaration/class");
+
+    /** Sort constructors declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_CTOR =
+        new Convention.Key("printer/sorting/declaration/constructor");
+
+    /** Sort interfaces declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_INTERFACE =
+        new Convention.Key("printer/sorting/declaration/interface");
+
+    /** Sort methods declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_METHOD =
+        new Convention.Key("printer/sorting/declaration/method");
+
+    /** Sort modifers? (<em>boolean</em>) */
+    public static final Convention.Key SORT_MODIFIERS =
+        new Convention.Key("printer/sorting/modifier/enable");
+
+    /** String indicating the declaration sort order (<em>String</em>). */
+    public static final Convention.Key SORT_ORDER =
+        new Convention.Key("printer/sorting/declaration/order");
+
+    /** String indicating the modifiers sort order (<em>String</em>). */
+    public static final Convention.Key SORT_ORDER_MODIFIERS =
+        new Convention.Key("printer/sorting/modifier/order");
+
+    /** Sort variable declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_VARIABLE =
+        new Convention.Key("printer/sorting/declaration/variable");
+
+    /**
+     * String encoded environment variables (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key ENVIRONMENT =
+        new Convention.Key("printer/environment");
+
+    /** Print a space after type casting? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_AFTER_CAST =
+        new Convention.Key("printer/whitespace/after/typeCast");
+
+    /** Print a space after a comma? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_AFTER_COMMA =
+        new Convention.Key("printer/whitespace/after/comma");
+
+    /** Print a space after a semicolon? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_AFTER_SEMICOLON =
+        new Convention.Key("printer/whitespace/after/semicolon");
+
+    /** Print a space before braces (of arrays)? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_BRACES =
+        new Convention.Key("printer/whitespace/before/braces");
+
+    /** Print a space before brackets? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_BRACKETS =
+        new Convention.Key("printer/whitespace/before/brackets");
+
+    /** Print a space before types with brackets (<em>int</em>). */
+    public static final Convention.Key SPACE_BEFORE_BRACKETS_TYPES =
+        new Convention.Key("printer/whitespace/before/bracketsTypes");
+
+    /** Print a space before the colon of a case block? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_CASE_COLON =
+        new Convention.Key("printer/whitespace/before/caseColon");
+
+    /** Print a space before the negation of boolean expressions? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_LOGICAL_NOT =
+        new Convention.Key("printer/whitespace/before/operator/not");
+
+    /** Print a space before method call parenthesis? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_METHOD_CALL_PAREN =
+        new Convention.Key("printer/whitespace/before/parentheses/methodCall");
+
+    /** Print a space before method definition parenthesis? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_METHOD_DEF_PAREN =
+        new Convention.Key("printer/whitespace/before/parentheses/methodDeclaration");
+
+    /** Print a space before java statement parenthesis? (<em>boolean</em>) */
+    public static final Convention.Key SPACE_BEFORE_STATEMENT_PAREN =
+        new Convention.Key("printer/whitespace/before/parentheses/statement");
+
+    /** Strip qualification for identifiers? (<em>boolean</em>) */
+    public static final Convention.Key STRIP_QUALIFICATION =
+        new Convention.Key("printer/parser/stripQualification");
+
+    /**
+     * The fill character to use for the separator comments (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_FILL_CHARACTER =
+        new Convention.Key("printer/comments/separator/fillCharacter");
+
+    /**
+     * Insert separator comments between the different tree portions (
+     * class/interface/variable/method/constructor/initialiation declarations)?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key COMMENT_INSERT_SEPARATOR =
+        new Convention.Key("printer/comments/separator/insert");
+
+    /**
+     * Insert separator comments between the different tree portions of inner
+     * classes/interfaces (a.k.a recursively)? (<em>boolean</em>)
+     */
+    public static final Convention.Key COMMENT_INSERT_SEPARATOR_RECURSIVE =
+        new Convention.Key("printer/comments/separator/insertRecursive");
+
+    /**
+     * Separator text for the static variables and initalizers section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_STATIC_VAR_INIT =
+        new Convention.Key("printer/comments/separator/text/static");
+
+    /**
+     * Separator text for the instance variables section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_INSTANCE_VAR =
+        new Convention.Key("printer/comments/separator/text/field");
+
+    /**
+     * Separator text for the instance initializers section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_INSTANCE_INIT =
+        new Convention.Key("printer/comments/separator/text/initializer");
+
+    /**
+     * Separator text for the constructors section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_CTOR =
+        new Convention.Key("printer/comments/separator/text/constructor");
+
+    /**
+     * Separator text for the methods section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_METHOD =
+        new Convention.Key("printer/comments/separator/text/method");
+
+    /**
+     * Separator text for the interfaces section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_INTERFACE =
+        new Convention.Key("printer/comments/separator/text/interface");
+
+    /**
+     * Separator text for the inner classes section (<em>String</em>).
+     *
+     * @since 1.0b8
+     */
+    public static final Convention.Key SEPARATOR_CLASS =
+        new Convention.Key("printer/comments/separator/text/class");
+
+    /** Number of characters in each line(<em>int</em>). */
+    public static final Convention.Key LINE_LENGTH =
+        new Convention.Key("printer/wrapping/general/lineLength");
+
+    /** Use line wrapping? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP =
+        new Convention.Key("printer/wrapping/general/enable");
+
+    /**
+     * Prefer wrapping after assignments? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC =
-        new Convention.Key("inspector/naming/methodPrivateStatic");
+    public static final Convention.Key LINE_WRAP_AFTER_ASSIGN =
+        new Convention.Key("printer/wrapping/ondemand/after/assignment");
 
     /**
-     * Regexp for public static final methods (<em>String</em>).
+     * Wrap and indent expressions in grouping parentheses ? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PUBLIC_STATIC_FINAL =
-        new Convention.Key("inspector/naming/methodPublicStaticFinal");
+    public static final Convention.Key LINE_WRAP_PAREN_GROUPING =
+        new Convention.Key("printer/wrapping/ondemand/groupingParentheses");
 
     /**
-     * Regexp for protected static final methods (<em>String</em>).
+     * Prefer line wrapping after the left parentheses of parameter/expression lists?
+     * (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PROTECTED_STATIC_FINAL =
-        new Convention.Key("inspector/naming/methodProtectedStaticFinal");
+    public static final Convention.Key LINE_WRAP_AFTER_LEFT_PAREN =
+        new Convention.Key("printer/wrapping/ondemand/after/leftParenthesis");
 
     /**
-     * Regexp for package protected (default access) static final methods
-     * (<em>String</em>).
+     * Insert a newline before the right parentheses of parameter/epxression lists?
+     * (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_DEFAULT_STATIC_FINAL =
-        new Convention.Key("inspector/naming/methodFriendlyStaticFinal");
+    public static final Convention.Key LINE_WRAP_BEFORE_RIGHT_PAREN =
+        new Convention.Key("printer/wrapping/ondemand/before/rightParenthesis");
+
+    /** Should line wrapping be performed before or after operators? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP_BEFORE_OPERATOR =
+        new Convention.Key("printer/wrapping/general/beforeOperator");
+
+    /** Force wrapping/alignment after parameters for method calls? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_CALL =
+        new Convention.Key("printer/wrapping/always/parameter/methodCall");
 
     /**
-     * Regexp for private static final methods (<em>String</em>).
+     * Force wrapping/alignment of chained method? (<em>boolean</em>)
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_CHAINED_METHOD_CALL =
+        new Convention.Key("printer/wrapping/always/after/methodCallChained");
+
+    /**
+     * Force wrapping/alignment after parameters for method calls if they contain at
+     * least one other method call? (<em>boolean</em>)
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED =
+        new Convention.Key("printer/wrapping/always/parameter/methodCallNested");
+
+    /**
+     * Force wrapping/alignment of parameters for method/constructor declarations?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_PARAMS_METHOD_DEF =
+        new Convention.Key("printer/wrapping/always/parameter/methodDeclaration");
+
+    /** Force wrapping after the first ternary operand? (<em>boolean</em>) */
+    public static final Convention.Key ALIGN_TERNARY_EXPRESSION =
+        new Convention.Key("printer/wrapping/always/after/ternaryOperator/first");
+
+    /** Force wrapping after the second ternary operand? (<em>boolean</em>) */
+    public static final Convention.Key ALIGN_TERNARY_VALUES =
+        new Convention.Key("printer/wrapping/always/after/ternaryOperator/second");
+
+    /** Print newline after labels? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP_AFTER_LABEL =
+        new Convention.Key("printer/wrapping/always/after/label");
+
+    /** Print newline before left braces? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_NEWLINE_LEFT =
+        new Convention.Key("printer/wrapping/always/before/braceLeft");
+
+    /** Print newline after right braces? (<em>boolean</em>) */
+    public static final Convention.Key BRACE_NEWLINE_RIGHT =
+        new Convention.Key("printer/wrapping/always/after/braceRight");
+
+    /**
+     * Force alignment of extends types for class/interface declarations?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_EXTENDS =
+        new Convention.Key("printer/wrapping/always/after/extendsTypes");
+
+    /**
+     * Force alignment of implements types for class/interface declarations?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_IMPLEMENTS =
+        new Convention.Key("printer/wrapping/always/after/implementsTypes");
+
+    /**
+     * Force wrapping/alignment of exception types for method/ctor declarations?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS =
+        new Convention.Key("printer/wrapping/always/after/throwsTypes");
+
+    /* Force line wrapping before array initialization? (<em>boolean</em>)
+    public static final Convention.Key LINE_WRAP_BEFORE_ARRAY_INIT =
+        new Convention.Key("printer/wrapping/before/arrayInit");*/
+
+    /** Force wrapping/alignment after given number of array elements (<em>int</em>). */
+    public static final Convention.Key LINE_WRAP_ARRAY_ELEMENTS =
+        new Convention.Key("printer/wrapping/always/after/arrayElement");
+
+    /** Force line wrapping before implements? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP_BEFORE_IMPLEMENTS =
+        new Convention.Key("printer/wrapping/always/before/implements");
+
+    /** Force line wrapping before extends? (<em>boolean</em>) */
+    public static final Convention.Key LINE_WRAP_BEFORE_EXTENDS =
+        new Convention.Key("printer/wrapping/always/before/extends");
+
+    /**
+     * Force line wrapping before throws? (<em>boolean</em>)
+     *
+     * @since 1.0b7
+     */
+    public static final Convention.Key LINE_WRAP_BEFORE_THROWS =
+        new Convention.Key("printer/wrapping/always/before/throws");
+
+    /**
+     * Force alignment of extends types for class/interface declarations?
+     * (<em>boolean</em>)
      *
      * @since 1.0b9
      */
-    public static final Convention.Key REGEXP_METHOD_PRIVATE_STATIC_FINAL =
-        new Convention.Key("inspector/naming/methodPrivateStaticFinal");
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_EXTENDS_EXCEED =
+        new Convention.Key("printer/wrapping/ondemand/after/types/extends");
+
+    /**
+     * Force alignment of implements types for class/interface declarations?
+     * (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_IMPLEMENTS_EXCEED =
+        new Convention.Key("printer/wrapping/ondemand/after/types/implements");
+
+    /**
+     * Force wrapping/alignment of successive parameters/expression if the first
+     * parameter/expression was wrapped ? (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_PARAMS_EXCEED =
+        new Convention.Key("printer/wrapping/ondemand/after/parameter");
+
+    /**
+     * Force alignment of throws types for method/ctor declarations? (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS_EXCEED =
+        new Convention.Key("printer/wrapping/ondemand/after/types/throws");
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -1520,5 +1506,90 @@ public final class ConventionKeys
      */
     private ConventionKeys()
     {
+    }
+
+    //~ Methods --------------------------------------------------------------------------
+
+    /**
+     * Determines whether the given key is valid.
+     *
+     * @param key a code convention key.
+     *
+     * @return <code>true</code> if the given key is valid.
+     *
+     * @since 1.0b9
+     */
+    public static boolean isValid(Convention.Key key)
+    {
+        Field[] fields = ConventionKeys.class.getDeclaredFields();
+
+        ConventionKeys keys = new ConventionKeys();
+
+        try
+        {
+            for (int i = 0; i < fields.length; i++)
+            {
+                Object k = fields[i].get(keys);
+
+                if (key.toString().equals(k.toString()))
+                {
+                    return true;
+                }
+            }
+        }
+        catch (IllegalAccessException ex)
+        {
+            ex.printStackTrace();
+        }
+
+        return false;
+    }
+
+
+    /**
+     * DOCUMENT ME!
+     *
+     * @param args DOCUMENT ME!
+     */
+    public static void main(String[] args)
+    {
+        try
+        {
+            dump();
+        }
+        catch (Throwable ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+
+    private static void dump()
+      throws IllegalAccessException
+    {
+        Field[] fields = ConventionKeys.class.getDeclaredFields();
+
+        ConventionKeys keys = new ConventionKeys();
+
+        java.util.Map m = new java.util.TreeMap();
+
+        for (int i = 0; i < fields.length; i++)
+        {
+            java.lang.reflect.Field field = fields[i];
+            Object k = field.get(keys);
+
+            if (k instanceof Convention.Key)
+            {
+                m.put(k.toString(), field.getName());
+            }
+        }
+
+        for (java.util.Iterator i = m.keySet().iterator(); i.hasNext();)
+        {
+            Object k = i.next();
+            System.out.println(
+                "renameKey(settings, \"" + k + "\" /* NOI18N */ , ConventionKeys."
+                + m.get(k) + ");");
+        }
     }
 }
