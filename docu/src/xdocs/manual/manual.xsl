@@ -312,6 +312,7 @@
                     <a href="./features.html" class="navlink2">Features</a> |
                     <a href="./history.html" class="navlink2">History</a> |
                     <a href="./manual.html" class="navlink2">Manual</a> |
+                    <a href="./faq.html" class="navlink2">FAQ</a> |
                     <a href="./api/index.html" class="navlink2">Javadoc</a>
                   </td>
                 </tr>

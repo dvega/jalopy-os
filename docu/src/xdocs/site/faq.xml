@@ -100,12 +100,12 @@ Parse
 [jalopy] X:\beans\booking\BookingService.java:0:0:
 java.lang.NullPointerException
 [jalopy] java.lang.NullPointerException
-at de.hunsicker.jalopy.language.SortTransformation.addSiblings(SortTransformation.java:167)
-at de.hunsicker.jalopy.language.SortTransformation.sortDeclarations(SortTransformation.java:534)
-at de.hunsicker.jalopy.language.SortTransformation.sort(SortTransformation.java:104)
-at de.hunsicker.jalopy.language.SortTransformation.apply(SortTransformation.java:64)
-at de.hunsicker.jalopy.language.JavaRecognizer.transform(JavaRecognizer.java:451)
-at de.hunsicker.jalopy.language.JavaRecognizer.getParseTree(Java Recognizer.java:173)
+at de.hunsicker.jalopy.lang.Transformation.addSiblings(Transformation.java:167)
+at de.hunsicker.jalopy.lang.Transformation.sortDeclarations(Transformation.java:534)
+at de.hunsicker.jalopy.lang.Transformation.sort(Transformation.java:104)
+at de.hunsicker.jalopy.lang.Transformation.apply(Transformation.java:64)
+at de.hunsicker.jalopy.lang.JavaRecognizer.transform(JavaRecognizer.java:451)
+at de.hunsicker.jalopy.lang.JavaRecognizer.getParseTree(Java Recognizer.java:173)
 </programlisting>
 </informalexample>
 
@@ -116,7 +116,7 @@ convention format from 1.0b7 to 1.0b9 failed for some reason.
 
 <para>
 Looking further at the supplied code convention revealed that the value of the sorting
-key was invalid and the the actual cause was easy to spot.
+key was invalid and the actual cause was easy to spot.
 </para>
 </answer>
 </qandaentry>
