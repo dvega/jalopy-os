@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -288,13 +288,6 @@ final class SettingsContainer
                     ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                         "LBL_NAMING" /* NOI18N */),
                     "de.hunsicker.jalopy.swing.NamingSettingsPage" /* NOI18N */));
-        DefaultMutableTreeNode tips =
-            new SettingsNode(
-                new SettingsNodeInfo(
-                    "tips" /* NOI18N */,
-                    ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
-                        "LBL_TIPS" /* NOI18N */),
-                    "de.hunsicker.jalopy.swing.TipsSettingsPage" /* NOI18N */));
         DefaultMutableTreeNode projects =
             new SettingsNode(
                 new SettingsNodeInfo(
@@ -323,7 +316,6 @@ final class SettingsContainer
 
         root.add(inspector);
         inspector.add(naming);
-        inspector.add(tips);
 
         root.add(messages);
 

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -16,12 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.swing.*;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
@@ -189,8 +189,8 @@ public class SortingSettingsPage
     {
         StringTokenizer tokens =
             new StringTokenizer(
-                this.settings.get(
-                    ConventionKeys.SORT_ORDER, DeclarationType.getOrder()), COMMA);
+                this.settings.get(ConventionKeys.SORT_ORDER, DeclarationType.getOrder()),
+                COMMA);
         Object[][] data = new Object[7][2];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)

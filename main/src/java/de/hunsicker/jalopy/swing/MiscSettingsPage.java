@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.swing;
 
@@ -139,15 +139,15 @@ public class MiscSettingsPage
         {
             this.settings.put(
                 ConventionKeys.HISTORY_POLICY, History.Policy.COMMENT.toString());
-
-            History.Method historyMethod =
-                (History.Method) _historyMethodComboBox.getSelectedItem();
-            this.settings.put(ConventionKeys.HISTORY_METHOD, historyMethod.getName());
         }
         else if (_historyFileCheckBox.isSelected())
         {
             this.settings.put(
                 ConventionKeys.HISTORY_POLICY, History.Policy.FILE.toString());
+
+            History.Method historyMethod =
+                (History.Method) _historyMethodComboBox.getSelectedItem();
+            this.settings.put(ConventionKeys.HISTORY_METHOD, historyMethod.getName());
         }
         else
         {
@@ -193,7 +193,7 @@ public class MiscSettingsPage
         backupLayout.setConstraints(_backupSlider, c);
         backupPanel.add(_backupSlider);
 
-        final NumberedLabel backupLevelLbl =
+        final NumberedLabel backupLevelLabel =
             new NumberedLabel(
                 this.settings.getInt(
                     ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL),
@@ -206,7 +206,7 @@ public class MiscSettingsPage
                 {
                     JSlider source = (JSlider) ev.getSource();
                     int level = (int) source.getValue();
-                    backupLevelLbl.setLevel(level);
+                    backupLevelLabel.setLevel(level);
                 }
             });
         c.insets.left = 0;
@@ -214,8 +214,8 @@ public class MiscSettingsPage
         SwingHelper.setConstraints(
             c, 2, 0, GridBagConstraints.REMAINDER, 1, 0.0, 0.0, GridBagConstraints.EAST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        backupLayout.setConstraints(backupLevelLbl, c);
-        backupPanel.add(backupLevelLbl);
+        backupLayout.setConstraints(backupLevelLabel, c);
+        backupPanel.add(backupLevelLabel);
         c.insets.top = 10;
 
         JLabel directoryLbl =
@@ -387,7 +387,7 @@ public class MiscSettingsPage
         ComboBoxPanel historyMethodCombo =
             new ComboBoxPanel(
                 "method" /* NOI18N */,
-                new Object[] 
+                new Object[]
                 {
                     History.Method.TIMESTAMP, History.Method.CRC32, History.Method.ADLER32
                 }, historyMethod);
@@ -420,6 +420,7 @@ public class MiscSettingsPage
                     }
                 }
             });
+
         browseButton.addActionListener(
             new ActionListener()
             {
@@ -485,6 +486,7 @@ public class MiscSettingsPage
             c.insets, 0, 0);
         threadPanelLayout.setConstraints(threadLabel, c);
         threadPanel.add(threadLabel);
+
         _threadSlider =
             new JSlider(
                 JSlider.HORIZONTAL, 1, 8,
@@ -504,7 +506,7 @@ public class MiscSettingsPage
         threadPanelLayout.setConstraints(_threadSlider, c);
         threadPanel.add(_threadSlider);
 
-        final NumberedLabel backupLevelLbl =
+        final NumberedLabel backupLevelLabel =
             new NumberedLabel(
                 this.settings.getInt(
                     ConventionKeys.THREAD_COUNT, ConventionDefaults.THREAD_COUNT),
@@ -517,7 +519,7 @@ public class MiscSettingsPage
                 {
                     JSlider source = (JSlider) ev.getSource();
                     int level = (int) source.getValue();
-                    backupLevelLbl.setLevel(level);
+                    backupLevelLabel.setLevel(level);
                 }
             });
         c.insets.left = 0;
@@ -525,8 +527,8 @@ public class MiscSettingsPage
         SwingHelper.setConstraints(
             c, 2, 0, GridBagConstraints.REMAINDER, 1, 0.0, 0.0, GridBagConstraints.EAST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        threadPanelLayout.setConstraints(backupLevelLbl, c);
-        threadPanel.add(backupLevelLbl);
+        threadPanelLayout.setConstraints(backupLevelLabel, c);
+        threadPanel.add(backupLevelLabel);
 
         return threadPanel;
     }
@@ -544,9 +546,7 @@ public class MiscSettingsPage
         removePanel.setLayout(removeLayout);
 
         GridBagConstraints c = new GridBagConstraints();
-        SwingHelper.setConstraints(
-            c, 0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+
         _insertParenCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_INSERT_PARENTHESES" /* NOI18N */),
@@ -554,8 +554,12 @@ public class MiscSettingsPage
                     ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
                     ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS));
         _insertParenCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         removeLayout.setConstraints(_insertParenCheckBox, c);
         removePanel.add(_insertParenCheckBox);
+
         _insertUIDCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_INSERT_SERIAL_UID" /* NOI18N */),
@@ -617,14 +621,11 @@ public class MiscSettingsPage
         removeLayout.setConstraints(_forceCheckBox, c);
         removePanel.add(_forceCheckBox);
 
-        c.insets.top = 0;
-        c.insets.left = 0;
-        c.insets.right = 0;
-
         GridBagLayout layout = new GridBagLayout();
         setLayout(layout);
         c.insets.top = 10;
         c.insets.bottom = 10;
+        c.insets.right = 0;
         SwingHelper.setConstraints(
             c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
