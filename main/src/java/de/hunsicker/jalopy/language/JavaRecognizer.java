@@ -19,7 +19,6 @@ import de.hunsicker.antlr.TokenStreamException;
 import de.hunsicker.antlr.TokenStreamHiddenTokenFilter;
 import de.hunsicker.antlr.TokenStreamRecognitionException;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.plugin.Annotation;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -52,7 +51,12 @@ public final class JavaRecognizer
 
     /** The code convention. */
     private Convention _settings;
+
+    /** List with the annotations for the current input source. */
     private List _annotations = Collections.EMPTY_LIST; // List of <Annotation>
+
+    /** The position that needs to be tracked. */
+    private Position _position;
 
     /** Resolves wildcard imports. */
     private Transformation _importTrans;
@@ -65,6 +69,7 @@ public final class JavaRecognizer
 
     /** Sorts the AST tree. */
     private Transformation _sortTrans;
+    private boolean _trackPosition;
 
     /** Were the transformations applied to the generated AST? */
     private boolean _transformed;
@@ -117,7 +122,7 @@ public final class JavaRecognizer
      * Returns the root node of the generated parse tree. Note that every call to this
      * method triggers the tree transformations, which could be quite expensive. So make
      * sure to avoid unnecessary calls.
-     * 
+     *
      * <p>
      * As we don't use checked exceptions to indicate runtime failures, one may check
      * successful execution of the transformations prior to perform further processing:
@@ -151,11 +156,18 @@ public final class JavaRecognizer
 
         if (!_transformed)
         {
-            if (!_annotations.isEmpty())
+            boolean trackAnnotations = !_annotations.isEmpty();
+
+            if (_trackPosition || trackAnnotations)
             {
-                Searcher walker = new Searcher();
-                walker.annotation = (Annotation) _annotations.get(0);
-                walker.walk(super.getParseTree());
+                PositionTracker tracker = new PositionTracker();
+
+                if (trackAnnotations)
+                {
+                    tracker.annotation = (Annotation) _annotations.get(0);
+                }
+
+                tracker.walk(super.getParseTree());
             }
 
             transform();
@@ -163,6 +175,20 @@ public final class JavaRecognizer
         }
 
         return super.getParseTree();
+    }
+
+
+    /**
+     * Returns the tracked position information.
+     *
+     * @return the tracked position or <code>null</code> if no position should have been
+     *         tracked.
+     *
+     * @since 1.0b9
+     */
+    public Position getPosition()
+    {
+        return _position;
     }
 
 
@@ -223,12 +249,28 @@ public final class JavaRecognizer
 
 
     /**
+     * Determines whether the current tree contains a node that needs its position to be
+     * tracked.
+     *
+     * @return <code>true</code> if the tree contains a node that needs its position to
+     *         be tracked.
+     *
+     * @since 1.0b9
+     */
+    public boolean hasPosition()
+    {
+        return _position != null;
+    }
+
+
+    /**
      * Marks a position in the given input source.
      *
      * @param line a valid line number (<code>&gt;= 1</code>).
-     * @param line a valid column offset (<code>&gt;= 1</code>).
+     * @param column a valid column offset (<code>&gt;= 1</code>).
      *
-     * @throws IllegalArgumentException DOCUMENT ME!
+     * @throws IllegalArgumentException if either <em>line</em> or
+     *         <em>column</em><code>&lt; 1</code>
      *
      * @since 1.0b9
      */
@@ -240,6 +282,9 @@ public final class JavaRecognizer
         {
             throw new IllegalArgumentException();
         }
+
+        _trackPosition = true;
+        _position = new Position(line, column);
     }
 
 
@@ -259,7 +304,7 @@ public final class JavaRecognizer
         this.running = true;
         _transformed = false;
 
-        // update the parsers/lexers prior to parsing
+        // update the parsers/lexer driving settings prior to parsing
         JavaParser parser = (JavaParser) this.parser;
         parser.stripQualification =
             _settings.getBoolean(
@@ -309,6 +354,10 @@ public final class JavaRecognizer
 
         TokenStreamHiddenTokenFilter filter =
             new TokenStreamHiddenTokenFilter(this.lexer);
+
+        /**
+         * @todo keep WS
+         */
         filter.discard(JavaTokenTypes.WS);
         filter.discard(JavaTokenTypes.SEPARATOR_COMMENT);
         filter.hide(JavaTokenTypes.JAVADOC_COMMENT);
@@ -415,14 +464,25 @@ public final class JavaRecognizer
 
     //~ Inner Classes --------------------------------------------------------------------
 
-    private final class Searcher
+    /**
+     * DOCUMENT ME!
+     *
+     * @todo provide custom walkNode method, only link in children if span contains line
+     */
+    private final class PositionTracker
         extends TreeWalker
     {
+        /** The current annotation that is tracked. */
         Annotation annotation;
+
+        /** The current index of the annotation that is tracked. */
         int index;
 
         public void visit(AST node)
         {
+            // forget about most imaginary nodes, operators and the like to make
+            // implementing the tracking logic easier (as only a few printer classes need
+            // to implement it)
             switch (node.getType())
             {
                 case JavaTokenTypes.CLASS_DEF :
@@ -435,6 +495,7 @@ public final class JavaRecognizer
                 case JavaTokenTypes.EXTENDS_CLAUSE :
                 case JavaTokenTypes.IMPLEMENTS_CLAUSE :
                 case JavaTokenTypes.MODIFIERS :
+                case JavaTokenTypes.ELIST :
                 case JavaTokenTypes.TYPE :
                 case JavaTokenTypes.ASSIGN :
                 case JavaTokenTypes.DOT :
@@ -453,23 +514,99 @@ public final class JavaRecognizer
                 case JavaTokenTypes.FOR_INIT :
                 case JavaTokenTypes.FOR_ITERATOR :
                 case JavaTokenTypes.FOR_CONDITION :
+                case JavaTokenTypes.CTOR_CALL :
+                case JavaTokenTypes.SUPER_CTOR_CALL :
+                case JavaTokenTypes.LITERAL_new :
+                case JavaTokenTypes.LPAREN :
+                case JavaTokenTypes.RPAREN :
+                case JavaTokenTypes.LBRACK :
+                case JavaTokenTypes.RBRACK :
+                case JavaTokenTypes.CASESLIST :
+                case JavaTokenTypes.PLUS_ASSIGN :
+                case JavaTokenTypes.MINUS_ASSIGN :
+                case JavaTokenTypes.STAR_ASSIGN :
+                case JavaTokenTypes.DIV_ASSIGN :
+                case JavaTokenTypes.MOD_ASSIGN :
+                case JavaTokenTypes.SR_ASSIGN :
+                case JavaTokenTypes.BSR_ASSIGN :
+                case JavaTokenTypes.SL_ASSIGN :
+                case JavaTokenTypes.BAND_ASSIGN :
+                case JavaTokenTypes.BXOR_ASSIGN :
+                case JavaTokenTypes.BOR_ASSIGN :
+                case JavaTokenTypes.QUESTION :
+                case JavaTokenTypes.LOR :
+                case JavaTokenTypes.LAND :
+                case JavaTokenTypes.BOR :
+                case JavaTokenTypes.BXOR :
+                case JavaTokenTypes.BAND :
+                case JavaTokenTypes.NOT_EQUAL :
+                case JavaTokenTypes.EQUAL :
+                case JavaTokenTypes.LT :
+                case JavaTokenTypes.GT :
+                case JavaTokenTypes.LE :
+                case JavaTokenTypes.GE :
+                case JavaTokenTypes.LITERAL_instanceof :
+                case JavaTokenTypes.SL :
+                case JavaTokenTypes.SR :
+                case JavaTokenTypes.BSR :
+                case JavaTokenTypes.PLUS :
+                case JavaTokenTypes.MINUS :
+                case JavaTokenTypes.DIV :
+                case JavaTokenTypes.MOD :
+                case JavaTokenTypes.INC :
+                case JavaTokenTypes.DEC :
+                case JavaTokenTypes.BNOT :
+                case JavaTokenTypes.LNOT :
+                case JavaTokenTypes.COLON :
                     return;
             }
 
             JavaNode n = (JavaNode) node;
 
-            if (n.getStartLine() == this.annotation.getLine())
+            if (this.annotation != null)
             {
-                n.attachAnnotation(annotation);
-                this.index++;
+                if (n.getStartLine() == this.annotation.getLine())
+                {
+                    n.attachAnnotation(annotation);
+                    this.index++;
 
-                if (_annotations.size() > this.index)
-                {
-                    this.annotation = (Annotation) _annotations.get(index);
+                    if (_annotations.size() > this.index)
+                    {
+                        this.annotation = (Annotation) _annotations.get(index);
+                    }
+                    else
+                    {
+                        this.annotation = null;
+
+                        if (!_trackPosition)
+                        {
+                            stop();
+                        }
+                    }
                 }
-                else
+            }
+
+            if (_trackPosition)
+            {
+                int line = n.getStartLine();
+
+                if (line == _position.line)
                 {
-                    stop();
+                    System.err.println("node to track " + n + " " + n.hashCode());
+                    n.setPosition(_position);
+                    _trackPosition = false;
+
+                    if (this.annotation == null)
+                    {
+                        stop();
+                    }
+                }
+                else if (line < _position.line)
+                {
+                    /**
+                     * @todo store the node next to the position, if no node could be be
+                     *       found in the positioned line, use this as position info
+                     */
                 }
             }
         }

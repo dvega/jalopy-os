@@ -31,6 +31,7 @@ import javax.swing.WindowConstants;
 
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.Jalopy;
+import de.hunsicker.jalopy.language.Position;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -223,7 +224,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread after an action was performed.
-     *
+     * 
      * <p>
      * Override this method to perform any custom work after the formatting process
      * finished.
@@ -236,7 +237,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread before an action will be started.
-     *
+     * 
      * <p>
      * Override this method to perform any custom work before the formatting process
      * starts.
@@ -405,7 +406,7 @@ public abstract class AbstractPlugin
      */
     protected void showWaitCursor()
     {
-        Frame window = getMainWindow();
+        final Frame window = getMainWindow();
 
         if ((window != null) && window instanceof JFrame)
         {
@@ -416,15 +417,29 @@ public abstract class AbstractPlugin
 
             _glassPane.setThread(Thread.currentThread());
 
-            // make the glass pane visible so that all mouse and key
-            // actions will be blocked and a wait cursor displayed;
-            // the pane will be made hidden in the afterEnd() method that
-            // is always called after the run has finished
-            JFrame w = (JFrame) window;
-            _oldGlassPane = w.getRootPane().getGlassPane();
-            w.getRootPane().setGlassPane(_glassPane);
-            _glassPane.setCursor(WAIT_CURSOR);
-            _glassPane.setVisible(true);
+            try
+            {
+                execSync(
+                    new Runnable()
+                    {
+                        public void run()
+                        {
+                            // make the glass pane visible so that all mouse and key
+                            // actions will be blocked and a wait cursor displayed;
+                            // the pane will be made hidden in the afterEnd() method that
+                            // is always called after the run has finished
+                            JFrame w = (JFrame) window;
+                            _oldGlassPane = w.getRootPane().getGlassPane();
+                            w.getRootPane().setGlassPane(_glassPane);
+                            _glassPane.setCursor(WAIT_CURSOR);
+                            _glassPane.setVisible(true);
+                        }
+                    });
+            }
+            catch (Throwable ignored)
+            {
+                hideWaitCursor();
+            }
         }
     }
 
@@ -438,8 +453,7 @@ public abstract class AbstractPlugin
     {
         Convention settings = Convention.getInstance();
         int backupLevel =
-            settings.getInt(
-                ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL);
+            settings.getInt(ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL);
         jalopy.setBackup(backupLevel > 0);
         jalopy.setBackupDirectory(
             settings.get(
@@ -449,6 +463,10 @@ public abstract class AbstractPlugin
             History.Policy.valueOf(
                 settings.get(
                     ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY)));
+        jalopy.setHistoryMethod(
+            History.Method.valueOf(
+                settings.get(
+                    ConventionKeys.HISTORY_METHOD, ConventionDefaults.HISTORY_METHOD)));
         jalopy.setInspect(
             settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
         jalopy.setBackupLevel(backupLevel);
@@ -503,12 +521,17 @@ public abstract class AbstractPlugin
 
                 String content = editor.getText();
 
-                if (content != null && content.length() > 0)
+                if ((content != null) && (content.length() > 0))
                 {
                     jalopy.setInput(content, file.getFile().getAbsolutePath());
 
                     List annotations = editor.detachAnnotations();
                     jalopy.getRecognizer().attachAnnotations(annotations);
+                    jalopy.getRecognizer().markPosition(
+                        editor.getLine(), editor.getColumn());
+
+                    System.err.println(
+                        editor.getLine() + " " + editor.getColumn() + " >");
 
                     final StringBuffer textBuf = new StringBuffer(content.length());
                     jalopy.setOutput(textBuf);
@@ -532,7 +555,13 @@ public abstract class AbstractPlugin
                                     public void run()
                                     {
                                         editor.setText(textBuf.toString());
-                                        editor.attachAnnotations(jalopy.getRecognizer().detachAnnotations());
+                                        editor.attachAnnotations(
+                                            jalopy.getRecognizer().detachAnnotations());
+
+                                        Position position =
+                                            jalopy.getRecognizer().getPosition();
+                                        editor.setCaretPosition(
+                                            position.getLine(), position.getColumn());
                                     }
                                 });
                         }
@@ -789,9 +818,7 @@ public abstract class AbstractPlugin
          */
         public DefaultAppender()
         {
-            super(
-                new PatternLayout("[%p] %m\n" /* NOI18N */), "System.out" /* NOI18N */);
-
+            super(new PatternLayout("[%p] %m\n" /* NOI18N */), "System.out" /* NOI18N */);
         }
 
         public void clear()
@@ -847,34 +874,34 @@ public abstract class AbstractPlugin
                     beforeStart();
 
                     ProjectFile activeFile = getActiveProject().getActiveFile();
-                    final Editor editor = activeFile.getEditor();
 
+                    //final Editor editor = activeFile.getEditor();
                     // store the current offset to reposition the caret
                     // (synchronization needed to make Eclipse happy)
-                    execSync(
+
+                    /*execSync(
                         new Runnable()
                         {
                             public void run()
                             {
                                 offset = editor.getCaretPosition();
                             }
-                        });
-
+                        });*/
                     Jalopy jalopy = getJalopy();
                     format(activeFile, jalopy);
 
                     // only change if no errors showed up
-                    if (getState() != Jalopy.State.ERROR)
+                    /*if (getState() != Jalopy.State.ERROR)
                     {
                         // move the cursor
 
-                        /**
+                        **
                          * @todo this could be improved. Determine the location prior
                          *       formatting (relative to the next known node) and set
                          *       the cursor to that position after formatting; quite
                          *       involved, but possible (and only necessary if in
                          *       sorting mode)
-                         */
+                         *
                         execSync(
                             new Runnable()
                             {
@@ -888,13 +915,13 @@ public abstract class AbstractPlugin
                                     }
                                 }
                             });
-                    }
-
+                    }*/
                     jalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_ALL)
                 {
                     beforeStart();
+
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getAllFiles());
                     jalopy.cleanupBackupDirectory();
@@ -902,6 +929,7 @@ public abstract class AbstractPlugin
                 else if (this.action == Action.FORMAT_SELECTED)
                 {
                     beforeStart();
+
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getSelectedFiles());
                     jalopy.cleanupBackupDirectory();
@@ -909,16 +937,18 @@ public abstract class AbstractPlugin
                 else if (this.action == Action.FORMAT_OPEN)
                 {
                     beforeStart();
+
                     Jalopy jalopy = getJalopy();
                     formatSeveral(jalopy, getActiveProject().getOpenedFiles());
                     jalopy.cleanupBackupDirectory();
                 }
             }
-            catch (InterruptedException ex)
+
+            /*catch (InterruptedException ex)
             {
                 hideProgressMonitor();
                 notifyAll();
-            }
+            }*/
             catch (Throwable ex)
             {
                 hideProgressMonitor();

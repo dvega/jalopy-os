@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -13,7 +13,6 @@ import java.util.List;
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.Token;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.plugin.Annotation;
 
 
 /**
@@ -32,7 +31,12 @@ public class JavaNode
 
     /** Previous node. */
     protected JavaNode prevSibling;
+
+    /** The attached annotations. */
     private List _annotations = Collections.EMPTY_LIST;
+
+    /** Position that is to be tracked. */
+    private Position _position;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -88,30 +92,6 @@ public class JavaNode
     }
 
     //~ Methods --------------------------------------------------------------------------
-
-    /**
-     * Returns and detaches all annotations that are attached to this node.
-     *
-     * @return list of attached annotations (of type {@link de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}). Returns an empty list in case no annotations
-     *         were found.
-     *
-     * @since 1.0b9
-     */
-    public List detachAnnotations()
-    {
-        try
-        {
-            return _annotations;
-        }
-        finally
-        {
-            if (_annotations != Collections.EMPTY_LIST)
-            {
-                _annotations = Collections.EMPTY_LIST;
-            }
-        }
-    }
-
 
     /**
      * Returns the first comment that appears after this node.
@@ -195,6 +175,34 @@ public class JavaNode
     public JavaNode getParent()
     {
         return this.parent;
+    }
+
+
+    /**
+     * Sets the position that is to be tracked. This information can be used by printers
+     * to update the position information.
+     *
+     * @param position position to track.
+     *
+     * @see #updatePosition
+     * @since 1.0b9
+     */
+    public void setPosition(Position position)
+    {
+        _position = position;
+    }
+
+
+    /**
+     * Gets the tracked position.
+     *
+     * @return the tracked position. Returns <code>null</code> if no position was set.
+     *
+     * @since 1.0b9
+     */
+    public Position getPosition()
+    {
+        return _position;
     }
 
 
@@ -293,24 +301,6 @@ public class JavaNode
 
 
     /**
-     * Attaches an annotation to this node.
-     *
-     * @param annotation annotation.
-     *
-     * @since 1.0b9
-     */
-    public void attachAnnotation(Annotation annotation)
-    {
-        if (_annotations == Collections.EMPTY_LIST)
-        {
-            _annotations = new ArrayList(10);
-        }
-
-        _annotations.add(annotation);
-    }
-
-
-    /**
      * Adds a node to the end of the child list for this node.
      *
      * @param node node to add as a new child.
@@ -344,6 +334,49 @@ public class JavaNode
         n.parent = this;
         this.endLine = n.endLine;
         this.endColumn = n.endColumn;
+    }
+
+
+    /**
+     * Attaches an annotation to this node.
+     *
+     * @param annotation annotation.
+     *
+     * @since 1.0b9
+     */
+    public void attachAnnotation(Annotation annotation)
+    {
+        if (_annotations == Collections.EMPTY_LIST)
+        {
+            _annotations = new ArrayList(10);
+        }
+
+        _annotations.add(annotation);
+    }
+
+
+    /**
+     * Detaches and returns all annotations that are attached to this node.
+     *
+     * @return list of attached annotations (of type {@link
+     *         de.hunsicker.jalopy.plugin.Annotation &lt;Annotation&gt;}). Returns an
+     *         empty list in case no annotations were found.
+     *
+     * @since 1.0b9
+     */
+    public List detachAnnotations()
+    {
+        try
+        {
+            return _annotations;
+        }
+        finally
+        {
+            if (_annotations != Collections.EMPTY_LIST)
+            {
+                _annotations = Collections.EMPTY_LIST;
+            }
+        }
     }
 
 
@@ -392,9 +425,7 @@ public class JavaNode
 
 
     /**
-     * DOCUMENT ME!
-     *
-     * @param node DOCUMENT ME!
+     * {@inheritDoc}
      */
     public void initialize(AST node)
     {
@@ -407,9 +438,7 @@ public class JavaNode
 
 
     /**
-     * Returns a string representation of this node.
-     *
-     * @return a string representation of this node.
+     * {@inheritDoc}
      */
     public String toString()
     {
@@ -453,16 +482,25 @@ public class JavaNode
 
 
     /**
-     * Updates the line information of the attached annotations. Does nothing, if no
-     * annotations are attached to this node.
+     * Updates the position information of this node (and all annotations), if necessary.
      *
-     * @param line the new line information for the annotations.
+     * @param line the new line information.
+     * @param column the new column offset information.
      *
-     * @since 1.0b9
+     * @see #setPosition
      * @see #attachAnnotation
+     * @since 1.0b9
      */
-    public void updateAnnotations(int line)
+    public void updatePosition(
+        int line,
+        int column)
     {
+        if (_position != null)
+        {
+            _position.line = line;
+            _position.column = column;
+        }
+
         for (int i = 0, size = _annotations.size(); i < size; i++)
         {
             Annotation annotation = (Annotation) _annotations.get(i);
