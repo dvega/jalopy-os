@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+
+<!-- ==========================================================================
+
+Module              : eclipse
+Module-Dependencies : ant, build, main
+
+This build script is part of the Jalopy build system. It is not meant to be 
+directly invoked by the user but should only be used in conjunction with the 
+master build script that controls the whole build process.
+
+For detailed instructions on how to obtain the needed modules and build a 
+Jalopy distribution from scratch please refer to the manual available at the
+official Jalopy homepage under <http://jalopy.sf.net/build.html>.
+
+If you need further assistance, check <http://jalopy.sf.net/contact.html>.
+
+=========================================================================== -->
+
+<project name="jalopy-eclipse" default="eclipse-jar" basedir="." >
+
+  <!-- load the global properties -->
+  <property file="../build/build.properties" />
+
+  <property name="dir.src" value="src" />
+  <property name="dir.src.java" value="${dir.src}/java" />
+  <property name="dir.src.res" value="${dir.src}/resources" />
+
+  <!-- ==================================================================== -->
+  <!-- Defines the project classpath                                        -->
+  <!-- ==================================================================== -->
+  <path id="project.classpath" >
+    <fileset dir="${DIR.LIB}" >
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="${LIB.PATH.ECLIPSE}" />
+    <pathelement path="${DIR.COMPILE}" />
+  </path>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the binary Eclipse Plug-in .jar                              -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-jar"
+          description="Creates the Eclipse .jar"
+          depends="eclipse-compile, eclipse-uptodate-jar"
+          unless="jar.eclipse.uptodate">
+    <property name="jar.name" value="jalopy-eclipse" />
+
+    <jar jarfile="${DIR.JARS}/${jar.name}-${BUILD.VERSION.ECLIPSE}.jar"
+         duplicate="fail"
+         index="false" >
+      <fileset dir="${DIR.COMPILE}" >
+        <include name="**/plugin/eclipse/**" />
+      </fileset>
+      <manifest>
+        <section name="de/hunsicker/jalopy/plugin/eclipse/">
+          <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
+          <attribute name="Specification-Version" value="${SPEC.VERSION.ECLIPSE}" /> 
+          <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.eclipse" />
+          <attribute name="Implementation-Version" value="${BUILD.VERSION.ECLIPSE}" /> 
+          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-URL" value="${HOMEPAGE}" />
+        </section>
+      </manifest>
+    </jar>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Compiles the Project sources                                         -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-compile"
+          depends="eclipse-init">
+    <javac compiler="${BUILD.COMPILER}"
+           destdir="${DIR.COMPILE}"
+           debug="${BUILD.DEBUG}"
+           deprecation="${BUILD.DEPRECATION}"
+           optimize="${BUILD.OPTIMIZE}"
+           target="${BUILD.TARGET.VM}"
+           verbose="${BUILD.VERBOSE}"
+           fork="true" >
+      <classpath refid="project.classpath" />
+      <src path="${dir.src.java}" />
+    </javac>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Formats the project sources                                          -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-format" depends="eclipse-compile">
+
+    <!-- we checked the module's existence -->
+    <ant dir="../ant" target="ant-compile" inheritAll="false" />
+
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+      <classpath refid="project.classpath" />
+    </taskdef>
+
+    <jalopy classpathref="project.classpath"
+            style="${dir.src.res}/jal-cpl.xml">
+      <fileset dir="${dir.src.java}">
+        <include name="**/*.java" />
+      </fileset>
+    </jalopy>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Initializes the build                                                -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-init"
+          depends="eclipse-check-modules" >
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether all module dependencies are satisfied                 -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-check-modules" unless="eclipse.check.modules">
+    <available file="../build/build.xml" property="present.build" />
+    <antcall target="eclipse-check-build" />
+
+    <!-- now we know module 'build' exists so we can use its targets -->
+    <ant dir="../build" target="build-check-ant"  inheritAll="false"/>
+    <ant dir="../build" target="build-check-main"  inheritAll="false"/>
+    
+    <!-- build the runtime .jar if necessary -->
+    <ant dir="../main" target="main-jar"  inheritAll="false"/>
+    
+    <property name="eclipse.check.modules" value="true" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'build' exists                             -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-check-build"
+          unless="present.build" >
+    <echo message="ERROR 10: Module 'build' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'build' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the .jar needs to be generated                        -->
+  <!-- ==================================================================== -->
+  <target name="eclipse-uptodate-jar" >
+    <dependset>
+      <srcfileset dir="${DIR.COMPILE}">
+        <include name="de/hunsicker/jalopy/plugin/eclipse/*" />
+      </srcfileset>
+      <srcfileset dir="${dir.src.res}">
+        <include name="plugin.*" />
+        <include name="about.html" />
+      </srcfileset>
+      <srcfileset dir="${basedir}">
+        <include name="build.xml" />
+      </srcfileset>
+      <srcfileset dir="..\build">
+        <include name="build.xml" />
+        <include name="build.properties" />
+      </srcfileset>
+      <targetfileset dir="${DIR.JARS}"
+                     includes="jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar"/>
+    </dependset>
+
+    <available property="jar.eclipse.uptodate"
+               file="${DIR.JARS}/jalopy-eclipse-${BUILD.VERSION.ECLIPSE}.jar" />
+  </target>
+</project>

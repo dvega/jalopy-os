@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- $Id$ -->
+
+<plugin id="de.hunsicker.jalopy.plugin.eclipse"
+        name="Jalopy Java Source Code Formatter"
+        version="@BUILD.VERSION.ECLIPSE@"
+        provider-name="Marco Hunsicker"
+        class="de.hunsicker.jalopy.plugin.eclipse.EclipsePlugin">
+
+  <runtime>
+    <library name="jalopy-eclipse-@BUILD.VERSION.ECLIPSE@.jar" />
+    <library name="jalopy-@BUILD.VERSION@.jar" />
+    <library name="jdom-@LIB.VERSION.JDOM@.jar" />
+    <library name="log4j-@LIB.VERSION.LOG4J@.jar" />
+    <library name="oro-@LIB.VERSION.ORO@.jar" />
+  </runtime>
+
+  <requires>
+    <import plugin="org.eclipse.core.resources" />
+    <import plugin="org.eclipse.core.runtime" />
+    <import plugin="org.eclipse.jdt.core" />
+    <import plugin="org.eclipse.swt" />
+    <import plugin="org.eclipse.ui" />
+    <import plugin="org.apache.xerces" />
+  </requires>
+
+
+  <!-- adds an action to the context menu of Java editors -->
+  <extension point="org.eclipse.ui.popupMenus">
+    <viewerContribution id="ContributionEditorPopup"
+                        targetID="#CompilationUnitEditorContext" >
+      <action id="ContributionEditorPopupAction"
+              label="%FormatWithJalopy.label"
+              tooltip="%FormatWithJalopy.tooltip"
+              menubarPath="group.edit"
+              class="de.hunsicker.jalopy.plugin.eclipse.EditorPopupAction" >
+      </action>
+    </viewerContribution>
+  </extension>
+
+<!--<extension point="org.eclipse.ui.editorActions"> 
+	<editorContribution id="editor2" 
+		                  targetID="org.eclipse.jdt.ui.CompilationUnitEditor">
+		<action	id="action11" 
+			      label="Editor Action 1" 
+			      tooltip="Tooltip for Editor Action 1"
+			      menubarPath="navigate/showGroup"
+			      class="de.hunsicker.jalopy.plugin.eclipse.EditorPopupAction"> 
+		</action>
+	</editorContribution> 
+</extension> -->
+
+  <!-- ==================================================================== -->
+  <!-- Navigator View                                                       -->
+  <!-- ==================================================================== -->
+
+  <!-- adds an action to the context menu of files -->
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.core.resources.IFile"
+                        nameFilter="*.java"
+                        id="ContributionFile">
+    <action label="%Format.label"
+            tooltip="%Format.tooltip"
+            class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+            menubarPath="additions"
+            id="ContributionFileAction">
+    </action>
+    </objectContribution>
+  </extension>
+
+  <!-- adds an action to the context menu of folders -->
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.core.resources.IFolder"
+                        id="ContributionFolder">
+      <action label="%FormatFolder.label"
+              tooltip="%FormatFolder.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="additions"
+              id="ContributionFolderAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <!-- adds an action to the context menu of projects -->
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.core.resources.IProject"
+                        id="ContributionFolder">
+      <action label="%FormatProject.label"
+              tooltip="%FormatProject.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="additions"
+              id="ContributionProjectAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <!-- ==================================================================== -->
+  <!-- Projects/PackageExplorer View                                        -->
+  <!-- ==================================================================== -->
+
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.jdt.core.IJavaProject"
+                        id="ContributionPackageProject">
+      <action label="%FormatProject.label"
+              tooltip="%FormatProject.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="group.build"
+              id="ContributionPackageProjectAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.jdt.core.IPackageFragmentRoot"
+                        id="ContributionPackageFragmentRoot">
+      <action label="%FormatPackage.label"
+              tooltip="%FormatPackage.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="group.build"
+              id="ContributionPackageFragmentRootAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.jdt.core.IPackageFragment"
+                        id="ContributionPackageFragment">
+      <action label="%FormatPackage.label"
+              tooltip="%FormatPackage.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="group.build"
+              id="ContributionPackageFragmentAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution objectClass="org.eclipse.jdt.core.ICompilationUnit"
+                        id="ContributionCompilationUnit">
+      <action label="%Format.label"
+              tooltip="%Format.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.ResourcePopupAction"
+              menubarPath="group.build"
+              id="ContributionCompilationUnitAction">
+      </action>
+    </objectContribution>
+  </extension>
+
+  <extension point="org.eclipse.ui.actionSets">
+    <actionSet
+         id="actionSet"
+         label="Jalopy"
+         visible="false">
+      <action id="PreferencesAction"
+              menubarPath="window/additions"
+              label="%DisplayPreferences.label"
+              tooltip="%DisplayPreferences.tooltip"
+              class="de.hunsicker.jalopy.plugin.eclipse.PreferencesMenuAction">
+      </action>
+    </actionSet>
+  </extension>
+
+  <extension point="org.eclipse.ui.actionSetPartAssociations">
+  	<actionSetPartAssociation targetID="actionSet">
+  	  <part id="org.eclipse.team.ui.sync.SyncView" />
+  	  <part id="org.eclipse.vcm.ui.SyncView" />
+  	  <part id="org.eclipse.vcm.ui.RepositoryView" />
+  	  <part id="org.eclipse.vcm.ui.HistoryView" />
+  	  <part id="org.eclipse.ui.views.TaskList" />
+  	  <part id="org.eclipse.ui.views.ContentOutline" />
+  		<part id="org.eclipse.ui.views.ResourceNavigator" />
+  		<part id="org.eclipse.jdt.ui.PackageExplorer" />
+  		<part id="org.eclipse.jdt.ui.TypeHierarchy" />
+  		<part id="org.eclipse.jdt.ui.CompilationUnitEditor" />
+  		<part id="org.eclipse.jdt.ui.ClassFileEditor" />
+  		<part id="org.eclipse.jdt.ui.ProjectsView" />
+  		<part id="org.eclipse.jdt.ui.PackagesView" />
+  		<part id="org.eclipse.jdt.ui.TypesView" />
+  		<part id="org.eclipse.jdt.ui.MembersView" />
+  	</actionSetPartAssociation>
+  </extension>
+
+  <!--
+  <extension point="org.eclipse.ui.preferencePages">
+    <page id="GeneralPage" 
+          class="de.hunsicker.jalopy.plugin.eclipse.prefs.GeneralPage" 
+          name="Jalopy Preferences"> 
+    </page>
+    <page id="BracesPage" 
+          class="de.hunsicker.jalopy.plugin.eclipse.prefs.BracesPage" 
+          name="Braces"  
+          category="GeneralPage"> 
+    </page>
+  </extension>
+  -->
+
+  <extension id="JalopyProblemMarker"
+             point="org.eclipse.core.resources.markers"
+             name="%JalopyProblem">
+    <super type="org.eclipse.core.resources.problemmarker" />
+  </extension>
+</plugin>
