@@ -18,7 +18,7 @@ import de.hunsicker.jalopy.Jalopy;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
-import de.hunsicker.jalopy.plugin.jdeveloper.swing.BlankLinesPanelPanel;
+import de.hunsicker.jalopy.plugin.jdeveloper.swing.BlankLinesPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.BracesPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.CodeInspectorPanel;
 import de.hunsicker.jalopy.plugin.jdeveloper.swing.CommentsPanel;
@@ -348,7 +348,7 @@ public final class JDevPlugin
                 bundle.getString("LBL_WRAPPING" /* NOI18N */), WrappingPanel.class),
             new Navigable(
                 bundle.getString("LBL_BLANK_LINES" /* NOI18N */),
-                BlankLinesPanelPanel.class),
+                BlankLinesPanel.class),
             new Navigable(
                 bundle.getString("LBL_COMMENTS" /* NOI18N */), CommentsPanel.class),
             new Navigable(
