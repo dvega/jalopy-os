@@ -25,7 +25,7 @@ public class SortOptionPane
      */
     public SortOptionPane()
     {
-        super("jalopy.sort");
+        super("jalopy.printer.sort" /* NOI18N */);
         this.panel = new SortingSettingsPage();
     }
 }

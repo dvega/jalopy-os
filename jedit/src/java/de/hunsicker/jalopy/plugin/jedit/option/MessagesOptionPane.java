@@ -25,7 +25,7 @@ public class MessagesOptionPane
      */
     public MessagesOptionPane()
     {
-        super("jalopy.messages");
+        super("jalopy.messages" /* NOI18N */);
         this.panel = new MessagesSettingsPage();
     }
 }

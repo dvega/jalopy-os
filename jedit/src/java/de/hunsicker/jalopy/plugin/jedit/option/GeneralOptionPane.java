@@ -25,7 +25,7 @@ public class GeneralOptionPane
      */
     public GeneralOptionPane()
     {
-        super("jalopy.general");
+        super("jalopy.general" /* NOI18N */);
         this.panel = new GeneralSettingsPage();
     }
 }

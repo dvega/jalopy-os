@@ -25,7 +25,7 @@ public class MiscOptionPane
      */
     public MiscOptionPane()
     {
-        super("jalopy.misc");
+        super("jalopy.printer.misc" /* NOI18N */);
         this.panel = new MiscSettingsPage();
     }
 }

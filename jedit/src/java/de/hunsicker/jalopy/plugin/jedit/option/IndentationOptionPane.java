@@ -25,7 +25,7 @@ public class IndentationOptionPane
      */
     public IndentationOptionPane()
     {
-        super("jalopy.indentation");
+        super("jalopy.printer.indentation" /* NOI18N */);
         this.panel = new IndentationSettingsPage();
     }
 }

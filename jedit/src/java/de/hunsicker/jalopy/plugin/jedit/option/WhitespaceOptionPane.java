@@ -26,7 +26,7 @@ public class WhitespaceOptionPane
      */
     public WhitespaceOptionPane()
     {
-        super("jalopy.whitespace");
+        super("jalopy.printer.whitespace" /* NOI18N */);
         this.panel = new WhitespaceSettingsPage();
     }
 }

@@ -25,7 +25,7 @@ public class CommentsOptionPane
      */
     public CommentsOptionPane()
     {
-        super("jalopy.comments");
+        super("jalopy.printer.comments" /* NOI18N */);
         this.panel = new CommentsSettingsPage();
     }
 }

@@ -26,7 +26,7 @@ public class SeparationOptionPane
      */
     public SeparationOptionPane()
     {
-        super("jalopy.separation");
+        super("jalopy.printer.separation" /* NOI18N */);
         this.panel = new SeparationSettingsPage();
     }
 }

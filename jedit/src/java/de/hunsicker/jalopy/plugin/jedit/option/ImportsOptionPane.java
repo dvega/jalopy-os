@@ -25,7 +25,7 @@ public class ImportsOptionPane
      */
     public ImportsOptionPane()
     {
-        super("jalopy.imports");
+        super("jalopy.printer.imports" /* NOI18N */);
         this.panel = new ImportsSettingsPage();
     }
 }

@@ -25,7 +25,7 @@ public class FooterOptionPane
      */
     public FooterOptionPane()
     {
-        super("jalopy.footer");
+        super("jalopy.printer.footer" /* NOI18N */);
         this.panel = new FooterSettingsPage();
     }
 }

@@ -26,7 +26,7 @@ public class LineWrappingOptionPane
      */
     public LineWrappingOptionPane()
     {
-        super("jalopy.wrapping");
+        super("jalopy.printer.wrapping" /* NOI18N */);
         this.panel = new WrappingSettingsPage();
     }
 }

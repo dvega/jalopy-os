@@ -25,7 +25,7 @@ public class BracesOptionPane
      */
     public BracesOptionPane()
     {
-        super("jalopy.braces");
+        super("jalopy.printer.braces" /* NOI18N */);
         this.panel = new BracesSettingsPage();
     }
 }

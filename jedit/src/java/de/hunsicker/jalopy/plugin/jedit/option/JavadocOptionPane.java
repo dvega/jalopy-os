@@ -25,7 +25,7 @@ public class JavadocOptionPane
      */
     public JavadocOptionPane()
     {
-        super("jalopy.javadoc");
+        super("jalopy.printer.javadoc" /* NOI18N */);
         this.panel = new JavadocSettingsPage();
     }
 }

@@ -25,7 +25,7 @@ public class HeaderOptionPane
      */
     public HeaderOptionPane()
     {
-        super("jalopy.header");
+        super("jalopy.printer.header" /* NOI18N */);
         this.panel = new HeaderSettingsPage();
     }
 }

@@ -25,7 +25,7 @@ public class EnvironmentOptionPane
      */
     public EnvironmentOptionPane()
     {
-        super("jalopy.environment");
+        super("jalopy.printer.environment" /* NOI18N */);
         this.panel = new EnvironmentSettingsPage();
     }
 }
