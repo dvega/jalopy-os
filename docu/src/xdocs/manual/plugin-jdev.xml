@@ -24,8 +24,9 @@ Explains the steps involved to install the JDeveloper Plug-in.
 <sect3 id="plugin-jdev-installation-requirements">
 <title>System requirements</title>
 <para>
-The JDeveloper Plug-in requires JDeveloper 9i. It has only been tested with
-JDeveloper 9.0.2 and 9.0.3. See <xref linkend="installation-requirements" /> for the basic
+The JDeveloper Plug-in requires Oracle9i JDeveloper or later. 1.1.3 is the
+latest version and has only been tested with JDeveloper 10g Production.  Older
+releases may work on JDeveloper 9.0.2 and 9.0.3. See <xref linkend="installation-requirements" /> for the basic
 requirements to run Jalopy.
 </para>
 <para>
@@ -156,3 +157,12 @@ See <xref linkend="license-bsd" /> for the license
 and refer to <xref linkend="dependencies" /> for the license terms of the accompanying 3rd party libraries.
 </para>
 </sect1>
+
+
+
+
+
+
+
+
+
