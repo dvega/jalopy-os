@@ -10,7 +10,7 @@
                 exclude-result-prefixes="#default xsl xhtml">
 
 <!-- load the main docbook stylesheet -->
-<xsl:import href="file:///G:/XML/docbook-xsl/html/chunk.xsl" />
+<xsl:import href="file:///D:/projects/docbook-xsl-1.62.4/html/chunk.xsl" />
 
 <!-- set customization parameters -->
 <xsl:param name="annotate.toc" select="1" />
@@ -38,7 +38,7 @@
 <xsl:param name="shade.verbatim" select="1" />
 <xsl:param name="linenumbering.extension" select="'1'" />
 <xsl:param name="linenumbering.everyNth" select="'1'" />
-<xsl:param name="use.extensions" select="'1'" />
+<!-- <xsl:param name="use.extensions" select="'1'" /> -->
 <xsl:param name="html.cleanup" select="1" />
 
 <xsl:param name="build.time" select="-1" />
@@ -216,12 +216,16 @@
 
 
 <xsl:template name="chunk-element-content">
+  <xsl:param name="prev"/>
+  <xsl:param name="next"/>
   <xsl:if test="$build.time='-1'">
     <xsl:message>ERROR: You must supply the stylesheet parameter "build.time"</xsl:message>
   </xsl:if>
 
+<!--
   <xsl:param name="prev"></xsl:param>
   <xsl:param name="next"></xsl:param>
+-->
 
   <xsl:text disable-output-escaping="yes">
     <![CDATA[<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">]]>
