@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "java15.g" -> "InternalJavaParser.java"$
+// $ANTLR 2.7.4: "main/src/java/de/hunsicker/jalopy/language/antlr/java15.g" -> "InternalJavaParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
