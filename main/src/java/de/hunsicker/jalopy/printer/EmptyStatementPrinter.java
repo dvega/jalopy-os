@@ -34,7 +34,7 @@
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
-
+import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import java.io.IOException;
 
 
@@ -82,7 +82,7 @@ final class EmptyStatementPrinter
         throws IOException
     {
         printCommentsBefore(node, out);
-        out.printEndStatement(NodeWriter.NEWLINE_NO);
+        out.print(SEMI, JavaTokenTypes.EXPR);
 
         if (!printCommentsAfter(node, out))
         {
