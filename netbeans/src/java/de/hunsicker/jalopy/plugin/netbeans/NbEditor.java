@@ -1,15 +1,8 @@
 /*
- *                 Sun Public License Notice
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Sun Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.sun.com/
- *
- * The Original Code is Marco Hunsicker. The Initial Developer of the Original
- * Code is Marco Hunsicker. All rights reserved.
- *
- * Copyright (c) 2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
@@ -23,6 +16,7 @@ import javax.swing.text.StyledDocument;
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
+import org.openide.text.*;
 import org.openide.text.Line;
 
 
@@ -67,7 +61,6 @@ final class NbEditor
         this.pane = pane;
         this.lines = lines;
         this.document = (StyledDocument) pane.getDocument();
-        System.out.println(this.document.getClass());
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -88,7 +81,16 @@ final class NbEditor
         int line,
         int column)
     {
-        throw new UnsupportedOperationException();
+        try
+        {
+            int offset =
+                (NbDocument.findLineOffset(this.document, line - 1) + column) - 1;
+            setCaretPosition(offset);
+        }
+        catch (Throwable ex)
+        {
+            ;
+        }
     }
 
 
@@ -106,21 +108,14 @@ final class NbEditor
      */
     public int getColumn()
     {
-        /**
-         * @todo how can this implemented with reasonable performance?
-         */
-
-        /*
-           try
-           {
-               return NbDocument.findLineColumn(this.document, getCaretPosition());
-           }
-           catch (Exception ex)
-           {
-               return 1;
-           }
-        */
-        throw new UnsupportedOperationException();
+        try
+        {
+            return NbDocument.findLineColumn(this.document, getCaretPosition()) + 1;
+        }
+        catch (Throwable ex)
+        {
+            return 1;
+        }
     }
 
 
@@ -147,21 +142,14 @@ final class NbEditor
      */
     public int getLine()
     {
-        /**
-         * @todo how can this implemented with reasonable performance?
-         */
-
-        /*
-           try
-           {
-               return NbDocument.findLineNumber(this.document, getCaretPosition());
-           }
-           catch (Exception ex)
-           {
-               return 1;
-           }
-        */
-        throw new UnsupportedOperationException();
+        try
+        {
+            return NbDocument.findLineNumber(this.document, getCaretPosition()) + 1;
+        }
+        catch (Throwable ex)
+        {
+            return 1;
+        }
     }
 
 

@@ -1,15 +1,8 @@
 /*
- *                 Sun Public License Notice
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Sun Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.sun.com/
- *
- * The Original Code is Marco Hunsicker. The Initial Developer of the Original
- * Code is Marco Hunsicker. All rights reserved.
- *
- * Copyright (c) 2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
@@ -17,6 +10,8 @@ import java.util.Enumeration;
 
 import javax.swing.Action;
 import javax.swing.JEditorPane;
+
+import de.hunsicker.jalopy.storage.Loggers;
 
 import org.openide.TopManager;
 import org.openide.cookies.EditorCookie;
@@ -155,25 +150,31 @@ public final class FormatAction
                     if (
                         folder.getPrimaryFile().getFileSystem() instanceof LocalFileSystem)
                     {
-                        _name = "&Format All";
+                        _name =
+                            NbBundle.getMessage(
+                                FormatAction.class, "LBL_FormatAllAction" /* NOI18N */);
 
                         return true;
                     }
                 }
-                catch (Exception ex)
+                catch (Throwable ex)
                 {
                     ex.printStackTrace();
                 }
             }
             else if (NbHelper.isJavaFile(obj))
             {
-                _name = "&Format";
+                _name =
+                    NbBundle.getMessage(
+                        FormatAction.class, "LBL_FormatSingleAction" /* NOI18N */);
 
                 return true;
             }
         }
 
-        _name = "&Format";
+        _name =
+            NbBundle.getMessage(
+                FormatAction.class, "LBL_FormatSingleAction" /* NOI18N */);
 
         return false;
     }
@@ -187,7 +188,7 @@ public final class FormatAction
         super.initialize();
         putProperty(
             Action.SHORT_DESCRIPTION,
-            NbBundle.getMessage(FormatAction.class, "HINT_FormatAction"));
+            NbBundle.getMessage(FormatAction.class, "HINT_FormatAction" /* NOI18N */));
     }
 
 
@@ -291,12 +292,13 @@ public final class FormatAction
         DataLoader loader = manager.getLoaderPool().firstProducerOf(DataFolder.class);
         SystemAction[] actions = loader.getActions();
 
-SEARCH: 
+
+// add our action to the popup menu of folder nodes
+SEARCH_FOLDER: 
         for (int i = 0; i < actions.length; i++)
         {
             if (actions[i] != null) // null means separator
             {
-                // add after the BuildAll action
                 if (actions[i] instanceof org.openide.actions.BuildAllAction)
                 {
                     SystemAction[] result = new SystemAction[actions.length + 2];
@@ -307,7 +309,7 @@ SEARCH:
                         actions, i + 2, result, i + 4, actions.length - i - 2);
                     loader.setActions(result);
 
-                    break SEARCH;
+                    break SEARCH_FOLDER;
                 }
             }
         }
@@ -323,19 +325,21 @@ SEARCH:
 
             /**
              * @todo it would be cool to be able to format FormDataNodes
-             *       (org.netbeans.modules.form.FormDataLoader) as well, but I don't
-             *       know how to achieve that as form views have guarded sections
+             *       (org.netbeans.modules.form.FormDataLoader) as well, but I don't how
+             *       to bypass the guarded sections
              */
-            if (name.equals("org.netbeans.modules.java.JavaDataLoader"))
+            if (
+                name.equals("org.netbeans.modules.java.JavaDataLoader" /* NOI18N */)
+                || name.equals(
+                    "org.netbeans.modules.web.core.jsploader.ServletDataLoader" /* NOI18N */))
             {
                 actions = loader.getActions();
-SEARCH_JAVA_FILE: 
+SEARCH_FILE: 
                 for (int i = 0; i < actions.length; i++)
                 {
                     if (actions[i] != null) // null means separator
                     {
-                        // add after the Execute action
-                        if (actions[i] instanceof org.openide.actions.ExecuteAction)
+                        if (actions[i] instanceof org.openide.actions.BuildAction)
                         {
                             SystemAction[] result = new SystemAction[actions.length + 2];
                             System.arraycopy(actions, 0, result, 0, i + 1);
@@ -345,7 +349,7 @@ SEARCH_JAVA_FILE:
                                 actions, i + 2, result, i + 4, actions.length - i - 2);
                             loader.setActions(result);
 
-                            break SEARCH_JAVA_FILE;
+                            break SEARCH_FILE;
                         }
                     }
                 }

@@ -101,9 +101,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           unless="jar.netbeans.uptodate">
     <property name="jar.name" value="jalopy-netbeans" />
 
-    <mkdir dir="${DIR.TMP}/netbeans/bin" />
-
+    <mkdir dir="${DIR.TMP}/netbeans/lib" />
     <mkdir dir="${DIR.TMP}/tmp~/netbeans/modules" />
+
     <copy file="${DIR.JARS}/${jar.name}-${BUILD.VERSION.NETBEANS}.jar"
           todir="${DIR.TMP}/tmp~/netbeans/modules" />
 
@@ -118,7 +118,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </fileset>
     </copy>
 
-    <makenbm file="${DIR.TMP}/netbeans/bin/${jar.name}-${BUILD.VERSION.NETBEANS}.nbm"
+    <makenbm file="${DIR.TMP}/netbeans/lib/${jar.name}-${BUILD.VERSION.NETBEANS}.nbm"
              topdir="${DIR.TMP}/tmp~"
              module="${DIR.TMP}/tmp~/netbeans/modules/${jar.name}-${BUILD.VERSION.NETBEANS}.jar"
              homepage="${HOMEPAGE}"
@@ -186,6 +186,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         </fileset>
       </classpath>
     </taskdef>
+
+    <native2ascii
+        src="${dir.src.java}"
+        dest="${DIR.COMPILE}"
+        includes="**/Bundle*.properties" />
 
     <property name="netbeans.init" value="true" />
   </target>

@@ -1,15 +1,8 @@
 /*
- *                 Sun Public License Notice
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Sun Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.sun.com/
- *
- * The Original Code is Marco Hunsicker. The Initial Developer of the Original
- * Code is Marco Hunsicker. All rights reserved.
- *
- * Copyright (c) 2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 

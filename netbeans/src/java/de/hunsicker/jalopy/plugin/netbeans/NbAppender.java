@@ -1,15 +1,8 @@
 /*
- *                 Sun Public License Notice
+ * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * The contents of this file are subject to the Sun Public License
- * Version 1.0 (the "License"). You may not use this file except in
- * compliance with the License. A copy of the License is available at
- * http://www.sun.com/
- *
- * The Original Code is Marco Hunsicker. The Initial Developer of the Original
- * Code is Marco Hunsicker. All rights reserved.
- *
- * Copyright (c) 2002 Marco Hunsicker
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.plugin.netbeans;
 
@@ -51,8 +44,8 @@ final class NbAppender
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String TYPE_ERROR = "error";
-    private static final String TYPE_WARN = "warn";
+    private static final String TYPE_ERROR = "error" /* NOI18N */;
+    private static final String TYPE_WARN = "warn" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -67,7 +60,7 @@ final class NbAppender
      */
     public NbAppender()
     {
-        _sink = TopManager.getDefault().getIO("Jalopy", false);
+        _sink = TopManager.getDefault().getIO("Jalopy" /* NOI18N */, false);
         _infos = _sink.getOut();
         _errors = _sink.getErr();
         _sink.setErrSeparated(false);
@@ -173,8 +166,8 @@ final class NbAppender
         if (text.indexOf('\n') > -1)
         {
             // then the message first
-            StringTokenizer tokens = new StringTokenizer(text, "\n");
-            buf.append("        ");
+            StringTokenizer tokens = new StringTokenizer(text, "\n" /* NOI18N */);
+            buf.append("        " /* NOI18N */);
             buf.append(tokens.nextToken());
             buf.append('\n');
 
@@ -185,7 +178,7 @@ final class NbAppender
 
                 // only add the line with the stack trace information, but
                 // skip the exception message (to avoid duplication)
-                if ((line != null) && line.trim().startsWith("at"))
+                if ((line != null) && line.trim().startsWith("at" /* NOI18N */))
                 {
                     buf.append(line);
                     buf.append('\n');
@@ -196,7 +189,7 @@ final class NbAppender
         }
         else
         {
-            buf.append("        ");
+            buf.append("        " /* NOI18N */);
             buf.append(text);
         }
 
@@ -218,35 +211,35 @@ final class NbAppender
                 switch (level.toInt())
                 {
                     case Level.WARN_INT :
-                        out.print("[WARN] ");
+                        out.print("[WARN] " /* NOI18N */);
                         out.println(formatFilename(filename, 0));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
 
                     case Level.FATAL_INT :
                     case Level.ERROR_INT :
-                        out.print("[ERROR] ");
+                        out.print("[ERROR] " /* NOI18N */);
                         out.println(formatFilename(filename, 0));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
 
                     case Level.DEBUG_INT :
-                        out.print("[DEBUG] ");
+                        out.print("[DEBUG] " /* NOI18N */);
                         out.println(formatFilename(filename, 0));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
 
                     case Level.INFO_INT :
                     default :
-                        out.print("[INFO] ");
+                        out.print("[INFO] " /* NOI18N */);
                         out.println(formatFilename(filename, 0));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
@@ -257,18 +250,18 @@ final class NbAppender
                 switch (level.toInt())
                 {
                     case Level.WARN_INT :
-                        out.print("[WARN] ");
+                        out.print("[WARN] " /* NOI18N */);
                         out.println(
                             formatFilename(filename, lineno),
                             new OutputHandler(TYPE_WARN, filename, lineno, text));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
 
                     case Level.FATAL_INT :
                     case Level.ERROR_INT :
-                        out.print("[ERROR] ");
+                        out.print("[ERROR] " /* NOI18N */);
 
                         int linebreakPos = text.indexOf('\n'); // multiline message?
                         out.println(
@@ -284,9 +277,9 @@ final class NbAppender
 
                     case Level.INFO_INT :
                     default :
-                        out.print("[INFO] ");
+                        out.print("[INFO] " /* NOI18N */);
                         out.println(formatFilename(filename, 0));
-                        out.println("        " + text);
+                        out.println("        " /* NOI18N */ + text);
                         out.flush();
 
                         break;
@@ -312,7 +305,7 @@ final class NbAppender
             String type)
         {
             this.message = message;
-            this.type = "de-hunsicker-jalopy-plugin-netbeans-" + type;
+            this.type = "de-hunsicker-jalopy-plugin-netbeans-" /* NOI18N */ + type;
         }
 
         public String getAnnotationType()

@@ -8,4 +8,5 @@
       visible="true"
       highlight="#FFFF00"
       type="linepart"
+      glyph="nbresloc:/de/hunsicker/jalopy/plugin/netbeans/WarnGlyph16.gif"
 />
