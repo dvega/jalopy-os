@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.language;
 
@@ -569,7 +569,6 @@ final class NodeComparator
         int mod1,
         int mod2)
     {
-        // public
         if (Modifier.isPublic(mod1))
         {
             if (!Modifier.isPublic(mod2))
@@ -578,7 +577,6 @@ final class NodeComparator
             }
         }
 
-        // protected
         if (Modifier.isProtected(mod1))
         {
             if (Modifier.isPublic(mod2))
@@ -595,7 +593,6 @@ final class NodeComparator
             }
         }
 
-        // private
         if (Modifier.isPrivate(mod1))
         {
             if (!Modifier.isPrivate(mod2))
@@ -604,7 +601,6 @@ final class NodeComparator
             }
         }
 
-        // package protected (friendly)
         if (JavaNodeModifier.isFriendly(mod1))
         {
             if (Modifier.isPrivate(mod2))
@@ -628,11 +624,6 @@ final class NodeComparator
 
         if (Modifier.isStatic(mod1))
         {
-            if (Modifier.isAbstract(mod2))
-            {
-                return 1;
-            }
-
             if (!Modifier.isStatic(mod2))
             {
                 return -1;
@@ -641,11 +632,6 @@ final class NodeComparator
 
         if (Modifier.isFinal(mod1))
         {
-            if (Modifier.isAbstract(mod2) || Modifier.isStatic(mod2))
-            {
-                return 1;
-            }
-
             if (!Modifier.isFinal(mod2))
             {
                 return -1;
@@ -654,13 +640,6 @@ final class NodeComparator
 
         if (Modifier.isTransient(mod1))
         {
-            if (
-                Modifier.isAbstract(mod2) || Modifier.isStatic(mod2)
-                || Modifier.isFinal(mod2))
-            {
-                return 1;
-            }
-
             if (!Modifier.isTransient(mod2))
             {
                 return -1;
