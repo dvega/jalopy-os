@@ -88,9 +88,6 @@ final class ForPrinter
 
         Marker marker = out.state.markers.add();
 
-        /**
-         * @todo print comments after semis
-         */
         AST forInit = lparen.getNextSibling();
         AST firstSemi = forInit.getNextSibling();
         AST forCond = firstSemi.getNextSibling();
@@ -195,6 +192,9 @@ final class ForPrinter
             }
         }
 
+        out.print(SEMI, JavaTokenTypes.FOR_INIT);
+        printCommentsAfter(firstSemi, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
+
         printForCond(forCond, secondWrap, out);
 
         boolean thirdWrap = false;
@@ -228,6 +228,9 @@ final class ForPrinter
                 out.testers.release(tester);
             }
         }
+
+        out.print(SEMI, JavaTokenTypes.FOR_INIT);
+        printCommentsAfter(secondSemi, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
 
         printForIter(forIter, thirdWrap, out);
 
@@ -321,8 +324,6 @@ final class ForPrinter
         NodeWriter out)
       throws IOException
     {
-        out.print(SEMI, JavaTokenTypes.FOR_INIT);
-
         if (node.getFirstChild() == null)
         {
             return;
@@ -394,8 +395,6 @@ final class ForPrinter
         NodeWriter out)
       throws IOException
     {
-        out.print(SEMI, JavaTokenTypes.FOR_INIT);
-
         AST elist = node.getFirstChild();
 
         if (elist == null)
@@ -499,15 +498,16 @@ final class ForPrinter
                 return;
         }
 
-        AST mod = node.getFirstChild();
-        AST type = mod.getNextSibling();
+        AST modifier = node.getFirstChild();
+        AST type = modifier.getNextSibling();
 
         if (printType)
         {
+            PrinterFactory.create(modifier).print(modifier, out);
             PrinterFactory.create(type).print(type, out);
         }
 
-        AST ident = type.getNextSibling();
+        AST identifier = type.getNextSibling();
 
         // only insert whitespace if we haven't multiple variable defs in the
         // initialization part
@@ -516,9 +516,9 @@ final class ForPrinter
             out.print(SPACE, out.last);
         }
 
-        PrinterFactory.create(ident).print(ident, out);
+        PrinterFactory.create(identifier).print(identifier, out);
 
-        AST assign = ident.getNextSibling();
+        AST assign = identifier.getNextSibling();
 
         if (assign != null)
         {
