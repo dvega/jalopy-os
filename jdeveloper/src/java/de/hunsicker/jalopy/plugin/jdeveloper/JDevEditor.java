@@ -18,6 +18,7 @@ import de.hunsicker.util.ChainingRuntimeException;
 
 import oracle.ide.Ide;
 import oracle.ide.cmd.buffer.EditProcessor;
+import oracle.ide.editor.EditorManager;
 import oracle.ide.model.TextNode;
 import oracle.javatools.buffer.TextBuffer;
 import oracle.jdeveloper.ceditor.CodeEditor;
@@ -254,7 +255,7 @@ final class JDevEditor
     {
         if (_editor == null)
         {
-            List editors = Ide.getEditorManager().getAllEditors();
+            List editors = EditorManager.getEditorManager().getAllEditors();
 
             for (int i = 0, size = editors.size(); i < size; i++)
             {

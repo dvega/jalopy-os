@@ -13,6 +13,7 @@ import de.hunsicker.jalopy.plugin.jdeveloper.message.Message;
 import de.hunsicker.jalopy.plugin.jdeveloper.message.MessagePage;
 import de.hunsicker.jalopy.plugin.jdeveloper.message.MessageType;
 
+import oracle.ide.log.LogManager;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
 
@@ -123,7 +124,7 @@ final class JDevAppender
                     new ViewId("JalopyPage" /* NOI18N */, "Jalopy" /* NOI18N */), null);
         }
 
-        LogWindow window = Ide.getLogWindow();
+        LogWindow window = LogManager.getIdeLogWindow();
 
         if (!window.isVisible())
         {

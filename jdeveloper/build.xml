@@ -37,8 +37,16 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <fileset dir="${DIR.LIB}" >
       <include name="*.jar" />
     </fileset>
+<!--
     <fileset dir="${dir.lib}" >
       <include name="*.jar" />
+    </fileset>
+-->
+    <fileset dir="${DIR.INSTALL.JDEVELOPER}/ide/lib">
+      <include name="*.jar" />
+    </fileset>
+    <fileset dir="${DIR.INSTALL.JDEVELOPER}/jdev/lib">
+      <include name="jdev.jar" />
     </fileset>
     <pathelement path="${DIR.COMPILE}" />
   </path>

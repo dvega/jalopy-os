@@ -19,6 +19,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 
 import oracle.ide.Ide;
 import oracle.ide.editor.Editor;
+import oracle.ide.editor.EditorManager;
 import oracle.ide.model.DirectoryFolder;
 import oracle.ide.model.Document;
 import oracle.ide.model.Element;
@@ -65,7 +66,7 @@ final class JDevProject
      */
     public ProjectFile getActiveFile()
     {
-        Editor editor = Ide.getEditorManager().getCurrentEditor();
+        Editor editor = EditorManager.getEditorManager().getCurrentEditor();
 
         if (editor != null)
         {

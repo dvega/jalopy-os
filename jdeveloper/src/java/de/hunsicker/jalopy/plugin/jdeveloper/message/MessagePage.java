@@ -30,6 +30,7 @@ import oracle.ide.editor.Editor;
 import oracle.ide.editor.EditorManager;
 import oracle.ide.layout.ViewId;
 import oracle.ide.log.AbstractLogPage;
+import oracle.ide.log.LogManager;
 import oracle.ide.model.NodeFactory;
 import oracle.ide.model.TextNode;
 import oracle.ide.net.URLFactory;
@@ -162,7 +163,7 @@ public class MessagePage
                             if (message.file.exists())
                             {
                                 URL url = URLFactory.newFileURL(message.file);
-                                EditorManager editorManager = Ide.getEditorManager();
+                                EditorManager editorManager = EditorManager.getEditorManager();
                                 Editor editor =
                                     editorManager.openDefaultEditorInFrame(url);
 
@@ -178,7 +179,7 @@ public class MessagePage
                 }
             });
 
-        Ide.getLogManager().addPage(this);
+        LogManager.getLogManager().addPage(this);
     }
 
     //~ Methods --------------------------------------------------------------------------
