@@ -1,0 +1,372 @@
+<?xml version="1.0"?>
+
+<!-- $Id$ -->
+
+<!-- ==========================================================================
+
+Module              : main
+Module-Dependencies : ant, build
+
+This build script is part of the Jalopy build system. It is not meant to be 
+directly invoked by the user but should only be used in conjunction with the 
+master build script that controls the whole build process.
+
+For detailed instructions on how to obtain the needed modules and build a 
+Jalopy distribution from scratch please refer to the manual available at the
+official Jalopy homepage under <http://jalopy.sf.net/build.html>.
+
+If you need further assistance, check <http://jalopy.sf.net/contact.html>.
+
+=========================================================================== -->
+
+<project name="jalopy-main" default="main-jar-all" basedir="." >
+
+  <property file="../build/build.properties" />
+  <property name="dir.lib" value="ext/lib" />
+  <property name="dir.src" value="src" />
+  <property name="dir.src.java" value="${dir.src}/java" />
+  <property name="dir.src.parser" value="${dir.src.java}/de/hunsicker/jalopy/parser" />
+  <property name="dir.src.res" value="${dir.src}/resources" />
+
+
+  <!-- ==================================================================== -->
+  <!-- Defines the project classpath                                        -->
+  <!-- ==================================================================== -->
+  <path id="project.classpath" >
+    <!-- our compilation directory -->
+    <pathelement location="${DIR.COMPILE}" />
+
+    <!-- needed 3rd party libraries -->
+    <fileset dir="${dir.lib}" >
+      <include name="*.jar" />
+    </fileset>
+  </path>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates the Jalopy .jar                                              -->
+  <!-- ==================================================================== -->
+  <target name="main-jar"
+          description="Creates the Jalopy core runtime .jar"
+          depends="main-compile, main-uptodate-jar"
+          unless="jar.uptodate" >
+    <jar jarfile="${DIR.JARS}/jalopy-${BUILD.VERSION}.jar"
+         duplicate="fail"
+         index="false" >
+      <fileset dir="${DIR.COMPILE}" >
+        <patternset>
+          <include name="**/Folder*.gif" />
+          <include name="**/File*.gif" />
+          <include name="**/Preferences*.gif" />
+          <include name="**/History*.gif" />
+          <include name="de/hunsicker/io/*" />
+          <include name="de/hunsicker/jalopy/*" />
+          <include name="de/hunsicker/jalopy/parser/*" />
+          <include name="de/hunsicker/jalopy/plugin/*" />
+          <include name="de/hunsicker/jalopy/prefs/*" />
+          <include name="de/hunsicker/jalopy/printer/*" />
+          <include name="de/hunsicker/jalopy/ui/*" />
+          <include name="de/hunsicker/jalopy/ui/syntax/*" />
+          <include name="de/hunsicker/ui/*" />
+          <include name="de/hunsicker/ui/util/*" />
+          <include name="de/hunsicker/util/*" />
+          <include name="de/hunsicker/util/concurrent/*" />
+          <include name="**/ui/resources/*.java.tpl" />
+        </patternset>
+      </fileset>
+      <zipfileset src="${dir.lib}/antlr-${LIB.VERSION.ANTLR}.jar" casesensitive="false">
+        <exclude name="**/Index.list" />
+      </zipfileset>
+      <manifest>
+        <section name="de/hunsicker/jalopy/plugin/">
+          <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter Plug-in API" />
+          <attribute name="Specification-Version" value="${SPEC.VERSION.PLUGIN}" /> 
+          <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin" />
+          <attribute name="Implementation-Version" value="${BUILD.VERSION}" /> 
+          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-URL" value="${HOMEPAGE}" />
+        </section>
+        <section name="de/hunsicker/jalopy/">
+          <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
+          <attribute name="Specification-Version" value="${SPEC.VERSION}" /> 
+          <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-Title" value="de.hunsicker.jalopy" />
+          <attribute name="Implementation-Version" value="${BUILD.VERSION}" /> 
+          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
+          <attribute name="Implementation-URL" value="${HOMEPAGE}" />
+        </section>
+      </manifest>
+    </jar>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Creates all .jars                                                    -->
+  <!-- ==================================================================== -->
+  <target name="main-jar-all"
+          description="Creates all .jars"
+          depends="main-jar" >
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Compiles the Jalopy runtime classes                                  -->
+  <!-- ==================================================================== -->
+  <target name="main-compile"
+          depends="main-init, main-parser-java, main-parser-javadoc" >
+
+    <!-- 
+         we need this file for the error recovery feature of the Javadoc
+         parser, so we have to make sure it exists in the compile dir   
+    -->
+    <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/parser/JavadocTokenTypes.txt"
+          preservelastmodified="true" />
+
+    <javac compiler="${BUILD.COMPILER}"
+           destdir="${DIR.COMPILE}"
+           debug="${BUILD.DEBUG}"
+           deprecation="${BUILD.DEPRECATION}"
+           optimize="${BUILD.OPTIMIZE}"
+           target="${BUILD.TARGET.VM}"
+           verbose="${BUILD.VERBOSE}" >
+      <classpath refid="project.classpath" />
+      <src path="${dir.src.java}" />
+      <include name="*" />
+      <include name="de/hunsicker/io/*" />
+      <include name="de/hunsicker/jalopy/*" />
+      <include name="de/hunsicker/jalopy/debug/*" />
+      <include name="de/hunsicker/jalopy/parser/*" />
+      <include name="de/hunsicker/jalopy/plugin/*" />
+      <include name="de/hunsicker/jalopy/prefs/*" />
+      <include name="de/hunsicker/jalopy/printer/*" />
+      <include name="de/hunsicker/jalopy/ui/*" />
+      <include name="de/hunsicker/jalopy/ui/syntax/*" />
+      <include name="de/hunsicker/ui/*" />
+      <include name="de/hunsicker/ui/util/*" />
+      <include name="de/hunsicker/util/*" />
+      <include name="de/hunsicker/util/concurrent/*" />
+    </javac>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Performs the unit testing                                            -->
+  <!-- ==================================================================== -->
+  <target name="main-test" 
+          depends="main-compile" >
+    <property name="test.reports.dir"
+              value="${DIR.TMP}/testReports" />
+    <mkdir dir="${test.reports.dir}" />
+    <junit haltonerror="yes"
+           haltonfailure="yes"
+           printsummary="yes">
+      <classpath refid="project.classpath" />
+      <formatter type="plain" />
+      <batchtest todir="${test.reports.dir}">
+        <fileset dir="${dir.src.java}" includes="**/*Test.java" />
+      </batchtest>
+    </junit>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Formats the project sources                                          -->
+  <!-- ==================================================================== -->
+  <target name="main-format" depends="main-compile">
+
+    <!-- we know the ant module is available -->
+    <ant dir="../ant" target="ant-compile" inheritAll="false" />
+
+    <!-- declare the jalopy task -->
+    <taskdef name="jalopy"
+             classname="de.hunsicker.jalopy.plugin.ant.AntPlugin">
+      <classpath refid="project.classpath" />
+    </taskdef>
+
+    <jalopy classpathref="project.classpath"
+            style="${dir.src.res}/jal-bsd.xml">
+      <fileset dir="${dir.src.java}">
+        <include name="**/*.java" />
+      </fileset>
+    </jalopy>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Initializes the build                                                -->
+  <!-- ==================================================================== -->
+  <target name="main-init"
+          depends="main-check-modules" >
+    <mkdir dir="${DIR.JARS}" />
+    <mkdir dir="${DIR.COMPILE}" />
+
+    <copy todir="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources">
+      <fileset dir="${dir.src.res}">
+        <include name="*.java.tpl" />
+      </fileset>
+    </copy>
+
+    <copy file="${dir.src.res}/Bundle.properties"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/Bundle.properties" />
+    <copy file="${dir.src.res}/Preferences16.gif"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources/Preferences16.gif" />
+    <copy file="${dir.src.res}/History16.gif"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/ui/resources/History16.gif" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether all module dependencies are satisfied                 -->
+  <!-- ==================================================================== -->
+  <target name="main-check-modules" unless="present.build">
+    <available file="../build/build.xml" property="present.build" />
+
+    <!-- we need the module 'build' -->
+    <antcall target="main-check-build" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the module 'build' exists                             -->
+  <!-- ==================================================================== -->
+  <target name="main-check-build"
+          unless="present.build" >
+    <echo message="ERROR 10: Module 'build' not found" />
+    <echo message="" />
+    <echo message="Please refer to ${ant.file}" />
+    <echo message="on how to obtain the needed module." />
+    <fail message="Module 'build' not found" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the runtime .jar needs to be generated                -->
+  <!-- ==================================================================== -->
+  <target name="main-uptodate-jar" >
+    <dependset>
+      <srcfileset dir="${DIR.COMPILE}">
+        <include name="de/hunsicker/io/*" />
+        <include name="de/hunsicker/jalopy/*" />
+        <include name="de/hunsicker/jalopy/parser/*" />
+        <include name="de/hunsicker/jalopy/plugin/*" />
+        <include name="de/hunsicker/jalopy/prefs/*" />
+        <include name="de/hunsicker/jalopy/printer/*" />
+        <include name="de/hunsicker/jalopy/ui/*" />
+        <include name="de/hunsicker/jalopy/ui/syntax/*" />
+        <include name="de/hunsicker/ui/*" />
+        <include name="de/hunsicker/ui/util/*" />
+        <include name="de/hunsicker/util/*" />
+        <include name="de/hunsicker/util/concurrent/*" />
+      </srcfileset>
+      <srcfileset dir="${dir.src.res}">
+        <include name="*.properties" />
+        <include name="*.tpl" />
+        <include name="*.gif" />
+      </srcfileset>
+      <srcfileset dir="..\build">
+        <include name="build.xml" />
+        <include name="build.properties" />
+      </srcfileset>
+      <srcfileset dir="${basedir}">
+        <include name="build.xml" />
+      </srcfileset>
+      <targetfileset dir="${DIR.JARS}"
+                     includes="jalopy-${BUILD.VERSION}.jar" />
+    </dependset>
+
+    <available property="jar.uptodate"
+               file="${DIR.JARS}/jalopy-${BUILD.VERSION}.jar" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Java parser needs to be generated                 -->
+  <!-- ==================================================================== -->
+  <target name="main-uptodate-parser-java" >
+    <uptodate property="parser.java.uptodate"
+              targetfile="${DIR.TMP}/JavaParser.inf" >
+      <srcfiles dir="${dir.src.parser}" includes="**/java.g" />
+    </uptodate>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Checks whether the Javadoc parser needs to be generated              -->
+  <!-- ==================================================================== -->
+  <target name="main-uptodate-parser-javadoc" >
+    <uptodate property="parser.javadoc.uptodate"
+              targetfile="${DIR.TMP}/JavadocParser.inf" >
+      <srcfiles dir="${dir.src.parser}" includes="**/java.doc.g" />
+    </uptodate>
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Generates the source for the Java parser/lexer                       -->
+  <!-- ==================================================================== -->
+  <target name="main-parser-java"
+          depends="main-init, main-uptodate-parser-java"
+          unless="parser.java.uptodate" >
+    <java classname="de.hunsicker.antlr.Tool"
+          classpathref="project.classpath"
+          fork="yes"
+          failonerror="yes" >
+      <arg value="-o" />
+      <arg value="${dir.src.parser}" />
+      <arg value="${dir.src.parser}/java.g" />
+    </java>
+
+    <!-- 
+          force a recompilation of all source files because the token
+          constants may change
+    -->
+    <delete>
+      <fileset dir="${DIR.COMPILE}" >
+        <include name="**/*.class" />
+      </fileset>
+    </delete>
+
+    <!-- touch the file to track build time -->
+    <touch file="${DIR.TMP}/JavaParser.inf" />
+  </target>
+
+
+  <!-- ==================================================================== -->
+  <!-- Generates the sources for the Javadoc parser/lexer                   -->
+  <!-- ==================================================================== -->
+  <target name="main-parser-javadoc"
+          depends="main-init, main-uptodate-parser-javadoc"
+          unless="parser.javadoc.uptodate" >
+    <java classname="de.hunsicker.antlr.Tool"
+          classpathref="project.classpath"
+          fork="yes"
+          failonerror="yes" >
+      <arg value="-o" />
+      <arg value="${dir.src.parser}" />
+      <arg value="${dir.src.parser}/java.doc.g" />
+    </java>
+
+    <!-- 
+          force a recompilation of all source files because the token
+          constants may change
+    -->
+    <delete>
+      <fileset dir="${DIR.COMPILE}" >
+        <include name="**/*.class" />
+      </fileset>
+    </delete>
+
+    <!-- 
+         we need this file for the error recovery feature of the Javadoc
+         parser, so we have to make sure it exists in the compile dir
+    -->
+    <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
+          tofile="${DIR.COMPILE}/de/hunsicker/jalopy/parser/JavadocTokenTypes.txt"
+          overwrite="true" />
+
+    <!-- touch the file to track build time -->
+    <touch file="${DIR.TMP}/JavadocParser.inf" />
+  </target>
+</project>
