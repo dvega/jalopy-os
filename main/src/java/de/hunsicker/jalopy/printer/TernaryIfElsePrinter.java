@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -43,8 +43,7 @@ import java.io.IOException;
 
 
 /**
- * Printer for ternary if-else expressions (conditional operator <code>?
- * :</code>) [<code>QUESTION</code>].
+ * Printer for the ternary operator (<code>? :</code>) [<code>QUESTION</code>].
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -91,12 +90,12 @@ final class TernaryIfElsePrinter
         // print first operand
         AST secondOperand = printOperand(node.getFirstChild(), marker, out);
 
-        printQuestionMark(node, secondOperand, marker, out);
+        Marker m = printQuestionMark(node, secondOperand, out);
 
         // print the second operand
         JavaNode colon = (JavaNode)printOperand(secondOperand, marker, out);
 
-        printColon(colon, out);
+        printColon(colon, m, out);
 
         // print the third operand
         printOperand(colon.getNextSibling(), marker, out);
@@ -198,6 +197,7 @@ final class TernaryIfElsePrinter
      * Prints the colon.
      *
      * @param colon COLON node.
+     * @param marker marks the position before the question mark. If this value is not <code>null</code> the colon will alignment under the question mark is forced; otherwise the current indentation scheme will be used.
      * @param out stream to write to.
      *
      * @throws IOException if an I/O error occured.
@@ -205,37 +205,24 @@ final class TernaryIfElsePrinter
      * @since 1.0b9
      */
     private void printColon(JavaNode   colon,
+                            Marker marker,
                             NodeWriter out)
         throws IOException
     {
-        if (out.mode == NodeWriter.MODE_TEST)
-        {
-            return;
-        }
-
         boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean alignValue = this.prefs.getBoolean(Keys.ALIGN_TERNARY_VALUES,
+        boolean wrapBeforeColon = this.prefs.getBoolean(Keys.ALIGN_TERNARY_VALUES,
                                                    Defaults.ALIGN_TERNARY_VALUES);
-        int indentLength = out.getIndentLength();
 
-        Marker marker = out.state.markers.getLast();
-
-        if (out.column == 1) // line already wrapped, just align
+        if (out.newline) // line already wrapped, just indent
         {
-            out.print(out.getString((marker.column > indentLength)
-                                        ? (marker.column - indentLength)
-                                        : marker.column), JavaTokenTypes.WS);
-            out.state.markers.add();
+            printIndentation(marker, out);
         }
-        else if (alignValue) // force line wrap/align
+        else if (wrapBeforeColon) // force line wrap/align
         {
             out.printNewline();
-            out.print(out.getString((marker.column > indentLength)
-                                        ? (marker.column - indentLength)
-                                        : marker.column), JavaTokenTypes.WS);
-            out.state.markers.add();
+            printIndentation(marker, out);
         }
         else if (wrapLines) // check whether wrap/align necessary
         {
@@ -250,10 +237,7 @@ final class TernaryIfElsePrinter
                                                                  Defaults.LINE_LENGTH))
             {
                 out.printNewline();
-                out.print(out.getString((marker.column > indentLength)
-                                            ? (marker.column - indentLength)
-                                            : marker.column), JavaTokenTypes.WS);
-                out.state.markers.add();
+                printIndentation(marker, out);
             }
             else
             {
@@ -271,17 +255,17 @@ final class TernaryIfElsePrinter
 
         if ((!printCommentsAfter(colon, NodeWriter.NEWLINE_NO,
                                  NodeWriter.NEWLINE_YES, out)) &&
-            (out.column != 1))
+            !out.newline)
         {
             out.print(SPACE, JavaTokenTypes.COLON);
         }
         else
         {
             // add +2 to align the third operand under the second
-            out.print(out.getString(((marker.column > indentLength)
+            /*out.print(out.getString(((marker.column > indentLength)
                                          ? (marker.column - indentLength)
                                          : marker.column) + 2),
-                      JavaTokenTypes.WS);
+                      JavaTokenTypes.WS);*/
         }
     }
 
@@ -326,8 +310,7 @@ final class TernaryIfElsePrinter
                     {
                         PrinterFactory.create(child).print(child, out);
                     }
-                    else if (this.prefs.getBoolean(
-                                                   Keys.INSERT_EXPRESSION_PARENTHESIS,
+                    else if (this.prefs.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
                                                    Defaults.INSERT_EXPRESSION_PARENTHESIS) &&
                              needParentheses((JavaNode)child))
                     {
@@ -371,73 +354,50 @@ final class TernaryIfElsePrinter
      * @param secondOperand the second operand of the ternary expression.
      * @param marker marker that marks the position before the first operand.
      * @param out stream to write to.
-     *
+     * @return marker that marks the position before the question mark, <code>null</code> if ternary operator aligning is disabled.
      * @throws IOException if an I/O error occured.
      *
      * @since 1.0b9
      */
-    private void printQuestionMark(AST        node,
+    private Marker printQuestionMark(AST        node,
                                    AST        secondOperand,
-                                   Marker     marker,
                                    NodeWriter out)
         throws IOException
     {
-        boolean alignUnderFirst = this.prefs.getBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
-                                                        Defaults.ALIGN_TERNARY_EXPRESSION);
         boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        int indentLength = out.getIndentLength();
-        int continuationIndent = (this.prefs.getBoolean(Keys.INDENT_CONTINUATION_IF_TERNARY,
-                                                        Defaults.INDENT_CONTINUATION_IF_TERNARY))
-                                     ? (out.indentSize)
-                                     : 0;
+        boolean wrapBeforeQuestion = this.prefs.getBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
+                                                        Defaults.ALIGN_TERNARY_EXPRESSION);
 
-        if (out.newline) // line already wrapped, just align
+        if (out.newline) // line already wrapped, just indent
         {
-            out.print(out.getString(((marker.column > indentLength)
-                                         ? (marker.column - indentLength)
-                                         : marker.column) + continuationIndent),
-                      JavaTokenTypes.WS);
-            marker = out.state.markers.add();
+            printIndentation(out);
         }
-        else if (alignUnderFirst) // force line wrap/align
+        else if (wrapBeforeQuestion) // force line wrap/align
         {
             out.printNewline();
-            out.print(out.getString(((marker.column > indentLength)
-                                         ? (marker.column - indentLength)
-                                         : marker.column) + continuationIndent),
-                      JavaTokenTypes.WS);
-            marker = out.state.markers.add();
+            printIndentation(out);
         }
-        else if (wrapLines) // check whether if wrap/align necessary
+        else if (wrapLines) // check whether wrap/align necessary
         {
             TestNodeWriter tester = out.testers.get();
 
             AST secondOp = getNextOperand(secondOperand);
             PrinterFactory.create(secondOp).print(secondOp, tester);
 
-            AST thirdOp = getNextOperand(secondOp);
-            PrinterFactory.create(thirdOp).print(thirdOp, tester);
-
-            // wrap and align necessary (add +3 for the colon between
-            // values)
+            // wrap and align if necessary (+3 for the colon between the
+            // second and third operator)
             if ((tester.length + out.column + 3) > this.prefs.getInt(
                                                                      Keys.LINE_LENGTH,
                                                                      Defaults.LINE_LENGTH))
             {
                 out.printNewline();
-                out.print(out.getString(((marker.column > indentLength)
-                                             ? (marker.column - indentLength)
-                                             : marker.column) +
-                                        continuationIndent), JavaTokenTypes.WS);
-
-                out.state.markers.add();
+                printIndentation(out);
             }
             else // no line wrap necessary
             {
                 out.print(SPACE, out.last);
-                marker = out.state.markers.add();
             }
 
             out.testers.release(tester);
@@ -445,24 +405,22 @@ final class TernaryIfElsePrinter
         else // line wrapping disabled
         {
             out.print(SPACE, out.last);
-            marker = out.state.markers.add();
         }
+
+        Marker marker = null;
+
+        if (this.prefs.getBoolean(Keys.ALIGN_TERNARY_OPERATOR, Defaults.ALIGN_TERNARY_OPERATOR) && (wrapLines || wrapBeforeQuestion))
+            marker = out.state.markers.add();
 
         out.print(QUESTION, JavaTokenTypes.QUESTION);
 
-        if ((!printCommentsAfter(node, NodeWriter.NEWLINE_NO,
-                                 NodeWriter.NEWLINE_YES, out)) &&
-            (out.column != 1))
+        if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO,
+                                 NodeWriter.NEWLINE_YES, out) &&
+            !out.newline)
         {
             out.print(SPACE, JavaTokenTypes.COLON);
         }
-        else
-        {
-            // add +2 to align with the second operand
-            out.print(out.getString(((marker.column > indentLength)
-                                         ? (marker.column - indentLength)
-                                         : marker.column) + 2),
-                      JavaTokenTypes.WS);
-        }
+
+        return marker;
     }
 }

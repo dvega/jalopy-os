@@ -89,6 +89,8 @@ abstract class OperatorPrinter
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
+            System.err.println(node + " " + length + " " + out.column);
+
             /**
              * @todo respect operator length if wrapped after
              */
@@ -100,16 +102,7 @@ abstract class OperatorPrinter
             if ((out.column >= lineLength) || (offset > lineLength))
             {
                 out.printNewline();
-
-                /*if (this.prefs.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
-                                          Defaults.INDENT_CONTINUATION_OPERATOR))
-                {
-                    printIndentation(out.continuationIndentSize, out);
-                }
-                else
-                {
-                    printIndentation(out);
-                }*/
+                printIndentation(out);
 
                 return true;
             }
@@ -200,6 +193,110 @@ abstract class OperatorPrinter
         }
     }
 
+    /**
+     * Indicates whether the given operator node is at a higher level than
+     * some other operator, i.e. the node has no parent that is itself an operator node.
+     *
+     * @param operator the operator node to check.
+     *
+     * @return <code>true</code> if the given operator is at a higher level than some other operator.
+     * @since 1.0b9
+     */
+    private static boolean isHigherLevel(JavaNode operator)
+    {
+        switch (operator.getParent().getType())
+        {
+            case JavaTokenTypes.BXOR_ASSIGN :
+            case JavaTokenTypes.BAND_ASSIGN :
+            case JavaTokenTypes.BSR_ASSIGN :
+            case JavaTokenTypes.SR_ASSIGN :
+            case JavaTokenTypes.SL_ASSIGN :
+            case JavaTokenTypes.MINUS_ASSIGN :
+            case JavaTokenTypes.PLUS_ASSIGN :
+            case JavaTokenTypes.MOD_ASSIGN :
+            case JavaTokenTypes.DIV_ASSIGN :
+            case JavaTokenTypes.STAR_ASSIGN :
+            case JavaTokenTypes.ASSIGN :
+            case JavaTokenTypes.COLON :
+            case JavaTokenTypes.QUESTION :
+            case JavaTokenTypes.LOR :
+            case JavaTokenTypes.LAND :
+            case JavaTokenTypes.BOR :
+            case JavaTokenTypes.BXOR :
+            case JavaTokenTypes.BAND :
+            case JavaTokenTypes.NOT_EQUAL :
+            case JavaTokenTypes.EQUAL :
+            case JavaTokenTypes.GE :
+            case JavaTokenTypes.LE :
+            case JavaTokenTypes.GT :
+            case JavaTokenTypes.LT :
+            case JavaTokenTypes.SR :
+            case JavaTokenTypes.SL :
+            case JavaTokenTypes.MINUS :
+            case JavaTokenTypes.PLUS :
+            case JavaTokenTypes.MOD :
+            case JavaTokenTypes.DIV :
+            case JavaTokenTypes.STAR :
+            case JavaTokenTypes.LNOT :
+            case JavaTokenTypes.BNOT :
+            case JavaTokenTypes.UNARY_MINUS :
+            case JavaTokenTypes.UNARY_PLUS :
+            case JavaTokenTypes.DEC :
+            case JavaTokenTypes.INC :
+
+            for (AST child = operator.getFirstChild();
+                     child != null;
+                     child = child.getNextSibling())
+                {
+                    switch (child.getType())
+                    {
+                        case JavaTokenTypes.BXOR_ASSIGN :
+                        case JavaTokenTypes.BAND_ASSIGN :
+                        case JavaTokenTypes.BSR_ASSIGN :
+                        case JavaTokenTypes.SR_ASSIGN :
+                        case JavaTokenTypes.SL_ASSIGN :
+                        case JavaTokenTypes.MINUS_ASSIGN :
+                        case JavaTokenTypes.PLUS_ASSIGN :
+                        case JavaTokenTypes.MOD_ASSIGN :
+                        case JavaTokenTypes.DIV_ASSIGN :
+                        case JavaTokenTypes.STAR_ASSIGN :
+                        case JavaTokenTypes.ASSIGN :
+                        case JavaTokenTypes.COLON :
+                        case JavaTokenTypes.QUESTION :
+                        case JavaTokenTypes.LOR :
+                        case JavaTokenTypes.LAND :
+                        case JavaTokenTypes.BOR :
+                        case JavaTokenTypes.BXOR :
+                        case JavaTokenTypes.BAND :
+                        case JavaTokenTypes.NOT_EQUAL :
+                        case JavaTokenTypes.EQUAL :
+                        case JavaTokenTypes.GE :
+                        case JavaTokenTypes.LE :
+                        case JavaTokenTypes.GT :
+                        case JavaTokenTypes.LT :
+                        case JavaTokenTypes.SR :
+                        case JavaTokenTypes.SL :
+                        case JavaTokenTypes.MINUS :
+                        case JavaTokenTypes.PLUS :
+                        case JavaTokenTypes.MOD :
+                        case JavaTokenTypes.DIV :
+                        case JavaTokenTypes.STAR :
+                        //case JavaTokenTypes.LNOT :
+                        //case JavaTokenTypes.BNOT :
+                        //case JavaTokenTypes.UNARY_MINUS :
+                        //case JavaTokenTypes.UNARY_PLUS :
+                        //case JavaTokenTypes.DEC :
+                        //case JavaTokenTypes.INC :
+                            return true;
+                    }
+                }
+
+                return false;
+
+            default: // no parent operator
+                return true;
+        }
+    }
 
     /**
      * Indicates whether the given operator node is at a lower level that some
@@ -210,7 +307,7 @@ abstract class OperatorPrinter
      *
      * @return <code>true</code> if the given node is a lower level node.
      */
-    static boolean isLowerLevel(AST operator)
+    private static boolean isLowerLevel(JavaNode operator)
     {
         for (AST child = operator.getFirstChild();
              child != null;
@@ -505,7 +602,7 @@ abstract class OperatorPrinter
 
         boolean isOutMost = out.state.paramLevel < 2;
 
-        if (isOutMost || isLowerLevel(operator))
+        if (out.state.paramList || isHigherLevel((JavaNode)operator))
         {
             switch (operator.getType())
             {

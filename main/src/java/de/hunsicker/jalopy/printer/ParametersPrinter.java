@@ -174,7 +174,9 @@ final class ParametersPrinter
         // want to let the right parenthesis stand out if the parameter took
         // more than one line to print
         if (out.line > line)
+        {
             wrapped = true;
+        }
 
         // wrap and align, if necessary
         if (wrapped &&
@@ -508,6 +510,7 @@ SEARCH:
 
         if (out.mode == out.MODE_DEFAULT)
         {
+            out.state.paramList = true;
             out.state.paramLevel++;
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
         }
@@ -599,7 +602,6 @@ SEARCH:
                                           out.testers.release(tester);
                                     }
                                 }
-
                                 else if (wrapLines)
                                 {
                                     TestNodeWriter tester = out.testers.get();
@@ -632,6 +634,8 @@ SEARCH:
                                         {
                                             if (preferWrapAfterLeftParen)
                                             {
+
+
                                                 result = wrapFirst( /*indentation, */
                                                 type, true, next == null, out);
                                                 firstWrapped = result;
@@ -897,6 +901,7 @@ SEARCH:
 
         if (out.mode == out.MODE_DEFAULT)
         {
+            out.state.paramList = false;
             out.state.paramLevel--;
             out.state.parenScope.removeFirst();
         }
@@ -1128,8 +1133,8 @@ SEARCH:
                 && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                       Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
         {*/
-        if (!this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) &&
-            !last)
+
+        if (!this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) || !last)
         {
             switch (out.state.paramLevel)
             {

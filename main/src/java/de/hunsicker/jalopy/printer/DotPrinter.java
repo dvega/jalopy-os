@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -236,14 +236,6 @@ final class DotPrinter
                                 else
                                 {
                                     printIndentation(out);
-
-                                    /*out.print((out.state.paramLevel > 0)
-                                                  ? out.getString(
-                                                            out.indentSize * out.state.paramLevel)
-                                                  : EMPTY_STRING, 
-                                              JavaTokenTypes.WS);*/
-
-                                    //out.print("", JavaTokenTypes.WS);
                                 }
 
                                 return;
@@ -269,42 +261,21 @@ final class DotPrinter
                             // if this is the last node in the chain
                             if (first == parent)
                             {
-                                AST elist = NodeHelper.getFirstChild(first,
-                                                                     JavaTokenTypes.ELIST);
+                                AST c = node.getFirstChild().getNextSibling();
 
-                                // check whether one of the parameters starts
-                                // an anonymous inner class in which case we
-                                // prefer wrapping before or after the
-                                // LITERAL_new
-                                for (AST param = elist.getFirstChild();
-                                     param != null;
-                                     param = param.getNextSibling())
+                                TestNodeWriter tester = out.testers.get();
+                                PrinterFactory.create(c).print(c, tester);
+
+                                // and it does not exceed the line length
+                                if (out.column + tester.length < lineLength)
                                 {
-                                    switch (param.getType())
-                                    {
-                                        case JavaTokenTypes.EXPR :
+                                    out.testers.release(tester);
 
-                                            AST object = param.getFirstChild();
-
-                                            switch (object.getType())
-                                            {
-                                                case JavaTokenTypes.LITERAL_new :
-
-                                                    AST objblock = NodeHelper.getFirstChild(object,
-                                                                                            JavaTokenTypes.OBJBLOCK);
-
-                                                    if (objblock != null)
-                                                    {
-                                                        // we found one
-                                                        return;
-                                                    }
-
-                                                    break;
-                                            }
-
-                                            break;
-                                    }
+                                    // prefer wrapping along the parameters
+                                    return;
                                 }
+
+                                out.testers.release(tester);
                             }
 
                             int length = getLengthOfChainedCall(node, parent,
@@ -324,11 +295,48 @@ final class DotPrinter
                     break;
             }
         }
+        else
+        {
+            switch (((JavaNode)node).getParent().getType())
+            {
+                case JavaTokenTypes.DOT:
+                    break;
+
+                case JavaTokenTypes.METHOD_CALL: // last link of the chain (first in the tree)
+
+                    int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+                                                                   Defaults.LINE_LENGTH);
+                    if (out.column  + 1 > lineLength)
+                    {
+                        out.printNewline();
+                        printIndentation(out);
+                    }
+                    else
+                    {
+                        AST n = node.getFirstChild().getNextSibling();
+
+                        TestNodeWriter tester = out.testers.get();
+
+                        PrinterFactory.create(n).print(n, tester);
+
+                        if (out.column + 1 + tester.length> lineLength)
+                        {
+                            out.printNewline();
+                            printIndentation(out);
+                        }
+
+                        out.testers.release(tester);
+                    }
+
+                break;
+            }
+
+        }
     }
 
 
     /**
-     * Prints the indenation whitespace in front of wrapped lines.
+     * Prints the indenation whitespace for wrapped lines.
      *
      * @param align if <code>true</code> enough whitespace will be printed to
      *        align under the '.' of the previous chain member.
