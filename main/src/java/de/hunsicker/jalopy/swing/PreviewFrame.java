@@ -139,11 +139,11 @@ final class PreviewFrame
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Creates a new preview frame with the window owner
      *
-     * @param owner DOCUMENT ME!
+     * @param owner The window
      *
-     * @return DOCUMENT ME!
+     * @return The preview frame instance
      */
     public static PreviewFrame create(Window owner)
     {
@@ -225,7 +225,7 @@ final class PreviewFrame
      */
     public String getText()
     {
-        return _textArea.getText();
+        return _textOriginal.getText();
     }
 
 
@@ -275,7 +275,7 @@ final class PreviewFrame
      */
     public void update()
     {
-        setText(_textArea.getText());
+        setText(_textOriginal.getText());
     }
 
 

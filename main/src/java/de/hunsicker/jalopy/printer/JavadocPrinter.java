@@ -170,6 +170,11 @@ final class JavadocPrinter
         NodeWriter out)
       throws IOException
     {
+        // Javadoc comments always start on a new line
+        if (!out.newline) {
+            out.printNewline();
+        }
+        
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText()))
         {
