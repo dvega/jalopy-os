@@ -31,7 +31,7 @@ fi
 # The jar-files are in the same directory as this scriptfile !
 # So remove the name of this script-file from the path and replace it
 #   with *.jar
-DIRLIBS=../lib/*.jar
+DIRLIBS=${0%/*}/../lib/*.jar
 for i in ${DIRLIBS}
 do
   if [ -z "$LOCALCLASSPATH" ] ; then
