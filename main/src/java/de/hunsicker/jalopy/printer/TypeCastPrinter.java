@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -86,7 +86,7 @@ final class TypeCastPrinter
     {
         AST type = node.getFirstChild();
 
-        if (this.prefs.getBoolean(Keys.PADDING_CAST, Defaults.PADDING_CAST))
+        if (this.settings.getBoolean(Keys.PADDING_CAST, Defaults.PADDING_CAST))
         {
             out.print(LPAREN_SPACE, JavaTokenTypes.LPAREN);
             PrinterFactory.create(type).print(type, out);
@@ -99,7 +99,7 @@ final class TypeCastPrinter
             out.print(RPAREN, JavaTokenTypes.RPAREN);
         }
 
-        if (this.prefs.getBoolean(Keys.SPACE_AFTER_CAST,
+        if (this.settings.getBoolean(Keys.SPACE_AFTER_CAST,
                                   Defaults.SPACE_AFTER_CAST))
         {
             out.print(SPACE, out.last);

@@ -1,41 +1,41 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.Environment;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 import de.hunsicker.util.ChainingRuntimeException;
 
@@ -78,13 +78,13 @@ import org.apache.oro.text.regex.Perl5Matcher;
 
 /**
  * A component that can be used to display/edit the Jalopy environment
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class EnvironmentPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Static variables/initializers ·········································
 
@@ -144,7 +144,7 @@ public class EnvironmentPanel
      *
      * @param container the parent container.
      */
-    EnvironmentPanel(PreferencesContainer container)
+    EnvironmentPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -175,11 +175,11 @@ public class EnvironmentPanel
             }
 
             buf.deleteCharAt(buf.length() - 1);
-            this.prefs.put(Keys.ENVIRONMENT, buf.toString());
+            this.settings.put(Keys.ENVIRONMENT, buf.toString());
         }
         else
         {
-            this.prefs.put(Keys.ENVIRONMENT, EMPTY_STRING);
+            this.settings.put(Keys.ENVIRONMENT, EMPTY_STRING);
         }
 
         Environment env = Environment.getInstance();
@@ -263,7 +263,7 @@ public class EnvironmentPanel
         GridBagLayout layout = new GridBagLayout();
         panel.setLayout(layout);
 
-        String variablesString = this.prefs.get(Keys.ENVIRONMENT,
+        String variablesString = this.settings.get(Keys.ENVIRONMENT,
                                                 Defaults.ENVIRONMENT);
         List variables = Collections.EMPTY_LIST;
 

@@ -33,9 +33,9 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Key;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Key;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.BorderLayout;
@@ -63,13 +63,13 @@ import de.hunsicker.util.StringHelper;
 
 
 /**
- * A component that can be used to display/edit the Jalopy header preferences.
+ * A component that can be used to display/edit the Jalopy header settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class HeaderPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -101,7 +101,7 @@ public class HeaderPanel
      *
      * @param container the parent container.
      */
-    HeaderPanel(PreferencesContainer container)
+    HeaderPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -133,7 +133,7 @@ public class HeaderPanel
                 buf.deleteCharAt(buf.length() - 1);
             }
 
-            this.prefs.put(getTextKey(), buf.toString());
+            this.settings.put(getTextKey(), buf.toString());
         }
     }
 
@@ -142,12 +142,12 @@ public class HeaderPanel
      */
     public void store()
     {
-        this.prefs.put(getBlankLinesBeforeKey(),
+        this.settings.put(getBlankLinesBeforeKey(),
                        (String)_blankLinesBeforeComboBox.getSelectedItem());
-        this.prefs.put(getBlankLinesAfterKey(),
+        this.settings.put(getBlankLinesAfterKey(),
                        (String)_blankLinesAfterComboBox.getSelectedItem());
-        this.prefs.putBoolean(getUseKey(), _useCheckBox.isSelected());
-        this.prefs.put(getSmartModeKey(),
+        this.settings.putBoolean(getUseKey(), _useCheckBox.isSelected());
+        this.settings.put(getSmartModeKey(),
                        (String)_smartModeComboBox.getSelectedItem());
 
         storeText();
@@ -168,11 +168,11 @@ public class HeaderPanel
             }
 
             buf.deleteCharAt(buf.length() - 1);
-            this.prefs.put(getKeysKey(), buf.toString());
+            this.settings.put(getKeysKey(), buf.toString());
         }
         else
         {
-            this.prefs.put(getKeysKey(), "");
+            this.settings.put(getKeysKey(), "");
         }
     }
 
@@ -201,11 +201,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#BLANK_LINES_AFTER_HEADER
+     * @see de.hunsicker.jalopy.storage.Keys#BLANK_LINES_AFTER_HEADER
      */
     protected Key getBlankLinesAfterKey()
     {
@@ -214,11 +214,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#BLANK_LINES_BEFORE_HEADER
+     * @see de.hunsicker.jalopy.storage.Keys#BLANK_LINES_BEFORE_HEADER
      */
     protected Key getBlankLinesBeforeKey()
     {
@@ -238,11 +238,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#HEADER_KEYS
+     * @see de.hunsicker.jalopy.storage.Keys#HEADER_KEYS
      */
     protected Key getKeysKey()
     {
@@ -251,11 +251,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#HEADER_SMART_MODE_LINES
+     * @see de.hunsicker.jalopy.storage.Keys#HEADER_SMART_MODE_LINES
      */
     protected Key getSmartModeKey()
     {
@@ -264,11 +264,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#HEADER_TEXT
+     * @see de.hunsicker.jalopy.storage.Keys#HEADER_TEXT
      */
     protected Key getTextKey()
     {
@@ -277,11 +277,11 @@ public class HeaderPanel
 
 
     /**
-     * Returns the preferences key to store the setting.
+     * Returns the settings key to store the setting.
      *
-     * @return preferences key.
+     * @return settings key.
      *
-     * @see de.hunsicker.jalopy.prefs.Keys#HEADER
+     * @see de.hunsicker.jalopy.storage.Keys#HEADER
      */
     protected Key getUseKey()
     {
@@ -341,7 +341,7 @@ public class HeaderPanel
 
     private String loadText()
     {
-        String text = this.prefs.get(getTextKey(), "");
+        String text = this.settings.get(getTextKey(), "");
         return text.replace('|', '\n');
     }
 
@@ -372,7 +372,7 @@ public class HeaderPanel
 
         GridBagConstraints c = new GridBagConstraints();
         _useCheckBox = new JCheckBox(getUseLabel(),
-                                     this.prefs.getBoolean(getUseKey(), false));
+                                     this.settings.getBoolean(getUseKey(), false));
         _useCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(c, 0, 0, 1, 1, 1.0, 0.0,
                                    GridBagConstraints.NORTHWEST,
@@ -380,7 +380,7 @@ public class HeaderPanel
         headerLayout.setConstraints(_useCheckBox, c);
         headerPanel.add(_useCheckBox);
 
-        int lines = this.prefs.getInt(getSmartModeKey(),
+        int lines = this.settings.getInt(getSmartModeKey(),
                                       Defaults.HEADER_SMART_MODE_LINES);
         String[] lineItems ={ "0", "5", "10", "15", "20" };
         NumberComboBoxPanel smartModeComboBoxPanel = new NumberComboBoxPanel("Smart Mode:",
@@ -404,7 +404,7 @@ public class HeaderPanel
         String[] items ={ "0", "1", "2", "3", "4", "5" };
         _blankLinesBeforeComboBoxPnl = new NumberComboBoxPanel("Blank lines before:",
                                                                items,
-                                                               this.prefs.get(
+                                                               this.settings.get(
                                                                               getBlankLinesBeforeKey(),
                                                                               "0"));
         _blankLinesBeforeComboBox = _blankLinesBeforeComboBoxPnl.getComboBox();
@@ -416,7 +416,7 @@ public class HeaderPanel
         blankLinesPanel.add(_blankLinesBeforeComboBoxPnl);
         _blankLinesAfterComboBoxPnl = new NumberComboBoxPanel("Blank lines after:",
                                                               getItemsAfter(),
-                                                              this.prefs.get(
+                                                              this.settings.get(
                                                                              getBlankLinesAfterKey(),
                                                                              getDefaultAfter()));
         _blankLinesAfterComboBox = _blankLinesAfterComboBoxPnl.getComboBox();
@@ -435,7 +435,7 @@ public class HeaderPanel
         GridBagLayout identifyLayout = new GridBagLayout();
         identifyPanel.setLayout(identifyLayout);
 
-        String keysString = this.prefs.get(getKeysKey(), "");
+        String keysString = this.settings.get(getKeysKey(), "");
         List keys = Collections.EMPTY_LIST;
 
         if ((keysString != null) && (!keysString.trim().equals("")))

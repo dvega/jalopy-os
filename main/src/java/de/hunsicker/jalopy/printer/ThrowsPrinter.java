@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -95,17 +95,17 @@ final class ThrowsPrinter
         {
             Marker marker = null;
 
-            boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                       Defaults.LINE_WRAP) &&
                                 (out.mode == NodeWriter.MODE_DEFAULT);
-            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                Defaults.LINE_LENGTH);
-            int deepIndent = this.prefs.getInt(Keys.INDENT_SIZE_DEEP,
+            int deepIndent = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
                                                Defaults.INDENT_SIZE_DEEP);
             int indentLength = out.getIndentLength();
 
             if ((out.mode == NodeWriter.MODE_DEFAULT) &&
-                (out.newline || this.prefs.getBoolean(
+                (out.newline || this.settings.getBoolean(
                                                       Keys.LINE_WRAP_BEFORE_THROWS,
                                                       Defaults.LINE_WRAP_BEFORE_THROWS) ||
                  (wrapLines && exceedsBarriers(firstClause, lineLength,
@@ -116,7 +116,7 @@ final class ThrowsPrinter
                     out.printNewline();
                 }
 
-                int indentSize = this.prefs.getInt(Keys.INDENT_SIZE_THROWS,
+                int indentSize = this.settings.getInt(Keys.INDENT_SIZE_THROWS,
                                                    Defaults.INDENT_SIZE_THROWS);
 
                 if (indentSize > -1) // use custom indentation
@@ -127,7 +127,7 @@ final class ThrowsPrinter
                 }
                 else
                 {
-                    if (this.prefs.getBoolean(Keys.INDENT_DEEP,
+                    if (this.settings.getBoolean(Keys.INDENT_DEEP,
                                               Defaults.INDENT_DEEP) &&
                         canAlign(firstClause, lineLength, deepIndent, out))
                     {
@@ -156,9 +156,9 @@ final class ThrowsPrinter
             }
 
             String indentation = out.getString(marker.column - indentLength);
-            boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+            boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                             Defaults.SPACE_AFTER_COMMA);
-            boolean forceWrapping = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
+            boolean forceWrapping = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_THROWS,
                                                           Defaults.LINE_WRAP_AFTER_TYPES_THROWS);
             TestNodeWriter tester = null;
 
@@ -251,7 +251,7 @@ final class ThrowsPrinter
         else if (wrapAfterType)
             out.unindent();
 
-        if (this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
+        if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
                                                            Defaults.LINE_WRAP_AFTER_THROWS))
         {
             out.state.extraWrap = true;

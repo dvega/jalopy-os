@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.ui;
 import de.hunsicker.jalopy.parser.DeclarationType;
 import de.hunsicker.jalopy.parser.ModifierType;
 import de.hunsicker.jalopy.parser.Type;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.BorderLayout;
@@ -65,13 +65,13 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * A component that can be used to display/edit the Jalopy sorting
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class SortPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -100,7 +100,7 @@ public class SortPanel
      *
      * @param container the parent container.
      */
-    SortPanel(PreferencesContainer container)
+    SortPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -129,17 +129,17 @@ public class SortPanel
      */
     public void store()
     {
-        this.prefs.putBoolean(Keys.SORT, _sortCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.SORT_MODIFIERS,
+        this.settings.putBoolean(Keys.SORT, _sortCheckBox.isSelected());
+        this.settings.putBoolean(Keys.SORT_MODIFIERS,
                               _sortModifiersCheckBox.isSelected());
 
         String declarationOrder = getSortString();
         DeclarationType.setOrder(declarationOrder);
-        this.prefs.put(Keys.SORT_ORDER, declarationOrder);
+        this.settings.put(Keys.SORT_ORDER, declarationOrder);
 
         String modifierOrder = getModifierSortString();
         ModifierType.setOrder(modifierOrder);
-        this.prefs.put(Keys.SORT_ORDER_MODIFIERS, modifierOrder);
+        this.settings.put(Keys.SORT_ORDER_MODIFIERS, modifierOrder);
     }
 
 
@@ -175,27 +175,27 @@ public class SortPanel
 
             if (type == DeclarationType.METHOD)
             {
-                this.prefs.putBoolean(Keys.SORT_METHOD,
+                this.settings.putBoolean(Keys.SORT_METHOD,
                                       ((Boolean)rowData.get(1)).booleanValue());
             }
             else if (type == DeclarationType.CTOR)
             {
-                this.prefs.putBoolean(Keys.SORT_CTOR,
+                this.settings.putBoolean(Keys.SORT_CTOR,
                                       ((Boolean)rowData.get(1)).booleanValue());
             }
             else if (type == DeclarationType.CLASS)
             {
-                this.prefs.putBoolean(Keys.SORT_CLASS,
+                this.settings.putBoolean(Keys.SORT_CLASS,
                                       ((Boolean)rowData.get(1)).booleanValue());
             }
             else if (type == DeclarationType.VARIABLE)
             {
-                this.prefs.putBoolean(Keys.SORT_VARIABLE,
+                this.settings.putBoolean(Keys.SORT_VARIABLE,
                                       ((Boolean)rowData.get(1)).booleanValue());
             }
             else if (type == DeclarationType.INTERFACE)
             {
-                this.prefs.putBoolean(Keys.SORT_INTERFACE,
+                this.settings.putBoolean(Keys.SORT_INTERFACE,
                                       ((Boolean)rowData.get(1)).booleanValue());
             }
         }
@@ -209,7 +209,7 @@ public class SortPanel
 
     private JPanel createDeclarationPane()
     {
-        StringTokenizer tokens = new StringTokenizer(this.prefs.get(
+        StringTokenizer tokens = new StringTokenizer(this.settings.get(
                                                                     Keys.SORT_ORDER,
                                                                     DeclarationType.getOrder()),
                                                      ",");
@@ -222,7 +222,7 @@ public class SortPanel
             if (DeclarationType.valueOf(token) == DeclarationType.VARIABLE)
             {
                 data[i][0] = DeclarationType.VARIABLE;
-                data[i][1] = new Boolean(this.prefs.getBoolean(
+                data[i][1] = new Boolean(this.settings.getBoolean(
                                                                Keys.SORT_VARIABLE,
                                                                Defaults.SORT_VARIABLE));
             }
@@ -234,13 +234,13 @@ public class SortPanel
             else if (DeclarationType.valueOf(token) == DeclarationType.CTOR)
             {
                 data[i][0] = DeclarationType.CTOR;
-                data[i][1] = new Boolean(this.prefs.getBoolean(Keys.SORT_CTOR,
+                data[i][1] = new Boolean(this.settings.getBoolean(Keys.SORT_CTOR,
                                                                Defaults.SORT_CTOR));
             }
             else if (DeclarationType.valueOf(token) == DeclarationType.METHOD)
             {
                 data[i][0] = DeclarationType.METHOD;
-                data[i][1] = new Boolean(this.prefs.getBoolean(
+                data[i][1] = new Boolean(this.settings.getBoolean(
                                                                Keys.SORT_METHOD,
                                                                Defaults.SORT_METHOD));
             }
@@ -252,14 +252,14 @@ public class SortPanel
             else if (DeclarationType.valueOf(token) == DeclarationType.INTERFACE)
             {
                 data[i][0] = DeclarationType.INTERFACE;
-                data[i][1] = new Boolean(this.prefs.getBoolean(
+                data[i][1] = new Boolean(this.settings.getBoolean(
                                                                Keys.SORT_INTERFACE,
                                                                Defaults.SORT_INTERFACE));
             }
             else if (DeclarationType.valueOf(token) == DeclarationType.CLASS)
             {
                 data[i][0] = DeclarationType.CLASS;
-                data[i][1] = new Boolean(this.prefs.getBoolean(Keys.SORT_CLASS,
+                data[i][1] = new Boolean(this.settings.getBoolean(Keys.SORT_CLASS,
                                                                Defaults.SORT_CLASS));
             }
         }
@@ -270,7 +270,7 @@ public class SortPanel
                                                              BorderFactory.createTitledBorder("General"),
                                                              BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _sortCheckBox = new JCheckBox("Sort class elements",
-                                      this.prefs.getBoolean(Keys.SORT,
+                                      this.settings.getBoolean(Keys.SORT,
                                                             Defaults.SORT));
         _sortCheckBox.addActionListener(this.trigger);
         general.add(_sortCheckBox);
@@ -347,7 +347,7 @@ public class SortPanel
 
     private JPanel createModifierPane()
     {
-        StringTokenizer tokens = new StringTokenizer(this.prefs.get(
+        StringTokenizer tokens = new StringTokenizer(this.settings.get(
                                                                     Keys.SORT_ORDER_MODIFIERS,
                                                                     ModifierType.getOrder()),
                                                      ",");
@@ -409,7 +409,7 @@ public class SortPanel
                                                              BorderFactory.createTitledBorder("General"),
                                                              BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _sortModifiersCheckBox = new JCheckBox("Sort modifiers",
-                                               this.prefs.getBoolean(
+                                               this.settings.getBoolean(
                                                                      Keys.SORT_MODIFIERS,
                                                                      Defaults.SORT_MODIFIERS));
         _sortModifiersCheckBox.addActionListener(this.trigger);

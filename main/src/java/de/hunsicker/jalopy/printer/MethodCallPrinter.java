@@ -37,8 +37,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -120,9 +120,9 @@ final class MethodCallPrinter
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                       Defaults.LINE_WRAP);
-            boolean forceWrappingForChainedCalls = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+            boolean forceWrappingForChainedCalls = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                                                                          Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
             if ((wrapLines || forceWrappingForChainedCalls) &&
@@ -238,7 +238,7 @@ final class MethodCallPrinter
                     case JavaTokenTypes.ARRAY_DECLARATOR :
                         length = identifier.getFirstChild().getText().length();
 
-                        if (this.prefs.getBoolean(
+                        if (this.settings.getBoolean(
                                                   Keys.SPACE_BEFORE_BRACKETS_TYPES,
                                                   Defaults.SPACE_BEFORE_BRACKETS_TYPES))
                         {
@@ -280,13 +280,13 @@ final class MethodCallPrinter
                                                    type);
                 }
 
-                if (this.prefs.getBoolean(Keys.PADDING_CAST,
+                if (this.settings.getBoolean(Keys.PADDING_CAST,
                                           Defaults.PADDING_CAST))
                 {
                     length += 2;
                 }
 
-                if (this.prefs.getBoolean(Keys.SPACE_AFTER_CAST,
+                if (this.settings.getBoolean(Keys.SPACE_AFTER_CAST,
                                           Defaults.SPACE_AFTER_CAST))
                 {
                     length += 1;
@@ -308,7 +308,7 @@ final class MethodCallPrinter
 
         AST elist = first.getNextSibling();
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_METHOD_CALL_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_METHOD_CALL_PAREN,
                                   Defaults.SPACE_BEFORE_METHOD_CALL_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.WS);

@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -107,16 +107,16 @@ final class DoWhilePrinter
             default :
 
                 // insert braces manually
-                if (this.prefs.getBoolean(Keys.BRACE_INSERT_DO_WHILE,
+                if (this.settings.getBoolean(Keys.BRACE_INSERT_DO_WHILE,
                                           Defaults.BRACE_INSERT_DO_WHILE))
                 {
-                    out.printLeftBrace(this.prefs.getBoolean(
+                    out.printLeftBrace(this.settings.getBoolean(
                                                              Keys.BRACE_NEWLINE_LEFT,
                                                              Defaults.BRACE_NEWLINE_LEFT),
                                        NodeWriter.NEWLINE_YES);
                     out.last = JavaTokenTypes.IDENT;
                     PrinterFactory.create(body).print(body, out);
-                    out.printRightBrace(this.prefs.getBoolean(
+                    out.printRightBrace(this.settings.getBoolean(
                                                               Keys.BRACE_NEWLINE_RIGHT,
                                                               Defaults.BRACE_NEWLINE_RIGHT));
                 }
@@ -132,7 +132,7 @@ final class DoWhilePrinter
 
         if (out.last == JavaTokenTypes.RCURLY)
         {
-            out.print(out.getString(this.prefs.getInt(
+            out.print(out.getString(this.settings.getInt(
                                                       Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                                                       Defaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                       JavaTokenTypes.WS);
@@ -142,7 +142,7 @@ final class DoWhilePrinter
         printCommentsBefore(keyword, NodeWriter.NEWLINE_NO, out);
         out.print(WHILE, JavaTokenTypes.LITERAL_while);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                   Defaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.LITERAL_while);

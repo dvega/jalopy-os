@@ -37,13 +37,15 @@ import de.hunsicker.io.Copy;
 import de.hunsicker.io.FileBackup;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.IoHelper;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.parser.CodeInspector;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaRecognizer;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
 
@@ -415,7 +417,7 @@ public final class Jalopy
     {
         if (!directory.isAbsolute())
         {
-            directory = new File(Preferences.getProjectSettingsDirectory(),
+            directory = new File(Convention.getProjectSettingsDirectory(),
                                  directory.getPath());
         }
 
@@ -611,18 +613,18 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Sets the preferences to be loaded from the given file (either a
+     * Sets the code convention to be loaded from the given file (either a
      * qualified file path or single file name).
      *
-     * @param file the preferences file.
+     * @param file the code convention file.
      *
-     * @throws IOException if no preferences could be loaded from the given
+     * @throws IOException if no code convention could be loaded from the given
      *         file.
      */
-    public static void setPreferences(File file)
+    public static void setConvention(File file)
         throws IOException
     {
-        Preferences.getInstance().importPreferences(file);
+        Convention.getInstance().importSettings(file);
     }
 
 
@@ -854,39 +856,39 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
 
 
     /**
-     * Sets the preferences to be loaded from the given url.
+     * Sets the code convention to be loaded from the given url.
      *
      * @param url url.
      *
-     * @throws IOException if no preferences could be loaded from the given
+     * @throws IOException if no code convention could be loaded from the given
      *         url.
      */
-    public static void setPreferences(URL url)
+    public static void setConvention(URL url)
         throws IOException
     {
-        Preferences.getInstance().importPreferences(url);
+        Convention.getInstance().importSettings(url);
     }
 
 
     /**
-     * Sets the preferences to be loaded from the given file string (denoting
+     * Sets the code convention to be loaded from the given file string (denoting
      * either a qualified file path or single file name).
      *
      * @param file file.
      *
-     * @throws IOException if no preferences could be loaded from the given
+     * @throws IOException if no code convention could be loaded from the given
      *         file.
      */
-    public static void setPreferences(String file)
+    public static void setConvention(String file)
         throws IOException
     {
         if (file.startsWith("http://") || file.startsWith("www."))
         {
-            setPreferences(new URL(file));
+            setConvention(new URL(file));
         }
         else
         {
-            setPreferences(new File(file));
+            setConvention(new File(file));
         }
     }
 
@@ -1618,12 +1620,12 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
             if (entry != null)
             {
                 // the input file is up-to-date
-                if (entry.lastmod >= _inputFile.lastModified())
+                if (entry.getModification() >= _inputFile.lastModified())
                 {
                     if (_destination != null)
                     {
                         copyInputToOutput(_inputFile, _destination,
-                                          entry.packageName, entry.lastmod);
+                                          entry.getPackageName(), entry.getModification());
                     }
 
                     return false;
@@ -1983,7 +1985,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
      */
     private void initDefaults()
     {
-        _backupDir = Preferences.getBackupDirectory();
+        _backupDir = Convention.getBackupDirectory();
         _backupLevel = Defaults.BACKUP_LEVEL;
         _holdBackup = false;
         _state = State.UNDEFINED;
@@ -2183,7 +2185,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
     //~ Inner Classes ·························································
 
     /**
-     * Represents a Jalopy run state.
+     * Represents a Jalopy run state. You may want to use {@link Jalopy#getState()} to query the engine about its current state.
      *
      * @since 1.0b8
      */
@@ -2201,7 +2203,7 @@ href="http://java.sun.com/products/jdk/1.4/docs/guide/intl/encoding.doc.html">Su
         /** Indicates a successfully finished parse phase. */
         public static final State PARSED = new State("Jalopy.State [parsed]");
 
-        /** Indicates a sucessfully finished inspection phase. */
+        /** Indicates a successfully finished inspection phase. */
         public static final State INSPECTED = new State("Jalopy.State [inspected]");
 
         /** Indicates the running state (no phase yet finished). */

@@ -34,7 +34,7 @@
 package de.hunsicker.jalopy.ui;
 
 final class DummyPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Constructors ··························································
 
@@ -51,7 +51,7 @@ final class DummyPanel
      *
      * @param container the parent container.
      */
-    public DummyPanel(PreferencesContainer container)
+    public DummyPanel(SettingsContainer container)
     {
     }
 

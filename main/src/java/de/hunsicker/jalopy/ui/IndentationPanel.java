@@ -33,8 +33,8 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.BorderLayout;
@@ -53,13 +53,13 @@ import javax.swing.event.ChangeListener;
 
 /**
  * A component that can be used to display/edit the Jalopy indentation
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class IndentationPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -109,7 +109,7 @@ public class IndentationPanel
      *
      * @param container the parent container.
      */
-    IndentationPanel(PreferencesContainer container)
+    IndentationPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -138,86 +138,86 @@ public class IndentationPanel
      */
     public void store()
     {
-        this.prefs.put(Keys.INDENT_SIZE,
+        this.settings.put(Keys.INDENT_SIZE,
                        (String)_indentComboBox.getSelectedItem());
-        this.prefs.put(Keys.INDENT_SIZE_LEADING,
+        this.settings.put(Keys.INDENT_SIZE_LEADING,
                        (String)_leadingIndentComboBox.getSelectedItem());
-        this.prefs.put(Keys.INDENT_SIZE_CONTINUATION,
+        this.settings.put(Keys.INDENT_SIZE_CONTINUATION,
                        (String)_continuationIndentComboBox.getSelectedItem());
-        this.prefs.put(Keys.INDENT_SIZE_COMMENT_ENDLINE,
+        this.settings.put(Keys.INDENT_SIZE_COMMENT_ENDLINE,
                        (String)_endlineIndentComboBox.getSelectedItem());
-        this.prefs.putBoolean(Keys.INDENT_CASE_FROM_SWITCH,
+        this.settings.putBoolean(Keys.INDENT_CASE_FROM_SWITCH,
                               _indentCaseSwitchCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_LABEL,
+        this.settings.putBoolean(Keys.INDENT_LABEL,
                               _indentLabelsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_CONTINUATION_IF,
+        this.settings.putBoolean(Keys.INDENT_CONTINUATION_IF,
                               _indentContinuationCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
+        this.settings.putBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
                               _indentFirstColumnCheckBox.isSelected());
-        /*this.prefs.putBoolean(Keys.INDENT_CONTINUATION_IF_TERNARY,
+        /*this.settings.putBoolean(Keys.INDENT_CONTINUATION_IF_TERNARY,
                               _indentContinuationTernaryCheckBox.isSelected());*/
-        this.prefs.put(Keys.INDENT_SIZE_TABS,
+        this.settings.put(Keys.INDENT_SIZE_TABS,
                        (String)_tabSizeComboBox.getSelectedItem());
-        this.prefs.putBoolean(Keys.INDENT_WITH_TABS,
+        this.settings.putBoolean(Keys.INDENT_WITH_TABS,
                               _indentUsingTabsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_WITH_TABS_ONLY_LEADING,
+        this.settings.putBoolean(Keys.INDENT_WITH_TABS_ONLY_LEADING,
                               _indentUsingLeadingTabsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ALIGN_VAR_IDENTS,
+        this.settings.putBoolean(Keys.ALIGN_VAR_IDENTS,
                               _alignVariablesCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ALIGN_VAR_ASSIGNS,
+        this.settings.putBoolean(Keys.ALIGN_VAR_ASSIGNS,
                               _alignAssignmentsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
+        this.settings.putBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
                               _alignMethodDefParamsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ALIGN_TERNARY_OPERATOR,
+        this.settings.putBoolean(Keys.ALIGN_TERNARY_OPERATOR,
                               _alignTernaryOperatorCheckBox.isSelected());
 
-        /*this.prefs.putBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
+        /*this.settings.putBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                               _indentMethodCallCheckBox.isSelected());*/
-        this.prefs.putBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
+        this.settings.putBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
                               _indentContinuationOperatorCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INDENT_DEEP,
+        this.settings.putBoolean(Keys.INDENT_DEEP,
                               !_standardIndentCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
+        this.settings.putBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
                               _alignMethodCallChainsCheckBox.isSelected());
 
         if (_indentExtendsCheckBox.isSelected())
         {
-            this.prefs.put(Keys.INDENT_SIZE_EXTENDS,
+            this.settings.put(Keys.INDENT_SIZE_EXTENDS,
                            (String)_indentExtendsComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.INDENT_SIZE_EXTENDS, "-1");
+            this.settings.put(Keys.INDENT_SIZE_EXTENDS, "-1");
         }
 
         if (_indentImplementsCheckBox.isSelected())
         {
-            this.prefs.put(Keys.INDENT_SIZE_IMPLEMENTS,
+            this.settings.put(Keys.INDENT_SIZE_IMPLEMENTS,
                            (String)_indentImplementsComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.INDENT_SIZE_IMPLEMENTS, "-1");
+            this.settings.put(Keys.INDENT_SIZE_IMPLEMENTS, "-1");
         }
 
         if (_indentThrowsCheckBox.isSelected())
         {
-            this.prefs.put(Keys.INDENT_SIZE_THROWS,
+            this.settings.put(Keys.INDENT_SIZE_THROWS,
                            (String)_indentThrowsComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.INDENT_SIZE_THROWS, "-1");
+            this.settings.put(Keys.INDENT_SIZE_THROWS, "-1");
         }
 
         /*if (_indentParametersCheckBox.isSelected())
         {
-            this.prefs.put(Keys.INDENT_SIZE_PARAMETERS,
+            this.settings.put(Keys.INDENT_SIZE_PARAMETERS,
                            (String)_indentParametersComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.INDENT_SIZE_PARAMETERS, "-1");
+            this.settings.put(Keys.INDENT_SIZE_PARAMETERS, "-1");
         }*/
     }
 
@@ -238,7 +238,7 @@ public class IndentationPanel
                                    GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         _standardIndentCheckBox = new JCheckBox("Standard indent",
-                                                !this.prefs.getBoolean(
+                                                !this.settings.getBoolean(
                                                                        Keys.INDENT_DEEP,
                                                                        Defaults.INDENT_DEEP));
         _standardIndentCheckBox.addActionListener(this.trigger);
@@ -250,7 +250,7 @@ public class IndentationPanel
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
 
         JCheckBox deepIndentCheckBox = new JCheckBox("Deep indent",
-                                                     this.prefs.getBoolean(
+                                                     this.settings.getBoolean(
                                                                            Keys.INDENT_DEEP,
                                                                            Defaults.INDENT_DEEP));
         deepIndentCheckBox.addActionListener(this.trigger);
@@ -271,7 +271,7 @@ public class IndentationPanel
 
         Object[] items ={ "2", "3", "4" };
         ComboBoxPanel indent = new NumberComboBoxPanel("General indent:", items,
-                                                       this.prefs.get(
+                                                       this.settings.get(
                                                                       Keys.INDENT_SIZE,
                                                                       String.valueOf(Defaults.INDENT_SIZE)));
         _indentComboBox = indent.getComboBox();
@@ -285,7 +285,7 @@ public class IndentationPanel
         Object[] leadingItems ={ "0", "2", "4", "6", "8", "10" };
         ComboBoxPanel leadingIndent = new NumberComboBoxPanel("Leading indent:",
                                                               leadingItems,
-                                                              this.prefs.get(
+                                                              this.settings.get(
                                                                              Keys.INDENT_SIZE_LEADING,
                                                                              String.valueOf(Defaults.INDENT_SIZE_LEADING)));
         _leadingIndentComboBox = leadingIndent.getComboBox();
@@ -299,7 +299,7 @@ public class IndentationPanel
         Object[] continuationItems ={ "2", "4", "6", "8", "10", "12" };
         ComboBoxPanel continuationIndent = new NumberComboBoxPanel("Continuation indent:",
                                                                    continuationItems,
-                                                                   this.prefs.get(
+                                                                   this.settings.get(
                                                                                   Keys.INDENT_SIZE_CONTINUATION,
                                                                                   String.valueOf(Defaults.INDENT_SIZE_CONTINUATION)));
         _continuationIndentComboBox = continuationIndent.getComboBox();
@@ -313,7 +313,7 @@ public class IndentationPanel
         Object[] endlineItems ={ "0", "1", "2", "3", "4" };
         ComboBoxPanel endlineIndent = new NumberComboBoxPanel("Endline comment indent:",
                                                               endlineItems,
-                                                              this.prefs.get(
+                                                              this.settings.get(
                                                                              Keys.INDENT_SIZE_COMMENT_ENDLINE,
                                                                              String.valueOf(Defaults.INDENT_SIZE_COMMENT_ENDLINE)));
         _endlineIndentComboBox = endlineIndent.getComboBox();
@@ -327,7 +327,7 @@ public class IndentationPanel
         Object[] tabSizeItems ={ "2", "3", "4", "6", "8", "10" };
         ComboBoxPanel tabSize = new NumberComboBoxPanel("Original Tab indent:",
                                                         tabSizeItems,
-                                                        this.prefs.get(
+                                                        this.settings.get(
                                                                        Keys.INDENT_SIZE_TABS,
                                                                        String.valueOf(Defaults.INDENT_SIZE_TABS)));
         _tabSizeComboBox = tabSize.getComboBox();
@@ -339,7 +339,7 @@ public class IndentationPanel
         indentPanel.add(tabSize);
 
         String[] identItems ={ "0", "2", "3", "4", "6", "8" };
-        int indentExtends = this.prefs.getInt(Keys.INDENT_SIZE_EXTENDS,
+        int indentExtends = this.settings.getInt(Keys.INDENT_SIZE_EXTENDS,
                                               Defaults.INDENT_SIZE_EXTENDS);
         NumberComboBoxPanelCheckBox indentExtendsComboCheckBox = new NumberComboBoxPanelCheckBox("Extends indent:",
                                                                                                  indentExtends > -1,
@@ -359,7 +359,7 @@ public class IndentationPanel
         indentPanelLayout.setConstraints(indentExtendsComboCheckBox, c);
         indentPanel.add(indentExtendsComboCheckBox);
 
-        int indentImplements = this.prefs.getInt(Keys.INDENT_SIZE_IMPLEMENTS,
+        int indentImplements = this.settings.getInt(Keys.INDENT_SIZE_IMPLEMENTS,
                                                  Defaults.INDENT_SIZE_IMPLEMENTS);
         NumberComboBoxPanelCheckBox indentImplementsComboCheckBox = new NumberComboBoxPanelCheckBox("Implements indent:",
                                                                                                     indentImplements > -1,
@@ -379,7 +379,7 @@ public class IndentationPanel
         indentPanelLayout.setConstraints(indentImplementsComboCheckBox, c);
         indentPanel.add(indentImplementsComboCheckBox);
 
-        int indentThrows = this.prefs.getInt(Keys.INDENT_SIZE_THROWS,
+        int indentThrows = this.settings.getInt(Keys.INDENT_SIZE_THROWS,
                                              Defaults.INDENT_SIZE_THROWS);
         NumberComboBoxPanelCheckBox indentThrowsComboCheckBox = new NumberComboBoxPanelCheckBox("Throws indent:",
                                                                                                 indentThrows > -1,
@@ -399,7 +399,7 @@ public class IndentationPanel
         indentPanelLayout.setConstraints(indentThrowsComboCheckBox, c);
         indentPanel.add(indentThrowsComboCheckBox);
 
-        /*int indentParams = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
+        /*int indentParams = this.settings.getInt(Keys.INDENT_SIZE_PARAMETERS,
                                              Defaults.INDENT_SIZE_PARAMETERS);
         NumberComboBoxPanelCheckBox indentParametersComboCheckBox =
         new NumberComboBoxPanelCheckBox("Parameters indent:",
@@ -454,7 +454,7 @@ public class IndentationPanel
 
         GridBagConstraints c = new GridBagConstraints();
         _indentUsingTabsCheckBox = new JCheckBox("Use tabs to indent",
-                                                 this.prefs.getBoolean(
+                                                 this.settings.getBoolean(
                                                                        Keys.INDENT_WITH_TABS,
                                                                        Defaults.INDENT_WITH_TABS));
         _indentUsingTabsCheckBox.addActionListener(this.trigger);
@@ -465,7 +465,7 @@ public class IndentationPanel
         miscPanel.add(_indentUsingTabsCheckBox);
 
         _indentUsingLeadingTabsCheckBox = new JCheckBox("Use only leading tabs",
-                                                        this.prefs.getBoolean(
+                                                        this.settings.getBoolean(
                                                                               Keys.INDENT_WITH_TABS_ONLY_LEADING,
                                                                               Defaults.INDENT_WITH_TABS_ONLY_LEADING));
         _indentUsingLeadingTabsCheckBox.addActionListener(this.trigger);
@@ -476,7 +476,7 @@ public class IndentationPanel
         miscPanel.add(_indentUsingLeadingTabsCheckBox);
 
         _indentCaseSwitchCheckBox = new JCheckBox("Indent \"case\" from \"switch\"",
-                                                  this.prefs.getBoolean(
+                                                  this.settings.getBoolean(
                                                                         Keys.INDENT_CASE_FROM_SWITCH,
                                                                         Defaults.INDENT_CASE_FROM_SWITCH));
         _indentCaseSwitchCheckBox.addActionListener(this.trigger);
@@ -487,7 +487,7 @@ public class IndentationPanel
         miscPanelLayout.setConstraints(_indentCaseSwitchCheckBox, c);
         miscPanel.add(_indentCaseSwitchCheckBox);
         _indentLabelsCheckBox = new JCheckBox("Indent labels",
-                                              this.prefs.getBoolean(
+                                              this.settings.getBoolean(
                                                                     Keys.INDENT_LABEL,
                                                                     Defaults.INDENT_LABEL));
         _indentLabelsCheckBox.addActionListener(this.trigger);
@@ -497,7 +497,7 @@ public class IndentationPanel
         miscPanelLayout.setConstraints(_indentLabelsCheckBox, c);
         miscPanel.add(_indentLabelsCheckBox);
         _indentFirstColumnCheckBox = new JCheckBox("Indent first column comments",
-                                                   this.prefs.getBoolean(
+                                                   this.settings.getBoolean(
                                                                          Keys.INDENT_FIRST_COLUMN_COMMENT,
                                                                          Defaults.INDENT_FIRST_COLUMN_COMMENT));
         _indentFirstColumnCheckBox.addActionListener(this.trigger);
@@ -508,7 +508,7 @@ public class IndentationPanel
         miscPanel.add(_indentFirstColumnCheckBox);
 
         _indentContinuationCheckBox = new JCheckBox("Continuation indent for blocks",
-                                                    this.prefs.getBoolean(
+                                                    this.settings.getBoolean(
                                                                           Keys.INDENT_CONTINUATION_IF,
                                                                           Defaults.INDENT_CONTINUATION_IF));
         _indentContinuationCheckBox.addActionListener(this.trigger);
@@ -519,7 +519,7 @@ public class IndentationPanel
         miscPanel.add(_indentContinuationCheckBox);
 
         _indentContinuationOperatorCheckBox = new JCheckBox("Continuation indent for operators",
-                                                            this.prefs.getBoolean(
+                                                            this.settings.getBoolean(
                                                                                   Keys.INDENT_CONTINUATION_OPERATOR,
                                                                                   Defaults.INDENT_CONTINUATION_OPERATOR));
         _indentContinuationOperatorCheckBox.addActionListener(this.trigger);
@@ -530,7 +530,7 @@ public class IndentationPanel
         miscPanel.add(_indentContinuationOperatorCheckBox);
 
         /*_indentContinuationTernaryCheckBox = new JCheckBox("Continuation indent for ternary \"if-else\"",
-                                                           this.prefs.getBoolean(
+                                                           this.settings.getBoolean(
                                                                                  Keys.INDENT_CONTINUATION_IF_TERNARY,
                                                                                  Defaults.INDENT_CONTINUATION_IF_TERNARY));
         _indentContinuationTernaryCheckBox.addActionListener(this.trigger);
@@ -542,7 +542,7 @@ public class IndentationPanel
 
         /*_indentMethodCallCheckBox = new JCheckBox(
             "Force indentation for parameters",
-            this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
+            this.settings.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                   Defaults.INDENT_USE_PARAMS_METHOD_CALL));
         _indentMethodCallCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(c, 0, 5, GridBagConstraints.REMAINDER, 1,
@@ -557,7 +557,7 @@ public class IndentationPanel
                                                                 BorderFactory.createTitledBorder("Align"),
                                                                 BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _alignVariablesCheckBox = new JCheckBox("Variable identifiers",
-                                                this.prefs.getBoolean(
+                                                this.settings.getBoolean(
                                                                       Keys.ALIGN_VAR_IDENTS,
                                                                       Defaults.ALIGN_VAR_IDENTS));
         _alignVariablesCheckBox.addActionListener(this.trigger);
@@ -568,7 +568,7 @@ public class IndentationPanel
         alignPanel.add(_alignVariablesCheckBox);
 
         _alignAssignmentsCheckBox = new JCheckBox("Variable assignments",
-                                                  this.prefs.getBoolean(
+                                                  this.settings.getBoolean(
                                                                         Keys.ALIGN_VAR_ASSIGNS,
                                                                         Defaults.ALIGN_VAR_ASSIGNS));
         _alignAssignmentsCheckBox.addActionListener(this.trigger);
@@ -579,7 +579,7 @@ public class IndentationPanel
         alignPanel.add(_alignAssignmentsCheckBox);
 
         _alignMethodDefParamsCheckBox = new JCheckBox("Method Def parameters",
-                                                      this.prefs.getBoolean(
+                                                      this.settings.getBoolean(
                                                                             Keys.ALIGN_PARAMS_METHOD_DEF,
                                                                             Defaults.ALIGN_PARAMS_METHOD_DEF));
         _alignMethodDefParamsCheckBox.addActionListener(this.trigger);
@@ -590,7 +590,7 @@ public class IndentationPanel
         alignPanel.add(_alignMethodDefParamsCheckBox);
 
         _alignMethodCallChainsCheckBox = new JCheckBox("Method call chains",
-                                                       this.prefs.getBoolean(
+                                                       this.settings.getBoolean(
                                                                              Keys.ALIGN_METHOD_CALL_CHAINS,
                                                                              Defaults.ALIGN_METHOD_CALL_CHAINS));
         _alignMethodCallChainsCheckBox.addActionListener(this.trigger);
@@ -602,7 +602,7 @@ public class IndentationPanel
 
 
         _alignTernaryOperatorCheckBox       = new JCheckBox("Ternary expressions",
-                                                       this.prefs.getBoolean(
+                                                       this.settings.getBoolean(
                                                                              Keys.ALIGN_TERNARY_OPERATOR,
                                                                              Defaults.ALIGN_TERNARY_OPERATOR));
         _alignTernaryOperatorCheckBox      .addActionListener(this.trigger);

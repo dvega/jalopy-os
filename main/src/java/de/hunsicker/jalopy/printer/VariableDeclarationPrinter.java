@@ -37,8 +37,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -93,7 +93,7 @@ final class VariableDeclarationPrinter
         if ((!out.state.anonymousInnerClass) && (!n.hasJavadocComment()))
         {
             if (((!out.state.innerClass) ||
-                 this.prefs.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
+                 this.settings.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
                                        Defaults.COMMENT_JAVADOC_INNER_CLASS)) &&
                 (!NodeHelper.isLocalVariable(node)))
             {
@@ -115,7 +115,7 @@ final class VariableDeclarationPrinter
         // align if necessary
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            if (this.prefs.getBoolean(Keys.ALIGN_VAR_IDENTS,
+            if (this.settings.getBoolean(Keys.ALIGN_VAR_IDENTS,
                                       Defaults.ALIGN_VAR_IDENTS))
             {
                 newChunk = alignVariable(node, last, out);
@@ -213,7 +213,7 @@ final class VariableDeclarationPrinter
     {
         JavaNode n = (JavaNode)node;
 
-        if (this.prefs.getBoolean(Keys.CHUNKS_BY_COMMENTS,
+        if (this.settings.getBoolean(Keys.CHUNKS_BY_COMMENTS,
                                   Defaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
@@ -226,14 +226,14 @@ final class VariableDeclarationPrinter
         {
             case JavaTokenTypes.VARIABLE_DEF :
 
-                int maxLinesBetween = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+                int maxLinesBetween = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                                         Defaults.BLANK_LINES_KEEP_UP_TO);
 
                 // it does not make sense to mark chunks by blank lines if no
                 // blank lines should be retained
                 if (maxLinesBetween > 0)
                 {
-                    if (this.prefs.getBoolean(Keys.CHUNKS_BY_BLANK_LINES,
+                    if (this.settings.getBoolean(Keys.CHUNKS_BY_BLANK_LINES,
                                               Defaults.CHUNKS_BY_BLANK_LINES))
                     {
                         if ((n.getStartLine() - n.getPreviousSibling()
@@ -268,7 +268,7 @@ final class VariableDeclarationPrinter
     {
         boolean result = false;
         boolean possible = false;
-        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
 LOOP: 
         for (AST child = node.getFirstChild();

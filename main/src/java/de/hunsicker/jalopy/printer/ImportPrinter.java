@@ -38,8 +38,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.util.StringHelper;
 
 import java.io.IOException;
@@ -112,7 +112,7 @@ final class ImportPrinter
 
                     // grouping of the declarations only makes sense if
                     // sorting is enabled
-                    if (this.prefs.getBoolean(Keys.IMPORT_SORT,
+                    if (this.settings.getBoolean(Keys.IMPORT_SORT,
                                               Defaults.IMPORT_SORT))
                     {
                         String nextName = NodeHelper.getDottedName(next.getFirstChild());
@@ -176,13 +176,13 @@ final class ImportPrinter
      */
     private int getImportDepth(String declaration)
     {
-        int defaultGroupingDepth = this.prefs.getInt(Keys.IMPORT_GROUPING_DEPTH,
+        int defaultGroupingDepth = this.settings.getInt(Keys.IMPORT_GROUPING_DEPTH,
                                                      Defaults.IMPORT_GROUPING_DEPTH);
 
         // '0' means no grouping at all
         if (defaultGroupingDepth > 0)
         {
-            String info = this.prefs.get(Keys.IMPORT_GROUPING,
+            String info = this.settings.get(Keys.IMPORT_GROUPING,
                                          Defaults.IMPORT_GROUPING);
 
             if (info.length() > 0)
@@ -240,7 +240,7 @@ final class ImportPrinter
             {
                 case JavaTokenTypes.SL_COMMENT :
 
-                    if (this.prefs.getInt(
+                    if (this.settings.getInt(
                                           Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                                           Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE) <= 0)
                     {
@@ -251,7 +251,7 @@ final class ImportPrinter
 
                 case JavaTokenTypes.JAVADOC_COMMENT :
 
-                    if (this.prefs.getInt(
+                    if (this.settings.getInt(
                                           Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                                           Defaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC) <= 0)
                     {
@@ -262,7 +262,7 @@ final class ImportPrinter
 
                 case JavaTokenTypes.ML_COMMENT :
 
-                    if (this.prefs.getInt(
+                    if (this.settings.getInt(
                                           Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                                           Defaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE) <= 0)
                     {

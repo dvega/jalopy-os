@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -34,12 +34,12 @@
 package de.hunsicker.jalopy.plugin;
 
 import de.hunsicker.io.FileFormat;
-import de.hunsicker.jalopy.History;
+import de.hunsicker.jalopy.storage.History;
 import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.ui.ProgressMonitor;
 import de.hunsicker.jalopy.ui.ProgressPanel;
 import de.hunsicker.ui.ErrorDialog;
@@ -241,7 +241,7 @@ public abstract class AbstractPlugin
 
     /**
      * Called on the event dispatching thread after an action was performed.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work after the formatting
      * process finished.
@@ -255,7 +255,7 @@ public abstract class AbstractPlugin
     /**
      * Called on the event dispatching thread before an action will be
      * started.
-     * 
+     *
      * <p>
      * Override this method to perform any custom work before the formatting
      * process starts.
@@ -305,7 +305,7 @@ public abstract class AbstractPlugin
 
     /**
      * Returns a Jalopy instance. The instance will be configured according to
-     * the current user preferences.
+     * the current code convention.
      *
      * @return a Jalopy instance.
      */
@@ -386,7 +386,7 @@ public abstract class AbstractPlugin
      * @see javax.swing.SwingUtilities#invokeAndWait
      */
     protected void execSync(Runnable operation)
-        throws InterruptedException, 
+        throws InterruptedException,
                InvocationTargetException
     {
         EventQueue.invokeAndWait(operation);
@@ -447,26 +447,26 @@ public abstract class AbstractPlugin
 
 
     /**
-     * Configures the given Jalopy instance to meet the current user
-     * preferences.
+     * Configures the given Jalopy instance to meet the current code
+     * convention.
      *
-     * @param jalopy jalopy instance to configure.
+     * @param jalopy Jalopy instance to configure.
      */
     private void configureJalopy(Jalopy jalopy)
     {
-        Preferences prefs = Preferences.getInstance();
-        int backupLevel = prefs.getInt(Keys.BACKUP_LEVEL, Defaults.BACKUP_LEVEL);
+        Convention settings = Convention.getInstance();
+        int backupLevel = settings.getInt(Keys.BACKUP_LEVEL, Defaults.BACKUP_LEVEL);
         jalopy.setBackup(backupLevel > 0);
-        jalopy.setBackupDirectory(prefs.get(Keys.BACKUP_DIRECTORY,
-                                            Preferences.getBackupDirectory()
+        jalopy.setBackupDirectory(settings.get(Keys.BACKUP_DIRECTORY,
+                                            Convention.getBackupDirectory()
                                                        .getAbsolutePath()));
-        jalopy.setHistoryPolicy(History.Policy.valueOf(prefs.get(
+        jalopy.setHistoryPolicy(History.Policy.valueOf(settings.get(
                                                                  Keys.HISTORY_POLICY,
                                                                  Defaults.HISTORY_POLICY)));
-        jalopy.setInspect(prefs.getBoolean(Keys.INSPECTOR, Defaults.INSPECTOR));
+        jalopy.setInspect(settings.getBoolean(Keys.INSPECTOR, Defaults.INSPECTOR));
         jalopy.setBackupLevel(backupLevel);
         jalopy.setFileFormat(getFileFormat());
-        jalopy.setForce(prefs.getBoolean(Keys.FORCE_FORMATTING,
+        jalopy.setForce(settings.getBoolean(Keys.FORCE_FORMATTING,
                                          Defaults.FORCE_FORMATTING));
     }
 
@@ -483,7 +483,7 @@ public abstract class AbstractPlugin
      */
     private void format(ProjectFile file,
                         Jalopy      jalopy)
-        throws IOException, 
+        throws IOException,
                InvocationTargetException
     {
         jalopy.setEncoding(file.getEncoding());
@@ -570,7 +570,7 @@ public abstract class AbstractPlugin
      */
     private void formatSeveral(Jalopy     jalopy,
                                Collection files)
-        throws IOException, 
+        throws IOException,
                InvocationTargetException
     {
         formatSeveral(jalopy, files, true);
@@ -593,7 +593,7 @@ public abstract class AbstractPlugin
     private void formatSeveral(Jalopy     jalopy,
                                Collection files,
                                boolean    checkThreading)
-        throws IOException, 
+        throws IOException,
                InvocationTargetException
     {
         int size = files.size();
@@ -611,7 +611,7 @@ public abstract class AbstractPlugin
                 }
             }
 
-            int numThreads = Preferences.getInstance()
+            int numThreads = Convention.getInstance()
                                         .getInt(Keys.THREAD_COUNT,
                                                 Defaults.THREAD_COUNT);
 
@@ -707,6 +707,7 @@ public abstract class AbstractPlugin
     /**
      * Represents an action that can be performed.
      *
+     * @see AbstractPlugin#performAction
      * @since 1.0b8
      */
     public static final class Action
@@ -767,8 +768,6 @@ public abstract class AbstractPlugin
         implements VisualAppender
     {
         /**
-         * DOCUMENT ME!
-         *
          * @todo overide format() to add stacktraces
          */
         public DefaultAppender()

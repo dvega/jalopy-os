@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -101,9 +101,9 @@ final class LabelStatementPrinter
                       NodeWriter out)
         throws IOException
     {
-        boolean indentLabel = this.prefs.getBoolean(Keys.INDENT_LABEL,
+        boolean indentLabel = this.settings.getBoolean(Keys.INDENT_LABEL,
                                                     Defaults.INDENT_LABEL);
-        boolean lineWrapLabel = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
+        boolean lineWrapLabel = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
                                                       Defaults.LINE_WRAP_AFTER_LABEL);
         AST identifier = node.getFirstChild();
         AST body = identifier.getNextSibling();

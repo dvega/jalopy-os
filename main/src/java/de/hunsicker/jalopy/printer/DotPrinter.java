@@ -37,8 +37,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -94,9 +94,9 @@ final class DotPrinter
             /**
              * @todo add switch to disable wrapping along dots alltogether
              */
-            boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                       Defaults.LINE_WRAP);
-            boolean forceWrappingForChainedCalls = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
+            boolean forceWrappingForChainedCalls = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                                                                          Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
             if (wrapLines || forceWrappingForChainedCalls)
@@ -192,9 +192,11 @@ final class DotPrinter
     {
         ParenthesesScope scope = (ParenthesesScope)out.state.parenScope.getFirst();
 
-        boolean continuationIndent = this.prefs.getBoolean(
+        boolean continuationIndent = this.settings.getBoolean(
                                                     Keys.INDENT_CONTINUATION_OPERATOR,
                                                     Defaults.INDENT_CONTINUATION_OPERATOR);
+
+
 
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
@@ -206,13 +208,13 @@ final class DotPrinter
             {
                 //case JavaTokenTypes.INDEX_OP:
                 case JavaTokenTypes.METHOD_CALL :
-                    boolean align = this.prefs.getBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
+                    boolean align = this.settings.getBoolean(Keys.ALIGN_METHOD_CALL_CHAINS,
                                                           Defaults.ALIGN_METHOD_CALL_CHAINS);
 
                     if (parent != scope.chainCall)
                     {
                         // force wrap after each call?
-                        if (this.prefs.getBoolean(
+                        if (this.settings.getBoolean(
                                                   Keys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                                                   Defaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL))
                         {
@@ -221,6 +223,7 @@ final class DotPrinter
                                 // simply wrap and align all chained calls
                                 // under the first one
                                 out.printNewline();
+
 
                                 int indentLength = out.getIndentLength();
 
@@ -246,7 +249,7 @@ final class DotPrinter
                         }
                         else
                         {
-                            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+                            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                                Defaults.LINE_LENGTH);
 
                             // we're already beyond the maximal line length,
@@ -254,6 +257,8 @@ final class DotPrinter
                             if (out.column > lineLength)
                             {
                                 out.printNewline();
+
+
                                 if (continuationIndent)
                                     out.continuation = true;
 
@@ -296,6 +301,7 @@ final class DotPrinter
                                     out.continuation = true;
 
                                 out.printNewline();
+
                                 indent(align, scope, out);
                             }
                         }
@@ -304,7 +310,7 @@ final class DotPrinter
                     break;
             }
         }
-        else  if (this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR, Defaults.LINE_WRAP_BEFORE_OPERATOR))
+        else  if (this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR, Defaults.LINE_WRAP_BEFORE_OPERATOR))
         {
             switch (((JavaNode)node).getParent().getType())
             {
@@ -313,11 +319,12 @@ final class DotPrinter
 
                 case JavaTokenTypes.METHOD_CALL: // last link of the chain (first in the tree)
 
-                    int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+                    int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                                    Defaults.LINE_LENGTH);
                     if (out.column  + 1 > lineLength)
                     {
                         out.printNewline();
+
 
                         if (continuationIndent)
                             out.continuation = true;
@@ -326,15 +333,38 @@ final class DotPrinter
                     }
                     else
                     {
-                        AST n = node.getFirstChild().getNextSibling();
+                        AST n = node.getFirstChild();
+
+                        switch (n.getType())
+                        {
+                            case JavaTokenTypes.LPAREN:
+
+                            SEEK_FORWARD:
+                            for (AST child = n; n != null; n = n.getNextSibling())
+                            {
+                                switch (n.getType())
+                                {
+                                    case JavaTokenTypes.RPAREN:
+                                        n = n.getNextSibling();
+                                        break SEEK_FORWARD;
+                                }
+                            }
+                            break;
+                            default:
+                                n = n.getNextSibling();
+                                break;
+
+                        }
+
 
                         TestNodeWriter tester = out.testers.get();
 
                         PrinterFactory.create(n).print(n, tester);
 
-                        if (out.column + 1 + tester.length> lineLength)
+                        if (out.column + 1 + tester.length > lineLength)
                         {
                             out.printNewline();
+
                         if (continuationIndent)
                             out.continuation = true;
 
@@ -378,7 +408,7 @@ final class DotPrinter
         }
         else if (out.continuation ||
                  ((!out.continuation) &&
-                  this.prefs.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
+                  this.settings.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
                                         Defaults.INDENT_CONTINUATION_OPERATOR)))
         {
             printIndentation(out);

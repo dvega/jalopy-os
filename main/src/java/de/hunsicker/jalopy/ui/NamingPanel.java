@@ -1,40 +1,40 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.BorderLayout;
@@ -65,13 +65,13 @@ import org.apache.oro.text.regex.Perl5Compiler;
 
 /**
  * A component that can be used to display/edit the Jalopy Code Inspector
- * naming preferences.
+ * naming settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class NamingPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -104,7 +104,7 @@ public class NamingPanel
      *
      * @param container the parent container.
      */
-    NamingPanel(PreferencesContainer container)
+    NamingPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -117,27 +117,27 @@ public class NamingPanel
      */
     public void store()
     {
-        this.prefs.put(Keys.REGEXP_PACKAGE, _packageTextField.getText());
-        this.prefs.put(Keys.REGEXP_CLASS, _classTextField.getText());
-        this.prefs.put(Keys.REGEXP_CLASS_ABSTRACT,
+        this.settings.put(Keys.REGEXP_PACKAGE, _packageTextField.getText());
+        this.settings.put(Keys.REGEXP_CLASS, _classTextField.getText());
+        this.settings.put(Keys.REGEXP_CLASS_ABSTRACT,
                        _abstractClassTextField.getText());
-        this.prefs.put(Keys.REGEXP_INTERFACE, _interfaceTextField.getText());
-        this.prefs.put(Keys.REGEXP_LABEL, _labelTextField.getText());
-        this.prefs.put(Keys.REGEXP_FIELD_PUBLIC, _variablesData[0][1]);
-        this.prefs.put(Keys.REGEXP_FIELD_PROTECTED, _variablesData[0][2]);
-        this.prefs.put(Keys.REGEXP_FIELD_DEFAULT, _variablesData[0][3]);
-        this.prefs.put(Keys.REGEXP_FIELD_PRIVATE, _variablesData[0][4]);
-        this.prefs.put(Keys.REGEXP_FIELD_PUBLIC_STATIC, _variablesData[1][1]);
-        this.prefs.put(Keys.REGEXP_FIELD_PROTECTED_STATIC, _variablesData[1][2]);
-        this.prefs.put(Keys.REGEXP_FIELD_DEFAULT_STATIC, _variablesData[1][3]);
-        this.prefs.put(Keys.REGEXP_FIELD_PRIVATE_STATIC, _variablesData[1][4]);
-        this.prefs.put(Keys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
+        this.settings.put(Keys.REGEXP_INTERFACE, _interfaceTextField.getText());
+        this.settings.put(Keys.REGEXP_LABEL, _labelTextField.getText());
+        this.settings.put(Keys.REGEXP_FIELD_PUBLIC, _variablesData[0][1]);
+        this.settings.put(Keys.REGEXP_FIELD_PROTECTED, _variablesData[0][2]);
+        this.settings.put(Keys.REGEXP_FIELD_DEFAULT, _variablesData[0][3]);
+        this.settings.put(Keys.REGEXP_FIELD_PRIVATE, _variablesData[0][4]);
+        this.settings.put(Keys.REGEXP_FIELD_PUBLIC_STATIC, _variablesData[1][1]);
+        this.settings.put(Keys.REGEXP_FIELD_PROTECTED_STATIC, _variablesData[1][2]);
+        this.settings.put(Keys.REGEXP_FIELD_DEFAULT_STATIC, _variablesData[1][3]);
+        this.settings.put(Keys.REGEXP_FIELD_PRIVATE_STATIC, _variablesData[1][4]);
+        this.settings.put(Keys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
                        _variablesData[2][1]);
-        this.prefs.put(Keys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
+        this.settings.put(Keys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
                        _variablesData[2][2]);
-        this.prefs.put(Keys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
+        this.settings.put(Keys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
                        _variablesData[2][3]);
-        this.prefs.put(Keys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
+        this.settings.put(Keys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
                        _variablesData[2][4]);
     }
 
@@ -198,7 +198,7 @@ public class NamingPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         generalLayout.setConstraints(packageLabel, c);
         generalPanel.add(packageLabel);
-        _packageTextField = new RegexpTextField(this.prefs.get(
+        _packageTextField = new RegexpTextField(this.settings.get(
                                                                Keys.REGEXP_PACKAGE,
                                                                Defaults.REGEXP_PACKAGE));
         SwingHelper.setConstraints(c, 1, 0, GridBagConstraints.REMAINDER, 1,
@@ -213,7 +213,7 @@ public class NamingPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         generalLayout.setConstraints(classLabel, c);
         generalPanel.add(classLabel);
-        _classTextField = new RegexpTextField(this.prefs.get(Keys.REGEXP_CLASS,
+        _classTextField = new RegexpTextField(this.settings.get(Keys.REGEXP_CLASS,
                                                              Defaults.REGEXP_CLASS));
         SwingHelper.setConstraints(c, 1, 1, GridBagConstraints.REMAINDER, 1,
                                    1.0, 0.0, GridBagConstraints.WEST,
@@ -228,7 +228,7 @@ public class NamingPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         generalLayout.setConstraints(abstractClassLabel, c);
         generalPanel.add(abstractClassLabel);
-        _abstractClassTextField = new RegexpTextField(this.prefs.get(
+        _abstractClassTextField = new RegexpTextField(this.settings.get(
                                                                      Keys.REGEXP_CLASS_ABSTRACT,
                                                                      Defaults.REGEXP_CLASS_ABSTRACT));
         c.insets.right = 0;
@@ -244,7 +244,7 @@ public class NamingPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         generalLayout.setConstraints(interfaceLabel, c);
         generalPanel.add(interfaceLabel);
-        _interfaceTextField = new RegexpTextField(this.prefs.get(
+        _interfaceTextField = new RegexpTextField(this.settings.get(
                                                                  Keys.REGEXP_INTERFACE,
                                                                  Defaults.REGEXP_INTERFACE));
         SwingHelper.setConstraints(c, 1, 3, GridBagConstraints.REMAINDER, 1,
@@ -259,7 +259,7 @@ public class NamingPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         generalLayout.setConstraints(labelLabel, c);
         generalPanel.add(labelLabel);
-        _labelTextField = new RegexpTextField(this.prefs.get(Keys.REGEXP_LABEL,
+        _labelTextField = new RegexpTextField(this.settings.get(Keys.REGEXP_LABEL,
                                                              Defaults.REGEXP_LABEL));
         SwingHelper.setConstraints(c, 1, 4, GridBagConstraints.REMAINDER, 1,
                                    1.0, 1.0, GridBagConstraints.WEST,
@@ -322,31 +322,31 @@ public class NamingPanel
                                                                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _variablesData = new String[3][5];
         _variablesData[0][0] = "instance";
-        _variablesData[0][1] = this.prefs.get(Keys.REGEXP_FIELD_PUBLIC,
+        _variablesData[0][1] = this.settings.get(Keys.REGEXP_FIELD_PUBLIC,
                                               Defaults.REGEXP_FIELD_PUBLIC);
-        _variablesData[0][2] = this.prefs.get(Keys.REGEXP_FIELD_PROTECTED,
+        _variablesData[0][2] = this.settings.get(Keys.REGEXP_FIELD_PROTECTED,
                                               Defaults.REGEXP_FIELD_PROTECTED);
-        _variablesData[0][3] = this.prefs.get(Keys.REGEXP_FIELD_DEFAULT,
+        _variablesData[0][3] = this.settings.get(Keys.REGEXP_FIELD_DEFAULT,
                                               Defaults.REGEXP_FIELD_DEFAULT);
-        _variablesData[0][4] = this.prefs.get(Keys.REGEXP_FIELD_PRIVATE,
+        _variablesData[0][4] = this.settings.get(Keys.REGEXP_FIELD_PRIVATE,
                                               Defaults.REGEXP_FIELD_PRIVATE);
         _variablesData[1][0] = "static";
-        _variablesData[1][1] = this.prefs.get(Keys.REGEXP_FIELD_PUBLIC_STATIC,
+        _variablesData[1][1] = this.settings.get(Keys.REGEXP_FIELD_PUBLIC_STATIC,
                                               Defaults.REGEXP_FIELD_PUBLIC_STATIC);
-        _variablesData[1][2] = this.prefs.get(Keys.REGEXP_FIELD_PROTECTED_STATIC,
+        _variablesData[1][2] = this.settings.get(Keys.REGEXP_FIELD_PROTECTED_STATIC,
                                               Defaults.REGEXP_FIELD_PROTECTED_STATIC);
-        _variablesData[1][3] = this.prefs.get(Keys.REGEXP_FIELD_DEFAULT_STATIC,
+        _variablesData[1][3] = this.settings.get(Keys.REGEXP_FIELD_DEFAULT_STATIC,
                                               Defaults.REGEXP_FIELD_DEFAULT_STATIC);
-        _variablesData[1][4] = this.prefs.get(Keys.REGEXP_FIELD_PRIVATE_STATIC,
+        _variablesData[1][4] = this.settings.get(Keys.REGEXP_FIELD_PRIVATE_STATIC,
                                               Defaults.REGEXP_FIELD_PRIVATE_STATIC);
         _variablesData[2][0] = "static final";
-        _variablesData[2][1] = this.prefs.get(Keys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
+        _variablesData[2][1] = this.settings.get(Keys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
                                               Defaults.REGEXP_FIELD_PUBLIC_STATIC_FINAL);
-        _variablesData[2][2] = this.prefs.get(Keys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
+        _variablesData[2][2] = this.settings.get(Keys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
                                               Defaults.REGEXP_FIELD_PROTECTED_STATIC_FINAL);
-        _variablesData[2][3] = this.prefs.get(Keys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
+        _variablesData[2][3] = this.settings.get(Keys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
                                               Defaults.REGEXP_FIELD_DEFAULT_STATIC_FINAL);
-        _variablesData[2][4] = this.prefs.get(Keys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
+        _variablesData[2][4] = this.settings.get(Keys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
                                               Defaults.REGEXP_FIELD_PRIVATE_STATIC_FINAL);
 
         String[] names =
@@ -394,7 +394,7 @@ public class NamingPanel
         variableLayout.setConstraints(variableLabel, c);
         variablePanel.add(variableLabel);
 
-        RegexpTextField _localVariableTextField = new RegexpTextField(this.prefs.get(
+        RegexpTextField _localVariableTextField = new RegexpTextField(this.settings.get(
                                                                                      Keys.REGEXP_LOCAL_VARIABLE,
                                                                                      Defaults.REGEXP_LOCAL_VARIABLE));
         c.insets.right = 0;
@@ -418,7 +418,7 @@ public class NamingPanel
         paramLayout.setConstraints(paramLabel, c);
         paramPanel.add(paramLabel);
 
-        RegexpTextField _paramTextField = new RegexpTextField(this.prefs.get(
+        RegexpTextField _paramTextField = new RegexpTextField(this.settings.get(
                                                                              Keys.REGEXP_PARAM,
                                                                              Defaults.REGEXP_PARAM));
         SwingHelper.setConstraints(c, 1, 0, GridBagConstraints.REMAINDER, 1,
@@ -435,7 +435,7 @@ public class NamingPanel
         paramLayout.setConstraints(finalParamLabel, c);
         paramPanel.add(finalParamLabel);
 
-        RegexpTextField _finalParamTextField = new RegexpTextField(this.prefs.get(
+        RegexpTextField _finalParamTextField = new RegexpTextField(this.settings.get(
                                                                                   Keys.REGEXP_PARAM,
                                                                                   Defaults.REGEXP_PARAM));
         c.insets.right = 0;

@@ -37,8 +37,8 @@ import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.ModifierType;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -93,7 +93,7 @@ final class ModifiersPrinter
                       NodeWriter out)
         throws IOException
     {
-        if (this.prefs.getBoolean(Keys.SORT_MODIFIERS, Defaults.SORT_MODIFIERS))
+        if (this.settings.getBoolean(Keys.SORT_MODIFIERS, Defaults.SORT_MODIFIERS))
         {
             JavaNode firstModifier = (JavaNode)node.getFirstChild();
 

@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -35,9 +35,9 @@ package de.hunsicker.jalopy.parser;
 
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -108,7 +108,7 @@ final class SortTransformation
         }
 
         AST first = null;
-LOOP: 
+LOOP:
 
         // advance to the first CLASS_DEF or INTERFACE_DEF
         for (AST child = tree.getFirstChild();
@@ -222,8 +222,8 @@ LOOP:
                     next.setHiddenBefore(comment);
                 }
 
-                Preferences prefs = Preferences.getInstance();
-                String fillCharacter = prefs.get(Keys.SEPARATOR_FILL_CHARACTER,
+                Convention settings = Convention.getInstance();
+                String fillCharacter = settings.get(Keys.SEPARATOR_FILL_CHARACTER,
                                                  "\u00b7");
 
                 switch (next.getType())
@@ -233,7 +233,7 @@ LOOP:
                         if (isStatic(cur))
                         {
                             fillComment(comment,
-                                        prefs.get(
+                                        settings.get(
                                                   Keys.SEPARATOR_STATIC_VAR_INIT,
                                                   "Static variables/initializers"),
                                         fillCharacter, indent, maxwidth);
@@ -241,7 +241,7 @@ LOOP:
                         else
                         {
                             fillComment(comment,
-                                        prefs.get(Keys.SEPARATOR_INSTANCE_VAR,
+                                        settings.get(Keys.SEPARATOR_INSTANCE_VAR,
                                                   "Instance variables"),
                                         fillCharacter, indent, maxwidth);
                         }
@@ -250,14 +250,14 @@ LOOP:
 
                     case JavaTokenTypes.METHOD_DEF :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_METHOD, "Methods"),
+                                    settings.get(Keys.SEPARATOR_METHOD, "Methods"),
                                     fillCharacter, indent, maxwidth);
 
                         break;
 
                     case JavaTokenTypes.CTOR_DEF :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_CTOR,
+                                    settings.get(Keys.SEPARATOR_CTOR,
                                               "Constructors"), fillCharacter,
                                     indent, maxwidth);
 
@@ -265,7 +265,7 @@ LOOP:
 
                     case JavaTokenTypes.CLASS_DEF :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_CLASS,
+                                    settings.get(Keys.SEPARATOR_CLASS,
                                               "Inner classes"), fillCharacter,
                                     indent, maxwidth);
 
@@ -273,7 +273,7 @@ LOOP:
 
                     case JavaTokenTypes.INTERFACE_DEF :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_INTERFACE,
+                                    settings.get(Keys.SEPARATOR_INTERFACE,
                                               "Inner Interfaces"),
                                     fillCharacter, indent, maxwidth);
 
@@ -281,7 +281,7 @@ LOOP:
 
                     case JavaTokenTypes.STATIC_INIT :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_STATIC_VAR_INIT,
+                                    settings.get(Keys.SEPARATOR_STATIC_VAR_INIT,
                                               "Static variables/initializers"),
                                     fillCharacter, indent, maxwidth);
 
@@ -289,7 +289,7 @@ LOOP:
 
                     case JavaTokenTypes.INSTANCE_INIT :
                         fillComment(comment,
-                                    prefs.get(Keys.SEPARATOR_INSTANCE_INIT,
+                                    settings.get(Keys.SEPARATOR_INSTANCE_INIT,
                                               "Instance initializers"),
                                     fillCharacter, indent, maxwidth);
 
@@ -477,9 +477,9 @@ LOOP:
             }
         }
 
-        Preferences prefs = Preferences.getInstance();
+        Convention settings = Convention.getInstance();
 
-        if (prefs.getBoolean(Keys.SORT_VARIABLE, Defaults.SORT_VARIABLE))
+        if (settings.getBoolean(Keys.SORT_VARIABLE, Defaults.SORT_VARIABLE))
         {
             // because we recursively link into inner classes in the switch we
             // have to set our type names for every level
@@ -488,22 +488,22 @@ LOOP:
             names.clear();
         }
 
-        if (prefs.getBoolean(Keys.SORT_CTOR, Defaults.SORT_CTOR))
+        if (settings.getBoolean(Keys.SORT_CTOR, Defaults.SORT_CTOR))
         {
             Collections.sort(ctors, comp);
         }
 
-        if (prefs.getBoolean(Keys.SORT_METHOD, Defaults.SORT_METHOD))
+        if (settings.getBoolean(Keys.SORT_METHOD, Defaults.SORT_METHOD))
         {
             Collections.sort(methods, comp);
         }
 
-        if (prefs.getBoolean(Keys.SORT_CLASS, Defaults.SORT_CLASS))
+        if (settings.getBoolean(Keys.SORT_CLASS, Defaults.SORT_CLASS))
         {
             Collections.sort(classes, comp);
         }
 
-        if (prefs.getBoolean(Keys.SORT_INTERFACE, Defaults.SORT_INTERFACE))
+        if (settings.getBoolean(Keys.SORT_INTERFACE, Defaults.SORT_INTERFACE))
         {
             Collections.sort(interfaces, comp);
         }
@@ -521,19 +521,19 @@ LOOP:
 
         if (level == 1)
         {
-            addSeparator = prefs.getBoolean(Keys.COMMENT_INSERT_SEPARATOR,
+            addSeparator = settings.getBoolean(Keys.COMMENT_INSERT_SEPARATOR,
                                             Defaults.COMMENT_INSERT_SEPARATOR);
         }
         else
         {
-            addSeparator = prefs.getBoolean(Keys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
+            addSeparator = settings.getBoolean(Keys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
                                             Defaults.COMMENT_INSERT_SEPARATOR_RECURSIVE);
         }
 
-        String sortString = prefs.get(Keys.SORT_ORDER,
+        String sortString = settings.get(Keys.SORT_ORDER,
                                       DeclarationType.getOrder());
-        int maxwidth = prefs.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH);
-        int indent = prefs.getInt(Keys.INDENT_SIZE, Defaults.INDENT_SIZE);
+        int maxwidth = settings.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH);
+        int indent = settings.getInt(Keys.INDENT_SIZE, Defaults.INDENT_SIZE);
         JavaNode tmp = new JavaNode();
         JavaNode current = tmp;
 

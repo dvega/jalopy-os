@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -111,18 +111,18 @@ final class AssignmentPrinter
         logIssues(node, out);
         printCommentsBefore(node, out);
 
-        boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean preferWrapAfterLeftParen = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
+        boolean preferWrapAfterLeftParen = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
                                                                  Defaults.LINE_WRAP_AFTER_LEFT_PAREN);
-        boolean preferWrapAfterAssign = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_ASSIGN,
+        boolean preferWrapAfterAssign = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_ASSIGN,
                                                               Defaults.LINE_WRAP_AFTER_ASSIGN);
-        boolean padding = this.prefs.getBoolean(Keys.PADDING_ASSIGNMENT_OPERATORS,
+        boolean padding = this.settings.getBoolean(Keys.PADDING_ASSIGNMENT_OPERATORS,
                                                 Defaults.PADDING_ASSIGNMENT_OPERATORS);
-        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
-        boolean standardIndent = !this.prefs.getBoolean(Keys.INDENT_DEEP,
+        boolean standardIndent = !this.settings.getBoolean(Keys.INDENT_DEEP,
                                                         Defaults.INDENT_DEEP);
 
         AST expr = node.getFirstChild();
@@ -134,7 +134,7 @@ final class AssignmentPrinter
                 JavaNode parent = ((JavaNode)node).getParent();
 
                 if ((!wrapAfterAssign) &&
-                    this.prefs.getBoolean(Keys.ALIGN_VAR_ASSIGNS,
+                    this.settings.getBoolean(Keys.ALIGN_VAR_ASSIGNS,
                                           Defaults.ALIGN_VAR_ASSIGNS))
                 {
                     if (isNewChunk(parent, JavaTokenTypes.VARIABLE_DEF))
@@ -259,7 +259,7 @@ final class AssignmentPrinter
                         // ArrayInitializerPrinter.java wraps if the curly
                         // brace should be printed on its own line, so we try
                         // to avoid trailing whitespace
-                        if (this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+                        if (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                   Defaults.BRACE_NEWLINE_LEFT))
                         {
                             out.print(SPACE_ASSIGN, JavaTokenTypes.ASSIGN);
@@ -311,7 +311,7 @@ final class AssignmentPrinter
 
                 Marker marker = null;
 
-                if (preferWrapAfterAssign && (out.mode == NodeWriter.MODE_DEFAULT) &&(out.getIndentLength() + out.indentSize < out.column) &&
+                if (preferWrapAfterAssign && (out.mode == NodeWriter.MODE_DEFAULT) &&(out.getIndentLength() < out.column) &&
 
                     ((out.column + (padding ? 3
                                             : 1) + tester.length) > lineLength))
@@ -331,7 +331,7 @@ final class AssignmentPrinter
                 }
                 else
                 {
-                    if (this.prefs.getBoolean(Keys.ALIGN_VAR_ASSIGNS,
+                    if (this.settings.getBoolean(Keys.ALIGN_VAR_ASSIGNS,
                                               Defaults.ALIGN_VAR_ASSIGNS))
                     {
                         JavaNode parent = ((JavaNode)node).getParent();
@@ -449,7 +449,7 @@ final class AssignmentPrinter
                 return true;
         }
 
-        if (this.prefs.getBoolean(Keys.CHUNKS_BY_COMMENTS,
+        if (this.settings.getBoolean(Keys.CHUNKS_BY_COMMENTS,
                                   Defaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
@@ -458,14 +458,14 @@ final class AssignmentPrinter
             }
         }
 
-        int maxLinesBetween = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+        int maxLinesBetween = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                                 Defaults.BLANK_LINES_KEEP_UP_TO);
 
         // it does not make sense to mark chunks by blank lines if no blank
         // lines will be kept
         if (maxLinesBetween > 0)
         {
-            if (this.prefs.getBoolean(Keys.CHUNKS_BY_BLANK_LINES,
+            if (this.settings.getBoolean(Keys.CHUNKS_BY_BLANK_LINES,
                                       Defaults.CHUNKS_BY_BLANK_LINES))
             {
                 JavaNode prev = n.getPreviousSibling();
@@ -761,7 +761,7 @@ SEARCH:
 
                         //boolean lastAssign = false;
                         TestNodeWriter tester = out.testers.get();
-                        boolean alignVariables = this.prefs.getBoolean(Keys.ALIGN_VAR_IDENTS,
+                        boolean alignVariables = this.settings.getBoolean(Keys.ALIGN_VAR_IDENTS,
                                                                        Defaults.ALIGN_VAR_IDENTS);
 SEARCH:
 

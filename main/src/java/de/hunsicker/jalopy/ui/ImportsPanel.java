@@ -1,41 +1,41 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.ImportPolicy;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.ImportPolicy;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.EmptyButtonGroup;
 import de.hunsicker.ui.util.SwingHelper;
 
@@ -77,13 +77,13 @@ import org.apache.oro.text.perl.Perl5Util;
 
 /**
  * A component that can be used to display/edit the Jalopy package import
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class ImportsPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Static variables/initializers ·········································
 
@@ -131,7 +131,7 @@ public class ImportsPanel
      *
      * @param container the parent container.
      */
-    ImportsPanel(PreferencesContainer container)
+    ImportsPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -146,20 +146,20 @@ public class ImportsPanel
     {
         if (_expandCheckBox.isSelected())
         {
-            this.prefs.put(Keys.IMPORT_POLICY, ImportPolicy.EXPAND.toString());
+            this.settings.put(Keys.IMPORT_POLICY, ImportPolicy.EXPAND.toString());
         }
         else if (_collapseCheckBox.isSelected())
         {
-            this.prefs.put(Keys.IMPORT_POLICY, ImportPolicy.COLLAPSE.toString());
+            this.settings.put(Keys.IMPORT_POLICY, ImportPolicy.COLLAPSE.toString());
         }
         else
         {
-            this.prefs.put(Keys.IMPORT_POLICY, ImportPolicy.DISABLED.toString());
+            this.settings.put(Keys.IMPORT_POLICY, ImportPolicy.DISABLED.toString());
         }
 
-        this.prefs.putBoolean(Keys.IMPORT_SORT,
+        this.settings.putBoolean(Keys.IMPORT_SORT,
                               _sortImportsCheckBox.isSelected());
-        this.prefs.put(Keys.IMPORT_GROUPING_DEPTH,
+        this.settings.put(Keys.IMPORT_GROUPING_DEPTH,
                        (String)_groupingDepthComboBox.getSelectedItem());
 
         List values = new ArrayList(_tableModel.getRowCount());
@@ -187,7 +187,7 @@ public class ImportsPanel
             values.add(entry);
         }
 
-        this.prefs.put(Keys.IMPORT_GROUPING, encodeGroupingInfo(values));
+        this.settings.put(Keys.IMPORT_GROUPING, encodeGroupingInfo(values));
     }
 
 
@@ -232,7 +232,7 @@ public class ImportsPanel
         sortPanel.setLayout(sortLayout);
         sortPanel.setBorder(BorderFactory.createTitledBorder("Sorting"));
         _sortImportsCheckBox = new JCheckBox("Sort imports",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.IMPORT_SORT,
                                                                    Defaults.IMPORT_SORT));
         _sortImportsCheckBox.addActionListener(this.trigger);
@@ -251,7 +251,7 @@ public class ImportsPanel
         Object[] depths ={ "0", "1", "2", "3", "4", "5" };
         NumberComboBoxPanel groupingDepthPanel = new NumberComboBoxPanel("Default grouping depth:",
                                                                          depths,
-                                                                         String.valueOf(this.prefs.getInt(
+                                                                         String.valueOf(this.settings.getInt(
                                                                                                           Keys.IMPORT_GROUPING_DEPTH,
                                                                                                           Defaults.IMPORT_GROUPING_DEPTH)));
         _groupingDepthComboBox = groupingDepthPanel.getComboBox();
@@ -262,7 +262,7 @@ public class ImportsPanel
         sortLayout.setConstraints(groupingDepthPanel, c);
         sortPanel.add(groupingDepthPanel);
 
-        List info = decodeGroupingInfo(this.prefs.get(Keys.IMPORT_GROUPING,
+        List info = decodeGroupingInfo(this.settings.get(Keys.IMPORT_GROUPING,
                                                       Defaults.IMPORT_GROUPING));
         int rows = info.size();
         Object[][] data = new Object[rows][2];
@@ -474,7 +474,7 @@ public class ImportsPanel
         c.insets.top = 0;
         c.insets.bottom = 0;
 
-        ImportPolicy importPolicy = ImportPolicy.valueOf(this.prefs.get(
+        ImportPolicy importPolicy = ImportPolicy.valueOf(this.settings.get(
                                                                         Keys.IMPORT_POLICY,
                                                                         Defaults.IMPORT_POLICY));
         _expandCheckBox = new JCheckBox("Expand on-demand imports",

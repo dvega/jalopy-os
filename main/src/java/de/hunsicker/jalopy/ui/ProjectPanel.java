@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -34,8 +34,8 @@
 package de.hunsicker.jalopy.ui;
 
 import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.prefs.Preferences;
-import de.hunsicker.jalopy.prefs.Project;
+import de.hunsicker.jalopy.storage.Convention;
+import de.hunsicker.jalopy.storage.Project;
 import de.hunsicker.ui.ErrorDialog;
 import de.hunsicker.ui.util.SwingHelper;
 
@@ -79,7 +79,7 @@ import javax.swing.event.ListSelectionListener;
  * @version $Revision$
  */
 public class ProjectPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -103,7 +103,7 @@ public class ProjectPanel
      *
      * @param container the parent container.
      */
-    ProjectPanel(PreferencesContainer container)
+    ProjectPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -144,7 +144,7 @@ public class ProjectPanel
     {
         try
         {
-            File file = new File(Preferences.getSettingsDirectory(),
+            File file = new File(Convention.getSettingsDirectory(),
                                  "project.dat");
 
             if (file.exists())
@@ -153,19 +153,19 @@ public class ProjectPanel
             }
             else
             {
-                return Preferences.getDefaultProject();
+                return Convention.getDefaultProject();
             }
         }
         catch (IOException ex)
         {
-            return Preferences.getDefaultProject();
+            return Convention.getDefaultProject();
         }
     }
 
 
     private Collection getProjectEntries()
     {
-        File directory = Preferences.getSettingsDirectory();
+        File directory = Convention.getSettingsDirectory();
         File[] files = directory.listFiles();
         Project activeProject = getActiveProject();
         List projects = new ArrayList(6);
@@ -174,9 +174,10 @@ public class ProjectPanel
         {
             if (files[i].isDirectory())
             {
+                File file = new File(files[i], "project.dat");
+
                 try
                 {
-                    File file = new File(files[i], "project.dat");
 
                     if (file.exists())
                     {
@@ -184,20 +185,22 @@ public class ProjectPanel
                         ProjectListEntry entry = new ProjectListEntry(project.getName(),
                                                                       project.getDescription(),
                                                                       project.equals(activeProject),
-                                                                      project.equals(Preferences.getDefaultProject()));
+                                                                      project.equals(Convention.getDefaultProject()));
                         projects.add(entry);
                     }
                 }
                 catch (IOException ex)
                 {
-                    ex.printStackTrace();
+                    // should only fail between incompatible versions, just
+                    // remove the file for now
+                    file.delete();
                 }
             }
         }
 
         if (projects.isEmpty())
         {
-            Project defaultProject = Preferences.getDefaultProject();
+            Project defaultProject = Convention.getDefaultProject();
             projects.add(new ProjectListEntry(defaultProject.getName(),
                                               defaultProject.getDescription(),
                                               true, true));
@@ -230,7 +233,7 @@ public class ProjectPanel
                     active = true;
                 }
 
-                Project defaultProject = Preferences.getDefaultProject();
+                Project defaultProject = Convention.getDefaultProject();
                 projects.add(new ProjectListEntry(defaultProject.getName(),
                                                   defaultProject.getDescription(),
                                                   active, true));
@@ -291,7 +294,7 @@ public class ProjectPanel
                     {
                         try
                         {
-                            Preferences.removeProject(new Project(entry.name,
+                            Convention.removeProject(new Project(entry.name,
                                                                   entry.description));
                         }
                         catch (IOException ex)
@@ -325,7 +328,7 @@ public class ProjectPanel
                     {
                         try
                         {
-                            Preferences.setProject(new Project(entry.name,
+                            Convention.setProject(new Project(entry.name,
                                                                entry.description));
                             setActive(entry);
 
@@ -553,7 +556,7 @@ public class ProjectPanel
 
                             try
                             {
-                                Preferences.addProject(new Project(name,
+                                Convention.addProject(new Project(name,
                                                                    description));
 
                                 Object selValue = getSelectedValue();

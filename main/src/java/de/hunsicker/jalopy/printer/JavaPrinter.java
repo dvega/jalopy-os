@@ -35,14 +35,14 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.Environment;
-import de.hunsicker.jalopy.History;
+import de.hunsicker.jalopy.storage.Environment;
+import de.hunsicker.jalopy.storage.History;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Key;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Key;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.util.StringHelper;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,15 +97,15 @@ final class JavaPrinter
         throws IOException
     {
         out.environment.set(Environment.Variable.CONVENTION.getName(),
-                            this.prefs.get(Keys.STYLE_NAME, Defaults.STYLE_NAME));
+                            this.settings.get(Keys.CONVENTION_NAME, Defaults.CONVENTION_NAME));
 
         try
         {
-            History.Policy historyPolicy = History.Policy.valueOf(this.prefs.get(
+            History.Policy historyPolicy = History.Policy.valueOf(this.settings.get(
                                                                                  Keys.HISTORY_POLICY,
                                                                                  Defaults.HISTORY_POLICY));
             boolean useCommentHistory = (historyPolicy == History.Policy.COMMENT);
-            boolean useHeader = this.prefs.getBoolean(Keys.HEADER, false);
+            boolean useHeader = this.settings.getBoolean(Keys.HEADER, false);
 
             if (useHeader || useCommentHistory)
             {
@@ -117,7 +117,7 @@ final class JavaPrinter
                 printHeader(out);
             }
 
-            boolean useFooter = this.prefs.getBoolean(Keys.FOOTER,
+            boolean useFooter = this.settings.getBoolean(Keys.FOOTER,
                                                       Defaults.FOOTER);
 
             if (useFooter)
@@ -145,9 +145,9 @@ final class JavaPrinter
 
 
     /**
-     * Returns the identify keys as stored in the user preferences.
+     * Returns the identify keys as stored in the code convention.
      *
-     * @param key user preferences key.
+     * @param key code convention key.
      *
      * @return identify keys. If no keys are stored, an empty array will be
      *         returned.
@@ -155,7 +155,7 @@ final class JavaPrinter
     private String[] getKeys(Key key)
     {
         List keys = new ArrayList();
-        String str = this.prefs.get(key, EMPTY_STRING);
+        String str = this.settings.get(key, EMPTY_STRING);
         String delim = "|";
 
         for (StringTokenizer tokens = new StringTokenizer(str, delim);
@@ -230,8 +230,7 @@ final class JavaPrinter
 
 
     /**
-     * Returns the text (as individual lines) as stored in the user
-     * preferences.
+     * Returns the text (as individual lines) as stored in the code convention.
      *
      * @param text header text.
      *
@@ -255,7 +254,7 @@ final class JavaPrinter
     private void printFooter(NodeWriter out)
         throws IOException
     {
-        String text = out.environment.interpolate(this.prefs.get(
+        String text = out.environment.interpolate(this.settings.get(
                                                                  Keys.FOOTER_TEXT,
                                                                  EMPTY_STRING));
         String[] footer = getLines(text);
@@ -275,7 +274,7 @@ final class JavaPrinter
                     break;
             }
 
-            out.printBlankLines(this.prefs.getInt(
+            out.printBlankLines(this.settings.getInt(
                                                   Keys.BLANK_LINES_BEFORE_FOOTER,
                                                   Defaults.BLANK_LINES_BEFORE_FOOTER));
 
@@ -289,7 +288,7 @@ final class JavaPrinter
                 }
             }
 
-            int blankLinesAfter = this.prefs.getInt(
+            int blankLinesAfter = this.settings.getInt(
                                                   Keys.BLANK_LINES_AFTER_FOOTER,
                                                   Defaults.BLANK_LINES_AFTER_FOOTER);
 
@@ -314,14 +313,14 @@ final class JavaPrinter
     private void printHeader(NodeWriter out)
         throws IOException
     {
-        String text = out.environment.interpolate(this.prefs.get(
+        String text = out.environment.interpolate(this.settings.get(
                                                                  Keys.HEADER_TEXT,
                                                                  EMPTY_STRING));
         String[] header = getLines(text);
 
         if (header.length > 0)
         {
-            out.printBlankLines(this.prefs.getInt(
+            out.printBlankLines(this.settings.getInt(
                                                   Keys.BLANK_LINES_BEFORE_HEADER,
                                                   Defaults.BLANK_LINES_BEFORE_HEADER));
 
@@ -331,7 +330,7 @@ final class JavaPrinter
                 out.printNewline();
             }
 
-            out.printBlankLines(this.prefs.getInt(
+            out.printBlankLines(this.settings.getInt(
                                                   Keys.BLANK_LINES_AFTER_HEADER,
                                                   Defaults.BLANK_LINES_AFTER_HEADER));
             out.last = JavaTokenTypes.ML_COMMENT;
@@ -354,7 +353,7 @@ final class JavaPrinter
         {
             String[] keys = getKeys(Keys.FOOTER_KEYS);
             int count = 0;
-            int smartModeLines = this.prefs.getInt(Keys.FOOTER_SMART_MODE_LINES, 0);
+            int smartModeLines = this.settings.getInt(Keys.FOOTER_SMART_MODE_LINES, 0);
             boolean smartMode = smartModeLines > 0;
 
             for (CommonHiddenStreamToken comment = rcurly.getHiddenAfter();
@@ -443,12 +442,12 @@ final class JavaPrinter
      */
     private void removeHeader(AST node)
     {
-        History.Policy historyPolicy = History.Policy.valueOf(this.prefs.get(
+        History.Policy historyPolicy = History.Policy.valueOf(this.settings.get(
                                                                              Keys.HISTORY_POLICY,
                                                                              Defaults.HISTORY_POLICY));
         JavaNode first = (JavaNode)node.getFirstChild();
         String[] keys = getKeys(Keys.HEADER_KEYS);
-        int smartModeLines = this.prefs.getInt(Keys.HEADER_SMART_MODE_LINES,
+        int smartModeLines = this.settings.getInt(Keys.HEADER_SMART_MODE_LINES,
                                                Defaults.HEADER_SMART_MODE_LINES);
         boolean smartMode = (smartModeLines > 0);
         int line = 0;

@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -87,7 +87,7 @@ final class ArrayTypePrinter
     {
         AST child = node.getFirstChild();
 
-        boolean bracketsAfterIdentifier = this.prefs.getBoolean(Keys.ARRAY_BRACKETS_AFTER_IDENT,
+        boolean bracketsAfterIdentifier = this.settings.getBoolean(Keys.ARRAY_BRACKETS_AFTER_IDENT,
                                                                 Defaults.ARRAY_BRACKETS_AFTER_IDENT);
 
         if (child != null)
@@ -98,7 +98,7 @@ final class ArrayTypePrinter
                 {
                     case JavaTokenTypes.EXPR :
 
-                        if (this.prefs.getBoolean(Keys.PADDING_BRACKETS,
+                        if (this.settings.getBoolean(Keys.PADDING_BRACKETS,
                                                   Defaults.PADDING_BRACKETS))
                         {
                             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
@@ -144,7 +144,7 @@ final class ArrayTypePrinter
                         }
                         else
                         {
-                            if (this.prefs.getBoolean(
+                            if (this.settings.getBoolean(
                                                       Keys.SPACE_BEFORE_BRACKETS_TYPES,
                                                       Defaults.SPACE_BEFORE_BRACKETS_TYPES))
                             {
@@ -163,7 +163,7 @@ final class ArrayTypePrinter
         }
         else // followed by an ARRAY_INIT
         {
-            if (this.prefs.getBoolean(Keys.SPACE_BEFORE_BRACKETS_TYPES,
+            if (this.settings.getBoolean(Keys.SPACE_BEFORE_BRACKETS_TYPES,
                                       Defaults.SPACE_BEFORE_BRACKETS_TYPES))
             {
                 out.print(SPACE_BRACKETS, JavaTokenTypes.ARRAY_DECLARATOR);
@@ -171,6 +171,12 @@ final class ArrayTypePrinter
             else
             {
                 out.print(BRACKETS, JavaTokenTypes.RBRACK);
+            }
+
+            if (this.settings.getBoolean(Keys.SPACE_BEFORE_BRACES,
+                                      Defaults.SPACE_BEFORE_BRACES))
+            {
+                out.print(SPACE, out.last);
             }
         }
 

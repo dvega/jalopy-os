@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -34,9 +34,9 @@
 package de.hunsicker.jalopy.ui;
 
 import de.hunsicker.jalopy.parser.JavaRecognizer;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.ui.ErrorDialog;
 import de.hunsicker.ui.util.SwingHelper;
 
@@ -69,13 +69,13 @@ import javax.swing.filechooser.FileFilter;
 
 /**
  * A component that can be used to display/edit the Jalopy general
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class GeneralPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Static variables/initializers ·········································
 
@@ -107,7 +107,7 @@ public class GeneralPanel
      *
      * @param container the parent container.
      */
-    GeneralPanel(PreferencesContainer container)
+    GeneralPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -120,9 +120,9 @@ public class GeneralPanel
      */
     public void store()
     {
-        this.prefs.put(Keys.STYLE_NAME, _nameTextField.getText());
-        this.prefs.put(Keys.STYLE_DESCRIPTION, _descTextField.getText());
-        this.prefs.putInt(Keys.SOURCE_VERSION,
+        this.settings.put(Keys.CONVENTION_NAME, _nameTextField.getText());
+        this.settings.put(Keys.CONVENTION_DESCRIPTION, _descTextField.getText());
+        this.settings.putInt(Keys.SOURCE_VERSION,
                           getSourceVersion((String)_compatComboBox.getSelectedItem()));
     }
 
@@ -195,8 +195,8 @@ public class GeneralPanel
         conventionLayout.setConstraints(nameLbl, c);
         conventionPanel.add(nameLbl, c);
         c.insets.right = 0;
-        _nameTextField = new JTextField(this.prefs.get(Keys.STYLE_NAME,
-                                                       Defaults.STYLE_NAME), 15);
+        _nameTextField = new JTextField(this.settings.get(Keys.CONVENTION_NAME,
+                                                       Defaults.CONVENTION_NAME), 15);
         SwingHelper.setConstraints(c, 1, 0, GridBagConstraints.REMAINDER, 1,
                                    1.0, 0.0, GridBagConstraints.NORTHWEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
@@ -212,8 +212,8 @@ public class GeneralPanel
         conventionLayout.setConstraints(descLbl, c);
         conventionPanel.add(descLbl);
         c.insets.right = 0;
-        _descTextField = new JTextField(this.prefs.get(Keys.STYLE_DESCRIPTION,
-                                                       Defaults.STYLE_DESCRIPTION),
+        _descTextField = new JTextField(this.settings.get(Keys.CONVENTION_DESCRIPTION,
+                                                       Defaults.CONVENTION_DESCRIPTION),
                                         15);
         SwingHelper.setConstraints(c, 1, 1, GridBagConstraints.REMAINDER, 1,
                                    1.0, 0.0, GridBagConstraints.NORTHWEST,
@@ -231,7 +231,7 @@ public class GeneralPanel
         c.insets.left = 0;
         c.insets.top = 0;
 
-        int version = this.prefs.getInt(Keys.SOURCE_VERSION,
+        int version = this.settings.getInt(Keys.SOURCE_VERSION,
                                         Defaults.SOURCE_VERSION);
         String[] items ={ JDK_1_3, JDK_1_4 };
         ComboBoxPanel compatComboBoxPanel = new ComboBoxPanel("Source compatibility: ",
@@ -280,17 +280,17 @@ public class GeneralPanel
                     if (owner instanceof Dialog)
                     {
                         dialog = new LocationDialog((Dialog)owner,
-                                                    "Import Preferences", "XXX",
+                                                    "Import code convention", "XXX",
                                                     LocationDialog.loadHistory(new File(
-                                                                                        Preferences.getProjectSettingsDirectory(),
+                                                                                        Convention.getProjectSettingsDirectory(),
                                                                                         "import.dat")));
                     }
                     else
                     {
                         dialog = new LocationDialog((Frame)owner,
-                                                    "Import Preferences", "XXX",
+                                                    "Import code convention", "XXX",
                                                     LocationDialog.loadHistory(new File(
-                                                                                        Preferences.getProjectSettingsDirectory(),
+                                                                                        Convention.getProjectSettingsDirectory(),
                                                                                         "import.dat")));
                     }
 
@@ -318,53 +318,53 @@ public class GeneralPanel
                                 FileFilter filter = dialog.getFileFilter();
 
                                 if ((filter == FILTER_JAL) ||
-                                    location.endsWith(Preferences.EXTENSION_JAL))
+                                    location.endsWith(Convention.EXTENSION_JAL))
                                 {
-                                    if (!location.endsWith(Preferences.EXTENSION_JAL))
+                                    if (!location.endsWith(Convention.EXTENSION_JAL))
                                     {
-                                        location += Preferences.EXTENSION_JAL;
+                                        location += Convention.EXTENSION_JAL;
                                     }
                                 }
                                 else if ((filter == FILTER_XML) ||
-                                         location.endsWith(Preferences.EXTENSION_XML))
+                                         location.endsWith(Convention.EXTENSION_XML))
                                 {
-                                    if (!location.endsWith(Preferences.EXTENSION_XML))
+                                    if (!location.endsWith(Convention.EXTENSION_XML))
                                     {
-                                        location += Preferences.EXTENSION_XML;
+                                        location += Convention.EXTENSION_XML;
                                     }
                                 }
 
                                 if (location.startsWith("http:"))
                                 {
-                                    GeneralPanel.this.prefs.importPreferences(new URL(location));
-                                    GeneralPanel.this.prefs.put(Keys.STYLE_LOCATION,
+                                    GeneralPanel.this.settings.importSettings(new URL(location));
+                                    GeneralPanel.this.settings.put(Keys.STYLE_LOCATION,
                                                                 location);
                                 }
                                 else if (location.startsWith("www."))
                                 {
-                                    GeneralPanel.this.prefs.importPreferences(new URL("http://" + location));
-                                    GeneralPanel.this.prefs.put(Keys.STYLE_LOCATION,
+                                    GeneralPanel.this.settings.importSettings(new URL("http://" + location));
+                                    GeneralPanel.this.settings.put(Keys.STYLE_LOCATION,
                                                                 "http://" +
                                                                 location);
                                 }
                                 else
                                 {
-                                    GeneralPanel.this.prefs.importPreferences(new File(location));
+                                    GeneralPanel.this.settings.importSettings(new File(location));
                                 }
 
                                 // update the fields
-                                _nameTextField.setText(GeneralPanel.this.prefs.get(
-                                                                                   Keys.STYLE_NAME,
-                                                                                   Defaults.STYLE_NAME));
-                                _descTextField.setText(GeneralPanel.this.prefs.get(
-                                                                                   Keys.STYLE_DESCRIPTION,
-                                                                                   Defaults.STYLE_DESCRIPTION));
+                                _nameTextField.setText(GeneralPanel.this.settings.get(
+                                                                                   Keys.CONVENTION_NAME,
+                                                                                   Defaults.CONVENTION_NAME));
+                                _descTextField.setText(GeneralPanel.this.settings.get(
+                                                                                   Keys.CONVENTION_DESCRIPTION,
+                                                                                   Defaults.CONVENTION_DESCRIPTION));
 
-                                int version = GeneralPanel.this.prefs.getInt(Keys.SOURCE_VERSION,
+                                int version = GeneralPanel.this.settings.getInt(Keys.SOURCE_VERSION,
                                                                              Defaults.SOURCE_VERSION);
                                 _compatComboBox.setSelectedItem(getSourceVersion(version));
                                 LocationDialog.storeHistory(new File(
-                                                                     Preferences.getProjectSettingsDirectory(),
+                                                                     Convention.getProjectSettingsDirectory(),
                                                                      "import.dat"),
                                                             dialog.getHistoryString());
 
@@ -376,7 +376,7 @@ public class GeneralPanel
                                 }
 
                                 // and finally store everything
-                                GeneralPanel.this.prefs.flush();
+                                GeneralPanel.this.settings.flush();
                                 dialog.dispose();
                             }
                             catch (Exception ex)
@@ -415,17 +415,17 @@ public class GeneralPanel
                     if (owner instanceof Dialog)
                     {
                         dialog = new LocationDialog((Dialog)owner,
-                                                    "Export Preferences", "XXX",
+                                                    "Export code convention", "XXX",
                                                     LocationDialog.loadHistory(new File(
-                                                                                        Preferences.getProjectSettingsDirectory(),
+                                                                                        Convention.getProjectSettingsDirectory(),
                                                                                         "export.dat")));
                     }
                     else
                     {
                         dialog = new LocationDialog((Frame)owner,
-                                                    "Export Preferences", "XXX",
+                                                    "Export code onvention", "XXX",
                                                     LocationDialog.loadHistory(new File(
-                                                                                        Preferences.getProjectSettingsDirectory(),
+                                                                                        Convention.getProjectSettingsDirectory(),
                                                                                         "export.dat")));
                     }
 
@@ -444,35 +444,35 @@ public class GeneralPanel
                                 try
                                 {
                                     LocationDialog.storeHistory(new File(
-                                                                         Preferences.getProjectSettingsDirectory(),
+                                                                         Convention.getProjectSettingsDirectory(),
                                                                          "export.dat"),
                                                                 dialog.getHistoryString());
 
                                     FileFilter filter = dialog.getFileFilter();
-                                    String extension = Preferences.EXTENSION_JAL;
+                                    String extension = Convention.EXTENSION_JAL;
 
                                     if ((filter == FILTER_JAL) ||
-                                        location.endsWith(Preferences.EXTENSION_JAL))
+                                        location.endsWith(Convention.EXTENSION_JAL))
                                     {
-                                        if (!location.endsWith(Preferences.EXTENSION_JAL))
+                                        if (!location.endsWith(Convention.EXTENSION_JAL))
                                         {
-                                            location += Preferences.EXTENSION_JAL;
+                                            location += Convention.EXTENSION_JAL;
                                         }
                                     }
                                     else if ((filter == FILTER_XML) ||
-                                             location.endsWith(Preferences.EXTENSION_XML))
+                                             location.endsWith(Convention.EXTENSION_XML))
                                     {
-                                        if (!location.endsWith(Preferences.EXTENSION_XML))
+                                        if (!location.endsWith(Convention.EXTENSION_XML))
                                         {
-                                            location += Preferences.EXTENSION_XML;
+                                            location += Convention.EXTENSION_XML;
                                         }
 
-                                        extension = Preferences.EXTENSION_XML;
+                                        extension = Convention.EXTENSION_XML;
                                     }
 
-                                    // export the preferences
+                                    // export the Convention
                                     OutputStream out = new FileOutputStream(new File(location));
-                                    GeneralPanel.this.prefs.exportPreferences(out,
+                                    GeneralPanel.this.settings.exportSettings(out,
                                                                               extension);
                                 }
                                 catch (Exception ex)
@@ -644,7 +644,7 @@ public class GeneralPanel
     {
         public String getDescription()
         {
-            return "Binary preferences (*.jal)";
+            return "Binary Code Convention (*.jal)";
         }
 
 
@@ -660,7 +660,7 @@ public class GeneralPanel
                 return true;
             }
 
-            if (f.getName().endsWith(Preferences.EXTENSION_JAL))
+            if (f.getName().endsWith(Convention.EXTENSION_JAL))
             {
                 return true;
             }
@@ -678,7 +678,7 @@ public class GeneralPanel
     {
         public String getDescription()
         {
-            return "XML preferences (*.xml)";
+            return "XML Code Convention (*.xml)";
         }
 
 
@@ -694,7 +694,7 @@ public class GeneralPanel
                 return true;
             }
 
-            if (f.getName().endsWith(Preferences.EXTENSION_XML))
+            if (f.getName().endsWith(Convention.EXTENSION_XML))
             {
                 return true;
             }

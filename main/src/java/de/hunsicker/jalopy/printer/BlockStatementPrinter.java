@@ -37,8 +37,8 @@ import de.hunsicker.antlr.*;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -74,7 +74,7 @@ abstract class BlockStatementPrinter
         if (out.last == JavaTokenTypes.LABELED_STAT)
         {
             // if no newline will be printed after labels
-            if (!this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
+            if (!this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LABEL,
                                        Defaults.LINE_WRAP_AFTER_LABEL))
             {
                 // and we find comments before we have to issue one extra so
@@ -122,10 +122,10 @@ abstract class BlockStatementPrinter
             out.state.paramLevel++;
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
 
-            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                Defaults.LINE_LENGTH);
 
-            if (this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
+            if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
                                       Defaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
                 if (!out.newline)
@@ -139,7 +139,7 @@ abstract class BlockStatementPrinter
                         printIndentation(out);
                         wrapped = true;
 
-                        if (this.prefs.getBoolean(Keys.LINE_WRAP_ALL,
+                        if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
                                                   Defaults.LINE_WRAP_ALL))
                         {
                             out.state.wrap = true;
@@ -153,7 +153,7 @@ abstract class BlockStatementPrinter
                     printIndentation(out);
                     wrapped = true;
 
-                    if (this.prefs.getBoolean(Keys.LINE_WRAP_ALL,
+                    if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
                                               Defaults.LINE_WRAP_ALL))
                     {
                         out.state.wrap = true;
@@ -172,7 +172,7 @@ abstract class BlockStatementPrinter
 
             if ((!wrapped) && ((tester.length + out.column) > lineLength))
             {
-                if (this.prefs.getBoolean(Keys.LINE_WRAP_ALL,
+                if (this.settings.getBoolean(Keys.LINE_WRAP_ALL,
                                           Defaults.LINE_WRAP_ALL))
                 {
                     out.state.wrap = true;
@@ -185,7 +185,7 @@ abstract class BlockStatementPrinter
         }
 
         // use continuation indentation within the parentheses?
-        out.continuation = this.prefs.getBoolean(Keys.INDENT_CONTINUATION_IF,
+        out.continuation = this.settings.getBoolean(Keys.INDENT_CONTINUATION_IF,
                                                  Defaults.INDENT_CONTINUATION_IF);
 
         PrinterFactory.create(expr).print(expr, out);
@@ -194,7 +194,7 @@ abstract class BlockStatementPrinter
         out.state.wrap = false;
 
         if (wrapped &&
-            this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                                   Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
@@ -202,7 +202,7 @@ abstract class BlockStatementPrinter
                 out.printNewline();
             }
 
-            if (this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
             }
@@ -217,7 +217,7 @@ abstract class BlockStatementPrinter
         AST body = rparen.getNextSibling();
 
         boolean hasBraces = (body.getType() == JavaTokenTypes.SLIST);
-        boolean leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                          Defaults.BRACE_NEWLINE_LEFT);
 
         CommonHiddenStreamToken pendingComment = null;

@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -35,11 +35,11 @@ package de.hunsicker.jalopy.parser;
 
 import de.hunsicker.antlr.ASTPair;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.ImportPolicy;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.ImportPolicy;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.util.StringHelper;
 
 import java.util.ArrayList;
@@ -162,13 +162,13 @@ final class ImportTransformation
     {
         try
         {
-            Preferences prefs = Preferences.getInstance();
-            ImportPolicy importPolicy = ImportPolicy.valueOf(prefs.get(
+            Convention settings = Convention.getInstance();
+            ImportPolicy importPolicy = ImportPolicy.valueOf(settings.get(
                                                                        Keys.IMPORT_POLICY,
                                                                        Defaults.IMPORT_POLICY));
             boolean expand = importPolicy == ImportPolicy.EXPAND;
             boolean collapse = importPolicy == ImportPolicy.COLLAPSE;
-            _sortImports = prefs.getBoolean(Keys.IMPORT_SORT,
+            _sortImports = settings.getBoolean(Keys.IMPORT_SORT,
                                             Defaults.IMPORT_SORT);
 
             // we only can expand/collapse if our repository is available
@@ -205,7 +205,7 @@ final class ImportTransformation
 
     /**
      * Callback that will be called for every IMPORT node found.
-     * 
+     *
      * <p>
      * Adds the node to one of our collections (either single-type or
      * on-demand).
@@ -908,8 +908,8 @@ final class ImportTransformation
             return;
         }
 
-        Preferences prefs = Preferences.getInstance();
-        ImportPolicy importPolicy = ImportPolicy.valueOf(Preferences.getInstance()
+        Convention settings = Convention.getInstance();
+        ImportPolicy importPolicy = ImportPolicy.valueOf(Convention.getInstance()
                                                                     .get(Keys.IMPORT_POLICY,
                                                                          Defaults.IMPORT_POLICY));
         boolean report = importPolicy == ImportPolicy.EXPAND;
@@ -1025,7 +1025,7 @@ final class ImportTransformation
 
     /**
      * Tries to expand all on-demand import declarations.
-     * 
+     *
      * <p>
      * Duplicate and obsolete import declarations will be removed.
      * </p>
@@ -1168,7 +1168,7 @@ final class ImportTransformation
                             }
                         }
 
-CHECK: 
+CHECK:
 
                         // inner class check (this sucks)
                         for (int k = 0, s = _qualIdents.size(); k < s; k++)
@@ -1258,7 +1258,7 @@ CHECK:
             {
                 String path = StringHelper.getPackageName(node.text);
                 boolean furtherCheck = true;
-CHECK: 
+CHECK:
 
                 // second check: inner classes
                 // we take every given qualified identifier
@@ -1349,7 +1349,7 @@ CHECK:
         // sort lexicographically
         if (_sortImports)
         {
-            List info = decodeGroupingInfo(Preferences.getInstance()
+            List info = decodeGroupingInfo(Convention.getInstance()
                                                       .get(Keys.IMPORT_GROUPING,
                                                            Defaults.IMPORT_GROUPING));
             COMP_IMPORT.identifiers = info;

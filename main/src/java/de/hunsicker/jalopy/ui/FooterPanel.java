@@ -33,13 +33,13 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Key;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Key;
+import de.hunsicker.jalopy.storage.Keys;
 
 
 /**
- * A component that can be used to display/edit the Jalopy footer preferences.
+ * A component that can be used to display/edit the Jalopy footer settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -63,7 +63,7 @@ public class FooterPanel
      *
      * @param container the parent container.
      */
-    FooterPanel(PreferencesContainer container)
+    FooterPanel(SettingsContainer container)
     {
         super(container);
     }

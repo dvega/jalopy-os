@@ -40,10 +40,10 @@ import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.Node;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.util.StringHelper;
 
 import java.io.IOException;
@@ -133,8 +133,8 @@ class AbstractPrinter
     static final String WHILE_SPACE = "while ";
     static final String QUESTION = "?";
 
-    /** The user preferences. */
-    protected static final Preferences prefs = Preferences.getInstance();
+    /** The code convention settings. */
+    protected static final Convention settings = Convention.getInstance();
 
     /** Indicates that <strong>no</strong> whitespace should be printed. */
     private static final boolean WHITESPACE_NO = false;
@@ -209,7 +209,7 @@ class AbstractPrinter
 
                 out.print(out.getString(length), JavaTokenTypes.WS);
             }
-            else if (this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) && out.state.markers.isMarked()) // deep indentation
+            else if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) && out.state.markers.isMarked()) // deep indentation
             {
                 int indentLength = out.getIndentLength();
                 marker = out.state.markers.getLast();
@@ -243,7 +243,7 @@ class AbstractPrinter
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            if (!this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (!this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
             {
                 /**
                  * @todo implement custom indentation
@@ -339,7 +339,7 @@ class AbstractPrinter
      */
     int getOriginalBlankLines(JavaNode node)
     {
-        int keepLinesUpTo = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+        int keepLinesUpTo = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                               Defaults.BLANK_LINES_KEEP_UP_TO);
 
         if (keepLinesUpTo <= 0)
@@ -415,7 +415,7 @@ class AbstractPrinter
 
             case JavaTokenTypes.RCURLY :
 
-                int blankLinesBeforeRcurly = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                int blankLinesBeforeRcurly = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                                                Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                 if (blankLinesBeforeRcurly != -1)
@@ -609,7 +609,7 @@ class AbstractPrinter
                 /**
                  * @todo does this stuff still work in 1.0b9?
                  */
-                if (this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+                if (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                           Defaults.BRACE_NEWLINE_LEFT))
                 {
                     // print directly after, newlines are
@@ -695,7 +695,7 @@ class AbstractPrinter
         {
             // store the position where the first comment starts
             int offset = out.column - 1 +
-                         this.prefs.getInt(Keys.INDENT_SIZE_COMMENT_ENDLINE,
+                         this.settings.getInt(Keys.INDENT_SIZE_COMMENT_ENDLINE,
                                            Defaults.INDENT_SIZE_COMMENT_ENDLINE);
             CommonHiddenStreamToken firstComment = (CommonHiddenStreamToken)n.getHiddenAfter();
 
@@ -823,7 +823,7 @@ class AbstractPrinter
             return false;
         }
 
-        int linesToKeep = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+        int linesToKeep = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                             Defaults.BLANK_LINES_KEEP_UP_TO);
         boolean keepLines = linesToKeep > -1;
 
@@ -918,7 +918,7 @@ class AbstractPrinter
 
         if (canHaveBlankLinesBefore(node))
         {
-            // first set the value as specified in the preferences
+            // first set the value as specified in the code convention
             switch (node.getType())
             {
                 case JavaTokenTypes.ASSIGN :
@@ -962,7 +962,7 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_DECLARATION,
+                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_DECLARATION,
                                                        Defaults.BLANK_LINES_BEFORE_DECLARATION);
 
                             break;
@@ -983,11 +983,11 @@ class AbstractPrinter
                             case JavaTokenTypes.CTOR_DEF :
                             case JavaTokenTypes.INSTANCE_INIT :
                             case JavaTokenTypes.STATIC_INIT :
-                                return this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                                return this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                                          Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                             default :
-                                result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+                                result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                                            Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
 
                                 break;
@@ -1005,7 +1005,7 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
+                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
                                                        Defaults.BLANK_LINES_BEFORE_BLOCK);
 
                             break;
@@ -1033,7 +1033,7 @@ class AbstractPrinter
                             break;
 
                         default :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
+                            result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
                                                        Defaults.BLANK_LINES_BEFORE_BLOCK);
 
                             break;
@@ -1043,7 +1043,7 @@ class AbstractPrinter
 
                 case JavaTokenTypes.LITERAL_case :
                 case JavaTokenTypes.LITERAL_default :
-                    result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
+                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
                                                Defaults.BLANK_LINES_BEFORE_CASE_BLOCK);
 
                     break;
@@ -1051,7 +1051,7 @@ class AbstractPrinter
                 case JavaTokenTypes.LITERAL_return :
                 case JavaTokenTypes.LITERAL_break :
                 case JavaTokenTypes.LITERAL_continue :
-                    result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_CONTROL,
+                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_CONTROL,
                                                Defaults.BLANK_LINES_BEFORE_CONTROL);
 
                     break;
@@ -1076,7 +1076,7 @@ class AbstractPrinter
                                     break;
 
                                 default : // means freestanding block
-                                    result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
+                                    result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BLOCK,
                                                                Defaults.BLANK_LINES_BEFORE_BLOCK);
 
                                     break;
@@ -1091,7 +1091,7 @@ class AbstractPrinter
                 case JavaTokenTypes.LITERAL_catch :
                 case JavaTokenTypes.LITERAL_finally :
 
-                    if (!this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+                    if (!this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                Defaults.BRACE_NEWLINE_RIGHT))
                     {
                         result--;
@@ -1128,7 +1128,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.METHOD_DEF :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_METHOD,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_METHOD,
                                                        Defaults.BLANK_LINES_AFTER_METHOD);
 
                             break;
@@ -1157,7 +1157,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.CTOR_DEF :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_METHOD,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_METHOD,
                                                        Defaults.BLANK_LINES_AFTER_METHOD);
 
                             break;
@@ -1198,7 +1198,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.CLASS_DEF :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_CLASS,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_CLASS,
                                                        Defaults.BLANK_LINES_AFTER_CLASS);
 
                             /**
@@ -1213,7 +1213,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.IMPORT :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
                                                        Defaults.BLANK_LINES_AFTER_IMPORT);
 
                             break;
@@ -1254,7 +1254,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.INTERFACE_DEF :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_INTERFACE,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_INTERFACE,
                                                        Defaults.BLANK_LINES_AFTER_INTERFACE);
 
                             /**
@@ -1269,7 +1269,7 @@ class AbstractPrinter
                             break;
 
                         case JavaTokenTypes.IMPORT :
-                            result = this.prefs.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
+                            result = this.settings.getInt(Keys.BLANK_LINES_AFTER_IMPORT,
                                                        Defaults.BLANK_LINES_AFTER_IMPORT);
 
                             break;
@@ -1337,7 +1337,7 @@ class AbstractPrinter
 
                     default :
 
-                        int blankLinesAfterBlock = this.prefs.getInt(Keys.BLANK_LINES_AFTER_BLOCK,
+                        int blankLinesAfterBlock = this.settings.getInt(Keys.BLANK_LINES_AFTER_BLOCK,
                                                                      Defaults.BLANK_LINES_AFTER_BLOCK);
 
                         if (blankLinesAfterBlock > result)
@@ -1346,7 +1346,7 @@ class AbstractPrinter
                         }
 
                         /*
-                           if (!this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+                           if (!this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                       Defaults.BRACE_NEWLINE_RIGHT))
                            {
                                switch (node.getPreviousSibling().getType())
@@ -1399,7 +1399,7 @@ class AbstractPrinter
 
                     default :
 
-                        int blankLinesAfterDeclaration = this.prefs.getInt(Keys.BLANK_LINES_AFTER_DECLARATION,
+                        int blankLinesAfterDeclaration = this.settings.getInt(Keys.BLANK_LINES_AFTER_DECLARATION,
                                                                            Defaults.BLANK_LINES_AFTER_DECLARATION);
 
                         if (blankLinesAfterDeclaration > result)
@@ -1418,7 +1418,7 @@ class AbstractPrinter
             case JavaTokenTypes.LITERAL_do :
             case JavaTokenTypes.LCURLY :
 
-                int blankLinesAfterOpenCurly = this.prefs.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
+                int blankLinesAfterOpenCurly = this.settings.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
                                                                  Defaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
                 if (blankLinesAfterOpenCurly > -1)
@@ -1484,7 +1484,7 @@ class AbstractPrinter
 
             case JavaTokenTypes.LCURLY :
 
-                int blankLinesAfterOpenCurly = this.prefs.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
+                int blankLinesAfterOpenCurly = this.settings.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
                                                                  Defaults.BLANK_LINES_AFTER_BRACE_LEFT);
 
                 if (blankLinesAfterOpenCurly > -1)
@@ -1510,7 +1510,7 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
+                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                                                    Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
                         break;
@@ -1519,7 +1519,7 @@ class AbstractPrinter
                 break;
 
             case JavaTokenTypes.SPECIAL_COMMENT :
-                result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
+                result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                                            Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE);
 
                 break;
@@ -1534,7 +1534,7 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
+                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                                                    Defaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE);
 
                         break;
@@ -1552,7 +1552,7 @@ class AbstractPrinter
                         break;
 
                     default :
-                        result = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
+                        result = this.settings.getInt(Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                                                    Defaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC);
 
                         break;
@@ -1582,7 +1582,7 @@ class AbstractPrinter
         {
             case JavaTokenTypes.PACKAGE_DEF :
 
-                int linesAfterPackage = this.prefs.getInt(Keys.BLANK_LINES_AFTER_PACKAGE,
+                int linesAfterPackage = this.settings.getInt(Keys.BLANK_LINES_AFTER_PACKAGE,
                                                           Defaults.BLANK_LINES_AFTER_PACKAGE);
 
                 if (result > linesAfterPackage)
@@ -1597,7 +1597,7 @@ class AbstractPrinter
                 break;
         }
 
-        int keepLinesUpTo = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+        int keepLinesUpTo = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                               Defaults.BLANK_LINES_KEEP_UP_TO);
 
         int l = comment.getLine() - previous.getEndLine() - 1;
@@ -1684,7 +1684,7 @@ class AbstractPrinter
 
     /**
      * Outputs a number of blank lines before the given comment (according to
-     * the user preferences).
+     * the code convention).
      *
      * @param node node to print blank lines for.
      * @param comment the first comment of the given node.
@@ -2002,7 +2002,7 @@ class AbstractPrinter
         int indent = 0;
 
         if ((comment.getColumn() == 1) &&
-            (!this.prefs.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
+            (!this.settings.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
                                     Defaults.INDENT_FIRST_COLUMN_COMMENT)))
         {
             // we should retain first column comments, so we have to
@@ -2014,7 +2014,7 @@ class AbstractPrinter
 
         if (whitespaceBefore)
         {
-            out.print(out.getString(this.prefs.getInt(
+            out.print(out.getString(this.settings.getInt(
                                                       Keys.INDENT_SIZE_COMMENT_ENDLINE,
                                                       Defaults.INDENT_SIZE_COMMENT_ENDLINE)),
                       JavaTokenTypes.WS);
@@ -2104,7 +2104,7 @@ class AbstractPrinter
 
         if ((comment.getType() == JavaTokenTypes.SPECIAL_COMMENT) ||
             ((comment.getColumn() == 1) &&
-             (!this.prefs.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
+             (!this.settings.getBoolean(Keys.INDENT_FIRST_COLUMN_COMMENT,
                                      Defaults.INDENT_FIRST_COLUMN_COMMENT))))
         {
             // we should retain indentation, so we have to change the
@@ -2197,7 +2197,7 @@ class AbstractPrinter
         throws IOException
     {
         String[] lines = null;
-        boolean format = this.prefs.getBoolean(Keys.COMMENT_FORMAT_MULTI_LINE,
+        boolean format = this.settings.getBoolean(Keys.COMMENT_FORMAT_MULTI_LINE,
                                                Defaults.COMMENT_FORMAT_MULTI_LINE);
 
         // we always split the comment into several lines in order to indent
@@ -2283,7 +2283,7 @@ class AbstractPrinter
             case JavaTokenTypes.SPECIAL_COMMENT :
             case JavaTokenTypes.SEPARATOR_COMMENT :
 
-                if (this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+                if (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                           Defaults.BRACE_NEWLINE_LEFT))
                 {
                     return (!NodeHelper.isBlockNext(node));

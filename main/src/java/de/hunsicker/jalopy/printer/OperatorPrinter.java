@@ -38,8 +38,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -94,7 +94,7 @@ extends AbstractPrinter
              */
             int offset = out.column + length;
 
-            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                Defaults.LINE_LENGTH);
 
             if ((out.column >= lineLength) || (offset > lineLength))

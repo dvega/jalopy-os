@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -92,7 +92,7 @@ final class ForPrinter
     {
         super.print(node, out);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                   Defaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(FOR_SPACE, JavaTokenTypes.LITERAL_for);
@@ -116,9 +116,9 @@ final class ForPrinter
         AST secondSemi = forCond.getNextSibling();
         AST forIter = secondSemi.getNextSibling();
 
-        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
-        boolean deepIndent = this.prefs.getBoolean(Keys.INDENT_DEEP,
+        boolean deepIndent = this.settings.getBoolean(Keys.INDENT_DEEP,
                                                    Defaults.INDENT_DEEP);
         boolean firstWrap = false;
 
@@ -127,7 +127,7 @@ final class ForPrinter
             out.state.paramLevel++;
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
 
-            if (this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
+            if (this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
                                       Defaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
                 TestNodeWriter tester = out.testers.get();
@@ -164,9 +164,9 @@ final class ForPrinter
 
         printForInit(forInit, firstWrap, out);
 
-        boolean wrapAll = this.prefs.getBoolean(Keys.LINE_WRAP_ALL, Defaults.LINE_WRAP_ALL);
+        boolean wrapAll = this.settings.getBoolean(Keys.LINE_WRAP_ALL, Defaults.LINE_WRAP_ALL);
 
-        out.continuation = this.prefs.getBoolean(Keys.INDENT_CONTINUATION_IF,
+        out.continuation = this.settings.getBoolean(Keys.INDENT_CONTINUATION_IF,
                                          Defaults.INDENT_CONTINUATION_IF);
 
         boolean secondWrap = false;
@@ -228,7 +228,7 @@ final class ForPrinter
         out.continuation = false;
 
         if ((firstWrap || secondWrap || thirdWrap)  &&
-            this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                                   Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
@@ -271,10 +271,10 @@ final class ForPrinter
             default :
 
                 // insert braces manually
-                if (this.prefs.getBoolean(Keys.BRACE_INSERT_FOR,
+                if (this.settings.getBoolean(Keys.BRACE_INSERT_FOR,
                                           Defaults.BRACE_INSERT_FOR))
                 {
-                    out.printLeftBrace(this.prefs.getBoolean(
+                    out.printLeftBrace(this.settings.getBoolean(
                                                              Keys.BRACE_NEWLINE_LEFT,
                                                              Defaults.BRACE_NEWLINE_LEFT),
                                        NodeWriter.NEWLINE_YES);
@@ -322,7 +322,7 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-                 this.prefs.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
+                 this.settings.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
                                        Defaults.SPACE_AFTER_SEMICOLON))
         {
             out.print(SPACE, JavaTokenTypes.FOR_INIT);
@@ -394,13 +394,13 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-                 this.prefs.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
+                 this.settings.getBoolean(Keys.SPACE_AFTER_SEMICOLON,
                                        Defaults.SPACE_AFTER_SEMICOLON))
         {
             out.print(SPACE, JavaTokenTypes.FOR_INIT);
         }
 
-        boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                         Defaults.SPACE_AFTER_SEMICOLON);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
@@ -451,7 +451,7 @@ final class ForPrinter
             // one or more assignment expressions
             case JavaTokenTypes.ELIST :
 
-                boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+                boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                                 Defaults.SPACE_AFTER_COMMA);
                 String comma = spaceAfterComma ? COMMA_SPACE
                                                : COMMA;
@@ -531,7 +531,7 @@ final class ForPrinter
         throws IOException
     {
         AST child = node.getFirstChild();
-        boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                         Defaults.SPACE_AFTER_COMMA);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;

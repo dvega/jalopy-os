@@ -37,8 +37,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -107,7 +107,7 @@ final class ParametersPrinter
             // a method or ctor declaration
             case JavaTokenTypes.PARAMETERS :
 
-                boolean newlineAfter = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
+                boolean newlineAfter = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
                                                              Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF);
 
                 /**
@@ -115,7 +115,7 @@ final class ParametersPrinter
                  */
                 if (out.mode == NodeWriter.MODE_DEFAULT)
                 {
-                    boolean align = this.prefs.getBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
+                    boolean align = this.settings.getBoolean(Keys.ALIGN_PARAMS_METHOD_DEF,
                                                           Defaults.ALIGN_PARAMS_METHOD_DEF);
 
                     // determine if all parameters will be wrapped:
@@ -135,7 +135,7 @@ final class ParametersPrinter
                                 TestNodeWriter tester = out.testers.get();
                                 PrinterFactory.create(expr).print(expr, tester);
 
-                                int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+                                int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                                    Defaults.LINE_LENGTH);
 
                                 // ... or necessary
@@ -180,7 +180,7 @@ final class ParametersPrinter
 
         // wrap and align, if necessary
         if (wrapped &&
-            this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
+            this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                                   Defaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
             if (!out.newline)
@@ -188,7 +188,7 @@ final class ParametersPrinter
                 out.printNewline();
             }
 
-            if (this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+            if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
             }
@@ -481,27 +481,27 @@ SEARCH:
             return false;
         }
 
-        boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
-        boolean deepIndent = this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP);
-        int deepIndentSize = this.prefs.getInt(Keys.INDENT_SIZE_DEEP,
+        boolean deepIndent = this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP);
+        int deepIndentSize = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
                                            Defaults.INDENT_SIZE_DEEP);
-        boolean alignMethodCall = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
+        boolean alignMethodCall = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL,
                                                         Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL);
-        boolean alignMethodCallIfNested = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED,
+        boolean alignMethodCallIfNested = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED,
                                                                 Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_CALL_IF_NESTED);
-        boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                         Defaults.SPACE_AFTER_COMMA);
-        boolean preferWrapAfterLeftParen = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
+        boolean preferWrapAfterLeftParen = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_LEFT_PAREN,
                                                                  Defaults.LINE_WRAP_AFTER_LEFT_PAREN);
 
-        boolean wrapIfFirst = this.prefs.getBoolean(Keys.LINE_WRAP_ALL,
+        boolean wrapIfFirst = this.settings.getBoolean(Keys.LINE_WRAP_ALL,
                                                     Defaults.LINE_WRAP_ALL);
 
-        /*int indentation = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
+        /*int indentation = this.settings.getInt(Keys.INDENT_SIZE_PARAMETERS,
                                             Defaults.INDENT_SIZE_PARAMETERS);*/
         boolean result = false;
         int paramIndex = 0;
@@ -1101,14 +1101,14 @@ SEARCH:
 
         /*if ((indentation == -1)
             || ((type == JavaTokenTypes.ELIST)
-                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
+                && !this.settings.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                       Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
         if (((type == JavaTokenTypes.ELIST)
-                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
+                && !this.settings.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                       Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
         {*/
 
-        if (!this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) || !last)
+        if (!this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) || !last)
         {
             switch (out.state.paramLevel)
             {

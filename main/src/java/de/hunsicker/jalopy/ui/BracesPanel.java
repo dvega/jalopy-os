@@ -1,40 +1,40 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.EmptyButtonGroup;
 import de.hunsicker.ui.util.SwingHelper;
 
@@ -58,13 +58,13 @@ import javax.swing.event.ChangeListener;
 
 /**
  * A component that can be used to display/edit the Jalopy general brace
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class BracesPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Static variables/initializers ·········································
 
@@ -125,7 +125,7 @@ public class BracesPanel
      *
      * @param container the parent container.
      */
-    BracesPanel(PreferencesContainer container)
+    BracesPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -154,41 +154,41 @@ public class BracesPanel
      */
     public void store()
     {
-        this.prefs.putBoolean(Keys.BRACE_EMPTY_CUDDLE,
+        this.settings.putBoolean(Keys.BRACE_EMPTY_CUDDLE,
                               _cuddleEmptyBracesCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_EMPTY_INSERT_STATEMENT,
+        this.settings.putBoolean(Keys.BRACE_EMPTY_INSERT_STATEMENT,
                               _insertEmptyStatementCheckBox.isSelected());
-        this.prefs.put(Keys.INDENT_SIZE_BRACE_CUDDLED,
+        this.settings.put(Keys.INDENT_SIZE_BRACE_CUDDLED,
                        (String)_cuddleEmptyBracesComboBox.getSelectedItem());
-        this.prefs.putBoolean(Keys.BRACE_INSERT_IF_ELSE,
+        this.settings.putBoolean(Keys.BRACE_INSERT_IF_ELSE,
                               _insertIfElseCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_INSERT_FOR,
+        this.settings.putBoolean(Keys.BRACE_INSERT_FOR,
                               _insertForCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_INSERT_DO_WHILE,
+        this.settings.putBoolean(Keys.BRACE_INSERT_DO_WHILE,
                               _insertDoWhileCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_INSERT_WHILE,
+        this.settings.putBoolean(Keys.BRACE_INSERT_WHILE,
                               _insertWhileCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_REMOVE_IF_ELSE,
+        this.settings.putBoolean(Keys.BRACE_REMOVE_IF_ELSE,
                               _removeIfElseCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_REMOVE_FOR,
+        this.settings.putBoolean(Keys.BRACE_REMOVE_FOR,
                               _removeForCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_REMOVE_DO_WHILE,
+        this.settings.putBoolean(Keys.BRACE_REMOVE_DO_WHILE,
                               _removeDoWhileCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_REMOVE_WHILE,
+        this.settings.putBoolean(Keys.BRACE_REMOVE_WHILE,
                               _removeWhileCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_REMOVE_BLOCK,
+        this.settings.putBoolean(Keys.BRACE_REMOVE_BLOCK,
                               _removeBlockCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_NEWLINE_LEFT,
+        this.settings.putBoolean(Keys.BRACE_NEWLINE_LEFT,
                               _newlineLeftCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.BRACE_NEWLINE_RIGHT,
+        this.settings.putBoolean(Keys.BRACE_NEWLINE_RIGHT,
                               _newlineRightCheckBox.isSelected());
-        this.prefs.put(Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
+        this.settings.put(Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                        (String)_indentAfterRightBraceComboBox.getSelectedItem());
-        this.prefs.put(Keys.INDENT_SIZE_BRACE_RIGHT,
+        this.settings.put(Keys.INDENT_SIZE_BRACE_RIGHT,
                        (String)_indentRightBraceComboBox.getSelectedItem());
-        this.prefs.put(Keys.INDENT_SIZE_BRACE_LEFT,
+        this.settings.put(Keys.INDENT_SIZE_BRACE_LEFT,
                        (String)_indentLeftBraceComboBox.getSelectedItem());
-        this.prefs.putBoolean(Keys.BRACE_TREAT_DIFFERENT,
+        this.settings.putBoolean(Keys.BRACE_TREAT_DIFFERENT,
                               _treatDifferentCheckBox.isSelected());
     }
 
@@ -317,12 +317,12 @@ public class BracesPanel
     {
         Object[] items ={ "0", "1", "2", "3", "4", "5" };
         ComboBoxPanelCheckBox emptyBraces = new NumberComboBoxPanelCheckBox("Cuddle braces",
-                                                                            this.prefs.getBoolean(
+                                                                            this.settings.getBoolean(
                                                                                                   Keys.BRACE_EMPTY_CUDDLE,
                                                                                                   Defaults.BRACE_EMPTY_CUDDLE),
                                                                             "Space before:",
                                                                             items,
-                                                                            this.prefs.get(
+                                                                            this.settings.get(
                                                                                            Keys.INDENT_SIZE_BRACE_CUDDLED,
                                                                                            String.valueOf(Defaults.INDENT_SIZE_BRACE_CUDDLED)));
         _cuddleEmptyBracesCheckBox = emptyBraces.getCheckBox();
@@ -339,7 +339,7 @@ public class BracesPanel
                                                                 BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         emptyPanel.setLayout(emptyPanelLayout);
         _insertEmptyStatementCheckBox = new JCheckBox("Insert empty statement",
-                                                      this.prefs.getBoolean(
+                                                      this.settings.getBoolean(
                                                                             Keys.BRACE_EMPTY_INSERT_STATEMENT,
                                                                             Defaults.BRACE_EMPTY_INSERT_STATEMENT));
         _insertEmptyStatementCheckBox.addActionListener(this.trigger);
@@ -362,25 +362,25 @@ public class BracesPanel
         insertBracesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         insertBracesPanel.setBorder(BorderFactory.createTitledBorder("Insert braces"));
         _insertIfElseCheckBox = new JCheckBox("if...else",
-                                              this.prefs.getBoolean(
+                                              this.settings.getBoolean(
                                                                     Keys.BRACE_INSERT_IF_ELSE,
                                                                     Defaults.BRACE_INSERT_IF_ELSE));
         _insertIfElseCheckBox.addActionListener(this.trigger);
         insertBracesPanel.add(_insertIfElseCheckBox);
         _insertForCheckBox = new JCheckBox("for",
-                                           this.prefs.getBoolean(
+                                           this.settings.getBoolean(
                                                                  Keys.BRACE_INSERT_FOR,
                                                                  Defaults.BRACE_INSERT_FOR));
         _insertForCheckBox.addActionListener(this.trigger);
         insertBracesPanel.add(_insertForCheckBox);
         _insertWhileCheckBox = new JCheckBox("while",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.BRACE_INSERT_WHILE,
                                                                    Defaults.BRACE_INSERT_WHILE));
         _insertWhileCheckBox.addActionListener(this.trigger);
         insertBracesPanel.add(_insertWhileCheckBox);
         _insertDoWhileCheckBox = new JCheckBox("do...while",
-                                               this.prefs.getBoolean(
+                                               this.settings.getBoolean(
                                                                      Keys.BRACE_INSERT_DO_WHILE,
                                                                      Defaults.BRACE_INSERT_DO_WHILE));
         _insertDoWhileCheckBox.addActionListener(this.trigger);
@@ -390,31 +390,31 @@ public class BracesPanel
         removeBracesPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
         removeBracesPanel.setBorder(BorderFactory.createTitledBorder("Remove braces"));
         _removeIfElseCheckBox = new JCheckBox("if...else",
-                                              this.prefs.getBoolean(
+                                              this.settings.getBoolean(
                                                                     Keys.BRACE_REMOVE_IF_ELSE,
                                                                     Defaults.BRACE_REMOVE_IF_ELSE));
         _removeIfElseCheckBox.addActionListener(this.trigger);
         removeBracesPanel.add(_removeIfElseCheckBox);
         _removeForCheckBox = new JCheckBox("for",
-                                           this.prefs.getBoolean(
+                                           this.settings.getBoolean(
                                                                  Keys.BRACE_REMOVE_FOR,
                                                                  Defaults.BRACE_REMOVE_FOR));
         _removeForCheckBox.addActionListener(this.trigger);
         removeBracesPanel.add(_removeForCheckBox);
         _removeWhileCheckBox = new JCheckBox("while",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.BRACE_REMOVE_WHILE,
                                                                    Defaults.BRACE_REMOVE_WHILE));
         _removeWhileCheckBox.addActionListener(this.trigger);
         removeBracesPanel.add(_removeWhileCheckBox);
         _removeDoWhileCheckBox = new JCheckBox("do...while",
-                                               this.prefs.getBoolean(
+                                               this.settings.getBoolean(
                                                                      Keys.BRACE_REMOVE_DO_WHILE,
                                                                      Defaults.BRACE_REMOVE_DO_WHILE));
         _removeDoWhileCheckBox.addActionListener(this.trigger);
         removeBracesPanel.add(_removeDoWhileCheckBox);
         _removeBlockCheckBox = new JCheckBox("Blocks",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.BRACE_REMOVE_BLOCK,
                                                                    Defaults.BRACE_REMOVE_BLOCK));
         _removeBlockCheckBox.addActionListener(this.trigger);
@@ -477,19 +477,19 @@ public class BracesPanel
                                                                     BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         alignmentPanel.setLayout(new BoxLayout(alignmentPanel, BoxLayout.Y_AXIS));
         _newlineLeftCheckBox = new JCheckBox("Newline before left brace",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.BRACE_NEWLINE_LEFT,
                                                                    Defaults.BRACE_NEWLINE_LEFT));
         _newlineLeftCheckBox.addActionListener(this.trigger);
         alignmentPanel.add(_newlineLeftCheckBox);
         _newlineRightCheckBox = new JCheckBox("Newline after right brace",
-                                              this.prefs.getBoolean(
+                                              this.settings.getBoolean(
                                                                     Keys.BRACE_NEWLINE_RIGHT,
                                                                     Defaults.BRACE_NEWLINE_RIGHT));
         _newlineRightCheckBox.addActionListener(this.trigger);
         alignmentPanel.add(_newlineRightCheckBox);
         _treatDifferentCheckBox = new JCheckBox("Treat class and method blocks different",
-                                                this.prefs.getBoolean(
+                                                this.settings.getBoolean(
                                                                       Keys.BRACE_TREAT_DIFFERENT,
                                                                       Defaults.BRACE_TREAT_DIFFERENT));
         _treatDifferentCheckBox.addActionListener(this.trigger);
@@ -498,21 +498,21 @@ public class BracesPanel
         String[] items ={ "0", "1", "2", "3", "4", "5" };
         _indentLeftBraceComboBoxPnl = new NumberComboBoxPanel("Before left brace:",
                                                               items,
-                                                              this.prefs.get(
+                                                              this.settings.get(
                                                                              Keys.INDENT_SIZE_BRACE_LEFT,
                                                                              String.valueOf(Defaults.INDENT_SIZE_BRACE_LEFT)));
         _indentLeftBraceComboBox = _indentLeftBraceComboBoxPnl.getComboBox();
         _indentLeftBraceComboBox.addActionListener(this.trigger);
         _indentRightBraceComboBoxPnl = new NumberComboBoxPanel("Before right brace:",
                                                                items,
-                                                               this.prefs.get(
+                                                               this.settings.get(
                                                                               Keys.INDENT_SIZE_BRACE_RIGHT,
                                                                               String.valueOf(Defaults.INDENT_SIZE_BRACE_RIGHT)));
         _indentRightBraceComboBox = _indentRightBraceComboBoxPnl.getComboBox();
         _indentRightBraceComboBox.addActionListener(this.trigger);
         _indentAfterRightBraceComboBoxPnl = new NumberComboBoxPanel("After right brace:",
                                                                     items,
-                                                                    this.prefs.get(
+                                                                    this.settings.get(
                                                                                    Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                                                                                    String.valueOf(Defaults.INDENT_SIZE_BRACE_RIGHT_AFTER)));
         _indentAfterRightBraceComboBox = _indentAfterRightBraceComboBoxPnl.getComboBox();

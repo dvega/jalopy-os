@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -95,7 +95,7 @@ final class CasePrinter
                 AST expr = node.getFirstChild();
                 PrinterFactory.create(expr).print(expr, out);
 
-                if (this.prefs.getBoolean(Keys.SPACE_BEFORE_CASE_COLON,
+                if (this.settings.getBoolean(Keys.SPACE_BEFORE_CASE_COLON,
                                           Defaults.SPACE_BEFORE_CASE_COLON))
                 {
                     out.print(SPACE, JavaTokenTypes.WS);
@@ -181,7 +181,7 @@ LOOP:
             {
                 printCommentsBefore(node, out);
 
-                if (this.prefs.getBoolean(Keys.SPACE_BEFORE_CASE_COLON, false))
+                if (this.settings.getBoolean(Keys.SPACE_BEFORE_CASE_COLON, false))
                 {
                     out.print(DEFAULT_SPACE_COLON,
                               JavaTokenTypes.LITERAL_default);

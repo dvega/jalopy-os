@@ -33,7 +33,7 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.Dimension;

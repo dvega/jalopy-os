@@ -1,6 +1,6 @@
 package com.my.foo;
 
-import de.hunsicker.jalopy.ui.AbstractPreferencesPanel;
+import de.hunsicker.jalopy.ui.AbstractSettingsPanel;
 import de.hunsicker.jalopy.ui.ImportsPanel;
 import de.hunsicker.util.Lcs;
 

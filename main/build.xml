@@ -7,11 +7,11 @@
 Module              : main
 Module-Dependencies : ant, build
 
-This build script is part of the Jalopy build system. It is not meant to be 
-directly invoked by the user but should only be used in conjunction with the 
+This build script is part of the Jalopy build system. It is not meant to be
+directly invoked by the user but should only be used in conjunction with the
 master build script that controls the whole build process.
 
-For detailed instructions on how to obtain the needed modules and build a 
+For detailed instructions on how to obtain the needed modules and build a
 Jalopy distribution from scratch please refer to the manual available at the
 official Jalopy homepage under <http://jalopy.sf.net/build.html>.
 
@@ -64,6 +64,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <include name="de/hunsicker/jalopy/parser/*" />
           <include name="de/hunsicker/jalopy/plugin/*" />
           <include name="de/hunsicker/jalopy/prefs/*" />
+          <include name="de/hunsicker/jalopy/storage/*" />
           <include name="de/hunsicker/jalopy/printer/*" />
           <include name="de/hunsicker/jalopy/ui/*" />
           <include name="de/hunsicker/jalopy/ui/syntax/*" />
@@ -80,19 +81,19 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <manifest>
         <section name="de/hunsicker/jalopy/plugin/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter Plug-in API" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION.PLUGIN}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION.PLUGIN}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
         <section name="de/hunsicker/jalopy/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
-          <attribute name="Specification-Version" value="${SPEC.VERSION}" /> 
+          <attribute name="Specification-Version" value="${SPEC.VERSION}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy" />
-          <attribute name="Implementation-Version" value="${BUILD.VERSION}" /> 
+          <attribute name="Implementation-Version" value="${BUILD.VERSION}" />
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
@@ -116,9 +117,9 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <target name="main-compile"
           depends="main-init, main-parser-java, main-parser-javadoc" >
 
-    <!-- 
+    <!--
          we need this file for the error recovery feature of the Javadoc
-         parser, so we have to make sure it exists in the compile dir   
+         parser, so we have to make sure it exists in the compile dir
     -->
     <copy file="${dir.src.parser}/JavadocTokenTypes.txt"
           tofile="${DIR.COMPILE}/de/hunsicker/jalopy/parser/JavadocTokenTypes.txt"
@@ -140,6 +141,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <include name="de/hunsicker/jalopy/parser/*" />
       <include name="de/hunsicker/jalopy/plugin/*" />
       <include name="de/hunsicker/jalopy/prefs/*" />
+      <include name="de/hunsicker/jalopy/storage/*" />
       <include name="de/hunsicker/jalopy/printer/*" />
       <include name="de/hunsicker/jalopy/ui/*" />
       <include name="de/hunsicker/jalopy/ui/syntax/*" />
@@ -154,7 +156,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <!-- Performs the unit testing                                            -->
   <!-- ==================================================================== -->
-  <target name="main-test" 
+  <target name="main-test"
           depends="main-compile" >
     <property name="test.reports.dir"
               value="${DIR.TMP}/testReports" />
@@ -252,6 +254,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="de/hunsicker/jalopy/parser/*" />
         <include name="de/hunsicker/jalopy/plugin/*" />
         <include name="de/hunsicker/jalopy/prefs/*" />
+        <include name="de/hunsicker/jalopy/storage/*" />
         <include name="de/hunsicker/jalopy/printer/*" />
         <include name="de/hunsicker/jalopy/ui/*" />
         <include name="de/hunsicker/jalopy/ui/syntax/*" />
@@ -318,7 +321,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <arg value="${dir.src.parser}/java.g" />
     </java>
 
-    <!-- 
+    <!--
           force a recompilation of all source files because the token
           constants may change
     -->
@@ -348,7 +351,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <arg value="${dir.src.parser}/java.doc.g" />
     </java>
 
-    <!-- 
+    <!--
           force a recompilation of all source files because the token
           constants may change
     -->
@@ -358,7 +361,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       </fileset>
     </delete>
 
-    <!-- 
+    <!--
          we need this file for the error recovery feature of the Javadoc
          parser, so we have to make sure it exists in the compile dir
     -->

@@ -35,16 +35,16 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.CommonAST;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.Environment;
+import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.JavadocTokenTypes;
 import de.hunsicker.jalopy.parser.Node;
 import de.hunsicker.jalopy.parser.NodeHelper;
 import de.hunsicker.jalopy.parser.TreeWalker;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.Lcs;
 import de.hunsicker.util.StringHelper;
 
@@ -201,7 +201,7 @@ final class JavadocPrinter
                           JavadocTokenTypes.JAVADOC_COMMENT);
             }
         }
-        else if (!this.prefs.getBoolean(Keys.COMMENT_JAVADOC_PARSE,
+        else if (!this.settings.getBoolean(Keys.COMMENT_JAVADOC_PARSE,
                                         Defaults.COMMENT_JAVADOC_PARSE))
         {
             String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
@@ -229,7 +229,7 @@ final class JavadocPrinter
 
             // any tags to print or check needed?
             if ((firstTag != EMPTY_NODE) ||
-                this.prefs.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
+                this.settings.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
                                       Defaults.COMMENT_JAVADOC_CHECK_TAG))
             {
                 printTagSection(node, comment, firstTag, asterix, out);
@@ -413,7 +413,7 @@ final class JavadocPrinter
      */
     private String getAsterix()
     {
-        String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
         int asterix = text.indexOf('*');
         int description = StringHelper.indexOfNonWhitespace(text, asterix + 1);
@@ -448,11 +448,11 @@ final class JavadocPrinter
         switch (type)
         {
             case JavaTokenTypes.METHOD_DEF :
-                return this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+                return this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
                                       Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
 
             case JavaTokenTypes.CTOR_DEF :
-                return this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+                return this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                                       Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
 
             case JavaTokenTypes.VARIABLE_DEF :
@@ -464,7 +464,7 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CLASS_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS)
                                         .trim();
                 int offset = text.lastIndexOf(DELIMETER);
@@ -481,7 +481,7 @@ final class JavadocPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE)
                                         .trim();
                 int offset = text.lastIndexOf(DELIMETER);
@@ -650,12 +650,12 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
 
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
-                        text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+                        text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
                                               Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM);
 
                         int offset = text.indexOf('*');
@@ -684,12 +684,12 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
+                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
                                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION);
 
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
-                        text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
+                        text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
                                               Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION);
 
                         int offset = text.indexOf('*');
@@ -717,7 +717,7 @@ final class JavadocPrinter
                 {
                     case JavaTokenTypes.METHOD_DEF :
 
-                        String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
+                        String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
                                                      Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN);
                         int offset = text.indexOf('*');
 
@@ -755,7 +755,7 @@ final class JavadocPrinter
         {
             case JavaTokenTypes.METHOD_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP);
                 int offset = text.indexOf(DELIMETER);
 
@@ -771,7 +771,7 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CTOR_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP);
                 int offset = text.indexOf(DELIMETER);
 
@@ -794,7 +794,7 @@ final class JavadocPrinter
 
             case JavaTokenTypes.CLASS_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS)
                                         .trim();
                 int offset = text.indexOf(DELIMETER);
@@ -811,7 +811,7 @@ final class JavadocPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
             {
-                String text = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                String text = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                                              Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE)
                                         .trim();
                 int offset = text.indexOf(DELIMETER);
@@ -1689,7 +1689,7 @@ SELECTION:
         {
             case JavaTokenTypes.VARIABLE_DEF :
 
-                if (this.prefs.getBoolean(Keys.COMMENT_JAVADOC_FIELDS_SHORT,
+                if (this.settings.getBoolean(Keys.COMMENT_JAVADOC_FIELDS_SHORT,
                                           Defaults.COMMENT_JAVADOC_FIELDS_SHORT))
                 {
                     if (printSingleLineDescription(node, comment, out))
@@ -2179,7 +2179,7 @@ if (offset > -1)
         throws IOException
     {
         StringBuffer buf = new StringBuffer();
-        int maxwidth = this.prefs.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
+        int maxwidth = this.settings.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
                        3 - out.getIndentLength();
 
         for (AST child = comment.getFirstChild();
@@ -2576,7 +2576,7 @@ if (offset > -1)
         AST returnTag = null;
         List exceptionTags = Collections.EMPTY_LIST;
 
-        boolean checkTags = this.prefs.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
+        boolean checkTags = this.settings.getBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
                                                   Defaults.COMMENT_JAVADOC_CHECK_TAG);
 
         if (checkTags)
@@ -2695,7 +2695,7 @@ if (offset > -1)
             }
         }
 
-        int maxwidth = this.prefs.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
+        int maxwidth = this.settings.getInt(Keys.LINE_LENGTH, Defaults.LINE_LENGTH) -
                        out.getIndentLength() - 3;
 
         int last = NONE;
@@ -3010,7 +3010,7 @@ LOOP:
 
         if (buf.length() > 0)
         {
-            int maxwidth = this.prefs.getInt(Keys.LINE_LENGTH,
+            int maxwidth = this.settings.getInt(Keys.LINE_LENGTH,
                                              Defaults.LINE_LENGTH);
             printCommentLines(split(buf.toString().trim(),
                                     maxwidth - out.getIndentLength() - 3, true),

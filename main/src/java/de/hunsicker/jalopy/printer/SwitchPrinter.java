@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -125,7 +125,7 @@ final class SwitchPrinter
 
         out.print(SWITCH, JavaTokenTypes.LITERAL_switch);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                   Defaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.LITERAL_switch);
@@ -141,7 +141,7 @@ final class SwitchPrinter
         PrinterFactory.create(rparen).print(rparen, out);
 
         AST lcurly = rparen.getNextSibling();
-        boolean leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                          Defaults.BRACE_NEWLINE_LEFT);
 
         boolean commentsAfter = ((JavaNode)lcurly).hasCommentsAfter();
@@ -163,7 +163,7 @@ final class SwitchPrinter
                                NodeWriter.NEWLINE_YES, out);
         }
 
-        boolean indentCaseFromSwitch = this.prefs.getBoolean(Keys.INDENT_CASE_FROM_SWITCH,
+        boolean indentCaseFromSwitch = this.settings.getBoolean(Keys.INDENT_CASE_FROM_SWITCH,
                                                              Defaults.INDENT_CASE_FROM_SWITCH);
 
         if (!indentCaseFromSwitch)

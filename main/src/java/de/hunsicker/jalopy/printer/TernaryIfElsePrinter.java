@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -209,10 +209,10 @@ final class TernaryIfElsePrinter
                             NodeWriter out)
         throws IOException
     {
-        boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean wrapBeforeColon = this.prefs.getBoolean(Keys.ALIGN_TERNARY_VALUES,
+        boolean wrapBeforeColon = this.settings.getBoolean(Keys.ALIGN_TERNARY_VALUES,
                                                    Defaults.ALIGN_TERNARY_VALUES);
 
         if (out.newline) // line already wrapped, just indent
@@ -232,7 +232,7 @@ final class TernaryIfElsePrinter
             PrinterFactory.create(thirdOp).print(thirdOp, tester);
 
             // only wrap and align if necessary
-            if ((tester.length + out.column) > this.prefs.getInt(
+            if ((tester.length + out.column) > this.settings.getInt(
                                                                  Keys.LINE_LENGTH,
                                                                  Defaults.LINE_LENGTH))
             {
@@ -310,7 +310,7 @@ final class TernaryIfElsePrinter
                     {
                         PrinterFactory.create(child).print(child, out);
                     }
-                    else if (this.prefs.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
+                    else if (this.settings.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
                                                    Defaults.INSERT_EXPRESSION_PARENTHESIS) &&
                              needParentheses((JavaNode)child))
                     {
@@ -364,10 +364,10 @@ final class TernaryIfElsePrinter
                                    NodeWriter out)
         throws IOException
     {
-        boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+        boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                   Defaults.LINE_WRAP) &&
                             (out.mode == NodeWriter.MODE_DEFAULT);
-        boolean wrapBeforeQuestion = this.prefs.getBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
+        boolean wrapBeforeQuestion = this.settings.getBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
                                                         Defaults.ALIGN_TERNARY_EXPRESSION);
 
         if (out.newline) // line already wrapped, just indent
@@ -388,7 +388,7 @@ final class TernaryIfElsePrinter
 
             // wrap and align if necessary (+3 for the colon between the
             // second and third operator)
-            if ((tester.length + out.column + 3) > this.prefs.getInt(
+            if ((tester.length + out.column + 3) > this.settings.getInt(
                                                                      Keys.LINE_LENGTH,
                                                                      Defaults.LINE_LENGTH))
             {
@@ -409,7 +409,7 @@ final class TernaryIfElsePrinter
 
         Marker marker = null;
 
-        if (this.prefs.getBoolean(Keys.ALIGN_TERNARY_OPERATOR, Defaults.ALIGN_TERNARY_OPERATOR) && (wrapLines || wrapBeforeQuestion))
+        if (this.settings.getBoolean(Keys.ALIGN_TERNARY_OPERATOR, Defaults.ALIGN_TERNARY_OPERATOR) && (wrapLines || wrapBeforeQuestion))
             marker = out.state.markers.add();
 
         out.print(QUESTION, JavaTokenTypes.QUESTION);

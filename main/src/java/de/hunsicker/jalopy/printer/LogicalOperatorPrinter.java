@@ -34,8 +34,8 @@
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -84,7 +84,7 @@ final class LogicalOperatorPrinter
         throws IOException
     {
         super.print(node,
-                    this.prefs.getBoolean(Keys.PADDING_LOGICAL_OPERATORS,
+                    this.settings.getBoolean(Keys.PADDING_LOGICAL_OPERATORS,
                                           Defaults.PADDING_LOGICAL_OPERATORS),
                     out);
     }

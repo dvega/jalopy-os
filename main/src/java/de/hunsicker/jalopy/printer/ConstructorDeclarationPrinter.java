@@ -36,8 +36,8 @@ package de.hunsicker.jalopy.printer;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -98,7 +98,7 @@ final class ConstructorDeclarationPrinter
         AST identifier = modifiers.getNextSibling();
         PrinterFactory.create(identifier).print(identifier, out);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_METHOD_DEF_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_METHOD_DEF_PAREN,
                                   Defaults.SPACE_BEFORE_METHOD_DEF_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.WS);

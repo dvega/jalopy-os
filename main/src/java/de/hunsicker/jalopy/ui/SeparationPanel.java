@@ -1,40 +1,40 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.BorderLayout;
@@ -58,13 +58,13 @@ import javax.swing.event.ChangeListener;
 
 /**
  * A component that can be used to display/edit the Jalopy separation
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class SeparationPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -118,7 +118,7 @@ public class SeparationPanel
      *
      * @param container the parent container.
      */
-    SeparationPanel(PreferencesContainer container)
+    SeparationPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -150,83 +150,83 @@ public class SeparationPanel
      */
     public void store()
     {
-        this.prefs.put(Keys.BLANK_LINES_AFTER_METHOD,
+        this.settings.put(Keys.BLANK_LINES_AFTER_METHOD,
                        (String)_linesAfterMethodComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_CLASS,
+        this.settings.put(Keys.BLANK_LINES_AFTER_CLASS,
                        (String)_linesAfterClassComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_INTERFACE,
+        this.settings.put(Keys.BLANK_LINES_AFTER_INTERFACE,
                        (String)_linesAfterInterfaceComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_IMPORT,
+        this.settings.put(Keys.BLANK_LINES_AFTER_IMPORT,
                        (String)_linesAfterImportComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_PACKAGE,
+        this.settings.put(Keys.BLANK_LINES_AFTER_PACKAGE,
                        (String)_linesAfterPackageComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_DECLARATION,
+        this.settings.put(Keys.BLANK_LINES_AFTER_DECLARATION,
                        (String)_linesAfterDeclarationComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_DECLARATION,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_DECLARATION,
                        (String)_linesBeforeDeclarationComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                        (String)_linesBeforeSingleLineComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                        (String)_linesBeforeMultiLineComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
                        (String)_linesBeforeCaseComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_BLOCK,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_BLOCK,
                        (String)_linesBeforeBlockComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_AFTER_BLOCK,
+        this.settings.put(Keys.BLANK_LINES_AFTER_BLOCK,
                        (String)_linesAfterBlockComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_CONTROL,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_CONTROL,
                        (String)_linesBeforeControlComboBox.getSelectedItem());
-        this.prefs.put(Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
+        this.settings.put(Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                        (String)_linesBeforeJavadocComboBox.getSelectedItem());
-        this.prefs.putBoolean(Keys.CHUNKS_BY_COMMENTS,
+        this.settings.putBoolean(Keys.CHUNKS_BY_COMMENTS,
                               _chunksByCommentsCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.CHUNKS_BY_BLANK_LINES,
+        this.settings.putBoolean(Keys.CHUNKS_BY_BLANK_LINES,
                               _chunksByBlankLinesCheckBox.isSelected());
-        this.prefs.put(Keys.SEPARATOR_STATIC_VAR_INIT,
+        this.settings.put(Keys.SEPARATOR_STATIC_VAR_INIT,
                        _staticVarInitTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_INSTANCE_VAR,
+        this.settings.put(Keys.SEPARATOR_INSTANCE_VAR,
                        _instanceVarTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_INSTANCE_INIT,
+        this.settings.put(Keys.SEPARATOR_INSTANCE_INIT,
                        _instanceInitTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_CTOR, _constructorTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_METHOD, _methodTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_INTERFACE, _interfaceTextField.getText());
-        this.prefs.put(Keys.SEPARATOR_CLASS, _classTextField.getText());
-        this.prefs.putBoolean(Keys.COMMENT_INSERT_SEPARATOR,
+        this.settings.put(Keys.SEPARATOR_CTOR, _constructorTextField.getText());
+        this.settings.put(Keys.SEPARATOR_METHOD, _methodTextField.getText());
+        this.settings.put(Keys.SEPARATOR_INTERFACE, _interfaceTextField.getText());
+        this.settings.put(Keys.SEPARATOR_CLASS, _classTextField.getText());
+        this.settings.putBoolean(Keys.COMMENT_INSERT_SEPARATOR,
                               _separatorCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
+        this.settings.putBoolean(Keys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
                               _separatorRecursiveCheckBox.isSelected());
-        this.prefs.put(Keys.SEPARATOR_FILL_CHARACTER,
+        this.settings.put(Keys.SEPARATOR_FILL_CHARACTER,
                        (String)_fillCharacterComboBox.getSelectedItem());
 
         if (_blankLinesAfterLeftCurlyCheckBox.isSelected())
         {
-            this.prefs.put(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
+            this.settings.put(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
                            (String)_blankLinesAfterLeftCurlyComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.BLANK_LINES_AFTER_BRACE_LEFT, "-1");
+            this.settings.put(Keys.BLANK_LINES_AFTER_BRACE_LEFT, "-1");
         }
 
         if (_blankLinesBeforeRightCurlyCheckBox.isSelected())
         {
-            this.prefs.put(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+            this.settings.put(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                            (String)_blankLinesBeforeRightCurlyComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT, "-1");
+            this.settings.put(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT, "-1");
         }
 
         if (_keepBlankLinesCheckBox.isSelected())
         {
-            this.prefs.put(Keys.BLANK_LINES_KEEP_UP_TO,
+            this.settings.put(Keys.BLANK_LINES_KEEP_UP_TO,
                            (String)_keepBlankLinesComboBox.getSelectedItem());
         }
         else
         {
-            this.prefs.put(Keys.BLANK_LINES_KEEP_UP_TO, "0");
+            this.settings.put(Keys.BLANK_LINES_KEEP_UP_TO, "0");
         }
     }
 
@@ -249,7 +249,7 @@ public class SeparationPanel
         panel.add(packageLabel);
 
         ComboBoxPanel afterPackage = new NumberComboBoxPanel("After:", items,
-                                                             this.prefs.get(
+                                                             this.settings.get(
                                                                             Keys.BLANK_LINES_AFTER_PACKAGE,
                                                                             String.valueOf(Defaults.BLANK_LINES_AFTER_PACKAGE)));
         SwingHelper.setConstraints(c, 2, 0, GridBagConstraints.REMAINDER, 1,
@@ -268,7 +268,7 @@ public class SeparationPanel
         panel.add(importLabel);
 
         ComboBoxPanel afterImport = new NumberComboBoxPanel("After:", items,
-                                                            this.prefs.get(
+                                                            this.settings.get(
                                                                            Keys.BLANK_LINES_AFTER_IMPORT,
                                                                            String.valueOf(Defaults.BLANK_LINES_AFTER_IMPORT)));
         SwingHelper.setConstraints(c, 2, 1, GridBagConstraints.REMAINDER, 1,
@@ -287,7 +287,7 @@ public class SeparationPanel
         panel.add(classLabel);
 
         ComboBoxPanel afterClass = new NumberComboBoxPanel("After:", items,
-                                                           this.prefs.get(
+                                                           this.settings.get(
                                                                           Keys.BLANK_LINES_AFTER_CLASS,
                                                                           String.valueOf(Defaults.BLANK_LINES_AFTER_CLASS)));
         SwingHelper.setConstraints(c, 2, 2, GridBagConstraints.REMAINDER, 1,
@@ -306,7 +306,7 @@ public class SeparationPanel
         panel.add(interfaceLabel);
 
         ComboBoxPanel afterInterface = new NumberComboBoxPanel("After:", items,
-                                                               this.prefs.get(
+                                                               this.settings.get(
                                                                               Keys.BLANK_LINES_AFTER_INTERFACE,
                                                                               String.valueOf(Defaults.BLANK_LINES_AFTER_INTERFACE)));
         SwingHelper.setConstraints(c, 2, 3, GridBagConstraints.REMAINDER, 1,
@@ -325,7 +325,7 @@ public class SeparationPanel
         panel.add(methodLabel);
 
         ComboBoxPanel afterMethod = new NumberComboBoxPanel("After:", items,
-                                                            this.prefs.get(
+                                                            this.settings.get(
                                                                            Keys.BLANK_LINES_AFTER_METHOD,
                                                                            String.valueOf(Defaults.BLANK_LINES_AFTER_METHOD)));
         SwingHelper.setConstraints(c, 2, 4, GridBagConstraints.REMAINDER, 1,
@@ -344,7 +344,7 @@ public class SeparationPanel
         panel.add(blockBeforeLabel);
 
         ComboBoxPanel beforeBlock = new NumberComboBoxPanel("Before:", items,
-                                                            this.prefs.get(
+                                                            this.settings.get(
                                                                            Keys.BLANK_LINES_BEFORE_BLOCK,
                                                                            String.valueOf(Defaults.BLANK_LINES_BEFORE_BLOCK)));
         SwingHelper.setConstraints(c, 1, 5, 1, 1, 0.0, 0.0,
@@ -356,7 +356,7 @@ public class SeparationPanel
         panel.add(beforeBlock);
 
         ComboBoxPanel afterBlock = new NumberComboBoxPanel("After:", items,
-                                                           this.prefs.get(
+                                                           this.settings.get(
                                                                           Keys.BLANK_LINES_AFTER_BLOCK,
                                                                           String.valueOf(Defaults.BLANK_LINES_AFTER_BLOCK)));
         SwingHelper.setConstraints(c, 2, 5, GridBagConstraints.REMAINDER, 1,
@@ -376,7 +376,7 @@ public class SeparationPanel
 
         ComboBoxPanel beforeDeclaration = new NumberComboBoxPanel("Before:",
                                                                   items,
-                                                                  this.prefs.get(
+                                                                  this.settings.get(
                                                                                  Keys.BLANK_LINES_BEFORE_DECLARATION,
                                                                                  String.valueOf(Defaults.BLANK_LINES_BEFORE_DECLARATION)));
         SwingHelper.setConstraints(c, 1, 6, GridBagConstraints.REMAINDER, 1,
@@ -389,7 +389,7 @@ public class SeparationPanel
 
         ComboBoxPanel afterDeclaration = new NumberComboBoxPanel("After:",
                                                                  items,
-                                                                 this.prefs.get(
+                                                                 this.settings.get(
                                                                                 Keys.BLANK_LINES_AFTER_DECLARATION,
                                                                                 String.valueOf(Defaults.BLANK_LINES_AFTER_DECLARATION)));
         SwingHelper.setConstraints(c, 2, 6, GridBagConstraints.REMAINDER, 1,
@@ -408,7 +408,7 @@ public class SeparationPanel
         panel.add(caseLabel);
 
         ComboBoxPanel beforeCase = new NumberComboBoxPanel("Before:", items,
-                                                           this.prefs.get(
+                                                           this.settings.get(
                                                                           Keys.BLANK_LINES_BEFORE_CASE_BLOCK,
                                                                           String.valueOf(Defaults.BLANK_LINES_BEFORE_CASE_BLOCK)));
         SwingHelper.setConstraints(c, 1, 7, GridBagConstraints.REMAINDER, 1,
@@ -428,7 +428,7 @@ public class SeparationPanel
 
         ComboBoxPanel beforeControlPanel = new NumberComboBoxPanel("Before:",
                                                                    items,
-                                                                   this.prefs.get(
+                                                                   this.settings.get(
                                                                                   Keys.BLANK_LINES_BEFORE_CONTROL,
                                                                                   String.valueOf(Defaults.BLANK_LINES_BEFORE_CONTROL)));
         SwingHelper.setConstraints(c, 1, 8, GridBagConstraints.REMAINDER, 1,
@@ -448,7 +448,7 @@ public class SeparationPanel
 
         ComboBoxPanel beforeSingleLine = new NumberComboBoxPanel("Before:",
                                                                  items,
-                                                                 this.prefs.get(
+                                                                 this.settings.get(
                                                                                 Keys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                                                                                 String.valueOf(Defaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE)));
         SwingHelper.setConstraints(c, 1, 9, GridBagConstraints.REMAINDER, 1,
@@ -468,7 +468,7 @@ public class SeparationPanel
 
         ComboBoxPanel beforeMultiLine = new NumberComboBoxPanel("Before:",
                                                                 items,
-                                                                this.prefs.get(
+                                                                this.settings.get(
                                                                                Keys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                                                                                String.valueOf(Defaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE)));
         SwingHelper.setConstraints(c, 1, 10, GridBagConstraints.REMAINDER, 1,
@@ -488,7 +488,7 @@ public class SeparationPanel
 
         ComboBoxPanel beforeJavadocPanel = new NumberComboBoxPanel("Before:",
                                                                    items,
-                                                                   this.prefs.get(
+                                                                   this.settings.get(
                                                                                   Keys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                                                                                   String.valueOf(Defaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC)));
         SwingHelper.setConstraints(c, 1, 11, GridBagConstraints.REMAINDER, 1,
@@ -519,7 +519,7 @@ public class SeparationPanel
                                                                     BorderFactory.createTitledBorder("General"),
                                                                     BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _separatorCheckBox = new JCheckBox("Add separator comments",
-                                           this.prefs.getBoolean(
+                                           this.settings.getBoolean(
                                                                  Keys.COMMENT_INSERT_SEPARATOR,
                                                                  Defaults.COMMENT_INSERT_SEPARATOR));
         _separatorCheckBox.addActionListener(this.trigger);
@@ -531,7 +531,7 @@ public class SeparationPanel
         separatorPanelLayout.setConstraints(_separatorCheckBox, c);
         separatorPanel.add(_separatorCheckBox);
         _separatorRecursiveCheckBox = new JCheckBox("Add separator comments for inner classes",
-                                                    this.prefs.getBoolean(
+                                                    this.settings.getBoolean(
                                                                           Keys.COMMENT_INSERT_SEPARATOR_RECURSIVE,
                                                                           Defaults.COMMENT_INSERT_SEPARATOR_RECURSIVE));
         _separatorRecursiveCheckBox.addActionListener(this.trigger);
@@ -556,7 +556,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(staticVarInitLabel, c);
         textPanel.add(staticVarInitLabel);
-        _staticVarInitTextField = new JTextField(this.prefs.get(
+        _staticVarInitTextField = new JTextField(this.settings.get(
                                                                 Keys.SEPARATOR_STATIC_VAR_INIT,
                                                                 "Static variables/initializers"),
                                                  30);
@@ -573,7 +573,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(instanceVarLabel, c);
         textPanel.add(instanceVarLabel);
-        _instanceVarTextField = new JTextField(this.prefs.get(
+        _instanceVarTextField = new JTextField(this.settings.get(
                                                               Keys.SEPARATOR_INSTANCE_VAR,
                                                               "Instance variables"),
                                                30);
@@ -589,7 +589,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(instanceInitLabel, c);
         textPanel.add(instanceInitLabel);
-        _instanceInitTextField = new JTextField(this.prefs.get(
+        _instanceInitTextField = new JTextField(this.settings.get(
                                                                Keys.SEPARATOR_INSTANCE_INIT,
                                                                "Instance initializers"),
                                                 30);
@@ -605,7 +605,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(constructorLabel, c);
         textPanel.add(constructorLabel);
-        _constructorTextField = new JTextField(this.prefs.get(
+        _constructorTextField = new JTextField(this.settings.get(
                                                               Keys.SEPARATOR_CTOR,
                                                               "Constructors"),
                                                30);
@@ -621,7 +621,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(methodLabel, c);
         textPanel.add(methodLabel);
-        _methodTextField = new JTextField(this.prefs.get(Keys.SEPARATOR_METHOD,
+        _methodTextField = new JTextField(this.settings.get(Keys.SEPARATOR_METHOD,
                                                          "Methods"), 30);
         SwingHelper.setConstraints(c, 1, 4, GridBagConstraints.REMAINDER, 1,
                                    1.0, 0.0, GridBagConstraints.NORTHWEST,
@@ -635,7 +635,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(interfaceLabel, c);
         textPanel.add(interfaceLabel);
-        _interfaceTextField = new JTextField(this.prefs.get(
+        _interfaceTextField = new JTextField(this.settings.get(
                                                             Keys.SEPARATOR_INTERFACE,
                                                             "Interfaces"), 30);
         SwingHelper.setConstraints(c, 1, 5, GridBagConstraints.REMAINDER, 1,
@@ -650,7 +650,7 @@ public class SeparationPanel
                                    GridBagConstraints.NONE, c.insets, 0, 0);
         textPanelLayout.setConstraints(classLabel, c);
         textPanel.add(classLabel);
-        _classTextField = new JTextField(this.prefs.get(Keys.SEPARATOR_CLASS,
+        _classTextField = new JTextField(this.settings.get(Keys.SEPARATOR_CLASS,
                                                         "Classes"), 30);
         SwingHelper.setConstraints(c, 1, 6, GridBagConstraints.REMAINDER, 1,
                                    1.0, 0.0, GridBagConstraints.NORTHWEST,
@@ -668,7 +668,7 @@ public class SeparationPanel
         Object[] items ={ "\u00b7", ".", "-", "=", "*", "/" };
         ComboBoxPanel fillCharacterComboBoxPanel = new ComboBoxPanel("Character:",
                                                                      items,
-                                                                     this.prefs.get(
+                                                                     this.settings.get(
                                                                                     Keys.SEPARATOR_FILL_CHARACTER,
                                                                                     "\u00b7"));
         _fillCharacterComboBox = fillCharacterComboBoxPanel.getComboBox();
@@ -718,7 +718,7 @@ public class SeparationPanel
         arrayPanel.setLayout(arrayLayout);
 
         String[] items ={ "0", "1", "2", "3", "4", "5" };
-        int blankLinesAfterLeftCurly = this.prefs.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
+        int blankLinesAfterLeftCurly = this.settings.getInt(Keys.BLANK_LINES_AFTER_BRACE_LEFT,
                                                          Defaults.BLANK_LINES_AFTER_BRACE_LEFT);
         NumberComboBoxPanelCheckBox blankLinesAfterLeftCurlyCheck = new NumberComboBoxPanelCheckBox("Blank lines after left curly brace",
                                                                                                     blankLinesAfterLeftCurly > -1,
@@ -740,7 +740,7 @@ public class SeparationPanel
         arrayLayout.setConstraints(blankLinesAfterLeftCurlyCheck, c);
         arrayPanel.add(blankLinesAfterLeftCurlyCheck);
 
-        int blankLinesBeforeRightCurly = this.prefs.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
+        int blankLinesBeforeRightCurly = this.settings.getInt(Keys.BLANK_LINES_BEFORE_BRACE_RIGHT,
                                                            Defaults.BLANK_LINES_BEFORE_BRACE_RIGHT);
         NumberComboBoxPanelCheckBox blankLinesBeforeRightCurlyCheck = new NumberComboBoxPanelCheckBox("Blank lines before right curly brace",
                                                                                                       blankLinesBeforeRightCurly > -1,
@@ -760,7 +760,7 @@ public class SeparationPanel
         arrayLayout.setConstraints(blankLinesBeforeRightCurlyCheck, c);
         arrayPanel.add(blankLinesBeforeRightCurlyCheck);
 
-        int keepBlankLines = this.prefs.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
+        int keepBlankLines = this.settings.getInt(Keys.BLANK_LINES_KEEP_UP_TO,
                                                Defaults.BLANK_LINES_KEEP_UP_TO);
         String[] blankItems ={ "1", "2", "3", "4", "5" };
         NumberComboBoxPanelCheckBox keepBlankLinesCheck = new NumberComboBoxPanelCheckBox("Keep Blank lines up to",
@@ -789,7 +789,7 @@ public class SeparationPanel
         GridBagLayout chunksPanelLayout = new GridBagLayout();
         chunksPanel.setLayout(chunksPanelLayout);
         _chunksByCommentsCheckBox = new JCheckBox("By Comments",
-                                                  this.prefs.getBoolean(
+                                                  this.settings.getBoolean(
                                                                         Keys.CHUNKS_BY_COMMENTS,
                                                                         Defaults.CHUNKS_BY_COMMENTS));
         _chunksByCommentsCheckBox.addActionListener(this.trigger);
@@ -799,7 +799,7 @@ public class SeparationPanel
         chunksPanelLayout.setConstraints(_chunksByCommentsCheckBox, c);
         chunksPanel.add(_chunksByCommentsCheckBox);
         _chunksByBlankLinesCheckBox = new JCheckBox("By Blank lines",
-                                                    this.prefs.getBoolean(
+                                                    this.settings.getBoolean(
                                                                           Keys.CHUNKS_BY_BLANK_LINES,
                                                                           Defaults.CHUNKS_BY_BLANK_LINES));
         _chunksByBlankLinesCheckBox.addActionListener(this.trigger);

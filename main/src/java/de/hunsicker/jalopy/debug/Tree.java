@@ -38,7 +38,7 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaRecognizer;
 import de.hunsicker.jalopy.parser.TreeWalker;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Loggers;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

@@ -1,41 +1,41 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.ui.util.SwingHelper;
 
 import java.awt.Component;
@@ -55,13 +55,13 @@ import org.apache.log4j.Logger;
 
 /**
  * A component that can be used to display/edit the Jalopy logging messages
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class MessagesPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -89,7 +89,7 @@ public class MessagesPanel
      *
      * @param container the parent container.
      */
-    MessagesPanel(PreferencesContainer container)
+    MessagesPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -103,33 +103,33 @@ public class MessagesPanel
     public void store()
     {
         updateLogger(Loggers.PARSER, (String)_parserComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_PARSER,
+        this.settings.putInt(Keys.MSG_PRIORITY_PARSER,
                           Level.toLevel((String)_parserComboBox.getSelectedItem())
                                .toInt());
         updateLogger(Loggers.PARSER_JAVADOC,
                      (String)_javadocParserComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_PARSER_JAVADOC,
+        this.settings.putInt(Keys.MSG_PRIORITY_PARSER_JAVADOC,
                           Level.toLevel((String)_javadocParserComboBox.getSelectedItem())
                                .toInt());
         updateLogger(Loggers.PRINTER, (String)_outputComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_PRINTER,
+        this.settings.putInt(Keys.MSG_PRIORITY_PRINTER,
                           Level.toLevel((String)_outputComboBox.getSelectedItem())
                                .toInt());
         updateLogger(Loggers.PRINTER_JAVADOC,
                      (String)_javadocOutputComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_PRINTER_JAVADOC,
+        this.settings.putInt(Keys.MSG_PRIORITY_PRINTER_JAVADOC,
                           Level.toLevel((String)_javadocOutputComboBox.getSelectedItem())
                                .toInt());
         updateLogger(Loggers.TRANSFORM,
                      (String)_transComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_TRANSFORM,
+        this.settings.putInt(Keys.MSG_PRIORITY_TRANSFORM,
                           Level.toLevel((String)_transComboBox.getSelectedItem())
                                .toInt());
         updateLogger(Loggers.IO, (String)_generalComboBox.getSelectedItem());
-        this.prefs.putInt(Keys.MSG_PRIORITY_IO,
+        this.settings.putInt(Keys.MSG_PRIORITY_IO,
                           Level.toLevel((String)_generalComboBox.getSelectedItem())
                                .toInt());
-        this.prefs.putBoolean(Keys.MSG_SHOW_ERROR_STACKTRACE,
+        this.settings.putBoolean(Keys.MSG_SHOW_ERROR_STACKTRACE,
                               _showStackTraceCheckBox.isSelected());
     }
 
@@ -146,7 +146,7 @@ public class MessagesPanel
             Level.FATAL.toString()
         };
         ComboBoxPanel parserMessages = new ComboBoxPanel("Parsing", prios,
-                                                         Level.toLevel(prefs.getInt(
+                                                         Level.toLevel(this.settings.getInt(
                                                                                     Keys.MSG_PRIORITY_PARSER,
                                                                                     Defaults.MSG_PRIORITY_PARSER))
                                                               .toString());
@@ -154,21 +154,21 @@ public class MessagesPanel
 
         ComboBoxPanel javadocParserMessages = new ComboBoxPanel("Javadoc parsing",
                                                                 prios,
-                                                                Level.toLevel(prefs.getInt(
+                                                                Level.toLevel(this.settings.getInt(
                                                                                            Keys.MSG_PRIORITY_PARSER_JAVADOC,
                                                                                            Defaults.MSG_PRIORITY_PARSER_JAVADOC))
                                                                      .toString());
         _javadocParserComboBox = javadocParserMessages.getComboBox();
 
         ComboBoxPanel transMessages = new ComboBoxPanel("Transforming", prios,
-                                                        Level.toLevel(prefs.getInt(
+                                                        Level.toLevel(this.settings.getInt(
                                                                                    Keys.MSG_PRIORITY_TRANSFORM,
                                                                                    Defaults.MSG_PRIORITY_TRANSFORM))
                                                              .toString());
         _transComboBox = transMessages.getComboBox();
 
         ComboBoxPanel outputMessages = new ComboBoxPanel("Printing", prios,
-                                                         Level.toLevel(prefs.getInt(
+                                                         Level.toLevel(this.settings.getInt(
                                                                                     Keys.MSG_PRIORITY_PRINTER,
                                                                                     Defaults.MSG_PRIORITY_PRINTER))
                                                               .toString());
@@ -176,14 +176,14 @@ public class MessagesPanel
 
         ComboBoxPanel javadocOutputMessages = new ComboBoxPanel("Javadoc printing",
                                                                 prios,
-                                                                Level.toLevel(prefs.getInt(
+                                                                Level.toLevel(this.settings.getInt(
                                                                                            Keys.MSG_PRIORITY_PRINTER_JAVADOC,
                                                                                            Defaults.MSG_PRIORITY_PRINTER_JAVADOC))
                                                                      .toString());
         _javadocOutputComboBox = javadocOutputMessages.getComboBox();
 
         ComboBoxPanel generalMessages = new ComboBoxPanel("General", prios,
-                                                          Level.toLevel(prefs.getInt(
+                                                          Level.toLevel(this.settings.getInt(
                                                                                      Keys.MSG_PRIORITY_IO,
                                                                                      Defaults.MSG_PRIORITY_IO))
                                                                .toString());
@@ -201,7 +201,7 @@ public class MessagesPanel
         categories.add(outputMessages);
         categories.add(javadocOutputMessages);
         _showStackTraceCheckBox = new JCheckBox("Show stacktrace",
-                                                this.prefs.getBoolean(
+                                                this.settings.getBoolean(
                                                                       Keys.MSG_SHOW_ERROR_STACKTRACE,
                                                                       Defaults.MSG_SHOW_ERROR_STACKTRACE));
 

@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -90,7 +90,7 @@ final class CommaPrinter
         if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO,
                                 NodeWriter.NEWLINE_NO, out))
         {
-            if (this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+            if (this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                       Defaults.SPACE_AFTER_COMMA))
             {
                 out.print(SPACE, JavaTokenTypes.COMMA);

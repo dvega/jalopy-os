@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -86,13 +86,13 @@ final class IndexOperatorPrinter
     {
         AST expr = printLeftHandSide(node, out);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_BRACKETS,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_BRACKETS,
                                   Defaults.SPACE_BEFORE_BRACKETS))
         {
             out.print(SPACE, out.last);
         }
 
-        if (this.prefs.getBoolean(Keys.PADDING_BRACKETS,
+        if (this.settings.getBoolean(Keys.PADDING_BRACKETS,
                                   Defaults.PADDING_BRACKETS))
         {
             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);

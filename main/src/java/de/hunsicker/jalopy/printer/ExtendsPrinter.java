@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -88,14 +88,14 @@ final class ExtendsPrinter
 
         if (first != null)
         {
-            boolean newlineBefore = this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
+            boolean newlineBefore = this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
                                                           Defaults.LINE_WRAP_BEFORE_EXTENDS);
-            int deepIndent = this.prefs.getInt(Keys.INDENT_SIZE_DEEP,
+            int deepIndent = this.settings.getInt(Keys.INDENT_SIZE_DEEP,
                                                Defaults.INDENT_SIZE_DEEP);
-            boolean wrapLines = this.prefs.getBoolean(Keys.LINE_WRAP,
+            boolean wrapLines = this.settings.getBoolean(Keys.LINE_WRAP,
                                                       Defaults.LINE_WRAP) &&
                                 (out.mode == NodeWriter.MODE_DEFAULT);
-            int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+            int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                                Defaults.LINE_LENGTH);
 
             if (out.newline || newlineBefore ||
@@ -105,7 +105,7 @@ final class ExtendsPrinter
             {
                 out.printNewline();
 
-                int indentSize = this.prefs.getInt(Keys.INDENT_SIZE_EXTENDS,
+                int indentSize = this.settings.getInt(Keys.INDENT_SIZE_EXTENDS,
                                                    Defaults.INDENT_SIZE_EXTENDS);
 
                 if (indentSize > -1) // use custom indentation
@@ -126,7 +126,7 @@ final class ExtendsPrinter
             }
 
             Marker marker = out.state.markers.add();
-            boolean forceWrapping = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_EXTENDS,
+            boolean forceWrapping = this.settings.getBoolean(Keys.LINE_WRAP_AFTER_TYPES_EXTENDS,
                                                           Defaults.LINE_WRAP_AFTER_TYPES_EXTENDS);
             TestNodeWriter tester = null;
 
@@ -135,7 +135,7 @@ final class ExtendsPrinter
                 tester = out.testers.get();
             }
 
-            String comma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+            String comma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                  Defaults.SPACE_AFTER_COMMA)
                                ? COMMA_SPACE
                                : COMMA;

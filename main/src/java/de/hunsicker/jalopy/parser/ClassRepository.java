@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -36,9 +36,9 @@ package de.hunsicker.jalopy.parser;
 import de.hunsicker.io.DirScanner;
 import de.hunsicker.io.ExtensionFilter;
 import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.util.ChainingRuntimeException;
 import de.hunsicker.util.StringHelper;
 
@@ -69,7 +69,7 @@ import org.apache.log4j.Level;
  * Stores type names for Java packages. This information is needed in order to
  * be able to switch between <em>single-type-import declarations</em> and
  * <em>type-import-on-demand declarations</em>.
- * 
+ *
  * <p>
  * This class is thread-safe.
  * </p>
@@ -105,8 +105,8 @@ public class ClassRepository
     /** Holds information about the currently active repository entries. */
     private List _infos = new ArrayList(); // List of <ClassRepositoryEntry.Info>
 
-    /** The user preferences. */
-    private Preferences _prefs;
+    /** The current code convention. */
+    private Convention _settings;
 
     /** The current contents. */
     private String[] _content = EMPTY_STRING_ARRAY;
@@ -121,7 +121,7 @@ public class ClassRepository
      */
     private ClassRepository()
     {
-        _prefs = Preferences.getInstance();
+        _settings = Convention.getInstance();
 
         File directory = getWorkingDir();
 
@@ -312,20 +312,20 @@ public class ClassRepository
 
     /**
      * Loads the contents of the given location into memory.
-     * 
+     *
      * <p>
      * If the given location is already registered, both persistent storage
      * and memory will be updated. If the location denotes a Java archive
      * (JAR) an update will only be performed if the archive actually
      * changed.
      * </p>
-     * 
+     *
      * <p>
      * Directories will always be updated as there is no easy way to detect
      * changes in such a case. You should perform logic to avoid unecessary
      * loads in the Plug-in code.
      * </p>
-     * 
+     *
      * <p>
      * If no entry exits for the location, a new entry will be generated and
      * its contents loaded into memory.
@@ -537,9 +537,9 @@ public class ClassRepository
             /**
              * @todo make this user configurable
              */
-            _repositoryDirectory = new File(_prefs.get(
+            _repositoryDirectory = new File(_settings.get(
                                                        Keys.CLASS_REPOSITORY_DIRECTORY,
-                                                       Preferences.getRepositoryDirectory()
+                                                       Convention.getRepositoryDirectory()
                                                                   .getAbsolutePath()));
         }
 

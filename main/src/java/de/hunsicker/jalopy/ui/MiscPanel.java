@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -34,10 +34,10 @@
 package de.hunsicker.jalopy.ui;
 
 import de.hunsicker.io.IoHelper;
-import de.hunsicker.jalopy.History;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.History;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.ui.EmptyButtonGroup;
 import de.hunsicker.ui.ErrorDialog;
 import de.hunsicker.ui.util.SwingHelper;
@@ -69,13 +69,13 @@ import javax.swing.event.ChangeListener;
 
 /**
  * A component that can be used to display/edit the Jalopy miscellaneous
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class MiscPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Instance variables ····················································
 
@@ -107,7 +107,7 @@ public class MiscPanel
      *
      * @param container the parent container.
      */
-    MiscPanel(PreferencesContainer container)
+    MiscPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -120,48 +120,48 @@ public class MiscPanel
      */
     public void store()
     {
-        this.prefs.putBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
+        this.settings.putBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
                               _insertParenCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.FORCE_FORMATTING,
+        this.settings.putBoolean(Keys.FORCE_FORMATTING,
                               _forceCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INSERT_TRAILING_NEWLINE,
+        this.settings.putBoolean(Keys.INSERT_TRAILING_NEWLINE,
                               _insertTrailingNewlineCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.ARRAY_BRACKETS_AFTER_IDENT,
+        this.settings.putBoolean(Keys.ARRAY_BRACKETS_AFTER_IDENT,
                               _arrayBracketsAfterIdentifierCheckBox.isSelected());
-        this.prefs.putInt(Keys.BACKUP_LEVEL, _backupSlider.getValue());
-        this.prefs.putInt(Keys.THREAD_COUNT, _threadSlider.getValue());
+        this.settings.putInt(Keys.BACKUP_LEVEL, _backupSlider.getValue());
+        this.settings.putInt(Keys.THREAD_COUNT, _threadSlider.getValue());
 
         String directoryPath = _directoryTextField.getText();
 
-        if (directoryPath.startsWith(Preferences.getProjectSettingsDirectory()
+        if (directoryPath.startsWith(Convention.getProjectSettingsDirectory()
                                                 .getAbsolutePath()))
         {
             // if the user specified a path relative to the default Jalopy
             // settings directory we only store the relative subdirectory
             // to make the setting portable across different platforms
-            directoryPath = directoryPath.substring(Preferences.getProjectSettingsDirectory()
+            directoryPath = directoryPath.substring(Convention.getProjectSettingsDirectory()
                                                                .getAbsolutePath()
                                                                .length() + 1);
         }
 
-        this.prefs.put(Keys.BACKUP_DIRECTORY, directoryPath);
-        this.prefs.putBoolean(Keys.INSERT_SERIAL_UID,
+        this.settings.put(Keys.BACKUP_DIRECTORY, directoryPath);
+        this.settings.putBoolean(Keys.INSERT_SERIAL_UID,
                               _insertUIDCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.INSERT_LOGGING_CONDITIONAL,
+        this.settings.putBoolean(Keys.INSERT_LOGGING_CONDITIONAL,
                               _insertConditionalCheckBox.isSelected());
 
         if (_historyCommentCheckBox.isSelected())
         {
-            this.prefs.put(Keys.HISTORY_POLICY,
+            this.settings.put(Keys.HISTORY_POLICY,
                            History.Policy.COMMENT.toString());
         }
         else if (_historyFileCheckBox.isSelected())
         {
-            this.prefs.put(Keys.HISTORY_POLICY, History.Policy.FILE.toString());
+            this.settings.put(Keys.HISTORY_POLICY, History.Policy.FILE.toString());
         }
         else
         {
-            this.prefs.put(Keys.HISTORY_POLICY,
+            this.settings.put(Keys.HISTORY_POLICY,
                            History.Policy.DISABLED.toString());
         }
     }
@@ -185,7 +185,7 @@ public class MiscPanel
         backupLayout.setConstraints(backupLbl, c);
         backupPanel.add(backupLbl);
         _backupSlider = new JSlider(JSlider.HORIZONTAL, 0, 30,
-                                    this.prefs.getInt(Keys.BACKUP_LEVEL,
+                                    this.settings.getInt(Keys.BACKUP_LEVEL,
                                                       Defaults.BACKUP_LEVEL));
         _backupSlider.setSnapToTicks(true);
         c.insets.left = 10;
@@ -196,7 +196,7 @@ public class MiscPanel
         backupLayout.setConstraints(_backupSlider, c);
         backupPanel.add(_backupSlider);
 
-        final NumberedLabel backupLevelLbl = new NumberedLabel(this.prefs.getInt(
+        final NumberedLabel backupLevelLbl = new NumberedLabel(this.settings.getInt(
                                                                                  Keys.BACKUP_LEVEL,
                                                                                  Defaults.BACKUP_LEVEL),
                                                                "Backup ",
@@ -226,14 +226,14 @@ public class MiscPanel
         backupLayout.setConstraints(directoryLbl, c);
         backupPanel.add(directoryLbl);
 
-        String directoryPath = this.prefs.get(Keys.BACKUP_DIRECTORY,
-                                              Preferences.getBackupDirectory()
+        String directoryPath = this.settings.get(Keys.BACKUP_DIRECTORY,
+                                              Convention.getBackupDirectory()
                                                          .getAbsolutePath());
         File directoryFile = new File(directoryPath);
 
         if (!directoryFile.isAbsolute())
         {
-            directoryPath = new File(Preferences.getProjectSettingsDirectory(),
+            directoryPath = new File(Convention.getProjectSettingsDirectory(),
                                      directoryPath).getAbsolutePath();
         }
 
@@ -264,12 +264,12 @@ public class MiscPanel
                     final Window owner = SwingUtilities.windowForComponent(MiscPanel.this);
                     LocationDialog dialog = null;
                     String backupHistory = LocationDialog.loadHistory(new File(
-                                                                               Preferences.getProjectSettingsDirectory(),
+                                                                               Convention.getProjectSettingsDirectory(),
                                                                                "backup.dat"));
 
                     if ("".equals(backupHistory))
                     {
-                        backupHistory = Preferences.getBackupDirectory()
+                        backupHistory = Convention.getBackupDirectory()
                                                    .getAbsolutePath();
                     }
 
@@ -314,7 +314,7 @@ public class MiscPanel
 
                                     // update url history
                                     LocationDialog.storeHistory(new File(
-                                                                         Preferences.getProjectSettingsDirectory(),
+                                                                         Convention.getProjectSettingsDirectory(),
                                                                          "backup.dat"),
                                                                 dialog.getHistoryString());
                                 }
@@ -348,7 +348,7 @@ public class MiscPanel
                                                                   BorderFactory.createTitledBorder("History"),
                                                                   BorderFactory.createEmptyBorder(0, 5, 5, 5)));
 
-        History.Policy historyPolicy = History.Policy.valueOf(this.prefs.get(
+        History.Policy historyPolicy = History.Policy.valueOf(this.settings.get(
                                                                              Keys.HISTORY_POLICY,
                                                                              Defaults.HISTORY_POLICY));
         GridBagLayout historyLayout = new GridBagLayout();
@@ -443,7 +443,7 @@ public class MiscPanel
         threadPanelLayout.setConstraints(threadLabel, c);
         threadPanel.add(threadLabel);
         _threadSlider = new JSlider(JSlider.HORIZONTAL, 1, 8,
-                                    this.prefs.getInt(Keys.THREAD_COUNT,
+                                    this.settings.getInt(Keys.THREAD_COUNT,
                                                       Defaults.THREAD_COUNT));
         _threadSlider.setLabelTable(_threadSlider.createStandardLabels(1, 1));
         _threadSlider.setMajorTickSpacing(7);
@@ -459,7 +459,7 @@ public class MiscPanel
         threadPanelLayout.setConstraints(_threadSlider, c);
         threadPanel.add(_threadSlider);
 
-        final NumberedLabel backupLevelLbl = new NumberedLabel(this.prefs.getInt(
+        final NumberedLabel backupLevelLbl = new NumberedLabel(this.settings.getInt(
                                                                                  Keys.THREAD_COUNT,
                                                                                  Defaults.THREAD_COUNT),
                                                                "Thread ",
@@ -499,14 +499,14 @@ public class MiscPanel
                                    GridBagConstraints.WEST,
                                    GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         _insertParenCheckBox = new JCheckBox("Insert expression parentheses",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.INSERT_EXPRESSION_PARENTHESIS,
                                                                    Defaults.INSERT_EXPRESSION_PARENTHESIS));
         _insertParenCheckBox.addActionListener(this.trigger);
         removeLayout.setConstraints(_insertParenCheckBox, c);
         removePanel.add(_insertParenCheckBox);
         _insertUIDCheckBox = new JCheckBox("Insert serial version UID",
-                                           this.prefs.getBoolean(
+                                           this.settings.getBoolean(
                                                                  Keys.INSERT_SERIAL_UID,
                                                                  Defaults.INSERT_SERIAL_UID));
         SwingHelper.setConstraints(c, 1, 0, GridBagConstraints.REMAINDER, 1,
@@ -516,7 +516,7 @@ public class MiscPanel
         removePanel.add(_insertUIDCheckBox);
 
         _insertConditionalCheckBox = new JCheckBox("Insert logging conditional",
-                                                   this.prefs.getBoolean(
+                                                   this.settings.getBoolean(
                                                                          Keys.INSERT_LOGGING_CONDITIONAL,
                                                                          Defaults.INSERT_LOGGING_CONDITIONAL));
         _insertConditionalCheckBox.addActionListener(this.trigger);
@@ -527,7 +527,7 @@ public class MiscPanel
         removePanel.add(_insertConditionalCheckBox);
 
         _insertTrailingNewlineCheckBox = new JCheckBox("Insert trailing newline",
-                                                       this.prefs.getBoolean(
+                                                       this.settings.getBoolean(
                                                                              Keys.INSERT_TRAILING_NEWLINE,
                                                                              Defaults.INSERT_TRAILING_NEWLINE));
         _insertTrailingNewlineCheckBox.addActionListener(this.trigger);
@@ -538,7 +538,7 @@ public class MiscPanel
         removePanel.add(_insertTrailingNewlineCheckBox);
 
         _arrayBracketsAfterIdentifierCheckBox = new JCheckBox("Array brackets after identifier",
-                                                              this.prefs.getBoolean(
+                                                              this.settings.getBoolean(
                                                                                     Keys.ARRAY_BRACKETS_AFTER_IDENT,
                                                                                     Defaults.ARRAY_BRACKETS_AFTER_IDENT));
         _arrayBracketsAfterIdentifierCheckBox.addActionListener(this.trigger);
@@ -549,7 +549,7 @@ public class MiscPanel
         removePanel.add(_arrayBracketsAfterIdentifierCheckBox);
 
         _forceCheckBox = new JCheckBox("Force formatting",
-                                       this.prefs.getBoolean(
+                                       this.settings.getBoolean(
                                                              Keys.FORCE_FORMATTING,
                                                              Defaults.FORCE_FORMATTING));
         SwingHelper.setConstraints(c, 1, 2, GridBagConstraints.REMAINDER, 1,

@@ -37,7 +37,7 @@ import de.hunsicker.antlr.ASTFactory;
 import de.hunsicker.antlr.ASTPair;
 import de.hunsicker.antlr.Token;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Loggers;
 
 
 /**

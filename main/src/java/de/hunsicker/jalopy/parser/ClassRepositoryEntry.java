@@ -33,8 +33,8 @@
  */
 package de.hunsicker.jalopy.parser;
 
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -392,9 +392,9 @@ public class ClassRepositoryEntry
 
         private String genFilename(String filename)
         {
-            File file = new File(Preferences.getInstance()
+            File file = new File(Convention.getInstance()
                                             .get(Keys.CLASS_REPOSITORY_DIRECTORY,
-                                                 Preferences.getRepositoryDirectory()
+                                                 Convention.getRepositoryDirectory()
                                                             .getAbsolutePath()) +
                                  filename);
 

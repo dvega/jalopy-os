@@ -37,8 +37,8 @@ import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -113,7 +113,7 @@ final class IfElsePrinter
                 break;
         }
 
-        boolean spaceBefore = this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        boolean spaceBefore = this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                                     Defaults.SPACE_BEFORE_STATEMENT_PAREN);
 
         if (spaceBefore)
@@ -127,15 +127,15 @@ final class IfElsePrinter
 
         AST lparen = node.getFirstChild();
 
-        boolean insertBraces = this.prefs.getBoolean(Keys.BRACE_INSERT_IF_ELSE,
+        boolean insertBraces = this.settings.getBoolean(Keys.BRACE_INSERT_IF_ELSE,
                                                      Defaults.BRACE_INSERT_IF_ELSE);
 
         JavaNode rparen = printExpressionList(lparen, insertBraces, out);
         AST body = rparen.getNextSibling();
 
-        boolean leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                          Defaults.BRACE_NEWLINE_LEFT);
-        boolean rightBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+        boolean rightBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                           Defaults.BRACE_NEWLINE_RIGHT);
         boolean hasBraces = body.getType() == JavaTokenTypes.SLIST;
 
@@ -186,7 +186,7 @@ final class IfElsePrinter
 
             if ((!out.newline) && (out.last == JavaTokenTypes.RCURLY))
             {
-                out.print(out.getString(this.prefs.getInt(
+                out.print(out.getString(this.settings.getInt(
                                                           Keys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                                                           Defaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                           JavaTokenTypes.WS);

@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -92,7 +92,7 @@ final class WhilePrinter
     {
         super.print(node, out);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                   Defaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(WHILE_SPACE, JavaTokenTypes.LITERAL_while);
@@ -102,7 +102,7 @@ final class WhilePrinter
             out.print(WHILE, JavaTokenTypes.LITERAL_while);
         }
 
-        boolean insertBraces = this.prefs.getBoolean(Keys.BRACE_INSERT_WHILE,
+        boolean insertBraces = this.settings.getBoolean(Keys.BRACE_INSERT_WHILE,
                                                      Defaults.BRACE_INSERT_WHILE);
 
         AST lparen = node.getFirstChild();
@@ -122,7 +122,7 @@ final class WhilePrinter
                 // insert braces manually
                 if (insertBraces)
                 {
-                    out.printLeftBrace(this.prefs.getBoolean(
+                    out.printLeftBrace(this.settings.getBoolean(
                                                              Keys.BRACE_NEWLINE_LEFT,
                                                              Defaults.BRACE_NEWLINE_LEFT),
                                        NodeWriter.NEWLINE_YES);

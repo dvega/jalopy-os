@@ -34,7 +34,7 @@
 package de.hunsicker.jalopy.parser;
 
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.Helper;
 
 import java.io.ObjectStreamClass;

@@ -37,8 +37,8 @@ import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -92,18 +92,20 @@ final class ArrayInitializerPrinter
         //   - Integer.MAX_VALUE : never wrap
         //   - custom user value : wrap if more than 'value' elements
         //
-        int maxElementsPerLine = this.prefs.getInt(Keys.LINE_WRAP_ARRAY_ELEMENTS,
+        int maxElementsPerLine = this.settings.getInt(Keys.LINE_WRAP_ARRAY_ELEMENTS,
                                                    Defaults.LINE_WRAP_ARRAY_ELEMENTS);
         boolean wrapAsNeeded = maxElementsPerLine == 0;
-        int lineLength = this.prefs.getInt(Keys.LINE_LENGTH,
+        int lineLength = this.settings.getInt(Keys.LINE_LENGTH,
                                            Defaults.LINE_LENGTH);
-        boolean bracesPadding = this.prefs.getBoolean(Keys.PADDING_BRACES,
+        boolean bracesPadding = this.settings.getBoolean(Keys.PADDING_BRACES,
                                                       Defaults.PADDING_BRACES);
-        boolean spaceAfterComma = this.prefs.getBoolean(Keys.SPACE_AFTER_COMMA,
+        boolean spaceAfterComma = this.settings.getBoolean(Keys.SPACE_AFTER_COMMA,
                                                         Defaults.SPACE_AFTER_COMMA);
         int numElements = 0; // number of array elements
 
-        if (hasArrayChild(node))
+        boolean multiArray = hasArrayChild(node);
+
+        if (multiArray)
         {
             maxElementsPerLine = 1;
             wrapAsNeeded = false;
@@ -158,7 +160,7 @@ final class ArrayInitializerPrinter
                 {
                     if ((!out.newline) &&
                         (
-                         (this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+                         (this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                 Defaults.BRACE_NEWLINE_LEFT) &&
                           (((JavaNode)node).getParent().getType() != JavaTokenTypes.ARRAY_INIT))))
                     {
@@ -170,16 +172,19 @@ final class ArrayInitializerPrinter
 
                     Marker marker = null;
 
-                    if (this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
+                    if (this.settings.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP))
                         marker = out.state.markers.add(out.line, out.state.markers.getLast().column + out.indentSize);
                     else
                         out.indent();
 
                     //printCommentsAfter(node, out);
-                    if (firstElement.getType() != JavaTokenTypes.ARRAY_INIT && hasArrayParent(node))
+                    if (firstElement.getType() != JavaTokenTypes.ARRAY_INIT)
                     {
-                        out.printNewline();
-                        printIndentation(out);
+                        if (!multiArray ||  hasArrayParent(node))
+                        {
+                            out.printNewline();
+                            printIndentation(out);
+                        }
                     }
 
                     int count = 0;

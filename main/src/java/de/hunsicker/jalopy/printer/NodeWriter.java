@@ -34,12 +34,12 @@
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.*;
-import de.hunsicker.jalopy.Environment;
+import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.util.StringHelper;
 
 import java.io.File;
@@ -91,8 +91,8 @@ public class NodeWriter
     /** The envrionment to use. */
     protected Environment environment;
 
-    /** The user preferences that control the output style. */
-    protected Preferences prefs;
+    /** The code convention settings that controls the output style. */
+    protected Convention settings;
 
     /** Used line separator. Defaults to the platform standard. */
     protected String lineSeparator;
@@ -220,24 +220,24 @@ public class NodeWriter
     {
         this.state = new PrinterState(this);
         this.lineSeparator = File.separator;
-        this.prefs = Preferences.getInstance();
-        this.indentSize = this.prefs.getInt(Keys.INDENT_SIZE,
+        this.settings = Convention.getInstance();
+        this.indentSize = this.settings.getInt(Keys.INDENT_SIZE,
                                             Defaults.INDENT_SIZE);
-        this.insertTrailingEmpty = this.prefs.getBoolean(Keys.INSERT_TRAILING_NEWLINE,
+        this.insertTrailingEmpty = this.settings.getBoolean(Keys.INSERT_TRAILING_NEWLINE,
                                                          Defaults.INSERT_TRAILING_NEWLINE);
-        this.continuationIndentSize = this.prefs.getInt(Keys.INDENT_SIZE_CONTINUATION,
+        this.continuationIndentSize = this.settings.getInt(Keys.INDENT_SIZE_CONTINUATION,
                                                         Defaults.INDENT_SIZE_CONTINUATION);
-        this.leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+        this.leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                       Defaults.BRACE_NEWLINE_LEFT);
-        this.leftBraceIndent = this.prefs.getInt(Keys.INDENT_SIZE_BRACE_LEFT,
+        this.leftBraceIndent = this.settings.getInt(Keys.INDENT_SIZE_BRACE_LEFT,
                                                  Defaults.INDENT_SIZE_BRACE_LEFT);
-        this.leadingIndentSize = this.prefs.getInt(Keys.INDENT_SIZE_LEADING,
+        this.leadingIndentSize = this.settings.getInt(Keys.INDENT_SIZE_LEADING,
                                                    Defaults.INDENT_SIZE_LEADING);
-        this.useTabs = this.prefs.getBoolean(Keys.INDENT_WITH_TABS,
+        this.useTabs = this.settings.getBoolean(Keys.INDENT_WITH_TABS,
                                              Defaults.INDENT_WITH_TABS);
-        this.useLeadingTabs = this.prefs.getBoolean(Keys.INDENT_WITH_TABS_ONLY_LEADING,
+        this.useLeadingTabs = this.settings.getBoolean(Keys.INDENT_WITH_TABS_ONLY_LEADING,
                                                     Defaults.INDENT_WITH_TABS_ONLY_LEADING);
-        this.footer = this.prefs.getBoolean(Keys.FOOTER, Defaults.FOOTER);
+        this.footer = this.settings.getBoolean(Keys.FOOTER, Defaults.FOOTER);
         _indentChars = new char[150];
 
         for (int i = 0; i < _indentChars.length; i++)
@@ -441,7 +441,7 @@ public class NodeWriter
     public void close()
         throws IOException
     {
-        this.prefs = null;
+        this.settings = null;
         this.issues = null;
         this.state.dispose();
         this.state = null;
@@ -676,7 +676,7 @@ public class NodeWriter
      *
      * @param type the type of the brace. Either RCURLY or
      *        OBJBLOCK.
-     * @param whitepaceBefore if <code>true</code> outputs indentation whitespace (depending on the preferences setting).
+     * @param whitepaceBefore if <code>true</code> outputs indentation whitespace (depending on the code convention setting).
      * @param newlineAfter if <code>true</code> a newline will be printed after the
      *        brace.
      *
@@ -814,7 +814,7 @@ public class NodeWriter
 
     /**
      * Returns the closing (right) curly brace to use. The actual
-     * representation depends on the user preferences.
+     * representation depends on the code convention.
      *
      * @return the closing curly brace to use.
      */
@@ -823,7 +823,7 @@ public class NodeWriter
         if (_rightBrace == null)
         {
             StringBuffer buf = new StringBuffer(getIndentSize() + 1);
-            buf.append(generateIndentString(this.prefs.getInt(
+            buf.append(generateIndentString(this.settings.getInt(
                                                               Keys.INDENT_SIZE_BRACE_RIGHT,
                                                               Defaults.INDENT_SIZE_BRACE_RIGHT)));
             buf.append(RCURLY);

@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -95,7 +95,7 @@ final class PackagePrinter
         AST semi = identifier.getNextSibling();
         PrinterFactory.create(semi).print(semi, out);
 
-        out.printBlankLines(this.prefs.getInt(Keys.BLANK_LINES_AFTER_PACKAGE,
+        out.printBlankLines(this.settings.getInt(Keys.BLANK_LINES_AFTER_PACKAGE,
                                               Defaults.BLANK_LINES_AFTER_PACKAGE));
         out.last = JavaTokenTypes.PACKAGE_DEF;
     }

@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -98,7 +98,7 @@ final class RelationalOperatorPrinter
 
             default :
                 super.print(node,
-                            this.prefs.getBoolean(
+                            this.settings.getBoolean(
                                                   Keys.PADDING_RELATIONAL_OPERATORS,
                                                   Defaults.PADDING_RELATIONAL_OPERATORS),
                             out);

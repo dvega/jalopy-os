@@ -37,8 +37,8 @@ import de.hunsicker.antlr.*;
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -89,7 +89,7 @@ class InfixOperatorPrinter
                       NodeWriter out)
         throws IOException
     {
-        boolean shouldWrap = this.prefs.getBoolean(Keys.LINE_WRAP,
+        boolean shouldWrap = this.settings.getBoolean(Keys.LINE_WRAP,
                                                    Defaults.LINE_WRAP);
         boolean wrapLines = false; // actually perform line wrapping
         boolean insertLeft = false; // insert parentheses for the lhs expression
@@ -167,7 +167,7 @@ ITERATE:
         }
         else
         {
-            boolean insertExpressionParentheses = this.prefs.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
+            boolean insertExpressionParentheses = this.settings.getBoolean(Keys.INSERT_EXPRESSION_PARENTHESIS,
                                                                         Defaults.INSERT_EXPRESSION_PARENTHESIS);
 
             // should we add parentheses to make precedence obvious?
@@ -231,7 +231,7 @@ ITERATE:
         }
 
         boolean continuation = out.continuation;
-        boolean continuationIndent = this.prefs.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
+        boolean continuationIndent = this.settings.getBoolean(Keys.INDENT_CONTINUATION_OPERATOR,
                                                            Defaults.INDENT_CONTINUATION_OPERATOR);
         if (continuationIndent && !continuation)
         {
@@ -254,7 +254,7 @@ ITERATE:
             printIndentation(out);
         }
 
-        boolean wrapBeforeOperator = this.prefs.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR,
+        boolean wrapBeforeOperator = this.settings.getBoolean(Keys.LINE_WRAP_BEFORE_OPERATOR,
                                                            Defaults.LINE_WRAP_BEFORE_OPERATOR);
         boolean commentAfter = operator.hasCommentsAfter();
 

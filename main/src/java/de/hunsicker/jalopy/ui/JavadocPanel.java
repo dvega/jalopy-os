@@ -33,9 +33,9 @@
  */
 package de.hunsicker.jalopy.ui;
 
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.ui.util.SwingHelper;
 import de.hunsicker.util.StringHelper;
 
@@ -91,13 +91,13 @@ import org.apache.oro.text.regex.Perl5Matcher;
 
 /**
  * A component that can be used to display/edit the Jalopy Javadoc comment
- * preferences.
+ * settings.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
 public class JavadocPanel
-    extends AbstractPreferencesPanel
+    extends AbstractSettingsPanel
 {
     //~ Static variables/initializers ·········································
 
@@ -170,7 +170,7 @@ public class JavadocPanel
      *
      * @param container the parent container.
      */
-    JavadocPanel(PreferencesContainer container)
+    JavadocPanel(SettingsContainer container)
     {
         super(container);
         initialize();
@@ -290,22 +290,22 @@ public class JavadocPanel
             variableMask += Modifier.PRIVATE;
         }
 
-        this.prefs.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, ctorMask);
-        this.prefs.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, methodMask);
-        this.prefs.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, classMask);
-        this.prefs.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, variableMask);
-        this.prefs.putBoolean(Keys.COMMENT_JAVADOC_FIELDS_SHORT,
+        this.settings.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, ctorMask);
+        this.settings.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, methodMask);
+        this.settings.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, classMask);
+        this.settings.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, variableMask);
+        this.settings.putBoolean(Keys.COMMENT_JAVADOC_FIELDS_SHORT,
                               _singleLineFieldCommentsCheckBox.isSelected());
 
-        this.prefs.putBoolean(Keys.COMMENT_JAVADOC_PARSE,
+        this.settings.putBoolean(Keys.COMMENT_JAVADOC_PARSE,
                               _parseCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
+        this.settings.putBoolean(Keys.COMMENT_JAVADOC_CHECK_TAG,
                               _checkCheckBox.isSelected());
-        this.prefs.putBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
+        this.settings.putBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
                               _createInnerCheckBox.isSelected());
-        this.prefs.put(Keys.COMMENT_JAVADOC_TAGS_STANDARD,
+        this.settings.put(Keys.COMMENT_JAVADOC_TAGS_STANDARD,
                        encodeTags(_standardTagsList.getValues()));
-        this.prefs.put(Keys.COMMENT_JAVADOC_TAGS_INLINE,
+        this.settings.put(Keys.COMMENT_JAVADOC_TAGS_INLINE,
                        encodeTags(_inlineTagsList.getValues()));
         _templatesContainer.store();
     }
@@ -324,12 +324,12 @@ public class JavadocPanel
     private JPanel createGeneralPane()
     {
         _parseCheckBox = new JCheckBox("Parse/format comments",
-                                       this.prefs.getBoolean(
+                                       this.settings.getBoolean(
                                                              Keys.COMMENT_JAVADOC_PARSE,
                                                              Defaults.COMMENT_JAVADOC_PARSE));
         _parseCheckBox.addActionListener(this.trigger);
         _checkCheckBox = new JCheckBox("Correct tags",
-                                       this.prefs.getBoolean(
+                                       this.settings.getBoolean(
                                                              Keys.COMMENT_JAVADOC_CHECK_TAG,
                                                              Defaults.COMMENT_JAVADOC_CHECK_TAG));
         _checkCheckBox.addActionListener(this.trigger);
@@ -391,7 +391,7 @@ public class JavadocPanel
         createPanel.add(scrollPane);
         c.insets.bottom = 0;
         _createInnerCheckBox = new JCheckBox("Include inner classes",
-                                             this.prefs.getBoolean(
+                                             this.settings.getBoolean(
                                                                    Keys.COMMENT_JAVADOC_INNER_CLASS,
                                                                    Defaults.COMMENT_JAVADOC_INNER_CLASS));
         _createInnerCheckBox.addActionListener(this.trigger);
@@ -407,7 +407,7 @@ public class JavadocPanel
                                                                BorderFactory.createTitledBorder("Misc"),
                                                                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
         _singleLineFieldCommentsCheckBox = new JCheckBox("Field comments in single line",
-                                                         this.prefs.getBoolean(
+                                                         this.settings.getBoolean(
                                                                                Keys.COMMENT_JAVADOC_FIELDS_SHORT,
                                                                                Defaults.COMMENT_JAVADOC_FIELDS_SHORT));
         _singleLineFieldCommentsCheckBox.addActionListener(this.trigger);
@@ -480,7 +480,7 @@ public class JavadocPanel
                                                                        BorderFactory.createTitledBorder("Standard Tags"),
                                                                        BorderFactory.createEmptyBorder(0, 5, 5, 5)));
 
-        String standardTagsString = this.prefs.get(Keys.COMMENT_JAVADOC_TAGS_STANDARD,
+        String standardTagsString = this.settings.get(Keys.COMMENT_JAVADOC_TAGS_STANDARD,
                                                    Defaults.COMMENT_JAVADOC_TAGS_STANDARD);
         Collection standardTags = decodeTags(standardTagsString);
         _standardTagsList = new AddRemoveList("Add new standard tag",
@@ -523,7 +523,7 @@ public class JavadocPanel
                                                                      BorderFactory.createTitledBorder("In-line Tags"),
                                                                      BorderFactory.createEmptyBorder(0, 5, 5, 5)));
 
-        String inlineTagsString = this.prefs.get(Keys.COMMENT_JAVADOC_TAGS_INLINE,
+        String inlineTagsString = this.settings.get(Keys.COMMENT_JAVADOC_TAGS_INLINE,
                                                  Defaults.COMMENT_JAVADOC_TAGS_INLINE);
         Collection inlineTags = decodeTags(inlineTagsString);
         _inlineTagsList = new AddRemoveList("Add new in-line tag",
@@ -760,7 +760,7 @@ public class JavadocPanel
     private static class DataModel
         extends AbstractTableModel
     {
-        private static final Preferences _prefs = Preferences.getInstance();
+        private static final Convention _settings = Convention.getInstance();
         final String[] columnNames =
         {
             "                  ", "public", "protected", "default", "private"
@@ -769,47 +769,47 @@ public class JavadocPanel
         {
             {
                 "Classes/Interfaces",
-                new Boolean(Modifier.isPublic(_prefs.getInt(
+                new Boolean(Modifier.isPublic(_settings.getInt(
                                                             Keys.COMMENT_JAVADOC_CLASS_MASK,
                                                             Defaults.COMMENT_JAVADOC_CLASS_MASK))),
-                new Boolean(Modifier.isProtected(_prefs.getInt(
+                new Boolean(Modifier.isProtected(_settings.getInt(
                                                                Keys.COMMENT_JAVADOC_CLASS_MASK, 0))),
-                new Boolean(Modifier.isFinal(_prefs.getInt(
+                new Boolean(Modifier.isFinal(_settings.getInt(
                                                            Keys.COMMENT_JAVADOC_CLASS_MASK, 0))),
-                new Boolean(Modifier.isPrivate(_prefs.getInt(
+                new Boolean(Modifier.isPrivate(_settings.getInt(
                                                              Keys.COMMENT_JAVADOC_CLASS_MASK, 0)))
             },
             {
                 "Constructors",
-                new Boolean(Modifier.isPublic(_prefs.getInt(
+                new Boolean(Modifier.isPublic(_settings.getInt(
                                                             Keys.COMMENT_JAVADOC_CTOR_MASK, 0))),
-                new Boolean(Modifier.isProtected(_prefs.getInt(
+                new Boolean(Modifier.isProtected(_settings.getInt(
                                                                Keys.COMMENT_JAVADOC_CTOR_MASK, 0))),
-                new Boolean(Modifier.isFinal(_prefs.getInt(
+                new Boolean(Modifier.isFinal(_settings.getInt(
                                                            Keys.COMMENT_JAVADOC_CTOR_MASK, 0))),
-                new Boolean(Modifier.isPrivate(_prefs.getInt(
+                new Boolean(Modifier.isPrivate(_settings.getInt(
                                                              Keys.COMMENT_JAVADOC_CTOR_MASK, 0)))
             },
             {
                 "Methods",
-                new Boolean(Modifier.isPublic(_prefs.getInt(
+                new Boolean(Modifier.isPublic(_settings.getInt(
                                                             Keys.COMMENT_JAVADOC_METHOD_MASK, 0))),
-                new Boolean(Modifier.isProtected(_prefs.getInt(
+                new Boolean(Modifier.isProtected(_settings.getInt(
                                                                Keys.COMMENT_JAVADOC_METHOD_MASK, 0))),
-                new Boolean(Modifier.isFinal(_prefs.getInt(
+                new Boolean(Modifier.isFinal(_settings.getInt(
                                                            Keys.COMMENT_JAVADOC_METHOD_MASK, 0))),
-                new Boolean(Modifier.isPrivate(_prefs.getInt(
+                new Boolean(Modifier.isPrivate(_settings.getInt(
                                                              Keys.COMMENT_JAVADOC_METHOD_MASK, 0)))
             },
             {
                 "Variables",
-                new Boolean(Modifier.isPublic(_prefs.getInt(
+                new Boolean(Modifier.isPublic(_settings.getInt(
                                                             Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0))),
-                new Boolean(Modifier.isProtected(_prefs.getInt(
+                new Boolean(Modifier.isProtected(_settings.getInt(
                                                                Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0))),
-                new Boolean(Modifier.isFinal(_prefs.getInt(
+                new Boolean(Modifier.isFinal(_settings.getInt(
                                                            Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0))),
-                new Boolean(Modifier.isPrivate(_prefs.getInt(
+                new Boolean(Modifier.isPrivate(_settings.getInt(
                                                              Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0)))
             }
         };
@@ -894,7 +894,7 @@ public class JavadocPanel
         JTextArea exceptionTextArea;
         JTextArea parameterTextArea;
         JTextArea topTextArea;
-        Preferences prefs = Preferences.getInstance();
+        Convention settings = Convention.getInstance();
 
         public CtorTemplatePanel()
         {
@@ -971,18 +971,18 @@ public class JavadocPanel
 
         public void store()
         {
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
                            StringHelper.replace(this.topTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
                            StringHelper.replace(
                                                 this.parameterTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
                            StringHelper.replace(
                                                 this.exceptionTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                            StringHelper.replace(this.bottomTextArea.getText(),
                                                 "\n", DELIMETER));
         }
@@ -1050,7 +1050,7 @@ public class JavadocPanel
 
         protected String getBottomTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM),
                                         DELIMETER, "\n");
@@ -1059,7 +1059,7 @@ public class JavadocPanel
 
         protected String getExceptionTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION),
                                         DELIMETER, "\n");
@@ -1068,7 +1068,7 @@ public class JavadocPanel
 
         protected String getParameterTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
                                         DELIMETER, "\n");
@@ -1077,7 +1077,7 @@ public class JavadocPanel
 
         protected String getTopTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP),
                                         DELIMETER, "\n");
@@ -1135,7 +1135,7 @@ public class JavadocPanel
             layout.setConstraints(returnLabel, c);
             add(returnLabel);
             this.returnTextArea = new JTextArea(StringHelper.replace(
-                                                                     this.prefs.get(
+                                                                     this.settings.get(
                                                                                     Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
                                                                                     Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN),
                                                                      DELIMETER,
@@ -1152,21 +1152,21 @@ public class JavadocPanel
 
         public void store()
         {
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
                            StringHelper.replace(this.topTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                            StringHelper.replace(
                                                 this.parameterTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
                            StringHelper.replace(
                                                 this.exceptionTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
                            StringHelper.replace(this.returnTextArea.getText(),
                                                 "\n", DELIMETER));
-            this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+            this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
                            StringHelper.replace(this.bottomTextArea.getText(),
                                                 "\n", DELIMETER));
         }
@@ -1195,7 +1195,7 @@ public class JavadocPanel
 
         protected String getBottomTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM),
                                         DELIMETER, "\n");
@@ -1204,7 +1204,7 @@ public class JavadocPanel
 
         protected String getExceptionTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION),
                                         DELIMETER, "\n");
@@ -1213,7 +1213,7 @@ public class JavadocPanel
 
         protected String getParameterTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM),
                                         DELIMETER, "\n");
@@ -1222,7 +1222,7 @@ public class JavadocPanel
 
         protected String getTopTemplate()
         {
-            return StringHelper.replace(this.prefs.get(
+            return StringHelper.replace(this.settings.get(
                                                        Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
                                                        Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP),
                                         DELIMETER, "\n");
@@ -1257,7 +1257,7 @@ public class JavadocPanel
         {
             if (TPL_CLASS.equals(this.name))
             {
-                JavadocPanel.this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+                JavadocPanel.this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                                             StringHelper.replace(
                                                                  this.textArea.getText(),
                                                                  "\n",
@@ -1265,7 +1265,7 @@ public class JavadocPanel
             }
             else if (TPL_INTERFACE.equals(name))
             {
-                JavadocPanel.this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+                JavadocPanel.this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                                             StringHelper.replace(
                                                                  this.textArea.getText(),
                                                                  "\n",
@@ -1273,7 +1273,7 @@ public class JavadocPanel
             }
             else if (TPL_FIELD.equals(name))
             {
-                JavadocPanel.this.prefs.put(Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
+                JavadocPanel.this.settings.put(Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                                             StringHelper.replace(
                                                                  this.textArea.getText(),
                                                                  "\n",
@@ -1396,7 +1396,7 @@ public class JavadocPanel
             if (TPL_CLASS.equals(name))
             {
                 SimpleTemplatePanel panel = new SimpleTemplatePanel(name,
-                                                                    JavadocPanel.this.prefs.get(
+                                                                    JavadocPanel.this.settings.get(
                                                                                                 Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                                                                                                 Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS));
                 this.panels.put(name, panel);
@@ -1406,7 +1406,7 @@ public class JavadocPanel
             else if (TPL_INTERFACE.equals(name))
             {
                 SimpleTemplatePanel panel = new SimpleTemplatePanel(name,
-                                                                    JavadocPanel.this.prefs.get(
+                                                                    JavadocPanel.this.settings.get(
                                                                                                 Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                                                                                                 Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE));
                 this.panels.put(name, panel);
@@ -1430,7 +1430,7 @@ public class JavadocPanel
             else if (TPL_FIELD.equals(name))
             {
                 SimpleTemplatePanel panel = new SimpleTemplatePanel(name,
-                                                                    JavadocPanel.this.prefs.get(
+                                                                    JavadocPanel.this.settings.get(
                                                                                                 Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                                                                                                 Defaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE));
                 this.panels.put(name, panel);

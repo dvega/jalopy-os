@@ -34,9 +34,9 @@
 package de.hunsicker.jalopy.ui;
 
 import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Loggers;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.ui.util.*;
 import de.hunsicker.jalopy.ui.syntax.SyntaxTextArea;
 import java.io.File;
@@ -73,10 +73,10 @@ final class PreviewFrame
 {
     //~ Instance variables ····················································
 
-    /** The currently displayed preferences page. */
-    private AbstractPreferencesPanel _page;
+    /** The currently displayed settings page. */
+    private AbstractSettingsPanel _page;
 
-    /** The associated preferences dialog. */
+    /** The associated settings dialog. */
     private JDialog _dialog;
 
     /** Our text area. */
@@ -131,7 +131,7 @@ final class PreviewFrame
     /**
      * Creates a new PreviewFrame object.
      *
-     * @param dialog the associated preferences dialog.
+     * @param dialog the associated settings dialog.
      */
     public PreviewFrame(JDialog dialog)
     {
@@ -251,23 +251,23 @@ final class PreviewFrame
     }
 
     /**
-     * Sets the preferences page that is currently displayed in the
-     * preferences dialog.
+     * Sets the settings page that is currently displayed in the
+     * settings dialog.
      *
-     * @param page the currently displayed preferences page.
+     * @param page the currently displayed settings page.
      */
-    public void setCurrentPage(AbstractPreferencesPanel page)
+    public void setCurrentPage(AbstractSettingsPanel page)
     {
         _page = page;
     }
 
 
     /**
-     * Returns the currently active preferences page.
+     * Returns the currently active settings page.
      *
-     * @return currently displayed preferences page.
+     * @return currently displayed settings page.
      */
-    public AbstractPreferencesPanel getCurrentPage()
+    public AbstractSettingsPanel getCurrentPage()
     {
         return _page;
     }
@@ -393,7 +393,7 @@ final class PreviewFrame
                 parserJavadocLevel = Loggers.PARSER_JAVADOC.getLevel();
                 printerLevel = Loggers.PRINTER.getLevel();
                 printerJavadocLevel = Loggers.PRINTER_JAVADOC.getLevel();
-                _page.prefs.snapshot();
+                _page.settings.snapshot();
             }
 
             try
@@ -413,57 +413,57 @@ final class PreviewFrame
                     // enable Header/Footer template only for the Header/Footer page
                     if (_page.getCategory().equals("header"))
                     {
-                        _page.prefs.putBoolean(Keys.FOOTER, false);
+                        _page.settings.putBoolean(Keys.FOOTER, false);
                     }
                     else if (_page.getCategory().equals("footer"))
                     {
-                        _page.prefs.putBoolean(Keys.HEADER, false);
+                        _page.settings.putBoolean(Keys.HEADER, false);
                     }
                     else
                     {
-                        _page.prefs.putBoolean(Keys.FOOTER, false);
-                        _page.prefs.putBoolean(Keys.HEADER, false);
+                        _page.settings.putBoolean(Keys.FOOTER, false);
+                        _page.settings.putBoolean(Keys.HEADER, false);
 
                         if (_page.getCategory().equals("indentation"))
                         {
-                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
+                            _page.settings.putBoolean(Keys.LINE_WRAP_BEFORE_EXTENDS,
                                                    true);
-                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_IMPLEMENTS,
+                            _page.settings.putBoolean(Keys.LINE_WRAP_BEFORE_IMPLEMENTS,
                                                    true);
-                            _page.prefs.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
+                            _page.settings.putBoolean(Keys.LINE_WRAP_BEFORE_THROWS,
                                                    true);
-                            _page.prefs.putBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
+                            _page.settings.putBoolean(Keys.LINE_WRAP_AFTER_PARAMS_METHOD_DEF,
                                                    true);
-                            _page.prefs.putBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
+                            _page.settings.putBoolean(Keys.ALIGN_TERNARY_EXPRESSION,
                                                    true);
-                            _page.prefs.putBoolean(Keys.ALIGN_TERNARY_VALUES, true);
+                            _page.settings.putBoolean(Keys.ALIGN_TERNARY_VALUES, true);
                         }
                     }
 
                     // enable Javadoc template insertion only for Javadoc page
                     if (!_page.getCategory().equals("javadoc"))
                     {
-                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, 0);
-                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, 0);
-                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, 0);
-                        _page.prefs.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0);
+                        _page.settings.putInt(Keys.COMMENT_JAVADOC_CLASS_MASK, 0);
+                        _page.settings.putInt(Keys.COMMENT_JAVADOC_CTOR_MASK, 0);
+                        _page.settings.putInt(Keys.COMMENT_JAVADOC_METHOD_MASK, 0);
+                        _page.settings.putInt(Keys.COMMENT_JAVADOC_VARIABLE_MASK, 0);
                     }
 
                     // enable separation comments only for Separation page
                     if (!_page.getPreviewFileName().equals("separationcomments"))
                     {
-                        _page.prefs.putBoolean(Keys.COMMENT_INSERT_SEPARATOR, false);
+                        _page.settings.putBoolean(Keys.COMMENT_INSERT_SEPARATOR, false);
                     }
                 }
 
-                int wrapGuideColumn = _page.prefs.getInt(Keys.LINE_LENGTH,
+                int wrapGuideColumn = _page.settings.getInt(Keys.LINE_LENGTH,
                                                          Defaults.LINE_LENGTH);
 
                 /*if (wrapGuideColumn != _textArea.getWrapGuideColumn())
                 {
                     _textArea.setWrapGuideColumn(wrapGuideColumn);
                 }*/
-                _textArea.setTabSize(_page.prefs.getInt(Keys.INDENT_SIZE,
+                _textArea.setTabSize(_page.settings.getInt(Keys.INDENT_SIZE,
                                                         Defaults.INDENT_SIZE));
 
                 _jalopy.setForce(true);
@@ -496,10 +496,10 @@ final class PreviewFrame
             }
             finally
             {
-                // restore the current active settings as we want the user
-                // to explicitely enable the changes (either by pressing 'OK'
+                // restore the current active settings 'cause we want the user
+                // to explicitly enable the changes (either by pressing 'OK'
                 // or 'Apply')
-                _page.prefs.revert();
+                _page.settings.revert();
 
                 if (_textArea.getText().equals(""))
                 {

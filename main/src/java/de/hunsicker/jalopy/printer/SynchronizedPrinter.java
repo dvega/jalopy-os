@@ -35,8 +35,8 @@ package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -88,7 +88,7 @@ final class SynchronizedPrinter
 
         out.print(SYNCHRONIZED, JavaTokenTypes.LITERAL_synchronized);
 
-        if (this.prefs.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
+        if (this.settings.getBoolean(Keys.SPACE_BEFORE_STATEMENT_PAREN,
                                   Defaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
             out.print(SPACE, JavaTokenTypes.LITERAL_synchronized);

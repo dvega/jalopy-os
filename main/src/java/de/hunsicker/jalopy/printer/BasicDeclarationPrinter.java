@@ -34,7 +34,7 @@
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.Environment;
+import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.jalopy.parser.ExtendedToken;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaNodeModifier;
@@ -42,8 +42,8 @@ import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.JavadocTokenTypes;
 import de.hunsicker.jalopy.parser.Node;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
@@ -98,7 +98,7 @@ abstract class BasicDeclarationPrinter
      */
     protected void addClassComment(JavaNode node, NodeWriter out)
     {
-        String t = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
+        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                                   Defaults.COMMENT_JAVADOC_TEMPLATE_CLASS);
         Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(t));
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
@@ -127,7 +127,7 @@ abstract class BasicDeclarationPrinter
         {
             case JavaTokenTypes.METHOD_DEF :
 
-                if (isEnabled(this.prefs.getInt(
+                if (isEnabled(this.settings.getInt(
                                                 Keys.COMMENT_JAVADOC_METHOD_MASK,
                                                 Defaults.COMMENT_JAVADOC_METHOD_MASK),
                               node))
@@ -139,7 +139,7 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.CTOR_DEF :
 
-                if (isEnabled(this.prefs.getInt(Keys.COMMENT_JAVADOC_CTOR_MASK,
+                if (isEnabled(this.settings.getInt(Keys.COMMENT_JAVADOC_CTOR_MASK,
                                                 Defaults.COMMENT_JAVADOC_CTOR_MASK),
                               node))
                 {
@@ -150,7 +150,7 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.VARIABLE_DEF :
 
-                if (isEnabled(this.prefs.getInt(
+                if (isEnabled(this.settings.getInt(
                                                 Keys.COMMENT_JAVADOC_VARIABLE_MASK,
                                                 Defaults.COMMENT_JAVADOC_VARIABLE_MASK),
                               node))
@@ -162,7 +162,7 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.CLASS_DEF :
 
-                if (isEnabled(this.prefs.getInt(
+                if (isEnabled(this.settings.getInt(
                                                 Keys.COMMENT_JAVADOC_CLASS_MASK,
                                                 Defaults.COMMENT_JAVADOC_CLASS_MASK),
                               node))
@@ -174,7 +174,7 @@ abstract class BasicDeclarationPrinter
 
             case JavaTokenTypes.INTERFACE_DEF :
 
-                if (isEnabled(this.prefs.getInt(
+                if (isEnabled(this.settings.getInt(
                                                 Keys.COMMENT_JAVADOC_CLASS_MASK,
                                                 Defaults.COMMENT_JAVADOC_CLASS_MASK),
                               node))
@@ -196,7 +196,7 @@ abstract class BasicDeclarationPrinter
      */
     protected void addInterfaceComment(JavaNode node)
     {
-        String t = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
+        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                                   Defaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE);
         Node text = new Node(JavadocTokenTypes.PCDATA, t);
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
@@ -222,7 +222,7 @@ abstract class BasicDeclarationPrinter
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
                                 GENERATED_COMMENT);
         StringBuffer buf = new StringBuffer(150);
-        String topText = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
+        String topText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
                                         Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP)
                                    .trim();
         buf.append(topText);
@@ -230,7 +230,7 @@ abstract class BasicDeclarationPrinter
 
         AST parameters = NodeHelper.getFirstChild(node,
                                                   JavaTokenTypes.PARAMETERS);
-        String bottomText = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+        String bottomText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
                                            Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
         String leadingSeparator = bottomText.substring(0,
                                                        bottomText.indexOf('*') +
@@ -241,7 +241,7 @@ abstract class BasicDeclarationPrinter
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
             addParameters(buf, parameters,
-                          this.prefs.get(
+                          this.settings.get(
                                          Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                                          Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM),
                           out.environment);
@@ -254,7 +254,7 @@ abstract class BasicDeclarationPrinter
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
-            buf.append(this.prefs.get(
+            buf.append(this.settings.get(
                                       Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
                                       Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN));
             buf.append(DELIMETER);
@@ -271,7 +271,7 @@ abstract class BasicDeclarationPrinter
             List types = JavadocPrinter.getValidTypeNames(node,
                                                           JavaTokenTypes.LITERAL_throws);
             addExceptions(buf, types,
-                          this.prefs.get(
+                          this.settings.get(
                                          Keys.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION,
                                          Defaults.COMMENT_JAVADOC_TEMPLATE_METHOD_EXCEPTION),
                           out.environment);
@@ -305,7 +305,7 @@ abstract class BasicDeclarationPrinter
 
         if ((!out.state.anonymousInnerClass) &&
             ((!out.state.innerClass) ||
-             this.prefs.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
+             this.settings.getBoolean(Keys.COMMENT_JAVADOC_INNER_CLASS,
                                    Defaults.COMMENT_JAVADOC_INNER_CLASS)))
         {
             boolean hasJavadoc = node.hasJavadocComment();
@@ -316,7 +316,7 @@ abstract class BasicDeclarationPrinter
                  * @todo transform the existing comment
                  */
 
-                /*if (this.prefs.getBoolean(Keys.COMMENT_JAVADOC_TRANSFORM, Defaults.COMMENT_JAVADOC_TRANSFORM))
+                /*if (this.settings.getBoolean(Keys.COMMENT_JAVADOC_TRANSFORM, Defaults.COMMENT_JAVADOC_TRANSFORM))
                 {
                 }*/
             }
@@ -332,7 +332,7 @@ abstract class BasicDeclarationPrinter
      * Determines whether the auto-generation of Javadoc comments is enabled
      * for the given node.
      *
-     * @param mask int mask that encodes the auto-generation preferences for
+     * @param mask int mask that encodes the auto-generation settings for
      *        the given node.
      * @param node declaration node.
      *
@@ -375,7 +375,7 @@ abstract class BasicDeclarationPrinter
     {
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,
                                 GENERATED_COMMENT);
-        String topText = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
+        String topText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
                                         Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP)
                                    .trim();
         StringBuffer buf = new StringBuffer();
@@ -390,7 +390,7 @@ abstract class BasicDeclarationPrinter
 
         AST parameters = NodeHelper.getFirstChild(node,
                                                   JavaTokenTypes.PARAMETERS);
-        String bottomText = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+        String bottomText = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                                            Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
         String leadingSeparator = bottomText.substring(0,
                                                        bottomText.indexOf('*') +
@@ -401,7 +401,7 @@ abstract class BasicDeclarationPrinter
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
             addParameters(buf, parameters,
-                          this.prefs.get(
+                          this.settings.get(
                                          Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
                                          Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
                           out.environment);
@@ -418,7 +418,7 @@ abstract class BasicDeclarationPrinter
             List types = JavadocPrinter.getValidTypeNames(node,
                                                           JavaTokenTypes.LITERAL_throws);
             addExceptions(buf, types,
-                          this.prefs.get(
+                          this.settings.get(
                                          Keys.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION,
                                          Defaults.COMMENT_JAVADOC_TEMPLATE_CTOR_EXCEPTION),
                           out.environment);
@@ -509,7 +509,7 @@ abstract class BasicDeclarationPrinter
      */
     private void addVariableComment(JavaNode node)
     {
-        String t = this.prefs.get(Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
+        String t = this.settings.get(Keys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                                   Defaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE);
         Node text = new Node(JavadocTokenTypes.PCDATA, t);
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT,

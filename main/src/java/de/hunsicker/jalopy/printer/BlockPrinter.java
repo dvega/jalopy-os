@@ -37,8 +37,8 @@ import de.hunsicker.antlr.collections.AST;
 import de.hunsicker.jalopy.parser.JavaNode;
 import de.hunsicker.jalopy.parser.JavaTokenTypes;
 import de.hunsicker.jalopy.parser.NodeHelper;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -92,7 +92,7 @@ class BlockPrinter
         // always print a newline before the left curly brace
         boolean forceNewlineBefore = out.state.extraWrap;
 
-        boolean treatDifferent = this.prefs.getBoolean(Keys.BRACE_TREAT_DIFFERENT,
+        boolean treatDifferent = this.settings.getBoolean(Keys.BRACE_TREAT_DIFFERENT,
                                   Defaults.BRACE_TREAT_DIFFERENT);
 
         if (treatDifferent)
@@ -129,11 +129,11 @@ class BlockPrinter
                 break;
         }
 
-        boolean cuddleEmpty = this.prefs.getBoolean(Keys.BRACE_EMPTY_CUDDLE,
+        boolean cuddleEmpty = this.settings.getBoolean(Keys.BRACE_EMPTY_CUDDLE,
                                                     Defaults.BRACE_EMPTY_CUDDLE);
-        boolean insertEmptyStatement = this.prefs.getBoolean(Keys.BRACE_EMPTY_INSERT_STATEMENT,
+        boolean insertEmptyStatement = this.settings.getBoolean(Keys.BRACE_EMPTY_INSERT_STATEMENT,
                                                              Defaults.BRACE_EMPTY_INSERT_STATEMENT);
-        boolean leftBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_LEFT,
+        boolean leftBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_LEFT,
                                                          Defaults.BRACE_NEWLINE_LEFT);
 
         // do we print a SLIST or an OBJBLOCK?
@@ -221,7 +221,7 @@ class BlockPrinter
 
         boolean brace = true;
         boolean indent = false;
-        boolean removeBlockBraces = this.prefs.getBoolean(Keys.BRACE_REMOVE_BLOCK,
+        boolean removeBlockBraces = this.settings.getBoolean(Keys.BRACE_REMOVE_BLOCK,
                                                           Defaults.BRACE_REMOVE_BLOCK);
 
         if (freestanding)
@@ -267,7 +267,7 @@ class BlockPrinter
                 // TRUE for both if and else (see IfElsePrinter.java)
                 case JavaTokenTypes.LITERAL_if :
 
-                    if (this.prefs.getBoolean(Keys.BRACE_REMOVE_IF_ELSE,
+                    if (this.settings.getBoolean(Keys.BRACE_REMOVE_IF_ELSE,
                                               Defaults.BRACE_REMOVE_IF_ELSE))
                     {
                         if (!isBraceNecessary(node))
@@ -282,7 +282,7 @@ class BlockPrinter
 
                 case JavaTokenTypes.LITERAL_for :
 
-                    if (this.prefs.getBoolean(Keys.BRACE_REMOVE_FOR,
+                    if (this.settings.getBoolean(Keys.BRACE_REMOVE_FOR,
                                               Defaults.BRACE_REMOVE_FOR))
                     {
                         if (!isBraceNecessary(node))
@@ -297,7 +297,7 @@ class BlockPrinter
 
                 case JavaTokenTypes.LITERAL_while :
 
-                    if (this.prefs.getBoolean(Keys.BRACE_REMOVE_WHILE,
+                    if (this.settings.getBoolean(Keys.BRACE_REMOVE_WHILE,
                                               Defaults.BRACE_REMOVE_WHILE))
                     {
                         if (!isBraceNecessary(node))
@@ -312,7 +312,7 @@ class BlockPrinter
 
                 case JavaTokenTypes.LITERAL_do :
 
-                    if (this.prefs.getBoolean(Keys.BRACE_REMOVE_DO_WHILE,
+                    if (this.settings.getBoolean(Keys.BRACE_REMOVE_DO_WHILE,
                                               Defaults.BRACE_REMOVE_DO_WHILE))
                     {
                         if (!isBraceNecessary(node))
@@ -536,7 +536,7 @@ LOOP:
                     case JavaTokenTypes.LITERAL_else : // else part of if-else
                     case JavaTokenTypes.LITERAL_catch : // catch block
                     case JavaTokenTypes.LITERAL_finally : // finally block
-                        rightBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+                        rightBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                                   Defaults.BRACE_NEWLINE_RIGHT);
 
                         break;
@@ -546,7 +546,7 @@ LOOP:
                         switch (next.getParent().getType())
                         {
                             case JavaTokenTypes.LITERAL_do : // do-while block
-                                rightBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+                                rightBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                                           Defaults.BRACE_NEWLINE_RIGHT);
 
                                 break;
@@ -571,7 +571,7 @@ LOOP:
                             {
                                 case JavaTokenTypes.LITERAL_catch :
                                 case JavaTokenTypes.LITERAL_finally :
-                                    rightBraceNewline = this.prefs.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
+                                    rightBraceNewline = this.settings.getBoolean(Keys.BRACE_NEWLINE_RIGHT,
                                                                               Defaults.BRACE_NEWLINE_RIGHT);
 
                                     break;
@@ -643,7 +643,7 @@ LOOP:
                                     NodeWriter out)
         throws IOException
     {
-        out.print(out.getString(this.prefs.getInt(
+        out.print(out.getString(this.settings.getInt(
                                                   Keys.INDENT_SIZE_BRACE_CUDDLED,
                                                   Defaults.INDENT_SIZE_BRACE_CUDDLED)),
                   JavaTokenTypes.WS);

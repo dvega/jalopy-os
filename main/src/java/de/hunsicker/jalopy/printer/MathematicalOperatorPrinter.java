@@ -34,8 +34,8 @@
 package de.hunsicker.jalopy.printer;
 
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
 
 import java.io.IOException;
 
@@ -89,7 +89,7 @@ final class MathematicalOperatorPrinter
         throws IOException
     {
         super.print(node,
-                    this.prefs.getBoolean(Keys.PADDING_MATH_OPERATORS,
+                    this.settings.getBoolean(Keys.PADDING_MATH_OPERATORS,
                                           Defaults.PADDING_MATH_OPERATORS), out);
     }
 }

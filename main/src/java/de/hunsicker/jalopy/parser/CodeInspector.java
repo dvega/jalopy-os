@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -35,9 +35,9 @@ package de.hunsicker.jalopy.parser;
 
 import de.hunsicker.antlr.CommonHiddenStreamToken;
 import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.prefs.Defaults;
-import de.hunsicker.jalopy.prefs.Keys;
-import de.hunsicker.jalopy.prefs.Preferences;
+import de.hunsicker.jalopy.storage.Defaults;
+import de.hunsicker.jalopy.storage.Keys;
+import de.hunsicker.jalopy.storage.Convention;
 
 import java.io.File;
 import java.lang.reflect.Modifier;
@@ -77,8 +77,8 @@ public class CodeInspector
     /** The cache with the regexpes. */
     private static final PatternCache _patterns = new PatternCacheLRU(30);
 
-    /** The Jalopy preferences. */
-    private static final Preferences _prefs = Preferences.getInstance();
+    /** The code convention. */
+    private static final Convention _settings = Convention.getInstance();
     private static final ResourceBundle _bundle = ResourceBundle.getBundle("de.hunsicker.jalopy.Bundle");
     private static final String STR_boolean = "boolean";
     private static final String STR_Object = "Object";
@@ -228,7 +228,7 @@ public class CodeInspector
                 AST type = NodeHelper.getFirstChild(node, JavaTokenTypes.TYPE);
                 String returnType = type.getFirstChild().getText();
 
-                if (_prefs.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false) &&
+                if (_settings.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false) &&
                     _favorableTypes.contains(returnType))
                 {
                     addIssue(node, STR_REFER_BY_INTERFACE, _args);
@@ -588,7 +588,7 @@ public class CodeInspector
     private void checkArrayReturnType(AST    node,
                                       Method method)
     {
-        if (!_prefs.getBoolean(Keys.TIP_RETURN_ZERO_ARRAY, false))
+        if (!_settings.getBoolean(Keys.TIP_RETURN_ZERO_ARRAY, false))
         {
             return;
         }
@@ -635,7 +635,7 @@ public class CodeInspector
                             {
                                 case JavaTokenTypes.LITERAL_null :
 
-                                    if (_prefs.getBoolean(
+                                    if (_settings.getBoolean(
                                                           Keys.TIP_RETURN_ZERO_ARRAY,
                                                           false))
                                     {
@@ -660,7 +660,7 @@ public class CodeInspector
 
     private void checkAssignment(AST node)
     {
-        if (!_prefs.getBoolean(Keys.TIP_VARIABLE_SHADOW, false))
+        if (!_settings.getBoolean(Keys.TIP_VARIABLE_SHADOW, false))
         {
             return;
         }
@@ -702,7 +702,7 @@ public class CodeInspector
                                                 _args[2] = "this." + name +
                                                            " = " + name;
 
-                                                if (_prefs.getBoolean(
+                                                if (_settings.getBoolean(
                                                                       Keys.TIP_VARIABLE_SHADOW,
                                                                       false))
                                                 {
@@ -746,7 +746,7 @@ public class CodeInspector
      */
     private void checkCatch(AST node)
     {
-        if (!_prefs.getBoolean(Keys.TIP_DONT_IGNORE_EXCEPTION, false))
+        if (!_settings.getBoolean(Keys.TIP_DONT_IGNORE_EXCEPTION, false))
         {
             return;
         }
@@ -758,7 +758,7 @@ public class CodeInspector
         {
             // if the user does not document why the catch is ignored
             if ((!next.hasCommentsBefore()) &&
-                _prefs.getBoolean(Keys.TIP_DONT_IGNORE_EXCEPTION, false))
+                _settings.getBoolean(Keys.TIP_DONT_IGNORE_EXCEPTION, false))
             {
                 addIssue(node, STR_DONT_IGNORE_EXCEPTION, _args);
             }
@@ -775,13 +775,13 @@ public class CodeInspector
      */
     private void checkClass(AST node)
     {
-        boolean checkReplaceStructure = _prefs.getBoolean(Keys.TIP_REPLACE_STRUCTURE_WITH_CLASS,
+        boolean checkReplaceStructure = _settings.getBoolean(Keys.TIP_REPLACE_STRUCTURE_WITH_CLASS,
                                                           false);
-        boolean checkOverrideHashCode = _prefs.getBoolean(Keys.TIP_OVERRIDE_HASHCODE,
+        boolean checkOverrideHashCode = _settings.getBoolean(Keys.TIP_OVERRIDE_HASHCODE,
                                                           false);
-        boolean checkOverrideEquals = _prefs.getBoolean(Keys.TIP_OVERRIDE_EQUALS,
+        boolean checkOverrideEquals = _settings.getBoolean(Keys.TIP_OVERRIDE_EQUALS,
                                                         false);
-        boolean checkOverrideToString = _prefs.getBoolean(Keys.TIP_OVERRIDE_TO_STRING,
+        boolean checkOverrideToString = _settings.getBoolean(Keys.TIP_OVERRIDE_TO_STRING,
                                                           false);
 
         if ((!checkReplaceStructure) && (!checkOverrideHashCode) &&
@@ -861,7 +861,7 @@ public class CodeInspector
 
         if (checkReplaceStructure && isPublicClass && violate)
         {
-            if (_prefs.getBoolean(Keys.TIP_REPLACE_STRUCTURE_WITH_CLASS, false))
+            if (_settings.getBoolean(Keys.TIP_REPLACE_STRUCTURE_WITH_CLASS, false))
             {
                 addIssue(node, STR_REPLACE_STRUCTURE_WITH_CLASS, _args);
             }
@@ -869,7 +869,7 @@ public class CodeInspector
 
         if (foundEquals && (!foundHashCode))
         {
-            if (_prefs.getBoolean(Keys.TIP_OVERRIDE_HASHCODE, false))
+            if (_settings.getBoolean(Keys.TIP_OVERRIDE_HASHCODE, false))
             {
                 addIssue(equalsNode, STR_OVERRIDE_HASHCODE, _args);
             }
@@ -877,7 +877,7 @@ public class CodeInspector
 
         if (foundHashCode && (!foundEquals))
         {
-            if (_prefs.getBoolean(Keys.TIP_OVERRIDE_EQUALS, false))
+            if (_settings.getBoolean(Keys.TIP_OVERRIDE_EQUALS, false))
             {
                 addIssue(hashCodeNode, STR_OVERRIDE_EQUALS, _args);
             }
@@ -885,7 +885,7 @@ public class CodeInspector
 
         if (!foundToString)
         {
-            if (_prefs.getBoolean(Keys.TIP_OVERRIDE_TO_STRING, false))
+            if (_settings.getBoolean(Keys.TIP_OVERRIDE_TO_STRING, false))
             {
                 addIssue(node, STR_OVERRIDE_TO_STRING, _args);
             }
@@ -905,14 +905,14 @@ public class CodeInspector
 
         if (!JavaNodeModifier.isAbstract(node))
         {
-            Pattern pattern = _patterns.getPattern(_prefs.get(
+            Pattern pattern = _patterns.getPattern(_settings.get(
                                                               Keys.REGEXP_CLASS,
                                                               Defaults.REGEXP_CLASS));
 
             if ((!pattern.getPattern().equals(STR_EMPTY)) &&
                 (!_matcher.matches(name, pattern)))
             {
-                if (_prefs.getBoolean(Keys.TIP_ADHERE_TO_NAMING_CONVENTION,
+                if (_settings.getBoolean(Keys.TIP_ADHERE_TO_NAMING_CONVENTION,
                                       false))
                 {
                     _args[0] = "Class";
@@ -924,14 +924,14 @@ public class CodeInspector
         }
         else
         {
-            Pattern pattern = _patterns.getPattern(_prefs.get(
+            Pattern pattern = _patterns.getPattern(_settings.get(
                                                               Keys.REGEXP_CLASS_ABSTRACT,
                                                               Defaults.REGEXP_CLASS_ABSTRACT));
 
             if ((!pattern.getPattern().equals(STR_EMPTY)) &&
                 (!_matcher.matches(name, pattern)))
             {
-                if (_prefs.getBoolean(Keys.TIP_ADHERE_TO_NAMING_CONVENTION,
+                if (_settings.getBoolean(Keys.TIP_ADHERE_TO_NAMING_CONVENTION,
                                       false))
                 {
                     _args[0] = "Abstract class";
@@ -959,12 +959,12 @@ public class CodeInspector
             if (_collectionTypes.contains(returnType))
             {
                 if ((!node.hasCommentsAfter()) &&
-                    _prefs.getBoolean(Keys.TIP_DECLARE_COLLECTION_COMMENT,
+                    _settings.getBoolean(Keys.TIP_DECLARE_COLLECTION_COMMENT,
                                       false))
                 {
                     addIssue(node, STR_DECLARE_COLLECTION_COMMENT, _args);
                 }
-                else if (_prefs.getBoolean(Keys.TIP_WRONG_COLLECTION_COMMENT,
+                else if (_settings.getBoolean(Keys.TIP_WRONG_COLLECTION_COMMENT,
                                            false))
                 {
                     CommonHiddenStreamToken comment = (CommonHiddenStreamToken)node.getHiddenAfter();
@@ -1015,7 +1015,7 @@ public class CodeInspector
                 {
                     case JavaTokenTypes.LITERAL_throw :
 
-                        if (_prefs.getBoolean(Keys.TIP_OBEY_CONTRACT_EQUALS,
+                        if (_settings.getBoolean(Keys.TIP_OBEY_CONTRACT_EQUALS,
                                               false))
                         {
                             addIssue(node, STR_OBEY_CONTRACT_EQUALS, _args);
@@ -1039,13 +1039,13 @@ public class CodeInspector
      */
     private void checkFinally(AST node)
     {
-        if (!_prefs.getBoolean(Keys.TIP_EMPTY_FINALLY, false))
+        if (!_settings.getBoolean(Keys.TIP_EMPTY_FINALLY, false))
         {
             return;
         }
 
         if ((node.getFirstChild().getFirstChild().getType() == JavaTokenTypes.RCURLY) &&
-            _prefs.getBoolean(Keys.TIP_EMPTY_FINALLY, false))
+            _settings.getBoolean(Keys.TIP_EMPTY_FINALLY, false))
         {
             addIssue(node, STR_EMPTY_FINALLY, _args);
         }
@@ -1059,11 +1059,11 @@ public class CodeInspector
      */
     private void checkInterface(AST node)
     {
-        if (_prefs.getBoolean(Keys.TIP_INTERFACE_ONLY_FOR_TYPE, false))
+        if (_settings.getBoolean(Keys.TIP_INTERFACE_ONLY_FOR_TYPE, false))
         {
             AST body = NodeHelper.getFirstChild(node, JavaTokenTypes.OBJBLOCK);
             boolean violate = true;
-SEARCH: 
+SEARCH:
             for (AST child = body.getFirstChild();
                  child != null;
                  child = child.getNextSibling())
@@ -1117,7 +1117,7 @@ SEARCH:
     {
         String name = NodeHelper.getFirstChild(node, JavaTokenTypes.IDENT)
                                 .getText();
-        Pattern pattern = _patterns.getPattern(_prefs.get(
+        Pattern pattern = _patterns.getPattern(_settings.get(
                                                           Keys.REGEXP_INTERFACE,
                                                           Defaults.REGEXP_INTERFACE));
 
@@ -1140,7 +1140,7 @@ SEARCH:
     private void checkLabelName(AST node)
     {
         String name = node.getFirstChild().getText();
-        Pattern pattern = _patterns.getPattern(_prefs.get(Keys.REGEXP_LABEL,
+        Pattern pattern = _patterns.getPattern(_settings.get(Keys.REGEXP_LABEL,
                                                           Defaults.REGEXP_LABEL));
 
         if ((!pattern.getPattern().equals(STR_EMPTY)) &&
@@ -1162,7 +1162,7 @@ SEARCH:
      */
     private void checkMethodCall(AST node)
     {
-        if (!_prefs.getBoolean(Keys.TIP_NEVER_WAIT_OUTSIDE_LOOP, false))
+        if (!_settings.getBoolean(Keys.TIP_NEVER_WAIT_OUTSIDE_LOOP, false))
         {
             return;
         }
@@ -1238,7 +1238,7 @@ SEARCH:
     private void checkObjectEquals(AST    node,
                                    Method method)
     {
-        if (!_prefs.getBoolean(Keys.TIP_DONT_SUBSTITUTE_OBJECT_EQUALS, false))
+        if (!_settings.getBoolean(Keys.TIP_DONT_SUBSTITUTE_OBJECT_EQUALS, false))
         {
             return;
         }
@@ -1262,7 +1262,7 @@ SEARCH:
     private void checkPackageName(AST node)
     {
         String name = NodeHelper.getDottedName(node.getFirstChild());
-        Pattern pattern = _patterns.getPattern(_prefs.get(Keys.REGEXP_PACKAGE,
+        Pattern pattern = _patterns.getPattern(_settings.get(Keys.REGEXP_PACKAGE,
                                                           Defaults.REGEXP_PACKAGE));
 
         if ((!pattern.getPattern().equals(STR_EMPTY)) &&
@@ -1285,7 +1285,7 @@ SEARCH:
     private void checkParameters(AST         node,
                                  Constructor type)
     {
-        if (!_prefs.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false))
+        if (!_settings.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false))
         {
             return;
         }
@@ -1315,7 +1315,7 @@ SEARCH:
     private void checkReturnType(AST    node,
                                  Method method)
     {
-        if (!_prefs.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false))
+        if (!_settings.getBoolean(Keys.TIP_REFER_BY_INTERFACE, false))
         {
             return;
         }
@@ -1342,9 +1342,9 @@ SEARCH:
     private void checkThrows(AST         node,
                              Constructor type)
     {
-        boolean checkThrowException = _prefs.getBoolean(Keys.TIP_NEVER_THROW_EXCEPTION,
+        boolean checkThrowException = _settings.getBoolean(Keys.TIP_NEVER_THROW_EXCEPTION,
                                                         false);
-        boolean checkThrowThrowable = _prefs.getBoolean(Keys.TIP_NEVER_THROW_THROWABLE,
+        boolean checkThrowThrowable = _settings.getBoolean(Keys.TIP_NEVER_THROW_THROWABLE,
                                                         false);
 
         if ((!checkThrowException) && (!checkThrowThrowable))
@@ -1396,7 +1396,7 @@ SEARCH:
     {
         if (NodeHelper.isLocalVariable(node))
         {
-            Pattern pattern = _patterns.getPattern(_prefs.get(
+            Pattern pattern = _patterns.getPattern(_settings.get(
                                                               Keys.REGEXP_LOCAL_VARIABLE,
                                                               Defaults.REGEXP_LOCAL_VARIABLE));
 
@@ -1421,7 +1421,7 @@ SEARCH:
                 {
                     if (Modifier.isPublic(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PUBLIC_STATIC_FINAL,
                                                                           Defaults.REGEXP_FIELD_PUBLIC_STATIC_FINAL));
 
@@ -1436,7 +1436,7 @@ SEARCH:
                     }
                     else if (Modifier.isProtected(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PROTECTED_STATIC_FINAL,
                                                                           Defaults.REGEXP_FIELD_PROTECTED_STATIC_FINAL));
 
@@ -1451,7 +1451,7 @@ SEARCH:
                     }
                     else if (Modifier.isPrivate(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PRIVATE_STATIC_FINAL,
                                                                           Defaults.REGEXP_FIELD_PRIVATE_STATIC_FINAL));
 
@@ -1466,7 +1466,7 @@ SEARCH:
                     }
                     else
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_DEFAULT_STATIC_FINAL,
                                                                           Defaults.REGEXP_FIELD_DEFAULT_STATIC_FINAL));
 
@@ -1484,7 +1484,7 @@ SEARCH:
                 {
                     if (Modifier.isPublic(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PUBLIC_STATIC,
                                                                           Defaults.REGEXP_FIELD_PUBLIC_STATIC));
 
@@ -1499,7 +1499,7 @@ SEARCH:
                     }
                     else if (Modifier.isProtected(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PROTECTED_STATIC,
                                                                           Defaults.REGEXP_FIELD_PROTECTED_STATIC));
 
@@ -1514,7 +1514,7 @@ SEARCH:
                     }
                     else if (Modifier.isPrivate(modifierMask))
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_PRIVATE_STATIC,
                                                                           Defaults.REGEXP_FIELD_PRIVATE_STATIC));
 
@@ -1529,7 +1529,7 @@ SEARCH:
                     }
                     else
                     {
-                        Pattern pattern = _patterns.getPattern(_prefs.get(
+                        Pattern pattern = _patterns.getPattern(_settings.get(
                                                                           Keys.REGEXP_FIELD_DEFAULT_STATIC,
                                                                           Defaults.REGEXP_FIELD_DEFAULT_STATIC));
 
@@ -1548,7 +1548,7 @@ SEARCH:
             {
                 if (Modifier.isPublic(modifierMask))
                 {
-                    Pattern pattern = _patterns.getPattern(_prefs.get(
+                    Pattern pattern = _patterns.getPattern(_settings.get(
                                                                       Keys.REGEXP_FIELD_PUBLIC,
                                                                       Defaults.REGEXP_FIELD_PUBLIC));
 
@@ -1563,7 +1563,7 @@ SEARCH:
                 }
                 else if (Modifier.isProtected(modifierMask))
                 {
-                    Pattern pattern = _patterns.getPattern(_prefs.get(
+                    Pattern pattern = _patterns.getPattern(_settings.get(
                                                                       Keys.REGEXP_FIELD_PROTECTED,
                                                                       Defaults.REGEXP_FIELD_PROTECTED));
 
@@ -1578,7 +1578,7 @@ SEARCH:
                 }
                 else if (Modifier.isPrivate(modifierMask))
                 {
-                    Pattern pattern = _patterns.getPattern(_prefs.get(
+                    Pattern pattern = _patterns.getPattern(_settings.get(
                                                                       Keys.REGEXP_FIELD_PRIVATE,
                                                                       Defaults.REGEXP_FIELD_PRIVATE));
 
@@ -1593,7 +1593,7 @@ SEARCH:
                 }
                 else
                 {
-                    Pattern pattern = _patterns.getPattern(_prefs.get(
+                    Pattern pattern = _patterns.getPattern(_settings.get(
                                                                       Keys.REGEXP_FIELD_DEFAULT,
                                                                       Defaults.REGEXP_FIELD_DEFAULT));
 
