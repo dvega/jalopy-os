@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -59,6 +59,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import de.hunsicker.util.StringHelper;
 
 
 /**
@@ -106,7 +107,35 @@ public class HeaderPanel
         initialize();
     }
 
+    private final static String DELIMETER = "|";
+
     //~ Methods ·······························································
+
+    private void storeText()
+    {
+        String text = _textTextArea.getText().trim();
+
+        if (text.length() > 0)
+        {
+
+            String[] lines = StringHelper.split(text, "\n");
+
+            StringBuffer buf = new StringBuffer(text.length());
+
+            for (int i = 0; i < lines.length; i++)
+            {
+                buf.append(StringHelper.trimTrailing(lines[i]));
+                buf.append(DELIMETER);
+            }
+
+            if (lines.length > 0)
+            {
+                buf.deleteCharAt(buf.length() - 1);
+            }
+
+            this.prefs.put(getTextKey(), buf.toString());
+        }
+    }
 
     /**
      * {@inheritDoc}
@@ -118,9 +147,10 @@ public class HeaderPanel
         this.prefs.put(getBlankLinesAfterKey(),
                        (String)_blankLinesAfterComboBox.getSelectedItem());
         this.prefs.putBoolean(getUseKey(), _useCheckBox.isSelected());
-        this.prefs.put(getTypeKey(), _textTextArea.getText());
         this.prefs.put(getSmartModeKey(),
                        (String)_smartModeComboBox.getSelectedItem());
+
+        storeText();
 
         DefaultListModel keysListModel = (DefaultListModel)_keysList.getModel();
 
@@ -129,13 +159,12 @@ public class HeaderPanel
             String[] items = new String[keysListModel.size()];
             keysListModel.copyInto(items);
 
-            String delim = "|";
             StringBuffer buf = new StringBuffer(100);
 
             for (int i = 0; i < items.length; i++)
             {
                 buf.append(items[i]);
-                buf.append(delim);
+                buf.append(DELIMETER);
             }
 
             buf.deleteCharAt(buf.length() - 1);
@@ -241,7 +270,7 @@ public class HeaderPanel
      *
      * @see de.hunsicker.jalopy.prefs.Keys#HEADER_TEXT
      */
-    protected Key getTypeKey()
+    protected Key getTextKey()
     {
         return Keys.HEADER_TEXT;
     }
@@ -258,7 +287,6 @@ public class HeaderPanel
     {
         return Keys.HEADER;
     }
-
 
     /**
      * Returns the text for the use label.
@@ -290,13 +318,40 @@ public class HeaderPanel
         }
     }
 
+    /**
+     * Returns the default value for the BLANK_LINES_AFTER_XXX setting.
+     * @return default value of the BLANK_LINES_AFTER_XXX setting.
+     * @since 1.0b9
+     */
+    protected String getDefaultAfter()
+    {
+        return String.valueOf(Defaults.BLANK_LINES_AFTER_HEADER);
+    }
+
+    /**
+     * Returns the default values for the combo box entries to choose the
+     * value for the BLANK_LINES_AFTER_XXX settings.
+     * @return the default values for the blank lines after combo box.
+     * @since 1.0b9
+     */
+    protected String[] getItemsAfter()
+    {
+        return new String[] { "0", "1", "2", "3", "4", "5" };
+    }
+
+    private String loadText()
+    {
+        String text = this.prefs.get(getTextKey(), "");
+        return text.replace('|', '\n');
+    }
+
 
     /**
      * Initializes the UI.
      */
     private void initialize()
     {
-        _textTextArea = new JTextArea(this.prefs.get(getTypeKey(), ""), 7, 50);
+        _textTextArea = new JTextArea(loadText(), 7, 50);
         _textTextArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         _textTextArea.setForeground(new Color(0, 128, 128));
         _textTextArea.setCaretPosition(0);
@@ -360,10 +415,10 @@ public class HeaderPanel
         blankLinesLayout.setConstraints(_blankLinesBeforeComboBoxPnl, c);
         blankLinesPanel.add(_blankLinesBeforeComboBoxPnl);
         _blankLinesAfterComboBoxPnl = new NumberComboBoxPanel("Blank lines after:",
-                                                              items,
+                                                              getItemsAfter(),
                                                               this.prefs.get(
                                                                              getBlankLinesAfterKey(),
-                                                                             "0"));
+                                                                             getDefaultAfter()));
         _blankLinesAfterComboBox = _blankLinesAfterComboBoxPnl.getComboBox();
         _blankLinesAfterComboBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(c, 0, 1, GridBagConstraints.REMAINDER, 1,
@@ -387,9 +442,7 @@ public class HeaderPanel
         {
             keys = new ArrayList();
 
-            String delim = "|";
-
-            for (StringTokenizer tokens = new StringTokenizer(keysString, delim);
+            for (StringTokenizer tokens = new StringTokenizer(keysString, DELIMETER);
                  tokens.hasMoreElements();)
             {
                 keys.add(tokens.nextElement());

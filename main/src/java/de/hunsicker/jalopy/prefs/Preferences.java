@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -47,6 +47,7 @@ import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.History;
 import de.hunsicker.jalopy.parser.DeclarationType;
 import de.hunsicker.util.ChainingRuntimeException;
+import de.hunsicker.util.StringHelper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -127,7 +128,7 @@ public class Preferences
     private static final Map EMPTY_MAP = new HashMap(); // Map of <Key>:<String>
 
     /** The current version number. */
-    private static final String VERSION = "4";
+    private static final String VERSION = "5";
 
     /** Object to synchronize processes on. */
     private static final Object _lock = new Object();
@@ -731,7 +732,7 @@ public class Preferences
 
     /**
      * Returns the boolean value associated with the given key.
-     * 
+     *
      * <p>
      * This implementation invokes {@link #get(Key,String) <tt>get(key,
      * null)</tt>}. If the return value is non-null, it is compared with
@@ -926,7 +927,7 @@ public class Preferences
 
     /**
      * Returns the value associated with the given key.
-     * 
+     *
      * <p>
      * This implementation first checks to see if <tt>key</tt> is
      * <tt>null</tt> throwing a <tt>NullPointerException</tt> if this is the
@@ -991,7 +992,7 @@ public class Preferences
     /**
      * Implements the <tt>putBoolean</tt> method as per the specification in
      * {@link Preferences#putBoolean(Key,boolean)}.
-     * 
+     *
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
      * String#valueOf(boolean)} and invokes {@link #put(Key,String)} on the
@@ -1011,7 +1012,7 @@ public class Preferences
     /**
      * Implements the <tt>putInt</tt> method as per the specification in
      * {@link Preferences#putInt(Key,int)}.
-     * 
+     *
      * <p>
      * This implementation translates <tt>value</tt> to a string with {@link
      * Integer#toString(int)} and invokes {@link #put(Key,String)} on the
@@ -1193,7 +1194,7 @@ public class Preferences
 
 
     /**
-     * Converts a JDOM Tree to a map represenation.
+     * Converts a JDOM tree to a Map represenation.
      *
      * @param map the map to hold the values.
      * @param element root element of the JDOM tree.
@@ -1279,7 +1280,7 @@ public class Preferences
      * @throws ClassNotFoundException if a class could not be found.
      */
     private static Preferences readFromStream(InputStream in)
-        throws IOException, 
+        throws IOException,
                ClassNotFoundException
     {
         return new Preferences((Map)IoHelper.deserialize(new BufferedInputStream(in)));
@@ -1365,8 +1366,12 @@ public class Preferences
 
             case 3 : // 1.0b8
                 sync3To4(prefs);
+                sync(prefs, 4);
 
                 break;
+
+            case 4: // 1.0b9
+                sync4To5(prefs);
         }
     }
 
@@ -1461,6 +1466,53 @@ public class Preferences
 
                 break;
         }
+    }
+
+    /**
+     * Changes the preferences format from version 4 to version 5.
+     *
+     * @param prefs preferences to update.
+     *
+     * @since 1.0b9
+     */
+    private static void sync4To5(Preferences prefs)
+    {
+        String header = prefs.get(Keys.HEADER_TEXT, "").trim();
+        String[] lines = StringHelper.split(header, "\n");
+
+        StringBuffer buf = new StringBuffer(header.length());
+
+        for (int i = 0; i < lines.length; i++)
+        {
+            buf.append(StringHelper.trimTrailing(lines[i]));
+            buf.append('|');
+        }
+
+        if (lines.length > 0)
+        {
+            buf.deleteCharAt(buf.length() - 1);
+        }
+
+        prefs.put(Keys.HEADER_TEXT, buf.toString());
+
+
+        String footer = prefs.get(Keys.FOOTER_TEXT, "").trim();
+        lines = StringHelper.split(footer, "\n");
+
+        buf = new StringBuffer(footer.length());
+
+        for (int i = 0; i < lines.length; i++)
+        {
+            buf.append(StringHelper.trimTrailing(lines[i]));
+            buf.append('|');
+        }
+
+        if (lines.length > 0)
+        {
+            buf.deleteCharAt(buf.length() - 1);
+        }
+
+        prefs.put(Keys.FOOTER_TEXT, buf.toString());
     }
 
 

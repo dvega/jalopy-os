@@ -100,7 +100,7 @@ public final class Defaults
     public static final int BLANK_LINES_AFTER_DECLARATION = 0;
 
     /** DOCUMENT ME! */
-    public static final int BLANK_LINES_AFTER_FOOTER = 0;
+    public static final int BLANK_LINES_AFTER_FOOTER = 1;
 
     /** DOCUMENT ME! */
     public static final int BLANK_LINES_AFTER_HEADER = 0;
