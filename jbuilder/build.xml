@@ -59,8 +59,6 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         </patternset>
       </fileset>
       <manifest>
-        <attribute name="OpenTools-UI"
-                   value="de.hunsicker.jalopy.plugin.jbuilder.JbPlugin de.hunsicker.jalopy.plugin.jbuilder.BuildHandler de.hunsicker.jalopy.plugin.jbuilder.OldBuildHandler" />
         <section name="de/hunsicker/jalopy/plugin/jbuilder/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
           <attribute name="Specification-Version" value="${SPEC.VERSION.JBUILDER}" />
@@ -70,6 +68,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
+	<attribute name="OpenTools-Core"
+                   value="de.hunsicker.jalopy.plugin.jbuilder.BuildHandler de.hunsicker.jalopy.plugin.jbuilder.OldBuildHandler" />
+        <attribute name="OpenTools-UI"
+                   value="de.hunsicker.jalopy.plugin.jbuilder.JbPlugin" />
       </manifest>
     </jar>
   </target>

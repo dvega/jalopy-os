@@ -22,7 +22,7 @@ import com.borland.primetime.ide.Browser;
 import com.borland.primetime.node.FileNode;
 import com.borland.primetime.viewer.NodeViewMap;
 
-import de.hunsicker.jalopy.plugin.Annotation;
+import de.hunsicker.jalopy.language.Annotation;
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
@@ -297,9 +297,9 @@ final class JbEditor
 
 
     /**
-     * Returns the BreakPointTreeModel for the active browser.
+     * Returns the BreakpointTreeModel for the active browser.
      *
-     * @return BreakPointTreeModel
+     * @return BreakpointTreeModel
      *
      * @since 0.7.5
      */

@@ -28,6 +28,9 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import com.borland.jbuilder.JBuilderMenu;
+import com.borland.jbuilder.node.JBProject;
+import com.borland.jbuilder.node.JavaFileNode;
+import com.borland.jbuilder.node.PackageNode;
 import com.borland.jbuilder.paths.JDKPathSet;
 import com.borland.jbuilder.paths.PathSet;
 import com.borland.jbuilder.paths.PathSetManager;
@@ -43,8 +46,10 @@ import com.borland.primetime.editor.EditorPane;
 import com.borland.primetime.ide.Browser;
 import com.borland.primetime.ide.BrowserAction;
 import com.borland.primetime.ide.BrowserAdapter;
+import com.borland.primetime.ide.ContentManager;
 import com.borland.primetime.ide.ContextActionProvider;
 import com.borland.primetime.ide.ProjectView;
+import com.borland.primetime.node.FolderNode;
 import com.borland.primetime.node.Node;
 import com.borland.primetime.node.ProjectListener;
 import com.borland.primetime.util.VetoException;
@@ -61,6 +66,7 @@ import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.ImportPolicy;
+import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.jalopy.swing.SettingsDialog;
 import de.hunsicker.swing.ErrorDialog;
 import de.hunsicker.util.StringHelper;
@@ -87,10 +93,10 @@ public final class JbPlugin
             Convention.getInstance().getLocale());
 
     /** Our sole instance. */
-    private static final JbPlugin INSTANCE = new JbPlugin();
+    private static JbPlugin _instance;
 
     /** The currently active project. */
-    private static com.borland.jbuilder.node.JBProject _curProject;
+    private static JBProject _curProject;
 
     /** Number of project files in the active project. */
     private static int _numFiles;
@@ -101,15 +107,17 @@ public final class JbPlugin
     /** Helper array. */
     private static final Object[] _args = new Object[1];
 
+    /** Our log4j appender. */
+    private static JbAppender _appender;
+
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JbPlugin object.
      */
-    public JbPlugin()
+    private JbPlugin()
     {
-        super(new JbAppender());
-        initActions();
+        super(_appender);
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -168,10 +176,10 @@ public final class JbPlugin
 
 
     /**
-     * Initializes the Plug-in.
+     * Initializes this OpenTool.
      *
-     * @param major major release number for which the OpenTool is being initialized.
-     * @param minor minor release number for which the OpenTool is being initialized.
+     * @param major major release number for which this OpenTool is being initialized.
+     * @param minor minor release number for which this OpenTool is being initialized.
      */
     public static void initOpenTool(
         byte major,
@@ -192,6 +200,28 @@ public final class JbPlugin
 
             return;
         }
+
+        _appender = new JbAppender();
+        Loggers.initialize(_appender);
+
+        FormatSingleAction formatSingleAction = new FormatSingleAction();
+
+        JBuilderMenu.GROUP_ProjectBuild.add(formatSingleAction);
+        EditorManager.registerContextActionProvider(formatSingleAction);
+        EditorManager.getKeymap().addActionForKeyStroke(
+            KeyStroke.getKeyStroke(KeyEvent.VK_F10, Event.CTRL_MASK | Event.SHIFT_MASK),
+            formatSingleAction);
+        EditorActions.addBindableEditorAction(formatSingleAction);
+
+        ProjectView.registerContextActionProvider(new ProjectContextActionProvider());
+
+        SettingsAction displaySettingsAction = new SettingsAction();
+        getToolsGroup().add(2, displaySettingsAction);
+
+        EditorManager.registerContextActionProvider(displaySettingsAction);
+
+        ContentManager.registerContextActionProvider(
+            new ContentContextActionProvider(formatSingleAction));
 
         Browser.addStaticBrowserListener(new BrowserHandler());
 
@@ -294,6 +324,17 @@ public final class JbPlugin
     }
 
 
+    private static JbPlugin getInstance()
+    {
+        if (_instance == null)
+        {
+            _instance = new JbPlugin();
+        }
+
+        return _instance;
+    }
+
+
     /**
      * Returns all Java source files that make up the currently active project.
      *
@@ -317,7 +358,7 @@ public final class JbPlugin
      *
      * @return the ActionGroup for the <code>Tools</code> menu item.
      */
-    private ActionGroup getToolsGroup()
+    private static ActionGroup getToolsGroup()
     {
         ActionGroup toolGroup = null;
         ActionGroup[] groups = Browser.getMenuGroups();
@@ -357,7 +398,7 @@ public final class JbPlugin
      *
      * @since 1.0b8
      */
-    private static boolean checkClassPath(com.borland.jbuilder.node.JBProject project)
+    private static boolean checkClassPath(JBProject project)
     {
         String libraries = project.getProperty(project.PROPERTY_LIBRARIES);
 
@@ -373,7 +414,7 @@ public final class JbPlugin
                 Object[] args =
                 { library, BUNDLE.getString("TAB_REQUIRED_LIBRARIES" /* NOI18N */) };
                 JOptionPane.showMessageDialog(
-                    INSTANCE.getMainWindow(),
+                    Browser.getActiveBrowser(),
                     MessageFormat.format(
                         BUNDLE.getString("MSG_ERROR_EMPTY_LIBRARY" /* NOI18N */), args),
                     BUNDLE.getString("TLE_FORMATTING_IMPOSSIBLE" /* NOI18N */),
@@ -399,7 +440,7 @@ public final class JbPlugin
                     if (!location.exists())
                     {
                         JOptionPane.showMessageDialog(
-                            INSTANCE.getMainWindow(),
+                            Browser.getActiveBrowser(),
                             MessageFormat.format(
                                 BUNDLE.getString("MSG_ERROR_INVALID_PATH" /* NOI18N */),
                                 args),
@@ -461,21 +502,6 @@ public final class JbPlugin
      */
     private void initActions()
     {
-        FormatSingleAction formatSingleAction = new FormatSingleAction();
-
-        JBuilderMenu.GROUP_ProjectBuild.add(formatSingleAction);
-        EditorManager.registerContextActionProvider(formatSingleAction);
-        EditorManager.getKeymap().addActionForKeyStroke(
-            KeyStroke.getKeyStroke(KeyEvent.VK_F10, Event.CTRL_MASK | Event.SHIFT_MASK),
-            formatSingleAction);
-        EditorActions.addBindableEditorAction(formatSingleAction);
-
-        ProjectView.registerContextActionProvider(new JbContextActionProvider());
-
-        SettingsAction displaySettingsAction = new SettingsAction();
-        getToolsGroup().add(2, displaySettingsAction);
-
-        EditorManager.registerContextActionProvider(displaySettingsAction);
     }
 
     //~ Inner Classes --------------------------------------------------------------------
@@ -496,6 +522,7 @@ public final class JbPlugin
         public void browserClosed(Browser browser)
         {
             this.closing = false;
+            this.opened = false;
         }
 
 
@@ -509,8 +536,7 @@ public final class JbPlugin
         public void browserOpened(Browser browser)
         {
             this.opened = true;
-            browserProjectActivated(
-                browser, browser.getProjectView().getActiveProject());
+            browserProjectActivated(browser, browser.getProjectView().getActiveProject());
         }
 
 
@@ -538,7 +564,7 @@ public final class JbPlugin
             }
 
             // keep track of the current project
-            _curProject = (com.borland.jbuilder.node.JBProject) project;
+            _curProject = (JBProject) project;
 
             if (isImportOptimizationEnabled())
             {
@@ -557,15 +583,14 @@ public final class JbPlugin
 
             if (this.projects.size() == 0)
             {
-                unloadProject(
-                    (com.borland.jbuilder.node.JBProject) project, new Url[0]);
+                unloadProject((JBProject) project, new Url[0]);
             }
         }
 
 
         private void unloadProject(
-            com.borland.jbuilder.node.JBProject currentProject,
-            Url[]                               newLibraries)
+            JBProject currentProject,
+            Url[]     newLibraries)
         {
             if (currentProject == null)
             {
@@ -612,12 +637,12 @@ public final class JbPlugin
         private final class UpdateThreadZwei
             extends Thread
         {
-            com.borland.jbuilder.node.JBProject project;
+            JBProject project;
             JDialog dialog;
 
             UpdateThreadZwei(
-                JDialog                             dialog,
-                com.borland.jbuilder.node.JBProject project)
+                JDialog   dialog,
+                JBProject project)
             {
                 this.dialog = dialog;
                 this.project = project;
@@ -654,11 +679,10 @@ public final class JbPlugin
                     Object[] args = { ex.getMessage() };
 
                     JOptionPane.showMessageDialog(
-                        INSTANCE.getMainWindow(),
+                        Browser.getActiveBrowser(),
                         MessageFormat.format(
                             BUNDLE.getString("MSG_ERROR_LIBRARY_NOT_FOUND" /* NOI18N */),
-                            args),
-                        BUNDLE.getString("TLE_LIBRARY_NOT_FOUND" /* NOI18N */),
+                            args), BUNDLE.getString("TLE_LIBRARY_NOT_FOUND" /* NOI18N */),
                         JOptionPane.ERROR_MESSAGE);
                 }
 
@@ -670,6 +694,316 @@ public final class JbPlugin
                     BrowserHandler.this.projects.add(this.project);
                 }
             }
+        }
+    }
+
+
+    /**
+     * Provides the context menu action for the Content Pane.
+     */
+    private static final class ContentContextActionProvider
+        implements ContextActionProvider
+    {
+        javax.swing.Action action;
+
+        public ContentContextActionProvider(javax.swing.Action action)
+        {
+            this.action = action;
+        }
+
+        public javax.swing.Action getContextAction(
+            Browser browser,
+            Node[]  nodes)
+        {
+            javax.swing.Action result = null;
+
+            if (nodes.length == 1)
+            {
+                if (nodes[0] instanceof JavaFileNode)
+                {
+                    result = this.action;
+                }
+            }
+
+            return result;
+        }
+    }
+
+
+    /**
+     * Formats the project files currently selected in the project view.
+     */
+    private static final class FormatMultiAction
+        extends BrowserAction
+    {
+        /**
+         * Creates a new FormatMultiAction object.
+         */
+        public FormatMultiAction()
+        {
+            super("project-format" /* NOI18N */);
+
+            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
+            putValue(
+                BrowserAction.SHORT_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+            putValue(
+                BrowserAction.LONG_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT_FILES_DESCRIPTION" /* NOI18N */));
+        }
+
+        public void actionPerformed(Browser browser)
+        {
+            Node node = browser.getProjectView().getSelectedNode();
+
+            if (node instanceof JBProject)
+            {
+                switch (JOptionPane.showConfirmDialog(
+                    Browser.getActiveBrowser(),
+                    BUNDLE.getString("MSG_CONFIRM_FORMAT_PROJECT" /* NOI18N */),
+                    BUNDLE.getString("TLE_CONFIRM_FORMAT_PROJECT" /* NOI18N */),
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE))
+                {
+                    case JOptionPane.CANCEL_OPTION :
+                    case JOptionPane.CLOSED_OPTION :
+                        return;
+                }
+            }
+
+            if (isImportOptimizationEnabled())
+            {
+                if (!checkClassPath(_curProject))
+                {
+                    return;
+                }
+
+                if (ClassRepository.getInstance().isEmpty())
+                {
+                    /*Thread updater =  new UpdateThreadZwei(null, _curProject);
+                    updater.start();*/
+                }
+            }
+
+            // we want to update all selected nodes
+            getInstance().performAction(Action.FORMAT_SELECTED);
+        }
+    }
+
+
+    /**
+     * Formats the currently active editor window content.
+     */
+    private static final class FormatSingleAction
+        extends EditorAction
+        implements EditorContextActionProvider
+    {
+        /**
+         * Creates a new FormatSingleAction object.
+         */
+        public FormatSingleAction()
+        {
+            super("file-format" /* NOI18N */);
+            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
+            putValue(
+                BrowserAction.LONG_DESCRIPTION,
+                BUNDLE.getString("MNE_FORMAT_FILE_DESCRIPTION" /* NOI18N */));
+            putValue(UpdateAction.MNEMONIC, new Character('t'));
+            putValue(
+                UpdateAction.ACCELERATOR,
+                KeyStroke.getKeyStroke(
+                    KeyEvent.VK_F10, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
+        }
+
+        public javax.swing.Action getContextAction(EditorPane editor)
+        {
+            if (CONTENT_TYPE_JAVA.equals(editor.getContentType()))
+            {
+                return this;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+        /**
+         * Determines whether this action is enabled.
+         *
+         * @return <code>true</code> if the action is enabled.
+         */
+        public boolean isEnabled()
+        {
+            ProjectFile file = getInstance().getActiveProject().getActiveFile();
+
+            if (file == null)
+            {
+                putValue(
+                    BrowserAction.SHORT_DESCRIPTION,
+                    BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+
+                return false;
+            }
+            else
+            {
+                _args[0] = file.getName();
+
+                putValue(
+                    BrowserAction.SHORT_DESCRIPTION,
+                    MessageFormat.format(
+                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args));
+
+                return true;
+            }
+        }
+
+
+        public int getPriority()
+        {
+            return Integer.MAX_VALUE;
+        }
+
+
+        /**
+         * Gets one of this object's properties using the associated key.
+         *
+         * @param key a string containing the specified key.
+         *
+         * @return the binding Object stored with this key. If there are no keys, it will
+         *         return <code>null</code>.
+         */
+        public Object getValue(String key)
+        {
+            if (key.equals(BrowserAction.SHORT_DESCRIPTION))
+            {
+                ProjectFile file = getInstance().getActiveProject().getActiveFile();
+
+                if (file == null)
+                {
+                    return BUNDLE.getString("MNE_FORMAT" /* NOI18N */);
+                }
+                else
+                {
+                    _args[0] = file.getName();
+
+                    return MessageFormat.format(
+                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args);
+                }
+            }
+
+            return super.getValue(key);
+        }
+
+
+        /**
+         * Invoked when an action occurs.
+         *
+         * @param ev the event which caused the action.
+         */
+        public void actionPerformed(ActionEvent ev)
+        {
+            EditorManager.getEditor(Browser.getActiveBrowser().getActiveNode())
+                         .startUndoGroup();
+
+            if (isImportOptimizationEnabled())
+            {
+                if (!checkClassPath(_curProject))
+                {
+                    return;
+                }
+
+                if (ClassRepository.getInstance().isEmpty())
+                {
+                    ;
+                }
+            }
+
+            // we only want to update the active file
+            getInstance().performAction(Action.FORMAT_ACTIVE);
+        }
+    }
+
+
+    /**
+     * Provides the context menu action for the project view.
+     */
+    private static final class ProjectContextActionProvider
+        implements ContextActionProvider
+    {
+        FormatMultiAction action;
+
+        public javax.swing.Action getContextAction(
+            Browser browser,
+            Node[]  nodes)
+        {
+            javax.swing.Action result = null;
+
+            if (nodes.length == 1) // format one file or folder
+            {
+                if (nodes[0] instanceof JavaFileNode)
+                {
+                    _args[0] = nodes[0].getDisplayName();
+                    result = getContextAction();
+                    result.putValue(
+                        BrowserAction.SHORT_DESCRIPTION,
+                        MessageFormat.format(
+                            BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args));
+                    result.putValue(
+                        BrowserAction.LONG_DESCRIPTION,
+                        BUNDLE.getString("MNE_FORMAT_FILE_DESCRIPTION" /* NOI18N */));
+                }
+                else if (
+                    nodes[0] instanceof PackageNode || nodes[0] instanceof FolderNode)
+                {
+                    result = getContextAction();
+                    result.putValue(
+                        BrowserAction.SHORT_DESCRIPTION,
+                        BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+                    result.putValue(
+                        BrowserAction.LONG_DESCRIPTION,
+                        BUNDLE.getString("MNE_FORMAT_FOLDER_DESCRIPTION" /* NOI18N */));
+                }
+                else if (nodes[0] instanceof JBProject)
+                {
+                    _args[0] = nodes[0].getDisplayName();
+
+                    result = getContextAction();
+                    result.putValue(
+                        BrowserAction.SHORT_DESCRIPTION,
+                        MessageFormat.format(
+                            BUNDLE.getString("MNE_FORMAT_PROJECT" /* NOI18N */), _args));
+                    result.putValue(
+                        BrowserAction.LONG_DESCRIPTION,
+                        BUNDLE.getString("MNE_FORMAT_PROJECT_DESCRIPTION" /* NOI18N */));
+                }
+            }
+            else if (nodes.length == 0)
+            {
+                // nothing selected, nothing to do
+            }
+            else // format selected nodes
+            {
+                result = getContextAction();
+                result.putValue(
+                    BrowserAction.SHORT_DESCRIPTION,
+                    BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
+                result.putValue(
+                    BrowserAction.LONG_DESCRIPTION,
+                    BUNDLE.getString("MNE_FORMAT_FILES_DESCRIPTION" /* NOI18N */));
+            }
+
+            return result;
+        }
+
+
+        private javax.swing.Action getContextAction()
+        {
+            if (this.action == null)
+            {
+                this.action = new FormatMultiAction();
+            }
+
+            return this.action;
         }
     }
 
@@ -760,8 +1094,7 @@ public final class JbPlugin
                 }
 
                 Url[] unload = new Url[0];
-                ProjectPathSet paths =
-                    ((com.borland.jbuilder.node.JBProject) project).getPaths();
+                ProjectPathSet paths = ((JBProject) project).getPaths();
 
                 for (int i = 0, size = removed.size(); i < size; i++)
                 {
@@ -936,9 +1269,6 @@ public final class JbPlugin
         extends EditorAction
         implements EditorContextActionProvider
     {
-        /**
-         * Creates a new SettingsAction object.
-         */
         public SettingsAction()
         {
             super("config-jalopy" /* NOI18N */);
@@ -959,6 +1289,7 @@ public final class JbPlugin
 
         public javax.swing.Action getContextAction(EditorPane editor)
         {
+            // only add the action for Java source files
             if (CONTENT_TYPE_JAVA.equals(editor.getContentType()))
             {
                 return this;
@@ -983,212 +1314,13 @@ public final class JbPlugin
          */
         public void actionPerformed(ActionEvent ev)
         {
-            SettingsDialog dlg =
+            SettingsDialog dialog =
                 SettingsDialog.create(
                     Browser.getActiveBrowser(),
                     BUNDLE.getString("TLE_OPTIONS" /* NOI18N */));
-            dlg.pack();
-            dlg.setLocationRelativeTo(Browser.getActiveBrowser());
-            dlg.setVisible(true);
-        }
-    }
-
-
-    /**
-     * Formats the project files currently selected in the project view.
-     */
-    private final class FormatMultiAction
-        extends BrowserAction
-    {
-        /**
-         * Creates a new FormatMultiAction object.
-         */
-        public FormatMultiAction()
-        {
-            super("project-format" /* NOI18N */);
-
-            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
-            putValue(
-                BrowserAction.SHORT_DESCRIPTION,
-                BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
-            putValue(
-                BrowserAction.LONG_DESCRIPTION,
-                BUNDLE.getString("MNE_FORMAT_DESCRIPTION" /* NOI18N */));
-        }
-
-        public void actionPerformed(Browser browser)
-        {
-            if (isImportOptimizationEnabled())
-            {
-                if (!checkClassPath(_curProject))
-                {
-                    return;
-                }
-
-                if (ClassRepository.getInstance().isEmpty())
-                {
-                    /*Thread updater =  new UpdateThreadZwei(null, _curProject);
-                    updater.start();*/
-                }
-            }
-
-            // we want to update all selected nodes
-            performAction(Action.FORMAT_SELECTED);
-        }
-    }
-
-
-    /**
-     * Formats the currently active editor window content.
-     */
-    private final class FormatSingleAction
-        extends EditorAction
-        implements EditorContextActionProvider
-    {
-        /**
-         * Creates a new FormatSingleAction object.
-         */
-        public FormatSingleAction()
-        {
-            super("file-format" /* NOI18N */);
-            putValue("ActionGroup" /* NOI18N */, "Build" /* NOI18N */);
-            putValue(
-                BrowserAction.LONG_DESCRIPTION,
-                BUNDLE.getString("MNE_FORMAT_DESCRIPTION" /* NOI18N */));
-            putValue(UpdateAction.MNEMONIC, new Character('t'));
-            putValue(
-                UpdateAction.ACCELERATOR,
-                KeyStroke.getKeyStroke(
-                    KeyEvent.VK_F10, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-        }
-
-        public javax.swing.Action getContextAction(EditorPane editor)
-        {
-            if (CONTENT_TYPE_JAVA.equals(editor.getContentType()))
-            {
-                return this;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        /**
-         * Determines whether this action is enabled.
-         *
-         * @return <code>true</code> if the action is enabled.
-         */
-        public boolean isEnabled()
-        {
-            ProjectFile file = getActiveProject().getActiveFile();
-
-            if (file == null)
-            {
-                putValue(
-                    BrowserAction.SHORT_DESCRIPTION,
-                    BUNDLE.getString("MNE_FORMAT" /* NOI18N */));
-
-                return false;
-            }
-            else
-            {
-                _args[0] = file.getName();
-
-                putValue(
-                    BrowserAction.SHORT_DESCRIPTION,
-                    MessageFormat.format(
-                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args));
-
-                return true;
-            }
-        }
-
-
-        public int getPriority()
-        {
-            return Integer.MAX_VALUE;
-        }
-
-
-        /**
-         * Gets one of this object's properties using the associated key.
-         *
-         * @param key a string containing the specified key.
-         *
-         * @return the binding Object stored with this key. If there are no keys, it will
-         *         return <code>null</code>.
-         */
-        public Object getValue(String key)
-        {
-            if (key.equals(BrowserAction.SHORT_DESCRIPTION))
-            {
-                ProjectFile file = getActiveProject().getActiveFile();
-
-                if (file == null)
-                {
-                    return BUNDLE.getString("MNE_FORMAT" /* NOI18N */);
-                }
-                else
-                {
-                    _args[0] = file.getName();
-
-                    return MessageFormat.format(
-                        BUNDLE.getString("MNE_FORMAT_FILE" /* NOI18N */), _args);
-                }
-            }
-
-            return super.getValue(key);
-        }
-
-
-        /**
-         * Invoked when an action occurs.
-         *
-         * @param ev the event which caused the action.
-         */
-        public void actionPerformed(ActionEvent ev)
-        {
-            EditorManager.getEditor(Browser.getActiveBrowser().getActiveNode())
-                         .startUndoGroup();
-
-            if (isImportOptimizationEnabled())
-            {
-                if (!checkClassPath(_curProject))
-                {
-                    return;
-                }
-
-                if (ClassRepository.getInstance().isEmpty())
-                {
-                    ;
-                }
-            }
-
-            // we only want to update the active file
-            performAction(Action.FORMAT_ACTIVE);
-        }
-    }
-
-
-    /**
-     * Provides the context menu action for the project view.
-     */
-    private final class JbContextActionProvider
-        implements ContextActionProvider
-    {
-        FormatMultiAction action = new FormatMultiAction();
-
-        public JbContextActionProvider()
-        {
-        }
-
-        public javax.swing.Action getContextAction(
-            Browser browser,
-            Node[]  nodes)
-        {
-            return (this.action);
+            dialog.pack();
+            dialog.setLocationRelativeTo(Browser.getActiveBrowser());
+            dialog.setVisible(true);
         }
     }
 }

@@ -18,6 +18,7 @@ import com.borland.primetime.node.Node;
 import com.borland.primetime.node.Project;
 
 import de.hunsicker.jalopy.plugin.ProjectFile;
+import de.hunsicker.jalopy.storage.Loggers;
 
 
 /**
@@ -29,6 +30,10 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 final class JbProject
     implements de.hunsicker.jalopy.plugin.Project
 {
+    //~ Static variables/initializers ----------------------------------------------------
+
+    private static final String LESS_THAN = "<" /* NOI18N */;
+
     //~ Instance variables ---------------------------------------------------------------
 
     /** Used to build ProjectFile arrays. */
@@ -146,6 +151,25 @@ final class JbProject
      */
     private void walkChildren(Node node)
     {
+        if (Loggers.IO.isDebugEnabled())
+        {
+            Node[] nodes = Browser.getActiveBrowser().getOpenNodes(_project);
+
+            boolean open = false;
+
+            for (int i = 0; i < nodes.length; i++)
+            {
+                if (nodes[i] == node)
+                {
+                    open = true;
+
+                    break;
+                }
+            }
+
+            System.err.println("Iterate over -- " + node + " " + open);
+        }
+
         Node[] nodes = node.getDisplayChildren();
 
         for (int i = 0; i < nodes.length; i++)
@@ -168,7 +192,7 @@ final class JbProject
              * @todo is there a kind of 'special' node in the Professional/Enterprise
              *       versions?
              */
-            if ("<Project Source>".equals(node.getDisplayName()))
+            if (node.getDisplayName().startsWith(LESS_THAN))
             {
                 // ignore children of this node to avoid duplication
                 return;

@@ -37,6 +37,7 @@ import com.borland.primetime.vfs.Url;
 import com.borland.primetime.viewer.TextViewerComponent;
 
 import de.hunsicker.jalopy.plugin.AbstractAppender;
+import de.hunsicker.swing.ErrorDialog;
 import de.hunsicker.util.ResourceBundleFactory;
 import de.hunsicker.util.StringHelper;
 
@@ -93,11 +94,6 @@ final class JbAppender
      */
     public void append(LoggingEvent ev)
     {
-        if (!checkEntryConditions())
-        {
-            return;
-        }
-
         final MessageView view = Browser.getActiveBrowser().getMessageView();
 
         if (_root == null)
@@ -178,6 +174,250 @@ final class JbAppender
     }
 
     //~ Inner Classes --------------------------------------------------------------------
+
+    /**
+     * Custom message which let us interact with the current editor pane.
+     */
+    private static final class FileMessage
+        extends Message
+    {
+        private static final String LINE_SEPARATOR = "\n" /* NOI18N */;
+        private static final String TAB_CHARACTER = "\t" /* NOI18N */;
+        private static final String TAB_SPACING = "  " /* NOI18N */;
+        private static final CaretListener HIGHLIGHT_HANDLER = new HighlightHandler();
+
+        /** File which caused the message. */
+        String filename;
+
+        /** Level of the message. */
+        int level;
+
+        /** Holds the sucessive lines of the message (if this is a multiline message). */
+        private List _messages = Collections.EMPTY_LIST; // List of <Message>
+
+        /** Line number where an error/warning occured. */
+        private int _line;
+
+        /**
+         * Creates a new FileMessage object.
+         *
+         * @param filename filename of the source file which caused the message.
+         * @param lineno line number where the message origins.
+         * @param text message text.
+         * @param level message level.
+         */
+        public FileMessage(
+            String filename,
+            int    lineno,
+            String text,
+            int    level)
+        {
+            this.filename = filename;
+            this.level = level;
+            _line = lineno;
+
+            Color color = Color.black;
+            StringBuffer buf = new StringBuffer(text.length());
+            setIcon(BrowserIcons.ICON_FILETEXT);
+
+            switch (level)
+            {
+                case Level.ERROR_INT :
+                case Level.FATAL_INT :
+                    color = Color.red;
+
+                    break;
+
+                case Level.WARN_INT :
+                    color = Color.blue;
+
+                    break;
+
+                default :
+                    break;
+            }
+
+            setForeground(color);
+
+            // is this a multiline message?
+            if (text.indexOf('\n') > -1)
+            {
+                setLazyFetchChildren(true);
+                _messages = new ArrayList();
+
+                StringTokenizer tokens = new StringTokenizer(text, LINE_SEPARATOR);
+                buf.append(lineno);
+                buf.append(':');
+                buf.append(tokens.nextToken());
+                setText(buf.toString());
+
+                while (tokens.hasMoreElements())
+                {
+                    String line =
+                        StringHelper.replace(
+                            tokens.nextToken(), TAB_CHARACTER, TAB_SPACING);
+                    Message message = new Message(line);
+                    _messages.add(message);
+                    message.setForeground(color);
+                }
+            }
+            else
+            {
+                buf.append(lineno);
+                buf.append(':');
+                buf.append(text);
+                setText(buf.toString());
+            }
+        }
+
+        public void fetchChildren(Browser browser)
+        {
+            MessageView view = browser.getMessageView();
+
+            for (int i = 0, size = _messages.size(); i < size; i++)
+            {
+                view.addMessage(CATEGORY, this, (Message) _messages.get(i));
+            }
+        }
+
+
+        /**
+         * Triggered if the user clicks on the item. Jumps to the line in the editor pane
+         * where an error/warning occured. If the file is not currently displayed, it
+         * will be opened.
+         *
+         * @param browser the Browser owning the MessageView.
+         */
+        public void selectAction(Browser browser)
+        {
+            /**
+             * @todo I'd rather wanted to override messageAction() but it doesn't work
+             *       for multiple line messages as of JBuilder 5.0 (it only expands the
+             *       parent node, but does not trigger the message action)
+             */
+
+            // if there is no line number given, there is nothing to do
+            if (_line <= NOT_AVAILABLE)
+            {
+                return;
+            }
+
+            EditorPane pane = getEditor(browser);
+
+            if (pane != null)
+            {
+                int totalLines = pane.getLineCount();
+
+                if (_line > totalLines)
+                {
+                    _line = totalLines;
+                }
+
+                pane.gotoLine(_line, false);
+                pane.requestFocus();
+                pane.setHighlight(_line);
+
+                /**
+                 * @todo if we don't add our listener, the highlight will only be removed
+                 *       if the user collapses the message which caused the line to be
+                 *       highlighted. Is this a bug or a feature?
+                 */
+                pane.addCaretListener(HIGHLIGHT_HANDLER);
+            }
+        }
+
+
+        /**
+         * Gets the editor pane for the given node.
+         *
+         * @param browser browser to display the node in.
+         *
+         * @return editor pane for the selected file or <code>null</code> if no editor
+         *         pane could be located/created.
+         */
+        private EditorPane getEditor(Browser browser)
+        {
+            Url url = new Url(new File(this.filename));
+            Project project = browser.getActiveProject();
+            Node node = project.findNode(url);
+
+            if (node == null)
+            {
+                browser.doOpen(url, browser.getActiveProject(), false);
+                node = browser.getActiveNode();
+            }
+
+            // make sure the node is the active node
+            else if (!node.equals(browser.getActiveNode()))
+            {
+                try
+                {
+                    browser.setActiveNode(node, true);
+                }
+                catch (Throwable ex)
+                {
+                    ErrorDialog dialog =
+                        ErrorDialog.create(Browser.getActiveBrowser(), ex);
+                    dialog.setVisible(true);
+                    dialog.dispose();
+
+                    return null;
+                }
+            }
+
+            NodeViewer viewer = browser.getActiveViewer(node);
+            TextViewerComponent component =
+                (TextViewerComponent) viewer.getViewerComponent();
+
+            return component.getMainView().getEditor();
+        }
+
+
+        /**
+         * Gets an appropriate icon for the given logging event.
+         *
+         * @param level of the logging event.
+         *
+         * @return icon to display in the message view.
+         */
+        private Icon getIcon(int level)
+        {
+            switch (level)
+            {
+                case Level.INFO_INT :
+                    return BrowserIcons.ICON_TIPOFTHEDAY;
+
+                case Level.ERROR_INT :
+                case Level.FATAL_INT :
+                    return BrowserIcons.ICON_ERROR;
+
+                case Level.WARN_INT :
+                    return BrowserIcons.ICON_WARNING;
+
+                default :
+                    break;
+            }
+
+            return BrowserIcons.ICON_UNKNOWN;
+        }
+
+        /**
+         * Clears the highlight if the user selects another line.
+         */
+        private static final class HighlightHandler
+            implements CaretListener
+        {
+            public void caretUpdate(CaretEvent ev)
+            {
+                // if the user moves the caret, clear the highlighted line
+                EditorPane pane = (EditorPane) ev.getSource();
+                pane.clearHighlight();
+
+                pane.removeCaretListener(this);
+            }
+        }
+    }
+
 
     /**
      * Acts as the root for all messages belonging to one file. Children are lazy loaded
@@ -312,6 +552,7 @@ final class JbAppender
                 }
 
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+
                 Object nodeValue = node.getUserObject();
 
                 if (nodeValue == null)
@@ -327,253 +568,15 @@ final class JbAppender
                     ParentMessage.this.filename, new Integer(_infos),
                     new Integer(_warnings), new Integer(_errors)
                 };
+
                 this.setText(
                     MessageFormat.format(
                         ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                             "LBL_ROOT_MESSAGE" /* NOI18N */), args));
+
                 this.setIcon(null);
 
                 return this;
-            }
-        }
-    }
-
-
-    /**
-     * Custom message which let us interact with the current editor pane.
-     */
-    private static final class FileMessage
-        extends Message
-    {
-        private static final String LINE_SEPARATOR = "\n" /* NOI18N */;
-        private static final String TAB_CHARACTER = "\t" /* NOI18N */;
-        private static final String TAB_SPACING = "  " /* NOI18N */;
-        private static final CaretListener HIGHLIGHT_HANDLER = new HighlightHandler();
-
-        /** File which caused the message. */
-        String filename;
-
-        /** Level of the message. */
-        int level;
-
-        /** Holds the sucessive lines of the message (if this is a multiline message). */
-        private List _messages = Collections.EMPTY_LIST; // List of <Message>
-
-        /** Line number where an error/warning occured. */
-        private int _line;
-
-        /**
-         * Creates a new FileMessage object.
-         *
-         * @param filename filename of the source file which caused the message.
-         * @param lineno line number where the message origins.
-         * @param text message text.
-         * @param level message level.
-         */
-        public FileMessage(
-            String filename,
-            int    lineno,
-            String text,
-            int    level)
-        {
-            this.filename = filename;
-            this.level = level;
-            setIcon(BrowserIcons.ICON_FILETEXT);
-            _line = lineno;
-
-            StringBuffer buf = new StringBuffer(text.length());
-            Color color = Color.black;
-
-            switch (level)
-            {
-                case Level.ERROR_INT :
-                case Level.FATAL_INT :
-                    color = Color.red;
-
-                    break;
-
-                case Level.WARN_INT :
-                    color = Color.blue;
-
-                    break;
-
-                default :
-                    break;
-            }
-
-            setForeground(color);
-
-            // is this a multiline message?
-            if (text.indexOf('\n') > -1)
-            {
-                setLazyFetchChildren(true);
-                _messages = new ArrayList();
-
-                StringTokenizer tokens = new StringTokenizer(text, LINE_SEPARATOR);
-                buf.append(lineno);
-                buf.append(':');
-                buf.append(tokens.nextToken());
-                setText(buf.toString());
-
-                while (tokens.hasMoreElements())
-                {
-                    String line =
-                        StringHelper.replace(
-                            tokens.nextToken(), TAB_CHARACTER, TAB_SPACING);
-                    Message message = new Message(line);
-                    _messages.add(message);
-                    message.setForeground(color);
-                }
-            }
-            else
-            {
-                buf.append(lineno);
-                buf.append(':');
-                buf.append(text);
-                setText(buf.toString());
-            }
-        }
-
-        public void fetchChildren(Browser browser)
-        {
-            MessageView view = browser.getMessageView();
-
-            for (int i = 0, size = _messages.size(); i < size; i++)
-            {
-                view.addMessage(CATEGORY, this, (Message) _messages.get(i));
-            }
-        }
-
-
-        /**
-         * Triggered if the user clicks on the item. Jumps to the line in the editor pane
-         * where an error/warning occured. If the file is not currently displayed, it
-         * will be opened.
-         *
-         * @param browser the Browser owning the MessageView.
-         */
-        public void selectAction(Browser browser)
-        {
-            /**
-             * @todo I'd rather wanted to override messageAction() but it doesn't work
-             *       for multiple line messages as of JBuilder 5.0 (it only expands the
-             *       parent node, but don't trigger the message action)
-             */
-
-            // if there is no line number given, there is nothing to do
-            if (_line <= NOT_AVAILABLE)
-            {
-                return;
-            }
-
-            EditorPane pane = getEditor(browser);
-
-            if (pane != null)
-            {
-                int totalLines = pane.getLineCount();
-
-                if (_line > totalLines)
-                {
-                    _line = totalLines;
-                }
-
-                pane.gotoLine(_line, false);
-                pane.requestFocus();
-                pane.setHighlight(_line);
-
-                /**
-                 * @todo if we don't add our listener the highlight will only be removed
-                 *       if the user collapses the message which caused the line to be
-                 *       highlighted. Is this a bug or a feature?
-                 */
-                pane.addCaretListener(HIGHLIGHT_HANDLER);
-            }
-        }
-
-
-        /**
-         * Gets the editor pane for the given node.
-         *
-         * @param browser browser to display the node in.
-         *
-         * @return editor pane for the selected file or <code>null</code> if no editor
-         *         pane could be located/created.
-         */
-        private EditorPane getEditor(Browser browser)
-        {
-            Url url = new Url(new File(this.filename));
-            Project project = browser.getActiveProject();
-            Node node = project.findNode(url);
-
-            if (node == null)
-            {
-                browser.doOpen(url, browser.getActiveProject(), false);
-                node = browser.getActiveNode();
-            }
-
-            // make sure the node is the active node
-            else if (!node.equals(browser.getActiveNode()))
-            {
-                try
-                {
-                    browser.setActiveNode(node, true);
-                }
-                catch (Exception ex)
-                {
-                    ex.printStackTrace();
-
-                    return null;
-                }
-            }
-
-            NodeViewer viewer = browser.getActiveViewer(node);
-            TextViewerComponent component =
-                (TextViewerComponent) viewer.getViewerComponent();
-
-            return (component.getMainView().getEditor());
-        }
-
-
-        /**
-         * Gets an appropriate icon for the given logging event.
-         *
-         * @param level of the logging event.
-         *
-         * @return icon to display in the message view.
-         */
-        private Icon getIcon(int level)
-        {
-            switch (level)
-            {
-                case Level.INFO_INT :
-                    return BrowserIcons.ICON_TIPOFTHEDAY;
-
-                case Level.ERROR_INT :
-                case Level.FATAL_INT :
-                    return BrowserIcons.ICON_ERROR;
-
-                case Level.WARN_INT :
-                    return BrowserIcons.ICON_WARNING;
-
-                default :
-                    break;
-            }
-
-            return BrowserIcons.ICON_UNKNOWN;
-        }
-
-        /**
-         * Clears the highlight if the user selects another line.
-         */
-        private static final class HighlightHandler
-            implements CaretListener
-        {
-            public void caretUpdate(CaretEvent ev)
-            {
-                // if the user moves the caret, clear the highlighted line
-                EditorPane pane = (EditorPane) ev.getSource();
-                pane.clearHighlight();
-                pane.removeCaretListener(this);
             }
         }
     }
