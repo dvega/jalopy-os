@@ -26,14 +26,15 @@ public class Braces
 
                 switch (a)
                 {
-                    case 0 :
-                    {
+                    case 0 : {
                         doCase0();
                         break;
                     }
+                    case 1:
+                        doCase1();
+                        break;
 
-                    default :
-                    {
+                    default : {
                         doDefault();
                         break;
                     }
