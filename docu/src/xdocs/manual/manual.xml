@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 
-<!-- 
+<!--
      $Id$
  -->
 
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
           "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"
   [
-  <!ENTITY dedication SYSTEM "dedication.xml">    
-  <!ENTITY introduction SYSTEM "introduction.xml">    
-  <!ENTITY page-general SYSTEM "page-general.xml">    
+  <!ENTITY dedication SYSTEM "dedication.xml">
+  <!ENTITY introduction SYSTEM "introduction.xml">
+  <!ENTITY page-general SYSTEM "page-general.xml">
   <!ENTITY page-project SYSTEM "page-project.xml">
-  <!ENTITY page-braces SYSTEM "page-braces.xml"> 
-  <!ENTITY page-whitespace SYSTEM "page-whitespace.xml">  
+  <!ENTITY page-braces SYSTEM "page-braces.xml">
+  <!ENTITY page-whitespace SYSTEM "page-whitespace.xml">
   <!ENTITY page-indentation SYSTEM "page-indentation.xml">
   <!ENTITY page-wrapping SYSTEM "page-wrapping.xml">
   <!ENTITY page-separation SYSTEM "page-separation.xml">
@@ -25,16 +25,17 @@
   <!ENTITY page-environment SYSTEM "page-environment.xml">
   <!ENTITY page-imports SYSTEM "page-imports.xml">
   <!ENTITY page-messages SYSTEM "page-messages.xml">
-  <!ENTITY plugin-ant SYSTEM "plugin-ant.xml">    
+  <!ENTITY plugin-ant SYSTEM "plugin-ant.xml">
   <!ENTITY plugin-ant-params SYSTEM "plugin-ant-params.xml">
-  <!ENTITY plugin-console SYSTEM "plugin-console.xml">  
-  <!ENTITY plugin-eclipse SYSTEM "plugin-eclipse.xml">  
+  <!ENTITY plugin-console SYSTEM "plugin-console.xml">
+  <!ENTITY plugin-eclipse SYSTEM "plugin-eclipse.xml">
   <!ENTITY plugin-jbuilder SYSTEM "plugin-jbuilder.xml">
   <!ENTITY plugin-jdev SYSTEM "plugin-jdev.xml">
   <!ENTITY plugin-jedit SYSTEM "plugin-jedit.xml">
   <!ENTITY plugin-netbeans SYSTEM "plugin-netbeans.xml">
-  <!ENTITY dependencies SYSTEM "dependencies.xml"> 
-  <!ENTITY license-apache SYSTEM "license-apache.xml"> 
+  <!ENTITY dependencies SYSTEM "dependencies.xml">
+  <!ENTITY license-antlr SYSTEM "license-antlr.xml">
+  <!ENTITY license-apache SYSTEM "license-apache.xml">
   <!ENTITY license-bsd SYSTEM "license-bsd.xml">
   <!ENTITY license-common-public SYSTEM "license-common-public.xml">
   <!ENTITY license-sun-public SYSTEM "license-sun-public.xml">
@@ -61,19 +62,19 @@
 <title>Legal Notice</title>
 
 <para>
-Permission is granted to copy, distribute and/or modify this document under 
-the terms of the GNU Free Documentation License, Version 1.1 or any later 
-version published by the Free Software Foundation; with no "Invariant Sections", 
-"Front-Cover Texts" or "Back-Cover Texts", each as defined in the license. For 
+Permission is granted to copy, distribute and/or modify this document under
+the terms of the GNU Free Documentation License, Version 1.1 or any later
+version published by the Free Software Foundation; with no "Invariant Sections",
+"Front-Cover Texts" or "Back-Cover Texts", each as defined in the license. For
 a copy of the license terms refer to <xref linkend="license-gnu-doc" />.
 </para>
 
 <para>
 This product includes software developed by
-<ulink url="http://www.antlr.org/">jGuru.com (MageLang Institute)</ulink>, the 
-<ulink url="http://www.apache.org/">Apache Software Foundation</ulink>, the 
-<ulink url="http://www.jdom.org">JDOM group</ulink> and other 
-individuals. Please refer to <xref linkend="dependencies" /> for a detailed list 
+<ulink url="http://www.antlr.org/">jGuru.com (MageLang Institute)</ulink>, the
+<ulink url="http://www.apache.org/">Apache Software Foundation</ulink>, the
+<ulink url="http://www.jdom.org">JDOM group</ulink> and other
+individuals. Please refer to <xref linkend="dependencies" /> for a detailed list
 and the licensing terms.
 </para>
 </legalnotice>
@@ -94,8 +95,8 @@ and the licensing terms.
 
 <partintro>
 <para>
-This part of the manual covers the core Jalopy engine: generic installation and 
-usage instructions along with a detailed discussion of the available switches 
+This part of the manual covers the core Jalopy engine: generic installation and
+usage instructions along with a detailed discussion of the available switches
 to customize formatting output.
 </para>
 </partintro>
@@ -154,10 +155,10 @@ sources:
 <itemizedlist mark="square">
 <listitem>
 <para>
-Jakarta Ant. Jalopy comes with a simple, Ant-based build 
-system. So you first need to obtain and install Ant as outlined in the 
-<ulink url="http://jakarta.apache.org/ant/manual/install.html">Ant manual</ulink>. 
-The build system is only tested against the Ant 1.5 release, but later nightly 
+Jakarta Ant. Jalopy comes with a simple, Ant-based build
+system. So you first need to obtain and install Ant as outlined in the
+<ulink url="http://jakarta.apache.org/ant/manual/install.html">Ant manual</ulink>.
+The build system is only tested against the Ant 1.5 release, but later nightly
 builds of Ant may also work.
 </para>
 </listitem>
@@ -182,11 +183,11 @@ generation.
 
 <listitem>
 <para>
-An XSLT processor. The only one I found working with the DocBook XSL release 
-I'm using is Michael Kay's Saxon. You should download the current stable 
-production release from SourceForge 
+An XSLT processor. The only one I found working with the DocBook XSL release
+I'm using is Michael Kay's Saxon. You should download the current stable
+production release from SourceForge
 (<ulink url="http://saxon.sf.net">http://saxon.sf.net</ulink>)
-and extract the file <filename>saxon.jar</filename> into the <filename>/lib</filename> 
+and extract the file <filename>saxon.jar</filename> into the <filename>/lib</filename>
 folder of your Ant installation directory.
 </para>
 </listitem>
@@ -211,8 +212,8 @@ Make sure Ant is set up correctly.
 
 <listitem>
 <para>
-Get the sources. Currently you don't have a choice but to download the 
-<ulink url="./download.html#source">Jalopy source distribution</ulink> which 
+Get the sources. Currently you don't have a choice but to download the
+<ulink url="./download.html#source">Jalopy source distribution</ulink> which
 contains the complete Jalopy sources. Unpack the sources into a directory of
 your choice.</para>
 </listitem>
@@ -232,13 +233,13 @@ directory layout somewhat similar to the following:
 &lt;DIR&gt;          jdeveloper
 &lt;DIR&gt;          jedit
 &lt;DIR&gt;          main
-&lt;DIR&gt;          netbeans  
+&lt;DIR&gt;          netbeans
 </screen>
 
 <para>
 <firstterm>main</firstterm> contains the core Jalopy runtime sources,
-<firstterm>docu</firstterm> all documentation, <firstterm>build</firstterm> 
-contains the build system and files related to installation and maintainance, 
+<firstterm>docu</firstterm> all documentation, <firstterm>build</firstterm>
+contains the build system and files related to installation and maintainance,
 the other (optional) directories contain the sources of the different Plug-ins.
 </para>
 
@@ -250,7 +251,7 @@ lurks.
 
 <listitem>
 <para>
-Adjust the global build properties to match your installation. The build 
+Adjust the global build properties to match your installation. The build
 system uses quite a few properties to control the behaviour and
 specify additional needed resources. You will find these properties in the file
 <filename>build.properties</filename>.
@@ -306,7 +307,7 @@ to match your installation.
 
 <listitem>
 <para>
-Once everything is set up, you can start a build by using <command>ant</command> <parameter>target</parameter> 
+Once everything is set up, you can start a build by using <command>ant</command> <parameter>target</parameter>
 where <parameter>target</parameter> describes one of the main build targets (those with a
 description, use <command>ant</command> <parameter>-projecthelp</parameter> to display
 the available targets). Just typing <command>ant</command> will build the Jalopy
@@ -353,7 +354,7 @@ individual Plug-in chapters in <xref linkend="part-plugins" /> for details.
 <indexterm><primary>Preferences</primary></indexterm>
 
 <para id="settings-directory">
-Jalopy stores all preferences settings as files inside its 
+Jalopy stores all preferences settings as files inside its
 <firstterm>settings directory</firstterm> (or subdirectories thereof).
 This directory is located in the user home directory (<filename>$HOME/.jalopy</filename>).
 </para>
@@ -361,9 +362,9 @@ This directory is located in the user home directory (<filename>$HOME/.jalopy</f
 <indexterm zone="settings-directory"><primary>Settings directory</primary></indexterm>
 
 <para>
-A graphical user interface is provided to easily configure the preferences. 
+A graphical user interface is provided to easily configure the preferences.
 Please refer to the individual Plug-in chapters in <xref linkend="part-plugins"/>
-for information on how to display it from within the Plug-in you received. 
+for information on how to display it from within the Plug-in you received.
 </para>
 
 &page-general;
@@ -445,6 +446,10 @@ This part of the manual covers the different Plug-ins available.
 
 <appendix id="license-bsd">
 &license-bsd;
+</appendix>
+
+<appendix id="license-antlr">
+&license-antlr;
 </appendix>
 
 <appendix id="license-apache">

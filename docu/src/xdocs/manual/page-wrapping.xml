@@ -39,8 +39,8 @@ Enables or disables the automatic line wrapping.
 Line length
 </para>
 <para>
-Lets you specify the maximum line length. Jalopy tries to limit each line within 
-the given length. 
+Lets you specify the maximum line length. Jalopy tries to limit each line within
+the given length.
 </para>
 
 <indexterm zone="wrapping-sizes-line"><primary>Wrapping</primary><secondary>Line length</secondary></indexterm>
@@ -57,7 +57,7 @@ Deep indent
 <indexterm zone="wrapping-sizes-deep"><primary>Deep indent</primary></indexterm>
 
 <para>
-Specifies the length after which a gap will be identified as &quot;deep indented&quot;. 
+Specifies the length after which a gap will be identified as &quot;deep indented&quot;.
 Jalopy tries to avoid these kind of gaps and will force a line break or apply
 another indentation scheme, if this size is exceeded.
 </para>
@@ -66,12 +66,12 @@ another indentation scheme, if this size is exceeded.
 <title>Deep indent size (60) not exceeded</title>
 <programlisting>
                                                             |                  |
-    protected static synchronized File getANewDestinationFile(File dest,       | 
-                                                            | String packageName, 
+    protected static synchronized File getANewDestinationFile(File dest,       |
+                                                            | String packageName,
                                                             | String filename) |
 |----------------- the gap ---------------------------|throws IOException      |
     {                                                       |                  |
-    }                                                       |                  | 
+    }                                                       |                  |
                                                             |                  |
                                                             60                 79
 </programlisting>
@@ -82,11 +82,11 @@ another indentation scheme, if this size is exceeded.
 <programlisting>
                                                   |                            |
     protected static synchronized File getANewDestinationFile(File dest,       |
-                                                  |           String packageName, 
+                                                  |           String packageName,
                                                   |           String filename) |
 |----------------- the gap ---------------------------|throws IOException      |
     {                                             |                            |
-    }                                             |                            | 
+    }                                             |                            |
                                                   |                            |
                                                   50                           79
 </programlisting>
@@ -103,10 +103,225 @@ another indentation scheme, if this size is exceeded.
 <indexterm zone="wrapping-policy"><primary>Policy</primary><secondary>Wrapping</secondary></indexterm>
 
 <para>
-Line wrapping will often occur with statements that consist of several (possibly long) 
-expressions. Here you specify whether line wrapping should occur 
+Lets you fine-control the wrapping behaviour.
+</para>
+
+<itemizedlist>
+<listitem>
+<para id="wrap-left-parenthesis">
+Wrap after left parenthesis
+</para>
+<para>
+Lets you control the wrapping behaviour for statement and expression lists.
+</para>
+
+<para>
+If left disabled, the first line break will be preferably inserted
+behind the first parameter or expression and only occurs after the left
+parenthesis if the maximum line length would be exceeded.</para>
+
+<example id="ex-wrap-left-parenthesis-disabled">
+<title>Wrap after left parenthesis (disabled)</title>
+<programlisting>
+                                                                               |
+appServerReferencesVector.add<emphasis role="bold">(</emphasis>new AppServerReference<emphasis role="bold">(</emphasis>
+        "RemoteApplicationManager",                                            |
+        poa.create_reference_with_id<emphasis role="bold">(</emphasis>         |
+            "RemoteApplicationManager".getBytes(),                             |
+            RemoteApplicationManagerHelper.id())));                            |
+                                                                               |
+</programlisting>
+</example>
+
+<para>
+Otherwise the line break will always occur behind the left parenthesis.
+</para>
+
+<example id="ex-wrap-left-parenthesis-enabled">
+<title>Wrap after left parenthesis (enabled)</title>
+<programlisting>
+appServerReferencesVector.add<emphasis role="bold">(</emphasis>
+    new AppServerReference<emphasis role="bold">(</emphasis>
+        "RemoteApplicationManager",
+        poa.create_reference_with_id<emphasis role="bold">(</emphasis>
+            "RemoteApplicationManager".getBytes(),
+            RemoteApplicationManagerHelper.id())));
+</programlisting>
+</example>
+
+<para>
+This switch affects the output style of method/constructor declarations and
+calls, creator statements and <literal>if-else</literal>, <literal>for</literal>,
+<literal>while</literal> and <literal>do-while</literal> blocks.
+</para>
+
+<para>
+As per default, the wrapped lines will be indended using
+<link linkend="indentation-policy-standard">Standard indentation</link>, but you
+may want to apply another indentation scheme. See
+<xref linkend="indentation-policy" /> for more information.
+</para>
+<para />
+</listitem>
+
+<listitem>
+<para id="wrap-right-parenthesis">
+Wrap before right parenthesis
+</para>
+<para>
+Forces a line break before the right parenthesis of parameter or expression lists.
+The parenthesis will be intended according to the current indentation level.
+Only takes action if at least one parameter/expression was indeed wrapped.
+</para>
+
+<para>
+This switch affects the output style of method/constructor declarations and
+calls, creator statements and <literal>if-else</literal>, <literal>for</literal>,
+<literal>while</literal> and <literal>do-while</literal> blocks.
+</para>
+
+<example id="ex-wrap-right-parenthesis">
+<title>Right parenthesis (disabled)</title>
+<programlisting>
+public void severalParameters(String one,
+                              int two,
+                              String three,
+                              StringObject four,
+                              AnotherObject five<emphasis role="bold">)</emphasis> {
+}
+</programlisting>
+</example>
+
+<example id="ex-wrap-right-parenthesis-enabled">
+<title>Right parenthesis (enabled)</title>
+<programlisting>
+public void severalParameters(String one,
+                              int two,
+                              String three,
+                              StringObject four,
+                              AnotherObject five
+<emphasis role="bold">)</emphasis> {
+}
+</programlisting>
+</example>
+
+<para>
+Both switches combined, looks like the following example:
+</para>
+
+<example id="ex-wrap-left-right-parenthesis">
+<title>Left and right parenthesis</title>
+<programlisting>
+appServerReferencesVector.add<emphasis role="bold">(</emphasis>
+    new AppServerReference<emphasis role="bold">(</emphasis>
+        "RemoteApplicationManager",
+        poa.create_reference_with_id<emphasis role="bold">(</emphasis>
+            "RemoteApplicationManager".getBytes(),
+            RemoteApplicationManagerHelper.id()
+        <emphasis role="bold">)</emphasis>
+    <emphasis role="bold">)</emphasis>
+<emphasis role="bold">)</emphasis>;
+</programlisting>
+</example>
+
+<para>
+For blocks the output may go like this:
+</para>
+
+<example id="ex-wrap-left-right-parenthesis-wrapped-continue">
+<title>Left and right parenthesis (wrapped)</title>
+<programlisting>
+if <emphasis role="bold">(</emphasis>
+    "pick".equals(m.getName()) &amp;&amp; m.isStatic() &amp;&amp; m.isPublic()
+<emphasis role="bold">)</emphasis> {
+    pickFound = true;
+}
+else if <emphasis role="bold">(</emphasis>
+    "pick".equals(m.getName()) &amp;&amp; m.isStatic() &amp;&amp; m.isPublic()
+<emphasis role="bold">)</emphasis> {
+    pickFound = true;
+}
+</programlisting>
+</example>
+<para />
+</listitem>
+
+<listitem>
+<para id="wrap-after-assignment">
+Wrap after assignments
+</para>
+<para>
+Lets you control the way wrapping takes action for assignments. If left disabled,
+line wrapping preferably occurs as part of the expression printing. Otherwise
+wrapping will be performed right after the assignment.
+</para>
+
+<example id="ex-wrap-assignment-no">
+<title>Don't wrap after assignment</title>
+<programlisting>
+this.interessentenNr = new InteressentenNr(
+        Fachschluesselerzeugung.createService()
+        .getNeuerFachschluessel(
+            FachschluesselerzeugungService.FACHSCHLUESSEL_KZ_INTERESSENT
+        )
+    );
+</programlisting>
+</example>
+
+<example id="ex-wrap-assignment">
+<title>Wrap after assignment</title>
+<programlisting>
+this.interessentenNr =
+    new InteressentenNr(
+        Fachschluesselerzeugung.createService()
+        .getNeuerFachschluessel(
+            FachschluesselerzeugungService.FACHSCHLUESSEL_KZ_INTERESSENT
+        )
+    );
+</programlisting>
+</example>
+<para />
+
+</listitem>
+
+<listitem>
+<para id="wrap-all-if-first">
+Wrap all on wrap
+</para>
+<para>
+If enabled, this switch will cause all parameters/expressions to be
+wrapped, if and only if the first parameter/expression of the list has been
+wrapped.
+</para>
+<example id="ex-wrap-all">
+<title>Expression list (all wrapped)</title>
+<programlisting>
+if (
+    "pick".equals(m.getName()) &amp;&amp;
+    m.isStatic() &amp;&amp;
+    m.isPublic()
+) {
+    pickFound = true;
+}
+else if (
+    "pick".equals(m.getName()) &amp;&amp;
+    m.isStatic() &amp;&amp;
+    m.isPublic()
+) {
+    pickFound = true;
+}
+</programlisting>
+</example>
+<para />
+</listitem>
+</itemizedlist>
+
+<para>
+Line wrapping will often occur with statements that consist of several (possibly long)
+expressions. Here you specify whether line wrapping should occur
 before or after the expression operator.
 </para>
+
 <itemizedlist>
 <listitem>
 <para id="wrapping-before">
@@ -116,7 +331,7 @@ Wrap before operators
 <indexterm zone="wrapping-before"><primary>Operators</primary><secondary>wrap before</secondary></indexterm>
 
 <para>
-If enabled, lines will be wrapped before the operator. The operator will be 
+If enabled, lines will be wrapped before the operator. The operator will be
 printed with the continuation line.
 </para>
 
@@ -157,221 +372,14 @@ if ((condition1 &amp;&amp; condition2) ||
 </programlisting>
 </example>
 <para>
-If you happen to use Sun Brace styling, you might want to enable 
-<link linkend="indentation-misc-continuation-if">continuation indentation</link> 
+If you happen to use Sun Brace styling, you might want to enable
+<link linkend="indentation-misc-continuation-if">continuation indentation</link>
 to let the statement body stand out.
 </para>
 <para />
 
 </listitem>
 
-<listitem>
-<para id="wrap-left-parenthesis">
-Wrap after left parenthesis
-</para>
-<para>
-Lets you control the wrapping behaviour for statement and expression lists.
-</para>
-
-<para>
-If left disabled, the first line break will be preferably inserted
-behind the first parameter or expression and only occurs after the left
-parenthesis if the maximum line length would be exceeded.</para>
-
-<example id="ex-wrap-left-parenthesis-disabled">
-<title>Wrap after left parenthesis (disabled)</title>
-<programlisting>
-                                                                               |
-appServerReferencesVector.add<emphasis role="bold">(</emphasis>new AppServerReference<emphasis role="bold">(</emphasis>
-        "RemoteApplicationManager",                                            |
-        poa.create_reference_with_id<emphasis role="bold">(</emphasis>         |
-            "RemoteApplicationManager".getBytes(),                             |
-            RemoteApplicationManagerHelper.id())));                            |
-                                                                               |
-</programlisting>
-</example>
-
-<para>
-Otherwise the line break will always occur behind the left parenthesis.
-</para>
-
-<example id="ex-wrap-left-parenthesis-enabled">
-<title>Wrap after left parenthesis (enabled)</title>
-<programlisting>
-appServerReferencesVector.add<emphasis role="bold">(</emphasis>
-    new AppServerReference<emphasis role="bold">(</emphasis>
-        "RemoteApplicationManager", 
-        poa.create_reference_with_id<emphasis role="bold">(</emphasis>
-            "RemoteApplicationManager".getBytes(), 
-            RemoteApplicationManagerHelper.id())));
-</programlisting>
-</example>
-
-<para>
-This switch affects the output style of method/constructor declarations and
-calls, creator statements and <literal>if-else</literal>, <literal>for</literal>,
-<literal>while</literal> and <literal>do-while</literal> blocks.
-</para>
-
-<para>
-As per default, the wrapped lines will be indended using
-<link linkend="indentation-policy-standard">Standard indentation</link>, but you
-may want to apply another indentation scheme. See 
-<xref linkend="indentation-policy" /> for more information.
-</para>
-<para />
-</listitem>
-
-<listitem>
-<para id="wrap-right-parenthesis">
-Wrap before right parenthesis
-</para>
-<para>
-Forces a line break before the right parenthesis of parameter or expression lists.
-The parenthesis will be intended according to the current indentation level.
-Only takes action if at least one parameter/expression was indeed wrapped.
-</para>
-
-<para>
-This switch affects the output style of method/constructor declarations and
-calls, creator statements and <literal>if-else</literal>, <literal>for</literal>,
-<literal>while</literal> and <literal>do-while</literal> blocks.
-</para>
-
-<example id="ex-wrap-right-parenthesis">
-<title>Right parenthesis (disabled)</title>
-<programlisting>
-public void severalParameters(String one, 
-                              int two, 
-                              String three, 
-                              StringObject four,
-                              AnotherObject five<emphasis role="bold">)</emphasis> {
-}
-</programlisting>
-</example>
-
-<example id="ex-wrap-right-parenthesis-enabled">
-<title>Right parenthesis (enabled)</title>
-<programlisting>
-public void severalParameters(String one, 
-                              int two, 
-                              String three, 
-                              StringObject four,
-                              AnotherObject five
-<emphasis role="bold">)</emphasis> {
-}
-</programlisting>
-</example>
-
-<para>
-Both switches combined, looks like the following example:
-</para>
-
-<example id="ex-wrap-left-right-parenthesis">
-<title>Left and right parenthesis</title>
-<programlisting>
-appServerReferencesVector.add<emphasis role="bold">(</emphasis>
-    new AppServerReference<emphasis role="bold">(</emphasis>
-        "RemoteApplicationManager", 
-        poa.create_reference_with_id<emphasis role="bold">(</emphasis>
-            "RemoteApplicationManager".getBytes(), 
-            RemoteApplicationManagerHelper.id()
-        <emphasis role="bold">)</emphasis>
-    <emphasis role="bold">)</emphasis>
-<emphasis role="bold">)</emphasis>;
-</programlisting>
-</example>
-
-<para>
-For blocks the output may go like this:
-</para>
-
-<example id="ex-wrap-left-right-parenthesis-wrapped-continue">
-<title>Left and right parenthesis (wrapped)</title>
-<programlisting>
-if <emphasis role="bold">(</emphasis>
-    "pick".equals(m.getName()) &amp;&amp; m.isStatic() &amp;&amp; m.isPublic()
-<emphasis role="bold">)</emphasis> {
-    pickFound = true;
-} 
-else if <emphasis role="bold">(</emphasis>
-    "pick".equals(m.getName()) &amp;&amp; m.isStatic() &amp;&amp; m.isPublic()
-<emphasis role="bold">)</emphasis> {
-    pickFound = true;
-}
-</programlisting>
-</example>
-<para />
-</listitem>
-
-<listitem>
-<para id="wrap-after-assignment">
-Wrap after assignments
-</para>
-<para>
-Lets you control the way wrapping takes action for assignments. If left disabled,
-line wrapping occurs as part of the expression printing. Otherwise wrapping will
-be performed right after the assignment.
-</para>
-
-<example id="ex-wrap-assignment-no">
-<title>Don't wrap after assignment</title>
-<programlisting>
-this.interessentenNr = new InteressentenNr(
-        Fachschluesselerzeugung.createService()
-        .getNeuerFachschluessel(
-            FachschluesselerzeugungService.FACHSCHLUESSEL_KZ_INTERESSENT
-        )
-    );
-</programlisting>
-</example>
-
-<example id="ex-wrap-assignment">
-<title>Wrap after assignment</title>
-<programlisting>
-this.interessentenNr = 
-    new InteressentenNr(
-        Fachschluesselerzeugung.createService()
-        .getNeuerFachschluessel(
-            FachschluesselerzeugungService.FACHSCHLUESSEL_KZ_INTERESSENT
-        )
-    );
-</programlisting>
-</example>
-<para />
-
-</listitem>
-
-<listitem>
-<para id="wrap-all-if-first">
-Wrap all on wrap
-</para>
-<para>
-If enabled, this switch will cause all parameters/expressions to be 
-wrapped, if and only if the first parameter/expression of the list has been
-wrapped.
-</para>
-<example id="ex-wrap-all">
-<title>Expression list (all wrapped)</title>
-<programlisting>
-if (
-    "pick".equals(m.getName()) &amp;&amp;
-    m.isStatic() &amp;&amp; 
-    m.isPublic()
-) {
-    pickFound = true;
-} 
-else if (
-    "pick".equals(m.getName()) &amp;&amp;
-    m.isStatic() &amp;&amp; 
-    m.isPublic()
-) {
-    pickFound = true;
-}
-</programlisting>
-</example>
-<para />
-</listitem>
 </itemizedlist>
 </sect3>
 </sect2>
@@ -383,9 +391,9 @@ else if (
 <sect3 id="wrapping-always">
 <title>Wrap always</title>
 <para>
-For certain cases, the need may arise to force line wrapping to achieve a 
+For certain cases, the need may arise to force line wrapping to achieve a
 consistent, uniform look. If you enable any of the following switches, line wrapping
-will occur for the specified cases no matter whether you have enabled general 
+will occur for the specified cases no matter whether you have enabled general
 line wrapping or not.
 </para>
 
@@ -419,9 +427,9 @@ public interface Channel
 </programlisting>
 </example>
 <para>
-You can control the space printed before the keyword with the 
+You can control the space printed before the keyword with the
 <link linkend="indentation-sizes-extends">Extends Indent</link> setting.
-If you leave the switch disabled, the clause will be printed with 
+If you leave the switch disabled, the clause will be printed with
 <link linkend="indentation-sizes-general">standard indentation</link>.
 </para>
 </listitem>
@@ -486,9 +494,9 @@ public class SynchronizedBoolean
 </programlisting>
 </example>
 <para>
-You can control the space printed before the keyword with the 
+You can control the space printed before the keyword with the
 <link linkend="indentation-sizes-implements">Implements Indent</link> setting.
-If you leave the switch disabled, the clause will be printed with 
+If you leave the switch disabled, the clause will be printed with
 <link linkend="indentation-sizes-general">standard indentation</link>.
 </para>
 </listitem>
@@ -536,7 +544,7 @@ Forces a line break before the throws keyword of a method/constructor declaratio
 <example id="ex-wrapping-before-throws">
 <title>throws keyword</title>
 <programlisting>
-private File getDestinationFile(File dest, String packageName, 
+private File getDestinationFile(File dest, String packageName,
                                 String filename) throws IOException
 {
     ...
@@ -547,7 +555,7 @@ private File getDestinationFile(File dest, String packageName,
 <example id="ex-wrapping-before-throws-wrapped">
 <title>throws keyword (wrapped)</title>
 <programlisting>
-private File getDestinationFile(File dest, String packageName, 
+private File getDestinationFile(File dest, String packageName,
                                 String filename)
                          throws IOException
 {
@@ -556,7 +564,7 @@ private File getDestinationFile(File dest, String packageName,
 </programlisting>
 </example>
 <para>
-You can control the space printed before the keyword with the 
+You can control the space printed before the keyword with the
 <link linkend="indentation-sizes-throws">Throws Indent</link> setting. If you
 leave the switch disabled, Jalopy tries to align the throws clause with the
 method/constructor parameters as with the above example. If no alignment is
@@ -576,7 +584,7 @@ Forces a line wrap after each type name of the throws clause of a method/constru
 <example id="ex-wrapping-after-throws-types">
 <title>throws types</title>
 <programlisting>
-private File getDestinationFile(File dest, String packageName, 
+private File getDestinationFile(File dest, String packageName,
                                 String filename)
                          throws IOException, FooException
 {
@@ -588,7 +596,7 @@ private File getDestinationFile(File dest, String packageName,
 <example id="ex-wrapping-after-throws-types-wrapped">
 <title>throws types (wrapped)</title>
 <programlisting>
-private File getDestinationFile(File dest, String packageName, 
+private File getDestinationFile(File dest, String packageName,
                                 String filename)
                          throws IOException,
                                 FooException
@@ -603,7 +611,7 @@ private File getDestinationFile(File dest, String packageName,
 <example id="ex-wrapping-after-throws-types-wrapped-standard">
 <title>throws types (wrapped with standard indentation)</title>
 <programlisting>
-private static final File getDestinationFile(File dest, String packageName, 
+private static final File getDestinationFile(File dest, String packageName,
                                              String filename)
     throws IOException,
           FooException
@@ -640,8 +648,8 @@ public static File create(File file, File directory, int backupLevel)
 <example id="ex-wrap-method-params-wrapped">
 <title>Method declaration parameters (wrapped)</title>
 <programlisting>
-public static File create(File file, 
-                          File directory, 
+public static File create(File file,
+                          File directory,
                           int backupLevel)
                    throws IOException
 {
@@ -650,7 +658,7 @@ public static File create(File file,
 </programlisting>
 </example>
 <para>
-You can control the space printed before each parameter with the 
+You can control the space printed before each parameter with the
 <link linkend="indentation-sizes-param">Parameters Indent</link> setting.
 </para>
 </listitem>
@@ -694,7 +702,7 @@ Forces a line wrap after each parameter of a method call.
 <title>Method call</title>
 <programlisting>
 doSomething();
-_userDatabase.addUser("Name", encryptPassword("password", _secretKey), 
+_userDatabase.addUser("Name", encryptPassword("password", _secretKey),
                       "123 fake address");
 doSomethingElse();
 </programlisting>
@@ -704,9 +712,9 @@ doSomethingElse();
 <title>Method call (wrapped)</title>
 <programlisting>
 doSomething();
-_userDatabase.addUser("Name", 
+_userDatabase.addUser("Name",
                       encryptPassword("password",
-                                      _secretKey), 
+                                      _secretKey),
                       "123 fake address");
 doSomethingElse();
 </programlisting>
@@ -719,18 +727,18 @@ doSomethingElse();
 Method Call parameters if nested
 </para>
 <para>
-Forces a line wrap after each parameter of a method call if at least one 
+Forces a line wrap after each parameter of a method call if at least one
 parameter is a method call itself. This option can prove especially useful if
-one prefers to nest method calls as parameters rather than adding local 
-variables just to hold those parameters. 
+one prefers to nest method calls as parameters rather than adding local
+variables just to hold those parameters.
 </para>
 
 <example id="ex-wrap-method-call-nested-wrapped">
 <title>Method call if nested (wrapped)</title>
 <programlisting>
 doSomething();
-_userDatabase.addUser("Name", 
-                      encryptPassword("password", _secretKey), 
+_userDatabase.addUser("Name",
+                      encryptPassword("password", _secretKey),
                       "123 fake address");
 doSomethingElse();
 </programlisting>
@@ -740,7 +748,7 @@ doSomethingElse();
 
 <listitem>
 <para>
-Ternary if-else expression 
+Ternary if-else expression
 </para>
 <para>
 Forces line wrapping after the first operand.
@@ -902,7 +910,7 @@ String[] constraints = {                                               |
 <title>Wrap after element 2</title>
 <programlisting>
 String[] constraints = {                                               |
-    "patternPanel.top=form.top", "patternPanel.hcenter=form.hcenter", 
+    "patternPanel.top=form.top", "patternPanel.hcenter=form.hcenter",
     "okButton.top=patternPanel.bottom+20", "okButton.right=form.hcenter-10",
     "cancelButton.vcenter=10", "cancelButton.left=10"                  |
 };                                                                     |

@@ -5,7 +5,7 @@
 
 <title>Library Dependencies</title>
 <para>
-Depending on the distribution, Jalopy depends on some or all of the following 
+Depending on the distribution, Jalopy depends on some or all of the following
 freely available libraries:
 </para>
 
@@ -52,7 +52,7 @@ freely available libraries:
 </row>
 <row>
 <entry>License:</entry>
-<entry><ulink url="http://www.antlr.org/rights.html">Public Domain</ulink></entry>
+<entry><link linkend="license-antlr">Custom, Public Domain</link></entry>
 </row>
 <row>
 <entry valign="top">Info:</entry>
@@ -72,7 +72,7 @@ to avoid classpath clashes.
 
 <row>
 <entry>Name:</entry>
-<entry>DocBook XSL Stylesheets 1.50.0</entry>
+<entry>DocBook XSL Stylesheets 1.54.0</entry>
 </row>
 <row>
 <entry>Author:</entry>
@@ -81,13 +81,6 @@ to avoid classpath clashes.
 <row>
 <entry>License:</entry>
 <entry>Open Source</entry>
-</row>
-<row>
-<entry valign="top">Info:</entry>
-<entry>Included with the Jalopy source distribution comes a slightly modified 
-version that features custom cellpadding and cellspacing definitions for HTML 
-table generation.
-</entry>
 </row>
 <row>
 <entry>URL:</entry>
