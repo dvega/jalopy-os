@@ -54,19 +54,19 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
          index="false" >
       <fileset dir="${DIR.COMPILE}" >
         <patternset>
-          <include name="**/plugin/jdeveloper/**" />
+          <include name="de/**/plugin/jdeveloper/**" />
         </patternset>
       </fileset>
       <manifest>
         <attribute name="AddinCount" value="1" />
-        <attribute name="Addin0" value="com.informatikatelier.jalopy.plugin.jdeveloper.JDevPlugin" />
+        <attribute name="Addin0" value="de.hunsicker.jalopy.plugin.jdeveloper.JDevPlugin" />
         <section name="de/hunsicker/jalopy/plugin/jdeveloper/">
           <attribute name="Specification-Title" value="Jalopy Java Source Code Formatter" />
           <attribute name="Specification-Version" value="${SPEC.VERSION.JDEVELOPER}" />
           <attribute name="Specification-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-Title" value="de.hunsicker.jalopy.plugin.jdeveloper" />
           <attribute name="Implementation-Version" value="${BUILD.VERSION.JDEVELOPER}" />
-          <attribute name="Implementation-Vendor" value="Frank Klomp" />
+          <attribute name="Implementation-Vendor" value="${AUTHOR.NAME}" />
           <attribute name="Implementation-URL" value="${HOMEPAGE}" />
         </section>
       </manifest>
@@ -107,7 +107,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </taskdef>
 
     <jalopy classpathref="project.classpath"
-            style="${dir.src.res}/jal-atelier.xml">
+            style="${dir.src.res}/jal-bsd.xml">
       <fileset dir="${dir.src.java}">
         <include name="**/*.java" />
       </fileset>
@@ -120,6 +120,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="jdev-init"
           depends="jdev-check-modules" >
+    <native2ascii
+        src="${dir.src.java}"
+        dest="${DIR.COMPILE}"
+        includes="**/Bundle*.properties" />
   </target>
 
 
@@ -172,7 +176,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
-        <include name="com/informatikatelier/jalopy/plugin/jdeveloper/*" />
+        <include name="de/hunsicker/jalopy/plugin/jdeveloper/*" />
       </srcfileset>
       <srcfileset dir="${DIR.JARS}">
         <include name="jalopy-${BUILD.VERSION}.jar" />
@@ -180,7 +184,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <srcfileset dir="${basedir}">
         <include name="build.xml" />
       </srcfileset>
-      <srcfileset dir="..\build">
+      <srcfileset dir="../build">
         <include name="build.xml" />
         <include name="build.properties" />
       </srcfileset>
