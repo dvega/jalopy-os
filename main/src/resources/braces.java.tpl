@@ -1,6 +1,6 @@
 public class Braces
 {
-    public void foo()
+    public void foo() throws IOException, FileNotFoundException, InterruptedIOException, UnsupportedEncodingException
     {
         do
         {
@@ -27,12 +27,16 @@ public class Braces
                 switch (a)
                 {
                     case 0 :
+                    {
                         doCase0();
-
                         break;
+                    }
 
                     default :
+                    {
                         doDefault();
+                        break;
+                    }
                 }
             }
             catch (Exception e)
