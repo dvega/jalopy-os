@@ -89,8 +89,6 @@ abstract class OperatorPrinter
     {
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
-            System.err.println(node + " " + length + " " + out.column);
-
             /**
              * @todo respect operator length if wrapped after
              */

@@ -221,12 +221,6 @@ ITERATE:
                        NodeWriter out)
         throws IOException
     {
-        switch (operator.getType())
-        {
-            case JavaTokenTypes.PLUS:
-                System.err.println(operator + " "  + wrapLines);
-            }
-
         if (insertLeftParen)
         {
             printWithParentheses(lhs, out);

@@ -197,9 +197,7 @@ final class AssignmentPrinter
                     }
                     else if (standardIndent)
                     {
-                        if (out.column > this.prefs.getInt(
-                                                           Keys.INDENT_SIZE_DEEP,
-                                                           Defaults.INDENT_SIZE_DEEP))
+                        if (out.column > lineLength || (out.column + tester.length + (padding ? 3 : 1) > lineLength))
                         {
                             if (padding)
                             {
@@ -313,8 +311,8 @@ final class AssignmentPrinter
 
                 Marker marker = null;
 
-                if (preferWrapAfterAssign &&
-                    (out.mode == NodeWriter.MODE_DEFAULT) &&
+                if (preferWrapAfterAssign && (out.mode == NodeWriter.MODE_DEFAULT) &&(out.getIndentLength() + out.indentSize < out.column) &&
+
                     ((out.column + (padding ? 3
                                             : 1) + tester.length) > lineLength))
                 {
