@@ -416,7 +416,7 @@ abstract class AbstractPrinter
                 {
                     if (child.hasCommentsBefore())
                     {
-                        CommonHiddenStreamToken t = child.getFirstCommentBefore();
+                        CommonHiddenStreamToken t = child.getCommentBefore();
 
                         if (t != null)
                         {
@@ -1733,7 +1733,7 @@ abstract class AbstractPrinter
 
 
     /**
-     * Determines whether the given node can have blank before.
+     * Determines whether the given node can have blank lines before.
      *
      * @param node node to check.
      *
@@ -1741,7 +1741,8 @@ abstract class AbstractPrinter
      */
     private boolean canHaveBlankLinesBefore(JavaNode node)
     {
-        /*switch (node.getType())
+        /*
+        switch (node.getType())
         {
             case JavaTokenTypes.EXPR:
             case JavaTokenTypes.LITERAL_if:
@@ -1752,7 +1753,8 @@ abstract class AbstractPrinter
             case JavaTokenTypes.LITERAL_catch:
             case JavaTokenTypes.LITERAL_finally:
                 return true;
-        }*/
+        }
+        */
         JavaNode parent = node.getParent();
 
         switch (parent.getType())

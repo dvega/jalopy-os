@@ -68,6 +68,8 @@ final class ImportPrinter
       throws IOException
     {
         printCommentsBefore(node, NodeWriter.NEWLINE_YES, out);
+        trackPosition((JavaNode)node, out);
+
         out.print(IMPORT_SPACE, JavaTokenTypes.LITERAL_import);
 
         AST identifier = node.getFirstChild();

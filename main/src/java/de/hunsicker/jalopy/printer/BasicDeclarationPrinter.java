@@ -304,7 +304,7 @@ abstract class BasicDeclarationPrinter
 
             if (!hasJavadoc && node.hasCommentsBefore())
             {
-                CommonHiddenStreamToken comment = node.getFirstCommentBefore();
+                CommonHiddenStreamToken comment = node.getCommentBefore();
 
                 if (comment.getHiddenAfter() == null)
                 {
@@ -390,7 +390,7 @@ abstract class BasicDeclarationPrinter
         JavaNode      node,
         ExtendedToken comment)
     {
-        CommonHiddenStreamToken c = node.getFirstCommentBefore();
+        CommonHiddenStreamToken c = node.getCommentBefore();
 
         if (c == null)
         {
