@@ -15,7 +15,7 @@ public class BracesMisc
             doElse();
         }
 
-        if (firstCondition())
+        if (firstCondition()) // endline comment
             doIf();
         else if (secondCondition())
             doElseIf();
