@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# OS specific support.  $var _must_ be set to either true or false.
+# OS specific support. $var _must_ be set to either true or false.
 cygwin=false;
 darwin=false;
 case "`uname`" in
