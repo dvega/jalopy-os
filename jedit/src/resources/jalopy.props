@@ -9,7 +9,7 @@ plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.docs=docs/jedit.html
 plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.0=jdk 1.3
 plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.1=jedit @LIB.VERSION.JEDIT@
 #plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.depend.2=plugin org.gjt.sp.jedit.view.message.MessageViewPlugin @LIB.VERSION.MESSAGEVIEW@
-plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.jars = jalopy-@BUILD.VERSION@.jar jdom-@LIB.VERSION.JDOM@.jar log4j-@LIB.VERSION.LOG4J@.jar oro-@LIB.VERSION.ORO@.jar textarea-@LIB.VERSION.TEXTAREA@.jar
+plugin.de.hunsicker.jalopy.plugin.jedit.JEditPlugin.jars = jalopy-@BUILD.VERSION@.jar jdom-@LIB.VERSION.JDOM@.jar log4j-@LIB.VERSION.LOG4J@.jar oro-@LIB.VERSION.ORO@.jar
 
 #
 # Menu properties
