@@ -87,9 +87,6 @@ final class ThrowsPrinter
     {
         AST firstClause = node.getFirstChild();
 
-        boolean newlineAfterThrows = this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
-                                                           Defaults.LINE_WRAP_AFTER_THROWS);
-
         boolean wrapBeforeKeyword = false;
         boolean wrapAfterType = false;
 
@@ -254,7 +251,8 @@ final class ThrowsPrinter
         else if (wrapAfterType)
             out.unindent();
 
-        if (newlineAfterThrows)
+        if (this.prefs.getBoolean(Keys.LINE_WRAP_AFTER_THROWS,
+                                                           Defaults.LINE_WRAP_AFTER_THROWS))
         {
             out.state.extraWrap = true;
         }
