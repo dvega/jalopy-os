@@ -1,32 +1,32 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 1. Redistributions of source code must retain the above copyright 
- *    notice, this list of conditions and the following disclaimer. 
- * 
- * 2. Redistributions in binary form must reproduce the above copyright 
- *    notice, this list of conditions and the following disclaimer in 
- *    the documentation and/or other materials provided with the 
- *    distribution. 
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- * 3. Neither the name of the Jalopy project nor the names of its 
- *    contributors may be used to endorse or promote products derived 
- *    from this software without specific prior written permission. 
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
- * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS 
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE 
- * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, 
- * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS 
- * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND 
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR 
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE 
+ * 3. Neither the name of the Jalopy project nor the names of its
+ *    contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
@@ -69,9 +69,6 @@ final class ParametersPrinter
     /** Perform line wrapping/alignment only if necessary. */
     private static final int MODE_AS_NEEDED = 2;
 
-    /** Perform no line wrapping/alignment. */
-    private static final int MODE_NOTHING = 0;
-
     //~ Constructors ··························································
 
     /**
@@ -102,7 +99,7 @@ final class ParametersPrinter
         throws IOException
     {
         boolean wrapped = false;
-
+        int line = out.line;
         Marker marker = out.state.markers.add();
 
         switch (node.getType())
@@ -114,7 +111,7 @@ final class ParametersPrinter
                                                              Defaults.LINE_WRAP_AFTER_PARAMS_METHOD_DEF);
 
                 /**
-                 * @todo move the test into printImpl()?
+                 * @todo move the whole test into printImpl()?
                  */
                 if (out.mode == NodeWriter.MODE_DEFAULT)
                 {
@@ -161,7 +158,7 @@ final class ParametersPrinter
 
                 break;
 
-            // a method call or a creator
+            // a method call or creator
             case JavaTokenTypes.ELIST :
                 wrapped = printImpl(node, MODE_AS_NEEDED, JavaTokenTypes.ELIST,
                                     out);
@@ -172,6 +169,12 @@ final class ParametersPrinter
                 throw new IllegalArgumentException("unexpected node type -- " +
                                                    node);
         }
+
+        // printImpl() returns 'false' if only one parameter was found, but we
+        // want to let the right parenthesis stand out if the parameter took
+        // more than one line to print
+        if (out.line > line)
+            wrapped = true;
 
         // wrap and align, if necessary
         if (wrapped &&
@@ -191,11 +194,6 @@ final class ParametersPrinter
             {
                 printIndentation(out);
             }
-
-            /*out.print(out.getString(
-                              (((out.state.paramLevel > 0)
-                                    ? out.state.paramLevel
-                                    : 0) * out.indentSize)), JavaTokenTypes.WS);*/
         }
 
         out.state.markers.remove(marker);
@@ -256,7 +254,7 @@ final class ParametersPrinter
 
     /**
      * Determines whether the given EXPR node denotes a concatenated
-     * expression (either string concatenation or addititive expression...)
+     * expression (either a string concatenation or addititive expression using the + operator).
      *
      * @param node an EXPR node.
      *
@@ -294,7 +292,7 @@ final class ParametersPrinter
             case JavaTokenTypes.PLUS :
 
                 AST first = null;
-SEARCH: 
+SEARCH:
                 for (AST next = expr.getFirstChild();
                      next != null;
                      next = next.getFirstChild())
@@ -412,7 +410,7 @@ SEARCH:
     {
         if (out.state.paramOffset != OFFSET_NONE)
         {
-            out.state.paramOffset = out.state.paramOffset - column + out.column;
+            out.state.paramOffset=out.state.paramOffset-column+out.column;
         }
     }
 
@@ -500,7 +498,7 @@ SEARCH:
         boolean wrapIfFirst = this.prefs.getBoolean(Keys.LINE_WRAP_ALL,
                                                     Defaults.LINE_WRAP_ALL);
 
-        /*int indentation = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS, 
+        /*int indentation = this.prefs.getInt(Keys.INDENT_SIZE_PARAMETERS,
                                             Defaults.INDENT_SIZE_PARAMETERS);*/
         boolean result = false;
         int paramIndex = 0;
@@ -527,23 +525,6 @@ SEARCH:
                         out.print(COMMA, JavaTokenTypes.COMMA);
                         printCommentsAfter(parameter, NodeWriter.NEWLINE_NO,
                                            action != MODE_ALWAYS, out);
-                        printIndentation(out);
-
-                        /*if ((indentation == -1)
-                            || ((type == JavaTokenTypes.ELIST)
-                            && !this.prefs.getBoolean(
-                                        Keys.INDENT_USE_PARAMS_METHOD_CALL, 
-                                        Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
-                        {
-                            out.print(out.getString(out.state.markers.getLast().column - out.getIndentLength()), 
-                                      JavaTokenTypes.WS);
-                        }
-                        else
-                        {
-                            out.print(out.getString(
-                                              indentation * out.state.paramLevel), 
-                                      JavaTokenTypes.WS);
-                        }*/
                     }
                     else
                     {
@@ -598,7 +579,28 @@ SEARCH:
                         {
                             case MODE_AS_NEEDED :
 
-                                if (wrapLines)
+                                if (out.newline)
+                                {
+                                    printIndentation(out);
+
+                                    if (preferWrapAfterLeftParen &&
+                                        (paramIndex == FIRST_PARAM))
+                                    {
+                                        TestNodeWriter tester = out.testers.get();
+                                        // determine the exact space all
+                                        // parameters would need
+                                        PrinterFactory.create(node)
+                                                      .print(node, tester);
+
+                                          if (out.column + tester.length > lineLength)
+                                          {
+                                            firstWrapped = true;
+                                          }
+                                          out.testers.release(tester);
+                                    }
+                                }
+
+                                else if (wrapLines)
                                 {
                                     TestNodeWriter tester = out.testers.get();
 
@@ -718,7 +720,7 @@ SEARCH:
                                             /*if ((indentation == -1)
                                                 || ((type == JavaTokenTypes.ELIST)
                                                 && !this.prefs.getBoolean(
-                                                            Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+                                                            Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                                             Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
                                             {*/
                                             Marker m = out.state.markers.getLast();
@@ -735,7 +737,7 @@ SEARCH:
                                                 printIndentation(out);
 
                                                 /*out.print(out.getString(
-                                                                  length), 
+                                                                  length),
                                                           JavaTokenTypes.WS);
                                                 out.state.markers.add();*/
                                                 result = true;
@@ -761,7 +763,7 @@ SEARCH:
                                                 out.printNewline();
                                                 printIndentation(out);
                                                 //out.print(out.getString(
-                                                //                  indentation * out.state.paramLevel), 
+                                                //                  indentation * out.state.paramLevel),
                                                 //          JavaTokenTypes.WS);
 
                                                 result = true;
@@ -789,7 +791,7 @@ SEARCH:
                                             result = true;
                                             printIndentation(out);
 
-                                            /*out.print(out.getString(length), 
+                                            /*out.print(out.getString(length),
                                                       JavaTokenTypes.WS);
                                             out.state.markers.add();*/
                                         }
@@ -813,7 +815,7 @@ SEARCH:
 
                                 if (paramIndex != FIRST_PARAM)
                                 {
-                                    if (out.column != 1)
+                                    if (!out.newline)
                                     {
                                         out.printNewline();
                                         result = true;
@@ -824,22 +826,27 @@ SEARCH:
                                     /*if (!firstWrapped || (indentation == -1)
                                         || ((type == JavaTokenTypes.ELIST)
                                         && !this.prefs.getBoolean(
-                                                    Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+                                                    Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                                     Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
                                     {
-                                        out.print(out.getString(out.state.markers.getLast().column - out.getIndentLength()), 
+                                        out.print(out.getString(out.state.markers.getLast().column - out.getIndentLength()),
                                                   JavaTokenTypes.WS);
                                     }
                                     else // force specified indendation
                                     {
                                         out.print(out.getString(
-                                                          indentation * out.state.paramLevel), 
+                                                          indentation * out.state.paramLevel),
                                                   JavaTokenTypes.WS);
                                     }*/
                                 }
                                 else
                                 {
-                                    if (preferWrapAfterLeftParen)
+                                    if (out.newline)
+                                    {
+                                        printIndentation(out);
+                                    firstWrapped = true;
+                                    }
+                                    else if (preferWrapAfterLeftParen)
                                     {
                                         if (next == null)
                                         {
@@ -929,7 +936,7 @@ SEARCH:
                 case JavaTokenTypes.PLUS :
 
                     AST first = child;
-SEARCH: 
+SEARCH:
                     for (AST next = node.getFirstChild();
                          next != null;
                          next = next.getFirstChild())
@@ -1082,7 +1089,7 @@ SEARCH:
      */
     private boolean wrapFirst( /*int        indentation, */
     int    type,
-    boolean last,
+    boolean last, /*d */
     NodeWriter out)
         throws IOException
     {
@@ -1096,8 +1103,7 @@ SEARCH:
      *
      * @param type the type of the parameter list. Either ELIST or PARAMETER.
      * @param force if <code>true</code> a newline will be forced.
-     * @param last the amount of whitespace that is to print before the
-     *        parameter.
+     * @param last <code>true</code> indicates that this parameter is the last parameter of the list.
      * @param out stream to write to.
      *
      * @return <code>true</code> if a newline was actually printed.
@@ -1116,14 +1122,14 @@ SEARCH:
 
         /*if ((indentation == -1)
             || ((type == JavaTokenTypes.ELIST)
-                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                       Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
         if (((type == JavaTokenTypes.ELIST)
-                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL, 
+                && !this.prefs.getBoolean(Keys.INDENT_USE_PARAMS_METHOD_CALL,
                                       Defaults.INDENT_USE_PARAMS_METHOD_CALL)))
         {*/
-        if (!(this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) &&
-            last))
+        if (!this.prefs.getBoolean(Keys.INDENT_DEEP, Defaults.INDENT_DEEP) &&
+            !last)
         {
             switch (out.state.paramLevel)
             {
