@@ -394,7 +394,7 @@
         </tr>
         <tr>
           <td class="footer" align="center" height="15" valign="middle">
-            Copyright &#169; 2001-2002, <a class="footer" href="./contact.html">Marco Hunsicker</a>. All rights reserved. Hosted by <a href="http://sourceforge.net">SourceForge.net</a>
+            Copyright &#169; 2001-2004, <a class="footer" href="./contact.html">Marco Hunsicker</a>. All rights reserved. Hosted by <a href="http://sourceforge.net">SourceForge.net</a>
           </td>
         </tr>
       </tbody>
