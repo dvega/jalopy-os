@@ -33,7 +33,7 @@ final class JEditAppender
     //~ Static variables/initializers ----------------------------------------------------
 
     /** Our message category. */
-    private static final MessageTab TAB_JALOPY = new MessageTab("Jalopy");
+    private static final MessageTab TAB_JALOPY = new MessageTab("Jalopy" /* NOI18N */);
 
     //~ Constructors ---------------------------------------------------------------------
 

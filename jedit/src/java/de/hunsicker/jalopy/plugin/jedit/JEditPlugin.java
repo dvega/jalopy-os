@@ -32,6 +32,7 @@ import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
 import de.hunsicker.jalopy.plugin.jedit.option.BracesOptionPane;
+import de.hunsicker.jalopy.plugin.jedit.option.CodeInspectorOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.CommentsOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.EnvironmentOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.FooterOptionPane;
@@ -43,6 +44,8 @@ import de.hunsicker.jalopy.plugin.jedit.option.JavadocOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.LineWrappingOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.MessagesOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.MiscOptionPane;
+import de.hunsicker.jalopy.plugin.jedit.option.NamingOptionPane;
+import de.hunsicker.jalopy.plugin.jedit.option.ProjectOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.SeparationOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.SortOptionPane;
 import de.hunsicker.jalopy.plugin.jedit.option.WhitespaceOptionPane;
@@ -65,6 +68,9 @@ public class JEditPlugin
 
     /** The actual plug-in implementation. */
     private static PluginImpl _instance;
+
+    /** Indicates the Java Buffer mode. */
+    private static final String MODE_JAVA = "java" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -89,11 +95,10 @@ public class JEditPlugin
      */
     public void createMenuItems(Vector menuItems)
     {
-        _menu = GUIUtilities.loadMenu("jalopy-menu");
+        _menu = GUIUtilities.loadMenu("jalopy-menu" /* NOI18N */);
 
-        // we store the "Format current Buffer" menu item, because we want to
-        // be able to enable/disable this item according to the state of the
-        // view
+        // we store the Format menu item, because we want to be able to enable/disable
+        // this item according to the Buffer mode of the view
         _formatItem = _menu.getItem(0);
         menuItems.addElement(_menu);
     }
@@ -193,28 +198,40 @@ public class JEditPlugin
      */
     public void createOptionPanes(OptionsDialog dialog)
     {
-        OptionGroup grp = new OptionGroup("jalopy");
-        grp.addOptionPane(new GeneralOptionPane());
-        grp.addOptionPane(new BracesOptionPane());
-        grp.addOptionPane(new WhitespaceOptionPane());
-        grp.addOptionPane(new IndentationOptionPane());
-        grp.addOptionPane(new LineWrappingOptionPane());
-        grp.addOptionPane(new SeparationOptionPane());
-        grp.addOptionPane(new CommentsOptionPane());
-        grp.addOptionPane(new ImportsOptionPane());
-        grp.addOptionPane(new EnvironmentOptionPane());
-        grp.addOptionPane(new JavadocOptionPane());
-        grp.addOptionPane(new HeaderOptionPane());
-        grp.addOptionPane(new FooterOptionPane());
-        grp.addOptionPane(new SortOptionPane());
-        grp.addOptionPane(new MiscOptionPane());
-        grp.addOptionPane(new MessagesOptionPane());
-        dialog.addOptionGroup(grp);
+        OptionGroup jalopyGroup = new OptionGroup("jalopy" /* NOI18N */);
+        jalopyGroup.addOptionPane(new GeneralOptionPane());
+        jalopyGroup.addOptionPane(new ProjectOptionPane());
+
+        OptionGroup printerGroup = new OptionGroup("jalopy.printer" /* NOI18N */);
+        printerGroup.addOptionPane(new BracesOptionPane());
+        printerGroup.addOptionPane(new WhitespaceOptionPane());
+        printerGroup.addOptionPane(new IndentationOptionPane());
+        printerGroup.addOptionPane(new LineWrappingOptionPane());
+        printerGroup.addOptionPane(new SeparationOptionPane());
+        printerGroup.addOptionPane(new CommentsOptionPane());
+        printerGroup.addOptionPane(new ImportsOptionPane());
+        printerGroup.addOptionPane(new EnvironmentOptionPane());
+        printerGroup.addOptionPane(new JavadocOptionPane());
+        printerGroup.addOptionPane(new HeaderOptionPane());
+        printerGroup.addOptionPane(new FooterOptionPane());
+        printerGroup.addOptionPane(new SortOptionPane());
+        printerGroup.addOptionPane(new MiscOptionPane());
+
+        jalopyGroup.addOptionGroup(printerGroup);
+
+        OptionGroup inspectorGroup = new OptionGroup("jalopy.inspector" /* NOI18N */);
+        inspectorGroup.addOptionPane(new CodeInspectorOptionPane());
+        inspectorGroup.addOptionPane(new NamingOptionPane());
+        jalopyGroup.addOptionGroup(inspectorGroup);
+
+        jalopyGroup.addOptionPane(new MessagesOptionPane());
+
+        dialog.addOptionGroup(jalopyGroup);
     }
 
 
     /**
-     * Handles a message sent on the EditBus. Updates the state of the Jalopy menu item
+     * Handles a message sent on the EditBus. Updates the state of the Format menu item
      * according to the message content.
      *
      * @param message the message.
@@ -239,21 +256,18 @@ public class JEditPlugin
                 {
                     Buffer buffer = update.getEditPane().getBuffer();
 
-                    if (isActiveBuffer(buffer))
+                    if (isJava(buffer))
                     {
-                        if (isSourceFile(buffer))
+                        if (!_formatItem.isEnabled())
                         {
-                            if (!_formatItem.isEnabled())
-                            {
-                                _formatItem.setEnabled(true);
-                            }
+                            _formatItem.setEnabled(true);
                         }
-                        else
+                    }
+                    else
+                    {
+                        if (_formatItem.isEnabled())
                         {
-                            if (_formatItem.isEnabled())
-                            {
-                                _formatItem.setEnabled(false);
-                            }
+                            _formatItem.setEnabled(false);
                         }
                     }
                 }
@@ -270,7 +284,12 @@ public class JEditPlugin
 
                 if (isActiveBuffer(buffer))
                 {
-                    if (isSourceFile(buffer))
+                    /**
+                     * @todo we can't use isJava() because of a bug in jEdit: the mode
+                     *       seems to be only set after the message is issued and
+                     *       therefore the buffer is in 'text' mode
+                     */
+                    if (buffer.getFile().getName().endsWith(".java" /* NOI18N */))
                     {
                         if (!_formatItem.isEnabled())
                         {
@@ -298,9 +317,9 @@ public class JEditPlugin
                 {
                     Buffer buffer = update.getBuffer();
 
-                    if (update.getView() != null && isActiveBuffer(buffer))
+                    if ((update.getView() != null) && isActiveBuffer(buffer))
                     {
-                        if (isSourceFile(buffer))
+                        if (isJava(buffer))
                         {
                             if (!_formatItem.isEnabled())
                             {
@@ -330,9 +349,20 @@ public class JEditPlugin
      */
     static boolean isActiveBuffer(Buffer buffer)
     {
-        return (buffer == jEdit.getActiveView().getBuffer());
+        /*
+        View view = jEdit.getActiveView();
 
-        /*View[] views = jEdit.getViews();
+        boolean result = false;
+
+        if (view != null)
+        {
+            result = buffer == view.getBuffer();
+        }
+
+        return result;
+
+        */
+        View[] views = jEdit.getViews();
 
         for (int i = 0; i < views.length; i++)
         {
@@ -342,22 +372,22 @@ public class JEditPlugin
             }
         }
 
-        return false;*/
+        return false;
     }
 
-    /** Indicates the Java Buffer mode. */
-    private final static String MODE_JAVA = "java" /* NOI18N */;
 
     /**
-     * Determines whether the given buffer contains a Java source file.
+     * Determines whether the given buffer contains Java sources.
      *
      * @param buffer jEdit buffer.
      *
-     * @return <code>true</code> if the given buffer edits a Java source file.
+     * @return <code>true</code> if the given buffer contains Java sources.
      */
-    private static boolean isSourceFile(Buffer buffer)
+    private static boolean isJava(Buffer buffer)
     {
-        if ((!buffer.isReadOnly()) && buffer.getMode().getName().equalsIgnoreCase(MODE_JAVA))
+        if (
+            (!buffer.isReadOnly())
+            && buffer.getMode().getName().equalsIgnoreCase(MODE_JAVA))
         {
             return true;
         }
@@ -400,7 +430,7 @@ public class JEditPlugin
 
         public Jalopy getEngine()
         {
-            return getJalopy();
+            return getEngine();
         }
 
 
@@ -468,11 +498,11 @@ public class JEditPlugin
         {
             /**
              * @todo maybe this check will become obsolete one day, if jEdit makes use of
-             *       the Java Action framework
+             *       the Java Swing Action framework
              */
 
-            // only perform the action if the format menu item is enabled
-            if (_formatItem.isEnabled())
+            // only perform the action if the current Buffer contains a Java source file
+            if (isJava(jEdit.getActiveView().getBuffer()))
             {
                 performAction(Action.FORMAT_ACTIVE);
             }

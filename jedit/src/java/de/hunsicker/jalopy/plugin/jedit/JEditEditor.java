@@ -6,12 +6,17 @@
  */
 package de.hunsicker.jalopy.plugin.jedit;
 
+import org.gjt.sp.jedit.Buffer;
+import org.gjt.sp.jedit.Marker;
 import org.gjt.sp.jedit.textarea.JEditTextArea;
 import org.gjt.sp.jedit.textarea.Selection;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
+import de.hunsicker.jalopy.language.Annotation;
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
@@ -54,6 +59,11 @@ final class JEditEditor
      */
     public void setCaretPosition(int offset)
     {
+        if ((offset < 0) || (offset > getLength()))
+        {
+            throw new IllegalArgumentException("invalid range -- " + offset);
+        }
+
         this.textArea.setCaretPosition(offset);
     }
 
@@ -65,7 +75,13 @@ final class JEditEditor
         int line,
         int column)
     {
-        setCaretPosition(line, column);
+        if ((line < 1) || (column < 1))
+        {
+            throw new IllegalArgumentException(
+                "invalid range -- line " + line + ", column " + column);
+        }
+
+        setCaretPosition((this.textArea.getLineStartOffset(line - 1) + column) - 1);
     }
 
 
@@ -83,7 +99,7 @@ final class JEditEditor
      */
     public int getColumn()
     {
-        return this.textArea.getMagicCaretPosition();
+        return 1;
     }
 
 
@@ -110,7 +126,7 @@ final class JEditEditor
      */
     public int getLine()
     {
-        return this.textArea.getCaretLine();
+        return this.textArea.getCaretLine() + 1;
     }
 
 
@@ -130,6 +146,13 @@ final class JEditEditor
         int startOffset,
         int endOffset)
     {
+        if ((startOffset < 0) || (endOffset < 0))
+        {
+            throw new IllegalArgumentException(
+                "invalid range -- startOffset " + startOffset + ", endOffset "
+                + endOffset);
+        }
+
         Selection selection = new Selection.Range(startOffset, endOffset);
         this.textArea.setSelection(selection);
     }
@@ -190,6 +213,19 @@ final class JEditEditor
      */
     public void attachAnnotations(List annotations)
     {
+        /*
+        Buffer buffer = this.textArea.getBuffer();
+
+        for (int i = 0, size = annotations.size(); i < size; i++)
+        {
+            Annotation annotation = (Annotation) annotations.get(i);
+            Marker marker = (Marker) annotation.getData();
+            buffer.addMarker(
+                marker.getShortcut(), buffer.getLineStartOffset(annotation.getLine() - 1));
+        }
+
+        annotations.clear();
+        */
     }
 
 
@@ -198,6 +234,23 @@ final class JEditEditor
      */
     public List detachAnnotations()
     {
+        /*
+        Buffer buffer = this.textArea.getBuffer();
+        Vector markers = buffer.getMarkers();
+        List result = new ArrayList(markers.size());
+
+        for (int i = 0, size = markers.size(); i < size; i++)
+        {
+            Marker marker = (Marker) markers.elementAt(i);
+            result.add(
+                new Annotation(
+                    this.textArea.getLineOfOffset(marker.getPosition()) + 1, marker));
+        }
+
+        buffer.removeAllMarkers();
+
+        return result;
+        */
         return Collections.EMPTY_LIST;
     }
 
@@ -228,4 +281,3 @@ final class JEditEditor
         this.textArea.selectAll();
     }
 }
-
