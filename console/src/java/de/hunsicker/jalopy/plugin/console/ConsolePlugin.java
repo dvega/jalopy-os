@@ -48,6 +48,7 @@ import de.hunsicker.util.StringHelper;
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
 
+import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -115,23 +116,24 @@ public final class ConsolePlugin
 
     /** Holds the longoptions to use. */
     private static final LongOpt[] LONG_OPTIONS =
-    {
-        new LongOpt("convention" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'c'),
-        new LongOpt(
-            "classpath" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, OPT_CLASSPATH),
-        new LongOpt("destination" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'd'),
-        new LongOpt("disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
-        new LongOpt("encoding" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'e'),
-        new LongOpt("format" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'f'),
-        new LongOpt("force" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_FORCE),
-        new LongOpt("log" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'l'),
-        new LongOpt("nobackup" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_NOBACKUP),
-        new LongOpt("thread" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 't'),
-        new LongOpt("recursive" /* NOI18N */, LongOpt.OPTIONAL_ARGUMENT, null, 'r'),
-        new LongOpt("style" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 's'),
-        new LongOpt("version" /* NOI18N */, LongOpt.NO_ARGUMENT, null, 'v'),
-        new LongOpt("help" /* NOI18N */, LongOpt.NO_ARGUMENT, null, 'h')
-    };
+        {
+            new LongOpt("convention" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'c'),
+            new LongOpt(
+                "classpath" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, OPT_CLASSPATH),
+            new LongOpt("destination" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'd'),
+            new LongOpt(
+                "disclaimer" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_DISCLAIMER),
+            new LongOpt("encoding" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'e'),
+            new LongOpt("format" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'f'),
+            new LongOpt("force" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_FORCE),
+            new LongOpt("loglevel" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 'l'),
+            new LongOpt("nobackup" /* NOI18N */, LongOpt.NO_ARGUMENT, null, OPT_NOBACKUP),
+            new LongOpt("thread" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 't'),
+            new LongOpt("recursive" /* NOI18N */, LongOpt.OPTIONAL_ARGUMENT, null, 'r'),
+            new LongOpt("style" /* NOI18N */, LongOpt.REQUIRED_ARGUMENT, null, 's'),
+            new LongOpt("version" /* NOI18N */, LongOpt.NO_ARGUMENT, null, 'v'),
+            new LongOpt("help" /* NOI18N */, LongOpt.NO_ARGUMENT, null, 'h')
+        };
 
     /** Bundle with localized message strings. */
     private static final ResourceBundle BUNDLE =
@@ -139,6 +141,8 @@ public final class ConsolePlugin
             "de.hunsicker.jalopy.plugin.console.Bundle" /* NOI18N */,
             Convention.getInstance().getLocale());
 
+    private static String CONSOLE_APPENDER_NAME = "ConsoleAppender";            
+            
     //~ Instance variables ---------------------------------------------------------------
 
     /** Holds the name of the destination directory, if any. */
@@ -146,6 +150,9 @@ public final class ConsolePlugin
 
     /** The file format we use to write files. */
     private FileFormat _fileFormat = FileFormat.AUTO;
+
+    /** The level to control logging output. */
+    private Level _loglevel;
 
     /** File to use load code convention from. */
     private String _convention;
@@ -200,17 +207,18 @@ public final class ConsolePlugin
     {
         long start = System.currentTimeMillis();
         ConsolePlugin console = new ConsolePlugin();
-        console.initializeLogging();
         console.parseArgs(argv);
+        console.initializeLogging();
 
         if ((console._ioMode != IO_SYSTEM) && !console.scan()) // no files found
         {
             if (_argString != null)
             {
                 Object[] args = { _argString };
-                System.out.println(
+                System.err.println(
                     MessageFormat.format(
                         BUNDLE.getString("NON_MATCHING_EXPRESSION" /* NOI18N */), args));
+
                 System.exit(1);
             }
         }
@@ -224,9 +232,10 @@ public final class ConsolePlugin
             catch (VersionMismatchException ex)
             {
                 Object[] args = { ex.getExpected(), ex.getFound() };
-                System.out.println(
+                System.err.println(
                     MessageFormat.format(
                         BUNDLE.getString("VERSION_MISMATCH" /* NOI18N */), args));
+
                 System.exit(1);
             }
 
@@ -262,10 +271,10 @@ public final class ConsolePlugin
             }
 
             Object[] args =
-            {
-                new Integer(console._numFiles), new Integer(console._numFiles),
-                console.getRuntime(System.currentTimeMillis() - start)
-            };
+                {
+                    new Integer(console._numFiles), new Integer(console._numFiles),
+                    console.getRuntime(System.currentTimeMillis() - start)
+                };
             _logger.l7dlog(Level.INFO, "RUN_INFO" /* NOI18N */, args, null);
         }
     }
@@ -445,15 +454,15 @@ public final class ConsolePlugin
     private void displayCopyright()
     {
         System.out.println(
-            "Jalopy Java Source Code Formatter " + Jalopy.getVersion()
+            " Jalopy Java Source Code Formatter " + Jalopy.getVersion()
             + " Console Plug-in " /* NOI18N */ + getVersion());
         System.out.println(
-            "Copyright (c) " /* NOI18N */
+            " Copyright (c) " /* NOI18N */
             + BUNDLE.getString("COPYRIGHT_YEAR" /* NOI18N */) + " "
             + BUNDLE.getString("AUTHOR.1" /* NOI18N */));
         System.out.println();
-        System.out.println("Jalopy comes with ABSOLUTELY NO WARRANTY");
-        System.out.println("Use '--disclaimer' to show the disclaimer");
+        System.out.println(" Jalopy comes with ABSOLUTELY NO WARRANTY");
+        System.out.println(" Use '--disclaimer' to show the disclaimer");
     }
 
 
@@ -465,6 +474,7 @@ public final class ConsolePlugin
         displayCopyright();
         System.out.println();
         displayUsage();
+
         System.exit(getExitCode());
     }
 
@@ -477,6 +487,7 @@ public final class ConsolePlugin
         Object[] args = { "'java " + BUNDLE.getString("PROGRAM_CMD") + " -h'" };
         System.out.println(MessageFormat.format(BUNDLE.getString("HINT"), args));
         System.out.println();
+
         System.exit(getExitCode());
     }
 
@@ -522,7 +533,7 @@ public final class ConsolePlugin
         System.out.println("   or  java -jar jalopy-<version>.jar [-options] [args...]");
         System.out.println();
         System.out.println("where options include:");
-        System.out.println("  -c, --convention=FILE   use FILE as code convention file");
+        System.out.println("  -c, --convention=FILE   load code convention from FILE");
         System.out.println("  -d, --dest=DIR          use DIR as base output directory");
         System.out.println("      --disclaimer        print software disclaimer");
         System.out.println(
@@ -541,14 +552,20 @@ public final class ConsolePlugin
             "      --force             force formatting even if file up-to-date");
         System.out.println("  -h, --help              display this help");
         System.out.println(
+            "  -l, --loglevel=WORD     specifies the logging level where WORD can be");
+        System.out.println(
+            "                          either DEBUG, INFO (the default), WARN or DEBUG");
+        System.out.println("                          (all case-insensitive)");
+        System.out.println(
             "      --nobackup          indicates that no backups should be kept");
         System.out.println(
-            "  -r, --recursive{=NUM}   recurse into directories, up to NUM levels");
+            "  -r, --recursive{=NUM}   recurse into directories, up to NUM levels;");
         System.out.println(
             "                          if NUM is omitted, recurses indefinitely");
         System.out.println("  -t, --thread=NUM        use NUM processing threads");
         System.out.println("  -v, --version           print product version and exit");
         System.out.println();
+
         System.exit(getExitCode());
     }
 
@@ -560,6 +577,7 @@ public final class ConsolePlugin
     {
         displayCopyright();
         System.out.println();
+
         System.exit(getExitCode());
     }
 
@@ -749,38 +767,76 @@ public final class ConsolePlugin
         }
     }
 
+    /**
+     * Initializes the given logger.
+     * 
+     * @param logger the logger to initialize.
+     * @param appender the appender the logger should be added to (if it weren't already).
+     * @param level the new level of the logger.
+     */
+    private void initializeLogger(
+        Logger   logger,
+        Appender appender,
+        Level    level)
+    {
+        Object currentAppender = logger.getAppender(CONSOLE_APPENDER_NAME);
+
+        if (currentAppender == null)
+        {
+            logger.addAppender(appender);
+        }
+
+        logger.setLevel(level);
+    }
+
 
     /**
      * Program initialization.
      */
     private void initializeLogging()
     {
-        Loggers.initialize(
+        Appender appender =
             new ConsoleAppender(
                 new PatternLayout("[%p] %m\n" /* NOI18N */),
                 (_ioMode == IO_FILE) ? "System.out" /* NOI18N */
-                                     : "System.err" /* NOI18N */));
+                                     : "System.err" /* NOI18N */);
+        appender.setName(CONSOLE_APPENDER_NAME);
+
+        if (_loglevel == null)
+        {
+            Loggers.initialize(appender);
+            initializeLogger(Loggers.IO, appender, Level.INFO);
+        }
+        else
+        {
+            Loggers.ALL.removeAllAppenders();
+
+            ResourceBundle bundle =
+                ResourceBundle.getBundle(
+                    "de.hunsicker.jalopy.storage.Bundle" /* NOI18N */,
+                    Convention.getInstance().getLocale());
+
+            Loggers.ALL.setResourceBundle(bundle);
+
+            initializeLogger(Loggers.IO, appender, _loglevel);
+            initializeLogger(Loggers.PARSER, appender, _loglevel);
+            initializeLogger(Loggers.PRINTER, appender, _loglevel);
+            initializeLogger(Loggers.TRANSFORM, appender, _loglevel);
+            initializeLogger(Loggers.PARSER_JAVADOC, appender, _loglevel);
+            initializeLogger(Loggers.PRINTER_JAVADOC, appender, _loglevel);
+        }
     }
 
 
     /**
-     * Loads the repository
+     * Loads the repository.
      *
-     * @param files DOCUMENT ME!
+     * @param files the serialized repository entries to load.
      */
     private void loadRepository(List files)
     {
         ClassRepository repository = ClassRepository.getInstance();
 
-        /*
-        ClassRepositoryEntry.Info[] infos = repository.getInfo();
-        List files = new ArrayList(infos.length);
-
-        for (int i = 0; i < infos.length; i++)
-        {
-            files.add(infos[i].getLocation());
-        }
-        */
         try
         {
             repository.loadAll(files);
@@ -831,7 +887,7 @@ public final class ConsolePlugin
                         if (!_destDir.mkdirs())
                         {
                             Object[] args = { _destDir };
-                            System.out.println(
+                            System.err.println(
                                 MessageFormat.format(
                                     BUNDLE.getString(
                                         "ERROR_CREATING_DESTINATION_DIRECTORY" /* NOI18N */),
@@ -842,7 +898,7 @@ public final class ConsolePlugin
                     else if (_destDir.isFile())
                     {
                         Object[] args = { _destDir };
-                        System.out.println(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString(
                                     "INVALID_DESTINATION_DIRECTORY" /* NOI18N */), args));
@@ -870,7 +926,7 @@ public final class ConsolePlugin
                     else
                     {
                         Object[] args = { g.getOptarg() };
-                        System.out.println(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString("INVALID_ENCODING" /* NOI18N */), args));
                         System.exit(1);
@@ -915,11 +971,43 @@ public final class ConsolePlugin
                     else
                     {
                         Object[] args = { format };
-                        System.out.println(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString("INVALID_FILE_FORMAT" /* NOI18N */), args));
                         setExitCode(1);
                         displayHint();
+                    }
+
+                    break;
+
+                case 'l' :
+
+                    String level = g.getOptarg().trim().toUpperCase();
+
+                    if (level.equals("INFO" /* NOI18N */))
+                    {
+                        _loglevel = Level.INFO;
+                    }
+                    else if (level.equals("DEBUG" /* NOI18N */))
+                    {
+                        _loglevel = Level.DEBUG;
+                    }
+                    else if (level.equals("WARN" /* NOI18N */))
+                    {
+                        _loglevel = Level.WARN;
+                    }
+                    else if (level.equals("ERROR" /* NOI18N */))
+                    {
+                        _loglevel = Level.ERROR;
+                    }
+                    else
+                    {
+                        Object[] args = { level };
+
+                        System.err(
+                            MessageFormat.format(
+                                BUNDLE.getString("INVALID_LOGLEVEL" /* NOI18N */), args));
+                        System.exit(1);
                     }
 
                     break;
@@ -947,7 +1035,7 @@ public final class ConsolePlugin
                         if (!file.exists())
                         {
                             Object[] args = { file };
-                            System.out.println(
+                            System.err.println(
                                 MessageFormat.format(
                                     BUNDLE.getString("INVALID_CLASSPATH" /* NOI18N */),
                                     args));
@@ -966,18 +1054,11 @@ public final class ConsolePlugin
 
                     break;
 
-                case 'l' :
-
-                    /**
-                     * @todo implement file logging
-                     */
-                    break;
-
                 case 'r' :
 
-                    String level = g.getOptarg();
+                    String depth = g.getOptarg();
 
-                    if (level == null)
+                    if (depth == null)
                     {
                         // recurse indefinitely
                         _scanner.setMaxLevels(Integer.MAX_VALUE);
@@ -986,7 +1067,7 @@ public final class ConsolePlugin
                     {
                         try
                         {
-                            int number = Integer.parseInt(level);
+                            int number = Integer.parseInt(depth);
 
                             if (number > 0)
                             {
@@ -994,8 +1075,8 @@ public final class ConsolePlugin
                             }
                             else
                             {
-                                Object[] args = { level };
-                                System.out.println(
+                                Object[] args = { depth };
+                                System.err.println(
                                     MessageFormat.format(
                                         BUNDLE.getString(
                                             "INVALID_RECURSION_NUMBER" /* NOI18N */), args));
@@ -1005,8 +1086,8 @@ public final class ConsolePlugin
                         }
                         catch (NumberFormatException ex)
                         {
-                            Object[] args = { level };
-                            System.out.println(
+                            Object[] args = { depth };
+                            System.err.println(
                                 MessageFormat.format(
                                     BUNDLE.getString(
                                         "INVALID_RECURSION_LEVEL" /* NOI18N */), args));
@@ -1030,7 +1111,7 @@ public final class ConsolePlugin
                         else
                         {
                             Object[] args = { new Integer(threads) };
-                            System.out.println(
+                            System.err.println(
                                 MessageFormat.format(
                                     BUNDLE.getString(
                                         "INVALID_THREAD_NUMBER" /* NOI18N */), args));
@@ -1041,7 +1122,7 @@ public final class ConsolePlugin
                     catch (NumberFormatException ex)
                     {
                         Object[] args = { g.getOptarg() };
-                        System.out.println(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString("INVALID_THREAD_NUMBER" /* NOI18N */),
                                 args));
@@ -1119,10 +1200,10 @@ public final class ConsolePlugin
                             continue;
                         }
                     }
-                    catch (Exception ex)
+                    catch (Throwable ex)
                     {
                         Object[] args = { ex.getMessage(), argv[i] };
-                        System.out.println(
+                        System.err.println(
                             MessageFormat.format(
                                 BUNDLE.getString("MALFORMED_EXPRESSION" /* NOI18N */),
                                 args));
@@ -1130,7 +1211,7 @@ public final class ConsolePlugin
                     }
 
                     Object[] args = { argv[i] };
-                    System.out.println(
+                    System.err.println(
                         MessageFormat.format(
                             BUNDLE.getString("INPUT_SOURCE_NOT_EXIST" /* NOI18N */), args));
                 }
