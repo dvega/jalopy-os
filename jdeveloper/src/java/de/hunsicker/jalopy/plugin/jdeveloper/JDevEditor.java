@@ -72,7 +72,7 @@ final class JDevEditor
         int column)
     {
         int offset = getEditor().getLineStartOffset(line);
-        getEditor().setCaretPosition(offset + column);
+        getEditor().setCaretPosition(offset + column - 1);
     }
 
 
@@ -90,10 +90,10 @@ final class JDevEditor
      */
     public int getColumn()
     {
-        int currentLine = getEditor().getLineFromOffset(getCaretPosition());
-        int linePosition = getEditor().getLineStartOffset(currentLine);
+        int caret = getCaretPosition();
+        int lineOffset = getEditor().getLineStartOffset(getEditor().getLineFromOffset(caret));
 
-        return getCaretPosition() - linePosition;
+        return caret - lineOffset + 1 ;
     }
 
 
@@ -247,7 +247,7 @@ final class JDevEditor
      */
     public void requestFocus()
     {
-        //getEditor().requestFocus();
+        getEditor().getFocusedEditorPane().requestFocus();
     }
 
 
@@ -268,7 +268,7 @@ final class JDevEditor
 
             for (int i = 0, size = editors.size(); i < size; i++)
             {
-                AbstractEditor editor = (AbstractEditor) editors.get(i);
+                oracle.ide.editor.Editor editor = (oracle.ide.editor.Editor) editors.get(i);
 
                 if (editor instanceof CodeEditor)
                 {

@@ -19,6 +19,8 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.apache.oro.text.regex.MatchResult;
 
 import oracle.ide.layout.ViewId;
+import oracle.ide.Ide;
+import oracle.ide.log.LogWindow;
 
 
 /**
@@ -121,6 +123,11 @@ final class JDevAppender
                 new MessagePage(
                     new ViewId("JalopyPage" /* NOI18N */, "Jalopy" /* NOI18N */), null);
         }
+
+        LogWindow window = Ide.getLogWindow();
+
+        if (!window.isVisible())
+            window.show();
 
         if (result == null)
         {

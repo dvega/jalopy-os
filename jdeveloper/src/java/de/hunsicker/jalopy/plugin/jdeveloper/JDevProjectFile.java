@@ -7,11 +7,13 @@
 package de.hunsicker.jalopy.plugin.jdeveloper;
 
 import java.io.File;
+import java.util.List;
 
 import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
+import oracle.ide.Ide;
 import oracle.ide.model.TextNode;
 
 
@@ -120,7 +122,25 @@ final class JDevProjectFile
      */
     public boolean isOpened()
     {
-        return _node.isOpen();
+        // broken in 9.0.3!
+        // return _node.isOpen();
+        boolean result = false;
+
+        List editors = Ide.getEditorManager().getAllEditors();
+
+        for (int i = 0, size = editors.size(); i < size; i++)
+        {
+            oracle.ide.editor.Editor editor = (oracle.ide.editor.Editor) editors.get(i);
+
+            if (_node.equals(editor.getContext().getElement()))
+            {
+                result = true;
+
+                break;
+            }
+        }
+
+        return result;
     }
 
 
