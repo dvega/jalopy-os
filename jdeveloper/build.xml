@@ -176,7 +176,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
         <include name="de/hunsicker/swing/util/*" />
         <include name="de/hunsicker/util/*" />
         <include name="de/hunsicker/util/concurrent/*" />
-        <include name="de/hunsicker/jalopy/plugin/jdeveloper/*" />
+        <include name="de/hunsicker/jalopy/plugin/jdeveloper/**" />
       </srcfileset>
       <srcfileset dir="${DIR.JARS}">
         <include name="jalopy-${BUILD.VERSION}.jar" />
