@@ -18,7 +18,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 
 
 /**
- * The JEdit project implementation.
+ * The jEdit project implementation.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$

@@ -298,7 +298,7 @@ public class JEditPlugin
                 {
                     Buffer buffer = update.getBuffer();
 
-                    if (isActiveBuffer(buffer))
+                    if (update.getView() != null && isActiveBuffer(buffer))
                     {
                         if (isSourceFile(buffer))
                         {
@@ -330,7 +330,9 @@ public class JEditPlugin
      */
     static boolean isActiveBuffer(Buffer buffer)
     {
-        View[] views = jEdit.getViews();
+        return (buffer == jEdit.getActiveView().getBuffer());
+
+        /*View[] views = jEdit.getViews();
 
         for (int i = 0; i < views.length; i++)
         {
@@ -340,9 +342,11 @@ public class JEditPlugin
             }
         }
 
-        return false;
+        return false;*/
     }
 
+    /** Indicates the Java Buffer mode. */
+    private final static String MODE_JAVA = "java" /* NOI18N */;
 
     /**
      * Determines whether the given buffer contains a Java source file.
@@ -353,7 +357,7 @@ public class JEditPlugin
      */
     private static boolean isSourceFile(Buffer buffer)
     {
-        if ((!buffer.isReadOnly()) && buffer.getMode().getName().equalsIgnoreCase("java"))
+        if ((!buffer.isReadOnly()) && buffer.getMode().getName().equalsIgnoreCase(MODE_JAVA))
         {
             return true;
         }

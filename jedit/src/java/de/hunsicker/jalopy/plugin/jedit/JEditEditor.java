@@ -17,7 +17,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 
 
 /**
- * The JEdit editor implementation.
+ * The jEdit editor implementation.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
@@ -228,3 +228,4 @@ final class JEditEditor
         this.textArea.selectAll();
     }
 }
+

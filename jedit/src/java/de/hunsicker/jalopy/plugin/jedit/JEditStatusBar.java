@@ -10,7 +10,7 @@ import org.gjt.sp.jedit.gui.StatusBar;
 
 
 /**
- * The JEdit status bar implementation.
+ * The jEdit status bar implementation.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$

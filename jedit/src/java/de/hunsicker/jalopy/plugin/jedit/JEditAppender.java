@@ -22,7 +22,7 @@ import org.apache.oro.text.regex.MatchResult;
 
 
 /**
- * Appender which displays messages in a JEdit message view.
+ * Appender which displays messages in a jEdit message view.
  *
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
