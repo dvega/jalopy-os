@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2002, Marco Hunsicker. All rights reserved.
  *
- * This software is distributable under the BSD license. See the terms of the BSD license
- * in the documentation provided with this software.
+ * This software is distributable under the BSD license. See the terms of the
+ * BSD license in the documentation provided with this software.
  */
 package de.hunsicker.jalopy.printer;
 
@@ -135,8 +135,8 @@ final class ParametersPrinter
                     out.state.parametersWrapped =
                         printImpl(
                             node, newlineAfter ? MODE_ALWAYS
-                                               : MODE_AS_NEEDED,
-                            JavaTokenTypes.PARAMETERS, out);
+                                               : MODE_AS_NEEDED, JavaTokenTypes.PARAMETERS,
+                            out);
                 out.state.paramOffset = OFFSET_NONE;
 
                 break;
@@ -621,7 +621,7 @@ SEARCH:
                                             parameter, tester);
                                     }
 
-                                    if (next != null)
+                                    if (!preferWrapAfterLeftParen && (next != null))
                                     {
                                         if (spaceAfterComma)
                                         {
@@ -652,8 +652,8 @@ SEARCH:
                                             else if (
                                                 !indentDeep
                                                 && !shouldWrapAtLowerLevel(
-                                                    parameter.getFirstChild(),
-                                                    lineLength, deepIndentSize, out))
+                                                    parameter.getFirstChild(), lineLength,
+                                                    deepIndentSize, out))
                                             {
                                                 if ((type == JavaTokenTypes.PARAMETERS))
                                                 {
@@ -709,8 +709,8 @@ SEARCH:
                                                             {
                                                                 result =
                                                                     wrapFirst(
-                                                                        type,
-                                                                        next == null, out);
+                                                                        type, next == null,
+                                                                        out);
                                                                 firstWrapped = result;
                                                             }
                                                         }
