@@ -1289,8 +1289,35 @@ public final class Convention
 
         for (int i = 0, i_len = children.getLength(); i < i_len; i++)
         {
-            Element childElement = (Element) children.item(i);
-            convertXmlToMap(map, childElement);
+            if (children instanceof Element) {
+                Element childElement = (Element) children.item(i);
+                convertXmlToMap(map, childElement);
+            }
+            else {
+                StringBuffer path = new StringBuffer();
+                String value = element.getTagName();
+    
+                while (true)
+                {
+                    if (path.length() > 0)
+                    {
+                        path.insert(0, '/');
+                    }
+    
+                    path.insert(0, element.getTagName());
+                    element = (Element) element.getParentNode();
+    
+                    if ((element == null) || element.getTagName().equals("jalopy" /* NOI18N */))
+                    {
+                        break;
+                    }
+                }
+    
+                map.put(new Key(new String(path)), value);
+    
+                return;
+                
+            }
         }
     }
 
