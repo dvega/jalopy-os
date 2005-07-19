@@ -174,6 +174,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <fileset dir="../eclipse/src/resources" >
         <include name="about.html" />
         <include name="plugin.*" />
+        <include name="META-INF/*"/>
       </fileset>
       <filterset>
         <filtersfile file="build.properties" />
@@ -183,9 +184,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <copy todir="${DIR.TMP}/eclipse/de.hunsicker.jalopy.plugin.eclipse_${BUILD.VERSION.ECLIPSE}" >
       <fileset dir="${DIR.LIB}" >
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-eclipse*.jar" />
