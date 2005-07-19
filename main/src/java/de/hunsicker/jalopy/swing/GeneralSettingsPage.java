@@ -49,7 +49,7 @@ public class GeneralSettingsPage
     private static final String JDK_1_4 = "JDK 1.4" /* NOI18N */;
     private static final String FILENAME_IMPORT = "import.dat" /* NOI18N */;
     private static final String FILENAME_EXPORT = "export.dat" /* NOI18N */;
-    private static final Object JDK_1_5 = "JDK 1.5";
+    private static final String JDK_1_5 = "JDK 1.5";
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -142,8 +142,11 @@ public class GeneralSettingsPage
                 return JDK_1_3;
 
             case de.hunsicker.jalopy.language.JavaParser.JDK_1_4 :
-            default :
                 return JDK_1_4;
+                
+            case de.hunsicker.jalopy.language.JavaParser.JDK_1_5 :
+            default :
+                return JDK_1_5;
         }
     }
 
