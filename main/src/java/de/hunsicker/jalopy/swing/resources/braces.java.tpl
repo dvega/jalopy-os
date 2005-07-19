@@ -1,3 +1,6 @@
+import foo.bar.*;
+import static foo.bar.com;
+
 /**
 * Test
 */
@@ -50,7 +53,7 @@ public void calculateInterest(float amount, float rate) {
 /**
 * Test 2
 */
-    public void foo() throws IOException, FileNotFoundException, InterruptedIOException, UnsupportedEncodingException
+    public void foo(double... values) throws IOException, FileNotFoundException, InterruptedIOException, UnsupportedEncodingException
     {
     	for(String s:greeting) {
     	
