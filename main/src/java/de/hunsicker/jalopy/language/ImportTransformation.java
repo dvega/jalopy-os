@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import antlr.ASTPair;
 import antlr.collections.AST;
@@ -907,8 +908,25 @@ final class ImportTransformation
      */
     private JavaNode createImportNode(JavaNode node)
     {
-        List parts = 
-		Arrays.asList(node.text.split("/([.])/" /* NOI18N */));
+     //   List parts = 
+//		new Vector(Arrays.asList(node.text.split("/([.])/" /* NOI18N */)));
+        
+        // TODO Check to see if this can be better optimized...
+        String identifier = node.text;
+        List parts = new ArrayList(8);
+
+        int endOffset = -1;
+        int startOffset = 0;
+
+        // split the identifier into parts
+        while ((endOffset = identifier.indexOf('.', startOffset)) > -1)
+        {
+            parts.add(identifier.substring(startOffset, endOffset));
+            parts.add(DOT);
+            startOffset = endOffset + 1;
+        }
+
+        parts.add(identifier.substring(startOffset));
 
         ASTPair curAST = new ASTPair();
 
