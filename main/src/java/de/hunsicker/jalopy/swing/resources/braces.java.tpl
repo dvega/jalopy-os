@@ -52,6 +52,9 @@ public void calculateInterest(float amount, float rate) {
 */
     public void foo() throws IOException, FileNotFoundException, InterruptedIOException, UnsupportedEncodingException
     {
+    	for(String s:greeting) {
+    	
+    	}
         do
         {
             for (int i = 0, n = getMax(); i < n; i++)
