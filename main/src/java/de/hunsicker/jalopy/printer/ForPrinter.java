@@ -160,7 +160,7 @@ final class ForPrinter
     private AST for_each(AST forNode, NodeWriter out, Marker marker) throws IOException{
         AST forEachClause = forNode.getFirstChild();
         AST expresion = forEachClause.getNextSibling();
-        printChildren(forEachClause,out);
+        PrinterFactory.create(forEachClause).print(forEachClause,out);
         out.print(SPACE_COLON_SPACE,forEachClause.getType());
         printChildren(expresion,out);
         return forNode.getNextSibling();
