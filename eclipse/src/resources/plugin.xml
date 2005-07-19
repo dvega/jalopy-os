@@ -11,9 +11,7 @@
   <runtime>
     <library name="jalopy-eclipse-@BUILD.VERSION.ECLIPSE@.jar" />
     <library name="jalopy-@BUILD.VERSION@.jar" />
-    <library name="jdom-@LIB.VERSION.JDOM@.jar" />
     <library name="log4j-@LIB.VERSION.LOG4J@.jar" />
-    <library name="oro-@LIB.VERSION.ORO@.jar" />
   </runtime>
 
   <requires>

@@ -40,18 +40,20 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
       <include name="*.jar" />
     </fileset>
 -->
-    <fileset dir="D:/eclipse-M9/eclipse/plugins/">
-      <include name="org.eclipse.core.resources_3.0.0/*.jar" />
-      <include name="org.eclipse.core.runtime_3.0.0/*.jar" />
-      <include name="org.eclipse.jdt.core_3.0.0/*.jar" />
-      <include name="org.eclipse.jface.text_3.0.0/*.jar" />
-      <include name="org.eclipse.jface_3.0.0/*.jar" />
-      <include name="org.eclipse.osgi_3.0.0/*.jar" />
-      <include name="org.eclipse.swt.win32_3.0.0/ws/win32/*.jar" />
-      <include name="org.eclipse.text_3.0.0/*.jar" />
-      <include name="org.eclipse.ui.ide_3.0.0/*.jar" />
-      <include name="org.eclipse.ui.workbench.texteditor_3.0.0/*.jar" />
-      <include name="org.eclipse.ui.workbench_3.0.0/*.jar" />
+    <fileset dir="${DIR.ECLIPSE.HOME}/plugins/">
+      <include name="**/*.jar"/>
+    	<!--
+    	Probably should shorten this a little...
+      <include name="org.eclipse.core.resources_*/*.jar" />
+      <include name="org.eclipse.core.runtime_*/*.jar" />
+      <include name="org.eclipse.jdt.core_*/*.jar" />
+      <include name="org.eclipse.jface*/*.jar" />
+      <include name="org.eclipse.osgi*/*.jar" />
+      <include name="org.eclipse.text_*/*.jar" />
+      <include name="org.eclipse.ui.ide_*/*.jar" />
+      <include name="org.eclipse.ui.workbench.texteditor_*/*.jar" />
+      <include name="org.eclipse.ui.workbench_*/*.jar" />
+      -->
     </fileset>
     <pathelement path="${DIR.COMPILE}" />
   </path>
@@ -92,6 +94,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="eclipse-compile"
           depends="eclipse-init">
+
     <javac compiler="${BUILD.COMPILER}"
            destdir="${DIR.COMPILE}"
            debug="${BUILD.DEBUG}"

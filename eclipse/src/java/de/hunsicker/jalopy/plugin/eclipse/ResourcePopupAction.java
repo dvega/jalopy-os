@@ -30,8 +30,10 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -92,6 +94,16 @@ public class ResourcePopupAction
      */
     public void run(IAction action)
     {
+        Shell shell = new Shell();
+        if (
+        !MessageDialog.openConfirm(shell,"Please Confirm", "Are you sure you wish to use jalopy to format")) {
+         return;   
+        }
+        MessageDialog.openInformation(
+            shell,
+            "TestPlugin Plug-in",
+            "New Action was executed.");
+        
         IWorkbenchPartSite site = _part.getSite();
         ISelectionProvider provider = site.getSelectionProvider();
         StructuredSelection selection = (StructuredSelection) provider.getSelection();

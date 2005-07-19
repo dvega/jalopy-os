@@ -12,12 +12,12 @@
  */
 package de.hunsicker.jalopy.plugin.eclipse;
 
+import java.util.regex.Matcher;
+
 import de.hunsicker.jalopy.plugin.AbstractAppender;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-
-import org.apache.oro.text.regex.MatchResult;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -85,7 +85,7 @@ final class EclipseAppender extends AbstractAppender
     public void append(LoggingEvent ev)
     {
         // check for Emacs-style messages
-        MatchResult result = parseMessage(ev);
+        Matcher result = parseMessage(ev);
 
         // parsing failed, so we issue a standard message
         if (result == null)
