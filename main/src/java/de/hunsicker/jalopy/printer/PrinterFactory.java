@@ -86,6 +86,10 @@ public static AST lastChild = null;
                 result = DoWhilePrinter.getInstance();
 
                 break;
+            case JavaTokenTypes.VARIABLE_PARAMETER_DEF :
+                result = VariableParameterDefPrinter.getInstance();
+
+                break;
 
             case JavaTokenTypes.LITERAL_assert:
                 result = AssertionPrinter.getInstance();
