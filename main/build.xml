@@ -63,6 +63,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
           <include name="de/hunsicker/io/*" />
           <include name="de/hunsicker/jalopy/*" />
           <include name="de/hunsicker/jalopy/language/*" />
+          <include name="de/hunsicker/jalopy/language/antlr/*" />
           <include name="de/hunsicker/jalopy/plugin/*" />
           <include name="de/hunsicker/jalopy/prefs/*" />
           <include name="de/hunsicker/jalopy/storage/*" />
