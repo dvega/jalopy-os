@@ -6,6 +6,16 @@ import static foo.bar.com;
 */
 public class Braces
 {
+public Braces(String test) {
+	super(test);
+        anArrayList.add(15.2);
+        anArrayList.add(3.14);
+        anArrayList.add(40000.0);
+       
+        for(Double al : anArrayList){
+            System.out.println(al);
+        }	
+}
 /**
  * Annotation type to indicate a task still needs to be
  *   completed.
