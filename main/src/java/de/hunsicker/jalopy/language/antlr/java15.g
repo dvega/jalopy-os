@@ -945,9 +945,9 @@ constructorBody
 /** Catch obvious constructor calls, but not the expr.super(...) calls */
 explicitConstructorInvocation
 	:	(typeArguments)?
-		(	"this"! lp1:LPAREN^ argList RPAREN SEMI
+		(	"this" lp1:LPAREN^ argList RPAREN SEMI
 			{#lp1.setType(CTOR_CALL);}
-		|	"super"! lp2:LPAREN^ argList RPAREN SEMI
+		|	"super" lp2:LPAREN^ argList RPAREN SEMI
 			{#lp2.setType(SUPER_CTOR_CALL);}
 		)
 	;

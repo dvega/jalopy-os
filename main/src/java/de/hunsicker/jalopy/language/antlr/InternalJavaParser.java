@@ -4265,6 +4265,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case LITERAL_this:
 		{
+			JavaNode tmp109_AST = null;
+			tmp109_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp109_AST);
 			match(LITERAL_this);
 			lp1 = LT(1);
 			lp1_AST = (JavaNode)astFactory.create(lp1);
@@ -4287,6 +4290,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_super:
 		{
+			JavaNode tmp112_AST = null;
+			tmp112_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp112_AST);
 			match(LITERAL_super);
 			lp2 = LT(1);
 			lp2_AST = (JavaNode)astFactory.create(lp2);
