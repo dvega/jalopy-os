@@ -158,6 +158,11 @@ final class ForPrinter
      * @param marker
      */
     private AST for_each(AST forNode, NodeWriter out, Marker marker) throws IOException{
+                if (out.mode == NodeWriter.MODE_DEFAULT)
+        {
+            out.state.paramLevel++;
+            out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
+        }
         AST forEachClause = forNode.getFirstChild();
         AST expresion = forEachClause.getNextSibling();
         PrinterFactory.create(forEachClause).print(forEachClause,out);
