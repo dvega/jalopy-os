@@ -674,6 +674,9 @@ public final class ConventionDefaults
     /** The default value for the key with the same name ("{@value}"). */
     public static final String SEPARATOR_CLASS = "Inner Classes" /* NOI18N */;
 
+    /** Add comments after closing braces */
+    public static final boolean BRACE_ADD_COMMENT = false;
+
     //~ Constructors ---------------------------------------------------------------------
 
     /**

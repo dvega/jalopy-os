@@ -1044,6 +1044,10 @@ public final class Convention
         {
             throw new NullPointerException(key + ", " + value);
         }
+        if (key._name.equals(ConventionKeys.SORT_ORDER._name)) {
+            key = key;
+            value = value.trim();
+        }
 
         _values.put(key, value);
     }
@@ -1264,7 +1268,7 @@ public final class Convention
         if (children.getLength() == 0)
         {
             StringBuffer path = new StringBuffer();
-            String value = element.getTagName();
+            String value = "";//;element.getTagName();
 
             while (true)
             {
@@ -1290,13 +1294,14 @@ public final class Convention
         for (int i = 0, i_len = children.getLength(); i < i_len; i++)
         {
             if (children instanceof Element && children.item(i) instanceof Element) {
-                System.out.println(((Element)children).toString()+","+children.item(i).toString());
                 Element childElement = (Element) children.item(i);
                 convertXmlToMap(map, childElement);
+                
             }
-            else {
+            
+            else if (i_len == 1){
                 StringBuffer path = new StringBuffer();
-                String value = element.getTagName();
+                String value = element.getFirstChild().getNodeValue();
     
                 while (true)
                 {
@@ -1318,11 +1323,14 @@ public final class Convention
                         break;
                     }
                 }
+                
     
                 map.put(new Key(new String(path)), value);
     
                 return;
-                
+            }
+            else {
+                // Skip format node
             }
         }
     }
@@ -2496,6 +2504,7 @@ public final class Convention
         String s=settings.get(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
         StringTokenizer sortOrder = new StringTokenizer(s,"|");
         int t = sortOrder.countTokens();
+
         int z= DeclarationType.getOrderSize();
         if (t!=z) {
             settings.put(ConventionKeys.SORT_ORDER,DeclarationType.getOrder());
@@ -2569,8 +2578,7 @@ public final class Convention
 
                 go = child;
             }
-
-            go.setNodeValue(value.toString());
+            go.appendChild(doc.createTextNode(value.toString()));
         }
 
         return root;

@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Level;
+
 //import org.apache.oro.text.perl.Perl5Util;
 
 import antlr.CommonHiddenStreamToken;
@@ -2426,5 +2428,191 @@ OUTER:
             default :
                 return false;
         }
+    }
+
+    protected void prepareComment(JavaNode lcurly,JavaNode rcurly, NodeWriter out){
+        String currentFile = "<unknown>";
+        if (!out.getFilename().equals("<unknown>"))
+            currentFile = out.getFilename();
+        else {
+            AST tag = lcurly;
+            out.state.args[0] = currentFile;
+            out.state.args[1] = new Integer(out.line);
+            out.state.args[2] = new Integer(out.column);
+            out.state.args[3] = "File name is unknown! Line-";
+            out.state.args[4] = new Integer(((Node) tag).getStartLine());
+            out.state.args[5] = tag;
+                
+            Loggers.PRINTER_JAVADOC.l7dlog(
+                Level.INFO, "TAG_ADD_MISSING", out.state.args, null);
+            
+        }
+        String commentForNode = getNodeComment(lcurly,out,currentFile);
+        
+        CommonHiddenStreamToken firstComment =
+            (CommonHiddenStreamToken) rcurly.getHiddenAfter();
+        if (firstComment==null){
+            // Append comment
+            firstComment = new CommonHiddenStreamToken(JavaTokenTypes.SL_COMMENT,commentForNode);
+            firstComment.setLine(rcurly.getEndLine()); 
+            rcurly.setHiddenAfter(firstComment);
+            AST tag = rcurly;
+            out.state.args[0] = currentFile;
+            out.state.args[1] = new Integer(out.line);
+            out.state.args[2] = new Integer(out.column);
+            out.state.args[3] = commentForNode;
+            out.state.args[4] = " (Line "+((Node) tag).getStartLine()+")";
+            out.state.args[5] = tag;
+                
+            Loggers.PRINTER_JAVADOC.l7dlog(
+                Level.WARN, "TAG_ADD_MISSING", out.state.args, null);
+        }
+        else {
+            if (!firstComment.getText().equals(commentForNode)){
+                AST tag = rcurly;
+                out.state.args[0] = currentFile;
+                out.state.args[1] = new Integer(out.line);
+                out.state.args[2] = new Integer(out.column);
+                out.state.args[3] = firstComment.getText(); 
+                out.state.args[4] = commentForNode;
+                out.state.args[5] = tag;
+                Loggers.PRINTER_JAVADOC.l7dlog(
+                    Level.WARN, "TAG_MISSPELLED_NAME", out.state.args, null);
+                firstComment.setText(commentForNode);   
+            }
+            
+        }
+        
+    }
+    private String getNodeComment(JavaNode node, NodeWriter out, String currentFile) {
+       JavaNode parent = node.getParent();
+       String comment = "// mt comment";
+       JavaNode anext = null;
+       if (parent!=null){
+            switch(parent.getType()){
+                
+                case JavaTokenTypes.LITERAL_if:
+                if (node.getPreviousSibling().getType() == JavaTokenTypes.LITERAL_else){
+                    comment="// end else";
+                }
+                else {
+                    if (parent.getPreviousSibling().getType() == JavaTokenTypes.LITERAL_else){
+                        comment = "// end else if";
+                    }
+                    else
+                        comment="// end if";
+                }
+                //comment = comment +", p"+parent+",c"+node;
+                break;
+                case JavaTokenTypes.LITERAL_switch:
+                comment="// end switch";
+                break;
+                case JavaTokenTypes.LITERAL_else:
+                comment="// end if else";
+                break;
+                case JavaTokenTypes.LITERAL_catch:
+                comment = "// end catch";
+                break;
+                case JavaTokenTypes.LITERAL_try:
+                comment = "// end try";
+                break;
+                case JavaTokenTypes.LITERAL_while:
+                comment = "// end while";
+                break;
+                case JavaTokenTypes.LITERAL_do:
+                comment = "// end do";
+                break;
+                case JavaTokenTypes.LITERAL_for:
+                comment = "// end for";
+                break;
+                case JavaTokenTypes.LITERAL_finally:
+                comment = "// end finally";
+                break;
+                case JavaTokenTypes.LITERAL_new:
+                comment = "// end new";
+                break;
+                case JavaTokenTypes.CASESLIST:
+                comment = "// end case";
+                break;
+                case JavaTokenTypes.SYNBLOCK:
+                comment = "// end synchronized";
+                break;
+                case JavaTokenTypes.INTERFACE_DEF:
+                anext = (JavaNode)parent.getFirstChild();
+                while((anext=(JavaNode)anext.getNextSibling())!=null){
+                    if (anext.getType()==JavaTokenTypes.IDENT){
+                        break;
+                    }
+                }
+                if (anext !=null){
+                    comment="// end "+anext.getText();                    
+                } 
+                else 
+                    comment="// TODO not found ";
+                break;
+                
+                case JavaTokenTypes.LITERAL_static:
+                    comment = "// end static";
+                    break;
+                case JavaTokenTypes.METHOD_DEF:
+                anext = (JavaNode)parent.getFirstChild();
+                while((anext=(JavaNode)anext.getNextSibling())!=null){
+                    if (anext.getType()==JavaTokenTypes.IDENT){
+                        break;
+                    }
+                }
+                if (anext !=null){
+                    comment="// end "+anext.getText()+"()";                    
+                } 
+                else 
+                    comment="// TODO not found ";
+                break;
+                
+                case JavaTokenTypes.CTOR_DEF:
+                // If the parent is a constructor this is an end of method
+                // Back traverse the current node till we hit the method_def
+                JavaNode prev = node;
+                while((prev=prev.getPreviousSibling())!=null) {
+                    if (prev.getType()==JavaTokenTypes.IDENT)
+                    break;                    
+                }
+                
+                if (prev!=null){
+                    comment="// end "+prev.getText()+"()";                    
+                } 
+                else 
+                    comment="// TODO not found ";
+                break;
+                
+                
+                case JavaTokenTypes.CLASS_DEF:
+                anext = (JavaNode)parent.getFirstChild();
+                while((anext=(JavaNode)anext.getNextSibling())!=null){
+                    if (anext.getType()==JavaTokenTypes.IDENT){
+                        break;
+                    }
+                }
+                if (anext !=null){
+                    comment="// end "+anext.getText();                    
+                } 
+                else 
+                    comment="// TODO not found ";
+                break;
+                
+                default:
+                comment = ""; //"// TODO "+parent+" "+out.getLast()+" "+node.getType()+" TODO unknown type "+parent.getType();
+                AST tag = node;
+                out.state.args[0] = currentFile;
+                out.state.args[1] = new Integer(out.line);
+                out.state.args[2] = new Integer(out.column);
+                out.state.args[3] = "Unknown code "+new StringBuffer().append(parent); 
+                out.state.args[4] = new StringBuffer().append(parent);
+                out.state.args[5] = tag;
+                Loggers.PRINTER_JAVADOC.l7dlog(
+                    Level.WARN, "GENERATE_COMMENT", out.state.args, null);
+                    
+            }
+       }
+       return comment;
     }
 }

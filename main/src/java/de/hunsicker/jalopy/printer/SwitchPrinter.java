@@ -168,6 +168,11 @@ LOOP:
                     PrinterFactory.create(child).print(child, out);
             }
         }
+        
+        if (AbstractPrinter.settings.getBoolean(
+            ConventionKeys.BRACE_ADD_COMMENT, ConventionDefaults.BRACE_ADD_COMMENT))
+            prepareComment((JavaNode)lcurly,rcurly,out);
+
 
         if (!indentCaseFromSwitch)
         {

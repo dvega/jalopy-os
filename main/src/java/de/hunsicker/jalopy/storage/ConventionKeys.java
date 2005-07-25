@@ -9,6 +9,8 @@ package de.hunsicker.jalopy.storage;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
+import de.hunsicker.jalopy.storage.Convention.Key;
+
 
 /**
  * Provides the valid keys for accessing the values in a code convention.
@@ -1642,6 +1644,9 @@ public final class ConventionKeys
      */
     public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS_EXCEED =
         new Convention.Key("printer/wrapping/ondemand/after/types/throws");
+
+    public static final Key BRACE_ADD_COMMENT = 
+        new Convention.Key("printer/brace/comment");
 
     //~ Constructors ---------------------------------------------------------------------
 

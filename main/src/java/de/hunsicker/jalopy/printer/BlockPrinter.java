@@ -394,6 +394,7 @@ class BlockPrinter
 
         JavaNode rcurly = null;
         int enumCounter = 1;
+        int currentLine = out.line;
 
 LOOP:
 
@@ -425,7 +426,21 @@ LOOP:
                             newLineAfter = false;
                         }
                     }
+                    currentLine = out.line;
                     PrinterFactory.create(child).print(child, out);
+                    if (currentLine == out.line) {
+                        AST nextNode = child.getNextSibling();
+                        if (newLineAfter && nextNode!=null && nextNode.getType()!=JavaTokenTypes.COMMA) {
+                            newLineAfter = false;
+                            out.printNewline();
+                        }
+                    }
+                    else {
+                        // If already on a new line reset the counter and the newLineAfter flag 
+                        newLineAfter = false;
+                        enumCounter = 0;
+                    }
+                    
 
                     break;
             }
@@ -445,6 +460,10 @@ LOOP:
             trackPosition(
                 rcurly, rightBraceNewline ? (out.line - 1)
                                           : out.line, offset, out);
+            
+            if (AbstractPrinter.settings.getBoolean(
+                ConventionKeys.BRACE_ADD_COMMENT, ConventionDefaults.BRACE_ADD_COMMENT))
+            prepareComment(lcurly,rcurly,out);
 
             printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
             //if (!freestanding && !forceNewlineBefore) {

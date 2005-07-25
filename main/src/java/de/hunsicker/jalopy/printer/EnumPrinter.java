@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 import antlr.collections.AST;
 
@@ -47,6 +49,7 @@ public class EnumPrinter extends BasicDeclarationPrinter {
      */
     public void print(AST node, NodeWriter out) throws IOException {
         out.state.innerClass = (out.getIndentLength() > 0);
+         
 
         // TODO addCommentIfNeeded((JavaNode)node, out);
 

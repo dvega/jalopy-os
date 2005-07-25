@@ -2,6 +2,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -41,6 +43,8 @@ public class EnumConstantPrinter extends AbstractPrinter {
      */
     public void print(AST node, NodeWriter out) throws IOException {
         TestNodeWriter tester = out.testers.get();
+        boolean spaceAfterComma = AbstractPrinter.settings.getBoolean(
+                    ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         
         tester.reset(out);
         printChildren(node,tester);
@@ -53,7 +57,22 @@ public class EnumConstantPrinter extends AbstractPrinter {
         }
         out.testers.release(tester);
         printChildren(node,out);
-
+        AST next = node.getNextSibling();
+        if (next!=null) {
+            if (next.getType()==JavaTokenTypes.ENUM_CONSTANT_DEF) {
+                if (spaceAfterComma) {
+                    out.print(COMMA_SPACE,out.last);
+                }
+                else {
+                    out.print(COMMA,out.last);
+                }
+            }
+            else {
+                    out.print(SEMI,out.last);
+            }
+        }
+        else {
+                out.print(SEMI,out.last);
+        }
     }
-
 }
