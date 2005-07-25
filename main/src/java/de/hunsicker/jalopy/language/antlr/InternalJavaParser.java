@@ -2639,9 +2639,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 			_loop105:
 			do {
 				if ((LA(1)==COMMA) && (LA(2)==IDENT||LA(2)==AT)) {
-					JavaNode tmp70_AST = null;
-					tmp70_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp70_AST);
 					match(COMMA);
 					enumConstant();
 					astFactory.addASTChild(currentAST, returnAST);
@@ -2656,9 +2653,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case COMMA:
 			{
-				JavaNode tmp71_AST = null;
-				tmp71_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp71_AST);
 				match(COMMA);
 				break;
 			}
@@ -2690,9 +2684,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case SEMI:
 		{
-			JavaNode tmp72_AST = null;
-			tmp72_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp72_AST);
 			match(SEMI);
 			{
 			_loop109:
@@ -2733,9 +2724,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				case SEMI:
 				{
-					JavaNode tmp73_AST = null;
-					tmp73_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp73_AST);
 					match(SEMI);
 					break;
 				}
@@ -6687,9 +6675,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				builtInTypeSpec(true);
 				astFactory.addASTChild(currentAST, returnAST);
-				JavaNode tmp205_AST = null;
-				tmp205_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp205_AST);
 				match(RPAREN);
 				unaryExpression();
 				astFactory.addASTChild(currentAST, returnAST);

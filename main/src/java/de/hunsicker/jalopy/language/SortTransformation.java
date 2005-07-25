@@ -165,6 +165,10 @@ LOOP:
         int      maxwidth)
     {
         JavaNode cur = node;
+        if (nodes == null) {
+            node = node;
+            indent=indent+0;
+        }
 
         if (nodes.size() > 0)
         {
@@ -463,6 +467,7 @@ LOOP:
                 break;
 
                 case JavaTokenTypes.ENUM_DEF :
+                case JavaTokenTypes.ENUM_CONSTANT_DEF :
                     enums.add(child);
                 break;
 
@@ -568,9 +573,10 @@ LOOP:
             StringTokenizer tokens = new StringTokenizer(sortString, "|");
             tokens.hasMoreTokens();)
         {
+            String nextToken = tokens.nextToken(); 
             current =
                 addSiblings(
-                    (List) nodes.get(tokens.nextToken()), current, addSeparator,
+                    (List) nodes.get(nextToken), current, addSeparator,
                     indent * level, maxwidth);
         }
 

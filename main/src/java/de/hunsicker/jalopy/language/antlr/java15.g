@@ -663,8 +663,8 @@ annotationBlock
 // followed by any number of fields like a regular class
 enumBlock
 	:	lc:LCURLY^
-			( enumConstant ( options{greedy=true;}: COMMA enumConstant )* ( COMMA )? )?
-			( SEMI ( classField | SEMI )* )?
+			( enumConstant ( options{greedy=true;}: COMMA! enumConstant )* ( COMMA! )? )?
+			( SEMI! ( classField | SEMI! )* )?
 		RCURLY
           { #lc.setType(OBJBLOCK);}
 //		{#enumBlock = #([OBJBLOCK, "OBJBLOCK"], #enumBlock);}
@@ -1439,7 +1439,7 @@ unaryExpressionNotPlusMinus
 		:	// If typecast is built in type, must be numeric operand
 			// Have to backtrack to see if operator follows
 		(LPAREN builtInTypeSpec[true] RPAREN unaryExpression)=>
-		lpb:LPAREN^ {#lpb.setType(TYPECAST);} builtInTypeSpec[true] RPAREN
+		lpb:LPAREN^ {#lpb.setType(TYPECAST);} builtInTypeSpec[true] RPAREN!
 		unaryExpression
 
 		// Have to backtrack to see if operator follows. If no operator
