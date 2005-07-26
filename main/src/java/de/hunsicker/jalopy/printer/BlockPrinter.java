@@ -452,18 +452,21 @@ LOOP:
 
             boolean rightBraceNewline =
                 isCloseBraceNewline(lcurly, closeBraceType, freestanding);
-
+            
+            boolean addCustomComment = AbstractPrinter.settings.getBoolean(
+                ConventionKeys.BRACE_ADD_COMMENT, ConventionDefaults.BRACE_ADD_COMMENT);
+            
             int offset =
                 out.printRightBrace(
-                    closeBraceType, !treatDifferent && !freestanding, rightBraceNewline && !rcurly.hasCommentsAfter());
+                    closeBraceType, !treatDifferent && !freestanding, rightBraceNewline && !rcurly.hasCommentsAfter() && !addCustomComment);
 
             trackPosition(
                 rcurly, rightBraceNewline ? (out.line - 1)
                                           : out.line, offset, out);
             
-            if (AbstractPrinter.settings.getBoolean(
-                ConventionKeys.BRACE_ADD_COMMENT, ConventionDefaults.BRACE_ADD_COMMENT))
-            prepareComment(lcurly,rcurly,out);
+            if (addCustomComment) {
+                prepareComment(lcurly,rcurly,out);
+            }
 
             printCommentsAfter(rcurly, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
             //if (!freestanding && !forceNewlineBefore) {
