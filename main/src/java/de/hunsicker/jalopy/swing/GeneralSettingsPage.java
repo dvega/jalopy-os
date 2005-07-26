@@ -49,7 +49,7 @@ public class GeneralSettingsPage
     private static final String JDK_1_4 = "JDK 1.4" /* NOI18N */;
     private static final String FILENAME_IMPORT = "import.dat" /* NOI18N */;
     private static final String FILENAME_EXPORT = "export.dat" /* NOI18N */;
-    private static final String JDK_1_5 = "JDK 1.5";
+    private static final String JDK_1_5 = "JDK 5.0";
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -220,7 +220,7 @@ public class GeneralSettingsPage
         int version =
             this.settings.getInt(
                 ConventionKeys.SOURCE_VERSION, ConventionDefaults.SOURCE_VERSION);
-        String[] items = { JDK_1_3, JDK_1_4 };
+        String[] items = { JDK_1_3, JDK_1_4, JDK_1_5 };
         ComboBoxPanel compatComboBoxPanel =
             new ComboBoxPanel(
                 this.bundle.getString("LBL_COMPATIBILITY" /* NOI18N */), items,
