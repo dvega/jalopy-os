@@ -6,6 +6,7 @@ import static foo.bar.com;
 */
 public class Braces
 {
+
 public Braces(String test) {
 	super(test);
         anArrayList.add(15.2);
