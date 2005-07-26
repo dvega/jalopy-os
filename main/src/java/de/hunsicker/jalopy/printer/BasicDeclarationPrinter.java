@@ -140,6 +140,7 @@ abstract class BasicDeclarationPrinter
                             ConventionDefaults.COMMENT_JAVADOC_VARIABLE_MASK), node))
                 {
                     addVariableComment(node);
+                    out.state.variableOffset = VariableDeclarationPrinter.OFFSET_NONE;
                 }
 
                 break;

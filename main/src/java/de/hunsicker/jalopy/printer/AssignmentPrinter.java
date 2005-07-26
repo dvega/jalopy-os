@@ -121,7 +121,8 @@ final class AssignmentPrinter
                     !wrapAfterAssign
                     && AbstractPrinter.settings.getBoolean(
                         ConventionKeys.ALIGN_VAR_ASSIGNS,
-                        ConventionDefaults.ALIGN_VAR_ASSIGNS))
+                        ConventionDefaults.ALIGN_VAR_ASSIGNS) && 
+                        !((JavaNode)node).getParent().hasJavadocComment())
                 {
                     if (isNewChunk(parent, JavaTokenTypes.VARIABLE_DEF))
                     {

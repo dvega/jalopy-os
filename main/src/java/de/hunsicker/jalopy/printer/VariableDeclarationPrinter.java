@@ -93,7 +93,8 @@ final class VariableDeclarationPrinter
         {
             if (
                 AbstractPrinter.settings.getBoolean(
-                    ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS))
+                    ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS)
+                    && !n.hasJavadocComment())
             {
                 newChunk = alignVariable(node, last, out);
             }
@@ -341,6 +342,8 @@ SEARCH:
                                             defModifier, tester);
                                         PrinterFactory.create(defType).print(
                                             defType, tester);
+                                        
+                                        
 
                                         /**
                                          * @todo add new max. length setting
