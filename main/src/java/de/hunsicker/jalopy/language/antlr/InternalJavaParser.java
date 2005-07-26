@@ -2372,9 +2372,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 			_loop133:
 			do {
 				if ((LA(1)==COMMA)) {
-					JavaNode tmp64_AST = null;
-					tmp64_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp64_AST);
 					match(COMMA);
 					classOrInterfaceType(false);
 					astFactory.addASTChild(currentAST, returnAST);
@@ -2505,9 +2502,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 			_loop129:
 			do {
 				if ((LA(1)==COMMA)) {
-					JavaNode tmp67_AST = null;
-					tmp67_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp67_AST);
 					match(COMMA);
 					classOrInterfaceType(false);
 					astFactory.addASTChild(currentAST, returnAST);

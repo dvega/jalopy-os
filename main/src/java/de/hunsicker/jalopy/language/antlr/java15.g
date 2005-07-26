@@ -774,7 +774,7 @@ enumConstantField!
 interfaceExtends
 	:	(
 		e:"extends"!
-		classOrInterfaceType[false] ( COMMA classOrInterfaceType[false] )*
+		classOrInterfaceType[false] ( COMMA! classOrInterfaceType[false] )*
 		)?
 		{#interfaceExtends = #(#[EXTENDS_CLAUSE,"EXTENDS_CLAUSE"],
 								#interfaceExtends);}
@@ -783,7 +783,7 @@ interfaceExtends
 // A class can implement several interfaces...
 implementsClause
 	:	(
-			i:"implements"! classOrInterfaceType[false] ( COMMA classOrInterfaceType[false] )*
+			i:"implements"! classOrInterfaceType[false] ( COMMA! classOrInterfaceType[false] )*
 		)?
 		{#implementsClause = #(#[IMPLEMENTS_CLAUSE,"IMPLEMENTS_CLAUSE"],
 								 #implementsClause);}
