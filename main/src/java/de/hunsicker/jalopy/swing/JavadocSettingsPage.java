@@ -91,6 +91,7 @@ public class JavadocSettingsPage
     private JCheckBox _createInnerCheckBox;
     JCheckBox _parseCheckBox;
     JCheckBox _singleLineFieldCommentsCheckBox;
+    JCheckBox _braceCommentsCheckBox;
     Pattern _bottomTextPattern;
     Pattern _exceptionPattern;
     Pattern _paramPattern;
@@ -264,6 +265,9 @@ public class JavadocSettingsPage
             ConventionKeys.COMMENT_JAVADOC_FIELDS_SHORT,
             _singleLineFieldCommentsCheckBox.isSelected());
         this.settings.putBoolean(
+            ConventionKeys.BRACE_ADD_COMMENT,
+            _braceCommentsCheckBox.isSelected());
+        this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_PARSE, _parseCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS, _checkTagsCheckBox.isSelected());
@@ -429,6 +433,15 @@ public class JavadocSettingsPage
         _singleLineFieldCommentsCheckBox.addActionListener(this.trigger);
         miscPanel.add(_singleLineFieldCommentsCheckBox);
 
+        _braceCommentsCheckBox =
+            new JCheckBox(
+                "Add comments after closing braces",
+                this.settings.getBoolean(
+                    ConventionKeys.BRACE_ADD_COMMENT,
+                    ConventionDefaults.BRACE_ADD_COMMENT));
+        _braceCommentsCheckBox.addActionListener(this.trigger);
+        miscPanel.add(_braceCommentsCheckBox);
+        
         if (_parseCheckBox.isSelected())
         {
             _checkTagsCheckBox.setEnabled(true);
