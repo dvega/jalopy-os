@@ -147,28 +147,23 @@ public final class Environment
      */
     public String interpolate(String str)
     {
-		// TODO Fix interpolate
-    return str;
-    }
-		/*
-        //PatternMatcherInput input = new PatternMatcherInput(str);
         Map keys = new HashMap(10);
-		
-		_matcher.reset(str);
+        
+        _matcher.reset(str);
 
         // map all found variable expressions with their environment variable
-        while (_matcher.contains(input, _variablesPattern))
+        while (_matcher.find()) 
         {
-            MatchResult result = _matcher.getMatch();
-            String value = (String) _variables.get(result.group(1));
+            String result = _matcher.group(1); //getMatch();
+            String value = (String) _variables.get(result);
 
             // the value has to be set in order to be substituted
             if ((value != null) && (value.length() > 0))
             {
-                keys.put(result.group(0), value);
+                keys.put("\\$" + result +"\\$", value);
             }
         }
-
+        
         // and finally interpolate them
         for (Iterator i = keys.entrySet().iterator(); i.hasNext();)
         {
@@ -176,27 +171,14 @@ public final class Environment
 
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
-
-            Substitution substitution = new StringSubstitution(value);
-            Pattern pattern = null;
-
-            try
-            {
-                pattern = REGEXP_COMPILER.compile(Perl5Compiler.quotemeta(key));
-            }
-            catch (MalformedPatternException ex)
-            {
-                continue;
-            }
-
-            str = Util.substitute(
-                    _matcher, pattern, substitution, str, Util.SUBSTITUTE_ALL);
+            
+            str = str.replaceAll(key,value);
+            
         }
-
-        return str;
+        
+    return str;
     }
 
-*/
     /**
      * Sets the given variable to the given value.
      *

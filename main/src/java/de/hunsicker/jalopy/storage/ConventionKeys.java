@@ -1645,6 +1645,7 @@ public final class ConventionKeys
     public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS_EXCEED =
         new Convention.Key("printer/wrapping/ondemand/after/types/throws");
 
+    /** Add comments like end if and end switch after brace blocks */
     public static final Key BRACE_ADD_COMMENT = 
         new Convention.Key("printer/brace/comment");
 
