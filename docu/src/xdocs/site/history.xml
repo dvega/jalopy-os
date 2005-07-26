@@ -12,6 +12,63 @@
 <title>Jalopy - Change history</title>
 &keywords;
 </articleinfo>
+<!-- Start -->
+
+<simplesect>
+<title>1.5 Beta 1 (2005-07-01)</title>
+
+<orderedlist numeration="lowerroman">
+<listitem>
+New Features
+
+<itemizedlist mark="square">
+<listitem>
+Java 5 (version 1.5) grammer added. This includes annotations and enumerations and such
+</listitem>
+<listitem>
+Added controls for annotations and enumerations to the Jalopy Preferences screen. 
+This includes allowing to sort and group annotations, enumerations and type definitions.
+Also some wrapping options are available.
+</listitem>
+</itemizedlist>
+<para/>
+</listitem>
+
+<listitem>
+Bugfixes
+</listitem>
+
+<listitem>
+Changes
+
+<itemizedlist mark="square">
+  <listitem>
+  Modified code to use antlr natively. No repackaging (of antlr) required. All classes 
+  were touched to some extent during this process.
+  </listitem>
+  <listitem>
+  Modified grammer files to be abstract. Allowing for customizations to remain within package
+  </listitem>
+  <listitem>
+  Added
+  </listitem>
+  <listitem>
+  Modified preview screen
+    <itemizedlist>
+      <listitem>
+      Added a before and after tab to preview screen
+      </listitem>
+      <listitem>
+      Added tree view menue to preview screen.
+      </listitem>
+    </itemizedlist>
+  </listitem>
+</itemizedlist>
+<para/>
+</listitem>
+</orderedlist>
+</simplesect>
+<!-- end -->
 
 <simplesect>
 <title>1.0 Beta 10 (2002-11-14)</title>
