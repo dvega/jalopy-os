@@ -31,6 +31,8 @@ public class ExtendedToken
 
     /** Token text. */
     String text;
+    
+    /** True if attached to a node */
     boolean attached = false;
 
     //~ Constructors ---------------------------------------------------------------------

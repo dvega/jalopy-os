@@ -304,8 +304,8 @@ abstract class BasicDeclarationPrinter
             {
                 CommonHiddenStreamToken comment = node.getCommentBefore();
 
-                if (comment.getHiddenAfter() == null)
-                {
+//                if (comment.getHiddenAfter() == null)
+//                {
                     switch (comment.getType())
                     {
                         case JavaTokenTypes.SEPARATOR_COMMENT :
@@ -326,12 +326,13 @@ abstract class BasicDeclarationPrinter
                             {
                             }
                             */
+                            addComment(node, out);
                             break;
 
                         case JavaTokenTypes.SPECIAL_COMMENT :
                             break;
                     }
-                }
+//                }
             }
             else if (!hasJavadoc)
             {
@@ -384,7 +385,7 @@ abstract class BasicDeclarationPrinter
         JavaNode      node,
         ExtendedToken comment)
     {
-        CommonHiddenStreamToken c = node.getCommentBefore();
+        ExtendedToken c = (ExtendedToken)node.getCommentBefore();
 
         if (c == null)
         {
@@ -392,7 +393,10 @@ abstract class BasicDeclarationPrinter
         }
         else
         {
-            for (; c != null; c = c.getHiddenAfter())
+            c.setHiddenBefore(comment);
+            comment.setHiddenAfter(c);
+            /*
+            for (; c != null; c = (ExtendedToken) c.getHiddenAfter())
             {
                 if (c.getHiddenAfter() == null)
                 {
@@ -401,6 +405,7 @@ abstract class BasicDeclarationPrinter
                     break;
                 }
             }
+            */
         }
     }
 

@@ -99,10 +99,6 @@ public class ResourcePopupAction
         !MessageDialog.openConfirm(shell,"Please Confirm", "Are you sure you wish to use jalopy to format")) {
          return;   
         }
-        MessageDialog.openInformation(
-            shell,
-            "TestPlugin Plug-in",
-            "New Action was executed.");
         
         IWorkbenchPartSite site = _part.getSite();
         ISelectionProvider provider = site.getSelectionProvider();

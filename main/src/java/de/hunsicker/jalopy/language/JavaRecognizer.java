@@ -361,6 +361,14 @@ public final class JavaRecognizer
 
         this.lexer.setInputBuffer(in);
 
+        /**
+         * This private class slightly skews the way comments appear in the token chain
+         * For example if a comment follows node variable def rather then attaching to the 
+         * commentAfter of the variable def it attaches itself to the commentBefor of the next token.
+         * ****KEY IMPORTANT****
+         * See also JavaParser for more comment skewing.
+         * 
+         */
         TokenStreamHiddenTokenFilter filter =
             new TokenStreamHiddenTokenFilter(this.lexer){
             private void consumeFirst() throws TokenStreamException {
@@ -425,7 +433,8 @@ public final class JavaRecognizer
                         if (p != monitored) { //hidden cannot point to monitored tokens
                             if (attachBefore && !p.attached) {
                                 next.setHiddenBefore(p);
-                                next.attached = true;
+                                p.setHiddenAfter(next);
+                                p.attached = true;
                             }
                         }
                         p = (ExtendedToken) (lastHiddenToken = next);

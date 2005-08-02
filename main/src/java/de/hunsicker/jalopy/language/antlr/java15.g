@@ -800,6 +800,7 @@ classField!
 			(
 				h:ctorHead s:constructorBody // constructor
 				{#classField = #(#[CTOR_DEF,"CTOR_DEF"], mods, tp, h, s);
+		attachStuff(new JavaNode[] {#classField, #mods, #h});
 				}
 
 				|	// A generic method/ctor has the typeParameters before the return type.

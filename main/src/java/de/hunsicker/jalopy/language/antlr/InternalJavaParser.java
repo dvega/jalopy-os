@@ -2991,6 +2991,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 					if ( inputState.guessing==0 ) {
 						classField_AST = (JavaNode)currentAST.root;
 						classField_AST = (JavaNode)astFactory.make( (new ASTArray(5)).add((JavaNode)astFactory.create(CTOR_DEF,"CTOR_DEF")).add(mods_AST).add(tp_AST).add(h_AST).add(s_AST));
+								attachStuff(new JavaNode[] {classField_AST, mods_AST, h_AST});
 										
 						currentAST.root = classField_AST;
 						currentAST.child = classField_AST!=null &&classField_AST.getFirstChild()!=null ?

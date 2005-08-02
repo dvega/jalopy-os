@@ -408,7 +408,7 @@ private void attachStuffBeforeCompoundStatement(JavaNode node, JavaNode statemen
  */
 private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode keyword)
 {
-    JavaNode modifier = (JavaNode)modifiers.getFirstChild();
+    JavaNode modifier = getFirstCommentNode(modifiers);
 
     if (modifier != null)
     {
@@ -424,6 +424,23 @@ private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode k
         }
     }
 }
+/**
+ * Special node for determing the correct node to move up the comments from. Because
+ * a child of the modifier may contain both an anotation node and a modifier node.
+ * 
+ * @param modifiers
+ * @return
+ */
+private JavaNode getFirstCommentNode(JavaNode modifiers) {
+    JavaNode fc = (JavaNode)modifiers.getFirstChild();
+    if (fc!=null) {
+        if (fc.getType() == JavaTokenTypes.ANNOTATION) {
+            fc = (JavaNode) fc.getFirstChild();
+        }
+    }
+    
+    return fc;
+}
 
 /**
  * Attaches the hidden tokens associated to either the modifiers or type to the imaginary node.
@@ -434,7 +451,7 @@ private void attachStuffBeforeCtor(JavaNode node, JavaNode modifiers, JavaNode k
  */
 private void attachStuffBefore(JavaNode node, JavaNode modifiers, JavaNode type)
 {
-    JavaNode modifier = (JavaNode)modifiers.getFirstChild();
+    JavaNode modifier = getFirstCommentNode(modifiers);
 
     if (modifier != null)
     {
@@ -511,8 +528,12 @@ protected void attachStuff(JavaNode[] nodes) {
             case JavaTokenTypes.CLASS_DEF:
             case JavaTokenTypes.INTERFACE_DEF:
             case JavaTokenTypes.VARIABLE_DEF:
-            case JavaTokenTypes.METHOD_DEF:
+            case JavaTokenTypes.ANNOTATION_DEF:
+            case JavaTokenTypes.ENUM_DEF:
             	attachStuffBefore(node,nodes[1],nodes[2]);
+            break;
+            case JavaTokenTypes.METHOD_DEF:
+                attachStuffBefore(node,nodes[1],nodes[2]);
             break;
             case JavaTokenTypes.CTOR_DEF :
                 attachStuffBeforeCtor(nodes[0],nodes[1],nodes[2]);

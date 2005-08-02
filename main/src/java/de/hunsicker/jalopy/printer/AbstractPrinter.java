@@ -942,7 +942,7 @@ abstract class AbstractPrinter
                         }
 
                         printCommentBefore(
-                            n, comment, comment == firstComment, newlineBefore,
+                            n, comment, comment == firstComment, (comment == firstComment ? newlineBefore:!out.newline),
                             NodeWriter.NEWLINE_YES, out);
                     }
                     else // print in same line
