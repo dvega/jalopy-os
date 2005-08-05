@@ -17,14 +17,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 
 import de.hunsicker.jalopy.plugin.AbstractAppender;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
-
-import org.apache.oro.text.regex.MatchResult;
 
 import org.openide.TopManager;
 import org.openide.cookies.LineCookie;
@@ -84,7 +83,7 @@ final class NbAppender
     public void append(LoggingEvent ev)
     {
         // check for Emacs-style messages
-        MatchResult result = parseMessage(ev);
+        Matcher result = parseMessage(ev);
 
         // parsing failed, so we issue a standard-message
         if (result == null)

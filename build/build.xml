@@ -72,12 +72,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <copy todir="${DIR.TMP}/ant/lib" >
       <fileset dir="${DIR.LIB}" >
-        <include name="aelfred-*.jar" />
-        <include name="jaxp-*.jar" />
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
-        <include name="sax-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-ant*.jar" />
@@ -123,13 +118,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </copy>
     <copy todir="${DIR.TMP}/console/lib" >
       <fileset dir="${DIR.LIB}" >
-        <include name="aelfred-*.jar" />
-        <include name="getopt-*.jar" />
-        <include name="jaxp-*.jar" />
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
-        <include name="sax-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-console*.jar" />
@@ -221,9 +210,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <copy todir="${DIR.TMP}/jbuilder/lib" >
       <fileset dir="${DIR.LIB}" >
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-jbuilder*.jar" />
@@ -259,9 +246,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
 
     <copy todir="${DIR.TMP}/jdeveloper/de.hunsicker.jalopy.plugin.jdeveloper.${BUILD.VERSION.JDEVELOPER}/lib" >
       <fileset dir="${DIR.LIB}" >
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-${BUILD.VERSION}*.jar" />
@@ -300,13 +285,11 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     </copy>
 
     <copy todir="${DIR.TMP}/jedit/lib" >
-      <fileset dir="G:/Java/Programme/jEdit4.1pre5/jars">
+      <fileset dir="${DIR.JEDIT}/jars">
         <include name="messageview-*.jar" />
       </fileset>
       <fileset dir="${DIR.LIB}" >
-        <include name="jdom-*.jar" />
         <include name="log4j-*.jar" />
-        <include name="oro-*.jar" />
       </fileset>
       <fileset dir="${DIR.JARS}" >
         <include name="jalopy-${BUILD.VERSION}.jar" />
@@ -400,6 +383,8 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <zip zipfile="${DIR.DIST}/jalopy-${BUILD.VERSION}.src.zip"
          basedir=".." >
       <exclude name="**/*.*~" />
+      <exclude name="**/bin/**" />
+      <exclude name="**/*.class" />
       <exclude name="**/*.zip" />
       <exclude name="**/*.gz" />
       <exclude name="**/*.tar" />
@@ -425,7 +410,7 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
   <!-- ==================================================================== -->
   <target name="build-dist-docu"
           description="Creates the documention distribution"
-          depends="build-dist-ant, build-dist-console, build-dist-main, build-dist-src">
+          depends="build-dist-ant, build-dist-console, build-dist-eclipse, build-dist-jbuilder, build-dist-jdev,build-dist-jedit, build-dist-main, build-dist-netbeans, build-dist-src">
 
     <ant dir="../docu" target="docu-website" inheritAll="false" />
 

@@ -22,6 +22,7 @@ package de.hunsicker.jalopy.plugin.console;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import de.hunsicker.io.DirectoryScanner;
 import de.hunsicker.io.ExtensionFilter;
@@ -54,9 +56,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import org.apache.oro.io.Perl5FilenameFilter;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.Perl5Compiler;
+//import org.apache.oro.io.Perl5FilenameFilter;
+//import org.apache.oro.text.regex.PatternCompiler;
+//import org.apache.oro.text.regex.Perl5Compiler;
 
 
 /**
@@ -1150,7 +1152,7 @@ public final class ConsolePlugin
             }
         }
 
-        PatternCompiler compiler = new Perl5Compiler();
+        //PatternCompiler compiler = new Perl5Compiler();
 
         // handle the non-option args - our targets (files, dirs
         // and filter expressions)
@@ -1182,8 +1184,15 @@ public final class ConsolePlugin
                             if (target.exists())
                             {
                                 String pattern = argv[i].substring(path.length());
-                                compiler.compile(argv[i]);
-                                _scanner.addFilter(new Perl5FilenameFilter(pattern));
+                                final Pattern matcher = Pattern.compile(pattern);
+                                _scanner.addFilter(new FilenameFilter(){
+
+                                    public boolean accept(File dir, String name) {
+                                        
+                                        return matcher.matcher(name).matches();
+                                    }
+                                    
+                                });
                                 targets.add(target);
 
                                 continue;
@@ -1191,8 +1200,15 @@ public final class ConsolePlugin
                         }
                         else
                         {
-                            compiler.compile(argv[i]);
-                            _scanner.addFilter(new Perl5FilenameFilter(argv[i]));
+                                final Pattern matcher = Pattern.compile(argv[i]);
+                                _scanner.addFilter(new FilenameFilter(){
+
+                                    public boolean accept(File dir, String name) {
+                                        
+                                        return matcher.matcher(name).matches();
+                                    }
+                                    
+                                });
 
                             // no path was given, so use current directory
                             targets.add(new File("." /* NOI18N */).getAbsolutePath());

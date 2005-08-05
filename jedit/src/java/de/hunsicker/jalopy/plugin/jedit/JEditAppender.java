@@ -12,13 +12,12 @@ import org.gjt.sp.jedit.view.message.MessageType;
 import org.gjt.sp.jedit.view.message.MessageView;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import de.hunsicker.jalopy.plugin.AbstractAppender;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-
-import org.apache.oro.text.regex.MatchResult;
 
 
 /**
@@ -100,7 +99,7 @@ final class JEditAppender
         LoggingEvent ev,
         MessageType  type)
     {
-        MatchResult result = parseMessage(ev);
+        Matcher result = parseMessage(ev);
 
         if (result == null)
         {

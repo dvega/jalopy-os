@@ -7,6 +7,7 @@
 package de.hunsicker.jalopy.plugin.jdeveloper;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import de.hunsicker.jalopy.plugin.AbstractAppender;
 import de.hunsicker.jalopy.plugin.jdeveloper.message.Message;
@@ -14,12 +15,9 @@ import de.hunsicker.jalopy.plugin.jdeveloper.message.MessagePage;
 import de.hunsicker.jalopy.plugin.jdeveloper.message.MessageType;
 
 import oracle.ide.log.LogManager;
-import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
-import org.apache.oro.text.regex.MatchResult;
-
-import oracle.ide.Ide;
 import oracle.ide.layout.ViewId;
 import oracle.ide.log.LogWindow;
 
@@ -57,23 +55,23 @@ final class JDevAppender
     {
         switch (ev.getLevel().toInt())
         {
-            case Level.WARN_INT :
+            case Priority.WARN_INT :
                 append(ev, MessageType.WARN);
 
                 break;
 
-            case Level.DEBUG_INT :
+            case Priority.DEBUG_INT :
                 append(ev, MessageType.DEBUG);
 
                 break;
 
-            case Level.ERROR_INT :
-            case Level.FATAL_INT :
+            case Priority.ERROR_INT :
+            case Priority.FATAL_INT :
                 append(ev, MessageType.ERROR);
 
                 break;
 
-            case Level.INFO_INT :default :
+            case Priority.INFO_INT :default :
                 append(ev, MessageType.INFO);
 
                 break;
@@ -115,7 +113,7 @@ final class JDevAppender
         LoggingEvent ev,
         MessageType  type)
     {
-        MatchResult result = parseMessage(ev);
+        Matcher result = parseMessage(ev);
 
         if (_page == null)
         {

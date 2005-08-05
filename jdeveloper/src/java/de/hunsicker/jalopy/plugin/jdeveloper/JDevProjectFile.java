@@ -13,7 +13,6 @@ import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 
-import oracle.ide.Ide;
 import oracle.ide.editor.EditorManager;
 import oracle.ide.model.TextNode;
 

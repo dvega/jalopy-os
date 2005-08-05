@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -43,8 +44,6 @@ import de.hunsicker.util.StringHelper;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-
-import org.apache.oro.text.regex.MatchResult;
 
 
 /**
@@ -106,7 +105,7 @@ final class JbAppender
         }
 
         // check for Emacs-style messages
-        MatchResult result = parseMessage(ev);
+        Matcher result = parseMessage(ev);
 
         // parsing failed, so we issue a standard-message
         if (result == null)
