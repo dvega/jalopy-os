@@ -620,6 +620,9 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
                             ((ExtendedToken)node).comment = comment;
                             
                         }
+                        else {
+                            node.setType(Token.SKIP);
+                        }
                     }
                     catch (IOException ex)
                     {
@@ -643,6 +646,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
                     node.setText(t);
                     node.setType(JavaTokenTypes.JAVADOC_COMMENT);
                 }
+                
             }
             else
             {

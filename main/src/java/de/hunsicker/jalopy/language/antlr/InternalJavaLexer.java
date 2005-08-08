@@ -1275,7 +1275,9 @@ tryAgain:
 		if ( inputState.guessing==0 ) {
 			
 			// $setType(Token.SKIP);
-			_token = makeJavaDoc(makeToken(_ttype), new String(text.getBuffer(),_begin,text.length()-_begin));
+			Token n = makeJavaDoc(makeToken(_ttype), new String(text.getBuffer(),_begin,text.length()-_begin));
+			_token = n;
+			_ttype = n.getType();
 			
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {

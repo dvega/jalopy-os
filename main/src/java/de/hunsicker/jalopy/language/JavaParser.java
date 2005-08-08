@@ -436,6 +436,9 @@ private JavaNode getFirstCommentNode(JavaNode modifiers) {
     if (fc!=null) {
         if (fc.getType() == JavaTokenTypes.ANNOTATION) {
             fc = (JavaNode) fc.getFirstChild();
+            if (fc.getHiddenBefore()==null) {
+                fc = (JavaNode) fc.getParent().getNextSibling();
+            }
         }
     }
     

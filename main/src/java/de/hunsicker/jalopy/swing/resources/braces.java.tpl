@@ -4,9 +4,22 @@ import static foo.bar.com;
 /**
 * Test
 */
-public class Braces
+public abstract class Braces
 {
+    /* testr*/
+//This is my Function
+ 
+public void printHello(){
+System.out.println("Hello user!");
+}
 
+public abstract void printGoodby();
+
+@override
+/**
+* this New tags {@literal} and {@code} 
+
+*/
 public Braces(String test) {
 	super(test);
         anArrayList.add(15.2);
@@ -17,6 +30,17 @@ public Braces(String test) {
             System.out.println(al);
         }	
 }
+/**
+* Dimension of all curves is 1.
+*
+* @return Returns 1
+*/
+  @Override
+public int getCoordinateDimension()
+{
+return 1;
+}
+
 /**
  * Annotation type to indicate a task still needs to be
  *   completed.

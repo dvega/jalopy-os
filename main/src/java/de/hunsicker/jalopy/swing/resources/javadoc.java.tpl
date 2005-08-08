@@ -7,8 +7,13 @@ public class Javadoc
 
     /** A Javadoc comment for a field.*/
     private int _count;
-
-    public Javadoc(int param)
+@Overide
+ /**
+     * Getter of the property <tt>myAttribute</tt>
+     * @return  Returns the myAttribute.
+     * @uml.property  name="myAttribute"
+     */
+     public Javadoc(int param)
     {
     }
 

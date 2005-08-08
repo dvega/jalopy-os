@@ -2915,6 +2915,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 		JavaNode rt_AST = null;
 		JavaNode tc_AST = null;
 		JavaNode s2_AST = null;
+		Token  semim = null;
+		JavaNode semim_AST = null;
 		JavaNode v_AST = null;
 		Token  semi = null;
 		JavaNode semi_AST = null;
@@ -3046,8 +3048,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 						}
 						case SEMI:
 						{
-							JavaNode tmp82_AST = null;
-							tmp82_AST = (JavaNode)astFactory.create(LT(1));
+							semim = LT(1);
+							semim_AST = (JavaNode)astFactory.create(semim);
 							match(SEMI);
 							break;
 						}
@@ -3059,7 +3061,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 						}
 						if ( inputState.guessing==0 ) {
 							classField_AST = (JavaNode)currentAST.root;
-							classField_AST = (JavaNode)astFactory.make( (new ASTArray(10)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp79_AST).add(tmp80_AST).add(param_AST).add(tmp81_AST).add(tc_AST).add(s2_AST));
+							classField_AST = (JavaNode)astFactory.make( (new ASTArray(11)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp79_AST).add(tmp80_AST).add(param_AST).add(tmp81_AST).add(tc_AST).add(s2_AST).add(semim_AST));
 									attachStuff(new JavaNode[] {classField_AST, mods_AST, t_AST});
 																
 							currentAST.root = classField_AST;
@@ -3240,16 +3242,16 @@ public InternalJavaParser(ParserSharedInputState state) {
 			t_AST = (JavaNode)returnAST;
 			{
 			if ((LA(1)==IDENT) && (LA(2)==LPAREN)) {
+				JavaNode tmp83_AST = null;
+				tmp83_AST = (JavaNode)astFactory.create(LT(1));
+				match(IDENT);
 				JavaNode tmp84_AST = null;
 				tmp84_AST = (JavaNode)astFactory.create(LT(1));
-				match(IDENT);
-				JavaNode tmp85_AST = null;
-				tmp85_AST = (JavaNode)astFactory.create(LT(1));
 				match(LPAREN);
 				parameterDeclarationList();
 				param_AST = (JavaNode)returnAST;
-				JavaNode tmp86_AST = null;
-				tmp86_AST = (JavaNode)astFactory.create(LT(1));
+				JavaNode tmp85_AST = null;
+				tmp85_AST = (JavaNode)astFactory.create(LT(1));
 				match(RPAREN);
 				declaratorBrackets(t_AST);
 				rt_AST = (JavaNode)returnAST;
@@ -3271,12 +3273,12 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				}
 				}
-				JavaNode tmp87_AST = null;
-				tmp87_AST = (JavaNode)astFactory.create(LT(1));
+				JavaNode tmp86_AST = null;
+				tmp86_AST = (JavaNode)astFactory.create(LT(1));
 				match(SEMI);
 				if ( inputState.guessing==0 ) {
 					interfaceField_AST = (JavaNode)currentAST.root;
-					interfaceField_AST = (JavaNode)astFactory.make( (new ASTArray(10)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp84_AST).add(tmp85_AST).add(param_AST).add(tmp86_AST).add(tc_AST).add(tmp87_AST));
+					interfaceField_AST = (JavaNode)astFactory.make( (new ASTArray(10)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp83_AST).add(tmp84_AST).add(param_AST).add(tmp85_AST).add(tc_AST).add(tmp86_AST));
 							attachStuff(new JavaNode[] {interfaceField_AST, mods_AST, t_AST});
 												
 					currentAST.root = interfaceField_AST;
@@ -3390,11 +3392,11 @@ public InternalJavaParser(ParserSharedInputState state) {
 				i = LT(1);
 				i_AST = (JavaNode)astFactory.create(i);
 				match(IDENT);
+				JavaNode tmp87_AST = null;
+				tmp87_AST = (JavaNode)astFactory.create(LT(1));
+				match(LPAREN);
 				JavaNode tmp88_AST = null;
 				tmp88_AST = (JavaNode)astFactory.create(LT(1));
-				match(LPAREN);
-				JavaNode tmp89_AST = null;
-				tmp89_AST = (JavaNode)astFactory.create(LT(1));
 				match(RPAREN);
 				declaratorBrackets(t_AST);
 				rt_AST = (JavaNode)returnAST;
@@ -3417,13 +3419,13 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				}
 				}
-				JavaNode tmp91_AST = null;
-				tmp91_AST = (JavaNode)astFactory.create(LT(1));
+				JavaNode tmp90_AST = null;
+				tmp90_AST = (JavaNode)astFactory.create(LT(1));
 				match(SEMI);
 				if ( inputState.guessing==0 ) {
 					annotationField_AST = (JavaNode)currentAST.root;
 					annotationField_AST =
-										(JavaNode)astFactory.make( (new ASTArray(8)).add((JavaNode)astFactory.create(ANNOTATION_FIELD_DEF,"ANNOTATION_FIELD_DEF")).add(mods_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(i_AST).add(tmp88_AST).add(tmp89_AST).add(amvi_AST).add(tmp91_AST));
+										(JavaNode)astFactory.make( (new ASTArray(8)).add((JavaNode)astFactory.create(ANNOTATION_FIELD_DEF,"ANNOTATION_FIELD_DEF")).add(mods_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(i_AST).add(tmp87_AST).add(tmp88_AST).add(amvi_AST).add(tmp90_AST));
 							attachStuff(new JavaNode[] {annotationField_AST, mods_AST, t_AST});
 											
 					currentAST.root = annotationField_AST;
@@ -3652,9 +3654,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode enumConstantBlock_AST = null;
 		
-		JavaNode tmp93_AST = null;
-		tmp93_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp93_AST);
+		JavaNode tmp92_AST = null;
+		tmp92_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp92_AST);
 		match(LCURLY);
 		{
 		_loop119:
@@ -3695,9 +3697,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			case SEMI:
 			{
-				JavaNode tmp94_AST = null;
-				tmp94_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp94_AST);
+				JavaNode tmp93_AST = null;
+				tmp93_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp93_AST);
 				match(SEMI);
 				break;
 			}
@@ -3708,9 +3710,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 		} while (true);
 		}
-		JavaNode tmp95_AST = null;
-		tmp95_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp95_AST);
+		JavaNode tmp94_AST = null;
+		tmp94_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp94_AST);
 		match(RCURLY);
 		if ( inputState.guessing==0 ) {
 			enumConstantBlock_AST = (JavaNode)currentAST.root;
@@ -3737,6 +3739,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 		JavaNode rt_AST = null;
 		JavaNode tc_AST = null;
 		JavaNode s2_AST = null;
+		Token  semim = null;
+		JavaNode semim_AST = null;
 		JavaNode v_AST = null;
 		JavaNode s4_AST = null;
 		
@@ -3833,16 +3837,16 @@ public InternalJavaParser(ParserSharedInputState state) {
 				t_AST = (JavaNode)returnAST;
 				{
 				if ((LA(1)==IDENT) && (LA(2)==LPAREN)) {
+					JavaNode tmp95_AST = null;
+					tmp95_AST = (JavaNode)astFactory.create(LT(1));
+					match(IDENT);
 					JavaNode tmp96_AST = null;
 					tmp96_AST = (JavaNode)astFactory.create(LT(1));
-					match(IDENT);
-					JavaNode tmp97_AST = null;
-					tmp97_AST = (JavaNode)astFactory.create(LT(1));
 					match(LPAREN);
 					parameterDeclarationList();
 					param_AST = (JavaNode)returnAST;
-					JavaNode tmp98_AST = null;
-					tmp98_AST = (JavaNode)astFactory.create(LT(1));
+					JavaNode tmp97_AST = null;
+					tmp97_AST = (JavaNode)astFactory.create(LT(1));
 					match(RPAREN);
 					declaratorBrackets(t_AST);
 					rt_AST = (JavaNode)returnAST;
@@ -3875,8 +3879,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 					}
 					case SEMI:
 					{
-						JavaNode tmp99_AST = null;
-						tmp99_AST = (JavaNode)astFactory.create(LT(1));
+						semim = LT(1);
+						semim_AST = (JavaNode)astFactory.create(semim);
 						match(SEMI);
 						break;
 					}
@@ -3888,7 +3892,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 					}
 					if ( inputState.guessing==0 ) {
 						enumConstantField_AST = (JavaNode)currentAST.root;
-						enumConstantField_AST = (JavaNode)astFactory.make( (new ASTArray(8)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp96_AST).add(param_AST).add(tc_AST).add(s2_AST));
+						enumConstantField_AST = (JavaNode)astFactory.make( (new ASTArray(9)).add((JavaNode)astFactory.create(METHOD_DEF,"METHOD_DEF")).add(mods_AST).add(tp_AST).add((JavaNode)astFactory.make( (new ASTArray(2)).add((JavaNode)astFactory.create(TYPE,"TYPE")).add(rt_AST))).add(tmp95_AST).add(param_AST).add(tc_AST).add(s2_AST).add(semim_AST));
 								attachStuff(new JavaNode[] {enumConstantField_AST, mods_AST, t_AST});
 													
 						currentAST.root = enumConstantField_AST;
@@ -3996,9 +4000,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 					inputState.guessing--;
 				}
 				if ( synPredMatched181 ) {
-					JavaNode tmp100_AST = null;
-					tmp100_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp100_AST);
+					JavaNode tmp98_AST = null;
+					tmp98_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp98_AST);
 					match(COMMA);
 					parameterDeclaration();
 					astFactory.addASTChild(currentAST, returnAST);
@@ -4013,9 +4017,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case COMMA:
 			{
-				JavaNode tmp101_AST = null;
-				tmp101_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp101_AST);
+				JavaNode tmp99_AST = null;
+				tmp99_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp99_AST);
 				match(COMMA);
 				variableLengthParameterDeclaration();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -4061,9 +4065,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode throwsClause_AST = null;
 		
-		JavaNode tmp102_AST = null;
-		tmp102_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp102_AST);
+		JavaNode tmp100_AST = null;
+		tmp100_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp100_AST);
 		match(LITERAL_throws);
 		identifier();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -4071,9 +4075,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop174:
 		do {
 			if ((LA(1)==COMMA)) {
-				JavaNode tmp103_AST = null;
-				tmp103_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp103_AST);
+				JavaNode tmp101_AST = null;
+				tmp101_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp101_AST);
 				match(COMMA);
 				identifier();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -4116,9 +4120,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			
 		} while (true);
 		}
-		JavaNode tmp104_AST = null;
-		tmp104_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp104_AST);
+		JavaNode tmp102_AST = null;
+		tmp102_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp102_AST);
 		match(RCURLY);
 		compoundStatement_AST = (JavaNode)currentAST.root;
 		returnAST = compoundStatement_AST;
@@ -4130,19 +4134,19 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode ctorHead_AST = null;
 		
-		JavaNode tmp105_AST = null;
-		tmp105_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp105_AST);
+		JavaNode tmp103_AST = null;
+		tmp103_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp103_AST);
 		match(IDENT);
-		JavaNode tmp106_AST = null;
-		tmp106_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp106_AST);
+		JavaNode tmp104_AST = null;
+		tmp104_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp104_AST);
 		match(LPAREN);
 		parameterDeclarationList();
 		astFactory.addASTChild(currentAST, returnAST);
-		JavaNode tmp107_AST = null;
-		tmp107_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp107_AST);
+		JavaNode tmp105_AST = null;
+		tmp105_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp105_AST);
 		match(RPAREN);
 		{
 		switch ( LA(1)) {
@@ -4206,9 +4210,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			
 		} while (true);
 		}
-		JavaNode tmp108_AST = null;
-		tmp108_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp108_AST);
+		JavaNode tmp106_AST = null;
+		tmp106_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp106_AST);
 		match(RCURLY);
 		constructorBody_AST = (JavaNode)currentAST.root;
 		returnAST = constructorBody_AST;
@@ -4248,9 +4252,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case LITERAL_this:
 		{
-			JavaNode tmp109_AST = null;
-			tmp109_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp109_AST);
+			JavaNode tmp107_AST = null;
+			tmp107_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp107_AST);
 			match(LITERAL_this);
 			lp1 = LT(1);
 			lp1_AST = (JavaNode)astFactory.create(lp1);
@@ -4258,13 +4262,13 @@ public InternalJavaParser(ParserSharedInputState state) {
 			match(LPAREN);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp110_AST = null;
-			tmp110_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp110_AST);
+			JavaNode tmp108_AST = null;
+			tmp108_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp108_AST);
 			match(RPAREN);
-			JavaNode tmp111_AST = null;
-			tmp111_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp111_AST);
+			JavaNode tmp109_AST = null;
+			tmp109_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp109_AST);
 			match(SEMI);
 			if ( inputState.guessing==0 ) {
 				lp1_AST.setType(CTOR_CALL);
@@ -4273,9 +4277,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_super:
 		{
-			JavaNode tmp112_AST = null;
-			tmp112_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp112_AST);
+			JavaNode tmp110_AST = null;
+			tmp110_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp110_AST);
 			match(LITERAL_super);
 			lp2 = LT(1);
 			lp2_AST = (JavaNode)astFactory.create(lp2);
@@ -4283,13 +4287,13 @@ public InternalJavaParser(ParserSharedInputState state) {
 			match(LPAREN);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp113_AST = null;
-			tmp113_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp113_AST);
+			JavaNode tmp111_AST = null;
+			tmp111_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp111_AST);
 			match(RPAREN);
-			JavaNode tmp114_AST = null;
-			tmp114_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp114_AST);
+			JavaNode tmp112_AST = null;
+			tmp112_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp112_AST);
 			match(SEMI);
 			if ( inputState.guessing==0 ) {
 				lp2_AST.setType(SUPER_CTOR_CALL);
@@ -4335,27 +4339,27 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_if:
 		{
-			JavaNode tmp115_AST = null;
-			tmp115_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp115_AST);
+			JavaNode tmp113_AST = null;
+			tmp113_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp113_AST);
 			match(LITERAL_if);
-			JavaNode tmp116_AST = null;
-			tmp116_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp116_AST);
+			JavaNode tmp114_AST = null;
+			tmp114_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp114_AST);
 			match(LPAREN);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp117_AST = null;
-			tmp117_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp117_AST);
+			JavaNode tmp115_AST = null;
+			tmp115_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp115_AST);
 			match(RPAREN);
 			statement();
 			astFactory.addASTChild(currentAST, returnAST);
 			{
 			if ((LA(1)==LITERAL_else) && (_tokenSet_23.member(LA(2)))) {
-				JavaNode tmp118_AST = null;
-				tmp118_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp118_AST);
+				JavaNode tmp116_AST = null;
+				tmp116_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp116_AST);
 				match(LITERAL_else);
 				statement();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -4379,19 +4383,19 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_while:
 		{
-			JavaNode tmp119_AST = null;
-			tmp119_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp119_AST);
+			JavaNode tmp117_AST = null;
+			tmp117_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp117_AST);
 			match(LITERAL_while);
-			JavaNode tmp120_AST = null;
-			tmp120_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp120_AST);
+			JavaNode tmp118_AST = null;
+			tmp118_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp118_AST);
 			match(LPAREN);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp121_AST = null;
-			tmp121_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp121_AST);
+			JavaNode tmp119_AST = null;
+			tmp119_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp119_AST);
 			match(RPAREN);
 			statement();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4400,46 +4404,46 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_do:
 		{
-			JavaNode tmp122_AST = null;
-			tmp122_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp122_AST);
+			JavaNode tmp120_AST = null;
+			tmp120_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp120_AST);
 			match(LITERAL_do);
 			statement();
+			astFactory.addASTChild(currentAST, returnAST);
+			JavaNode tmp121_AST = null;
+			tmp121_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp121_AST);
+			match(LITERAL_while);
+			JavaNode tmp122_AST = null;
+			tmp122_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp122_AST);
+			match(LPAREN);
+			expression();
 			astFactory.addASTChild(currentAST, returnAST);
 			JavaNode tmp123_AST = null;
 			tmp123_AST = (JavaNode)astFactory.create(LT(1));
 			astFactory.addASTChild(currentAST, tmp123_AST);
-			match(LITERAL_while);
+			match(RPAREN);
 			JavaNode tmp124_AST = null;
 			tmp124_AST = (JavaNode)astFactory.create(LT(1));
 			astFactory.addASTChild(currentAST, tmp124_AST);
-			match(LPAREN);
-			expression();
-			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp125_AST = null;
-			tmp125_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp125_AST);
-			match(RPAREN);
-			JavaNode tmp126_AST = null;
-			tmp126_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp126_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_break:
 		{
-			JavaNode tmp127_AST = null;
-			tmp127_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp127_AST);
+			JavaNode tmp125_AST = null;
+			tmp125_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp125_AST);
 			match(LITERAL_break);
 			{
 			switch ( LA(1)) {
 			case IDENT:
 			{
-				JavaNode tmp128_AST = null;
-				tmp128_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp128_AST);
+				JavaNode tmp126_AST = null;
+				tmp126_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp126_AST);
 				match(IDENT);
 				break;
 			}
@@ -4453,26 +4457,26 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			JavaNode tmp129_AST = null;
-			tmp129_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp129_AST);
+			JavaNode tmp127_AST = null;
+			tmp127_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp127_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_continue:
 		{
-			JavaNode tmp130_AST = null;
-			tmp130_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp130_AST);
+			JavaNode tmp128_AST = null;
+			tmp128_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp128_AST);
 			match(LITERAL_continue);
 			{
 			switch ( LA(1)) {
 			case IDENT:
 			{
-				JavaNode tmp131_AST = null;
-				tmp131_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp131_AST);
+				JavaNode tmp129_AST = null;
+				tmp129_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp129_AST);
 				match(IDENT);
 				break;
 			}
@@ -4486,18 +4490,18 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			JavaNode tmp132_AST = null;
-			tmp132_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp132_AST);
+			JavaNode tmp130_AST = null;
+			tmp130_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp130_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_return:
 		{
-			JavaNode tmp133_AST = null;
-			tmp133_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp133_AST);
+			JavaNode tmp131_AST = null;
+			tmp131_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp131_AST);
 			match(LITERAL_return);
 			{
 			switch ( LA(1)) {
@@ -4546,32 +4550,32 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			JavaNode tmp134_AST = null;
-			tmp134_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp134_AST);
+			JavaNode tmp132_AST = null;
+			tmp132_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp132_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_switch:
 		{
-			JavaNode tmp135_AST = null;
-			tmp135_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp135_AST);
+			JavaNode tmp133_AST = null;
+			tmp133_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp133_AST);
 			match(LITERAL_switch);
-			JavaNode tmp136_AST = null;
-			tmp136_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp136_AST);
+			JavaNode tmp134_AST = null;
+			tmp134_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp134_AST);
 			match(LPAREN);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp137_AST = null;
-			tmp137_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp137_AST);
+			JavaNode tmp135_AST = null;
+			tmp135_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp135_AST);
 			match(RPAREN);
-			JavaNode tmp138_AST = null;
-			tmp138_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp138_AST);
+			JavaNode tmp136_AST = null;
+			tmp136_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp136_AST);
 			match(LCURLY);
 			{
 			_loop203:
@@ -4586,9 +4590,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				
 			} while (true);
 			}
-			JavaNode tmp139_AST = null;
-			tmp139_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp139_AST);
+			JavaNode tmp137_AST = null;
+			tmp137_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp137_AST);
 			match(RCURLY);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
@@ -4602,24 +4606,24 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_throw:
 		{
-			JavaNode tmp140_AST = null;
-			tmp140_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp140_AST);
+			JavaNode tmp138_AST = null;
+			tmp138_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp138_AST);
 			match(LITERAL_throw);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp141_AST = null;
-			tmp141_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp141_AST);
+			JavaNode tmp139_AST = null;
+			tmp139_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp139_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_assert:
 		{
-			JavaNode tmp142_AST = null;
-			tmp142_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp142_AST);
+			JavaNode tmp140_AST = null;
+			tmp140_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp140_AST);
 			match(LITERAL_assert);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -4642,9 +4646,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			}
 			}
-			JavaNode tmp144_AST = null;
-			tmp144_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp144_AST);
+			JavaNode tmp142_AST = null;
+			tmp142_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp142_AST);
 			match(SEMI);
 			statement_AST = (JavaNode)currentAST.root;
 			break;
@@ -4730,9 +4734,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				statement_AST = (JavaNode)currentAST.root;
 			}
 			else if ((LA(1)==IDENT) && (LA(2)==COLON)) {
-				JavaNode tmp145_AST = null;
-				tmp145_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp145_AST);
+				JavaNode tmp143_AST = null;
+				tmp143_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp143_AST);
 				match(IDENT);
 				c = LT(1);
 				c_AST = (JavaNode)astFactory.create(c);
@@ -4750,15 +4754,15 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synBlock_AST = (JavaNode)astFactory.create(synBlock);
 				astFactory.makeASTRoot(currentAST, synBlock_AST);
 				match(LITERAL_synchronized);
-				JavaNode tmp146_AST = null;
-				tmp146_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp146_AST);
+				JavaNode tmp144_AST = null;
+				tmp144_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp144_AST);
 				match(LPAREN);
 				expression();
 				astFactory.addASTChild(currentAST, returnAST);
-				JavaNode tmp147_AST = null;
-				tmp147_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp147_AST);
+				JavaNode tmp145_AST = null;
+				tmp145_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp145_AST);
 				match(RPAREN);
 				compoundStatement();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -4850,9 +4854,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case ASSIGN:
 		{
-			JavaNode tmp148_AST = null;
-			tmp148_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp148_AST);
+			JavaNode tmp146_AST = null;
+			tmp146_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp146_AST);
 			match(ASSIGN);
 			initializer();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -5015,9 +5019,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			_loop167:
 			do {
 				if ((LA(1)==COMMA) && (_tokenSet_36.member(LA(2)))) {
-					JavaNode tmp149_AST = null;
-					tmp149_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp149_AST);
+					JavaNode tmp147_AST = null;
+					tmp147_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp147_AST);
 					match(COMMA);
 					initializer();
 					astFactory.addASTChild(currentAST, returnAST);
@@ -5032,9 +5036,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case COMMA:
 			{
-				JavaNode tmp150_AST = null;
-				tmp150_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp150_AST);
+				JavaNode tmp148_AST = null;
+				tmp148_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp148_AST);
 				match(COMMA);
 				break;
 			}
@@ -5060,9 +5064,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		}
 		}
-		JavaNode tmp151_AST = null;
-		tmp151_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp151_AST);
+		JavaNode tmp149_AST = null;
+		tmp149_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp149_AST);
 		match(RCURLY);
 		arrayInitializer_AST = (JavaNode)currentAST.root;
 		returnAST = arrayInitializer_AST;
@@ -5134,8 +5138,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 		pm_AST = (JavaNode)returnAST;
 		typeSpec(false);
 		t_AST = (JavaNode)returnAST;
-		JavaNode tmp152_AST = null;
-		tmp152_AST = (JavaNode)astFactory.create(LT(1));
+		JavaNode tmp150_AST = null;
+		tmp150_AST = (JavaNode)astFactory.create(LT(1));
 		match(TRIPLE_DOT);
 		id = LT(1);
 		id_AST = (JavaNode)astFactory.create(id);
@@ -5241,9 +5245,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		f_AST = (JavaNode)astFactory.create(f);
 		astFactory.makeASTRoot(currentAST, f_AST);
 		match(LITERAL_for);
-		JavaNode tmp153_AST = null;
-		tmp153_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp153_AST);
+		JavaNode tmp151_AST = null;
+		tmp151_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp151_AST);
 		match(LPAREN);
 		{
 		boolean synPredMatched208 = false;
@@ -5276,9 +5280,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		
 		}
-		JavaNode tmp154_AST = null;
-		tmp154_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp154_AST);
+		JavaNode tmp152_AST = null;
+		tmp152_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp152_AST);
 		match(RPAREN);
 		statement();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -5327,9 +5331,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode tryBlock_AST = null;
 		
-		JavaNode tmp155_AST = null;
-		tmp155_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp155_AST);
+		JavaNode tmp153_AST = null;
+		tmp153_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp153_AST);
 		match(LITERAL_try);
 		compoundStatement();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -5486,15 +5490,15 @@ public InternalJavaParser(ParserSharedInputState state) {
 		
 		forInit();
 		astFactory.addASTChild(currentAST, returnAST);
-		JavaNode tmp156_AST = null;
-		tmp156_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp156_AST);
+		JavaNode tmp154_AST = null;
+		tmp154_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp154_AST);
 		match(SEMI);
 		forCond();
 		astFactory.addASTChild(currentAST, returnAST);
-		JavaNode tmp157_AST = null;
-		tmp157_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp157_AST);
+		JavaNode tmp155_AST = null;
+		tmp155_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp155_AST);
 		match(SEMI);
 		forIter();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -5667,9 +5671,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case LITERAL_case:
 		{
-			JavaNode tmp159_AST = null;
-			tmp159_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp159_AST);
+			JavaNode tmp157_AST = null;
+			tmp157_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp157_AST);
 			match(LITERAL_case);
 			expression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -5677,9 +5681,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_default:
 		{
-			JavaNode tmp160_AST = null;
-			tmp160_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp160_AST);
+			JavaNode tmp158_AST = null;
+			tmp158_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp158_AST);
 			match(LITERAL_default);
 			break;
 		}
@@ -5689,9 +5693,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		}
 		}
-		JavaNode tmp161_AST = null;
-		tmp161_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp161_AST);
+		JavaNode tmp159_AST = null;
+		tmp159_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp159_AST);
 		match(COLON);
 		aCase_AST = (JavaNode)currentAST.root;
 		returnAST = aCase_AST;
@@ -5740,9 +5744,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop236:
 		do {
 			if ((LA(1)==COMMA)) {
-				JavaNode tmp162_AST = null;
-				tmp162_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp162_AST);
+				JavaNode tmp160_AST = null;
+				tmp160_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp160_AST);
 				match(COMMA);
 				expression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -5771,19 +5775,19 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode handler_AST = null;
 		
-		JavaNode tmp163_AST = null;
-		tmp163_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp163_AST);
+		JavaNode tmp161_AST = null;
+		tmp161_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp161_AST);
 		match(LITERAL_catch);
-		JavaNode tmp164_AST = null;
-		tmp164_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp164_AST);
+		JavaNode tmp162_AST = null;
+		tmp162_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp162_AST);
 		match(LPAREN);
 		parameterDeclaration();
 		astFactory.addASTChild(currentAST, returnAST);
-		JavaNode tmp165_AST = null;
-		tmp165_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp165_AST);
+		JavaNode tmp163_AST = null;
+		tmp163_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp163_AST);
 		match(RPAREN);
 		compoundStatement();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -5797,9 +5801,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode finallyClause_AST = null;
 		
-		JavaNode tmp166_AST = null;
-		tmp166_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp166_AST);
+		JavaNode tmp164_AST = null;
+		tmp164_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp164_AST);
 		match(LITERAL_finally);
 		compoundStatement();
 		astFactory.addASTChild(currentAST, returnAST);
@@ -5834,97 +5838,97 @@ public InternalJavaParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case ASSIGN:
 			{
-				JavaNode tmp167_AST = null;
-				tmp167_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp167_AST);
+				JavaNode tmp165_AST = null;
+				tmp165_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp165_AST);
 				match(ASSIGN);
 				break;
 			}
 			case PLUS_ASSIGN:
 			{
-				JavaNode tmp168_AST = null;
-				tmp168_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp168_AST);
+				JavaNode tmp166_AST = null;
+				tmp166_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp166_AST);
 				match(PLUS_ASSIGN);
 				break;
 			}
 			case MINUS_ASSIGN:
 			{
-				JavaNode tmp169_AST = null;
-				tmp169_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp169_AST);
+				JavaNode tmp167_AST = null;
+				tmp167_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp167_AST);
 				match(MINUS_ASSIGN);
 				break;
 			}
 			case STAR_ASSIGN:
 			{
-				JavaNode tmp170_AST = null;
-				tmp170_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp170_AST);
+				JavaNode tmp168_AST = null;
+				tmp168_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp168_AST);
 				match(STAR_ASSIGN);
 				break;
 			}
 			case DIV_ASSIGN:
 			{
-				JavaNode tmp171_AST = null;
-				tmp171_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp171_AST);
+				JavaNode tmp169_AST = null;
+				tmp169_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp169_AST);
 				match(DIV_ASSIGN);
 				break;
 			}
 			case MOD_ASSIGN:
 			{
-				JavaNode tmp172_AST = null;
-				tmp172_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp172_AST);
+				JavaNode tmp170_AST = null;
+				tmp170_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp170_AST);
 				match(MOD_ASSIGN);
 				break;
 			}
 			case SR_ASSIGN:
 			{
-				JavaNode tmp173_AST = null;
-				tmp173_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp173_AST);
+				JavaNode tmp171_AST = null;
+				tmp171_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp171_AST);
 				match(SR_ASSIGN);
 				break;
 			}
 			case BSR_ASSIGN:
 			{
-				JavaNode tmp174_AST = null;
-				tmp174_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp174_AST);
+				JavaNode tmp172_AST = null;
+				tmp172_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp172_AST);
 				match(BSR_ASSIGN);
 				break;
 			}
 			case SL_ASSIGN:
 			{
-				JavaNode tmp175_AST = null;
-				tmp175_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp175_AST);
+				JavaNode tmp173_AST = null;
+				tmp173_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp173_AST);
 				match(SL_ASSIGN);
 				break;
 			}
 			case BAND_ASSIGN:
 			{
-				JavaNode tmp176_AST = null;
-				tmp176_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp176_AST);
+				JavaNode tmp174_AST = null;
+				tmp174_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp174_AST);
 				match(BAND_ASSIGN);
 				break;
 			}
 			case BXOR_ASSIGN:
 			{
-				JavaNode tmp177_AST = null;
-				tmp177_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp177_AST);
+				JavaNode tmp175_AST = null;
+				tmp175_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp175_AST);
 				match(BXOR_ASSIGN);
 				break;
 			}
 			case BOR_ASSIGN:
 			{
-				JavaNode tmp178_AST = null;
-				tmp178_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp178_AST);
+				JavaNode tmp176_AST = null;
+				tmp176_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp176_AST);
 				match(BOR_ASSIGN);
 				break;
 			}
@@ -5997,9 +6001,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop244:
 		do {
 			if ((LA(1)==LOR)) {
-				JavaNode tmp179_AST = null;
-				tmp179_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp179_AST);
+				JavaNode tmp177_AST = null;
+				tmp177_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp177_AST);
 				match(LOR);
 				logicalAndExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -6026,9 +6030,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop247:
 		do {
 			if ((LA(1)==LAND)) {
-				JavaNode tmp180_AST = null;
-				tmp180_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp180_AST);
+				JavaNode tmp178_AST = null;
+				tmp178_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp178_AST);
 				match(LAND);
 				inclusiveOrExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -6055,9 +6059,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop250:
 		do {
 			if ((LA(1)==BOR)) {
-				JavaNode tmp181_AST = null;
-				tmp181_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp181_AST);
+				JavaNode tmp179_AST = null;
+				tmp179_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp179_AST);
 				match(BOR);
 				exclusiveOrExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -6084,9 +6088,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop253:
 		do {
 			if ((LA(1)==BXOR)) {
-				JavaNode tmp182_AST = null;
-				tmp182_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp182_AST);
+				JavaNode tmp180_AST = null;
+				tmp180_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp180_AST);
 				match(BXOR);
 				andExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -6113,9 +6117,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop256:
 		do {
 			if ((LA(1)==BAND)) {
-				JavaNode tmp183_AST = null;
-				tmp183_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp183_AST);
+				JavaNode tmp181_AST = null;
+				tmp181_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp181_AST);
 				match(BAND);
 				equalityExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -6146,17 +6150,17 @@ public InternalJavaParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case NOT_EQUAL:
 				{
-					JavaNode tmp184_AST = null;
-					tmp184_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp184_AST);
+					JavaNode tmp182_AST = null;
+					tmp182_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp182_AST);
 					match(NOT_EQUAL);
 					break;
 				}
 				case EQUAL:
 				{
-					JavaNode tmp185_AST = null;
-					tmp185_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp185_AST);
+					JavaNode tmp183_AST = null;
+					tmp183_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp183_AST);
 					match(EQUAL);
 					break;
 				}
@@ -6255,33 +6259,33 @@ public InternalJavaParser(ParserSharedInputState state) {
 					switch ( LA(1)) {
 					case LT:
 					{
-						JavaNode tmp186_AST = null;
-						tmp186_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp186_AST);
+						JavaNode tmp184_AST = null;
+						tmp184_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp184_AST);
 						match(LT);
 						break;
 					}
 					case GT:
 					{
-						JavaNode tmp187_AST = null;
-						tmp187_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp187_AST);
+						JavaNode tmp185_AST = null;
+						tmp185_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp185_AST);
 						match(GT);
 						break;
 					}
 					case LE:
 					{
-						JavaNode tmp188_AST = null;
-						tmp188_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp188_AST);
+						JavaNode tmp186_AST = null;
+						tmp186_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp186_AST);
 						match(LE);
 						break;
 					}
 					case GE:
 					{
-						JavaNode tmp189_AST = null;
-						tmp189_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp189_AST);
+						JavaNode tmp187_AST = null;
+						tmp187_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp187_AST);
 						match(GE);
 						break;
 					}
@@ -6304,9 +6308,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_instanceof:
 		{
-			JavaNode tmp190_AST = null;
-			tmp190_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp190_AST);
+			JavaNode tmp188_AST = null;
+			tmp188_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp188_AST);
 			match(LITERAL_instanceof);
 			typeSpec(true);
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6338,25 +6342,25 @@ public InternalJavaParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case SL:
 				{
-					JavaNode tmp191_AST = null;
-					tmp191_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp191_AST);
+					JavaNode tmp189_AST = null;
+					tmp189_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp189_AST);
 					match(SL);
 					break;
 				}
 				case SR:
 				{
-					JavaNode tmp192_AST = null;
-					tmp192_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp192_AST);
+					JavaNode tmp190_AST = null;
+					tmp190_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp190_AST);
 					match(SR);
 					break;
 				}
 				case BSR:
 				{
-					JavaNode tmp193_AST = null;
-					tmp193_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp193_AST);
+					JavaNode tmp191_AST = null;
+					tmp191_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp191_AST);
 					match(BSR);
 					break;
 				}
@@ -6395,17 +6399,17 @@ public InternalJavaParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case PLUS:
 				{
-					JavaNode tmp194_AST = null;
-					tmp194_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp194_AST);
+					JavaNode tmp192_AST = null;
+					tmp192_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp192_AST);
 					match(PLUS);
 					break;
 				}
 				case MINUS:
 				{
-					JavaNode tmp195_AST = null;
-					tmp195_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp195_AST);
+					JavaNode tmp193_AST = null;
+					tmp193_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp193_AST);
 					match(MINUS);
 					break;
 				}
@@ -6444,25 +6448,25 @@ public InternalJavaParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case STAR:
 				{
-					JavaNode tmp196_AST = null;
-					tmp196_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp196_AST);
+					JavaNode tmp194_AST = null;
+					tmp194_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp194_AST);
 					match(STAR);
 					break;
 				}
 				case DIV:
 				{
-					JavaNode tmp197_AST = null;
-					tmp197_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp197_AST);
+					JavaNode tmp195_AST = null;
+					tmp195_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp195_AST);
 					match(DIV);
 					break;
 				}
 				case MOD:
 				{
-					JavaNode tmp198_AST = null;
-					tmp198_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.makeASTRoot(currentAST, tmp198_AST);
+					JavaNode tmp196_AST = null;
+					tmp196_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.makeASTRoot(currentAST, tmp196_AST);
 					match(MOD);
 					break;
 				}
@@ -6494,9 +6498,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case INC:
 		{
-			JavaNode tmp199_AST = null;
-			tmp199_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp199_AST);
+			JavaNode tmp197_AST = null;
+			tmp197_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp197_AST);
 			match(INC);
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6505,9 +6509,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case DEC:
 		{
-			JavaNode tmp200_AST = null;
-			tmp200_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp200_AST);
+			JavaNode tmp198_AST = null;
+			tmp198_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp198_AST);
 			match(DEC);
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6516,12 +6520,12 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case MINUS:
 		{
-			JavaNode tmp201_AST = null;
-			tmp201_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp201_AST);
+			JavaNode tmp199_AST = null;
+			tmp199_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp199_AST);
 			match(MINUS);
 			if ( inputState.guessing==0 ) {
-				tmp201_AST.setType(UNARY_MINUS);
+				tmp199_AST.setType(UNARY_MINUS);
 			}
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6530,12 +6534,12 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case PLUS:
 		{
-			JavaNode tmp202_AST = null;
-			tmp202_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp202_AST);
+			JavaNode tmp200_AST = null;
+			tmp200_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp200_AST);
 			match(PLUS);
 			if ( inputState.guessing==0 ) {
-				tmp202_AST.setType(UNARY_PLUS);
+				tmp200_AST.setType(UNARY_PLUS);
 			}
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6595,9 +6599,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case BNOT:
 		{
-			JavaNode tmp203_AST = null;
-			tmp203_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp203_AST);
+			JavaNode tmp201_AST = null;
+			tmp201_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp201_AST);
 			match(BNOT);
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6606,9 +6610,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LNOT:
 		{
-			JavaNode tmp204_AST = null;
-			tmp204_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp204_AST);
+			JavaNode tmp202_AST = null;
+			tmp202_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp202_AST);
 			match(LNOT);
 			unaryExpression();
 			astFactory.addASTChild(currentAST, returnAST);
@@ -6752,9 +6756,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop293:
 		do {
 			if ((LA(1)==DOT) && (_tokenSet_46.member(LA(2)))) {
-				JavaNode tmp207_AST = null;
-				tmp207_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp207_AST);
+				JavaNode tmp205_AST = null;
+				tmp205_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp205_AST);
 				match(DOT);
 				{
 				switch ( LA(1)) {
@@ -6779,9 +6783,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case IDENT:
 				{
-					JavaNode tmp208_AST = null;
-					tmp208_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp208_AST);
+					JavaNode tmp206_AST = null;
+					tmp206_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp206_AST);
 					match(IDENT);
 					{
 					switch ( LA(1)) {
@@ -6796,9 +6800,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 						}
 						argList();
 						astFactory.addASTChild(currentAST, returnAST);
-						JavaNode tmp209_AST = null;
-						tmp209_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp209_AST);
+						JavaNode tmp207_AST = null;
+						tmp207_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp207_AST);
 						match(RPAREN);
 						break;
 					}
@@ -6885,9 +6889,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				case LITERAL_super:
 				{
-					JavaNode tmp210_AST = null;
-					tmp210_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp210_AST);
+					JavaNode tmp208_AST = null;
+					tmp208_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp208_AST);
 					match(LITERAL_super);
 					{
 					switch ( LA(1)) {
@@ -6899,9 +6903,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 						match(LPAREN);
 						argList();
 						astFactory.addASTChild(currentAST, returnAST);
-						JavaNode tmp211_AST = null;
-						tmp211_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp211_AST);
+						JavaNode tmp209_AST = null;
+						tmp209_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp209_AST);
 						match(RPAREN);
 						if ( inputState.guessing==0 ) {
 							lp3_AST.setType(SUPER_CTOR_CALL);
@@ -6910,9 +6914,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 					}
 					case DOT:
 					{
-						JavaNode tmp212_AST = null;
-						tmp212_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.makeASTRoot(currentAST, tmp212_AST);
+						JavaNode tmp210_AST = null;
+						tmp210_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.makeASTRoot(currentAST, tmp210_AST);
 						match(DOT);
 						{
 						switch ( LA(1)) {
@@ -6932,9 +6936,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 						}
 						}
 						}
-						JavaNode tmp213_AST = null;
-						tmp213_AST = (JavaNode)astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp213_AST);
+						JavaNode tmp211_AST = null;
+						tmp211_AST = (JavaNode)astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp211_AST);
 						match(IDENT);
 						{
 						switch ( LA(1)) {
@@ -6949,9 +6953,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 							}
 							argList();
 							astFactory.addASTChild(currentAST, returnAST);
-							JavaNode tmp214_AST = null;
-							tmp214_AST = (JavaNode)astFactory.create(LT(1));
-							astFactory.addASTChild(currentAST, tmp214_AST);
+							JavaNode tmp212_AST = null;
+							tmp212_AST = (JavaNode)astFactory.create(LT(1));
+							astFactory.addASTChild(currentAST, tmp212_AST);
 							match(RPAREN);
 							break;
 						}
@@ -7052,19 +7056,19 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 			}
 			else if ((LA(1)==DOT) && (LA(2)==LITERAL_this)) {
-				JavaNode tmp215_AST = null;
-				tmp215_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp215_AST);
+				JavaNode tmp213_AST = null;
+				tmp213_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp213_AST);
 				match(DOT);
-				JavaNode tmp216_AST = null;
-				tmp216_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp216_AST);
+				JavaNode tmp214_AST = null;
+				tmp214_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp214_AST);
 				match(LITERAL_this);
 			}
 			else if ((LA(1)==DOT) && (LA(2)==LITERAL_new)) {
-				JavaNode tmp217_AST = null;
-				tmp217_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp217_AST);
+				JavaNode tmp215_AST = null;
+				tmp215_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp215_AST);
 				match(DOT);
 				newExpression();
 				astFactory.addASTChild(currentAST, returnAST);
@@ -7079,9 +7083,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				expression();
 				astFactory.addASTChild(currentAST, returnAST);
-				JavaNode tmp218_AST = null;
-				tmp218_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp218_AST);
+				JavaNode tmp216_AST = null;
+				tmp216_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp216_AST);
 				match(RBRACK);
 			}
 			else {
@@ -7209,13 +7213,13 @@ public InternalJavaParser(ParserSharedInputState state) {
 			astFactory.addASTChild(currentAST, returnAST);
 			{
 			if ((LA(1)==DOT) && (LA(2)==LITERAL_class)) {
-				JavaNode tmp219_AST = null;
-				tmp219_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp219_AST);
+				JavaNode tmp217_AST = null;
+				tmp217_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp217_AST);
 				match(DOT);
-				JavaNode tmp220_AST = null;
-				tmp220_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp220_AST);
+				JavaNode tmp218_AST = null;
+				tmp218_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp218_AST);
 				match(LITERAL_class);
 			}
 			else if ((_tokenSet_47.member(LA(1))) && (_tokenSet_48.member(LA(2)))) {
@@ -7242,27 +7246,27 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_true:
 		{
-			JavaNode tmp221_AST = null;
-			tmp221_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp221_AST);
+			JavaNode tmp219_AST = null;
+			tmp219_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp219_AST);
 			match(LITERAL_true);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_false:
 		{
-			JavaNode tmp222_AST = null;
-			tmp222_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp222_AST);
+			JavaNode tmp220_AST = null;
+			tmp220_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp220_AST);
 			match(LITERAL_false);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_null:
 		{
-			JavaNode tmp223_AST = null;
-			tmp223_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp223_AST);
+			JavaNode tmp221_AST = null;
+			tmp221_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp221_AST);
 			match(LITERAL_null);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
@@ -7276,33 +7280,33 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		case LITERAL_this:
 		{
-			JavaNode tmp224_AST = null;
-			tmp224_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp224_AST);
+			JavaNode tmp222_AST = null;
+			tmp222_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp222_AST);
 			match(LITERAL_this);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LITERAL_super:
 		{
-			JavaNode tmp225_AST = null;
-			tmp225_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp225_AST);
+			JavaNode tmp223_AST = null;
+			tmp223_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp223_AST);
 			match(LITERAL_super);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case LPAREN:
 		{
-			JavaNode tmp226_AST = null;
-			tmp226_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp226_AST);
+			JavaNode tmp224_AST = null;
+			tmp224_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp224_AST);
 			match(LPAREN);
 			assignmentExpression();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp227_AST = null;
-			tmp227_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp227_AST);
+			JavaNode tmp225_AST = null;
+			tmp225_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp225_AST);
 			match(RPAREN);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
@@ -7338,13 +7342,13 @@ public InternalJavaParser(ParserSharedInputState state) {
 				
 			} while (true);
 			}
-			JavaNode tmp229_AST = null;
-			tmp229_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp229_AST);
+			JavaNode tmp227_AST = null;
+			tmp227_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp227_AST);
 			match(DOT);
-			JavaNode tmp230_AST = null;
-			tmp230_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp230_AST);
+			JavaNode tmp228_AST = null;
+			tmp228_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp228_AST);
 			match(LITERAL_class);
 			primaryExpression_AST = (JavaNode)currentAST.root;
 			break;
@@ -7412,9 +7416,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode newExpression_AST = null;
 		
-		JavaNode tmp231_AST = null;
-		tmp231_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.makeASTRoot(currentAST, tmp231_AST);
+		JavaNode tmp229_AST = null;
+		tmp229_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.makeASTRoot(currentAST, tmp229_AST);
 		match(LITERAL_new);
 		{
 		switch ( LA(1)) {
@@ -7449,15 +7453,15 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case LPAREN:
 		{
-			JavaNode tmp232_AST = null;
-			tmp232_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp232_AST);
+			JavaNode tmp230_AST = null;
+			tmp230_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp230_AST);
 			match(LPAREN);
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp233_AST = null;
-			tmp233_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp233_AST);
+			JavaNode tmp231_AST = null;
+			tmp231_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp231_AST);
 			match(RPAREN);
 			{
 			if ((LA(1)==LCURLY) && (_tokenSet_49.member(LA(2)))) {
@@ -7535,9 +7539,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		}
 		}
-		JavaNode tmp234_AST = null;
-		tmp234_AST = (JavaNode)astFactory.create(LT(1));
-		astFactory.addASTChild(currentAST, tmp234_AST);
+		JavaNode tmp232_AST = null;
+		tmp232_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp232_AST);
 		match(IDENT);
 		{
 		_loop306:
@@ -7577,9 +7581,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				inputState.guessing--;
 			}
 			if ( synPredMatched304 ) {
-				JavaNode tmp235_AST = null;
-				tmp235_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp235_AST);
+				JavaNode tmp233_AST = null;
+				tmp233_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp233_AST);
 				match(DOT);
 				{
 				switch ( LA(1)) {
@@ -7599,9 +7603,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 				}
 				}
 				}
-				JavaNode tmp236_AST = null;
-				tmp236_AST = (JavaNode)astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp236_AST);
+				JavaNode tmp234_AST = null;
+				tmp234_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp234_AST);
 				match(IDENT);
 			}
 			else if (((_tokenSet_51.member(LA(1))) && (_tokenSet_48.member(LA(2))))&&(false)) {
@@ -7630,9 +7634,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			}
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
-			JavaNode tmp237_AST = null;
-			tmp237_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp237_AST);
+			JavaNode tmp235_AST = null;
+			tmp235_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp235_AST);
 			match(RPAREN);
 			}
 		}
@@ -7649,9 +7653,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 					if ( inputState.guessing==0 ) {
 						lbc_AST.setType(ARRAY_DECLARATOR);
 					}
-					JavaNode tmp238_AST = null;
-					tmp238_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp238_AST);
+					JavaNode tmp236_AST = null;
+					tmp236_AST = (JavaNode)astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp236_AST);
 					match(RBRACK);
 				}
 				else {
@@ -7682,54 +7686,54 @@ public InternalJavaParser(ParserSharedInputState state) {
 		switch ( LA(1)) {
 		case NUM_INT:
 		{
-			JavaNode tmp239_AST = null;
-			tmp239_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp239_AST);
+			JavaNode tmp237_AST = null;
+			tmp237_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp237_AST);
 			match(NUM_INT);
 			constant_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case CHAR_LITERAL:
 		{
-			JavaNode tmp240_AST = null;
-			tmp240_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp240_AST);
+			JavaNode tmp238_AST = null;
+			tmp238_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp238_AST);
 			match(CHAR_LITERAL);
 			constant_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case STRING_LITERAL:
 		{
-			JavaNode tmp241_AST = null;
-			tmp241_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp241_AST);
+			JavaNode tmp239_AST = null;
+			tmp239_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp239_AST);
 			match(STRING_LITERAL);
 			constant_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case NUM_FLOAT:
 		{
-			JavaNode tmp242_AST = null;
-			tmp242_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp242_AST);
+			JavaNode tmp240_AST = null;
+			tmp240_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp240_AST);
 			match(NUM_FLOAT);
 			constant_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case NUM_LONG:
 		{
-			JavaNode tmp243_AST = null;
-			tmp243_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp243_AST);
+			JavaNode tmp241_AST = null;
+			tmp241_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp241_AST);
 			match(NUM_LONG);
 			constant_AST = (JavaNode)currentAST.root;
 			break;
 		}
 		case NUM_DOUBLE:
 		{
-			JavaNode tmp244_AST = null;
-			tmp244_AST = (JavaNode)astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp244_AST);
+			JavaNode tmp242_AST = null;
+			tmp242_AST = (JavaNode)astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp242_AST);
 			match(NUM_DOUBLE);
 			constant_AST = (JavaNode)currentAST.root;
 			break;

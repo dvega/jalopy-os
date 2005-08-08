@@ -746,7 +746,7 @@ enumConstantField!
 				// declared to throw
 				(tc:throwsClause)?
 
-				( s2:compoundStatement | SEMI )
+				( s2:compoundStatement | semim:SEMI )
 				{#enumConstantField = #(#[METHOD_DEF,"METHOD_DEF"],
 							 mods,
 							 tp,
@@ -754,7 +754,8 @@ enumConstantField!
 							 IDENT,
 							 param,
 							 tc,
-							 s2);
+							 s2,
+							 semim);
 		attachStuff(new JavaNode[] {#enumConstantField, #mods, #t});
 							 }
 			|	v:variableDefinitions[#mods,#t] // typeVariableDefinitions
@@ -818,7 +819,7 @@ classField!
 						// declared to throw
 						(tc:throwsClause)?
 
-						( s2:compoundStatement | SEMI )
+						( s2:compoundStatement | semim:SEMI )
 						{#classField = #(#[METHOD_DEF,"METHOD_DEF"],
 									 mods,
 									 tp,
@@ -828,7 +829,8 @@ classField!
 									 param,
 									 RPAREN,
 									 tc,
-									 s2);
+									 s2,
+									 semim);
 		attachStuff(new JavaNode[] {#classField, #mods, #t});
 									 }
 					|	v:variableDefinitions[#mods,#t] semi:SEMI!// typeVariableDefinitions
@@ -1823,7 +1825,9 @@ ML_COMMENT
 		"*/"
 		{
     // $setType(Token.SKIP);
-    $setToken(makeJavaDoc(makeToken(_ttype), $getText));
+    Token n = makeJavaDoc(makeToken(_ttype), $getText);
+    $setToken(n);
+    $setType(n.getType());
     }
 	;
 

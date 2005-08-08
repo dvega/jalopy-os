@@ -2570,6 +2570,7 @@ SELECTION:
       throws IOException
     {
         List parameterTags = Collections.EMPTY_LIST;
+        List annotationTags = Collections.EMPTY_LIST;
         AST serialTag = null;
         AST serialDataTag = null;
         List serialFieldsTags = Collections.EMPTY_LIST;
@@ -2674,6 +2675,16 @@ SELECTION:
 
                 case JavadocTokenTypes.TAG_RETURN :
                     returnTag = tag;
+
+                    break;
+                case JavadocTokenTypes.TAG :
+
+                    if (annotationTags.isEmpty())
+                    {
+                        annotationTags = new ArrayList(4);
+                    }
+
+                    annotationTags.add(tag);
 
                     break;
 
@@ -2840,6 +2851,7 @@ SELECTION:
         last = printTags(seesTags, asterix, maxwidth, last, out);
         last = printTag(sinceTag, asterix, maxwidth, last, out);
         last = printTag(deprecatedTag, asterix, maxwidth, last, out);
+        last = printTags(annotationTags, asterix, maxwidth, last, out);
     }
 
 

@@ -289,6 +289,8 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
             _inlineTags.add("@link");
             _inlineTags.add("@linkPlain");
             _inlineTags.add("@value");
+            _inlineTags.add("@code");
+            _inlineTags.add("@literal");
             //loadCustomTagInfo(INLINE_TAGS, _inlineTags);
             //_inlineStamp = INLINE_TAGS.lastModified();
         }

@@ -447,8 +447,10 @@ public final class JavaRecognizer
                             attachBefore = false;
                         }
                     }
-                    consume();
-                    next =(ExtendedToken) LA(1);
+                    do {
+                        consume();
+                        next =(ExtendedToken) LA(1);
+                    } while (next.getType()==Token.SKIP);
                 }
                 return monitored;
             }            
