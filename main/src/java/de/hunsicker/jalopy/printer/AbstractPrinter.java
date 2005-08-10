@@ -2431,11 +2431,15 @@ OUTER:
     }
 
     protected void prepareComment(JavaNode lcurly,JavaNode rcurly, NodeWriter out){
+        if (out.mode == NodeWriter.MODE_TEST) {
+            return;
+        }
         String currentFile = "<unknown>";
         if (!out.getFilename().equals("<unknown>"))
             currentFile = out.getFilename();
         else {
             AST tag = lcurly;
+            System.out.println(out.mode +"," + NodeWriter.MODE_DEFAULT +"," +NodeWriter.MODE_TEST);
             out.state.args[0] = currentFile;
             out.state.args[1] = new Integer(out.line);
             out.state.args[2] = new Integer(out.column);
