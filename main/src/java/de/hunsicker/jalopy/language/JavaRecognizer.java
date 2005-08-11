@@ -372,7 +372,9 @@ public final class JavaRecognizer
         TokenStreamHiddenTokenFilter filter =
             new TokenStreamHiddenTokenFilter(this.lexer){
             private void consumeFirst() throws TokenStreamException {
-                consume(); // get first token of input stream
+                    do {
+                        consume();
+                    } while (LA(1).getType()==Token.SKIP);
 
                 // Handle situation where hidden or discarded tokens
                 // appear first in input stream
@@ -393,9 +395,11 @@ public final class JavaRecognizer
                             firstHidden = p; // record hidden token if first
                         }
                     }
-                    consume();
+                    do {
+                        consume();
+                    } while (LA(1).getType()==Token.SKIP);
                 }
-            }            
+            }   
             public Token nextToken() throws TokenStreamException {
                 // handle an initial condition; don't want to get lookahead
                 // token of this splitter until first call to nextToken
@@ -463,10 +467,26 @@ public final class JavaRecognizer
          */
         filter.discard(JavaTokenTypes.WS);
         filter.discard(JavaTokenTypes.SEPARATOR_COMMENT);
-        filter.hide(JavaTokenTypes.JAVADOC_COMMENT);
+        
+        if (javaLexer.removeJavadocComments) {
+            filter.discard(JavaTokenTypes.JAVADOC_COMMENT);
+        }
+        else {
+            filter.hide(JavaTokenTypes.JAVADOC_COMMENT);
+        }
+        if (javaLexer.removeMLComments) {
+            filter.discard(JavaTokenTypes.ML_COMMENT);
+        }
+        else {
         filter.hide(JavaTokenTypes.ML_COMMENT);
+        }
         filter.hide(JavaTokenTypes.SPECIAL_COMMENT);
-        filter.hide(JavaTokenTypes.SL_COMMENT);
+        if (javaLexer.removeSLComments) {
+            filter.discard(JavaTokenTypes.SL_COMMENT);
+        }
+        else {
+            filter.hide(JavaTokenTypes.SL_COMMENT);
+        }
 
         this.lexer.setFilename(filename);
         this.parser.setFilename(filename);
