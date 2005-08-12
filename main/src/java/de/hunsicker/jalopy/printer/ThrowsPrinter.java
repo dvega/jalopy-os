@@ -9,6 +9,7 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -59,6 +60,9 @@ final class ThrowsPrinter
         NodeWriter out)
       throws IOException
     {
+        if (((JavaNode)node).hasCommentsBefore()) {
+            printCommentsBefore(node,true,out);
+        }
         AST firstType = node.getFirstChild();
 
         boolean wrappedBefore = false;
@@ -283,6 +287,7 @@ final class ThrowsPrinter
         {
             out.state.newlineBeforeLeftBrace = true;
         }
+        
     }
 
 

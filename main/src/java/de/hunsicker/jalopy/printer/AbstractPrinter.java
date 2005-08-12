@@ -963,7 +963,7 @@ abstract class AbstractPrinter
                     break;
                 
                 default :
-                    throw new RuntimeException("" + comment);
+                    throw new RuntimeException("Strange comment type ! " + comment);
             }
 
             previousComment = comment;
@@ -992,6 +992,9 @@ abstract class AbstractPrinter
             // first set the value as specified in the code convention
             switch (node.getType())
             {
+                case JavaTokenTypes.LITERAL_throws:
+                    result=1;
+                    break;
                 case JavaTokenTypes.ASSIGN :
                     break;
 
