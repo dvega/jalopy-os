@@ -430,11 +430,14 @@ public final class JavaRecognizer
                         // attach the hidden token to the monitored in a chain
                         // link forwards
                         if (!attachBefore && !next.attached) {
-                            p.setHiddenAfter(next);
-                            next.attached = true;
-                            // Attach last hidden token to top
-                            if (p!=monitored)
-                                lastHiddenToken = p;
+                            if (next.getType()!= JavaTokenTypes.JAVADOC_COMMENT) {
+                                p.setHiddenAfter(next);
+                                next.attached = true;
+                                // Attach last hidden token to top
+                                if (p!=monitored && lastHiddenToken==null)
+                                    lastHiddenToken = p;
+                                
+                            }
                         }
                         // link backwards
                         if (p != monitored) { //hidden cannot point to monitored tokens
