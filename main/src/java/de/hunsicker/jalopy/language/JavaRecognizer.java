@@ -412,7 +412,7 @@ public final class JavaRecognizer
                 ExtendedToken monitored = (ExtendedToken) LA(1);
                 // point to hidden tokens found during last invocation
                 if (lastHiddenToken!=null && !((ExtendedToken)lastHiddenToken).attached) {
-                monitored.setHiddenBefore(lastHiddenToken);
+                    monitored.setHiddenBefore(lastHiddenToken);
                 }
                 else {
                     monitored.setHiddenBefore(null);
@@ -432,6 +432,9 @@ public final class JavaRecognizer
                         if (!attachBefore && !next.attached) {
                             p.setHiddenAfter(next);
                             next.attached = true;
+                            // Attach last hidden token to top
+                            if (p!=monitored)
+                                lastHiddenToken = p;
                         }
                         // link backwards
                         if (p != monitored) { //hidden cannot point to monitored tokens
@@ -439,9 +442,16 @@ public final class JavaRecognizer
                                 next.setHiddenBefore(p);
                                 p.setHiddenAfter(next);
                                 p.attached = true;
+                                // Attach last hidden token to bottom
+                                lastHiddenToken = next;
                             }
                         }
-                        p = (ExtendedToken) (lastHiddenToken = next);
+                        // Attach last hidden token to current hide mask
+                        if (lastHiddenToken==null) {
+                            lastHiddenToken = next;
+                        }
+                        // Current token points to next
+                        p = next;
                     }
                     else if (next.getType()==JavaTokenTypes.WS) {
                         if (next.getText().indexOf("\n")>-1) {
@@ -459,7 +469,6 @@ public final class JavaRecognizer
                 return monitored;
             }            
             protected boolean attachBefore = false;
-            protected ExtendedToken maybeLastToken = null;
         };
 
         /**
