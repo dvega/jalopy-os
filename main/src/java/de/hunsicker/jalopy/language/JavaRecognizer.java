@@ -421,7 +421,9 @@ public final class JavaRecognizer
 
                 // Look for hidden tokens, hook them into list emanating
                 // from the monitored tokens.
-                consume();
+                do {
+                    consume();
+                } while (LA(1).getType()==Token.SKIP);
                 ExtendedToken p = monitored;
                 ExtendedToken next = (ExtendedToken) LA(1);
                 // while hidden or discarded scarf tokens
