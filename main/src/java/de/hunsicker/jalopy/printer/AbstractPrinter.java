@@ -2325,11 +2325,6 @@ OUTER:
         // the text correctly (and the proper eol characters are used)
         String[] lines = null;
 
-        // Javadoc comments always start on a new line
-        if (!out.newline) {
-            out.printNewline();
-        }
-        
         boolean format =
             AbstractPrinter.settings.getBoolean(
                 ConventionKeys.COMMENT_FORMAT_MULTI_LINE,
