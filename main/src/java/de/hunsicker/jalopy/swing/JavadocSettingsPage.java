@@ -88,6 +88,7 @@ public class JavadocSettingsPage
     private DataModel _tableModel;
     JCheckBox _checkTagsCheckBox;
     JCheckBox _checkThrowsTagsCheckBox;
+    JCheckBox _checkDontJavadocIfMlBox;
     private JCheckBox _createInnerCheckBox;
     JCheckBox _parseCheckBox;
     JCheckBox _singleLineFieldCommentsCheckBox;
@@ -275,6 +276,10 @@ public class JavadocSettingsPage
             ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS_THROWS,
             _checkThrowsTagsCheckBox.isSelected());
         this.settings.putBoolean(
+            ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+            _checkDontJavadocIfMlBox.isSelected());
+        
+        this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_INNER_CLASS, _createInnerCheckBox.isSelected());
         this.settings.put(
             ConventionKeys.COMMENT_JAVADOC_TAGS_STANDARD,
@@ -318,10 +323,21 @@ public class JavadocSettingsPage
                     ConventionDefaults.COMMENT_JAVADOC_PARSE));
         _parseCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            c, 0, 0, GridBagConstraints.RELATIVE, 1, 1.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         generalLayout.setConstraints(_parseCheckBox, c);
         generalPanel.add(_parseCheckBox);
+        _checkDontJavadocIfMlBox =
+            new JCheckBox("Dont addd if ML",
+                this.settings.getBoolean(
+                    ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+                    ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML));
+        _checkDontJavadocIfMlBox.setToolTipText(this.bundle.getString("DONT_COMMENT_JAVADOC_WHEN_ML" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 1, 0, GridBagConstraints.REMAINDER, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        generalLayout.setConstraints(_checkDontJavadocIfMlBox, c);
+        generalPanel.add(_checkDontJavadocIfMlBox);
 
         _checkTagsCheckBox =
             new JCheckBox(
@@ -348,6 +364,7 @@ public class JavadocSettingsPage
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         generalLayout.setConstraints(_checkThrowsTagsCheckBox, c);
         generalPanel.add(_checkThrowsTagsCheckBox);
+        
 
         _parseCheckBox.addActionListener(
             new ActionListener()

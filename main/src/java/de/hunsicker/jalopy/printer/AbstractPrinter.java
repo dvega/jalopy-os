@@ -7,13 +7,9 @@
 package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Level;
-
-//import org.apache.oro.text.perl.Perl5Util;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
@@ -2452,7 +2448,7 @@ OUTER:
         String commentForNode = getNodeComment(lcurly,out,currentFile);
         
         CommonHiddenStreamToken firstComment =
-            (CommonHiddenStreamToken) rcurly.getHiddenAfter();
+            rcurly.getHiddenAfter();
         if (firstComment==null){
             // Append comment
             firstComment = new CommonHiddenStreamToken(JavaTokenTypes.SL_COMMENT,commentForNode);

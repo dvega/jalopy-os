@@ -63,8 +63,11 @@ final class VariableDeclarationPrinter
       throws IOException
     {
         JavaNode n = (JavaNode) node;
+        boolean isMLaComment = AbstractPrinter.settings.getBoolean(
+                ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+                ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML);
 
-        if (!out.state.anonymousInnerClass && !n.hasJavadocComment())
+        if (!out.state.anonymousInnerClass && !n.hasJavadocComment(isMLaComment))
         {
             if (
                 (!out.state.innerClass
@@ -94,7 +97,7 @@ final class VariableDeclarationPrinter
             if (
                 AbstractPrinter.settings.getBoolean(
                     ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS)
-                    && !n.hasJavadocComment())
+                    && !n.hasJavadocComment(isMLaComment))
             {
                 newChunk = alignVariable(node, last, out);
             }

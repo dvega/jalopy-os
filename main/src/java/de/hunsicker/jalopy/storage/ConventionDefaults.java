@@ -216,6 +216,9 @@ public final class ConventionDefaults
     public static final boolean COMMENT_JAVADOC_INNER_CLASS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean DONT_COMMENT_JAVADOC_WHEN_ML = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final int COMMENT_JAVADOC_METHOD_MASK = 0;
 
     /** The default value for the key with the same name ("{@value}"). */

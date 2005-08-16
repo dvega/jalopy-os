@@ -8,8 +8,6 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
-
 import antlr.collections.AST;
 
 
@@ -81,6 +79,6 @@ public class VariableParameterDefPrinter extends AbstractPrinter {
             PrinterFactory.create(child).print(child, out);
         }
         
+        out.state.markers.remove(marker);
     }
-
 }

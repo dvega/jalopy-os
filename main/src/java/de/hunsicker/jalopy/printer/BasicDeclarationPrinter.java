@@ -298,7 +298,9 @@ abstract class BasicDeclarationPrinter
                 ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
                 ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS)))
         {
-            boolean hasJavadoc = node.hasJavadocComment();
+            boolean hasJavadoc = node.hasJavadocComment(AbstractPrinter.settings.getBoolean(
+                ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+                ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML));
 
             if (!hasJavadoc && node.hasCommentsBefore())
             {

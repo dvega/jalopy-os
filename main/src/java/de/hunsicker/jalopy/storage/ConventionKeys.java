@@ -966,6 +966,10 @@ public final class ConventionKeys
     public static final Convention.Key COMMENT_JAVADOC_INNER_CLASS =
         new Convention.Key("printer/comments/javadoc/check/innerclass");
 
+    /** Dont insert missing Javadoc comments if multiline comment exists (<em>boolean</em>) */
+    public static final Convention.Key DONT_COMMENT_JAVADOC_WHEN_ML =
+        new Convention.Key("printer/comments/javadoc/skip/ifml");
+
     /** Parse Javadoc comments or add AS IS? (<em>boolean</em>) */
     public static final Convention.Key COMMENT_JAVADOC_PARSE =
         new Convention.Key("printer/comments/javadoc/parseComments");

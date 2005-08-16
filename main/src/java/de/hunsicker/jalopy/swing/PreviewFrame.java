@@ -40,6 +40,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import javax.swing.tree.TreePath;
 
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.Jalopy;
@@ -54,6 +55,7 @@ import de.hunsicker.util.ResourceBundleFactory;
 
 import org.apache.log4j.Level;
 
+import antlr.CommonASTWithHiddenTokens;
 import antlr.collections.AST;
 import antlr.debug.misc.JTreeASTModel;
 import antlr.debug.misc.JTreeASTPanel;
@@ -456,7 +458,7 @@ final class PreviewFrame
 			    
 			}, new TreeSelectionListener() {
 		        public void valueChanged(TreeSelectionEvent event) {
-		            /*
+		            
 		            TreePath path = event.getPath();
 		            System.out.println("Selected: " +"," +
 		                               ((CommonASTWithHiddenTokens) path.getLastPathComponent()).getLine() + ","+
@@ -470,7 +472,7 @@ final class PreviewFrame
 		                
 		            }
 		            System.out.println();
-		            */
+		            
 		        }});
 			frame.getContentPane().add(panel);
 
@@ -687,7 +689,7 @@ final class PreviewFrame
             }
             catch (Throwable ignored)
             {
-                // ignored.printStackTrace();
+                ignored.printStackTrace();
             }
             finally
             {

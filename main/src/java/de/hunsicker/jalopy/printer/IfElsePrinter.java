@@ -278,9 +278,7 @@ final class IfElsePrinter
         {
             return rcurly.hasCommentsAfter();
         }
-        else
-        {
-            return false;
-        }
+        
+        return false;
     }
 }
