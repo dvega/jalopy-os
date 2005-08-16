@@ -29,7 +29,6 @@ import java.util.Properties;
 import de.hunsicker.util.Lcs;
 import java.io.FileInputStream;
 import java.io.File;
-import java.util.Collection;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.IOException;
@@ -90,12 +89,6 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
 
     /** Starting column of the comment in the source file. */
     private int _startColumn;
-
-    /** Last modification stamp of the property file for inline Javadoc tags. */
-    private long _inlineStamp;
-
-    /** Last modification stamp of the property file for standard Javadoc tags. */
-    private long _standardStamp;
 
     /** The empty Javadoc comment. */
     public final static Node EMPTY_JAVADOC_COMMENT = new Node(JavadocTokenTypes.JAVADOC_COMMENT, "<JAVADOC_COMMENT>");

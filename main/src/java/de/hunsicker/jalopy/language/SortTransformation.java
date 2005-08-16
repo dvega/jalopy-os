@@ -165,10 +165,6 @@ LOOP:
         int      maxwidth)
     {
         JavaNode cur = node;
-        if (nodes == null) {
-            node = node;
-            indent=indent+0;
-        }
 
         if (nodes.size() > 0)
         {

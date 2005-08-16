@@ -416,7 +416,7 @@ public class JavaNode
      *
      * @return <code>true</code> if this node has a Javadoc comment attached.
      */
-    public boolean hasJavadocComment()
+    public boolean hasJavadocComment(boolean includeML)
     {
         for (
             CommonHiddenStreamToken comment = getHiddenBefore(); comment != null;
@@ -426,6 +426,10 @@ public class JavaNode
             {
                 case JavaTokenTypes.JAVADOC_COMMENT :
                     return true;
+                case JavaTokenTypes.ML_COMMENT:
+                    if (includeML) {
+                        return true;
+                    }
             }
         }
 
