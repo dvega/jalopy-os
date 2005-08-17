@@ -200,7 +200,7 @@ public final class CodeInspector
     //~ Methods --------------------------------------------------------------------------
 
 	private Pattern getPattern(String pattern) {
-		if (_patternMap.containsKey(pattern)) {
+		if (_patternMap.get(pattern)==null) {
 			_patternMap.put(pattern,Pattern.compile(pattern));
 		}
 		

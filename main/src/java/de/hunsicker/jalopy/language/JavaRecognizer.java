@@ -460,7 +460,17 @@ public final class JavaRecognizer
                     }
                     else if (next.getType()==JavaTokenTypes.WS) {
                         if (next.getText().indexOf("\n")>-1) {
+                            if (!attachBefore) {
                             attachBefore = true;
+                            if (lastHiddenToken!=null ){
+                            if (((ExtendedToken)lastHiddenToken).attached) {
+                                lastHiddenToken = null;
+                            }
+                            else {
+                                System.out.println("***************** Shouldnt happend "+lastHiddenToken);
+                            }
+                            }
+                            }
                         }
                         else {
                             attachBefore = false;

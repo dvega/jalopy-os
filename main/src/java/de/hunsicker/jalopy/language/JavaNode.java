@@ -39,6 +39,7 @@ public class JavaNode
 
     /** Position that is to be tracked. */
     private Position _position;
+    public int newLine,newColumn;
 
     //~ Constructors ---------------------------------------------------------------------
 

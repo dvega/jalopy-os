@@ -61,6 +61,17 @@ final class SortTransformation
     public void apply(AST tree)
       throws TransformationException
     {
+        Convention settings = Convention.getInstance();
+        boolean sortModifiers = settings.getBoolean(
+                            ConventionKeys.SORT_MODIFIERS, 
+                            ConventionDefaults.SORT_MODIFIERS);
+        boolean sortBeanNames=
+            settings.getBoolean(ConventionKeys.SORT_METHOD_BEAN, ConventionDefaults.SORT_METHOD_BEAN);
+        
+        _defaultComparator.setBeanSorting(sortBeanNames);
+        _defaultComparator.setModifierSorting(sortModifiers);
+
+        _variablesComparator.setModifierSorting(sortModifiers);
         sort(tree, _defaultComparator);
     }
 
@@ -276,7 +287,24 @@ LOOP:
                                 "Instance initializers"), fillCharacter, indent, maxwidth);
 
                         break;
+                    case JavaTokenTypes.ENUM_DEF :
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ENUM_INIT,
+                                "Enumeration initializers"), fillCharacter, indent, maxwidth);
 
+                        break;
+                        
+                    case JavaTokenTypes.ANNOTATION_DEF :
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ANNOTATION_INIT,
+                                "Annotation initializers"), fillCharacter, indent, maxwidth);
+
+                        break;
+                        
                     default :
                         throw new IllegalArgumentException("unexpected type -- " + cur);
                 }
@@ -463,6 +491,8 @@ LOOP:
                 break;
 
                 case JavaTokenTypes.ENUM_DEF :
+                    enums.add(sortDeclarations(child, comp, level + 1));
+                break;
                 case JavaTokenTypes.ENUM_CONSTANT_DEF :
                     enums.add(child);
                 break;

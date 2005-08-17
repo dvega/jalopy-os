@@ -22,7 +22,7 @@ import antlr.collections.AST;
  * @version $Revision$
  */
 final class VariableDefNodeComparator
-    implements Comparator
+    extends NodeComparator
 {
     //~ Instance variables ---------------------------------------------------------------
 
@@ -100,7 +100,7 @@ final class VariableDefNodeComparator
         // now check the accessibility
         int mod1 = JavaNodeModifier.valueOf(node1);
         int mod2 = JavaNodeModifier.valueOf(node2);
-        int result = NodeComparator.compareModifiers(mod1, mod2);
+        int result = compareModifiers(mod1, mod2);
 
         if (result != 0)
         {

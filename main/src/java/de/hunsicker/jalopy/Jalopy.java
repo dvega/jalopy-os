@@ -24,7 +24,9 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -36,6 +38,7 @@ import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaRecognizer;
+import de.hunsicker.jalopy.language.Node;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
@@ -1040,6 +1043,7 @@ public final class Jalopy
         catch (Throwable ex)
         {
             _state = State.ERROR;
+            ex.printStackTrace();
             _args[0] = _inputFile;
             _args[1] =
                 (ex.getMessage() == null) ? ex.getClass().getName()
@@ -1384,7 +1388,6 @@ public final class Jalopy
                 // now set the encoding to use by Jalopy
                 System.setProperty("file.encoding" /* NOI18N */, _encoding);
             }
-
             if (_inspect)
             {
                 inspect(tree);
@@ -1392,6 +1395,29 @@ public final class Jalopy
 
             // it seems ok to print the AST
             print(tree, packageName, format);
+
+            if (_inspect)
+            {
+                Object issues[] = new Object[6];
+                for(Iterator i = _issues.entrySet().iterator();i.hasNext();) {
+                    Entry entry = (Entry) i.next();
+                    JavaNode node = (JavaNode) entry.getKey();
+                    while (node!=null && node.getParent()!=null && node.newLine==0) {
+                        node = node.getParent();
+                    }
+                    Object message = entry.getValue();
+            issues[0] = _inputFile.getAbsolutePath();
+            issues[1] = new Integer(node.newLine);
+            issues[2] = new Integer(node.newColumn);
+            issues[3] = message.toString();
+            issues[4] = new Integer(node.getStartLine());
+            issues[5] = node;
+            Loggers.PRINTER.l7dlog(
+                Level.WARN, "CODE_INSPECTOR", issues, null);
+                }
+                
+                
+            }
 
             if (_state == State.ERROR)
             {
@@ -2243,7 +2269,7 @@ public final class Jalopy
                                            : _inputFile) + ":0:0:print");
 
                 start = System.currentTimeMillis();
-                PrinterFactory.create(tree).print(tree, out);
+                PrinterFactory.create(tree, out).print(tree, out);
 
                 if (!isChecksum())
                 {
@@ -2257,7 +2283,7 @@ public final class Jalopy
             }
             else
             {
-                PrinterFactory.create(tree).print(tree, out);
+                PrinterFactory.create(tree, out).print(tree, out);
             }
 
             if (isChecksum())
