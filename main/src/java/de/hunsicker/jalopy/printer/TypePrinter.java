@@ -56,6 +56,6 @@ final class TypePrinter
       throws IOException
     {
         AST type = node.getFirstChild();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
     }
 }

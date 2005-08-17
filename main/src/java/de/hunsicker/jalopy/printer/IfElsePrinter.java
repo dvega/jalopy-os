@@ -127,7 +127,7 @@ final class IfElsePrinter
 
         if (hasBraces)
         {
-            PrinterFactory.create(body).print(body, out);
+            PrinterFactory.create(body, out).print(body, out);
         }
         else // no braces, single statement
         {
@@ -148,7 +148,7 @@ final class IfElsePrinter
                     out.pendingComment = null;
                 }
 
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
                 out.printRightBrace(rightBraceNewline || (next == null));
             }
             else
@@ -157,7 +157,7 @@ final class IfElsePrinter
                     out.printNewline();
 
                 out.indent();
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
                 out.unindent();
             }
         }
@@ -192,7 +192,7 @@ final class IfElsePrinter
                     // either we print a LITERAL_if or LITERAL_else but
                     // we don't care as both will lead to the same result
                     out.last = JavaTokenTypes.LITERAL_if;
-                    PrinterFactory.create(block).print(block, out);
+                    PrinterFactory.create(block, out).print(block, out);
 
                     break;
 
@@ -225,7 +225,7 @@ final class IfElsePrinter
                                 next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
                         }
 
-                        PrinterFactory.create(block).print(block, out);
+                        PrinterFactory.create(block, out).print(block, out);
                         out.printRightBrace();
                     }
                     else
@@ -234,7 +234,7 @@ final class IfElsePrinter
                             next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
                         out.printNewline();
                         out.indent();
-                        PrinterFactory.create(block).print(block, out);
+                        PrinterFactory.create(block, out).print(block, out);
                         out.unindent();
                     }
             }

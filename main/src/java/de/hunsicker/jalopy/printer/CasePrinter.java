@@ -71,7 +71,7 @@ final class CasePrinter
                 trackPosition((JavaNode) node, out.line, offset, out);
 
                 AST expr = node.getFirstChild();
-                PrinterFactory.create(expr).print(expr, out);
+                PrinterFactory.create(expr, out).print(expr, out);
 
                 if (
                     AbstractPrinter.settings.getBoolean(
@@ -161,7 +161,7 @@ LOOP:
                             break;
                     }
 
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
                 }
 
                 break;

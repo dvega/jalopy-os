@@ -1278,6 +1278,10 @@ public final class ConventionKeys
     /** Sort methods declarations? (<em>boolean</em>) */
     public static final Convention.Key SORT_METHOD =
         new Convention.Key("printer/sorting/declaration/method");
+    
+    /** Sort method bean declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_METHOD_BEAN =
+        new Convention.Key("printer/sorting/declaration/method/bean");
 
     /** Sort modifers? (<em>boolean</em>) */
     public static final Convention.Key SORT_MODIFIERS =
@@ -1397,6 +1401,22 @@ public final class ConventionKeys
      */
     public static final Convention.Key SEPARATOR_INSTANCE_INIT =
         new Convention.Key("printer/comments/separator/text/initializer");
+
+    /**
+     * Separator text for the annotation section (<em>String</em>).
+     *
+     * @since 1.5b1
+     */
+    public static final Convention.Key SEPARATOR_ANNOTATION_INIT =
+        new Convention.Key("printer/comments/separator/text/annotation");
+
+    /**
+     * Separator text for the enumeration section (<em>String</em>).
+     *
+     * @since 1.5b1
+     */
+    public static final Convention.Key SEPARATOR_ENUM_INIT =
+        new Convention.Key("printer/comments/separator/text/enum");
 
     /**
      * Separator text for the constructors section (<em>String</em>).
@@ -1640,6 +1660,24 @@ public final class ConventionKeys
      */
     public static final Convention.Key LINE_WRAP_PARAMS_EXCEED =
         new Convention.Key("printer/wrapping/ondemand/after/parameter");
+
+    /**
+     *  If it is better to wrap the parameters deeply then do so 
+     *  (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_PARAMS_HARD =
+        new Convention.Key("printer/wrapping/ondemand/hard/parameter");
+
+    /**
+     *  When wrapping parameters always do it deeply 
+     *  (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_PARAMS_DEEP =
+        new Convention.Key("printer/wrapping/ondemand/deep/parameter");
 
     /**
      * Force alignment of throws types for method/ctor declarations? (<em>boolean</em>)

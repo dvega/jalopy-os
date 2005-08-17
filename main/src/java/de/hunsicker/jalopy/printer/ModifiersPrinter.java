@@ -91,7 +91,7 @@ final class ModifiersPrinter
                             ((JavaNode)modifier).setHiddenBefore(firstComment);
                             firstComment = null;
                         }
-                        PrinterFactory.create(modifier).print(modifier,out);
+                        PrinterFactory.create(modifier, out).print(modifier,out);
                     }
                     else {
                         modifiers.add(modifier);
@@ -108,7 +108,7 @@ final class ModifiersPrinter
                 for (int i = 0, size = modifiers.size(); i < size; i++)
                 {
                     AST modifier = (AST) modifiers.get(i);
-                    PrinterFactory.create(modifier).print(modifier, out);
+                    PrinterFactory.create(modifier, out).print(modifier, out);
                 }
             }
         }
@@ -118,7 +118,7 @@ final class ModifiersPrinter
                 AST modifier = node.getFirstChild(); modifier != null;
                 modifier = modifier.getNextSibling())
             {
-                PrinterFactory.create(modifier).print(modifier, out);
+                PrinterFactory.create(modifier, out).print(modifier, out);
             }
         }
     }

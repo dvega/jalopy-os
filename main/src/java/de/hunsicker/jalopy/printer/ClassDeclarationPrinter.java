@@ -67,7 +67,7 @@ final class ClassDeclarationPrinter
 
         // print the modifiers
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         /*
         // TODO Verify this
@@ -89,7 +89,7 @@ final class ClassDeclarationPrinter
                 out.state.extendsWrappedBefore = false;
                 out.last = JavaTokenTypes.LITERAL_class;
             }
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
         /*
         AST identifier = modifiers.getNextSibling();

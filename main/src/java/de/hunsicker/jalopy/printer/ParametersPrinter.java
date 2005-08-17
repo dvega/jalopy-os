@@ -112,7 +112,7 @@ final class ParametersPrinter
                             if (expr != null)
                             {
                                 TestNodeWriter tester = out.testers.get();
-                                PrinterFactory.create(expr).print(expr, tester);
+                                PrinterFactory.create(expr, out).print(expr, tester);
 
                                 int lineLength =
                                     AbstractPrinter.settings.getInt(
@@ -183,7 +183,7 @@ final class ParametersPrinter
             }
         }
 
-        out.state.markers.remove(marker);
+        out.state.markers.remove(marker,out);
     }
 
 
@@ -214,10 +214,10 @@ final class ParametersPrinter
                 default :
 
                     AST modifier = param.getFirstChild();
-                    PrinterFactory.create(modifier).print(modifier, tester);
+                    PrinterFactory.create(modifier, out).print(modifier, tester);
 
                     AST type = modifier.getNextSibling();
-                    PrinterFactory.create(type).print(type, tester);
+                    PrinterFactory.create(type, out).print(type, tester);
 
                     // +1 for the space between modifiers and name
                     int length = tester.length + 1;
@@ -498,6 +498,13 @@ SEARCH:
         int userAction = action;
         boolean firstWrapped = false; // was the first parameter wrapped?
 
+        boolean[] data = shouldHaveSmallIndent(parameter,
+            action,
+            type,
+            out, spaceAfterComma, lineLength,alignMethodCall);
+        boolean smallIndent = data[0];
+        alignMethodCall = data[1];
+        
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             out.state.paramList = true;
@@ -527,8 +534,25 @@ SEARCH:
                     break;
 
                 default :
+                    if (paramIndex == FIRST_PARAM && alignMethodCall){
+                            if (smallIndent){
+                                    
+                                out.printNewline();
+                                //add a new marker with an
+                                // appropiate indent level
+                                // on a new line
+                                Marker lastMarker = out.state.markers.getLast();
+                                // add only a 0 marker
+                                // Add a new marker with 0 and indent
+                                // the line was 0
+                                Marker current=out.state.markers.add(
+                                    out.line,
+                                    0,true,out
+                                    );
+                            }                        
+                    }
 
-                    if (out.mode == NodeWriter.MODE_DEFAULT)
+                    //if (out.mode == NodeWriter.MODE_DEFAULT)
                     {
                         // overwrite the mode for method calls
                         if (
@@ -536,6 +560,7 @@ SEARCH:
                             && (alignMethodCall
                             || (alignMethodCallIfNested && containsMethodCall(node))))
                         {
+                            
                             if (restoreAction)
                             {
                                 action = userAction;
@@ -585,7 +610,7 @@ SEARCH:
 
                                         // determine the exact space all
                                         // parameters would need
-                                        PrinterFactory.create(node).print(node, tester);
+                                        PrinterFactory.create(node, out).print(node, tester);
 
                                         // +1 for the right parenthesis
                                         if ((out.column + tester.length + 1) > lineLength)
@@ -606,7 +631,7 @@ SEARCH:
                                     {
                                         // determine the exact space all
                                         // parameters would need
-                                        PrinterFactory.create(node).print(node, tester);
+                                        PrinterFactory.create(node, out).print(node, tester);
 
                                         // (+1 for the right parenthesis)
                                         tester.length += 1;
@@ -615,7 +640,7 @@ SEARCH:
                                     {
                                         // determine the exact space this
                                         // parameter would need
-                                        PrinterFactory.create(parameter).print(
+                                        PrinterFactory.create(parameter, out).print(
                                             parameter, tester);
                                     }
 
@@ -689,7 +714,7 @@ SEARCH:
                                                         if (first != null)
                                                         {
                                                             tester.reset();
-                                                            PrinterFactory.create(first)
+                                                            PrinterFactory.create(first, out)
                                                                           .print(
                                                                 first, tester);
 
@@ -849,7 +874,7 @@ SEARCH:
                                         if (next == null)
                                         {
                                             TestNodeWriter tester = out.testers.get();
-                                            PrinterFactory.create(parameter).print(
+                                            PrinterFactory.create(parameter, out).print(
                                                 parameter, tester);
 
                                             // +1 for the right parenthesis
@@ -887,12 +912,13 @@ SEARCH:
                                 break;
                         }
                     }
+                    /*
                     else if (spaceAfterComma && (paramIndex != FIRST_PARAM))
                     {
                         out.print(SPACE, JavaTokenTypes.WS);
                     }
-
-                    PrinterFactory.create(parameter).print(parameter, out);
+*/
+                    PrinterFactory.create(parameter, out).print(parameter, out);
 
                     paramIndex++;
 
@@ -965,7 +991,7 @@ SEARCH:
                         case JavaTokenTypes.STRING_LITERAL :
 
                             TestNodeWriter tester = out.testers.get();
-                            PrinterFactory.create(first).print(first, tester);
+                            PrinterFactory.create(first, out).print(first, tester);
 
                             if ((out.column + tester.length) > lineLength)
                             {
@@ -1223,5 +1249,175 @@ SEARCH:
             adjustAlignmentOffset(column, out);
         }*/
         return result;
+    }
+    private boolean[] shouldHaveSmallIndent(
+        JavaNode        parameter,
+        int        action,
+        int        type,
+        NodeWriter out, boolean spaceAfterComma, int lineLength,boolean alignMethodCall)
+    throws IOException{
+        
+        boolean results[] = new boolean[]{false,alignMethodCall};
+        int totalParameterWidth = 0;
+        int totalParameters = 0;
+//        Point paramsSizes[] = null;
+        boolean smallindent = false;
+        
+        boolean debugmode=false;
+        JavaNode littleParam = null;
+            
+        
+        if (AbstractPrinter.settings.getBoolean(
+                ConventionKeys.LINE_WRAP_PARAMS_HARD,
+                ConventionDefaults.LINE_WRAP_PARAMS_HARD)) {
+        if (debugmode)
+            System.out.println("**Scaning line "+out.line+","+out.column+","+totalParameterWidth+","+type);
+        
+        // ignore method parameter calls for wrapping       
+        // If we want we could change this but we need to adjust using
+        //  setAlignOffset(node, out);
+        if (type!=JavaTokenTypes.PARAMETERS) {
+            TestNodeWriter paramTester = out.testers.get();
+            paramTester.reset(out,false);
+            //paramTester.column = paramTester.maxColumn = paramTester.length = out.column;
+    
+            // determine the exact space all
+            // parameters would need
+            littleParam = parameter;
+            
+            // Iterate through each parameter to get the length of the
+            // line
+            while(littleParam!=null){
+                PrinterFactory.create(littleParam, out).print(littleParam, paramTester);
+                if (spaceAfterComma && (totalParameters != FIRST_PARAM))
+                {
+                    paramTester.print(SPACE, JavaTokenTypes.WS);
+                }
+                littleParam = (JavaNode) littleParam.getNextSibling();
+                if (paramTester.state.smallIndent) {
+                    smallindent = true;
+                }
+                totalParameters ++;
+    //            System.out.println("has indent is a "+paramTester.state.smallIndent+","+ totalParameters +"," + out.line+","+out.column);
+            }
+            // +1 for braces
+            totalParameterWidth = paramTester.maxColumn + 1;
+            if (debugmode)
+            System.out.println("initial result "+paramTester.line+","+paramTester.column+","+paramTester.maxColumn);
+            // new
+            // If doing a mall indent
+            // or we need to wrap
+            // or we have multiple lines
+            if (smallindent || totalParameterWidth > lineLength ||
+                paramTester.line>1) {
+                    
+                // Attempt to wrap parameters see if that was sucesful in
+                // reducing the size to prevent the smallindent
+                TestNodeWriter paramTester2 = out.testers.get(); 
+                // A new line has occured , we need to test to see
+                // if it would be more efficient for us to make 
+                // the wrap or the child. 
+                paramTester2.reset(out,false);
+                //paramTester2.indent();
+                if (debugmode)
+                System.out.println("***Choosing to perform second scan on line"+out.line+","+out.column);
+                littleParam = parameter;
+            
+                // Iterate through each parameter to get the length of the
+                // line (This is a cheap and dirty alignment of method parameters call
+    //            System.out.println("Scanning line "+out.line+","+out.column);
+                while(littleParam!=null){
+                    PrinterFactory.create(littleParam, out).print(littleParam, paramTester2);
+                    littleParam = (JavaNode) littleParam.getNextSibling();
+                    //increment twice to ignore the commas
+                    if (littleParam !=null) {
+                        littleParam = (JavaNode) littleParam.getNextSibling();
+                        if (littleParam !=null) {
+    //                        System.out.println("new line - "+paramTester2.line+","+littleParam+","+paramTester2.column); 
+                            paramTester2.printNewline();
+                            printIndentation(paramTester2);
+                        }
+                    }
+                }
+                // Results
+                // Changed to +3 incase another wrap has occured at the correct 
+                // position this will give a bit of flexibility
+                boolean pt1 = paramTester.maxColumn>lineLength+3;
+                if (debugmode)
+                System.out.println(pt1 + "Paramtesters 1,"+paramTester.line+","+paramTester.column+","+paramTester.maxColumn+":"+paramTester.state.smallIndent);
+                if (debugmode)
+                System.out.println("Paramtesters 2,"+paramTester2.line+","+paramTester2.column+","+paramTester2.maxColumn+":"+paramTester2.state.smallIndent);
+    //            boolean pt2 = paramTester2.maxColumn>lineLength;
+                // Test if parameters in tester 1 exceed the line length
+                // or
+                // paramTester 1 is greater then line length 
+                // or
+                // paramtester 2.state.smallindent is false
+                // and
+                // paramtester 1.state.smallindent is true
+                if (paramTester.line>=paramTester2.line || pt1 ||
+                    (!paramTester2.state.smallIndent && paramTester.state.smallIndent))
+                //if (true) 
+                {
+                    if (debugmode)
+                    System.out.println("Opting with 2");
+                    out.testers.release(paramTester);
+                    paramTester = paramTester2;
+                    alignMethodCall=true;
+                }
+                else {
+                    if (debugmode)
+                    System.out.println("Opting with 1");
+                    out.testers.release(paramTester2);
+                }
+                // Perform a small indent if tester wrapped small or 
+                // if specified in options
+                smallindent = paramTester.state.smallIndent || 
+                    AbstractPrinter.settings.getBoolean(
+                        ConventionKeys.LINE_WRAP_PARAMS_DEEP,
+                        ConventionDefaults.LINE_WRAP_PARAMS_DEEP);
+                if (!smallindent){
+                    // Changed to +3 incase another wrap has occured at the correct 
+                    // position this will give a bit of flexibility
+                    smallindent=paramTester.maxColumn>lineLength+3;
+                }
+                
+                // || paramTester.line>1 if we want to break
+                // whenever a line is wrapped
+                if ((smallindent ) && !alignMethodCall){
+                    alignMethodCall = true;
+                }
+            }
+            //end
+            // If we are using a new param tester we need to 
+            // re initialize the total width
+            // +1 for braces
+            totalParameterWidth = paramTester.maxColumn + 1;
+            if (debugmode) {
+          System.out.println("Param tester status"+paramTester.line+","+paramTester.column);
+            }
+          out.testers.release(paramTester);
+        }
+        if (debugmode) {
+      System.out.println("FLAGS "+smallindent+","+alignMethodCall);
+      System.out.println("**Scanned line "+out.line+","+out.column+","+totalParameterWidth);
+        }
+      
+      // Small indent state only applicable to TestNodeWriter's
+      if (out instanceof TestNodeWriter){
+          // Only change the state if the current state is not true
+          // On release of the node writers the state will be changed
+          if (!out.state.smallIndent){
+            out.state.smallIndent=smallindent;
+          }
+          
+      }
+      else {
+          // Small indent state only applicable to tester 
+      }
+      results[0] = smallindent;
+      results[1] = alignMethodCall;
+        }
+      return results;
     }
 }

@@ -64,13 +64,13 @@ final class PackagePrinter
         out.print(PACKAGE_SPACE, JavaTokenTypes.LITERAL_package);
 
         AST annotations = node.getFirstChild();
-        PrinterFactory.create(annotations).print(annotations, out);
+        PrinterFactory.create(annotations, out).print(annotations, out);
         
         AST identifier = annotations.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST semi = identifier.getNextSibling();
-        PrinterFactory.create(semi).print(semi, out);
+        PrinterFactory.create(semi, out).print(semi, out);
 
         out.printBlankLines(
             AbstractPrinter.settings.getInt(

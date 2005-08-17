@@ -77,7 +77,7 @@ public class TypeParametersPrinter extends AbstractPrinter {
             	break;
             	
             	default :
-            	    PrinterFactory.create(child).print(child,out);
+            	    PrinterFactory.create(child, out).print(child,out);
             }
         }
     }

@@ -57,7 +57,7 @@ public class AnnotationFieldPrinter extends AbstractPrinter {
         printCommentsBefore(node,true,out);
         
         for(AST child = node.getFirstChild();child!=null;child=child.getNextSibling()) {
-            PrinterFactory.create(child).print(child,out);
+            PrinterFactory.create(child, out).print(child,out);
             // If the last child is a TYPE then add a space after it
             if (child.getType() == JavaTokenTypes.TYPE){
                 out.print(SPACE,JavaTokenTypes.TYPE);

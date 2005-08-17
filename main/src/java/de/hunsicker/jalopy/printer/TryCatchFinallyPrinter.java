@@ -70,7 +70,7 @@ final class TryCatchFinallyPrinter
             switch (child.getType())
             {
                 case JavaTokenTypes.SLIST :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
 
@@ -130,16 +130,16 @@ final class TryCatchFinallyPrinter
         }
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST parameters = lparen.getNextSibling();
-        PrinterFactory.create(parameters).print(parameters, out);
+        PrinterFactory.create(parameters, out).print(parameters, out);
 
         AST rparen = parameters.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         JavaNode body = (JavaNode) rparen.getNextSibling();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 
 
@@ -174,6 +174,6 @@ final class TryCatchFinallyPrinter
         printCommentsAfter(node, out);
 
         JavaNode body = (JavaNode) node.getFirstChild();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 }

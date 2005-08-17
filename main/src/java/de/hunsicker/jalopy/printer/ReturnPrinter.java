@@ -76,7 +76,7 @@ final class ReturnPrinter
 
         for (AST child = next; child != null; child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         out.state.markers.remove(marker);

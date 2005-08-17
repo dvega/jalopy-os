@@ -147,7 +147,7 @@ abstract class AbstractPrinter
      */
     public final void printChildren(AST node, NodeWriter out) throws IOException  {
         for(AST child = node.getFirstChild();child!=null;child=child.getNextSibling()) {
-            PrinterFactory.create(child).print(child,out);
+            PrinterFactory.create(child, out).print(child,out);
         }
     }
     /**
@@ -2252,7 +2252,7 @@ OUTER:
 
                 if (c != null)
                 {
-                    ((JavadocPrinter) PrinterFactory.create(c)).print(node, c, out);
+                    ((JavadocPrinter) PrinterFactory.create(c, out)).print(node, c, out);
                 }
                 else
                 {

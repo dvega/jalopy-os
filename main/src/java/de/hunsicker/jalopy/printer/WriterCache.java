@@ -25,7 +25,7 @@ final class WriterCache
     private final String _originalLineSeparator;
 
     //~ Constructors ---------------------------------------------------------------------
-
+    NodeWriter nodeWriter = null;
     /**
      * Creates a new WriterCache object.
      *
@@ -34,8 +34,8 @@ final class WriterCache
     public WriterCache(NodeWriter writer)
     {
         _originalLineSeparator = writer.originalLineSeparator;
-
-        TestNodeWriter tester = new TestNodeWriter();
+        nodeWriter = writer;
+        TestNodeWriter tester = new TestNodeWriter(this,nodeWriter);
         tester.originalLineSeparator = _originalLineSeparator;
         _writers.add(tester);
     }
@@ -58,7 +58,7 @@ final class WriterCache
             }
         }
 
-        TestNodeWriter tester = new TestNodeWriter();
+        TestNodeWriter tester = new TestNodeWriter(this,nodeWriter);
         tester.originalLineSeparator = _originalLineSeparator;
 
         return tester;

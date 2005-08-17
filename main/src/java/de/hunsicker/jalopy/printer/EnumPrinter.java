@@ -54,7 +54,7 @@ public class EnumPrinter extends BasicDeclarationPrinter {
 
         // print the modifiers
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
         
         out.print(ENUM_SPACE, JavaTokenTypes.LITERAL_enum);
         for(AST child = modifiers.getNextSibling();child!=null;child = child.getNextSibling()) {
@@ -62,7 +62,7 @@ public class EnumPrinter extends BasicDeclarationPrinter {
                 out.state.extendsWrappedBefore = false;
                 out.last = JavaTokenTypes.LITERAL_enum;                
             }
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
         // TODO out.state.innerClass = false;
         out.last = JavaTokenTypes.ENUM_DEF;

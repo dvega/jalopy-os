@@ -67,16 +67,16 @@ public class VariableParameterDefPrinter extends AbstractPrinter {
 
         // print the modifiers
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
         
         AST type = modifiers.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
         out.print(DOT,type.getType());
         out.print(DOT,type.getType());
         out.print(DOT,type.getType());
         
         for(AST child = type.getNextSibling();child!=null;child = child.getNextSibling()) {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
         
         out.state.markers.remove(marker);

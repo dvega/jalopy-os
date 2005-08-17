@@ -123,7 +123,7 @@ final class ArrayInitializerPrinter
                         break;
                 }
 
-                PrinterFactory.create(child).print(child, tester);
+                PrinterFactory.create(child, out).print(child, tester);
 
                 if (wrapAsNeeded && (tester.length > lineLength))
                 {
@@ -257,7 +257,7 @@ final class ArrayInitializerPrinter
                                 {
                                     // check if we exceed the line length
                                     tester.reset();
-                                    PrinterFactory.create(child).print(child, tester);
+                                    PrinterFactory.create(child, out).print(child, tester);
 
                                     if (
                                         (!wrapAsNeeded && (count > maxElementsPerLine))
@@ -312,7 +312,7 @@ final class ArrayInitializerPrinter
 
                                 wrapped = false;
 
-                                PrinterFactory.create(child).print(child, out);
+                                PrinterFactory.create(child, out).print(child, out);
 
                                 /*switch (child.getType())
                                 {
@@ -442,7 +442,7 @@ final class ArrayInitializerPrinter
                                 bracesPadding = false;
                             }
 
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             if (c.hasCommentsAfter())
                             {
@@ -461,7 +461,7 @@ final class ArrayInitializerPrinter
                             break;
 
                         default :
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             if (child.hasCommentsAfter())
                             {

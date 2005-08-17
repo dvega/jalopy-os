@@ -402,11 +402,6 @@ final class PreviewFrame
         public void actionPerformed(ActionEvent ev)
         {
             AST root = _jalopy.getRecognizer().getRoot();
-            // TODO Clean up
-            //_jalopy.getRecognizer().getParseTree();
-            //System.out.println("!!! start2");
-            //_jalopy.getRecognizer().parseToken(root,0, new java.util.Vector());
-            //System.out.println("!!! end start2");
             
             
 			final JFrame frame = new JFrame("Java AST");
@@ -575,7 +570,7 @@ final class PreviewFrame
                 Loggers.IO.setLevel(Level.FATAL);
                 Loggers.PARSER.setLevel(Level.FATAL);
                 Loggers.PARSER_JAVADOC.setLevel(Level.FATAL);
-                Loggers.PRINTER.setLevel(Level.FATAL);
+                Loggers.PRINTER.setLevel(Level.WARN);
                 Loggers.PRINTER_JAVADOC.setLevel(Level.FATAL);
 
                 if (!PreviewFrame.this.customFile)
@@ -632,8 +627,8 @@ final class PreviewFrame
                         !_page.getPreviewFileName().equals(
                             "separationcomments" /* NOI18N */))
                     {
-                        _page.settings.putBoolean(
-                            ConventionKeys.COMMENT_INSERT_SEPARATOR, false);
+                        //_page.settings.putBoolean(
+                        //    ConventionKeys.COMMENT_INSERT_SEPARATOR, false);
                     }
                 }
 
@@ -662,8 +657,9 @@ final class PreviewFrame
 
                     final StringBuffer buf = new StringBuffer(this.text.length());
                     _jalopy.setOutput(buf);
+                    _jalopy.setInspect(true);
                     _jalopy.format();
-
+                    
                     SwingUtilities.invokeLater(
                         new Runnable()
                         {

@@ -99,7 +99,7 @@ final class LabelStatementPrinter
         {
             printCommentsBefore(node, out);
             logIssues(node, out);
-            PrinterFactory.create(identifier).print(identifier, out);
+            PrinterFactory.create(identifier, out).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
             commentAfter =
                 printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out);
@@ -112,7 +112,7 @@ final class LabelStatementPrinter
             out.setIndentLevel(0);
             printCommentsBefore(node, out);
             logIssues(node, out);
-            PrinterFactory.create(identifier).print(identifier, out);
+            PrinterFactory.create(identifier, out).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
 
             if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out))
@@ -141,6 +141,6 @@ final class LabelStatementPrinter
             out.printNewline();
         }
 
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 }

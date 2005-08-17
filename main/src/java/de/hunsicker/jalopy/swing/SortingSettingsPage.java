@@ -48,6 +48,7 @@ public class SortingSettingsPage
 
     private JCheckBox _sortCheckBox;
     private JCheckBox _sortModifiersCheckBox;
+    private JCheckBox _sortMethodBeansCheckBox;
     private JTabbedPane _tabbedPane;
 
     /** The data stored in the table. */
@@ -103,6 +104,8 @@ public class SortingSettingsPage
         this.settings.putBoolean(ConventionKeys.SORT, _sortCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.SORT_MODIFIERS, _sortModifiersCheckBox.isSelected());
+        this.settings.putBoolean(
+            ConventionKeys.SORT_METHOD_BEAN, _sortMethodBeansCheckBox.isSelected());
 
         String declarationOrder = getSortString();
         DeclarationType.setOrder(declarationOrder);
@@ -122,7 +125,7 @@ public class SortingSettingsPage
         {
             List rowData = (List) i.next();
             ModifierType type = (ModifierType) rowData.get(0);
-            buf.append(type.getName());
+            buf.append(type.getName()+"="+((Boolean)rowData.get(1)).toString());
             buf.append(DELIMETER);
         }
 
@@ -385,7 +388,7 @@ public class SortingSettingsPage
                 this.settings.get(
                     ConventionKeys.SORT_ORDER_MODIFIERS, ModifierType.getOrder()),
                 DELIMETER);
-        Object[][] data = new Object[11][1];
+        Object[][] data = new Object[11][2];
 
         for (int i = 0; tokens.hasMoreTokens(); i++)
         {
@@ -394,46 +397,57 @@ public class SortingSettingsPage
             if (ModifierType.valueOf(token) == ModifierType.PUBLIC)
             {
                 data[i][0] = ModifierType.PUBLIC;
+                data[i][1] = Boolean.valueOf(ModifierType.PUBLIC.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.PROTECTED)
             {
                 data[i][0] = ModifierType.PROTECTED;
+                data[i][1] = Boolean.valueOf(ModifierType.PROTECTED.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.PRIVATE)
             {
                 data[i][0] = ModifierType.PRIVATE;
+                data[i][1] = Boolean.valueOf(ModifierType.PRIVATE.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.STATIC)
             {
                 data[i][0] = ModifierType.STATIC;
+                data[i][1] = Boolean.valueOf(ModifierType.STATIC.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.FINAL)
             {
                 data[i][0] = ModifierType.FINAL;
+                data[i][1] = Boolean.valueOf(ModifierType.FINAL.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.ABSTRACT)
             {
                 data[i][0] = ModifierType.ABSTRACT;
+                data[i][1] = Boolean.valueOf(ModifierType.ABSTRACT.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.NATIVE)
             {
                 data[i][0] = ModifierType.NATIVE;
+                data[i][1] = Boolean.valueOf(ModifierType.NATIVE.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.TRANSIENT)
             {
                 data[i][0] = ModifierType.TRANSIENT;
+                data[i][1] = Boolean.valueOf(ModifierType.TRANSIENT.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.SYNCHRONIZED)
             {
                 data[i][0] = ModifierType.SYNCHRONIZED;
+                data[i][1] = Boolean.valueOf(ModifierType.SYNCHRONIZED.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.VOLATILE)
             {
                 data[i][0] = ModifierType.VOLATILE;
+                data[i][1] = Boolean.valueOf(ModifierType.VOLATILE.getSort());
             }
             else if (ModifierType.valueOf(token) == ModifierType.STRICTFP)
             {
                 data[i][0] = ModifierType.STRICTFP;
+                data[i][1] = Boolean.valueOf(ModifierType.STRICTFP.getSort());
             }
         }
 
@@ -445,6 +459,7 @@ public class SortingSettingsPage
                     this.bundle.getString("BDR_GENERAL" /* NOI18N */)),
                 BorderFactory.createEmptyBorder(0, 5, 5, 5)));
 
+        
         _sortModifiersCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_SORT_MODIFIERS" /* NOI18N */),
@@ -461,6 +476,15 @@ public class SortingSettingsPage
                     refresh();
                 }
             });
+_sortMethodBeansCheckBox = 
+                new JCheckBox(
+                "Sort method names as beans",
+                this.settings.getBoolean(
+                    ConventionKeys.SORT_METHOD_BEAN, ConventionDefaults.SORT_METHOD_BEAN));
+        _sortMethodBeansCheckBox.addActionListener(this.trigger);
+        general.add(_sortMethodBeansCheckBox);
+
+        _sortMethodBeansCheckBox.addActionListener(this.trigger);
 
         JPanel typesPanel = new JPanel();
         typesPanel.setBorder(
@@ -472,7 +496,10 @@ public class SortingSettingsPage
         GridBagLayout typesLayout = new GridBagLayout();
         typesPanel.setLayout(typesLayout);
 
-        Object[] columnNames = { this.bundle.getString("HDR_TYPE" /* NOI18N */) };
+        Object[] columnNames = {
+            this.bundle.getString("HDR_TYPE" /* NOI18N */),
+            this.bundle.getString("HDR_SORT" /* NOI18N */)
+                                };
         DefaultTableModel d = new DataModel(data, columnNames);
         TableList modifiersTable = new TableList(d, TableList.TYPE_UP_DOWN);
         // TODO JTable table = modifiersTable.getTable();

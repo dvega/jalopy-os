@@ -390,7 +390,9 @@ public class ProjectSettingsPage
 
             for (int i = 0; i < listeners.length; i++)
             {
-                this.listenerList.remove(ListSelectionListener.class, listeners[i]);
+                this.listenerList.remove(ListSelectionListener.class, 
+                                         (ListSelectionListener)listeners[i]);
+                
             }
             
         }

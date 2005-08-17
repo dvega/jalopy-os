@@ -71,16 +71,16 @@ final class SynchronizedPrinter
         }
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST expr = lparen.getNextSibling();
-        PrinterFactory.create(expr).print(expr, out);
+        PrinterFactory.create(expr, out).print(expr, out);
 
         AST rparen = expr.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         AST body = rparen.getNextSibling();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
 
         out.last = JavaTokenTypes.RCURLY;
     }

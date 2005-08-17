@@ -95,7 +95,7 @@ final class WhilePrinter
         {
             case JavaTokenTypes.SLIST :
                 out.last = JavaTokenTypes.LITERAL_while;
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
 
                 break;
 
@@ -108,14 +108,14 @@ final class WhilePrinter
                         AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.printRightBrace();
                 }
                 else
                 {
                     out.printNewline();
                     out.indent();
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.unindent();
                 }
         }

@@ -217,7 +217,7 @@ final class TernaryIfElsePrinter
             TestNodeWriter tester = out.testers.get();
 
             AST thirdOp = getNextOperand(colon.getNextSibling());
-            PrinterFactory.create(thirdOp).print(thirdOp, tester);
+            PrinterFactory.create(thirdOp, out).print(thirdOp, tester);
 
             // only wrap and align if necessary
             if (
@@ -299,7 +299,7 @@ final class TernaryIfElsePrinter
             {
                 case JavaTokenTypes.LPAREN :
                     parentheses = true;
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
 
@@ -307,7 +307,7 @@ final class TernaryIfElsePrinter
 
                     if (parentheses || (node.getFirstChild() == child))
                     {
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
                     }
                     else if (
                         AbstractPrinter.settings.getBoolean(
@@ -322,24 +322,24 @@ final class TernaryIfElsePrinter
                             addParentheses(operator);
 
                             AST leftParen = operator.getPreviousSibling();
-                            PrinterFactory.create(leftParen).print(leftParen, out);
+                            PrinterFactory.create(leftParen, out).print(leftParen, out);
 
                             //AST rightParen = operator.getNextSibling();
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             //printWithParentheses(operator,leftParen, rightParen, out);
                         }
                         else
                         {
                             out.print(LPAREN, out.last);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             //out.print(RPAREN, out.last);
                         }
                     }
                     else
                     {
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
                     }
 
                     for (
@@ -349,7 +349,7 @@ final class TernaryIfElsePrinter
                         switch (child.getType())
                         {
                             case JavaTokenTypes.RPAREN :
-                                PrinterFactory.create(child).print(child, out);
+                                PrinterFactory.create(child, out).print(child, out);
 
                                 break;
 
@@ -411,7 +411,7 @@ final class TernaryIfElsePrinter
             TestNodeWriter tester = out.testers.get();
 
             AST secondOp = getNextOperand(secondOperand);
-            PrinterFactory.create(secondOp).print(secondOp, tester);
+            PrinterFactory.create(secondOp, out).print(secondOp, tester);
 
             // wrap and align if necessary (+3 for the colon between the
             // second and third operator)

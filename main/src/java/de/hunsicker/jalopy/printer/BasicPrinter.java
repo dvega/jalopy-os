@@ -62,7 +62,7 @@ class BasicPrinter
         
         // TODO validate this is ok for all 
         for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
-            PrinterFactory.create(child).print(child,out);
+            PrinterFactory.create(child, out).print(child,out);
         }
 
         trackPosition((JavaNode) node, out.line, offset, out);

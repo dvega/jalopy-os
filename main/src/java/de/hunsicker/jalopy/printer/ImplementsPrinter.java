@@ -134,7 +134,7 @@ final class ImplementsPrinter
                 }
                 else
                 {
-                    PrinterFactory.create(node).print(node, tester);
+                    PrinterFactory.create(node, out).print(node, tester);
 
                     if ((tester.length - 11 + out.column) > lineLength)
                     {
@@ -160,7 +160,7 @@ final class ImplementsPrinter
 
             for (AST child = first; child != null; child = child.getNextSibling())
             {
-                PrinterFactory.create(child).print(child, out);
+                PrinterFactory.create(child, out).print(child, out);
 
                 AST next = child.getNextSibling();
 
@@ -194,7 +194,7 @@ final class ImplementsPrinter
                     }
                     else if (wrapLines)
                     {
-                        PrinterFactory.create(next).print(next, tester);
+                        PrinterFactory.create(next, out).print(next, tester);
 
                         if ((tester.length + out.column + comma.length()) > lineLength)
                         {

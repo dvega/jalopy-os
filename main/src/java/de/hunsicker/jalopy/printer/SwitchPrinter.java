@@ -110,13 +110,13 @@ final class SwitchPrinter
         }
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST expr = lparen.getNextSibling();
-        PrinterFactory.create(expr).print(expr, out);
+        PrinterFactory.create(expr, out).print(expr, out);
 
         JavaNode rparen = (JavaNode) expr.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         AST lcurly = rparen.getNextSibling();
         boolean leftBraceNewline =
@@ -165,7 +165,7 @@ LOOP:
                     break LOOP;
 
                 default :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
             }
         }
         

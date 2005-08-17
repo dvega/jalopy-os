@@ -55,13 +55,13 @@ public class AnnotationMemberValuePairPrinter extends AbstractPrinter {
         
         // Fetch and print the name
         AST child = node.getFirstChild();
-        PrinterFactory.create(child).print(child,out);
+        PrinterFactory.create(child, out).print(child,out);
         
         // Add the assign
         out.print(ASSIGN_PADDED,node.getType());
         
         // Fetch and print the value
-        PrinterFactory.create(child.getNextSibling()).print(child.getNextSibling(),out);
+        PrinterFactory.create(child.getNextSibling(), out).print(child.getNextSibling(),out);
         
         // Print the rest
         printCommentsAfter(node,out);

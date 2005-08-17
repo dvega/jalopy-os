@@ -161,7 +161,7 @@ final class ThrowsPrinter
 
         if (!forceWrapping && wrapAll)
         {
-            PrinterFactory.create(node).print(node, tester);
+            PrinterFactory.create(node, out).print(node, tester);
 
             if ((tester.length - 7 + out.column) > lineLength)
             {
@@ -217,7 +217,7 @@ final class ThrowsPrinter
 
                         if (next != null)
                         {
-                            PrinterFactory.create(next).print(next, tester);
+                            PrinterFactory.create(next, out).print(next, tester);
 
                             if ((tester.length + out.column) > lineLength)
                             {
@@ -255,7 +255,7 @@ final class ThrowsPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
             }
@@ -314,7 +314,7 @@ final class ThrowsPrinter
       throws IOException
     {
         TestNodeWriter tester = out.testers.get();
-        PrinterFactory.create(node).print(node, tester);
+        PrinterFactory.create(node, out).print(node, tester);
 
         Marker marker = out.state.markers.getLast();
 
@@ -367,7 +367,7 @@ final class ThrowsPrinter
 
         try
         {
-            PrinterFactory.create(node).print(node, tester);
+            PrinterFactory.create(node, out).print(node, tester);
 
             if ((out.column + tester.length) > lineLength)
             {
@@ -376,7 +376,7 @@ final class ThrowsPrinter
 
             tester.reset();
 
-            PrinterFactory.create(firstType).print(firstType, tester);
+            PrinterFactory.create(firstType, out).print(firstType, tester);
 
             if ((out.column + 7 + tester.length) > lineLength)
             {

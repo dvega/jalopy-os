@@ -9,7 +9,9 @@ package de.hunsicker.jalopy.swing;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -45,6 +47,8 @@ public class WrappingSettingsPage
     private JCheckBox _wrapAfterAssignCheckBox;
     private JCheckBox _wrapAfterChainedCallCheckBox;
     private JCheckBox _wrapAfterCheckBox;
+    private JCheckBox _wrapParamsHardCheckBox;
+    private JCheckBox _wrapParamsDeepCheckBox;
     private JCheckBox _wrapAfterExtendsCheckBox;
     private JCheckBox _wrapAfterImplementsCheckBox;
     private JCheckBox _wrapAfterLeftParenCheckBox;
@@ -177,6 +181,13 @@ public class WrappingSettingsPage
         this.settings.putBoolean(
             ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED,
             _wrapAllThrowsTypesIfExceedCheckBox.isSelected());
+
+        this.settings.putBoolean(
+            ConventionKeys.LINE_WRAP_PARAMS_HARD,
+            _wrapParamsHardCheckBox.isSelected());
+        this.settings.putBoolean(
+            ConventionKeys.LINE_WRAP_PARAMS_DEEP,
+            _wrapParamsDeepCheckBox.isSelected());
 
         arraysPanel.setSettings(ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS);
 
@@ -610,6 +621,38 @@ public class WrappingSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapPolicyPanelLayout.setConstraints(_wrapAfterCheckBox, c);
         wrapPolicyPanel.add(_wrapAfterCheckBox);
+        
+        _wrapParamsHardCheckBox =
+            new JCheckBox(
+                "Deep wrap on params" /* NOI18N */,
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_PARAMS_HARD,
+                    ConventionDefaults.LINE_WRAP_PARAMS_HARD));
+        
+        _wrapParamsHardCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 3, GridBagConstraints.RELATIVE, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapPolicyPanelLayout.setConstraints(_wrapParamsHardCheckBox, c);
+        wrapPolicyPanel.add(_wrapParamsHardCheckBox);
+        _wrapParamsHardCheckBox.addActionListener(new AbstractAction(""){
+            public void actionPerformed(ActionEvent e) {
+                    _wrapParamsDeepCheckBox.setEnabled(_wrapParamsHardCheckBox.isSelected());
+            }
+        });
+        
+        _wrapParamsDeepCheckBox = 
+            new JCheckBox(
+                "When wrap use deep" /* NOI18N */,
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_PARAMS_DEEP,
+                    ConventionDefaults.LINE_WRAP_PARAMS_DEEP));
+        _wrapParamsDeepCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapPolicyPanelLayout.setConstraints(_wrapParamsDeepCheckBox, c);
+        wrapPolicyPanel.add(_wrapParamsDeepCheckBox);
 
         ButtonGroup operatorButtonGroup = new ButtonGroup();
         operatorButtonGroup.add(_wrapBeforeCheckBox);

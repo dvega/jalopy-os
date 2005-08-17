@@ -114,7 +114,7 @@ abstract class OperatorPrinter
 
                 for (AST child = first; child != null; child = child.getNextSibling())
                 {
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     switch (child.getType())
                     {
@@ -139,7 +139,7 @@ abstract class OperatorPrinter
                 throw new IllegalStateException("missing closing parenthesis");
 
             default :
-                PrinterFactory.create(first).print(first, out);
+                PrinterFactory.create(first, out).print(first, out);
 
                 return first.getNextSibling();
         }
@@ -163,7 +163,7 @@ abstract class OperatorPrinter
     {
         for (AST child = node; child != null; child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
     }
 
@@ -513,7 +513,7 @@ abstract class OperatorPrinter
             }
 
             Marker marker = out.state.markers.add();
-            PrinterFactory.create(node).print(node, out);
+            PrinterFactory.create(node, out).print(node, out);
             out.state.markers.remove(marker);
 
             /*if (!isTopMost(node))
@@ -552,7 +552,7 @@ abstract class OperatorPrinter
         Marker marker = out.state.markers.add();
         out.state.markers.remove(marker);
 
-        PrinterFactory.create(node).print(node, out);
+        PrinterFactory.create(node, out).print(node, out);
 
         /*if (!isTopMost(node))
         {

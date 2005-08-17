@@ -80,7 +80,7 @@ final class ImportPrinter
         out.print(name, JavaTokenTypes.LITERAL_import);
 
         AST semi = identifier.getNextSibling();
-        PrinterFactory.create(semi).print(semi, out);
+        PrinterFactory.create(semi, out).print(semi, out);
 
         AST next = node.getNextSibling();
 

@@ -22,6 +22,7 @@ final class Marker
 
     /** The line of the marker. */
     final int line;
+    final boolean hasIndent;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -33,10 +34,12 @@ final class Marker
      */
     public Marker(
         int line,
-        int column)
+        int column,
+        boolean hasIndent)
     {
         this.line = line;
         this.column = column;
+        this.hasIndent = hasIndent;
     }
 
     //~ Methods --------------------------------------------------------------------------

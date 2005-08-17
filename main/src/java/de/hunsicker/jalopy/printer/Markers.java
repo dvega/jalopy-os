@@ -88,10 +88,26 @@ final class Markers
         int line,
         int column)
     {
-        Marker m = new Marker(line, column);
+     return add(line,column,false,null);
+    }
+    
+    /**
+     * Adds a marker for the given position.
+     *
+     * @param line line of the marker
+     * @param column column of the marker.
+     *
+     * @return the created marker.
+     */
+    public Marker add(
+        int line,
+        int column,boolean hasIndent,NodeWriter out)
+    {
+        Marker m = new Marker(line, column,hasIndent);
         _marks.add(m);
         this.count++;
-
+        if (hasIndent)
+            out.indent();
         return m;
     }
 
@@ -137,6 +153,28 @@ final class Markers
             this.count--;
         }
     }
+    
+    /**
+     * Removes the given mark. Removes all marks that were set after the given mark, too.
+     *
+     * @param mark mark to remove.
+     */
+    public void remove(Marker mark,NodeWriter out)
+    {
+        int index = _marks.indexOf(mark);
+        Marker lastMark = null;
+
+        // remove the given marker and all markers that were set after this
+        // marker
+        for (int i = index, size = _marks.size(); i < size; i++)
+        {
+            lastMark = (Marker)_marks.removeLast();
+            if (lastMark.hasIndent){
+                out.unindent();
+            }
+            this.count--;
+        }
+    }
 
 
     /**
@@ -147,5 +185,11 @@ final class Markers
     public String toString()
     {
         return _marks.toString();
+    }
+    public void reset() {
+        if (this._marks!=null) {
+            this._marks.clear();
+        }
+        this.count = 0;
     }
 }

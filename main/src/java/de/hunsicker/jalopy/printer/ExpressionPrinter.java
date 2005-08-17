@@ -62,7 +62,7 @@ final class ExpressionPrinter
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         switch (out.last)

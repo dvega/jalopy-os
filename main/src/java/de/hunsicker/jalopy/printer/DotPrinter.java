@@ -114,12 +114,12 @@ final class DotPrinter
         if (lastCall != call)
         {
             AST elist = dot.getNextSibling();
-            PrinterFactory.create(elist).print(elist, tester);
+            PrinterFactory.create(elist, tester).print(elist, tester);
         }
         else
         {
             AST elist = lastCall.getFirstChild().getNextSibling();
-            PrinterFactory.create(elist).print(elist, tester);
+            PrinterFactory.create(elist, tester).print(elist, tester);
         }
 
         AST child = dot.getFirstChild();
@@ -129,13 +129,13 @@ final class DotPrinter
             case JavaTokenTypes.METHOD_CALL :
 
                 AST next = child.getNextSibling();
-                PrinterFactory.create(next).print(next, tester);
+                PrinterFactory.create(next, tester).print(next, tester);
 
                 break;
 
             default : // means the last node in the AST (but the first call in
                       // the chain)
-                PrinterFactory.create(child).print(child, tester);
+                PrinterFactory.create(child, tester).print(child, tester);
 
                 break;
         }
@@ -257,7 +257,7 @@ final class DotPrinter
                                 AST c = node.getFirstChild().getNextSibling();
 
                                 TestNodeWriter tester = out.testers.get();
-                                PrinterFactory.create(c).print(c, tester);
+                                PrinterFactory.create(c, out).print(c, tester);
 
                                 // and it does not exceed the line length
                                 if ((out.column + tester.length) < lineLength)
@@ -349,7 +349,7 @@ SEEK_FORWARD:
 
                         TestNodeWriter tester = out.testers.get();
 
-                        PrinterFactory.create(n).print(n, tester);
+                        PrinterFactory.create(n, out).print(n, tester);
 
                         if ((out.column + 1 + tester.length) > lineLength)
                         {

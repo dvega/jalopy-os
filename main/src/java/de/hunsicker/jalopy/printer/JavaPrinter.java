@@ -110,7 +110,7 @@ final class JavaPrinter
                 AST child = node.getFirstChild(); child != null;
                 child = child.getNextSibling())
             {
-                PrinterFactory.create(child).print(child, out);
+                PrinterFactory.create(child, out).print(child, out);
             }
 
             if (useFooter)

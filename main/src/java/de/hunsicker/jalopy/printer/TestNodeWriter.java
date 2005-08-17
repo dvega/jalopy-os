@@ -24,16 +24,21 @@ final class TestNodeWriter
 
     /** The length it would take to print the tree/node. */
     int length;
+    int maxColumn;
+    boolean hasIndent = false;
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new TestNodeWriter object.
      */
-    TestNodeWriter()
+    TestNodeWriter(WriterCache writer, NodeWriter source)
     {
         super();
         this.mode = MODE_TEST;
+        this.testers = writer;
+        this.filename = source.filename;
+        
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -57,6 +62,11 @@ final class TestNodeWriter
     {
         super.close();
         reset();
+        if (this.state!=null)
+            this.state.dispose();
+            
+        this.state = null;
+        
     }
 
 
@@ -82,14 +92,13 @@ final class TestNodeWriter
         if (this.newline)
         {
             int l = this.indentLevel * this.indentSize;
-            this.column += l;
+            addColumn(l);
             this.length += l;
             this.newline = false;
         }
-
         int l = string.length();
         this.length += l;
-        this.column += l;
+        addColumn(l);
         this.last = type;
 
         return 1;
@@ -105,9 +114,9 @@ final class TestNodeWriter
         this.newline = true;
         this.column = 1;
         this.line++;
+        
     }
-
-
+    
     /**
      * Resets the stream. Call this method prior reusing the stream.
      */
@@ -116,11 +125,51 @@ final class TestNodeWriter
         this.length = 0;
         this.line = 1;
         this.column = 1;
+        this.maxColumn = 1;
+        this.indentLevel=0;
+        //this.indentSize=0;
+        //this.indent();
+        if (this.state!=null)
+            this.state.reset();
+        else 
+            this.state=new PrinterState(this);
+        hasIndent = false;
+//        data=new StringBuffer();        
+        
     }
-    public void reset (NodeWriter writer) {
-        this.column = writer.column;
-        this.state.anonymousInnerClass = writer.state.anonymousInnerClass;
-        this.state.reset(writer.state);
-        this.line = 1;
+    /**
+     * Resets the stream. Call this method prior reusing the stream.
+     */
+    public void reset(NodeWriter out,boolean newline)
+    {
+        this.reset();
+        this.indentLevel = out.indentLevel;
+        this.column=this.maxColumn=this.length=out.column;
+        if (out.state.markers.isMarked()) {
+            Marker m=out.state.markers.getLast();
+            this.state.markers.add(m.line,m.column);
+        }
+        if (newline){
+            try {
+                this.printNewline();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+    
+    private void addColumn(int amount) {
+        this.column +=amount;
+        if (this.column>this.maxColumn)
+            this.maxColumn = this.column;
+    }
+    public void indent() {
+        hasIndent=true;
+        super.indent();
+    }
+
+    public void unindent() {
+    }
+
 }

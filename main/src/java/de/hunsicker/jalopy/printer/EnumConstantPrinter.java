@@ -45,7 +45,7 @@ public class EnumConstantPrinter extends AbstractPrinter {
         boolean spaceAfterComma = AbstractPrinter.settings.getBoolean(
                     ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         
-        tester.reset(out);
+        tester.reset(out,false);
         printChildren(node,tester);
         int lineLength =
             AbstractPrinter.settings.getInt(

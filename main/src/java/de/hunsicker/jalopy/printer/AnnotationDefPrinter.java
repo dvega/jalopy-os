@@ -79,7 +79,7 @@ public class AnnotationDefPrinter extends AbstractPrinter {
 
         // print the modifiers
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
         
         out.print(AT_INTERFACE_SPACE, JavaTokenTypes.AT);
         
@@ -90,7 +90,7 @@ public class AnnotationDefPrinter extends AbstractPrinter {
                 out.state.extendsWrappedBefore = false;
                 out.last = JavaTokenTypes.AT;                
             }
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
         
         out.state.innerClass = false;

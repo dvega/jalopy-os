@@ -80,13 +80,13 @@ final class ArrayTypePrinter
                                 ConventionDefaults.PADDING_BRACKETS))
                         {
                             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
                         else
                         {
                             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
 
@@ -110,7 +110,7 @@ final class ArrayTypePrinter
                         break;
 
                     default :
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
 
                         if (bracketsAfterIdentifier && canMoveBrackets(node))
                         {

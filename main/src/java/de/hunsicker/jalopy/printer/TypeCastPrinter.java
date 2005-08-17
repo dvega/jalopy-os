@@ -65,13 +65,13 @@ final class TypeCastPrinter
                 ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
         {
             out.print(LPAREN_SPACE, JavaTokenTypes.LPAREN);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(type, out).print(type, out);
             out.print(SPACE_RPAREN, JavaTokenTypes.RPAREN);
         }
         else
         {
             out.print(LPAREN, JavaTokenTypes.LPAREN);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(type, out).print(type, out);
             out.print(RPAREN, JavaTokenTypes.RPAREN);
         }
 
@@ -85,7 +85,7 @@ final class TypeCastPrinter
         for (AST child = type.getNextSibling(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
     }
 }

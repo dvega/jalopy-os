@@ -84,7 +84,7 @@ abstract class BlockStatementPrinter
         NodeWriter out)
       throws IOException
     {
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         Marker marker = out.state.markers.add();
         TestNodeWriter tester = null;
@@ -112,7 +112,7 @@ abstract class BlockStatementPrinter
                 if (!out.newline)
                 {
                     tester = out.testers.get();
-                    PrinterFactory.create(expr).print(expr, tester);
+                    PrinterFactory.create(expr, out).print(expr, tester);
 
                     if ((out.column + tester.length) > lineLength)
                     {
@@ -146,13 +146,13 @@ abstract class BlockStatementPrinter
                 }
 
                 tester = out.testers.get();
-                PrinterFactory.create(expr).print(expr, tester);
+                PrinterFactory.create(expr, out).print(expr, tester);
             }
 
             if (tester == null)
             {
                 tester = out.testers.get();
-                PrinterFactory.create(expr).print(expr, tester);
+                PrinterFactory.create(expr, out).print(expr, tester);
             }
 
             if (!wrapped && ((tester.length + out.column) > lineLength))
@@ -177,7 +177,7 @@ abstract class BlockStatementPrinter
                 ConventionKeys.INDENT_CONTINUATION_BLOCK,
                 ConventionDefaults.INDENT_CONTINUATION_BLOCK);
 
-        PrinterFactory.create(expr).print(expr, out);
+        PrinterFactory.create(expr, out).print(expr, out);
 
         out.continuation = false;
         out.state.wrap = false;
@@ -224,7 +224,7 @@ abstract class BlockStatementPrinter
             }
         }
 
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {

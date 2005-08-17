@@ -163,12 +163,12 @@ final class AssignmentPrinter
 
                     marker = out.state.markers.add();
 
-                    PrinterFactory.create(expr).print(expr, out);
+                    PrinterFactory.create(expr, out).print(expr, out);
                 }
                 else if (wrapLines)
                 {
                     TestNodeWriter tester = out.testers.get();
-                    PrinterFactory.create(expr).print(expr, tester);
+                    PrinterFactory.create(expr, out).print(expr, tester);
 
                     if (
                         (preferWrapAfterAssign)
@@ -252,7 +252,7 @@ final class AssignmentPrinter
                             printIndentation(out);
                     }
 
-                    PrinterFactory.create(expr).print(expr, out);
+                    PrinterFactory.create(expr, out).print(expr, out);
 
                     out.testers.release(tester);
 
@@ -272,7 +272,7 @@ final class AssignmentPrinter
                         out.print(ASSIGN, JavaTokenTypes.ASSIGN);
                     }
 
-                    PrinterFactory.create(expr).print(expr, out);
+                    PrinterFactory.create(expr, out).print(expr, out);
                 }
 
                 if (indent)
@@ -291,7 +291,7 @@ final class AssignmentPrinter
                     out.print(ASSIGN, JavaTokenTypes.ASSIGN);
                 }
 
-                PrinterFactory.create(expr).print(expr, out);
+                PrinterFactory.create(expr, out).print(expr, out);
             }
         }
         else // assignment expression
@@ -301,8 +301,8 @@ final class AssignmentPrinter
             if (out.mode == NodeWriter.MODE_DEFAULT)
             {
                 TestNodeWriter tester = out.testers.get();
-                tester.reset();
-                PrinterFactory.create(rhs).print(rhs, tester);
+                tester.reset(out,false);
+                PrinterFactory.create(rhs, out).print(rhs, tester);
 
                 boolean indent =
                     (indentStandard || wrapAfterAssign || preferWrapAfterAssign
@@ -318,8 +318,10 @@ final class AssignmentPrinter
                 if (
                     preferWrapAfterAssign && wrapLines
                     && (out.getIndentLength() < out.column)
-                    && ((out.column + (padding ? 3
-                                               : 1) + tester.length) > lineLength))
+                    && tester.line>1
+//                    && ((out.column + (padding ? 3
+//                                               : 1) + tester.length) > lineLength))
+                    )
                 {
                     if (padding)
                     {
@@ -711,7 +713,7 @@ SEARCH:
                                         tester.reset();
 
                                         AST rhs = def.getFirstChild().getFirstChild();
-                                        PrinterFactory.create(rhs).print(rhs, tester);
+                                        PrinterFactory.create(rhs, out).print(rhs, tester);
 
                                         if (tester.length > length)
                                         {
@@ -787,7 +789,7 @@ SEARCH:
                                         tester.reset();
 
                                         AST rhs = def.getFirstChild().getFirstChild();
-                                        PrinterFactory.create(rhs).print(rhs, tester);
+                                        PrinterFactory.create(rhs, out).print(rhs, tester);
 
                                         if (tester.length > length)
                                         {
@@ -811,11 +813,11 @@ SEARCH:
                                     tester.reset();
 
                                     AST defModifier = def.getFirstChild();
-                                    PrinterFactory.create(defModifier).print(
+                                    PrinterFactory.create(defModifier, out).print(
                                         defModifier, tester);
 
                                     AST defType = defModifier.getNextSibling();
-                                    PrinterFactory.create(defType).print(defType, tester);
+                                    PrinterFactory.create(defType, out).print(defType, tester);
 
                                     // we have to adjust the length in case
                                     // variable alignment is performed
@@ -832,7 +834,7 @@ SEARCH:
                                     }
 
                                     AST defIdent = defType.getNextSibling();
-                                    PrinterFactory.create(defIdent).print(
+                                    PrinterFactory.create(defIdent, out).print(
                                         defIdent, tester);
                                     tester.length++; // space before identifier
 

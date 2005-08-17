@@ -71,7 +71,7 @@ final class StaticInitPrinter
         out.last = JavaTokenTypes.LITERAL_static;
 
         AST child = node.getFirstChild();
-        PrinterFactory.create(child).print(child, out);
+        PrinterFactory.create(child, out).print(child, out);
         out.last = JavaTokenTypes.STATIC_INIT;
     }
 }

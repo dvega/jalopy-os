@@ -126,7 +126,7 @@ final class MethodCallPrinter
                         {
                             TestNodeWriter tester = out.testers.get();
                             AST identifier = child.getFirstChild();
-                            PrinterFactory.create(identifier).print(identifier, tester);
+                            PrinterFactory.create(identifier, out).print(identifier, tester);
                             scope.chainOffset = out.column - 1 + tester.length;
                             out.testers.release(tester);
 
@@ -280,7 +280,7 @@ final class MethodCallPrinter
 
         logIssues(node, out);
 
-        PrinterFactory.create(first).print(first, out);
+        PrinterFactory.create(first, out).print(first, out);
 
         if (
             AbstractPrinter.settings.getBoolean(
@@ -294,7 +294,7 @@ final class MethodCallPrinter
 
         AST elist = first.getNextSibling();
 
-        PrinterFactory.create(elist).print(elist, out);
+        PrinterFactory.create(elist, out).print(elist, out);
 
         // another trick to track inner class definitions
         if (out.last == JavaTokenTypes.CLASS_DEF)
@@ -303,7 +303,7 @@ final class MethodCallPrinter
         }
 
         AST rparen = elist.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         // for the correct blank lines behaviour: we want blank lines
         // after inner classes but not after method calls

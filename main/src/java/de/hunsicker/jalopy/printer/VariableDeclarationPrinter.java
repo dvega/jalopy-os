@@ -84,10 +84,10 @@ final class VariableDeclarationPrinter
 
         int last = out.last;
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         AST type = modifiers.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
 
         boolean newChunk = false;
 
@@ -118,7 +118,7 @@ final class VariableDeclarationPrinter
         out.print(SPACE, JavaTokenTypes.WS);
 
         AST identifier = type.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST assign = identifier.getNextSibling();
 
@@ -140,14 +140,14 @@ final class VariableDeclarationPrinter
                         }
 
                     default :
-                        PrinterFactory.create(assign).print(assign, out);
+                        PrinterFactory.create(assign, out).print(assign, out);
 
                         break;
                 }
             }
             else
             {
-                PrinterFactory.create(assign).print(assign, out);
+                PrinterFactory.create(assign, out).print(assign, out);
             }
         }
 
@@ -159,7 +159,7 @@ final class VariableDeclarationPrinter
 
             if (semi != null)
             {
-                PrinterFactory.create(semi).print(semi, out);
+                PrinterFactory.create(semi, out).print(semi, out);
             }
         }
 
@@ -341,9 +341,9 @@ SEARCH:
 
                                         AST defModifier = def.getFirstChild();
                                         AST defType = defModifier.getNextSibling();
-                                        PrinterFactory.create(defModifier).print(
+                                        PrinterFactory.create(defModifier, out).print(
                                             defModifier, tester);
-                                        PrinterFactory.create(defType).print(
+                                        PrinterFactory.create(defType, out).print(
                                             defType, tester);
                                         
                                         

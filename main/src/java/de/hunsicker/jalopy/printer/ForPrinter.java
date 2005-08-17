@@ -84,7 +84,7 @@ final class ForPrinter
         trackPosition((JavaNode) node, out.line, offset, out);
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         Marker marker = out.state.markers.add();
 
@@ -102,7 +102,7 @@ final class ForPrinter
                 
         }
 
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         out.state.markers.remove(marker);
 
@@ -119,7 +119,7 @@ final class ForPrinter
         switch (body.getType())
         {
             case JavaTokenTypes.SLIST :
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
 
                 break;
 
@@ -135,14 +135,14 @@ final class ForPrinter
                         AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.printRightBrace();
                 }
                 else
                 {
                     out.printNewline();
                     out.indent();
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.unindent();
                 }
         }
@@ -165,7 +165,7 @@ final class ForPrinter
         }
         AST forEachClause = forNode.getFirstChild();
         AST expresion = forEachClause.getNextSibling();
-        PrinterFactory.create(forEachClause).print(forEachClause,out);
+        PrinterFactory.create(forEachClause, out).print(forEachClause,out);
         out.print(SPACE_COLON_SPACE,forEachClause.getType());
         printChildren(expresion,out);
         return forNode.getNextSibling();
@@ -201,21 +201,21 @@ final class ForPrinter
 
                 for (AST c = child; c != null; c = c.getNextSibling())
                 {
-                    PrinterFactory.create(c).print(c, tester);
+                    PrinterFactory.create(c, out).print(c, tester);
                 }
 
                 child = forCond.getFirstChild();
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
                 }
 
                 child = forIter.getFirstChild();
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
                 }
 
                 if ((out.column + tester.length) > lineLength)
@@ -259,7 +259,7 @@ final class ForPrinter
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
 
                     // add enough space for semis before and after
                     tester.length += (spaceAfterSemi ? 3
@@ -296,7 +296,7 @@ final class ForPrinter
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
 
                     // add enough space for semis before and parenthesis after
                     tester.length += (spaceAfterSemi ? 5
@@ -381,7 +381,7 @@ final class ForPrinter
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
     }
 
@@ -472,7 +472,7 @@ final class ForPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(element).print(element, out);
+                    PrinterFactory.create(element, out).print(element, out);
 
                     break;
             }
@@ -520,7 +520,7 @@ final class ForPrinter
                     AST param = node.getFirstChild(); param != null;
                     param = param.getNextSibling())
                 {
-                    PrinterFactory.create(param).print(param, out);
+                    PrinterFactory.create(param, out).print(param, out);
 
                     /**
                      * @todo space after comma
@@ -539,8 +539,8 @@ final class ForPrinter
 
         if (printType)
         {
-            PrinterFactory.create(modifier).print(modifier, out);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(modifier, out).print(modifier, out);
+            PrinterFactory.create(type, out).print(type, out);
         }
 
         AST identifier = type.getNextSibling();
@@ -552,7 +552,7 @@ final class ForPrinter
             out.print(SPACE, out.last);
         }
 
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST assign = identifier.getNextSibling();
 
@@ -567,7 +567,7 @@ final class ForPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(assign).print(assign, out);
+                    PrinterFactory.create(assign, out).print(assign, out);
 
                     break;
             }
@@ -624,7 +624,7 @@ final class ForPrinter
                             break;
 
                         default :
-                            PrinterFactory.create(var).print(var, out);
+                            PrinterFactory.create(var, out).print(var, out);
 
                             break;
                     }

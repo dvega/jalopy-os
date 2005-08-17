@@ -66,7 +66,7 @@ final class ConstructorCallPrinter
 
                 // fall through                
                 default :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
             }

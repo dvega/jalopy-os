@@ -73,14 +73,14 @@ final class MethodDeclarationPrinter
             PrinterHelper.removeAbstractModifier(modifiers);
         }
 
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         AST type = modifiers.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
         out.print(SPACE, JavaTokenTypes.WS);
 
         AST identifier = type.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         // print parameters
         if (
@@ -95,13 +95,13 @@ final class MethodDeclarationPrinter
         Marker marker = out.state.markers.add(out.line, out.column);
 
         AST lparen = identifier.getNextSibling();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST parameters = lparen.getNextSibling();
-        PrinterFactory.create(parameters).print(parameters, out);
+        PrinterFactory.create(parameters, out).print(parameters, out);
 
         AST rparen = parameters.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         for (
             AST child = rparen.getNextSibling(); child != null;
@@ -116,7 +116,7 @@ final class MethodDeclarationPrinter
                     break;
             }
 
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         out.state.newlineBeforeLeftBrace = false;

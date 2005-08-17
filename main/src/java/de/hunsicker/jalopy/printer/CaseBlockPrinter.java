@@ -83,7 +83,7 @@ final class CaseBlockPrinter
 
         for (AST child = first; child != null; child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         if (indent)

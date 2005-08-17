@@ -81,20 +81,20 @@ final class CreatorPrinter
                         case JavaTokenTypes.ELIST :
                             out.indent();
                             out.state.paramLevel--;
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.unindent();
                             out.state.paramLevel++;
 
                             break;
 
                         case JavaTokenTypes.ASSIGN :
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             break;
 
                         default :
                             out.indent();
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.unindent();
 
                             break;
@@ -108,7 +108,7 @@ final class CreatorPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
             }

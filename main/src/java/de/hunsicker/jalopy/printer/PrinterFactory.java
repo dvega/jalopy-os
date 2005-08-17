@@ -7,6 +7,7 @@
 package de.hunsicker.jalopy.printer;
 
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
@@ -33,17 +34,22 @@ public static AST lastChild = null;
      * Returns a printer instance for the given node.
      *
      * @param node the node to print.
+     * @param out TODO
      *
      * @return The printer object for the given node.
      *
      * @throws IllegalArgumentException if no viable printer for the given node is known
      *         by the factory.
      */
-    public static Printer create(AST node)
+    public static Printer create(AST node, NodeWriter out)
     {
         int type = node.getType();
         Printer result = null;
         lastChild = node;
+        if (out.mode == NodeWriter.MODE_DEFAULT && node instanceof JavaNode ) {
+            ((JavaNode)node).newLine = out.line;
+            ((JavaNode)node).newColumn = out.column;
+        }
 
         switch (type)
         {

@@ -73,13 +73,13 @@ final class IndexOperatorPrinter
                 ConventionKeys.PADDING_BRACKETS, ConventionDefaults.PADDING_BRACKETS))
         {
             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-            PrinterFactory.create(expr).print(expr, out);
+            PrinterFactory.create(expr, out).print(expr, out);
             out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
         }
         else
         {
             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-            PrinterFactory.create(expr).print(expr, out);
+            PrinterFactory.create(expr, out).print(expr, out);
             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
         }
 

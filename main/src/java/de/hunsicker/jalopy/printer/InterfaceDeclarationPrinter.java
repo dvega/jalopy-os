@@ -73,7 +73,7 @@ class InterfaceDeclarationPrinter
             PrinterHelper.removeAbstractModifier(modifiers);
         }
 
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         /*
         AST keyword = modifiers.getNextSibling();
@@ -95,7 +95,7 @@ class InterfaceDeclarationPrinter
                 out.state.extendsWrappedBefore = false;
                 out.last = JavaTokenTypes.LITERAL_class;
             }
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
             if (child.getType() == JavaTokenTypes.EXTENDS_CLAUSE) {
                 out.state.extendsWrappedBefore = false;
                 printCommentsAfter(node, out);

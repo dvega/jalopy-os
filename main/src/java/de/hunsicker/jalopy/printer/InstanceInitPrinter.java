@@ -71,7 +71,7 @@ final class InstanceInitPrinter
         out.last = JavaTokenTypes.INSTANCE_INIT;
 
         AST body = node.getFirstChild();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
         out.last = JavaTokenTypes.INSTANCE_INIT;
     }
 }

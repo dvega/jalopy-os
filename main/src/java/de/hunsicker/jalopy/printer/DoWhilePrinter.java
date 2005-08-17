@@ -79,7 +79,7 @@ final class DoWhilePrinter
         {
             case JavaTokenTypes.SLIST :
                 out.last = JavaTokenTypes.LITERAL_do;
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
 
                 break;
 
@@ -96,7 +96,7 @@ final class DoWhilePrinter
                             ConventionKeys.BRACE_NEWLINE_LEFT,
                             ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
                     out.last = JavaTokenTypes.IDENT;
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.printRightBrace(
                         AbstractPrinter.settings.getBoolean(
                             ConventionKeys.BRACE_NEWLINE_RIGHT,
@@ -107,7 +107,7 @@ final class DoWhilePrinter
                     out.printNewline();
                     out.indent();
                     out.last = JavaTokenTypes.IDENT;
-                    PrinterFactory.create(body).print(body, out);
+                    PrinterFactory.create(body, out).print(body, out);
                     out.unindent();
                 }
         }
@@ -141,7 +141,7 @@ final class DoWhilePrinter
         AST rparen = printExpressionList(lparen, false, out);
         AST semi = rparen.getNextSibling();
 
-        PrinterFactory.create(semi).print(semi, out);
+        PrinterFactory.create(semi, out).print(semi, out);
 
         out.last = JavaTokenTypes.RCURLY;
     }

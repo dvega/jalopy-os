@@ -414,6 +414,12 @@ public final class ConventionDefaults
     public static final boolean LINE_WRAP_PARAMS_EXCEED = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean LINE_WRAP_PARAMS_HARD = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean LINE_WRAP_PARAMS_DEEP = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final boolean LINE_WRAP_PAREN_GROUPING = false;
 
     /** The default value for the key with the same name ("{@value}"). */
@@ -567,6 +573,9 @@ public final class ConventionDefaults
     public static final boolean SORT_METHOD = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_METHOD_BEAN = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_MODIFIERS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
@@ -673,6 +682,12 @@ public final class ConventionDefaults
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final String SEPARATOR_INTERFACE = "Inner Interfaces" /* NOI18N */;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final String SEPARATOR_ENUM_INIT = "Enumerations" /* NOI18N */;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final String SEPARATOR_ANNOTATION_INIT = "Annotations" /* NOI18N */;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final String SEPARATOR_CLASS = "Inner Classes" /* NOI18N */;

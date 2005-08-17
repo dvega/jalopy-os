@@ -77,7 +77,7 @@ public class TypeArgumentsPrinter extends AbstractPrinter {
             	break;
             	
             	default :
-            	    PrinterFactory.create(child).print(child,out);
+            	    PrinterFactory.create(child, out).print(child,out);
             }
         }
     }

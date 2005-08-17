@@ -271,7 +271,7 @@ ITERATE:
     {
         if (lhsLeftParen == null)
         {
-            PrinterFactory.create(lhs).print(lhs, out);
+            PrinterFactory.create(lhs, out).print(lhs, out);
         }
         else
         {
@@ -363,7 +363,7 @@ ITERATE:
                         if (!wrapped)
                         {
                             TestNodeWriter tester = out.testers.get();
-                            PrinterFactory.create(rhs).print(rhs, tester);
+                            PrinterFactory.create(rhs, out).print(rhs, tester);
                             wrapped =
                                 performWrap(
                                     tester.length + ((rhsLeftParen != null) ? 2
@@ -387,7 +387,7 @@ ITERATE:
                 if (!wrapped)
                 {
                     TestNodeWriter tester = out.testers.get();
-                    PrinterFactory.create(rhs).print(rhs, tester);
+                    PrinterFactory.create(rhs, out).print(rhs, tester);
                     wrapped =
                         performWrap(
                             tester.length + ((rhsLeftParen != null) ? 2
@@ -427,7 +427,7 @@ ITERATE:
 
         if (rhsLeftParen == null)
         {
-            PrinterFactory.create(rhs).print(rhs, out);
+            PrinterFactory.create(rhs, out).print(rhs, out);
         }
         else
         {

@@ -56,10 +56,10 @@ final class ParameterDeclarationPrinter
       throws IOException
     {
         AST modifier = node.getFirstChild();
-        PrinterFactory.create(modifier).print(modifier, out);
+        PrinterFactory.create(modifier, out).print(modifier, out);
 
         AST type = modifier.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
 
         // align the parameter
         if (
@@ -75,6 +75,6 @@ final class ParameterDeclarationPrinter
         }
 
         AST identifier = type.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
     }
 }
