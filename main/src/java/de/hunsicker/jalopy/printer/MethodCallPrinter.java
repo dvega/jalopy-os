@@ -206,6 +206,35 @@ final class MethodCallPrinter
 
                 switch (identifier.getType())
                 {
+                    case JavaTokenTypes.DOT : 
+                        length++;
+                        AST temp = identifier.getFirstChild();
+                        // Count all children
+                        while (temp!=null && temp!=identifier) {
+                            if (temp.getType() == JavaTokenTypes.DOT) {
+                                temp = temp.getFirstChild();
+                                length ++;
+                            }
+                            else {
+                                // Add text length
+                                length += temp.getText().length();
+                                
+                                // If no sibling go back up the chain
+                                if (temp.getNextSibling()==null) {
+                                    while(temp!=identifier) {
+                                        temp = ((JavaNode)temp).getParent();
+                                        if (temp.getNextSibling()!=null) {
+                                            temp = temp.getNextSibling();
+                                            break;
+                                        }
+                                    }
+                                }
+                                else {
+                                    // Assign to next sibling
+                                    temp = temp.getNextSibling();
+                                }
+                            }
+                        }
                     case JavaTokenTypes.IDENT :
                         length = identifier.getText().length();
 
@@ -255,6 +284,7 @@ final class MethodCallPrinter
                     default :
                         throw new RuntimeException("unexpected TYPE, was " + type);
                 }
+                
 
                 if (
                     AbstractPrinter.settings.getBoolean(

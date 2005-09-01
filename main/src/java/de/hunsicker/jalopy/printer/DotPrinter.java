@@ -103,6 +103,7 @@ final class DotPrinter
      * @since 1.0b8
      */
     private int getLengthOfChainedCall(
+                                       NodeWriter out,
         AST         dot,
         JavaNode    call,
         AST         lastCall,
@@ -110,6 +111,7 @@ final class DotPrinter
       throws IOException
     {
         TestNodeWriter tester = testers.get();
+        tester.reset(out,false);
 
         if (lastCall != call)
         {
@@ -141,7 +143,10 @@ final class DotPrinter
         }
 
         // add +1 for the dot
-        int result = tester.length + 1;
+        int result = tester.maxColumn + 1;
+        if (tester.line>1) {
+            result = -1;
+        }
 
         testers.release(tester);
 
@@ -252,15 +257,16 @@ final class DotPrinter
                             AST first = MethodCallPrinter.getLastMethodCall(parent);
 
                             // if this is the last node in the chain
-                            if (first == parent)
+                            if (first == parent && false)
                             {
                                 AST c = node.getFirstChild().getNextSibling();
 
                                 TestNodeWriter tester = out.testers.get();
-                                PrinterFactory.create(c, out).print(c, tester);
+                                tester.reset(out,false);
+                                PrinterFactory.create(c, tester).print(c, tester);
 
                                 // and it does not exceed the line length
-                                if ((out.column + tester.length) < lineLength)
+                                if (tester.maxColumn < lineLength && tester.line==1)
                                 {
                                     out.testers.release(tester);
 
@@ -272,11 +278,11 @@ final class DotPrinter
                             }
 
                             int length =
-                                getLengthOfChainedCall(node, parent, first, out.testers);
+                                getLengthOfChainedCall(out, node, parent, first, out.testers);
 
                             // if this chain element would exceed the maximal
                             // line length, perform wrapping
-                            if ((out.column + length) > lineLength)
+                            if (( length > lineLength || length<-1))
                             {
                                 if (continuationIndent)
                                 {
@@ -348,12 +354,24 @@ SEEK_FORWARD:
                         }
 
                         TestNodeWriter tester = out.testers.get();
+                        tester.reset(out, false);
+                        
+                        PrinterFactory.create(n, tester).print(n, tester);
+                        /*
+                        TODO Figure out why this consumes so much memory
+                        n = node.getNextSibling();
+                        if (n!=null) {
+                            PrinterFactory.create(n, tester).print(n, tester);
+                        }
+                        */
 
-                        PrinterFactory.create(n, out).print(n, tester);
-
-                        if ((out.column + 1 + tester.length) > lineLength)
+                        if (tester.maxColumn > lineLength || tester.line>1)
                         {
                             out.printNewline();
+                            Marker current=out.state.markers.add(
+                                out.line,
+                                0,true,out
+                                );
 
                             if (continuationIndent)
                             {
