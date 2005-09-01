@@ -201,10 +201,10 @@ class NodeComparator
         return compareNames(node1, node2);
     }
     /**
-     * Compares the two class declaration nodes.
+     * Compares the two enumeration declaration nodes.
      *
-     * @param node1 the first CLASS_DEF node.
-     * @param node2 the second  CLASS_DEF node.
+     * @param node1 the first ENUM_DEF node.
+     * @param node2 the second  ENUM_DEF node.
      *
      * @return a negative integer, zero, or a positive integer as the first node is less
      *         than, equal to, or greater than the second node.
@@ -304,6 +304,8 @@ class NodeComparator
                 
                 case JavaTokenTypes.ENUM_DEF:
                     return compareEnum(node1,node2);
+                case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                    return compareNames(node1,node2);
                 // nothing to compare here
                 case JavaTokenTypes.STATIC_INIT :
                 case JavaTokenTypes.INSTANCE_INIT :
@@ -312,7 +314,8 @@ class NodeComparator
 
                 default :
                     throw new IllegalArgumentException(
-                        "Heck. I don't know about this type -- " + type1);
+                        "Heck. I don't know about this type -- " + type1+ 
+                        node1);
             }
         }
         switch (type1)
