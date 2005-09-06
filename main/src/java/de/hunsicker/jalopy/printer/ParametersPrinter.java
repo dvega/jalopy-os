@@ -604,7 +604,8 @@ SEARCH:
 
                                     if (
                                         preferWrapAfterLeftParen
-                                        && (paramIndex == FIRST_PARAM))
+                                        && (paramIndex == FIRST_PARAM) 
+                                        && out.mode != NodeWriter.MODE_TEST )
                                     {
                                         TestNodeWriter tester = out.testers.get();
 
@@ -621,7 +622,7 @@ SEARCH:
                                         out.testers.release(tester);
                                     }
                                 }
-                                else if (wrapLines)
+                                else if (wrapLines && out.mode != NodeWriter.MODE_TEST )
                                 {
                                     TestNodeWriter tester = out.testers.get();
 
