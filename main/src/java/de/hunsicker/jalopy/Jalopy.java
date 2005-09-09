@@ -12,11 +12,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -913,7 +915,17 @@ public final class Jalopy
     public void setInput(File input)
       throws FileNotFoundException
     {
-        _inputReader = new BufferedReader(new FileReader(input));
+        try {
+            if (_encoding!=null) {
+                _inputReader = new BufferedReader(new InputStreamReader(new FileInputStream(input),_encoding));
+            }
+            else {
+                _inputReader = new BufferedReader(new FileReader(input));
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new FileNotFoundException("Unsupported encoding " +_encoding);
+        }
         _inputFile = input.getAbsoluteFile();
         _inputFileChecksum = null;
 
@@ -2302,7 +2314,12 @@ public final class Jalopy
                         _backupFile = createBackup(packageName);
                     }
 
-                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    if (_encoding!=null) {
+                        _outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile), _encoding));
+                    }
+                    else {
+                        _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    }
                     checksumWriter.writeTo(_outputWriter);
                 }
                 else
