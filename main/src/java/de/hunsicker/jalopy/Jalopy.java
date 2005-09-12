@@ -915,17 +915,7 @@ public final class Jalopy
     public void setInput(File input)
       throws FileNotFoundException
     {
-        try {
-            if (_encoding!=null) {
-                _inputReader = new BufferedReader(new InputStreamReader(new FileInputStream(input),_encoding));
-            }
-            else {
-                _inputReader = new BufferedReader(new FileReader(input));
-            }
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new FileNotFoundException("Unsupported encoding " +_encoding);
-        }
+        _inputReader = getBufferedReader(input, _encoding);
         _inputFile = input.getAbsoluteFile();
         _inputFileChecksum = null;
 
@@ -1214,7 +1204,7 @@ public final class Jalopy
                 case FILE_WRITER :
                     _args[0] = _inputFile;
                     Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
-                    _recognizer.parse(_inputFile);
+                    _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
 
@@ -1767,7 +1757,7 @@ public final class Jalopy
 
             try
             {
-                in = new BufferedReader(new FileReader(_inputFile));
+                in = getBufferedReader(_inputFile, _encoding);
 
                 String line = in.readLine().trim();
                 in.close();
@@ -2189,7 +2179,7 @@ public final class Jalopy
 
                 if (!isChecksum())
                 {
-                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    _outputWriter = getBufferedWriter(_outputFile, _encoding);
                 }
 
                 break;
@@ -2221,7 +2211,7 @@ public final class Jalopy
                     return;
                 }
 
-                _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                _outputWriter = getBufferedWriter(_outputFile, _encoding);
 
             // fall through
             case STRING_STRING :
@@ -2314,12 +2304,8 @@ public final class Jalopy
                         _backupFile = createBackup(packageName);
                     }
 
-                    if (_encoding!=null) {
-                        _outputWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(_outputFile), _encoding));
-                    }
-                    else {
-                        _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
-                    }
+                    _outputWriter = getBufferedWriter(_outputFile, _encoding);
+
                     checksumWriter.writeTo(_outputWriter);
                 }
                 else
@@ -2358,6 +2344,64 @@ public final class Jalopy
                 }
             }
         }
+    }
+
+
+    /**
+     * Return a buffered reader from <code>file</code> using <code>encoding</code>. If 
+     * the encoding is <code>null</code>, then the default encoding will be used.
+     *
+     * @param file input file
+     * @param encoding file character encoding
+     * @return a buffered reader 
+     */
+    private static BufferedReader getBufferedReader(File file, String encoding)
+      throws FileNotFoundException
+    {
+        BufferedReader reader;
+
+        try 
+        {
+            if (encoding != null) 
+            {
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
+            }
+            else 
+            {
+                reader = new BufferedReader(new FileReader(file));
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new FileNotFoundException("Unsupported encoding " + encoding);
+        }
+        
+        return reader;
+    }
+
+
+    /**
+     * Return a buffered writer to <code>file</code> using <code>encoding</code>. If 
+     * the encoding is <code>null</code>, then the default encoding will be used.
+     *
+     * @param file output file
+     * @param encoding file character encoding
+     * @return a buffered writer 
+     */
+    private static BufferedWriter getBufferedWriter(File file, String encoding)
+      throws IOException
+    {
+        BufferedWriter writer;
+
+        if (encoding != null) 
+        {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), encoding));
+        }
+        else 
+        {
+            writer = new BufferedWriter(new FileWriter(file));
+        }
+        
+        return writer;
     }
 
 
@@ -2526,3 +2570,4 @@ public final class Jalopy
         }
     }
 }
+
