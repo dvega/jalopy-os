@@ -53,20 +53,21 @@ xmlns:ant="jelly:ant" default="jalopy:help">
     <j:set var="maven.multiproject.includes"
     value="${maven.multiproject.site.includes}" />
     <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
-    <attainGoal name="dist" />
+    <attainGoal name="multiproject:dist" />
   </goal>
   <!-- Deploys all projects to sourceforge -->
   <goal name="jalopy-all:sf" description="Build all jalopy modules">
     <j:set var="maven.multiproject.includes"
     value="${maven.multiproject.site.includes}" />
     <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
-    <attainGoal name="sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:sourceforge:deploy-dist" />
   </goal>
 
   <!-- Cleans all projects -->
   <goal name="jalopy-all:clean" description="Clean all jalopy modules">
     <j:set var="maven.multiproject.includes"
     value="${maven.multiproject.site.includes}" />
+    <attainGoal name="multiproject:clean" />
     <attainGoal name="clean" />
   </goal>
 
