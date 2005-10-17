@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../build/project.xml</extend>
+    <pomVersion>1</pomVersion>
+    <name>Console plugin</name>
+    <description>The command line tool for jalopy</description>
+    <artifactId>jalopy-console</artifactId>
+    <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
+    <package>*</package>
+    <shortDescription>Console</shortDescription>
+    <dependencies>
+        <dependency>
+            <groupId>${jalopy.groupId}</groupId>
+            <artifactId>${jalopy.artifactId}</artifactId>
+            <version>${jalopy.currentVersion}</version>
+            <url>http://jalopy.sf.net/</url>
+            <type>jar</type>
+            <properties>
+              <core>true</core>
+            </properties>
+      </dependency>
+        <dependency>
+            <groupId>getopt</groupId>
+            <artifactId>getopt</artifactId>
+            <version>1.0.9</version>
+            <type>jar</type>
+            <url>http://gnu.org/</url>
+            <properties>
+              <core>true</core>
+            </properties>
+        </dependency>
+    </dependencies>
+    <reports>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-changes-plugin</report>
+    </reports>
+</project>
+
