@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <properties>
+    <title>Jalopy the source code formatting tool</title>
+  </properties>
+  <body>
+    <section name="Overview">
+      <div id="documentContent">
+        <p>The source code beautifier originally built by Marco
+        Hunsicker and enhanced for Java 5 by Steve Heyns.</p>
+        <p>This version is NOT the same as the version at TRIEMAX. For information about the commercial version
+        <a href="http://www.triemax.com/" target="_blank"
+        style="font-size: 90%;">click here</a></p>
+        <p>An updated manual will (hopefully) be available soon</p>
+        <p>Please refer to 
+        <a href="goals.html">this document</a>for a complete list
+        of features.</p>
+      </div>
+    </section>
+    <section name="Versions">
+      <div id="documentContent">
+        <p>Latest version available for download is 0.3.1. It works
+        with Eclipse 3.0, and should also with 2.x stream builds.
+        Also please note that the PDE Plugin doesnot support OSGI
+        Bundles yet.</p>
+      </div>
+    </section>
+    <section name="Installing">
+      <div id="documentContent">
+        <p>Download the appropiate plugins for installing the code
+        from the sub-projects listed on the menu to the left</p>
+      </div>
+    </section>
+  </body>
+</document>
