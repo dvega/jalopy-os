@@ -50,6 +50,7 @@ import java.lang.Object;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -924,7 +925,9 @@ public final class Convention
                 Document doc = dbf.newDocumentBuilder().newDocument();
                 convertMapToXml(_values,doc);
 				Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 				transformer.transform(new DOMSource(doc),new StreamResult(out));
+                
                 //Document document = new Document(convertMapToXml(_values));
                 //outputter.output(document, out);
                 // TODO dbf.
@@ -2573,7 +2576,17 @@ public final class Convention
                     go.appendChild(child);
                 }
                 else {
-                	child =(Element) children.item(0);
+                    for(int x=0;x<children.getLength();x++) {
+                        child =(Element) children.item(x);
+                        if (child.getParentNode() == go) {
+                            break;
+                        }
+                        child = null;
+                    }
+                    if (child == null) {
+                        child = doc.createElement(elName);
+                        go.appendChild(child);
+                    }
                 }
 
                 go = child;

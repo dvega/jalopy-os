@@ -137,6 +137,7 @@ final class TestNodeWriter
 //        data=new StringBuffer();        
         
     }
+
     /**
      * Resets the stream. Call this method prior reusing the stream.
      */

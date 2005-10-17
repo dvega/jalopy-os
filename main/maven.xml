@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant">
+ <preGoal name="jar:jar">
+    <ant:copy todir="${maven.build.dest}">
+      <ant:fileset dir="${basedir}/src/java">
+        <ant:include name="**/*.properties"/>
+        <ant:include name="**/*.txt"/>
+      </ant:fileset>
+    </ant:copy>  
+ </preGoal>
+</project>

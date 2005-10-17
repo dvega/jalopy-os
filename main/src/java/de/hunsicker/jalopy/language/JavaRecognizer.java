@@ -461,15 +461,17 @@ public final class JavaRecognizer
                     else if (next.getType()==JavaTokenTypes.WS) {
                         if (next.getText().indexOf("\n")>-1) {
                             if (!attachBefore) {
-                            attachBefore = true;
-                            if (lastHiddenToken!=null ){
-                            if (((ExtendedToken)lastHiddenToken).attached) {
-                                lastHiddenToken = null;
-                            }
-                            else {
-                                System.out.println("***************** Shouldnt happend "+lastHiddenToken);
-                            }
-                            }
+                                attachBefore = true;
+                                if (lastHiddenToken!=null ){
+                                    if (((ExtendedToken)lastHiddenToken).attached) {
+                                        lastHiddenToken = null;
+                                    }
+                                    else {
+                                        Object[] args = { JavaRecognizer.this.parser.getFilename() };
+                                        Loggers.IO.l7dlog(Level.WARN, "Unexpected token error " +
+                                                "last-" + lastHiddenToken +" new " +next, args, null);
+                                    }
+                                }
                             }
                         }
                         else {
@@ -490,6 +492,8 @@ public final class JavaRecognizer
          * @todo keep WS
          */
         filter.discard(JavaTokenTypes.WS);
+//        filter.hide(JavaTokenTypes.WS);
+        
         filter.discard(JavaTokenTypes.SEPARATOR_COMMENT);
         
         if (javaLexer.removeJavadocComments) {

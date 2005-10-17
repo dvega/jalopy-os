@@ -1,0 +1,25 @@
+<document>
+  <properties>
+    <title>Changes</title>
+<!--    <author email=""></author> -->
+  </properties>
+  <body>
+
+    <release version="1.5rc1" date="in CVS">
+      <action dev="notzippy" type="update">
+        Correct export xml problem
+      </action>              
+    </release>
+
+    <release version="1.5b2" date="2005-08-05">
+      <action dev="notzippy" type="update">
+        Corrected error with abstract methods
+      </action>              
+    </release>
+    <release version="1.5b1" date="2005-06-05">
+      <action dev="notzippy" type="add">
+        Major upgrade to be compatible with Java 5 (1.5)
+      </action>              
+    </release>
+  </body>
+</document>
