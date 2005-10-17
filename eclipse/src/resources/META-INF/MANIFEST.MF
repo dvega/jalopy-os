@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jalopy Java Source Code Formatter
 Bundle-SymbolicName: de.hunsicker.jalopy.plugin.eclipse; singleton:=true
-Bundle-Version: 0.2.8
+Bundle-Version: @BUILD.VERSION.ECLIPSE@
 Bundle-ClassPath: log4j-@LIB.VERSION.LOG4J@.jar,
  jalopy-eclipse-@BUILD.VERSION.ECLIPSE@.jar,
  jalopy-@BUILD.VERSION@.jar

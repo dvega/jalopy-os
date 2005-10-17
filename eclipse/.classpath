@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="/jalopy_cvs"/>
+	<classpathentry kind="lib" path="/jalopy_cvs/ext/lib/log4j-1.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
