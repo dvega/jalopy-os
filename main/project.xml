@@ -14,5 +14,13 @@
         <report>maven-javadoc-plugin</report>
         <report>maven-changes-plugin</report>
     </reports>
+  <dependencies>
+    <dependency>
+      <groupId>commons-jelly</groupId>
+      <artifactId>commons-jelly-tags-antlr</artifactId>
+      <version>20030211.143720</version>
+    </dependency>
+  </dependencies>
+
 </project>
 

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:j="jelly:core" xmlns:ant="jelly:ant">
+<project xmlns:j="jelly:core" 
+         xmlns:ant="jelly:ant"
+         xmlns:antlr="jelly:antlr"
+         xmlns:util="jelly:util">
+ <!-- Goals to ensure the properties file and text files are copied -->
  <preGoal name="jar:jar">
     <ant:copy todir="${maven.build.dest}">
       <ant:fileset dir="${basedir}/src/java">
@@ -8,4 +12,28 @@
       </ant:fileset>
     </ant:copy>  
  </preGoal>
+
+ <!-- Goals to ensure the antlr code is compiled -->
+  <preGoal name="java:compile">
+  <ant:copy file="${basedir}/src/java/de/hunsicker/jalopy/language/antlr/CommonTokenTypes.txt" 
+            tofile="${maven.antlr.target.dir}/de/hunsicker/jalopy/language/antlr/CommonTokenTypes.txt"/>
+  <ant:move todir="${maven.antlr.src.dir}" >
+    <ant:fileset dir="${maven.antlr.src.dir}" >
+      <ant:exclude name="*.orig"/>
+      <ant:include name="*.java"/>
+    </ant:fileset>
+    <ant:mapper type="glob" from="*" to="*.orig"/>
+  </ant:move>
+  </preGoal>
+
+ <!-- Goals to ensure the renamed files get renamed back -->
+  <postGoal name="java:compile">
+  <ant:move todir="${maven.antlr.src.dir}" >
+    <ant:fileset dir="${maven.antlr.src.dir}" >
+      <ant:include name="*.orig"/>
+    </ant:fileset>
+    <ant:mapper type="regexp" from="^(.*)\.orig$$" to="\1"/>
+  </ant:move>
+  </postGoal>
+ 
 </project>
