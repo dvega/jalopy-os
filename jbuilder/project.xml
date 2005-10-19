@@ -3,8 +3,8 @@
   <extend>../build/project.xml</extend>
   <pomVersion>1</pomVersion>
   <name>Console plugin</name>
-  <description>The command line tool for jalopy</description>
-  <artifactId>jalopy-console</artifactId>
+  <description>The jbuilder tool for jalopy</description>
+  <artifactId>jalopy-jbuilder</artifactId>
   <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
   <shortDescription>Console</shortDescription>
@@ -20,14 +20,11 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>getopt</groupId>
-      <artifactId>getopt</artifactId>
-      <version>1.0.9</version>
+      <groupId>jbuilder</groupId>
+      <artifactId>jbuilder</artifactId>
+      <version>0.7</version>
       <type>jar</type>
-      <url>http://gnu.org/</url>
-      <properties>
-        <core>true</core>
-      </properties>
+      <url>www.borland.com/jbuilder/</url>
     </dependency>
   </dependencies>
   <versions>

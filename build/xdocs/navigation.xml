@@ -19,18 +19,18 @@
 
 
 <project name="$pom.name">
-
   <title>$pom.name</title>
-
   <body>
     <menu name="Projects">
-    #if ($overviewPageCreate == "true" )
-      <item name="${overviewPageLinkTitle}" href="${overviewPageLink}.html"/>
-    #end
-    <item name="Goals" href="goals.html"/>
-    <item name="Manual" href="jalopy/manual.html"/>
-    <item name="Core changes" href="jalopy/changes-report.html"/>
-    <item name="Sub projects" />
+      <item name="Home" href="index.html"/>
+      #if ($overviewPageCreate == "true" )
+        <item name="${overviewPageLinkTitle}" href="${overviewPageLink}.html"/>
+      #end
+      <item name="Goals" href="goals.html"/>
+      <item name="Manual" href="jalopy/manual.html"/>
+      <item name="Core changes" href="jalopy/changes-report.html"/>
+    </menu>
+    <menu name="Plugins">
     #foreach ($reactorProject in $multiprojects)
       <item name="$reactorProject.name" href="/${aggregateDir}${reactorProject.artifactId}/index.html"/>
     #end

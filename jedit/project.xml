@@ -2,9 +2,9 @@
 <project>
   <extend>../build/project.xml</extend>
   <pomVersion>1</pomVersion>
-  <name>Console plugin</name>
-  <description>The command line tool for jalopy</description>
-  <artifactId>jalopy-console</artifactId>
+  <name>Jedit plugin</name>
+  <description>The jedit tool for jalopy</description>
+  <artifactId>jalopy-jedit</artifactId>
   <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
   <shortDescription>Console</shortDescription>
@@ -20,11 +20,21 @@
       </properties>
     </dependency>
     <dependency>
-      <groupId>getopt</groupId>
-      <artifactId>getopt</artifactId>
-      <version>1.0.9</version>
+      <groupId>messageview</groupId>
+      <artifactId>messageview</artifactId>
+      <version>0.1.0</version>
       <type>jar</type>
-      <url>http://gnu.org/</url>
+      <url>http://jedit.org/</url>
+      <properties>
+        <core>true</core>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>jedit</groupId>
+      <artifactId>jedit</artifactId>
+      <version>4.2</version>
+      <type>jar</type>
+      <url>http://jedit.org/</url>
       <properties>
         <core>true</core>
       </properties>

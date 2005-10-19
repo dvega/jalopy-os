@@ -47,10 +47,6 @@
             annotation printer. It would be nice if all these
             meshed a little better together</td>
           </tr>
-          <tr>
-            <td>Add maven plugin</td>
-            <td>Jalopy already has an ant task....</td>
-          </tr>
         </table>
       </div>
     </section>
