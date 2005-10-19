@@ -139,6 +139,14 @@ xmlns:ant="jelly:ant" default="jalopy:help">
   </preGoal>
   <goal name="prejar:jar">
     <j:set var="prejarRun" value="true" />
+    <!-- Copy any resource files in the code to the distribution folder -->
+    <ant:copy todir="${maven.build.dest}">
+      <ant:fileset dir="${basedir}/src/java">
+        <ant:include name="**/*.properties"/>
+        <ant:include name="**/*.txt"/>
+      </ant:fileset>
+    </ant:copy>  
+
     <ant:echo message="prejar1" />
     <ant:delete dir="${common.distribution.folder}" />
     <ant:mkdir dir="${common.distribution.bin}" />
@@ -164,26 +172,33 @@ xmlns:ant="jelly:ant" default="jalopy:help">
       </j:if>
     </j:forEach>
   </goal>
+
   <postGoal name="dist:prepare-bin-filesystem">
-    <ant:echo>+-------------------------------------------------------+ | Adding files
-    from resource to distribution directory |
+    <j:if test="${empty postdistrun}">
+      <attainGoal name="postdist:prepare-bin-filesystem" />
+    </j:if>
+  </postGoal>
+
+  <goal name="postdist:prepare-bin-filesystem">
+    <j:set var="postdistrun" value="true" />
+    <ant:echo>
+    +-------------------------------------------------------+ 
+    | Adding files from resource to distribution directory |
     +-------------------------------------------------------+</ant:echo>
     <ant:copy todir="${maven.dist.bin.assembly.dir}">
       <ant:fileset dir="${common.distribution.bin}" />
     </ant:copy>
     <ant:move file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar"
     tofile="${maven.dist.bin.assembly.dir}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
-  </postGoal>
-  <!--
+  </goal>
 
+<!-- Any extended maven can perform a post-goal event on this-->
+  <goal name="build:theend" prereqs="dist:build">
     <ant:echo>
+    +-------------------------------------------------------+ 
+    | Build completed                                       |
+    +-------------------------------------------------------+
     </ant:echo>
-    <ant:copy file="${maven.build.dir}/${maven.final.name}.jar" tofile="${common.distribution.bin}/${pom.artifactId}.jar"/>
-
-    <ant:zip zipfile="${maven.build.dir}/${maven.final.name}bin.zip">
-      <ant:zipfileset dir="${common.distribution.bin}"/>
-    </ant:zip>
-
- </postGoal>
--->
+  </goal>
+  
 </project>

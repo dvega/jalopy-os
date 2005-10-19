@@ -484,10 +484,10 @@ If you need further assistance, check <http://jalopy.sf.net/contact.html>.
     <mkdir dir="${DIR.DOCS}" />
     <mkdir dir="${DIR.DIST}" />
 
-    <fixcrlf eol="lf" eof="remove" srcDir="${dir.res}"
+<!--    <fixcrlf eol="lf" eof="remove" srcDir="${dir.res}"
              includes="*.sh">
     </fixcrlf>
-
+-->
     <property name="build.init" value="true" />
   </target>
 

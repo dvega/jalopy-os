@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   # =========================================================================
   # Copyright 2003-2005 jalopy Team
@@ -16,22 +16,19 @@
   #  limitations under the License.
   # =========================================================================
   -->
-
 <project>
-    <artifactId>null</artifactId>
-    <name>${rootProjectName}</name>
-    <organization>
-        <name>Jalopy</name>
-        <url>http://jalopy.sf.net/</url>
-    </organization>
-    <currentVersion>${jalopy.currentVersion}</currentVersion>
-    <inceptionYear>1997</inceptionYear>
-    <shortDescription>A source code beautifier</shortDescription>
-<!--
-    -->
+  <artifactId>null</artifactId>
+  <name>${rootProjectName}</name>
+  <organization>
+    <name>Jalopy</name>
     <url>http://jalopy.sf.net/</url>
-    <siteAddress>http://jalopy.sf.net</siteAddress>
-    <distributionSite>http://jalopy.sf.net</distributionSite>
+  </organization>
+  <currentVersion>${jalopy.currentVersion}</currentVersion>
+  <inceptionYear>1997</inceptionYear>
+  <shortDescription>A source code beautifier</shortDescription>
+  <url>http://jalopy.sf.net/</url>
+  <siteAddress>http://jalopy.sf.net</siteAddress>
+  <distributionSite>http://jalopy.sf.net</distributionSite>
   <developers>
     <developer>
       <id>001</id>
@@ -48,61 +45,25 @@
     <contributor>
       <name>Alen Vrecko</name>
       <email>alen_vrecko@yahoo.com</email>
-     </contributor>
+    </contributor>
   </contributors>
-
-    <dependencies>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${LIB_VERSION_LOG4J}</version>
-            <type>jar</type>
-            <properties>
-              <core>true</core>
-            </properties>
-        </dependency>
-        <dependency>
-            <groupId>antlr</groupId>
-            <artifactId>antlr</artifactId>
-            <version>${LIB_VERSION_ANTLR}</version>
-            <type>jar</type>
-            <url>antlr.org</url>
-            <properties>
-              <core>true</core>
-              <unpack>true</unpack>
-            </properties>
-        </dependency>
-    </dependencies>
-    <build>
-        <sourceDirectory>src/java</sourceDirectory>
-    </build>
-
-<!--  <extend>${basedir}/../maven/project.xml</extend> 
-
-  <pomVersion>3</pomVersion>
-  <name>jalopy Master</name>
-  <id>jalopy-master</id>
-  <artifactId>jalopy-master</artifactId>
-  <currentVersion>0.2.2</currentVersion>
-  <url>http://jalopy.codehaus.org/</url>
-  
-  <siteDirectory>/home/projects/jalopy/public_html</siteDirectory>
-  
   <dependencies>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${LIB_VERSION_LOG4J}</version>
+      <type>jar</type>
+      <properties>
+        <core>true</core>
+      </properties>
+    </dependency>
   </dependencies>
-  
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+  </build>
   <reports>
-    <report>maven-changes-plugin</report> 
-    <report>maven-faq-plugin</report> 
-    <report>maven-multiproject-plugin</report> 
+    <report>maven-changes-plugin</report>
+    <report>maven-faq-plugin</report>
+    <report>maven-multiproject-plugin</report>
   </reports>
- -->
-
-  <reports>
-    <report>maven-changes-plugin</report> 
-    <report>maven-faq-plugin</report> 
-    <report>maven-multiproject-plugin</report> 
-  </reports>
-
 </project>
-
