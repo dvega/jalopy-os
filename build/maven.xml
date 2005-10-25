@@ -178,6 +178,26 @@ xmlns:ant="jelly:ant" default="jalopy:help">
       <attainGoal name="postdist:prepare-bin-filesystem" />
     </j:if>
   </postGoal>
+  <postGoal name="dist:prepare-src-filesystem">
+    <!-- Copy build files from build folder to src directory -->
+    <ant:copy todir="${maven.dist.src.assembly.dir}/../build">
+      <ant:fileset dir="${basedir}/../build/">
+        <ant:excludes name="**/CVS"/>
+      </ant:fileset>
+    </ant:copy>
+
+    <util:available file="${basedir}/lib">
+      <ant:copy todir="${maven.dist.src.assembly.dir}/lib">
+        <ant:fileset dir="${basedir}/lib" />
+      </ant:copy>
+    </util:available>
+
+    <ant:copy todir="${maven.dist.src.assembly.dir}/../build">
+      <ant:fileset dir="${basedir}/../build/">
+        <ant:excludes name="**/CVS"/>
+      </ant:fileset>
+    </ant:copy>
+  </postGoal>
 
   <goal name="postdist:prepare-bin-filesystem">
     <j:set var="postdistrun" value="true" />

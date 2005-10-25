@@ -16,9 +16,15 @@
     </reports>
   <dependencies>
     <dependency>
-      <groupId>commons-jelly</groupId>
-      <artifactId>commons-jelly-tags-antlr</artifactId>
-      <version>20030211.143720</version>
+      <groupId>antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>${LIB_VERSION_ANTLR}</version>
+      <type>jar</type>
+      <url>antlr.org</url>
+      <properties>
+        <core>true</core>
+        <unpack>true</unpack>
+      </properties>
     </dependency>
   </dependencies>
 

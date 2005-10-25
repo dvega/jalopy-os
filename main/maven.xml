@@ -3,15 +3,6 @@
          xmlns:ant="jelly:ant"
          xmlns:antlr="jelly:antlr"
          xmlns:util="jelly:util">
- <!-- Goals to ensure the properties file and text files are copied -->
- <preGoal name="jar:jar">
-    <ant:copy todir="${maven.build.dest}">
-      <ant:fileset dir="${basedir}/src/java">
-        <ant:include name="**/*.properties"/>
-        <ant:include name="**/*.txt"/>
-      </ant:fileset>
-    </ant:copy>  
- </preGoal>
 
  <!-- Goals to ensure the antlr code is compiled -->
   <preGoal name="java:compile">
@@ -35,5 +26,8 @@
     <ant:mapper type="regexp" from="^(.*)\.orig$$" to="\1"/>
   </ant:move>
   </postGoal>
- 
+
+  <postGoal name="dist:prepare-bin-filesystem">
+    <attainGoal name="jar:install"/>
+  </postGoal>
 </project>

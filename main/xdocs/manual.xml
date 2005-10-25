@@ -9,22 +9,10 @@ to meet a certain coding style without putting a formatting burden on individual
 developers.
 </p>
 </section>
-<section name="Jalopy 1.5 Release notes">
-
-</section>
-<section name="TRIEMAX Jalopy 1.4 has been released">
-<table style="border-collapse: collapse; margin-left: 5px;" align="right" border="1" cellpadding="2" cellspacing="0" width="250"><colgroup><col width="100%"/></colgroup><tbody><tr valign="top"><td style="padding-top: 5px; padding-bottom: 10px;" valign="top">
-<span class="bold" style="font-size: 90%;"><b>Jalopy 1.4 has been released</b></span>
-<p style="font-size: 90%;">
+<section name="TRIEMAX Jalopy">
 TRIEMAX Software announced a new release of the commercial
 successor which provides enhanced functionality and improved stability.
-</p>
-<h3 style="font-size: 90%;">
-Enhancements since 1.3
-</h3>
-<ul style="padding-left: 15px; font-size: 90%;"><li>Support for Eclipse on Mac OS X</li><li>Cursor restore at the column level</li><li>Wrapping of parameterized types and import declarations</li><li>Enhanced printing of multi-dimensional arrays</li><li>Grouping of static imports possible</li><li>Custom styled separator comments</li><li>NetBeans 4.0 support</li></ul>
 <a href="http://www.triemax.com/" target="_top" style="font-size: 90%;">Learn more »»</a>
-</td></tr></tbody></table>
 </section>
 
 <section name="Jalopy's functionality">
@@ -65,8 +53,6 @@ refer to <a href="http://jalopy.sourceforge.net/dependencies.html" target="_top"
 accompanying 3rd party libraries and the different <a href="http://jalopy.sourceforge.net/part-plugins.html" target="_top">Plug-in chapters</a>
 for the license terms of the provided Plug-ins.
 </p>
-
-<p>Current version: <strong>See top header for current version</strong></p>
 </section>
 </body>
 </document>

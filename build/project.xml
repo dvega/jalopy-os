@@ -24,6 +24,7 @@
     <url>http://jalopy.sf.net/</url>
   </organization>
   <groupId>jalopy</groupId>
+  <artifactId>site</artifactId>
   <currentVersion>${jalopy.currentVersion}</currentVersion>
   <inceptionYear>1997</inceptionYear>
   <shortDescription>A source code beautifier</shortDescription>
