@@ -750,6 +750,7 @@ class LocationDialog
         {
             case FILES_ONLY :
                 chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                break;
 
             case FILES_AND_DIRECTORIES :
                 chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);

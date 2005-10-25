@@ -75,6 +75,10 @@ final class CaseBlockPrinter
                     break;
             }
         }
+        else
+    	{
+                out.printNewline();
+    	}
 
         if (indent)
         {

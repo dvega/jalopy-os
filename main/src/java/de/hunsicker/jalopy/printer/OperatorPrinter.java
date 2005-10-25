@@ -503,7 +503,7 @@ abstract class OperatorPrinter
     {
         JavaNode n = JavaNodeHelper.getLastChild(node);
 
-        if ((n == null) && n.hasCommentsAfter())
+        if ((n == null) || n.hasCommentsAfter())
         {
             LeftParenthesisPrinter.getInstance().print(leftParen, out);
 
