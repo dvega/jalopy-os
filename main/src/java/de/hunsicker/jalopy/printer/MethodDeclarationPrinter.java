@@ -76,10 +76,13 @@ final class MethodDeclarationPrinter
         PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         AST type = modifiers.getNextSibling();
+        while(type.getType()!=JavaTokenTypes.IDENT) {
         PrinterFactory.create(type, out).print(type, out);
         out.print(SPACE, JavaTokenTypes.WS);
+        type = type.getNextSibling();
+        }
 
-        AST identifier = type.getNextSibling();
+        AST identifier = type;
         PrinterFactory.create(identifier, out).print(identifier, out);
 
         // print parameters
