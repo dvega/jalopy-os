@@ -1,13 +1,32 @@
 <document>
   <properties>
     <title>Changes</title>
-<!--    <author email=""></author> -->
+    <author email="notzippy@users.sf.net"></author> 
   </properties>
   <body>
 
-    <release version="1.5rc1" date="in CVS">
+    <release version="1.5b3" date="in CVS">
       <action dev="notzippy" type="update">
         Correct export xml problem
+      </action>              
+      <action dev="notzippy" type="fix" issue="1335114">
+        <item name="Enum not handled correctly" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1335114&group_id=45216&atid=442212"/>
+      </action>              
+      <action dev="notzippy" type="fix" issue="1335107">
+        <item name=" Generics causes loss of whitespace" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1335107"/>
+      </action>              
+      <action dev="notzippy" type="fix" issue="1328270">
+        <item name=" XML export is incorrect" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1328270"/>
+      </action>              
+      <action dev="notzippy" type="fix" issue="1328270">
+        <item name=" XML export is incorrect" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1328270"/>
+      </action>              
+
+      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">
+        <item name=" Patch to add missing break" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1029009&group_id=45216&atid=442214"/>
+      </action>              
+      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">
+        <item name=" Patch for possible npe due to bad logic" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1029007&group_id=45216&atid=442214"/>
       </action>              
     </release>
 
