@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:j="jelly:core" xmlns:ant="jelly:ant">
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant" xmlns:util="jelly:util">
  <preGoal name="jar:jar">
   <ant:echo message="Setting version information"/>
   <attainGoal name="prejar:jar"/>
+    <util:replace var="mfversion" oldChar="-" newChar="." value="${pom.currentVersion}"/>
     <replaceregexp file="${common.distribution.bin}/plugin.xml" match="-@LIB.VERSION.LOG4J@" 
                    replace="" byline="true"/>
     <replaceregexp file="${common.distribution.bin}/plugin.xml" match="-@BUILD.VERSION@" 
@@ -18,7 +19,7 @@
     <replaceregexp file="${common.distribution.bin}/META-INF/MANIFEST.MF" match="-@BUILD.VERSION.ECLIPSE@" 
                    replace="" byline="true"/>
     <replaceregexp file="${common.distribution.bin}/META-INF/MANIFEST.MF" match="@BUILD.VERSION.ECLIPSE@" 
-                   replace="${pom.currentVersion}" byline="true"/>
+                   replace="${mfversion}" byline="true"/>
                    
  </preGoal>
 </project>
