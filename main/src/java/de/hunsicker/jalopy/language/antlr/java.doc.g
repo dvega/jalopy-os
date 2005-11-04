@@ -131,7 +131,7 @@ phrase
     ;
 
 special
-    :   anchor | IMG | font_dfn | BR
+    :   anchor | IMG | font_dfn | BR | typedclass
     ;
 
 text_tag
@@ -349,6 +349,10 @@ acronym
     :   OACRO^ ( text )+ CACRO
     ;
 
+typedclass 
+  : TYPEDCLASS^
+  ;
+
 /* special text level elements */
 anchor
     :   OANCHOR^ ( anchor_content )*  CANCHOR
@@ -552,7 +556,6 @@ options {
 }
 
 /* headings */
-
 OH1
     :   "<h1" (WS ATTR)? '>'
     ;
@@ -970,6 +973,10 @@ PRE
 
         "</pre>"
     ;
+TYPEDCLASS
+    :   "<" . '>'
+    ;
+
 
 /* MISC STUFF */
 PCDATA

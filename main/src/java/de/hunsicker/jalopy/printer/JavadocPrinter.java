@@ -236,6 +236,7 @@ final class JavadocPrinter
         AST node,
         int type)
     {
+    	// TODO Correct for generics
         switch (type)
         {
             case JavaTokenTypes.PARAMETERS :
@@ -245,12 +246,28 @@ final class JavadocPrinter
                     case JavaTokenTypes.METHOD_DEF :
                     case JavaTokenTypes.CTOR_DEF :
                         break;
+                    case JavaTokenTypes.CLASS_DEF:
+                    	// TODO Add parameter options to class definitions
+                    	return Collections.EMPTY_LIST;
 
                     default :
                         return Collections.EMPTY_LIST;
                 }
 
                 List names = new ArrayList(4);
+                if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS)!=null) {
+	                for (
+	                    AST child = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS).getFirstChild();
+	                    child != null; child = child.getNextSibling())
+	                {
+	                	if (child.getType()==JavaTokenTypes.TYPE_PARAMETER) {
+                            names.add("<"+
+                                JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
+                                              .getText()+">");
+	                	}
+	                }
+                }
+                
 
                 for (
                     AST child = JavaNodeHelper.getFirstChild(node, type).getFirstChild();
@@ -266,6 +283,7 @@ final class JavadocPrinter
                             break;
                     }
                 }
+                
 
                 return names;
             }
@@ -615,6 +633,9 @@ final class JavadocPrinter
         {
             count++;
         }
+        // 
+        // TODO This also needs to add in the number Type arguements contained in the parameters
+        
 
         return count;
     }
@@ -1616,6 +1637,7 @@ SELECTION:
                     case JavadocTokenTypes.IMG :
                     case JavadocTokenTypes.OFONT :
                     case JavadocTokenTypes.BR :
+                    case JavadocTokenTypes.TYPEDCLASS:
                         child = printText(child, asterix, out);
 
                         continue SELECTION;
@@ -2753,20 +2775,23 @@ SELECTION:
         // that are valid
         switch (node.getType())
         {
+            case JavaTokenTypes.VARIABLE_DEF :
+                last = printTag(serialTag, asterix, maxwidth, last, out);
+                last = printTags(serialFieldsTags, asterix, maxwidth, last, out);
+
+                break;
+
             /**
              * @todo spit out warnings if we find invalid tags
              */
             case JavaTokenTypes.CLASS_DEF :
             case JavaTokenTypes.INTERFACE_DEF :
+                if (checkTags) {
+                    
+                }
                 last = printTags(authorTags, asterix, maxwidth, last, out);
                 last = printTag(versionTag, asterix, maxwidth, last, out);
                 last = printTag(serialTag, asterix, maxwidth, last, out);
-
-                break;
-
-            case JavaTokenTypes.VARIABLE_DEF :
-                last = printTag(serialTag, asterix, maxwidth, last, out);
-                last = printTags(serialFieldsTags, asterix, maxwidth, last, out);
 
                 break;
 
@@ -2959,6 +2984,7 @@ LOOP:
                 case JavadocTokenTypes.LCURLY :
                 case JavadocTokenTypes.IMG :
                 case JavadocTokenTypes.BR :
+                case JavadocTokenTypes.TYPEDCLASS:
                     buf.append(child.getText());
 
                     break;

@@ -2276,10 +2276,11 @@ OUTER:
 
                 // if the node the separator comment belongs to, contains
                 // no other comments we want a newline between the two
-                if (comment.getHiddenAfter() == null)
-                {
+// TODO Allow this to be configurable 
+//                if (comment.getHiddenAfter() == null)
+//                {
                     out.printNewline();
-                }
+//                }
 
                 break;
 
@@ -2522,6 +2523,9 @@ OUTER:
                 break;
                 case JavaTokenTypes.LITERAL_for:
                 comment = "// end for";
+                break;
+                case JavaTokenTypes.ENUM_DEF:
+                comment = "// end enum";
                 break;
                 case JavaTokenTypes.LITERAL_finally:
                 comment = "// end finally";

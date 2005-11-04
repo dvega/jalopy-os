@@ -57,11 +57,12 @@ public class TypeArgumentsPrinter extends AbstractPrinter {
      * @throws IOException
      */
     private void processTypeArguement(AST node, NodeWriter out,boolean first) throws IOException {
-        // TODO validate this is ok for all 
+        // TODO Clean up commas
+    	if (node.getType() == JavaTokenTypes.COMMA) {
+        	    PrinterFactory.create(node, out).print(node,out);
+    	}
+    	else
         for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
-            if (!first) {
-                out.print(",",child.getType());
-            }
             switch(child.getType()) {
                 case JavaTokenTypes.WILDCARD_TYPE:
                     out.print(QUESTION_SPACE,child.getType());

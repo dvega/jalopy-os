@@ -351,7 +351,7 @@ typeArguments
 		typeArgument
 		(options{greedy=true;}: // match as many as possible
 			{inputState.guessing !=0 || ltCounter == currentLtLevel + 1}?
-			COMMA! typeArgument
+			COMMA typeArgument
 		)*
 
 		(	// turn warning off since Antlr generates the right code,

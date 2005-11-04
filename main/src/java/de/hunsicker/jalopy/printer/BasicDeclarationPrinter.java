@@ -227,7 +227,7 @@ abstract class BasicDeclarationPrinter
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
             addParameters(
-                buf, parameters,
+                buf, node,
                 AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM),
@@ -395,8 +395,12 @@ abstract class BasicDeclarationPrinter
         }
         else
         {
-            c.setHiddenBefore(comment);
-            comment.setHiddenAfter(c);
+        	
+        	comment.setHiddenBefore(c);
+        	c.setHiddenAfter(comment);
+        	
+//            c.setHiddenBefore(comment);
+//            comment.setHiddenAfter(c);
             /*
             for (; c != null; c = (ExtendedToken) c.getHiddenAfter())
             {
@@ -449,7 +453,7 @@ abstract class BasicDeclarationPrinter
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
             addParameters(
-                buf, parameters,
+                buf, node,
                 AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
@@ -530,7 +534,24 @@ abstract class BasicDeclarationPrinter
         String       text,
         Environment  environment)
     {
-        for (AST child = node.getFirstChild(); child != null;
+        AST parameters = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS);
+        if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS)!=null) {
+            for (
+                AST child = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS).getFirstChild();
+                child != null; child = child.getNextSibling())
+            {
+            	if (child.getType()==JavaTokenTypes.TYPE_PARAMETER) {
+                    String type =
+                        "<" + JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText()+">";
+                    environment.set(Environment.Variable.TYPE_PARAM.getName(), type);
+                    buf.append(environment.interpolate(text));
+                    buf.append(DELIMETER);
+                    environment.unset(Environment.Variable.TYPE_PARAM.getName());
+            	}
+            }
+        }
+    	
+        for (AST child = parameters.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
             switch (child.getType())

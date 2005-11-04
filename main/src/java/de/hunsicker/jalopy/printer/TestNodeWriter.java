@@ -137,11 +137,14 @@ final class TestNodeWriter
 //        data=new StringBuffer();        
         
     }
-
-    /**
-     * Resets the stream. Call this method prior reusing the stream.
-     */
-    public void reset(NodeWriter out,boolean newline)
+    
+	/**
+	 * Resets the stream. Call this method prior reusing the stream.
+	 * 
+	 * @param out The output writer to synchronize with
+	 * @param newline1 True if a new line should be emulated
+	 */
+    public void reset(NodeWriter out,boolean newline1)
     {
         this.reset();
         this.indentLevel = out.indentLevel;
@@ -150,7 +153,7 @@ final class TestNodeWriter
             Marker m=out.state.markers.getLast();
             this.state.markers.add(m.line,m.column);
         }
-        if (newline){
+        if (newline1){
             try {
                 this.printNewline();
             }

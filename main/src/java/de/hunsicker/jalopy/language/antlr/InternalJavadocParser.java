@@ -229,6 +229,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			case OVAR:
 			case OCITE:
 			case OACRO:
+			case TYPEDCLASS:
 			case OANCHOR:
 			case OFONT:
 			{
@@ -276,7 +277,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					setTagType(tag_AST, TYPE_STANDARD);
 				}
 				{
-				_loop173:
+				_loop174:
 				do {
 					switch ( LA(1)) {
 					case LCURLY:
@@ -303,6 +304,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					case OVAR:
 					case OCITE:
 					case OACRO:
+					case TYPEDCLASS:
 					case OANCHOR:
 					case OFONT:
 					{
@@ -327,7 +329,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					}
 					default:
 					{
-						break _loop173;
+						break _loop174;
 					}
 					}
 				} while (true);
@@ -464,6 +466,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			case OVAR:
 			case OCITE:
 			case OACRO:
+			case TYPEDCLASS:
 			case OANCHOR:
 			case OFONT:
 			{
@@ -1045,6 +1048,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			case OVAR:
 			case OCITE:
 			case OACRO:
+			case TYPEDCLASS:
 			case OANCHOR:
 			case OFONT:
 			case AT:
@@ -2354,6 +2358,13 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				special_AST = (AST)currentAST.root;
 				break;
 			}
+			case TYPEDCLASS:
+			{
+				typedclass();
+				astFactory.addASTChild(currentAST, returnAST);
+				special_AST = (AST)currentAST.root;
+				break;
+			}
 			default:
 			{
 				throw new NoViableAltException(LT(1), getFilename());
@@ -2384,14 +2395,14 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			astFactory.makeASTRoot(currentAST, tmp74_AST);
 			match(OANCHOR);
 			{
-			_loop165:
+			_loop166:
 			do {
 				if ((_tokenSet_10.member(LA(1)))) {
 					anchor_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop165;
+					break _loop166;
 				}
 				
 			} while (true);
@@ -2426,14 +2437,14 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			astFactory.makeASTRoot(currentAST, tmp76_AST);
 			match(OFONT);
 			{
-			_loop169:
+			_loop170:
 			do {
 				if ((_tokenSet_6.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop169;
+					break _loop170;
 				}
 				
 			} while (true);
@@ -2454,6 +2465,31 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 		}
 		returnAST = font_dfn_AST;
+	}
+	
+	public final void typedclass() throws RecognitionException, TokenStreamException {
+		
+		returnAST = null;
+		ASTPair currentAST = new ASTPair();
+		AST typedclass_AST = null;
+		
+		try {      // for error handling
+			AST tmp78_AST = null;
+			tmp78_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp78_AST);
+			match(TYPEDCLASS);
+			typedclass_AST = (AST)currentAST.root;
+		}
+		catch (RecognitionException ex) {
+			if (inputState.guessing==0) {
+				reportError(ex);
+				consume();
+				consumeUntil(_tokenSet_4);
+			} else {
+			  throw ex;
+			}
+		}
+		returnAST = typedclass_AST;
 	}
 	
 	public final void text_tag() throws RecognitionException, TokenStreamException {
@@ -2496,6 +2532,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case IMG:
 			case BR:
+			case TYPEDCLASS:
 			case OANCHOR:
 			case OFONT:
 			{
@@ -2540,16 +2577,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				setTagType(tag_AST, TYPE_INLINE);
 			}
 			{
-			_loop176:
+			_loop177:
 			do {
 				if ((_tokenSet_11.member(LA(1)))) {
-					AST tmp79_AST = null;
-					tmp79_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp79_AST);
+					AST tmp80_AST = null;
+					tmp80_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp80_AST);
 					matchNot(RCURLY);
 				}
 				else {
-					break _loop176;
+					break _loop177;
 				}
 				
 			} while (true);
@@ -2619,6 +2656,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				case OVAR:
 				case OCITE:
 				case OACRO:
+				case TYPEDCLASS:
 				case OANCHOR:
 				case OFONT:
 				{
@@ -2654,17 +2692,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST unordered_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp81_AST = null;
-			tmp81_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp81_AST);
+			AST tmp82_AST = null;
+			tmp82_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp82_AST);
 			match(OULIST);
 			{
 			_loop36:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp82_AST = null;
-					tmp82_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp82_AST);
+					AST tmp83_AST = null;
+					tmp83_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp83_AST);
 					match(PCDATA);
 				}
 				else {
@@ -2688,9 +2726,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_cnt38++;
 			} while (true);
 			}
-			AST tmp83_AST = null;
-			tmp83_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp83_AST);
+			AST tmp84_AST = null;
+			tmp84_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp84_AST);
 			match(CULIST);
 			unordered_list_AST = (AST)currentAST.root;
 		}
@@ -2713,17 +2751,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST ordered_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp84_AST = null;
-			tmp84_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp84_AST);
+			AST tmp85_AST = null;
+			tmp85_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp85_AST);
 			match(OOLIST);
 			{
 			_loop41:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp85_AST = null;
-					tmp85_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp85_AST);
+					AST tmp86_AST = null;
+					tmp86_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp86_AST);
 					match(PCDATA);
 				}
 				else {
@@ -2747,9 +2785,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_cnt43++;
 			} while (true);
 			}
-			AST tmp86_AST = null;
-			tmp86_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp86_AST);
+			AST tmp87_AST = null;
+			tmp87_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp87_AST);
 			match(COLIST);
 			ordered_list_AST = (AST)currentAST.root;
 		}
@@ -2772,17 +2810,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST def_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp87_AST = null;
-			tmp87_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp87_AST);
+			AST tmp88_AST = null;
+			tmp88_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp88_AST);
 			match(ODLIST);
 			{
 			_loop46:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp88_AST = null;
-					tmp88_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp88_AST);
+					AST tmp89_AST = null;
+					tmp89_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp89_AST);
 					match(PCDATA);
 				}
 				else {
@@ -2806,9 +2844,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_cnt48++;
 			} while (true);
 			}
-			AST tmp89_AST = null;
-			tmp89_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp89_AST);
+			AST tmp90_AST = null;
+			tmp90_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp90_AST);
 			match(CDLIST);
 			def_list_AST = (AST)currentAST.root;
 		}
@@ -2831,9 +2869,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST list_item_AST = null;
 		
 		try {      // for error handling
-			AST tmp90_AST = null;
-			tmp90_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp90_AST);
+			AST tmp91_AST = null;
+			tmp91_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp91_AST);
 			match(OLITEM);
 			{
 			int _cnt51=0;
@@ -2864,6 +2902,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				case OVAR:
 				case OCITE:
 				case OACRO:
+				case TYPEDCLASS:
 				case OANCHOR:
 				case OFONT:
 				{
@@ -2898,17 +2937,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case CLITEM:
 			{
-				AST tmp91_AST = null;
-				tmp91_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp91_AST);
+				AST tmp92_AST = null;
+				tmp92_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp92_AST);
 				match(CLITEM);
 				{
 				_loop54:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp92_AST = null;
-						tmp92_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp92_AST);
+						AST tmp93_AST = null;
+						tmp93_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp93_AST);
 						match(PCDATA);
 					}
 					else {
@@ -2994,9 +3033,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dt_AST = null;
 		
 		try {      // for error handling
-			AST tmp93_AST = null;
-			tmp93_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp93_AST);
+			AST tmp94_AST = null;
+			tmp94_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp94_AST);
 			match(ODTERM);
 			{
 			int _cnt58=0;
@@ -3017,17 +3056,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case CDTERM:
 			{
-				AST tmp94_AST = null;
-				tmp94_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp94_AST);
+				AST tmp95_AST = null;
+				tmp95_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp95_AST);
 				match(CDTERM);
 				{
 				_loop61:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp95_AST = null;
-						tmp95_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp95_AST);
+						AST tmp96_AST = null;
+						tmp96_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp96_AST);
 						match(PCDATA);
 					}
 					else {
@@ -3071,9 +3110,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dd_AST = null;
 		
 		try {      // for error handling
-			AST tmp96_AST = null;
-			tmp96_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp96_AST);
+			AST tmp97_AST = null;
+			tmp97_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp97_AST);
 			match(ODDEF);
 			{
 			int _cnt64=0;
@@ -3104,6 +3143,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				case OVAR:
 				case OCITE:
 				case OACRO:
+				case TYPEDCLASS:
 				case OANCHOR:
 				case OFONT:
 				{
@@ -3138,17 +3178,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case CDDEF:
 			{
-				AST tmp97_AST = null;
-				tmp97_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp97_AST);
+				AST tmp98_AST = null;
+				tmp98_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp98_AST);
 				match(CDDEF);
 				{
 				_loop67:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp98_AST = null;
-						tmp98_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp98_AST);
+						AST tmp99_AST = null;
+						tmp99_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp99_AST);
 						match(PCDATA);
 					}
 					else {
@@ -3192,9 +3232,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dir_AST = null;
 		
 		try {      // for error handling
-			AST tmp99_AST = null;
-			tmp99_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp99_AST);
+			AST tmp100_AST = null;
+			tmp100_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp100_AST);
 			match(ODIR);
 			{
 			int _cnt70=0;
@@ -3215,9 +3255,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case CDIR:
 			{
-				AST tmp100_AST = null;
-				tmp100_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp100_AST);
+				AST tmp101_AST = null;
+				tmp101_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp101_AST);
 				match(CDIR);
 				break;
 			}
@@ -3252,9 +3292,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST caption_AST = null;
 		
 		try {      // for error handling
-			AST tmp101_AST = null;
-			tmp101_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp101_AST);
+			AST tmp102_AST = null;
+			tmp102_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp102_AST);
 			match(OCAP);
 			{
 			_loop90:
@@ -3269,9 +3309,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				
 			} while (true);
 			}
-			AST tmp102_AST = null;
-			tmp102_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp102_AST);
+			AST tmp103_AST = null;
+			tmp103_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp103_AST);
 			match(CCAP);
 			caption_AST = (AST)currentAST.root;
 		}
@@ -3294,9 +3334,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST tr_AST = null;
 		
 		try {      // for error handling
-			AST tmp103_AST = null;
-			tmp103_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp103_AST);
+			AST tmp104_AST = null;
+			tmp104_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp104_AST);
 			match(O_TR);
 			{
 			switch ( LA(1)) {
@@ -3311,9 +3351,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_loop94:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp104_AST = null;
-						tmp104_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp104_AST);
+						AST tmp105_AST = null;
+						tmp105_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp105_AST);
 						match(PCDATA);
 					}
 					else {
@@ -3326,9 +3366,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case COMMENT:
 			{
-				AST tmp105_AST = null;
-				tmp105_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp105_AST);
+				AST tmp106_AST = null;
+				tmp106_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp106_AST);
 				match(COMMENT);
 				break;
 			}
@@ -3366,9 +3406,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					_loop100:
 					do {
 						if ((LA(1)==PCDATA)) {
-							AST tmp107_AST = null;
-							tmp107_AST = astFactory.create(LT(1));
-							astFactory.addASTChild(currentAST, tmp107_AST);
+							AST tmp108_AST = null;
+							tmp108_AST = astFactory.create(LT(1));
+							astFactory.addASTChild(currentAST, tmp108_AST);
 							match(PCDATA);
 						}
 						else {
@@ -3381,9 +3421,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				case COMMENT:
 				{
-					AST tmp108_AST = null;
-					tmp108_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp108_AST);
+					AST tmp109_AST = null;
+					tmp109_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp109_AST);
 					match(COMMENT);
 					break;
 				}
@@ -3431,17 +3471,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case OTH:
 			{
-				AST tmp109_AST = null;
-				tmp109_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp109_AST);
+				AST tmp110_AST = null;
+				tmp110_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp110_AST);
 				match(OTH);
 				break;
 			}
 			case OTD:
 			{
-				AST tmp110_AST = null;
-				tmp110_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp110_AST);
+				AST tmp111_AST = null;
+				tmp111_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp111_AST);
 				match(OTD);
 				break;
 			}
@@ -3491,9 +3531,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_loop108:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp113_AST = null;
-						tmp113_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp113_AST);
+						AST tmp114_AST = null;
+						tmp114_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp114_AST);
 						match(PCDATA);
 					}
 					else {
@@ -3572,9 +3612,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case PCDATA:
 			{
-				AST tmp114_AST = null;
-				tmp114_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp114_AST);
+				AST tmp115_AST = null;
+				tmp115_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp115_AST);
 				match(PCDATA);
 				anchor_content_AST = (AST)currentAST.root;
 				break;
@@ -3719,6 +3759,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		"CCITE",
 		"OACRO",
 		"CACRO",
+		"TYPEDCLASS",
 		"OANCHOR",
 		"CANCHOR",
 		"OFONT",
@@ -3751,7 +3792,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	};
 	
 	private static final long[] mk_tokenSet_0() {
-		long[] data = { 3074458502396117376L, 384307168201960064L, 0L, 0L};
+		long[] data = { 3074458502396117376L, 816652732429527680L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
@@ -3761,27 +3802,27 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 3074458794453901184L, 1537228672809631616L, 0L, 0L};
+		long[] data = { 3074458794453901184L, 3122495741644046208L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
-		long[] data = { 292057776128L, 1152921504606846976L, 0L, 0L};
+		long[] data = { 292057776128L, 2305843009213693952L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { -18014415689343102L, 2161727821137772511L, 0L, 0L};
+		long[] data = { -18014415689343102L, 4323455642275610591L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
 	private static final long[] mk_tokenSet_5() {
-		long[] data = { -90072009727271038L, 1537228672809631707L, 0L, 0L};
+		long[] data = { -90072009727271038L, 3122495741644046299L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
-		long[] data = { 1855425872256L, 384307168201932800L, 0L, 0L};
+		long[] data = { 1855425872256L, 816652732429500416L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
@@ -3791,12 +3832,12 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { -18014415689343102L, 1537228672809631707L, 0L, 0L};
+		long[] data = { -18014415689343102L, 3122495741644046299L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
-		long[] data = { -18014415689343102L, 2305843009213628383L, 0L, 0L};
+		long[] data = { -18014415689343102L, 4611686018427322335L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
@@ -3806,7 +3847,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { -272L, -1L, 131071L, 0L, 0L, 0L};
+		long[] data = { -272L, -1L, 262143L, 0L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
@@ -3841,7 +3882,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
 	private static final long[] mk_tokenSet_18() {
-		long[] data = { 1099511627776L, 168134386088148992L, 0L, 0L};
+		long[] data = { 1099511627776L, 312249574164004864L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());

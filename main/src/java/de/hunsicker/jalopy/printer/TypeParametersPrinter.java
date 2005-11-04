@@ -33,7 +33,7 @@ public class TypeParametersPrinter extends AbstractPrinter {
     }
     
     /** 
-     * TODO 
+     * Prints the type arguments
      *
      * @param node
      * @param out
@@ -57,11 +57,11 @@ public class TypeParametersPrinter extends AbstractPrinter {
      * @throws IOException
      */
     private void processTypeArguement(AST node, NodeWriter out,boolean first) throws IOException {
-        // TODO validate this is ok for all 
+        // TODO Make this a bit more intelligent... 
+    	if (node.getType()==JavaTokenTypes.COMMA) {
+			    PrinterFactory.create(node, out).print(node,out);
+    	}
         for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
-            if (!first && child.getType() == JavaTokenTypes.TYPE_ARGUMENT) {
-                out.print(",",child.getType());
-            }
             switch(child.getType()) {
                 case JavaTokenTypes.WILDCARD_TYPE:
                     out.print(QUESTION_SPACE,child.getType());

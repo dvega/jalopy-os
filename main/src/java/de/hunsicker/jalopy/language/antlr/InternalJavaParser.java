@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "main/src/java/de/hunsicker/jalopy/language/antlr/java15.g" -> "InternalJavaParser.java"$
+// $ANTLR 2.7.4: "java15.g" -> "InternalJavaParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
@@ -1125,6 +1125,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 		_loop33:
 		do {
 			if (((LA(1)==COMMA) && (_tokenSet_5.member(LA(2))))&&(inputState.guessing !=0 || ltCounter == currentLtLevel + 1)) {
+				JavaNode tmp26_AST = null;
+				tmp26_AST = (JavaNode)astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp26_AST);
 				match(COMMA);
 				typeArgument();
 				astFactory.addASTChild(currentAST, returnAST);

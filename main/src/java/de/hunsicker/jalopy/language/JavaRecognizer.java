@@ -452,24 +452,31 @@ public final class JavaRecognizer
                             }
                         }
                         // Attach last hidden token to current hide mask
-                        if (lastHiddenToken==null) {
+                        if (lastHiddenToken==null && !next.attached) {
                             lastHiddenToken = next;
                         }
                         // Current token points to next
                         p = next;
                     }
                     else if (next.getType()==JavaTokenTypes.WS) {
+                    	// If white space then check if new line
                         if (next.getText().indexOf("\n")>-1) {
+                        	// Check the attach before flag
                             if (!attachBefore) {
+                            	// Set the attach before flag
                                 attachBefore = true;
+                                // Check to see if a hidden token is not null
                                 if (lastHiddenToken!=null ){
+                                	// Check to see if the hidden token was attached
                                     if (((ExtendedToken)lastHiddenToken).attached) {
                                         lastHiddenToken = null;
                                     }
                                     else {
-                                        Object[] args = { JavaRecognizer.this.parser.getFilename() };
-                                        Loggers.IO.l7dlog(Level.WARN, "Unexpected token error " +
-                                                "last-" + lastHiddenToken +" new " +next, args, null);
+                                    	// TODO Safely ignore (for now) white space
+                                    	// In future this may be an issue (if white space
+                                    	// is not removed)
+//                                        Loggers.PARSER.log(Level.INFO, "Unexpected token error " +
+//                                                "last-" + lastHiddenToken +" new " +next, null);
                                     }
                                 }
                             }
