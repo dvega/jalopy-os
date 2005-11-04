@@ -5,7 +5,7 @@
   <name>Eclipse plugin</name>
   <description>The eclipse plugin for jalop</description>
   <artifactId>jalopy-eclipse</artifactId>
-  <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
+  <currentVersion>0.2-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
   <shortDescription>Eclipse plugin</shortDescription>
   <dependencies>
