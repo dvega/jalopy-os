@@ -56,7 +56,7 @@ class BasicPrinter
         NodeWriter out)
       throws IOException
     {
-        printCommentsBefore(node, out);
+        printCommentsBefore(node, false, out);
 
         int offset = out.print(node.getText(), node.getType());
         

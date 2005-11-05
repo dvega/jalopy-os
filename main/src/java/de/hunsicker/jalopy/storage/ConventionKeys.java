@@ -1419,6 +1419,14 @@ public final class ConventionKeys
         new Convention.Key("printer/comments/separator/text/enum");
 
     /**
+     * Separator text for the enumeration constant section (<em>String</em>).
+     *
+     * @since 1.5b4
+     */
+    public static final Convention.Key SEPARATOR_ENUM_CONSTANT_INIT =
+        new Convention.Key("printer/comments/separator/text/enum/constant");
+
+    /**
      * Separator text for the constructors section (<em>String</em>).
      *
      * @since 1.0b8

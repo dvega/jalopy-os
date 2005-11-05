@@ -296,6 +296,15 @@ LOOP:
 
                         break;
                         
+                    case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ENUM_CONSTANT_INIT,
+                                "Enumeration constant initializers"), fillCharacter, indent, maxwidth);
+
+                        break;
+                        
                     case JavaTokenTypes.ANNOTATION_DEF :
                         fillComment(
                             comment,

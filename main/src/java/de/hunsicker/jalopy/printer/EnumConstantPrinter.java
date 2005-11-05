@@ -55,7 +55,7 @@ public class EnumConstantPrinter extends AbstractPrinter {
             out.printNewline();
         }
         out.testers.release(tester);
-        
+        printCommentsBefore(node,false,out);
         printChildren(node,out);
         AST next = node.getNextSibling();
         if (next!=null) {

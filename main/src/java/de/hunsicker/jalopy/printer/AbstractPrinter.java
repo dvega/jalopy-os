@@ -508,6 +508,7 @@ abstract class AbstractPrinter
                 else
                 {
                     result = node.getCommentBefore().getLine() - prev.getEndLine() - 1;
+                    
                 }
             }
         }
@@ -911,11 +912,13 @@ abstract class AbstractPrinter
         {
             switch (comment.getType())
             {
+	            case JavaTokenTypes.SEPARATOR_COMMENT :
+                case JavaTokenTypes.JAVADOC_COMMENT :
+	            	newlineBefore = !out.newline;
+	            	// fall through
                 case JavaTokenTypes.SL_COMMENT :
                 case JavaTokenTypes.ML_COMMENT :
-                case JavaTokenTypes.JAVADOC_COMMENT :
                 case JavaTokenTypes.SPECIAL_COMMENT :
-                case JavaTokenTypes.SEPARATOR_COMMENT :
 
                     if (n.getStartLine() != comment.getLine())
                     {
@@ -1886,7 +1889,7 @@ OUTER:
 
                         if (first)
                         {
-                            blankLines = getBlankLinesBefore(node, out);
+                            blankLines = Math.max(getBlankLinesBefore(node, out),out.newline ? 0:1);
                         }
 
                         //blankLinesForComment = 1;
@@ -1899,7 +1902,7 @@ OUTER:
 
                         if (first)
                         {
-                            blankLines = getBlankLinesBefore(node, out);
+                            blankLines = Math.max(getBlankLinesBefore(node, out),out.newline ? 0:1);
                         }
 
                         blankLinesForComment =
