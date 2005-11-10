@@ -60,7 +60,9 @@ xmlns:ant="jelly:ant" default="jalopy:help">
     <j:set var="maven.multiproject.includes"
     value="${maven.multiproject.site.includes}" />
     <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
-    <attainGoal name="multiproject:sourceforge:deploy-dist" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
   </goal>
 
   <!-- Cleans all projects -->
@@ -221,4 +223,53 @@ xmlns:ant="jelly:ant" default="jalopy:help">
     </ant:echo>
   </goal>
   
+  <!-- Goal for generating manual -->
+  <postGoal name="sdocbook:init">
+      <maven:get plugin="maven-sdocbook-plugin" property="plugin" var="sdocbookPlugin" />
+  
+    <j:set var="testme"
+           value="hithere"/>
+      <j:if test="${!empty testme}">
+<ant:echo message="found messgae c ${test.sdocbook}"/>
+    </j:if>
+<ant:echo message="d ${plugin.dir}/plugin-resources/docbook-xsl-${maven.sdocbook.stylesheets.version} "/>
+<!--
+     <copy file="${basedir}/sdocbook/manual/manual.xsl"
+         todir="${maven.build.dir}/xsl"/>    
+    <j:set var="maven.sdocbook.html.xsl" value="${maven.build.dir}/xsl/manual.xsl" />
+<ant:echo message="a ${maven.plugin.unpacked.dir}, ${maven.sdocbook.stylesheets.dir}"/>
+<ant:echo message="b ${plugin.dir}/plugin-resources/docbook-xsl-${maven.sdocbook.stylesheets.version}"/>
+-->
+<!--    <replaceregexp file="${maven.sdocbook.html.xsl}" match="@maven.sdocbook.stylesheets.dir@" 
+                   replace="${maven.sdocbook.stylesheets.dir}" byline="true"/>
+    -->                         
+    
+   </postGoal>
+
+<!--
+     ======================================================================== 
+       Verify that the instlaled Maven has compatible versions of dependent  
+       plugins. TODO Validate plugins
+     ======================================================================== 
+  --> <!--
+  <goal name="jalopy:check-plugin-dependencies"> 
+     
+    <maven:get plugin="maven-war-plugin" property="plugin" var="warPlugin" /> 
+    <j:if test="${warPlugin.currentVersion.compareTo('1.7') lt 0}"> 
+      <ant:fail> 
+        Must have WAR plugin v1.7 installed to use this version of the Cactus plugin. 
+        Try: maven plugin:download -DgroupId=maven -DartifactId=maven-war-plugin -Dversion=1.7 
+      </ant:fail> 
+    </j:if> 
+ 
+    <maven:get plugin="maven-ejb-plugin" property="plugin" var="ejbPlugin" /> 
+    <j:if test="${warPlugin.currentVersion.compareTo('1.6') lt 0}"> 
+      <ant:fail> 
+        Must have EJB plugin v1.6 installed to use this version of the Cactus plugin. 
+        Try: maven plugin:download -DgroupId=maven -DartifactId=maven-ejb-plugin -Dversion=1.6 
+      </ant:fail> 
+    </j:if> 
+     
+  </goal> 
+  -->
 </project>

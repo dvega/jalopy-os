@@ -27,6 +27,15 @@
       </properties>
     </dependency>
   </dependencies>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/resources</directory>
+        <targetPath>/</targetPath>
+      </resource>
+    </resources>
+  </build>
 
 </project>
 
