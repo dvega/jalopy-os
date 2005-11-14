@@ -89,6 +89,11 @@ public class NodeWriter
      * Indicates whether we're at the beginning of a new line (<code>column == 1</code>).
      */
     protected boolean newline = true;
+    
+    /** Indicates that the line following this is a new line
+     * Used for printing commas in blocks without white space after the new line 
+     */
+    protected boolean nextNewline = false;
 
     /** Should tabs only be used to print leading indentation? */
     protected boolean useLeadingTabs;
@@ -156,6 +161,8 @@ public class NodeWriter
 
     /** Used to generate the indent string. */
     private char[] _indentChars;
+    
+
 
     //~ Constructors ---------------------------------------------------------------------
 

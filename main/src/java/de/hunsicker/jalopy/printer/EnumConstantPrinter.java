@@ -12,7 +12,7 @@ import antlr.collections.AST;
 /**
  * The EnumConstant printer 
  */
-public class EnumConstantPrinter extends AbstractPrinter {
+public class EnumConstantPrinter extends BasicPrinter {
     /** Singleton. */
     private static final Printer INSTANCE = new EnumConstantPrinter();
 
@@ -60,7 +60,7 @@ public class EnumConstantPrinter extends AbstractPrinter {
         AST next = node.getNextSibling();
         if (next!=null) {
             if (next.getType()==JavaTokenTypes.ENUM_CONSTANT_DEF) {
-                if (spaceAfterComma) {
+                if (spaceAfterComma && !out.nextNewline) {
                     out.print(COMMA_SPACE,out.last);
                 }
                 else {
@@ -74,13 +74,8 @@ public class EnumConstantPrinter extends AbstractPrinter {
         else {
                 out.print(SEMI,out.last);
         }
-        if (
-            !printCommentsAfter(
-                next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out))
-        {
-            out.printNewline();
-        }
-        
+        printCommentsAfter(
+                next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
         
     }
 }

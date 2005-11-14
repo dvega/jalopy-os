@@ -63,7 +63,7 @@ final class CommaPrinter
 
         if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
         {
-            if (
+            if (!out.nextNewline && 
                 AbstractPrinter.settings.getBoolean(
                     ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA))
             {

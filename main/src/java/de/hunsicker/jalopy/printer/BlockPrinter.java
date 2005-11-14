@@ -409,9 +409,11 @@ LOOP:
 
                     break LOOP;
                case JavaTokenTypes.COMMA :
-                   PrinterFactory.create(child, out).print(child, out);
+                   out.nextNewline = newLineAfter;
+                       PrinterFactory.create(child, out).print(child, out);
 	               if (newLineAfter) {
 	                   out.printNewline();
+                       out.nextNewline = false;
 	               }
                break;
                    
@@ -427,6 +429,7 @@ LOOP:
                         }
                     }
                     currentLine = out.line;
+                    out.nextNewline = newLineAfter;
                     PrinterFactory.create(child, out).print(child, out);
                     if (currentLine == out.line) {
                         AST nextNode = child.getNextSibling();
@@ -440,6 +443,7 @@ LOOP:
                         newLineAfter = false;
                         enumCounter = 0;
                     }
+                    out.nextNewline = false;
                     
 
                     break;

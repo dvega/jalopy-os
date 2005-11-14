@@ -71,10 +71,12 @@ public class AnnotationFieldPrinter extends AbstractPrinter {
             }
         }
         
+        printCommentsAfter(
+                node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
         // Print the comments, if none print a new line
-        if (!printCommentsAfter(node,false,true,out) && !out.newline) {
-            out.printNewline();
-        }
+//        if (!printCommentsAfter(node,false,true,out) && !out.newline) {
+//            out.printNewline();
+//        }
     }
 
 }

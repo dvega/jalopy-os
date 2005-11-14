@@ -220,6 +220,28 @@ final class JavadocPrinter
         }
     }
 
+    /**
+     * Appends valid parameter type names to the list 
+     * 
+     * @param names The list to append to
+     * @param node The node we are working with
+     * @return
+     */
+    private static List appendTypeNames(List names, AST node) {
+        if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS)!=null) {
+            for (
+                AST child = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS).getFirstChild();
+                child != null; child = child.getNextSibling())
+            {
+                if (child.getType()==JavaTokenTypes.TYPE_PARAMETER) {
+                    names.add("<"+
+                        JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
+                                      .getText()+">");
+                }
+            }
+        }
+        return names;
+    }
 
     /**
      * Returns all valid type names for the given node found as a sibling of the given
@@ -247,27 +269,15 @@ final class JavadocPrinter
                     case JavaTokenTypes.CTOR_DEF :
                         break;
                     case JavaTokenTypes.CLASS_DEF:
-                    	// TODO Add parameter options to class definitions
-                    	return Collections.EMPTY_LIST;
+               
+                    	return appendTypeNames(new ArrayList(4),node);
 
                     default :
                         return Collections.EMPTY_LIST;
                 }
 
                 List names = new ArrayList(4);
-                if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS)!=null) {
-	                for (
-	                    AST child = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS).getFirstChild();
-	                    child != null; child = child.getNextSibling())
-	                {
-	                	if (child.getType()==JavaTokenTypes.TYPE_PARAMETER) {
-                            names.add("<"+
-                                JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
-                                              .getText()+">");
-	                	}
-	                }
-                }
-                
+                appendTypeNames(names,node);
 
                 for (
                     AST child = JavaNodeHelper.getFirstChild(node, type).getFirstChild();
@@ -625,18 +635,27 @@ final class JavadocPrinter
     {
         int count = 0;
 
-        for (
-            AST param =
-                JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS)
-                              .getFirstChild(); param != null;
-            param = param.getNextSibling())
-        {
-            count++;
+        if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS)!=null) {
+            for (
+                AST param =
+                    JavaNodeHelper.getFirstChild(node, JavaTokenTypes.PARAMETERS)
+                                  .getFirstChild(); param != null;
+                param = param.getNextSibling())
+            {
+                count++;
+            }
         }
-        // 
-        // TODO This also needs to add in the number Type arguements contained in the parameters
+        if (JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS)!=null) {
+            for (
+                AST child = JavaNodeHelper.getFirstChild(node, JavaTokenTypes.TYPE_PARAMETERS).getFirstChild();
+                child != null; child = child.getNextSibling())
+            {
+                if (child.getType()==JavaTokenTypes.TYPE_PARAMETER) {
+                    count++;
+                }
+            }
+        }
         
-
         return count;
     }
 
@@ -678,6 +697,7 @@ final class JavadocPrinter
 
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.CLASS_DEF : // TODO Update template form for class definition
                         text =
                             AbstractPrinter.settings.get(
                                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
@@ -2581,7 +2601,7 @@ SELECTION:
      * @param asterix the leading asterix.
      * @param out stream to write to.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      */
     private void printTagSection(
         AST        node,
@@ -2784,7 +2804,6 @@ SELECTION:
             /**
              * @todo spit out warnings if we find invalid tags
              */
-            case JavaTokenTypes.CLASS_DEF :
             case JavaTokenTypes.INTERFACE_DEF :
                 if (checkTags) {
                     
@@ -2808,6 +2827,9 @@ SELECTION:
             case JavaTokenTypes.CTOR_DEF :
             {
                 last = printTag(serialDataTag, asterix, maxwidth, last, out);
+            }
+            // Fall through
+            case JavaTokenTypes.CLASS_DEF : {
 
                 if (getParamCount(node) > 0)
                 {
@@ -2841,29 +2863,31 @@ SELECTION:
                             printReturnTag(
                                 returnTag, asterix, maxwidth, returnTagAdded, last, out);
 
+                        // Fall through
+                    case JavaTokenTypes.CTOR_DEF :
+                        if (checkTags)
+                        {
+                            if (exceptionTags.isEmpty())
+                            {
+                                exceptionTags = new ArrayList();
+                            }
+        
+                            checkThrowsTags = true;
+                        }
+        
+                        if (checkThrowsTags)
+                        {
+                            last =
+                                printTags(
+                                    exceptionTags, asterix, maxwidth, node,
+                                    JavaTokenTypes.LITERAL_throws, last, out);
+                        }
+                        else
+                        {
+                            last = printTags(exceptionTags, asterix, maxwidth, last, out);
+                        }
                         break;
-                }
-
-                if (checkTags)
-                {
-                    if (exceptionTags.isEmpty())
-                    {
-                        exceptionTags = new ArrayList();
-                    }
-
-                    checkThrowsTags = true;
-                }
-
-                if (checkThrowsTags)
-                {
-                    last =
-                        printTags(
-                            exceptionTags, asterix, maxwidth, node,
-                            JavaTokenTypes.LITERAL_throws, last, out);
-                }
-                else
-                {
-                    last = printTags(exceptionTags, asterix, maxwidth, last, out);
+                    
                 }
 
                 break;

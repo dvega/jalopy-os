@@ -77,14 +77,40 @@ abstract class BasicDeclarationPrinter
         JavaNode   node,
         NodeWriter out)
     {
+        // TODO Template this out for CLASS DEFINITIONS
         String t =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
-                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS);
-        Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(t));
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).replaceAll("\\*/", "");
+        StringBuffer buf = new StringBuffer(t);
+        
+        String bottomText =
+            AbstractPrinter.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
+        String leadingSeparator = bottomText.substring(0, bottomText.indexOf('*') + 1);
+        
+        if (!JavadocPrinter.getValidTypeNames(node, JavaTokenTypes.PARAMETERS).isEmpty())
+        {
+            buf.append(leadingSeparator);
+            buf.append(DELIMETER);
+            addParameters(
+                buf, node,
+                AbstractPrinter.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
+                out.environment);
+        }
+
+        
+        buf.append(AbstractPrinter.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM));
+
+        Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
-
+        
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
@@ -222,7 +248,7 @@ abstract class BasicDeclarationPrinter
                 ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
         String leadingSeparator = bottomText.substring(0, bottomText.indexOf('*') + 1);
 
-        if (parameters.getFirstChild() != null)
+        if (!JavadocPrinter.getValidTypeNames(node, JavaTokenTypes.PARAMETERS).isEmpty())
         {
             buf.append(leadingSeparator);
             buf.append(DELIMETER);
@@ -550,22 +576,24 @@ abstract class BasicDeclarationPrinter
             	}
             }
         }
-    	
-        for (AST child = parameters.getFirstChild(); child != null;
-            child = child.getNextSibling())
-        {
-            switch (child.getType())
+
+        if (parameters != null) {
+            for (AST child = parameters.getFirstChild(); child != null;
+                child = child.getNextSibling())
             {
-                case JavaTokenTypes.PARAMETER_DEF :
-
-                    String type =
-                        JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
-                    environment.set(Environment.Variable.TYPE_PARAM.getName(), type);
-                    buf.append(environment.interpolate(text));
-                    buf.append(DELIMETER);
-                    environment.unset(Environment.Variable.TYPE_PARAM.getName());
-
-                    break;
+                switch (child.getType())
+                {
+                    case JavaTokenTypes.PARAMETER_DEF :
+    
+                        String type =
+                            JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
+                        environment.set(Environment.Variable.TYPE_PARAM.getName(), type);
+                        buf.append(environment.interpolate(text));
+                        buf.append(DELIMETER);
+                        environment.unset(Environment.Variable.TYPE_PARAM.getName());
+    
+                        break;
+                }
             }
         }
     }

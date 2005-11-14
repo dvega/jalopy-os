@@ -884,6 +884,16 @@ abstract class AbstractPrinter
         }
 
         JavaNode n = (JavaNode) node;
+        
+        if (!newlineBefore) {
+            switch (n.getParent().getType()) {
+                case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                    newlineBefore = true;
+                    break;
+                default:
+                    break;
+            }
+        }
 
         if (!n.hasCommentsBefore())
         {
@@ -914,7 +924,7 @@ abstract class AbstractPrinter
             {
 	            case JavaTokenTypes.SEPARATOR_COMMENT :
                 case JavaTokenTypes.JAVADOC_COMMENT :
-	            	newlineBefore = !out.newline;
+	            	newlineBefore = newlineBefore | !out.newline;
 	            	// fall through
                 case JavaTokenTypes.SL_COMMENT :
                 case JavaTokenTypes.ML_COMMENT :

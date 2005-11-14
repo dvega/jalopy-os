@@ -111,12 +111,12 @@ public class JavadocSettingsPage
                     "\\/\\*\\*(?:.*)+\\n\\s*\\*\\s*(.*)(?:\\n)*" /* NOI18N */);
             _paramPattern =
 				Pattern.compile(
-                    "\\s*\\*\\s*@param\\s+\\$paramType\\$" /*\\s+(?:.+) NOI18N */);
+                    "\\s*\\*\\s*@param\\s+\\$paramType\\$.*" /*\\s+(?:.+) NOI18N */);
             _returnPattern =
-				Pattern.compile("\\s*\\*\\s*@return" /*\\s+(?:.+) NOI18N */);
+				Pattern.compile("\\s*\\*\\s*@return.*" /*\\s+(?:.+) NOI18N */);
             _exceptionPattern =
 				Pattern.compile(
-                    "\\s*\\*\\s*@(?:throws|exception)\\s+\\$exceptionType\\$" /*\\s+(?:.+) NOI18N */);
+                    "\\s*\\*\\s*@(?:throws|exception)\\s+\\$exceptionType\\$.*" /*\\s+(?:.+) NOI18N */);
             _bottomTextPattern = Pattern.compile("\\s*(?:\\*)+/" /* NOI18N */);
             _templatePattern =
 				Pattern.compile("\\/\\*\\*[^*]*\\*+([^//*][^*]*\\*+)*\\/" /* NOI18N */);
