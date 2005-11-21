@@ -191,7 +191,7 @@ abstract class BasicDeclarationPrinter
                             ConventionKeys.COMMENT_JAVADOC_CLASS_MASK,
                             ConventionDefaults.COMMENT_JAVADOC_CLASS_MASK), node))
                 {
-                    addInterfaceComment(node);
+                    addInterfaceComment(node, out);
                 }
 
                 break;
@@ -206,19 +206,48 @@ abstract class BasicDeclarationPrinter
      *
      * @since 1.0b8
      */
-    protected void addInterfaceComment(JavaNode node)
+    protected void addInterfaceComment(JavaNode node,
+                                       NodeWriter out)
+
     {
+        // TODO Template this out for INTERFACE DEFINITIONS
         String t =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
-                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE);
-        Node text = new Node(JavadocTokenTypes.PCDATA, t);
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).replaceAll("\\*/", "");
+        StringBuffer buf = new StringBuffer(t);
+        
+        String bottomText =
+            AbstractPrinter.settings.get(
+                ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM,
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_BOTTOM);
+        String leadingSeparator = bottomText.substring(0, bottomText.indexOf('*') + 1);
+        
+        if (!JavadocPrinter.getValidTypeNames(node, JavaTokenTypes.PARAMETERS).isEmpty())
+        {
+            buf.append(leadingSeparator);
+            buf.append(DELIMETER);
+            addParameters(
+                buf, node,
+                AbstractPrinter.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM),
+                out.environment);
+        }
+
+        
+        buf.append(AbstractPrinter.settings.get(
+                    ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM));
+
+        Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
         Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
-
+        
         ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
+        
     }
 
 

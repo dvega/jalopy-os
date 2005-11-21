@@ -268,6 +268,7 @@ final class JavadocPrinter
                     case JavaTokenTypes.METHOD_DEF :
                     case JavaTokenTypes.CTOR_DEF :
                         break;
+                    case JavaTokenTypes.INTERFACE_DEF:
                     case JavaTokenTypes.CLASS_DEF:
                
                     	return appendTypeNames(new ArrayList(4),node);
@@ -698,6 +699,7 @@ final class JavadocPrinter
                     // fall through
                     case JavaTokenTypes.CTOR_DEF :
                     case JavaTokenTypes.CLASS_DEF : // TODO Update template form for class definition
+                    case JavaTokenTypes.INTERFACE_DEF : // TODO Update template form for class definition
                         text =
                             AbstractPrinter.settings.get(
                                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_PARAM,
@@ -2801,19 +2803,6 @@ SELECTION:
 
                 break;
 
-            /**
-             * @todo spit out warnings if we find invalid tags
-             */
-            case JavaTokenTypes.INTERFACE_DEF :
-                if (checkTags) {
-                    
-                }
-                last = printTags(authorTags, asterix, maxwidth, last, out);
-                last = printTag(versionTag, asterix, maxwidth, last, out);
-                last = printTag(serialTag, asterix, maxwidth, last, out);
-
-                break;
-
             case JavaTokenTypes.METHOD_DEF :
 
                 if (checkTags)
@@ -2829,7 +2818,15 @@ SELECTION:
                 last = printTag(serialDataTag, asterix, maxwidth, last, out);
             }
             // Fall through
-            case JavaTokenTypes.CLASS_DEF : {
+            case JavaTokenTypes.CLASS_DEF : 
+            case JavaTokenTypes.INTERFACE_DEF :
+            {
+                if (node.getType() == JavaTokenTypes.CLASS_DEF ||
+                        node.getType() == JavaTokenTypes.INTERFACE_DEF) {
+                    last = printTags(authorTags, asterix, maxwidth, last, out);
+                    last = printTag(versionTag, asterix, maxwidth, last, out);
+                    last = printTag(serialTag, asterix, maxwidth, last, out);
+                }
 
                 if (getParamCount(node) > 0)
                 {
