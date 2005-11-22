@@ -967,26 +967,30 @@ public final class CodeInspector
                         ConventionKeys.TIP_WRONG_COLLECTION_COMMENT, false))
                 {
                     CommonHiddenStreamToken comment = node.getHiddenAfter();
-
-                    switch (comment.getType())
-                    {
-                        case JavaTokenTypes.SL_COMMENT :
-
-                            String text = comment.getText();
-
-                            if ((text.indexOf('<') == -1) || (text.indexOf('>') == -1))
-                            {
-                                addIssue(node, STR_WRONG_COLLECTION_COMMENT, _args);
-                            }
-
-                            break;
-
-                        default :
-
-                            /**
-                             * @todo print warning about wrong comment type
-                             */
-                            break;
+                    if (comment==null) {
+                        addIssue(node, STR_WRONG_COLLECTION_COMMENT, _args);
+                    }
+                    else {
+	                    switch (comment.getType())
+	                    {
+	                        case JavaTokenTypes.SL_COMMENT :
+	
+	                            String text = comment.getText();
+	
+	                            if ((text.indexOf('<') == -1) || (text.indexOf('>') == -1))
+	                            {
+	                                addIssue(node, STR_WRONG_COLLECTION_COMMENT, _args);
+	                            }
+	
+	                            break;
+	
+	                        default :
+	
+	                            /**
+	                             * @todo print warning about wrong comment type
+	                             */
+	                            break;
+	                    }
                     }
                 }
             }

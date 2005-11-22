@@ -1568,7 +1568,7 @@ identPrimary
 				argList RPAREN
 			)
 		|	( options {greedy=true;} :
-				lbc:LBRACK^ {#lbc.setType(ARRAY_DECLARATOR);} RBRACK
+				lbc:LBRACK^ {#lbc.setType(ARRAY_DECLARATOR);} RBRACK!
 			)+
 		)?
 	;

@@ -7656,9 +7656,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 					if ( inputState.guessing==0 ) {
 						lbc_AST.setType(ARRAY_DECLARATOR);
 					}
-					JavaNode tmp236_AST = null;
-					tmp236_AST = (JavaNode)astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp236_AST);
 					match(RBRACK);
 				}
 				else {
