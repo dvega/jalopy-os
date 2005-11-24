@@ -55,6 +55,7 @@ final class SkipPrinter
         NodeWriter out)
       throws IOException
     {
+        printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
         printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
     }
 }

@@ -482,6 +482,7 @@ public static AST lastChild = null;
             /**
                                                              */
             case JavaTokenTypes.RCURLY :
+            case JavaTokenTypes.EOF :
                 result = SkipPrinter.getInstance();
 
                 break;

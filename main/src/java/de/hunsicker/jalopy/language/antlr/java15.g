@@ -244,7 +244,7 @@ parse
 		// definitions
 		( typeDefinition )*
 
-		EOF!
+		EOF
 	;
 
 

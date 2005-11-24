@@ -525,6 +525,11 @@ public void reset()
     setFilename(Recognizer.UNKNOWN_FILE);
     this.returnAST = null;
 }
+/**
+ * Attaches the items to the correct nodes
+ * 
+ * @param nodes
+ */
 protected void attachStuff(JavaNode[] nodes) {
     JavaNode node = nodes[0];
         switch (node.getType()) {

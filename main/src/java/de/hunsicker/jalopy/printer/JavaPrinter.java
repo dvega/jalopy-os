@@ -195,6 +195,7 @@ final class JavaPrinter
                         break;
 
                     case JavaTokenTypes.SEMI :
+                    case JavaTokenTypes.EOF :
                         return (JavaNode) declaration;
 
                     case JavaTokenTypes.PACKAGE_DEF :
@@ -313,7 +314,8 @@ final class JavaPrinter
 
 
     /**
-     * Removes the footer.
+     * Removes the footer. The footer is actually the JavaTokenTyps.EOF node.
+     * Comments are actually before this node not after it.
      *
      * @param root the root node of the Java AST.
      *
@@ -321,9 +323,9 @@ final class JavaPrinter
      */
     private void removeFooter(AST root)
     {
-        JavaNode rcurly = getLastElement(root);
+        JavaNode eofNode = getLastElement(root);
 
-        if (rcurly.hasCommentsAfter())
+        if (eofNode.hasCommentsBefore())
         {
             String[] keys = getConventionKeys(ConventionKeys.FOOTER_KEYS);
             int count = 0;
@@ -332,8 +334,8 @@ final class JavaPrinter
             boolean smartMode = smartModeLines > 0;
 
             for (
-                CommonHiddenStreamToken comment = rcurly.getHiddenAfter();
-                comment != null; comment = comment.getHiddenAfter())
+                CommonHiddenStreamToken comment = eofNode.getHiddenBefore();
+                comment != null; comment = comment.getHiddenBefore())
             {
                 switch (comment.getType())
                 {
@@ -343,7 +345,7 @@ final class JavaPrinter
 
                         if (smartMode && (count < smartModeLines))
                         {
-                            removeFooterComment(comment, rcurly);
+                            removeFooterComment(comment, eofNode);
                         }
 
                         count++;
@@ -356,7 +358,7 @@ final class JavaPrinter
                         {
                             if (comment.getText().indexOf(keys[j]) > -1)
                             {
-                                removeFooterComment(comment, rcurly);
+                                removeFooterComment(comment, eofNode);
                             }
                         }
 
@@ -392,7 +394,7 @@ final class JavaPrinter
             {
                 // we've just removed the first comment after the RCURLY so add
                 // the following as the new starting one
-                node.setHiddenAfter(after);
+                node.setHiddenBefore(after);
             }
         }
         else if ((before != null) && (comment != node.getHiddenAfter()))
@@ -407,9 +409,9 @@ final class JavaPrinter
         else
         {
             // it was the first comment
-            node.setHiddenAfter(null);
+            node.setHiddenBefore(null);
         }
-        ((ExtendedToken)comment).setHiddenBefore(null);
+        //((ExtendedToken)comment).setHiddenBefore(null);
     }
 
 

@@ -302,6 +302,9 @@ public InternalJavaParser(ParserSharedInputState state) {
 			
 		} while (true);
 		}
+		JavaNode tmp1_AST = null;
+		tmp1_AST = (JavaNode)astFactory.create(LT(1));
+		astFactory.addASTChild(currentAST, tmp1_AST);
 		match(Token.EOF_TYPE);
 		parse_AST = (JavaNode)currentAST.root;
 		returnAST = parse_AST;
