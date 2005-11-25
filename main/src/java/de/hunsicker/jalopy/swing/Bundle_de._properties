@@ -299,6 +299,7 @@ CHK_INSERT_LOGGING_CONDITIONAL = Füge Logging Conditional ein
 CHK_INSERT_TRAILING_NEWLINE = Füge Leerzeile ein
 CHK_BRACKETS_AFTER_IDENTIFIER = Nachgestellte Array Klammerung
 CHK_FORCE_FORMATTING = Erzwinge Formatierung
+CHK_INSERT_FINAL_MODIFIER = Add final modifier to parameters
 BDR_HISTORY = Historie
 CHK_USE_HISTORY_COMMENT = Benutze Kommentarhistorie
 CHK_USE_HISTORY_FILE = Benutze Dateienhistorie

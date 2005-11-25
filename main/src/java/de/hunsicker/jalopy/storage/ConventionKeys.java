@@ -1008,6 +1008,13 @@ public final class ConventionKeys
     public static final Convention.Key FORCE_FORMATTING =
         new Convention.Key("printer/misc/forceFormatting");
 
+    /**
+     * Should the "final" modifier be added for method parameters?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key INSERT_FINAL_MODIFIER_FOR_PARAMETERS =
+        new Convention.Key("printer/misc/forceFinalModifier");
+
     /** Insert a header? (<em>boolean</em>) */
     public static final Convention.Key HEADER = new Convention.Key("printer/header/use");
 

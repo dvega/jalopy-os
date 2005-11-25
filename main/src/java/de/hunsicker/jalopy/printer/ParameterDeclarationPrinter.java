@@ -9,7 +9,11 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -56,6 +60,26 @@ final class ParameterDeclarationPrinter
       throws IOException
     {
         AST modifier = node.getFirstChild();
+
+        if (
+            AbstractPrinter.settings.getBoolean(
+                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_PARAMETERS))
+        {
+            boolean  finalAlreadyExists = false;
+            for (
+                AST child = modifier.getFirstChild(); child != null;
+                child = child.getNextSibling())
+            {
+                if (child.getType()==JavaTokenTypes.FINAL) {
+                    finalAlreadyExists = true;
+                    break;
+                }
+            }
+            if (! finalAlreadyExists) {
+                AST finalModifier = new JavaNodeFactory().create(JavaTokenTypes.LITERAL_private, "final");
+                modifier.addChild(finalModifier);
+            }
+        }
         PrinterFactory.create(modifier, out).print(modifier, out);
 
         AST type = modifier.getNextSibling();

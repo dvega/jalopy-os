@@ -1059,7 +1059,12 @@ abstract class AbstractPrinter
 
                     if (!node.hasCommentsBefore())
                     {
-                        switch (out.last)
+                        if (node.getParent().getParent().getType()==JavaTokenTypes.ENUM_DEF) {
+                            if (!out.newline) {
+                                return 1;
+                            }
+                        }
+                        else switch (out.last)
                         {
                             case JavaTokenTypes.RCURLY :
                             case JavaTokenTypes.CLASS_DEF :

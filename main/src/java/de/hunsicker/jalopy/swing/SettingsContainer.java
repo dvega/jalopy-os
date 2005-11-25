@@ -352,6 +352,26 @@ final class SettingsContainer
     {
         if ((_previewFrame != null) && (node != null))
         {
+            if (node.toString().equalsIgnoreCase("general")) {
+                _previewFrame.setCurrentPage(_curSettingsPanel);
+
+                String text = loadPreview("general");
+
+                if (text != null)
+                {
+                    _previewFrame.setText(text);
+
+                    if (!_previewFrame.isVisible())
+                    {
+                        _previewFrame.setVisible(true);
+                    }
+                }
+                else
+                {
+                    _previewFrame.setText(EMPTY_STRING);
+                }
+            }
+            else 
             if (!((DefaultMutableTreeNode) node.getParent()).isRoot())
             {
                 // only if the user did not choose to display a custom file, we
@@ -440,8 +460,14 @@ final class SettingsContainer
 
         try
         {
+            if (name.equalsIgnoreCase("general")) {
+            s = getClass().getResourceAsStream(
+                    "allTest.javatpl" /* NOI18N */    );
+            }
+            else {
             s = getClass().getResourceAsStream(
                     "resources/" /* NOI18N */ + name + ".java.tpl" /* NOI18N */    );
+            }
 
             if (s != null)
             {
