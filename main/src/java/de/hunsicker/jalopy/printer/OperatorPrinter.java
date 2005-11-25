@@ -542,6 +542,7 @@ abstract class OperatorPrinter
         CommonHiddenStreamToken t = n.getHiddenAfter();
         n.setHiddenAfter(null);
 
+        Marker marker = out.state.markers.add();
         LeftParenthesisPrinter.getInstance().print(leftParen, out);
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
@@ -549,8 +550,6 @@ abstract class OperatorPrinter
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
         }
 
-        Marker marker = out.state.markers.add();
-        out.state.markers.remove(marker);
 
         PrinterFactory.create(node, out).print(node, out);
 
@@ -569,6 +568,7 @@ abstract class OperatorPrinter
             PrinterFactory.create(node).print(node, out);
         }*/
         RightParenthesisPrinter.getInstance().print(rightParen, out);
+        out.state.markers.remove(marker);
 
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
