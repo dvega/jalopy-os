@@ -1059,6 +1059,7 @@ abstract class AbstractPrinter
 
                     if (!node.hasCommentsBefore())
                     {
+                        // TODO Add control over the number of lines to print before RBRACK on an ENUMBERATION
                         if (node.getParent().getParent().getType()==JavaTokenTypes.ENUM_DEF) {
                             if (!out.newline) {
                                 return 1;

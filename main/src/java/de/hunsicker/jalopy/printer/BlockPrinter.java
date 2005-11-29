@@ -452,6 +452,7 @@ LOOP:
 
         if (brace)
         {
+            
             printCommentsBefore(rcurly, out);
 
             boolean rightBraceNewline =

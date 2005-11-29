@@ -237,6 +237,12 @@ public final class Environment
 
         /** Defines the variable &quot;objectType&quot;. */
         public static final Variable TYPE_OBJECT = new Variable("objectType");
+        
+        /** The date variable */
+        public static final Variable DATE = new Variable("date");
+        
+        /** The class name variable */
+        public static final Variable CLASS_NAME = new Variable("className");
         String name;
         int hashCode;
 

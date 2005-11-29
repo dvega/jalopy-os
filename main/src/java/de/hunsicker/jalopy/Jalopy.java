@@ -25,6 +25,8 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -1852,6 +1854,12 @@ public final class Jalopy
         environment.set(Environment.Variable.FILE_FORMAT.getName(), fileFormat);
         environment.set(
             Environment.Variable.TAB_SIZE.getName(), String.valueOf(indentSize));
+        DateFormat df = DateFormat.getDateTimeInstance();
+        environment.set(Environment.Variable.DATE.getName(),df.format(new Date())); 
+        String className = file.getName();
+        className = className.substring(0, className.length() - 5);
+        environment.set(de.hunsicker.jalopy.storage.Environment.Variable.CLASS_NAME.getName(), className);
+        
     }
 
 
