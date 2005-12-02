@@ -222,17 +222,12 @@ xmlns:ant="jelly:ant" default="jalopy:help">
     +-------------------------------------------------------+
     </ant:echo>
   </goal>
-  
+
   <!-- Goal for generating manual -->
   <postGoal name="sdocbook:init">
-      <maven:get plugin="maven-sdocbook-plugin" property="plugin" var="sdocbookPlugin" />
-  
-    <j:set var="testme"
-           value="hithere"/>
-      <j:if test="${!empty testme}">
-<ant:echo message="found messgae c ${test.sdocbook}"/>
-    </j:if>
-<ant:echo message="d ${plugin.dir}/plugin-resources/docbook-xsl-${maven.sdocbook.stylesheets.version} "/>
+    <maven:get plugin="maven-sdocbook-plugin" property="plugin" var="sdocbookPlugin" />
+    <ant:echo message="d ${plugin.dir} "/>
+    <ant:echo message="f ${maven.sdocbook.stylesheets.dir} "/>
 <!--
      <copy file="${basedir}/sdocbook/manual/manual.xsl"
          todir="${maven.build.dir}/xsl"/>    
