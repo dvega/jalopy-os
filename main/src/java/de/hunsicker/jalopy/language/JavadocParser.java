@@ -91,14 +91,14 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
     private int _startColumn;
 
     /** The empty Javadoc comment. */
-    public final static Node EMPTY_JAVADOC_COMMENT = new Node(JavadocTokenTypes.JAVADOC_COMMENT, "<JAVADOC_COMMENT>");
+    public final static Node EMPTY_JAVADOC_COMMENT = new Node(JavadocTokenTypes.JAVADOC_COMMENT, "<JAVADOC_COMMENT>"){};
 
     /** File to load the standard Javadoc tag definitions from. */
     //private final static File STANDARD_TAGS = new File(System.getProperty("user.home")+ File.separator + ".jalopy" + File.separator + "standard.tags");
 
     /** File to load the inline Javadoc tag definitions from. */
     //private final static File INLINE_TAGS = new File(System.getProperty("user.home")+ File.separator + ".jalopy" + File.separator + "inline.tags");
-
+    private JavaNodeFactory _factory = null;
     {
         loadTokenTypeInfo();
         loadTagInfo(true);
@@ -108,9 +108,9 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
      *
      * @param tokenBuf DOCUMENT ME!
      */
-    public JavadocParser(TokenBuffer tokenBuf)
+    public JavadocParser(TokenBuffer tokenBuf,JavaNodeFactory factory)
     {
-        this(tokenBuf, 1);
+        this(tokenBuf, 1,factory);
     }
 
 
@@ -119,9 +119,9 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
      *
      * @param lexer DOCUMENT ME!
      */
-    public JavadocParser(TokenStream lexer)
+    public JavadocParser(TokenStream lexer, JavaNodeFactory factory)
     {
-        this(lexer, 1);
+        this(lexer, 1, factory);
     }
 
 
@@ -144,9 +144,11 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
      */
     protected JavadocParser(
         TokenBuffer tokenBuf,
-        int         k)
+        int         k, JavaNodeFactory factory)
     {
         super(tokenBuf, k);
+        _factory = factory;
+        
     }
 
 
@@ -158,9 +160,10 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
      */
     protected JavadocParser(
         TokenStream lexer,
-        int         k)
+        int         k, JavaNodeFactory factory)
     {
         super(lexer, k);
+        _factory = factory;
     }
 
     /**
@@ -451,7 +454,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
         }
 
         Node current = (Node)this.returnAST;
-        Node root = new Node(_startLine, _startColumn,
+        Node root = _factory.create(_startLine, _startColumn,
                                            current.endLine, current.endColumn);
         root.setType(JavadocTokenTypes.JAVADOC_COMMENT);
         root.setText(JAVADOC_COMMENT);

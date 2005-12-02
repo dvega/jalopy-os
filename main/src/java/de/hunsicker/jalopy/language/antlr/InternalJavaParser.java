@@ -241,7 +241,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode parse_AST = null;
 		
-		JavaNode root = new JavaNode();
+					JavaNode root = (JavaNode) getASTFactory().create();
 		root.setType(JavaTokenTypes.ROOT);
 		root.setText(getFilename());
 		currentAST.root = root;

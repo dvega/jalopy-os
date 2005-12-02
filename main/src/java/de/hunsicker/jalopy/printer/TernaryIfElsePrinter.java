@@ -319,7 +319,7 @@ final class TernaryIfElsePrinter
 
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(operator);
+                            addParentheses(operator, out);
 
                             AST leftParen = operator.getPreviousSibling();
                             PrinterFactory.create(leftParen, out).print(leftParen, out);

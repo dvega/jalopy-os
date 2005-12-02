@@ -44,6 +44,8 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
     /** Corresponding Javadoc parser. */
     private JavadocParser _parser;
 
+    private final CompositeFactory factory;
+
     static class MyLexerSharedInputState extends LexerSharedInputState  {
 
         /**
@@ -70,21 +72,22 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
      * Creates a new JavadocLexer object. Use {@link #setInputBuffer(Reader)}
      * to set up the input buffer.
      */
-    public JavadocLexer()
+    public JavadocLexer(CompositeFactory factory)
     {
-        this(new StringReader(""));
-        _parser = new JavadocParser(this);
-        _parser.setASTFactory(new NodeFactory());
+        this(new StringReader(""),factory);
+        _parser = new JavadocParser(this, factory.getJavaNodeFactory());
+        _parser.setASTFactory(factory.getNodeFactory());
         _parser.setLexer(this);
     }
-    public JavadocLexer(Reader in) {
-    	this(new CharBuffer(in));
+    public JavadocLexer(Reader in,CompositeFactory factory) {
+    	this(new CharBuffer(in),factory);
     }
-    public JavadocLexer(InputBuffer ib) {
-    	this(new MyLexerSharedInputState(ib));
+    public JavadocLexer(InputBuffer ib,CompositeFactory factory) {
+    	this(new MyLexerSharedInputState(ib),factory);
     }
-    public JavadocLexer(LexerSharedInputState state) {
+    public JavadocLexer(LexerSharedInputState state,CompositeFactory factory) {
     	super(state);
+        this.factory = factory;
     }
 
     public Parser getParser()
@@ -317,7 +320,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
             Position cur = getPosition();
             setPosition(_mark);
             
-            ExtendedToken newToken = (ExtendedToken) super.makeToken(t);
+            ExtendedToken newToken = factory.getExtendedTokenFactory().create(t,null);
             newToken.setLine(this.getLine());
             newToken.setColumn(this.getColumn());
 
@@ -329,7 +332,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
 
             return newToken;
         }
-            ExtendedToken newToken = (ExtendedToken) super.makeToken(t);
+            ExtendedToken newToken = factory.getExtendedTokenFactory().create(t,null);
             newToken.setLine(this.getLine());
             newToken.setColumn(this.getColumn());
             return newToken;

@@ -455,11 +455,11 @@ abstract class OperatorPrinter
      *
      * @since 1.0b9
      */
-    void addParentheses(JavaNode operand)
+    void addParentheses(JavaNode operand, NodeWriter out)
     {
         JavaNode parent = operand.getParent();
-        JavaNode lparen = new JavaNode(JavaTokenTypes.LPAREN, LPAREN);
-        JavaNode rparen = new JavaNode(JavaTokenTypes.RPAREN, RPAREN);
+        JavaNode lparen = (JavaNode) out.getJavaNodeFactory().create(JavaTokenTypes.LPAREN, LPAREN);
+        JavaNode rparen = (JavaNode) out.getJavaNodeFactory().create(JavaTokenTypes.RPAREN, RPAREN);
 
         if (parent.getFirstChild() == operand)
         {

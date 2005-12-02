@@ -226,7 +226,7 @@ tokens {
 // rule for this parser compilationUnit
 parse
         {
-            JavaNode root = new JavaNode();
+			JavaNode root = (JavaNode) getASTFactory().create();
             root.setType(JavaTokenTypes.ROOT);
             root.setText(getFilename());
             currentAST.root = root;

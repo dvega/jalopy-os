@@ -46,14 +46,16 @@ final class SerializableTransformation
 
     /** Holds the package name of the compilation unit. */
     private String _packageName;
+    private CompositeFactory _factory = null;
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new SerializableTransformation object.
      */
-    public SerializableTransformation()
+    public SerializableTransformation(CompositeFactory factory)
     {
+        _factory = factory;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -289,36 +291,36 @@ LOOP:
         long         serialverUID)
     {
         // the VARIABLE_DEF
-        JavaNode serialver = new JavaNode(Integer.MAX_VALUE, 1, Integer.MAX_VALUE, 1);
+        JavaNode serialver = _factory.getJavaNodeFactory().create(Integer.MAX_VALUE, 1, Integer.MAX_VALUE, 1);
         serialver.setType(JavaTokenTypes.VARIABLE_DEF);
         serialver.setText("VARIABLE_DEF");
 
         // the MODIFIERS
-        AST modifiers = new JavaNode(JavaTokenTypes.MODIFIERS, "MODIFIERS");
-        AST privatemod = new JavaNode(JavaTokenTypes.LITERAL_private, "private");
-        AST finalmod = new JavaNode(JavaTokenTypes.FINAL, "final");
-        AST staticmod = new JavaNode(JavaTokenTypes.LITERAL_static, "static");
+        AST modifiers = _factory.getJavaNodeFactory().create(JavaTokenTypes.MODIFIERS, "MODIFIERS");
+        AST privatemod = _factory.getJavaNodeFactory().create(JavaTokenTypes.LITERAL_private, "private");
+        AST finalmod = _factory.getJavaNodeFactory().create(JavaTokenTypes.FINAL, "final");
+        AST staticmod = _factory.getJavaNodeFactory().create(JavaTokenTypes.LITERAL_static, "static");
         modifiers.addChild(privatemod);
         modifiers.addChild(finalmod);
         modifiers.addChild(staticmod);
 
         // the TYPE
-        AST type = new JavaNode(JavaTokenTypes.TYPE, "TYPE");
-        AST typevalue = new JavaNode(JavaTokenTypes.LITERAL_long, "long");
+        AST type = _factory.getJavaNodeFactory().create(JavaTokenTypes.TYPE, "TYPE");
+        AST typevalue = _factory.getJavaNodeFactory().create(JavaTokenTypes.LITERAL_long, "long");
         type.addChild(typevalue);
 
         // the IDENT
-        AST ident = new JavaNode(JavaTokenTypes.IDENT, "serialVersionUID");
+        AST ident = _factory.getJavaNodeFactory().create(JavaTokenTypes.IDENT, "serialVersionUID");
 
         // the ASSIGN
-        AST assign = new JavaNode(JavaTokenTypes.ASSIGN, "=");
-        AST expr = new JavaNode(JavaTokenTypes.EXPR, "EXPR");
-        AST assignvalue = new JavaNode(JavaTokenTypes.NUM_LONG, serialverUID + "L");
+        AST assign = _factory.getJavaNodeFactory().create(JavaTokenTypes.ASSIGN, "=");
+        AST expr = _factory.getJavaNodeFactory().create(JavaTokenTypes.EXPR, "EXPR");
+        AST assignvalue = _factory.getJavaNodeFactory().create(JavaTokenTypes.NUM_LONG, serialverUID + "L");
         expr.addChild(assignvalue);
         assign.addChild(expr);
 
         // the SEMI
-        JavaNode semi = new JavaNode(JavaTokenTypes.SEMI, ";");
+        JavaNode semi = (JavaNode) _factory.getJavaNodeFactory().create(JavaTokenTypes.SEMI, ";");
         serialver.addChild(modifiers);
         serialver.addChild(type);
         serialver.addChild(ident);
@@ -327,18 +329,18 @@ LOOP:
 
         // add a Javadoc comment
         // TODO was JavadocTokenTypes.PCDATA
-        Node description = new Node();
+        Node description = (Node) _factory.getNodeFactory().create();
         description.setType(JavadocTokenTypes.PCDATA);
         description.setText("Use serialVersionUID for interoperability.");
 
         Node comment =
-            new Node(
+            (Node) _factory.getNodeFactory().create(
                 JavaTokenTypes.JAVADOC_COMMENT,
                 "/** Use serialVersionUID for interoperability. */");
         comment.addChild(description);
 
         ExtendedToken token =
-            new ExtendedToken(
+             _factory.getExtendedTokenFactory().create(
                 JavaTokenTypes.JAVADOC_COMMENT,
                 "/** Use serialVersionUID for interoperability. */");
         token.comment = comment;

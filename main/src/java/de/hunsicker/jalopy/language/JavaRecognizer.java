@@ -83,21 +83,21 @@ public final class JavaRecognizer
     /**
      * Creates a new JavaRecognizer object.
      */
-    public JavaRecognizer()
+    public JavaRecognizer(CompositeFactory factory)
     {
         _settings = Convention.getInstance();
 
-        JavaLexer l = new JavaLexer();
+        JavaLexer l = new JavaLexer(factory);
         this.lexer = l;
 
         JavaParser p = (JavaParser) l.getParser();
         this.parser = p;
 
         _importTrans =
-            new ImportTransformation(p.getQualifiedIdents(), p.getUnqualifiedIdents());
-        _sortTrans = new SortTransformation();
-        _serialTrans = new SerializableTransformation();
-        _loggingTransformation = new LoggerTransformation();
+            new ImportTransformation(p.getQualifiedIdents(), p.getUnqualifiedIdents(),factory.getJavaNodeFactory());
+        _sortTrans = new SortTransformation(factory);
+        _serialTrans = new SerializableTransformation(factory);
+        _loggingTransformation = new LoggerTransformation(factory.getJavaNodeFactory());
     }
 
     //~ Methods --------------------------------------------------------------------------

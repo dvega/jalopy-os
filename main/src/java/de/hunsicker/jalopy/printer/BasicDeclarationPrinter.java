@@ -107,11 +107,11 @@ abstract class BasicDeclarationPrinter
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM));
 
-        Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
+        Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
         
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
+        ExtendedToken token = out.getCompositeFactory().getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
     }
@@ -165,7 +165,7 @@ abstract class BasicDeclarationPrinter
                             ConventionKeys.COMMENT_JAVADOC_VARIABLE_MASK,
                             ConventionDefaults.COMMENT_JAVADOC_VARIABLE_MASK), node))
                 {
-                    addVariableComment(node);
+                    addVariableComment(node, out);
                     out.state.variableOffset = VariableDeclarationPrinter.OFFSET_NONE;
                 }
 
@@ -240,11 +240,11 @@ abstract class BasicDeclarationPrinter
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM));
 
-        Node text = new Node(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
+        Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
         
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
+        ExtendedToken token = out.getCompositeFactory().getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
         
@@ -261,7 +261,7 @@ abstract class BasicDeclarationPrinter
         JavaNode   node,
         NodeWriter out)
     {
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         StringBuffer buf = new StringBuffer(150);
         String topText =
             AbstractPrinter.settings.get(
@@ -323,10 +323,10 @@ abstract class BasicDeclarationPrinter
 
         buf.append(bottomText);
 
-        Node text = new Node(JavadocTokenTypes.PCDATA, buf.toString());
+        Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, buf.toString());
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
+        ExtendedToken token = out.getCompositeFactory().getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
     }
@@ -481,7 +481,7 @@ abstract class BasicDeclarationPrinter
         JavaNode   node,
         NodeWriter out)
     {
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         String topText =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
@@ -535,10 +535,10 @@ abstract class BasicDeclarationPrinter
 
         buf.append(bottomText);
 
-        Node text = new Node(JavadocTokenTypes.PCDATA, buf.toString());
+        Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, buf.toString());
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
+        ExtendedToken token = out.getCompositeFactory().getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
     }
@@ -633,17 +633,17 @@ abstract class BasicDeclarationPrinter
      *
      * @param node a VARIABLE_DEF node.
      */
-    private void addVariableComment(JavaNode node)
+    private void addVariableComment(JavaNode node, NodeWriter out)
     {
         String t =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                 ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE);
-        Node text = new Node(JavadocTokenTypes.PCDATA, t);
-        Node comment = new Node(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
+        Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, t);
+        Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
         comment.setFirstChild(text);
 
-        ExtendedToken token = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, null);
+        ExtendedToken token = out.getCompositeFactory().getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, null);
         token.setComment(comment);
         addComment(node, token);
     }

@@ -12,7 +12,9 @@ import java.io.Writer;
 import java.util.Map;
 
 import antlr.CommonHiddenStreamToken;
+import de.hunsicker.jalopy.language.CompositeFactory;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -162,6 +164,8 @@ public class NodeWriter
     /** Used to generate the indent string. */
     private char[] _indentChars;
     
+    private CompositeFactory _factory = null;
+    
 
 
     //~ Constructors ---------------------------------------------------------------------
@@ -177,27 +181,36 @@ public class NodeWriter
      */
     public NodeWriter(
         Writer out,
+        CompositeFactory factory,
         String filename,
         Map    issues,
         String lineSeparator,
         String originalLineSeparator)
     {
-        this();
+        this(factory);
         this.filename = filename;
         this.issues = issues;
         this.lineSeparator = lineSeparator;
         this.originalLineSeparator = originalLineSeparator;
-        this.testers = new WriterCache(this);
+        this.testers = new WriterCache(factory,this);
         _out = out;
+    }
+    
+    public CompositeFactory getCompositeFactory() {
+        return _factory;
+    }
+    public JavaNodeFactory getJavaNodeFactory() {
+        return _factory.getJavaNodeFactory();
     }
 
 
     /**
      * Creates a new NodeWriter object.
      */
-    protected NodeWriter()
+    protected NodeWriter(CompositeFactory factory)
     {
         this.state = new PrinterState(this);
+        this._factory = factory;
         this.lineSeparator = File.separator;
         this.settings = Convention.getInstance();
         this.indentSize =

@@ -43,14 +43,17 @@ final class SortTransformation
     /** Comparator for VARIABLE_DEF nodes */
     private final VariableDefNodeComparator _variablesComparator =
         new VariableDefNodeComparator();
+    
+    CompositeFactory _factory = null;
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new SortTransformation object.
      */
-    public SortTransformation()
+    public SortTransformation(CompositeFactory factory)
     {
+        _factory = factory;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -186,7 +189,7 @@ LOOP:
             if (addSeparator)
             {
                 ExtendedToken comment =
-                    new ExtendedToken(JavaTokenTypes.SEPARATOR_COMMENT, EMPTY_STRING);
+                    _factory.getExtendedTokenFactory().create(JavaTokenTypes.SEPARATOR_COMMENT, EMPTY_STRING);
 
                 if (next.hasCommentsBefore())
                 {
@@ -600,7 +603,7 @@ LOOP:
             settings.getInt(ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         int indent =
             settings.getInt(ConventionKeys.INDENT_SIZE, ConventionDefaults.INDENT_SIZE);
-        JavaNode tmp = new JavaNode();
+        JavaNode tmp = (JavaNode) _factory.getJavaNodeFactory().create();
         JavaNode current = tmp;
 
         // add the different declaration groups in the specified order
@@ -628,6 +631,16 @@ LOOP:
 
         current.setNextSibling(rcurly);
 
+        staticStuff.clear(); // both variables and initializers
+        variables.clear(); // instance variables
+        initializers.clear(); // instance initializers
+        ctors.clear();
+        methods.clear();
+        classes.clear();
+        interfaces.clear();
+        annotations.clear();
+        enums.clear();
+        names.clear(); // type names of all instance variables
         return node;
     }
 }

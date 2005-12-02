@@ -26,10 +26,12 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
 import java.text.DateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
@@ -40,9 +42,12 @@ import de.hunsicker.io.FileBackup;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
+import de.hunsicker.jalopy.language.CompositeFactory;
 import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.JavaNodeFactory;
 import de.hunsicker.jalopy.language.JavaRecognizer;
 import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.NodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
@@ -285,6 +290,8 @@ public final class Jalopy
 
     /** Holds the number of milliseconds used for transforming. */
     private long _timeTransforming;
+    
+    private static CompositeFactory _factory=null;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -295,7 +302,10 @@ public final class Jalopy
     {
         initConventionDefaults();
         _issues = new HashMap(30);
-        _recognizer = new JavaRecognizer();
+        if (_factory == null) {
+            _factory = new CompositeFactory();
+        }
+        _recognizer = new JavaRecognizer(_factory);
         _inspector = new CodeInspector(_issues);
         _spy = new SpyAppender();
         Loggers.ALL.addAppender(_spy);
@@ -1004,7 +1014,12 @@ public final class Jalopy
      */
     public boolean format()
     {
+        return format(true);
+    }    
+    public boolean format(boolean runCleanup)
+    {
         JavaNode tree = null;
+        boolean formatSuccess = false;
 
         if (!hasInput())
         {
@@ -1043,6 +1058,7 @@ public final class Jalopy
             {
                 tree = _tree;
             }
+            formatSuccess = format(tree, _packageName, _inputFileFormat, false);
         }
         catch (Throwable ex)
         {
@@ -1054,10 +1070,18 @@ public final class Jalopy
                                           : ex.getMessage();
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
+        finally {
+            cleanupTree(tree);
+        }
+        
 
-        return format(tree, _packageName, _inputFileFormat, false);
+        return formatSuccess;
     }
 
+    private void cleanupTree(JavaNode tree) {
+        // TODO Should this occur here >?
+        _factory.clear();
+    }
 
     /*
      * Formats the given Java AST and writes the result to the specified
@@ -2255,7 +2279,7 @@ public final class Jalopy
 
         NodeWriter out =
             new NodeWriter(
-                outputWriter, _inputFile.getAbsolutePath(), _issues,
+                outputWriter,_factory, _inputFile.getAbsolutePath(), _issues,
                 getLineSeparator(_outputFileFormat, format), format.toString());
 
         out.setTracking(_recognizer.hasAnnotations() || _recognizer.hasPosition());

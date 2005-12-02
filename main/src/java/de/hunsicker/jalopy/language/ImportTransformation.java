@@ -46,8 +46,6 @@ final class ImportTransformation
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final JavaNodeFactory _fab = new JavaNodeFactory();
-
     /** The natural order for nodes: as they appeared in the source. */
     private static final Comparator COMP_LINE = new NodeLineComparator();
 
@@ -114,6 +112,7 @@ final class ImportTransformation
 
     /** The line number of the first import declaration. */
     private int _line;
+    private JavaNodeFactory _factory = null;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -125,11 +124,14 @@ final class ImportTransformation
      */
     public ImportTransformation(
         final List qualIdents,
-        final List unqualIdents)
+        final List unqualIdents,
+        JavaNodeFactory factory)
     {
         _qualIdents = qualIdents;
         _unqualIdents = unqualIdents;
+        _factory = factory;
     }
+    
 
     //~ Methods --------------------------------------------------------------------------
 
@@ -415,7 +417,7 @@ final class ImportTransformation
         }
 
         // add the default package (necessary to detect conflicts)
-        JavaNode defaultPckg = new JavaNode(DEFAULT_PACKAGE, 1, DEFAULT_PACKAGE, 2);
+        JavaNode defaultPckg = _factory.create(DEFAULT_PACKAGE, 1, DEFAULT_PACKAGE, 2);
         defaultPckg.text = _packageName;
         defaultPckg.type = JavaTokenTypes.IMPORT;
         result.add(defaultPckg);
@@ -706,7 +708,7 @@ final class ImportTransformation
         newOnDemandImports.addAll(_onDemandImports);
 
         // add the default package (needed to detect conflicts)
-        JavaNode defaultPackage = new JavaNode(JavaTokenTypes.IMPORT, _packageName);
+        JavaNode defaultPackage = (JavaNode) _factory.create(JavaTokenTypes.IMPORT, _packageName);
         defaultPackage.startLine = DEFAULT_PACKAGE;
         newOnDemandImports.add(defaultPackage);
 
@@ -723,7 +725,7 @@ final class ImportTransformation
             }
 
             // create an on-demand import out of the single-type import
-            JavaNode onDemand = new JavaNode(JavaTokenTypes.IMPORT, packageName);
+            JavaNode onDemand = (JavaNode) _factory.create(JavaTokenTypes.IMPORT, packageName);
             onDemand.setFirstChild(singleType.getFirstChild());
 
             if (singleType.hasCommentsBefore())
@@ -765,7 +767,7 @@ final class ImportTransformation
 
         Map allTypes = new HashMap(newOnDemandImports.size());
         List retainedOnDemandImports = new ArrayList();
-        JavaNode template = new JavaNode(JavaTokenTypes.IMPORT, EMPTY_STRING);
+        JavaNode template =  (JavaNode) _factory.create(JavaTokenTypes.IMPORT, EMPTY_STRING);
 
         // for every package that should be collapsed, build a list
         // with the contained type names
@@ -930,8 +932,8 @@ final class ImportTransformation
         ASTPair curAST = new ASTPair();
 
         // add the childs
-        AST last = _fab.create(JavaTokenTypes.IDENT, (String) parts.remove(0));
-        _fab.addASTChild(curAST, last);
+        AST last = _factory.create(JavaTokenTypes.IDENT, (String) parts.remove(0));
+        _factory.addASTChild(curAST, last);
 
         for (int i = 0, size = parts.size(); i < size; i++)
         {
@@ -939,13 +941,13 @@ final class ImportTransformation
 
             if (next.equals(DOT))
             {
-                last = _fab.create(JavaTokenTypes.DOT, next);
-                _fab.makeASTRoot(curAST, last);
+                last = _factory.create(JavaTokenTypes.DOT, next);
+                _factory.makeASTRoot(curAST, last);
             }
             else
             {
-                last = _fab.create(JavaTokenTypes.IDENT, next);
-                _fab.addASTChild(curAST, last);
+                last = _factory.create(JavaTokenTypes.IDENT, next);
+                _factory.addASTChild(curAST, last);
             }
         }
 
@@ -1162,7 +1164,7 @@ final class ImportTransformation
 
         StringBuffer buf = new StringBuffer(50);
         String defaultPackageName = _packageName;
-        JavaNode template = new JavaNode(JavaTokenTypes.IMPORT, EMPTY_STRING);
+        JavaNode template =  (JavaNode) _factory.create(JavaTokenTypes.IMPORT, EMPTY_STRING);
         String[] repository = ClassRepository.getInstance().getContent();
         List result = new ArrayList(20);
         Map conflicts = new HashMap(20);
@@ -1194,7 +1196,7 @@ final class ImportTransformation
                         && !result.contains(template))
                     {
                         JavaNode node =
-                            new JavaNode(JavaTokenTypes.IMPORT, template.text);
+                             (JavaNode) _factory.create(JavaTokenTypes.IMPORT, template.text);
                         node.startLine = resolvableImport.startLine;
                         node.parent = resolvableImport.parent;
                         node.setFirstChild(resolvableImport.getFirstChild());

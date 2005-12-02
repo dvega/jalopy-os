@@ -8,6 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import de.hunsicker.jalopy.language.CompositeFactory;
+import de.hunsicker.jalopy.language.JavaNodeFactory;
+
 
 /**
  * NodeWriter can be used to &quot;test&quot; the output result for nodes. The class'
@@ -32,9 +35,9 @@ final class TestNodeWriter
     /**
      * Creates a new TestNodeWriter object.
      */
-    TestNodeWriter(WriterCache writer, NodeWriter source)
+    TestNodeWriter(WriterCache writer,CompositeFactory factory, NodeWriter source)
     {
-        super();
+        super(factory);
         this.mode = MODE_TEST;
         this.testers = writer;
         this.filename = source.filename;

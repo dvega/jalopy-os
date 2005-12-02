@@ -309,6 +309,7 @@ abstract class AbstractPrinter
                 }*/
 
                 //offset += out.state.paramLevel * out.indentSize;
+                
                 int length =
                     (marker.column > indentLength) ? (marker.column - indentLength)
                                                    : marker.column;
@@ -317,9 +318,12 @@ abstract class AbstractPrinter
                 {
                     out.print(out.getString(length + diff), JavaTokenTypes.WS);
                 }
-                else
+                else if (length>0)
                 {
                     out.print(out.getString(length), JavaTokenTypes.WS);
+                }
+                else {
+                    System.out.println("Warning marker bad " + marker.column +"," + indentLength);
                 }
             }
         }
@@ -920,6 +924,7 @@ abstract class AbstractPrinter
             CommonHiddenStreamToken comment = firstComment; comment != null;
             comment = comment.getHiddenAfter())
         {
+
             switch (comment.getType())
             {
 	            case JavaTokenTypes.SEPARATOR_COMMENT :
@@ -963,7 +968,8 @@ abstract class AbstractPrinter
 
                         // change the column offset as we don't want line wrapping
                         // happen because of the comment
-                        out.column -= (comment.getText().length() - 1);
+                        if (comment.getText()!=null)
+                            out.column -= (comment.getText().length() - 1);
                     }
 
                     break;

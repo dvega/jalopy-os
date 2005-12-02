@@ -13,6 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hunsicker.io.FileFormat;
+import de.hunsicker.jalopy.language.CompositeFactory.ExtendedTokenFactory;
 import de.hunsicker.jalopy.language.antlr.InternalJavaLexer;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.util.StringHelper;
@@ -75,6 +76,8 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
 
     /** The used Javadoc parser. */
     private JavadocParser _javadocParser;
+
+    private CompositeFactory _factory = null;;
     
     static class MyLexerSharedInputState extends LexerSharedInputState  {
 
@@ -95,7 +98,15 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
             this.reset();
             this.input = inbuf;            
         }
-        
+        /**
+         * Configure the tokens start line and column.
+         * 
+         * @param tok The token to configure
+         */
+        public void configureToken(ExtendedToken tok) {
+            tok.setColumn(tokenStartColumn);
+            tok.setLine(tokenStartLine);
+        }
     }
 //    protected MyLexerSharedInputState inputState;
 
@@ -110,29 +121,30 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         inputState = sharedState;
     }
     */
-    public JavaLexer(Reader in) {
-    	this(new CharBuffer(in));
+    public JavaLexer(Reader in, CompositeFactory factory) {
+    	this(new CharBuffer(in),factory);
     }
-    public JavaLexer(InputBuffer ib) {
-    	this(new MyLexerSharedInputState(ib));
+    public JavaLexer(InputBuffer ib, CompositeFactory factory) {
+    	this(new MyLexerSharedInputState(ib),factory);
     }
-    public JavaLexer(LexerSharedInputState state) {
+    public JavaLexer(LexerSharedInputState state, CompositeFactory factory) {
     	super(state);
+        this._factory = factory;
     }
     /**
      * Creates a new JavaLexer object. Use {@link #setInputBuffer(Reader)} to
      * set up the input buffer.
      */
-    public JavaLexer()
+    public JavaLexer(CompositeFactory factory)
     {
-        this(new StringReader(""));
+        this(new StringReader(""), factory);
 
-        JavadocLexer lexer = new JavadocLexer();
+        JavadocLexer lexer = new JavadocLexer(factory);
         _javadocParser = (JavadocParser)lexer.getParser();
         _recognizer = new Recognizer(_javadocParser, lexer);
 
         _parser = new JavaParser(this);
-        _parser.setASTFactory(new JavaNodeFactory());   
+        _parser.setASTFactory(factory.getJavaNodeFactory());   
     }
 
     /**
@@ -422,15 +434,13 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
      */
     protected Token makeToken(int t)
     {
-        ExtendedToken newToken = (ExtendedToken) super.makeToken(t);
+        
+        ExtendedToken newToken = _factory.getExtendedTokenFactory().create(t, null);
+        ((MyLexerSharedInputState)this.inputState).configureToken(newToken);
         newToken.endLine=this.getLine();
         newToken.endColumn = this.getColumn();
         
         return newToken;
-        //return new ExtendedToken(t, this.inputState.tokenStartLine,
-        //                         this.inputState.tokenStartColumn,
-        //                         this.inputState.line,
-        //                         this.inputState.column);
     }
 
     /**
@@ -454,7 +464,10 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         }
 
         super.setTokenObjectClass(clazz);
+        
+        // TODO Technically this is not needed.
 
+        /*
         Object instance = null;
 
         try
@@ -463,7 +476,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         }
         catch (Exception ex)
         {
-            panic("" + ex);
+            panic("Java Lexer.467" + ex);
             return;
         }
 
@@ -471,6 +484,8 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         {
             throw new IllegalArgumentException("your TokenObject class must extend de.hunsicker.jalopy.language.ExtendedToken");
         }
+        */
+        
     }
 
     /**
@@ -616,7 +631,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
                         // ignore empty comments
                         if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
                         {
-                            node = new ExtendedToken(JavaTokenTypes.JAVADOC_COMMENT, t);
+                            node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
                             ((ExtendedToken)node).comment = comment;
                             
                         }

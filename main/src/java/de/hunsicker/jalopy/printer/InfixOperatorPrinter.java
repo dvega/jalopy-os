@@ -187,7 +187,7 @@ ITERATE:
                     {
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(lhs);
+                            addParentheses(lhs, out);
                             lhsLeftParen = lhs.getPreviousSibling();
                             lhsRightParen = lhs.getNextSibling();
                         }
@@ -209,7 +209,7 @@ ITERATE:
                     {
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(rhs);
+                            addParentheses(rhs, out);
                             rhsLeftParen = rhs.getPreviousSibling();
                             rhsRightParen = rhs.getNextSibling();
                         }

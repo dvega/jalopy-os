@@ -15,7 +15,7 @@ import javax.swing.JComboBox;
  * @author $author$
  * @version $Revision$
  */
-class NumberComboBoxPanel
+public class NumberComboBoxPanel
     extends ComboBoxPanel
 {
     //~ Constructors ---------------------------------------------------------------------

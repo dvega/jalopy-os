@@ -22,7 +22,7 @@ import java.lang.ClassCastException;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class Node
+public abstract class Node
     extends CommonASTWithHiddenTokens
     implements Comparable
 {
@@ -471,14 +471,21 @@ public class Node
         {
             return true;
         }
+        /*
 
         if (o instanceof Node)
         {
             Node node = (Node) o;
-
-            return this.text.equals(node.text) && (this.type == node.type);
+            if (this.text==null || node.text == null) {
+                return false;
+            }
+            
+            return this.text.equals(node.text) && (this.type == node.type) && 
+            this.startColumn == node.startColumn && this.endColumn == node.endColumn 
+            && this.startLine == node.startLine  && this.endLine = node.endLine;
         }
-
+         */
+        
         return false;
     }
 
@@ -526,7 +533,7 @@ public class Node
     {
         ExtendedToken token = (ExtendedToken) tok;
 
-        this.text = token.text;
+        this.text = token.getText();
         this.type = token.getType();
         this.startLine = token.getLine();
         this.endLine = token.endLine;
@@ -582,5 +589,21 @@ public class Node
         buf.append(this.endColumn);
 
         return buf.toString();
+    }
+/**
+ * Method to prevent references from sticking around
+ * 
+ */
+    public void clear() {
+        this.down = null;
+        this.right = null;
+        this.hiddenAfter = null;
+        this.hiddenBefore = null;     
+        this.text = null;
+        this.startColumn = -1;
+        this.endColumn = -1;
+        this.startLine = -1;
+        this.endLine = -1;
+        this.type = -1;
     }
 }

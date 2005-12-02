@@ -6,6 +6,10 @@
  */
 package de.hunsicker.jalopy.language;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
 import antlr.ASTFactory;
 import antlr.ASTPair;
 import antlr.Token;
@@ -26,14 +30,24 @@ public class JavaNodeFactory
     //~ Static variables/initializers ----------------------------------------------------
 
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    private final CompositeFactory _compositeFactory;
+    
+    private class JavaNodeImpl extends JavaNode {
+
+        public JavaNodeImpl() {
+            super();
+        }
+        
+    }
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new JavaNodeFactory object.
      */
-    public JavaNodeFactory()
+    public JavaNodeFactory(CompositeFactory compositeFactory)
     {
+        this._compositeFactory = compositeFactory;
         this.theASTNodeType = "JavaNode" /* NOI18N */;
         this.theASTNodeTypeClass = JavaNode.class;
     }
@@ -111,12 +125,28 @@ public class JavaNodeFactory
      *
      * @return newly created Node.
      */
+    /*
     public AST create()
     {
-        return new JavaNode();
+        JavaNode node = (JavaNode) _compositeFactory.getCached(JavaNodeFactory.class);
+        if (node==null) {
+            node = new JavaNodeImpl();
+            _compositeFactory.addCached(JavaNodeFactory.class,node);
+        }
+        
+        return node;
     }
-
-
+    */
+    private Collection nodeList = new Vector();
+    public void clear() {
+        for(Iterator i = nodeList.iterator();i.hasNext();) {
+            JavaNode node = (JavaNode) i.next();
+            node.clear();
+            unusedList.add(node);
+        }
+        nodeList.clear();
+    }
+    private static Vector unusedList = new Vector();
     /**
      * Creates a new JavaNode node.
      *
@@ -126,7 +156,12 @@ public class JavaNodeFactory
      */
     public AST create(int type)
     {
-        JavaNode node = (JavaNode) create();
+//        JavaNode node = (JavaNode) create();
+        JavaNode node = (JavaNode) _compositeFactory.getCached(JavaNodeFactory.class);
+        if (node==null) {
+            node = new JavaNodeImpl();
+            _compositeFactory.addCached(JavaNodeFactory.class,node);
+        }
         node.initialize(type, EMPTY_STRING);
 
         return node;
@@ -232,6 +267,23 @@ public class JavaNodeFactory
 
         return result;
     }
+    
+    /** Copy a single node with same Java AST objec type.
+     *  Ignore the tokenType->Class mapping since you know
+     *  the type of the node, t.getClass(), and doing a dup.
+     *
+     *  clone() is not used because we want all AST creation
+     *  to go thru the factory so creation can be
+     *  tracked.  Returns null if t is null.
+     */
+    public AST dup(AST t) {
+        if ( t==null ) {
+            return null;
+        }
+        AST dup_t = create();
+        dup_t.initialize(t);
+        return dup_t;
+    }
 
 
     /**
@@ -244,6 +296,7 @@ public class JavaNodeFactory
      */
     public AST dupTree(AST t)
     {
+        
         JavaNode result = (JavaNode) dup(t); // make copy of root
 
         // copy all children of root.
@@ -438,4 +491,18 @@ public class JavaNodeFactory
 
         return (JavaNode) node;
     }
+
+    public JavaNode create(
+        int startLine,
+        int startColumn,
+        int endLine,
+        int endColumn) {
+        JavaNode node = (JavaNode)create();
+        node.startLine=startLine;
+        node.startColumn=startColumn;
+        node.endLine=endLine;
+        node.endColumn=endColumn;        
+        return node;
+    }
+    
 }

@@ -12,7 +12,7 @@ package de.hunsicker.jalopy.swing;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-class NumberComboBoxPanelCheckBox
+public class NumberComboBoxPanelCheckBox
     extends ComboBoxPanelCheckBox
 {
     //~ Constructors ---------------------------------------------------------------------

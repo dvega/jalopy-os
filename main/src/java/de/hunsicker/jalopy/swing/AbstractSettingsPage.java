@@ -224,7 +224,7 @@ public abstract class AbstractSettingsPage
      *
      * @since 1.0b8
      */
-    String getPreviewFileName()
+    protected String getPreviewFileName()
     {
         return _category;
     }

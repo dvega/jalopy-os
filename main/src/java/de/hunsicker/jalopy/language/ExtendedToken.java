@@ -15,7 +15,7 @@ import antlr.CommonHiddenStreamToken;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class ExtendedToken
+public abstract class ExtendedToken
     extends CommonHiddenStreamToken
 {
     //~ Instance variables ---------------------------------------------------------------
@@ -250,6 +250,17 @@ public class ExtendedToken
 
     public void setHiddenBefore(CommonHiddenStreamToken t) {
         hiddenBefore = t;
+    }
+    public void clear() {
+        this.endColumn = -1;
+        this.endLine = -1;
+        this.comment=null;
+        this.text = null;
+        this.attached = false;
+        this.hiddenBefore = null;
+        this.hiddenAfter = null;
+        this.line = -1;
+        this.col = -1;
     }
     
 }

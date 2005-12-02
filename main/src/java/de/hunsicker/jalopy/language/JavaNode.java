@@ -23,7 +23,7 @@ import antlr.collections.AST;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-public class JavaNode
+public abstract class JavaNode
     extends Node
 {
     //~ Instance variables ---------------------------------------------------------------
@@ -52,7 +52,7 @@ public class JavaNode
      * @param endColumn the ending column offset.
      */
     
-    public JavaNode(
+    private JavaNode(
         int startLine,
         int startColumn,
         int endLine,
@@ -76,7 +76,7 @@ public class JavaNode
      *
      * @param tok token to initialize the node with.
      */
-    public JavaNode(Token tok)
+    private JavaNode(Token tok)
     {
         super(tok);
     }
@@ -89,7 +89,7 @@ public class JavaNode
      * @param text the text of the node.
      */
     
-    public JavaNode(
+    private JavaNode(
         int    type,
         String text)
     {
@@ -524,4 +524,13 @@ public class JavaNode
         }
     }
 
+/**
+ * Method to prevent references from sticking around
+ * 
+ */
+    public void clear() {
+        this.parent = null;
+        this.prevSibling = null;
+        super.clear();
+    }
 }

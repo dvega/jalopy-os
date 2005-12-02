@@ -972,7 +972,7 @@ LOOP:
             if (needTag)
             {
                 returnNode =
-                    createTag(node, JavadocTokenTypes.TAG_RETURN, null, out.environment);
+                    createTag(node, JavadocTokenTypes.TAG_RETURN, null, out.environment,out);
             }
         }
 
@@ -1146,7 +1146,7 @@ LOOP:
                         case JavaTokenTypes.PARAMETERS :
                             tag = createTag(
                                     node, JavadocTokenTypes.TAG_PARAM, name,
-                                    out.environment);
+                                    out.environment,out);
                             result.set(next, tag);
                             tagName = "@param" /* NOI18N */;
 
@@ -1158,7 +1158,7 @@ LOOP:
                                 tag =
                                     createTag(
                                         node, JavadocTokenTypes.TAG_EXCEPTION, name,
-                                        out.environment));
+                                        out.environment,out));
                             tagName = "@throws" /* NOI18N */;
 
                             break;
@@ -1333,7 +1333,7 @@ LOOP:
         {
             String newName = (String) validNames.get(index);
             String text = SPACE + newName;
-            Node c = new Node(JavadocTokenTypes.PCDATA, text);
+            Node c = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, text);
 
             wrongTag.setFirstChild(c);
         }
@@ -1356,14 +1356,15 @@ LOOP:
         AST         node,
         int         type,
         String      typeName,
-        Environment environment)
+        Environment environment,
+        NodeWriter out)
     {
-        AST tag = new Node(type, EMPTY_STRING);
+        AST tag = out.getJavaNodeFactory().create(type, EMPTY_STRING);
 
         if (typeName != null)
         {
             AST para =
-                new Node(
+                out.getJavaNodeFactory().create(
                     JavadocTokenTypes.PCDATA,
                     getTagTemplateText(node, typeName, type, environment));
             tag.setFirstChild(para);
@@ -1371,7 +1372,7 @@ LOOP:
         else
         {
             AST description =
-                new Node(
+                out.getJavaNodeFactory().create(
                     JavadocTokenTypes.PCDATA,
                     getTagTemplateText(node, null, type, environment));
             tag.setFirstChild(description);

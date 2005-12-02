@@ -53,7 +53,7 @@ import de.hunsicker.util.ResourceBundleFactory;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-final class SettingsContainer
+public final class SettingsContainer
     extends JPanel
 {
     //~ Static variables/initializers ----------------------------------------------------

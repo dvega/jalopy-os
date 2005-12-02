@@ -76,7 +76,7 @@ final class ParameterDeclarationPrinter
                 }
             }
             if (! finalAlreadyExists) {
-                AST finalModifier = new JavaNodeFactory().create(JavaTokenTypes.LITERAL_private, "final");
+                AST finalModifier = out.getJavaNodeFactory().create(JavaTokenTypes.FINAL, "final");
                 modifier.addChild(finalModifier);
             }
         }
