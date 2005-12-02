@@ -36,7 +36,7 @@
       <type>jar</type>
       <url>http://jedit.org/</url>
       <properties>
-        <core>true</core>
+        <core>false</core>
       </properties>
     </dependency>
   </dependencies>
@@ -48,7 +48,7 @@
     </version>
   </versions>
   <reports>
-    <report>maven-javadoc-plugin</report>
     <report>maven-changes-plugin</report>
+    <report>maven-faq-plugin</report>
   </reports>
 </project>
