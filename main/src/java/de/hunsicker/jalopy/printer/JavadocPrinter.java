@@ -1414,12 +1414,13 @@ LOOP:
      * Returns the text of the node and all siblings as one string.
      *
      * @param node node to merge its text for.
+     * @param newLineString The new line char code
      *
      * @return string with the textual content of the node and all siblings.
      *
      * @throws IllegalStateException if a &lt;pre&gt; tag was found in the description.
      */
-    private String mergeChildren(AST node)
+    private String mergeChildren(AST node, String newLineString, String asterix)
     {
         StringBuffer buf = new StringBuffer(150);
 
@@ -1452,7 +1453,7 @@ LOOP:
                 case JavadocTokenTypes.ODLIST :
                 case JavadocTokenTypes.OOLIST :
                     buf.append(child.getText());
-                    buf.append(mergeChildren(child.getFirstChild()));
+                    buf.append(mergeChildren(child.getFirstChild(),newLineString,asterix));
 
                     break;
 
@@ -1460,7 +1461,7 @@ LOOP:
                 case JavadocTokenTypes.ODTERM :
                 case JavadocTokenTypes.ODDEF :
                     buf.append(child.getText());
-                    buf.append(mergeChildren(child.getFirstChild()));
+                    buf.append(mergeChildren(child.getFirstChild(),newLineString,asterix));
                     buf.append(SPACE);
 
                     break;
@@ -1473,7 +1474,7 @@ LOOP:
                 case JavadocTokenTypes.TAG_INLINE_CUSTOM :
                     buf.append(LCURLY);
                     buf.append(child.getText());
-                    buf.append(mergeChildren(child.getFirstChild()));
+                    buf.append(mergeChildren(child.getFirstChild(),newLineString,asterix));
                     buf.append(RCURLY);
 
                     break;
@@ -1482,6 +1483,12 @@ LOOP:
                     throw new IllegalStateException(
                         "<pre> tag not supported within tag description");
 
+                case JavadocTokenTypes.BR :
+                    buf.append(child.getText());
+                    buf.append(newLineString);
+                    buf.append(asterix);
+                    break;
+                    
                 default :
                     buf.append(child.getText());
             }
@@ -1661,6 +1668,7 @@ SELECTION:
                     case JavadocTokenTypes.OFONT :
                     case JavadocTokenTypes.BR :
                     case JavadocTokenTypes.TYPEDCLASS:
+//                    case JavadocTokenTypes.EMAIL:
                         child = printText(child, asterix, out);
 
                         continue SELECTION;
@@ -2282,7 +2290,7 @@ SELECTION:
                 // special text elements
                 case JavadocTokenTypes.OFONT :
                     buf.append(child.getText());
-                    buf.append(mergeChildren(child.getFirstChild()));
+                    buf.append(mergeChildren(child.getFirstChild(),"", ""));
 
                     break;
 
@@ -2468,7 +2476,7 @@ SELECTION:
 
                     if (child != null)
                     {
-                        String description = mergeChildren(child);
+                        String description = mergeChildren(child, out.lineSeparator,asterix);
 
                         // we trim the text so we have to take care to print a
                         // blank between tag name and description
@@ -2543,7 +2551,7 @@ SELECTION:
     {
         if (child != null)
         {
-            String description = mergeChildren(child);
+            String description = mergeChildren(child,out.lineSeparator,asterix);
 
             // we trim the text so we have to take care to print a
             // blank between tag name and description
@@ -3037,7 +3045,7 @@ LOOP:
                 // special text elements
                 case JavadocTokenTypes.OFONT :
                     buf.append(child.getText());
-                    buf.append(mergeChildren(child.getFirstChild()));
+                    buf.append(mergeChildren(child.getFirstChild(),out.lineSeparator,asterix));
 
                     break;
 

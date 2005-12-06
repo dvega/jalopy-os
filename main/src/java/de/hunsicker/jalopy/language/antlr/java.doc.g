@@ -101,11 +101,15 @@ internalParse
             //_startColumn = _lexer.getColumn();
        }
 
-      JAVADOC_OPEN! ( body_content )* ( standard_tag )* JAVADOC_CLOSE!
+      JAVADOC_OPEN! 
+      	( body_content ) *
+        ( standard_tag ) *
+      	( body_content ) *
+         JAVADOC_CLOSE!
     ;
 
 body_content
-    :   body_tag  | text
+    :   body_tag  | text | AT
     ;
 
 body_tag
@@ -370,55 +374,9 @@ font_dfn
 standard_tag
    :    (
             tag:TAG^ { setTagType(#tag, TYPE_STANDARD); } (text | block)*
-          | AT {#standard_tag.setType(JavadocTokenTypes.AT); }
+//          | AT {#standard_tag.setType(JavadocTokenTypes.AT); }
         )
 
-        /*{
-            switch (tag_AST.getType())
-            {
-                case JavadocTokenTypes.TAG_PARAM:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing parameter-name and description", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_AUTHOR:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing name-text", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_THROWS :
-                case JavadocTokenTypes.TAG_EXCEPTION:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing class-name and description", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_RETURN:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing description", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_SEE:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing reference", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_SINCE:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing since-text", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_VERSION:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing version-text", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_SERIAL_DATA:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing data-description", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-                case JavadocTokenTypes.TAG_SERIAL_FIELD:
-                    if (tag_AST.getFirstChild() == null)
-                        throw new SemanticException("missing field-name, field-type and field-description", getFilename(), _lexer.getLine(), _lexer.getColumn());
-                    break;
-
-                //case JavadocTokenTypes.TAG_DEPRECATED:
-                //case JavadocTokenTypes.TAG_SERIAL:
-                //case JavadocTokenTypes.TAG_CUSTOM:
-            }
-        }*/
    ;
 
 inline_tag
@@ -935,7 +893,7 @@ STAR
     ;
 
 TAG
-  : AT (LCLETTER)+
+  : {LA(0)==' ' || LA(0)=='*'}? AT (LCLETTER)+
   ;
 
 AT

@@ -118,35 +118,6 @@ public class JavaNodeFactory
             currentAST.advanceChildToEnd();
         }
     }
-
-
-    /**
-     * Creates a new empty JavaNode node.
-     *
-     * @return newly created Node.
-     */
-    /*
-    public AST create()
-    {
-        JavaNode node = (JavaNode) _compositeFactory.getCached(JavaNodeFactory.class);
-        if (node==null) {
-            node = new JavaNodeImpl();
-            _compositeFactory.addCached(JavaNodeFactory.class,node);
-        }
-        
-        return node;
-    }
-    */
-    private Collection nodeList = new Vector();
-    public void clear() {
-        for(Iterator i = nodeList.iterator();i.hasNext();) {
-            JavaNode node = (JavaNode) i.next();
-            node.clear();
-            unusedList.add(node);
-        }
-        nodeList.clear();
-    }
-    private static Vector unusedList = new Vector();
     /**
      * Creates a new JavaNode node.
      *
@@ -156,7 +127,6 @@ public class JavaNodeFactory
      */
     public AST create(int type)
     {
-//        JavaNode node = (JavaNode) create();
         JavaNode node = (JavaNode) _compositeFactory.getCached(JavaNodeFactory.class);
         if (node==null) {
             node = new JavaNodeImpl();
