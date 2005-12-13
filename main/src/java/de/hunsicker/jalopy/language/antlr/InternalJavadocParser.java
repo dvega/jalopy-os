@@ -3731,6 +3731,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		"CSTRIKE_OR_CSTRONG",
 		"CSUB_OR_CSUP",
 		"STAR",
+		"TAG_OR_AT",
 		"COMMENT_DATA",
 		"WS",
 		"NEWLINE",
@@ -3811,7 +3812,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
 	private static final long[] mk_tokenSet_12() {
-		long[] data = { -272L, -1L, 262143L, 0L, 0L, 0L};
+		long[] data = { -272L, -1L, 524287L, 0L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());

@@ -892,9 +892,13 @@ STAR
     :   '*' { $setType(Token.SKIP); }
     ;
 
-TAG
-  : {LA(0)==' ' || LA(0)=='*'}? AT (LCLETTER)+
-  ;
+TAG_OR_AT
+    :   
+        (  
+        WS! AT (LCLETTER)+ {$setType(JavadocTokenTypes.TAG);} // Allowed tag
+        |  (LCLETTER) AT {$setType(JavadocTokenTypes.PCDATA);} // Assumed email
+        )
+    ;
 
 AT
     :   '@'
@@ -975,7 +979,7 @@ PCDATA
         | '\t'    {  replaceTab();
                   }
         | { LA(2) != '*' || (LA(2) == '*' && LA(3) != '*') }? '/' // allow slash
-        | ~('*'|'<'|'{'|'@'|'}'|'\n'|'\r'|'/')
+        | {LA(2) != '@'}? ~('*'|'<'|'{'|'@'|'}'|'\n'|'\r'|'/') 
         )+
 
         {

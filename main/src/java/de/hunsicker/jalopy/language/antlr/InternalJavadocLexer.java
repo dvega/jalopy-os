@@ -157,6 +157,12 @@ tryAgain:
 		try {   // for char stream error handling
 			try {   // for lexical error handling
 				switch ( LA(1)) {
+				case '@':
+				{
+					mAT(true);
+					theRetToken=_returnToken;
+					break;
+				}
 				case '}':
 				{
 					mRCURLY(true);
@@ -514,8 +520,8 @@ tryAgain:
 						mCOMMENT(true);
 						theRetToken=_returnToken;
 					}
-					else if (((LA(1)=='@') && (_tokenSet_3.member(LA(2))))&&(LA(0)==' ' || LA(0)=='*')) {
-						mTAG(true);
+					else if ((_tokenSet_3.member(LA(1))) && (_tokenSet_4.member(LA(2))) && (true) && (true)) {
+						mTAG_OR_AT(true);
 						theRetToken=_returnToken;
 					}
 					else if ((LA(1)=='/') && (LA(2)=='*')) {
@@ -530,11 +536,7 @@ tryAgain:
 						mSTAR(true);
 						theRetToken=_returnToken;
 					}
-					else if ((LA(1)=='@') && (true)) {
-						mAT(true);
-						theRetToken=_returnToken;
-					}
-					else if ((_tokenSet_4.member(LA(1))) && (true)) {
+					else if ((_tokenSet_5.member(LA(1))) && (true) && (true) && (true)) {
 						mPCDATA(true);
 						theRetToken=_returnToken;
 					}
@@ -595,7 +597,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -611,8 +613,8 @@ tryAgain:
 		
 		try {      // for error handling
 			{
-			int _cnt390=0;
-			_loop390:
+			int _cnt392=0;
+			_loop392:
 			do {
 				switch ( LA(1)) {
 				case ' ':
@@ -648,17 +650,17 @@ tryAgain:
 						newline();
 					}
 				else {
-					if ( _cnt390>=1 ) { break _loop390; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt392>=1 ) { break _loop392; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				}
-				_cnt390++;
+				_cnt392++;
 			} while (true);
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_6);
+			consumeUntil(_tokenSet_7);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -905,7 +907,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_7);
+			consumeUntil(_tokenSet_8);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -925,7 +927,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -964,7 +966,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -984,7 +986,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1023,7 +1025,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1043,7 +1045,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1082,7 +1084,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1102,7 +1104,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1141,7 +1143,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1161,7 +1163,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1200,7 +1202,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1220,7 +1222,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1269,7 +1271,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1313,7 +1315,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1333,7 +1335,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1382,7 +1384,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1402,7 +1404,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1451,7 +1453,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1471,7 +1473,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1520,7 +1522,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1540,7 +1542,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1589,7 +1591,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1609,7 +1611,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1658,7 +1660,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1678,7 +1680,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1727,7 +1729,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1747,7 +1749,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1796,7 +1798,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1816,7 +1818,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1865,7 +1867,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1906,7 +1908,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -1955,7 +1957,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2004,7 +2006,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2024,7 +2026,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2073,7 +2075,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2093,7 +2095,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2117,7 +2119,7 @@ tryAgain:
 				{
 				_loop249:
 				do {
-					if ((_tokenSet_8.member(LA(1)))) {
+					if ((_tokenSet_9.member(LA(1)))) {
 						mATTR(false);
 					}
 					else {
@@ -2143,7 +2145,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2167,7 +2169,7 @@ tryAgain:
 				{
 				_loop253:
 				do {
-					if ((_tokenSet_8.member(LA(1)))) {
+					if ((_tokenSet_9.member(LA(1)))) {
 						mATTR(false);
 					}
 					else {
@@ -2203,7 +2205,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2223,7 +2225,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2247,7 +2249,7 @@ tryAgain:
 				{
 				_loop259:
 				do {
-					if ((_tokenSet_8.member(LA(1)))) {
+					if ((_tokenSet_9.member(LA(1)))) {
 						mATTR(false);
 					}
 					else {
@@ -2283,7 +2285,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2303,7 +2305,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2327,7 +2329,7 @@ tryAgain:
 				{
 				_loop265:
 				do {
-					if ((_tokenSet_8.member(LA(1)))) {
+					if ((_tokenSet_9.member(LA(1)))) {
 						mATTR(false);
 					}
 					else {
@@ -2363,7 +2365,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2383,7 +2385,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2420,7 +2422,7 @@ tryAgain:
 				{
 				_loop272:
 				do {
-					if ((_tokenSet_8.member(LA(1)))) {
+					if ((_tokenSet_9.member(LA(1)))) {
 						mATTR(false);
 					}
 					else {
@@ -2456,7 +2458,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2487,7 +2489,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2536,7 +2538,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2556,7 +2558,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2605,7 +2607,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2625,7 +2627,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2674,7 +2676,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2694,7 +2696,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2743,7 +2745,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2763,7 +2765,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2812,7 +2814,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2832,7 +2834,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2913,7 +2915,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -2960,7 +2962,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3009,7 +3011,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3029,7 +3031,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3078,7 +3080,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3098,7 +3100,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3147,7 +3149,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3196,7 +3198,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3237,7 +3239,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3286,7 +3288,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3306,7 +3308,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3355,7 +3357,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3375,7 +3377,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3424,7 +3426,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3444,7 +3446,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3493,7 +3495,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3513,7 +3515,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3562,7 +3564,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3582,7 +3584,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3631,7 +3633,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3651,7 +3653,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3700,7 +3702,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3720,7 +3722,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3741,7 +3743,7 @@ tryAgain:
 			int _cnt349=0;
 			_loop349:
 			do {
-				if ((_tokenSet_8.member(LA(1)))) {
+				if ((_tokenSet_9.member(LA(1)))) {
 					mATTR(false);
 				}
 				else {
@@ -3766,7 +3768,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3786,7 +3788,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3807,7 +3809,7 @@ tryAgain:
 			int _cnt354=0;
 			_loop354:
 			do {
-				if ((_tokenSet_8.member(LA(1)))) {
+				if ((_tokenSet_9.member(LA(1)))) {
 					mATTR(false);
 				}
 				else {
@@ -3822,7 +3824,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3843,7 +3845,7 @@ tryAgain:
 			int _cnt357=0;
 			_loop357:
 			do {
-				if ((_tokenSet_8.member(LA(1)))) {
+				if ((_tokenSet_9.member(LA(1)))) {
 					mATTR(false);
 				}
 				else {
@@ -3868,7 +3870,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3888,7 +3890,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3944,7 +3946,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3965,7 +3967,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -3974,34 +3976,71 @@ tryAgain:
 		_returnToken = _token;
 	}
 	
-	public final void mTAG(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
+	public final void mTAG_OR_AT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
-		_ttype = TAG;
+		_ttype = TAG_OR_AT;
 		int _saveIndex;
 		
 		try {      // for error handling
-			if (!(LA(0)==' ' || LA(0)=='*'))
-			  throw new SemanticException("LA(0)==' ' || LA(0)=='*'");
-			mAT(false);
 			{
-			int _cnt366=0;
-			_loop366:
-			do {
-				if ((_tokenSet_3.member(LA(1)))) {
-					mLCLETTER(false);
+			switch ( LA(1)) {
+			case '\t':  case '\n':  case '\r':  case ' ':
+			{
+				_saveIndex=text.length();
+				mWS(false);
+				text.setLength(_saveIndex);
+				mAT(false);
+				{
+				int _cnt367=0;
+				_loop367:
+				do {
+					if ((_tokenSet_10.member(LA(1)))) {
+						mLCLETTER(false);
+					}
+					else {
+						if ( _cnt367>=1 ) { break _loop367; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					}
+					
+					_cnt367++;
+				} while (true);
 				}
-				else {
-					if ( _cnt366>=1 ) { break _loop366; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+				_ttype = JavadocTokenTypes.TAG;
+				break;
+			}
+			case 'a':  case 'b':  case 'c':  case 'd':
+			case 'e':  case 'f':  case 'g':  case 'h':
+			case 'i':  case 'j':  case 'k':  case 'l':
+			case 'm':  case 'n':  case 'o':  case 'p':
+			case 'q':  case 'r':  case 's':  case 't':
+			case 'u':  case 'v':  case 'w':  case 'x':
+			case 'y':  case 'z':  case '\u00df':  case '\u00e0':
+			case '\u00e1':  case '\u00e2':  case '\u00e3':  case '\u00e4':
+			case '\u00e5':  case '\u00e6':  case '\u00e7':  case '\u00e8':
+			case '\u00e9':  case '\u00ea':  case '\u00eb':  case '\u00ec':
+			case '\u00ed':  case '\u00ee':  case '\u00ef':  case '\u00f0':
+			case '\u00f1':  case '\u00f2':  case '\u00f3':  case '\u00f4':
+			case '\u00f5':  case '\u00f6':  case '\u00f7':  case '\u00f8':
+			case '\u00f9':  case '\u00fa':  case '\u00fb':  case '\u00fc':
+			case '\u00fd':  case '\u00fe':  case '\u00ff':
+			{
+				{
+				mLCLETTER(false);
 				}
-				
-				_cnt366++;
-			} while (true);
+				mAT(false);
+				_ttype = JavadocTokenTypes.PCDATA;
+				break;
+			}
+			default:
+			{
+				throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());
+			}
+			}
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4021,7 +4060,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_3);
+			consumeUntil(_tokenSet_10);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4070,7 +4109,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_9);
+			consumeUntil(_tokenSet_11);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4101,7 +4140,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4121,7 +4160,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4141,7 +4180,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4161,7 +4200,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4197,10 +4236,10 @@ tryAgain:
 			}
 			match('>');
 			{
-			_loop376:
+			_loop378:
 			do {
 				// nongreedy exit test
-				if ((LA(1)=='<') && (LA(2)=='/') && (LA(3)=='p') && (LA(4)=='r')) break _loop376;
+				if ((LA(1)=='<') && (LA(2)=='/') && (LA(3)=='p') && (LA(4)=='r')) break _loop378;
 				if ((LA(1)=='\r') && (LA(2)=='\n') && ((LA(3) >= '\u0003' && LA(3) <= '\ufffe')) && ((LA(4) >= '\u0003' && LA(4) <= '\ufffe'))) {
 					match("\r\n");
 					newline(false);
@@ -4217,7 +4256,7 @@ tryAgain:
 					matchNot(EOF_CHAR);
 				}
 				else {
-					break _loop376;
+					break _loop378;
 				}
 				
 			} while (true);
@@ -4227,7 +4266,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4249,7 +4288,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4265,8 +4304,8 @@ tryAgain:
 		
 		try {      // for error handling
 			{
-			int _cnt381=0;
-			_loop381:
+			int _cnt383=0;
+			_loop383:
 			do {
 				if ((LA(1)=='\r') && (LA(2)=='\n') && (true) && (true)) {
 					match('\r');
@@ -4308,16 +4347,16 @@ tryAgain:
 				else if (((LA(1)=='/'))&&( LA(2) != '*' || (LA(2) == '*' && LA(3) != '*') )) {
 					match('/');
 				}
-				else if ((_tokenSet_10.member(LA(1))) && (true) && (true) && (true)) {
+				else if (((_tokenSet_12.member(LA(1))) && (true) && (true) && (true))&&(LA(2) != '@')) {
 					{
-					match(_tokenSet_10);
+					match(_tokenSet_12);
 					}
 				}
 				else {
-					if ( _cnt381>=1 ) { break _loop381; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt383>=1 ) { break _loop383; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				
-				_cnt381++;
+				_cnt383++;
 			} while (true);
 			}
 			
@@ -4346,7 +4385,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4362,7 +4401,7 @@ tryAgain:
 		
 		try {      // for error handling
 			{
-			_loop385:
+			_loop387:
 			do {
 				if (((LA(1)=='-') && ((LA(2) >= '\u0003' && LA(2) <= '\ufffe')) && ((LA(3) >= '\u0003' && LA(3) <= '\ufffe')) && ((LA(4) >= '\u0003' && LA(4) <= '\ufffe')))&&(!(LA(2)=='-' && LA(3)=='>'))) {
 					match('-');
@@ -4379,13 +4418,13 @@ tryAgain:
 					match('\n');
 					newline();
 				}
-				else if ((_tokenSet_11.member(LA(1)))) {
+				else if ((_tokenSet_13.member(LA(1)))) {
 					{
-					match(_tokenSet_11);
+					match(_tokenSet_13);
 					}
 				}
 				else {
-					break _loop385;
+					break _loop387;
 				}
 				
 			} while (true);
@@ -4394,7 +4433,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_12);
+			consumeUntil(_tokenSet_14);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4426,7 +4465,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4474,8 +4513,8 @@ tryAgain:
 			}
 			}
 			{
-			int _cnt404=0;
-			_loop404:
+			int _cnt406=0;
+			_loop406:
 			do {
 				switch ( LA(1)) {
 				case '0':  case '1':  case '2':  case '3':
@@ -4496,27 +4535,27 @@ tryAgain:
 					break;
 				}
 				default:
-					if ((_tokenSet_3.member(LA(1))) && (_tokenSet_9.member(LA(2))) && (true) && (true)) {
+					if ((_tokenSet_10.member(LA(1))) && (_tokenSet_11.member(LA(2))) && (true) && (true)) {
 						mLCLETTER(false);
 					}
-					else if ((LA(1)=='.') && (_tokenSet_9.member(LA(2))) && (true) && (true)) {
+					else if ((LA(1)=='.') && (_tokenSet_11.member(LA(2))) && (true) && (true)) {
 						match('.');
 					}
-					else if ((LA(1)=='/') && (_tokenSet_9.member(LA(2))) && (true) && (true)) {
+					else if ((LA(1)=='/') && (_tokenSet_11.member(LA(2))) && (true) && (true)) {
 						match('/');
 					}
 				else {
-					if ( _cnt404>=1 ) { break _loop404; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt406>=1 ) { break _loop406; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				}
-				_cnt404++;
+				_cnt406++;
 			} while (true);
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_13);
+			consumeUntil(_tokenSet_15);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4532,24 +4571,24 @@ tryAgain:
 		
 		try {      // for error handling
 			{
-			int _cnt414=0;
-			_loop414:
+			int _cnt416=0;
+			_loop416:
 			do {
 				if (((LA(1) >= '0' && LA(1) <= '9'))) {
 					mDIGIT(false);
 				}
 				else {
-					if ( _cnt414>=1 ) { break _loop414; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt416>=1 ) { break _loop416; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				
-				_cnt414++;
+				_cnt416++;
 			} while (true);
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_14);
+			consumeUntil(_tokenSet_16);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4569,13 +4608,13 @@ tryAgain:
 			{
 				match('"');
 				{
-				_loop407:
+				_loop409:
 				do {
-					if ((_tokenSet_15.member(LA(1)))) {
+					if ((_tokenSet_17.member(LA(1)))) {
 						matchNot('"');
 					}
 					else {
-						break _loop407;
+						break _loop409;
 					}
 					
 				} while (true);
@@ -4587,13 +4626,13 @@ tryAgain:
 			{
 				match('\'');
 				{
-				_loop409:
+				_loop411:
 				do {
-					if ((_tokenSet_16.member(LA(1)))) {
+					if ((_tokenSet_18.member(LA(1)))) {
 						matchNot('\'');
 					}
 					else {
-						break _loop409;
+						break _loop411;
 					}
 					
 				} while (true);
@@ -4610,7 +4649,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_17);
+			consumeUntil(_tokenSet_19);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4631,7 +4670,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_17);
+			consumeUntil(_tokenSet_19);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4651,7 +4690,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_18);
+			consumeUntil(_tokenSet_20);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4686,7 +4725,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_5);
+			consumeUntil(_tokenSet_6);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4702,24 +4741,24 @@ tryAgain:
 		
 		try {      // for error handling
 			{
-			int _cnt417=0;
-			_loop417:
+			int _cnt419=0;
+			_loop419:
 			do {
-				if ((_tokenSet_19.member(LA(1))) && (_tokenSet_20.member(LA(2))) && (true) && (true)) {
+				if ((_tokenSet_21.member(LA(1))) && (_tokenSet_22.member(LA(2))) && (true) && (true)) {
 					mHEXDIGIT(false);
 				}
 				else {
-					if ( _cnt417>=1 ) { break _loop417; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
+					if ( _cnt419>=1 ) { break _loop419; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
 				}
 				
-				_cnt417++;
+				_cnt419++;
 			} while (true);
 			}
 		}
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_17);
+			consumeUntil(_tokenSet_19);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4757,7 +4796,7 @@ tryAgain:
 		catch (RecognitionException ex) {
 			reportError(ex);
 			consume();
-			consumeUntil(_tokenSet_20);
+			consumeUntil(_tokenSet_22);
 		}
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -4788,12 +4827,20 @@ tryAgain:
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
 		long[] data = new long[1025];
+		data[0]=4294977024L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
+		long[] data = new long[1025];
+		data[0]=4294977024L;
+		data[1]=1L;
+		return data;
+	}
+	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
+	private static final long[] mk_tokenSet_5() {
 		long[] data = new long[2048];
 		data[0]=-1152925902653358088L;
 		data[1]=-2882303761517117442L;
@@ -4801,31 +4848,23 @@ tryAgain:
 		data[1023]=9223372036854775807L;
 		return data;
 	}
-	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
-	private static final long[] mk_tokenSet_5() {
-		long[] data = new long[1025];
-		return data;
-	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
 		long[] data = new long[1025];
-		data[0]=7205724820716126208L;
-		data[1]=576460743713488896L;
-		data[3]=-2147483648L;
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
 	private static final long[] mk_tokenSet_7() {
 		long[] data = new long[1025];
-		data[0]=4611897124659920896L;
-		data[1]=576460743713488896L;
+		data[0]=7205724820716126208L;
+		data[1]=576460743713488897L;
 		data[3]=-2147483648L;
 		return data;
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
 		long[] data = new long[1025];
-		data[0]=70368744177664L;
+		data[0]=4611897124659920896L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
@@ -4833,13 +4872,28 @@ tryAgain:
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
 		long[] data = new long[1025];
-		data[0]=7493919415495304704L;
-		data[1]=576460743713488897L;
+		data[0]=70368744177664L;
+		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
+		long[] data = new long[1025];
+		data[1]=576460743713488896L;
+		data[3]=-2147483648L;
+		return data;
+	}
+	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
+	private static final long[] mk_tokenSet_11() {
+		long[] data = new long[1025];
+		data[0]=7493919415495304704L;
+		data[1]=576460743713488897L;
+		data[3]=-2147483648L;
+		return data;
+	}
+	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
+	private static final long[] mk_tokenSet_12() {
 		long[] data = new long[2048];
 		data[0]=-1153066640141722632L;
 		data[1]=-2882303761517117442L;
@@ -4847,83 +4901,83 @@ tryAgain:
 		data[1023]=9223372036854775807L;
 		return data;
 	}
-	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
-	private static final long[] mk_tokenSet_11() {
+	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());
+	private static final long[] mk_tokenSet_13() {
 		long[] data = new long[2048];
 		data[0]=-35184372098056L;
 		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		return data;
 	}
-	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
-	private static final long[] mk_tokenSet_12() {
+	public static final BitSet _tokenSet_13 = new BitSet(mk_tokenSet_13());
+	private static final long[] mk_tokenSet_14() {
 		long[] data = new long[1025];
 		data[0]=35184372088832L;
 		return data;
 	}
-	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());
-	private static final long[] mk_tokenSet_13() {
+	public static final BitSet _tokenSet_14 = new BitSet(mk_tokenSet_14());
+	private static final long[] mk_tokenSet_15() {
 		long[] data = new long[1025];
 		data[0]=6917740138168591872L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
-	public static final BitSet _tokenSet_13 = new BitSet(mk_tokenSet_13());
-	private static final long[] mk_tokenSet_14() {
+	public static final BitSet _tokenSet_15 = new BitSet(mk_tokenSet_15());
+	private static final long[] mk_tokenSet_16() {
 		long[] data = new long[1025];
 		data[0]=4611897266393851392L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
-	public static final BitSet _tokenSet_14 = new BitSet(mk_tokenSet_14());
-	private static final long[] mk_tokenSet_15() {
+	public static final BitSet _tokenSet_16 = new BitSet(mk_tokenSet_16());
+	private static final long[] mk_tokenSet_17() {
 		long[] data = new long[2048];
 		data[0]=-17179869192L;
 		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		return data;
 	}
-	public static final BitSet _tokenSet_15 = new BitSet(mk_tokenSet_15());
-	private static final long[] mk_tokenSet_16() {
+	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
+	private static final long[] mk_tokenSet_18() {
 		long[] data = new long[2048];
 		data[0]=-549755813896L;
 		for (int i = 1; i<=1022; i++) { data[i]=-1L; }
 		data[1023]=9223372036854775807L;
 		return data;
 	}
-	public static final BitSet _tokenSet_16 = new BitSet(mk_tokenSet_16());
-	private static final long[] mk_tokenSet_17() {
+	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());
+	private static final long[] mk_tokenSet_19() {
 		long[] data = new long[1025];
 		data[0]=4611897128954897920L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
-	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
-	private static final long[] mk_tokenSet_18() {
+	public static final BitSet _tokenSet_19 = new BitSet(mk_tokenSet_19());
+	private static final long[] mk_tokenSet_20() {
 		long[] data = new long[1025];
 		data[0]=7493919552934258176L;
 		data[1]=576460743713488897L;
 		data[3]=-2147483648L;
 		return data;
 	}
-	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());
-	private static final long[] mk_tokenSet_19() {
+	public static final BitSet _tokenSet_20 = new BitSet(mk_tokenSet_20());
+	private static final long[] mk_tokenSet_21() {
 		long[] data = new long[1025];
 		data[0]=287948901175001088L;
 		data[1]=541165879296L;
 		return data;
 	}
-	public static final BitSet _tokenSet_19 = new BitSet(mk_tokenSet_19());
-	private static final long[] mk_tokenSet_20() {
+	public static final BitSet _tokenSet_21 = new BitSet(mk_tokenSet_21());
+	private static final long[] mk_tokenSet_22() {
 		long[] data = new long[1025];
 		data[0]=4899846030129899008L;
 		data[1]=576460743713488896L;
 		data[3]=-2147483648L;
 		return data;
 	}
-	public static final BitSet _tokenSet_20 = new BitSet(mk_tokenSet_20());
+	public static final BitSet _tokenSet_22 = new BitSet(mk_tokenSet_22());
 	
 	}
