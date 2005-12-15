@@ -6,6 +6,7 @@
  */
 package de.hunsicker.jalopy.storage;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,7 +43,7 @@ public final class Environment
     {
             _variablesPattern = 
                 Pattern.compile(
-                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$");
+                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+):?(.*?)\\$");
     }
 
     private static final Environment INSTANCE = new Environment(true);
@@ -138,13 +139,22 @@ public final class Environment
         // map all found variable expressions with their environment variable
         while (_matcher.find()) 
         {
-            String result = _matcher.group(1); //getMatch();
-            String value = (String) _variables.get(result);
+            String result = _matcher.group(1);
+            String pattern = _matcher.group(2);
+            String value = null; 
+            Variable variable = (Variable) variableMap.get(result);
+            if (variable!=null) {
+                value = variable.format(_variables.get(result),pattern);
+            }
+            else{
+                value = (String) _variables.get(result);
+            }
+                
 
             // the value has to be set in order to be substituted
             if ((value != null) && (value.length() > 0))
             {
-                keys.put("\\$" + result +"\\$", value);
+                keys.put("\\$" + result + (pattern.length() == 0 ? "" : ":" + pattern)  + "\\$", value);
             }
         }
         
@@ -174,7 +184,7 @@ public final class Environment
      */
     public void set(
         String variable,
-        String value)
+        Object value)
     {
         _variables.put(variable, value);
     }
@@ -203,13 +213,31 @@ public final class Environment
     {
         _variables.remove(variable);
     }
+    
+    private static final Map variableMap = getVariableMap();
+    
+    private static Map getVariableMap() {
+        Map vMap = new HashMap(10);
+        vMap.put(Variable.FILE.getName(), Variable.FILE);
+        vMap.put(Variable.FILE_NAME.getName(), Variable.FILE_NAME);
+        vMap.put(Variable.FILE_FORMAT.getName(), Variable.FILE_FORMAT);
+        vMap.put(Variable.TAB_SIZE.getName(), Variable.TAB_SIZE);
+        vMap.put(Variable.CONVENTION.getName(), Variable.CONVENTION);
+        vMap.put(Variable.PACKAGE.getName(), Variable.PACKAGE);
+        vMap.put(Variable.TYPE_PARAM.getName(), Variable.TYPE_PARAM);
+        vMap.put(Variable.TYPE_EXCEPTION.getName(), Variable.TYPE_EXCEPTION);
+        vMap.put(Variable.TYPE_OBJECT.getName(), Variable.TYPE_OBJECT);
+        vMap.put(Variable.CLASS_NAME.getName(), Variable.CLASS_NAME);
+        vMap.put(Variable.DATE.getName(), Variable.DATE);
+        return vMap;
+    }
 
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Represents a local environment variable.
      */
-    public static final class Variable
+    public static class Variable
     {
         /** Defines the variable &quot;file&quot;. */
         public static final Variable FILE = new Variable("file");
@@ -238,8 +266,16 @@ public final class Environment
         /** Defines the variable &quot;objectType&quot;. */
         public static final Variable TYPE_OBJECT = new Variable("objectType");
         
-        /** The date variable */
-        public static final Variable DATE = new Variable("date");
+        /** The date variable you can specify a pattern following the date like $date:dd/mmmm$ as long as it follows the simple date format rules */
+        public static final Variable DATE = new Variable("date"){
+        public String format(Object value, String pattern) {
+            if (pattern == null || pattern.trim().length()==0) {
+                return new SimpleDateFormat().format(value);
+            }
+            return new SimpleDateFormat(pattern).format(value);
+        }
+            
+        };
         
         /** The class name variable */
         public static final Variable CLASS_NAME = new Variable("className");
@@ -277,6 +313,10 @@ public final class Environment
 
             return false;
         }
+        
+        public String format(Object value, String pattern) {
+            return value.toString();
+        }
 
 
         public int hashCode()
@@ -297,4 +337,5 @@ public final class Environment
             return this.name;
         }
     }
+
 }

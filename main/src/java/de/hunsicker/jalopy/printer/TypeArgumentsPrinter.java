@@ -65,7 +65,7 @@ public class TypeArgumentsPrinter extends AbstractPrinter {
         for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
             switch(child.getType()) {
                 case JavaTokenTypes.WILDCARD_TYPE:
-                    out.print(QUESTION_SPACE,child.getType());
+                    out.print(QUESTION,child.getType());
                 	processTypeArguement(child,out,true);
                 	break;
                 case JavaTokenTypes.TYPE_UPPER_BOUNDS:

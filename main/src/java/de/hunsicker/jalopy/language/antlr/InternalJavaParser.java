@@ -7521,7 +7521,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 		ASTPair currentAST = new ASTPair();
 		JavaNode identPrimary_AST = null;
 		JavaNode ta1_AST = null;
-		JavaNode ta2_AST = null;
 		Token  lp = null;
 		JavaNode lp_AST = null;
 		Token  lbc = null;
@@ -7550,43 +7549,10 @@ public InternalJavaParser(ParserSharedInputState state) {
 		astFactory.addASTChild(currentAST, tmp232_AST);
 		match(IDENT);
 		{
-		_loop306:
+		_loop304:
 		do {
-			boolean synPredMatched304 = false;
-			if (((LA(1)==DOT) && (LA(2)==IDENT||LA(2)==LT))) {
-				int _m304 = mark();
-				synPredMatched304 = true;
-				inputState.guessing++;
-				try {
-					{
-					match(DOT);
-					{
-					switch ( LA(1)) {
-					case LT:
-					{
-						typeArguments();
-						break;
-					}
-					case IDENT:
-					{
-						break;
-					}
-					default:
-					{
-						throw new NoViableAltException(LT(1), getFilename());
-					}
-					}
-					}
-					match(IDENT);
-					}
-				}
-				catch (RecognitionException pe) {
-					synPredMatched304 = false;
-				}
-				rewind(_m304);
-				inputState.guessing--;
-			}
-			if ( synPredMatched304 ) {
+			if ((LA(1)==DOT) && (LA(2)==IDENT||LA(2)==LT)) {
+				{
 				JavaNode tmp233_AST = null;
 				tmp233_AST = (JavaNode)astFactory.create(LT(1));
 				astFactory.makeASTRoot(currentAST, tmp233_AST);
@@ -7596,7 +7562,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				case LT:
 				{
 					typeArguments();
-					ta2_AST = (JavaNode)returnAST;
+					astFactory.addASTChild(currentAST, returnAST);
 					break;
 				}
 				case IDENT:
@@ -7613,11 +7579,12 @@ public InternalJavaParser(ParserSharedInputState state) {
 				tmp234_AST = (JavaNode)astFactory.create(LT(1));
 				astFactory.addASTChild(currentAST, tmp234_AST);
 				match(IDENT);
+				}
 			}
 			else if (((_tokenSet_51.member(LA(1))) && (_tokenSet_48.member(LA(2))))&&(false)) {
 			}
 			else {
-				break _loop306;
+				break _loop304;
 			}
 			
 		} while (true);
@@ -7632,12 +7599,6 @@ public InternalJavaParser(ParserSharedInputState state) {
 			if ( inputState.guessing==0 ) {
 				lp_AST.setType(METHOD_CALL);
 			}
-			if ( inputState.guessing==0 ) {
-				if (ta2_AST != null) astFactory.addASTChild(currentAST, ta2_AST);
-			}
-			if ( inputState.guessing==0 ) {
-				if (ta2_AST == null) astFactory.addASTChild(currentAST, ta1_AST);
-			}
 			argList();
 			astFactory.addASTChild(currentAST, returnAST);
 			JavaNode tmp235_AST = null;
@@ -7648,8 +7609,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 		}
 		else if ((LA(1)==LBRACK) && (LA(2)==RBRACK)) {
 			{
-			int _cnt310=0;
-			_loop310:
+			int _cnt308=0;
+			_loop308:
 			do {
 				if ((LA(1)==LBRACK) && (LA(2)==RBRACK)) {
 					lbc = LT(1);
@@ -7662,10 +7623,10 @@ public InternalJavaParser(ParserSharedInputState state) {
 					match(RBRACK);
 				}
 				else {
-					if ( _cnt310>=1 ) { break _loop310; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt308>=1 ) { break _loop308; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt310++;
+				_cnt308++;
 			} while (true);
 			}
 		}
@@ -7758,8 +7719,8 @@ public InternalJavaParser(ParserSharedInputState state) {
 		JavaNode lb_AST = null;
 		
 		{
-		int _cnt321=0;
-		_loop321:
+		int _cnt319=0;
+		_loop319:
 		do {
 			if ((LA(1)==LBRACK) && (_tokenSet_52.member(LA(2)))) {
 				lb = LT(1);
@@ -7819,10 +7780,10 @@ public InternalJavaParser(ParserSharedInputState state) {
 				match(RBRACK);
 			}
 			else {
-				if ( _cnt321>=1 ) { break _loop321; } else {throw new NoViableAltException(LT(1), getFilename());}
+				if ( _cnt319>=1 ) { break _loop319; } else {throw new NoViableAltException(LT(1), getFilename());}
 			}
 			
-			_cnt321++;
+			_cnt319++;
 		} while (true);
 		}
 		newArrayDeclarator_AST = (JavaNode)currentAST.root;

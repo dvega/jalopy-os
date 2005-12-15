@@ -1542,8 +1542,10 @@ identPrimary
 			// The problem is that this loop here conflicts with
 			// DOT typeArguments "super" in postfixExpression (k=2)
 			// A proper solution would require a lot of refactoring...
-		:	(DOT (typeArguments)? IDENT) =>
-				DOT^ (ta2:typeArguments!)? IDENT
+// Original way.			
+//		:	(DOT (typeArguments)? IDENT) =>
+//				DOT^ (ta2:typeArguments!)? IDENT
+		:	(DOT^ (typeArguments)? IDENT) 
 		|	{false}?	// FIXME: this is very ugly but it seems to work...
 						// this will also produce an ANTLR warning!
 				// Unfortunately a syntactic predicate can only select one of
@@ -1563,8 +1565,9 @@ identPrimary
 		:	(	lp:LPAREN^ {#lp.setType(METHOD_CALL);}
 				// if the input is valid, only the last IDENT may
 				// have preceding typeArguments... rather hacky, this is...
-				{if (#ta2 != null) astFactory.addASTChild(currentAST, #ta2);}
-				{if (#ta2 == null) astFactory.addASTChild(currentAST, #ta1);}
+// Not required because see above				
+//				{if (#ta2 != null) astFactory.addASTChild(currentAST, #ta2);}
+//				{if (#ta2 == null) astFactory.addASTChild(currentAST, #ta1);}
 				argList RPAREN
 			)
 		|	( options {greedy=true;} :
