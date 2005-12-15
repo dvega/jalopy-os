@@ -8,6 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
@@ -132,12 +133,12 @@ final class VariableDeclarationPrinter
                 {
                     case JavaTokenTypes.ASSIGN :
 
-                        if (isLongStringLiteral(assign, out))
-                        {
-                            AssignmentPrinter.getInstance().print(assign, true, out);
-
-                            break;
-                        }
+//                        if (isLongStringLiteral(assign, out))
+//                        {
+//                            AssignmentPrinter.getInstance().print(assign, true, out);
+//
+//                            break;
+//                        }
 
                     default :
                         PrinterFactory.create(assign, out).print(assign, out);
@@ -223,11 +224,13 @@ final class VariableDeclarationPrinter
                             ConventionKeys.CHUNKS_BY_BLANK_LINES,
                             ConventionDefaults.CHUNKS_BY_BLANK_LINES))
                     {
-                        if (
-                            (n.getStartLine() - n.getPreviousSibling().getStartLine() - 1) > maxLinesBetween)
-                        {
-                            return true;
-                        }
+                    	// Count hidden blank lines by adding up the newlines between the 2 nodes
+                    	
+                    	int totalLines = countChildrenLines((JavaNode)n.getPreviousSibling().getFirstChild(),0);
+                		if (totalLines-1 > maxLinesBetween) {
+                			return true;
+                		}
+                    	
                     }
 
                     return false;
@@ -239,6 +242,19 @@ final class VariableDeclarationPrinter
 
 
     /**
+     * Counts the number of blank lines following a node
+     * 
+	 * @param n The node
+	 * @return The number of lines
+	 */
+	private int countChildrenLines(JavaNode n, int current) {
+		for(;n!=null;n=(JavaNode) n.getNextSibling()) {
+			current += n.nlAfter;	
+		}
+		return current;
+	}
+
+	/**
      * Determines whether the node needs special wrapping (for long string literal
      * assignments).
      *

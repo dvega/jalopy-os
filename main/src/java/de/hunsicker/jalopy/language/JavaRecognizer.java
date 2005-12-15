@@ -426,7 +426,8 @@ public final class JavaRecognizer
                 } while (LA(1).getType()==Token.SKIP);
                 ExtendedToken p = monitored;
                 ExtendedToken next = (ExtendedToken) LA(1);
-                // while hidden or discarded scarf tokens
+                attachBefore = false;
+              // while hidden or discarded scarf tokens
                 while (hideMask.member(next.getType()) || discardMask.member(next.getType())) {
                     if (hideMask.member(next.getType())) {
                         // attach the hidden token to the monitored in a chain
@@ -434,7 +435,9 @@ public final class JavaRecognizer
                         if (!attachBefore && !next.attached) {
                             if (next.getType()!= JavaTokenTypes.JAVADOC_COMMENT) {
                                 p.setHiddenAfter(next);
-                                next.attached = true;
+                                if (p == monitored)
+                                	next.attached = true;
+                                next.setHiddenBefore(p);
                                 // Attach last hidden token to top
                                 if (p!=monitored && lastHiddenToken==null)
                                     lastHiddenToken = p;
@@ -461,6 +464,13 @@ public final class JavaRecognizer
                     else if (next.getType()==JavaTokenTypes.WS) {
                     	// If white space then check if new line
                         if (next.getText().indexOf("\n")>-1) {
+                        	
+                        	monitored.nlAfter=new StringTokenizer(next.getText(),"\n").countTokens();
+                        	if (monitored.nlAfter>4) {
+                        		int x=2;
+                        		x++;
+                        		System.out.println(monitored);
+                        	}
                         	// Check the attach before flag
                             if (!attachBefore) {
                             	// Set the attach before flag
@@ -482,7 +492,7 @@ public final class JavaRecognizer
                             }
                         }
                         else {
-                            attachBefore = false;
+//                            attachBefore = false;
                         }
                     }
                     do {

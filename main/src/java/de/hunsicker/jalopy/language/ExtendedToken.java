@@ -31,7 +31,8 @@ public abstract class ExtendedToken
 
     /** Token text. */
     String text;
-    
+
+    int nlAfter = 0;
     /** True if attached to a node */
     boolean attached = false;
 
@@ -259,6 +260,7 @@ public abstract class ExtendedToken
         this.attached = false;
         this.hiddenBefore = null;
         this.hiddenAfter = null;
+        this.nlAfter = 0;
         this.line = -1;
         this.col = -1;
     }

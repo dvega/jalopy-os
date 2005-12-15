@@ -30,6 +30,7 @@ public abstract class Node
 
     /** Node text. */
     protected String text;
+    public int nlAfter = 0;
 
     /** Column number where this node ends. */
     protected int endColumn;
@@ -541,6 +542,7 @@ public abstract class Node
         this.endColumn = token.endColumn;
         this.hiddenBefore = token.getHiddenBefore();
         this.hiddenAfter = token.getHiddenAfter();
+        this.nlAfter = token.nlAfter;
     }
 
 
@@ -605,5 +607,7 @@ public abstract class Node
         this.startLine = -1;
         this.endLine = -1;
         this.type = -1;
+        this.nlAfter = 0;
+        
     }
 }
