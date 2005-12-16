@@ -1,0 +1,40 @@
+package de.hunsicker.jalopy.swing;
+
+import java.net.URL;
+import java.net.URLConnection;
+
+/**
+* The <code>Source.java</code>
+* class a@b.com allows...
+*
+* @author=<a href="mailto:me@noway.com">me</a>
+* @version $Revision$, $date$
+* <br>Copyright © 2005, SH
+*/
+public class AllTest {
+    private Class<?> type;
+    /**
+     * This is a test
+     * 
+     * @param tmpObject the temp object
+     */
+    public void test1(Class tmpObject,Class[] panelParams, URL u) {
+        try {
+java.lang.reflect.Constructor tmpConst =
+(java.lang.reflect.Constructor) 
+tmpObject.getConstructor
+(panelParams);
+
+      java.net.JarURLConnection uc = (java.net.JarURLConnection)
+u
+         .openConnection();
+        } catch(Exception e) {}
+    }
+public static <K, V> Map<K, V> newSynchronizedMap() {
+return Collections.synchronizedMap(util.<K,V>newMap());
+}    
+}
+/*
+ * End comment
+ */
+

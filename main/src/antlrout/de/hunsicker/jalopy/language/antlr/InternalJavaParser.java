@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "java15.g" -> "InternalJavaParser.java"$
+// $ANTLR 2.7.5 (20050128): "java15.g" -> "InternalJavaParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
@@ -370,8 +370,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_0);
+				recover(ex,_tokenSet_0);
 			} else {
 			  throw ex;
 			}
@@ -427,8 +426,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_0);
+				recover(ex,_tokenSet_0);
 			} else {
 			  throw ex;
 			}
@@ -487,8 +485,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_3);
+				recover(ex,_tokenSet_3);
 			} else {
 			  throw ex;
 			}

@@ -90,6 +90,16 @@ tokens {
 
     /** Indicates a standard Javadoc tag. */
     protected final static String TYPE_STANDARD = "TAG_";
+    
+    /**
+     * To satisfy antlr
+     * 
+     * @param ex
+     * @param set
+     */
+	public void recover(RecognitionException ex, BitSet set) {
+        
+    }
 
 }
 
@@ -109,7 +119,7 @@ internalParse
     ;
 
 body_content
-    :   body_tag  | text | AT
+    :   body_tag  | text | AT | TAG_OR_AT
     ;
 
 body_tag
@@ -509,7 +519,15 @@ options {
      */
     protected abstract void replaceNewline(int length) throws CharStreamException;
 
-
+    /**
+     * To satisfy antlr
+     * 
+     * @param ex
+     * @param set
+     */
+	public void recover(RecognitionException ex, BitSet set) {
+        
+    }
 
 }
 
@@ -892,14 +910,6 @@ STAR
     :   '*' { $setType(Token.SKIP); }
     ;
 
-TAG_OR_AT
-    :   
-        (  
-        WS! AT (LCLETTER)+ {$setType(JavadocTokenTypes.TAG);} // Allowed tag
-        |  (LCLETTER) AT {$setType(JavadocTokenTypes.PCDATA);} // Assumed email
-        )
-    ;
-
 AT
     :   '@'
     ;
@@ -935,8 +945,9 @@ PRE
 
         "</pre>"
     ;
+    
 TYPEDCLASS
-    :   "<" . '>'
+    :   "<" LCLETTER '>'
     ;
 
 
@@ -1005,6 +1016,15 @@ PCDATA
             }
         }
     ;
+    
+TAG_OR_AT
+    :   
+        (  
+        " @" (LCLETTER)+ {$setType(JavadocTokenTypes.TAG);} // Allowed tag
+        |  (LCLETTER) AT {$setType(JavadocTokenTypes.PCDATA);} // Assumed email
+        )
+    ;
+
 
 // multiple-line comments
 protected

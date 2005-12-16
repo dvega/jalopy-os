@@ -2642,4 +2642,16 @@ OUTER:
        }
        return comment;
     }
+    /**
+     * Counts the number of blank lines following a node
+     * 
+     * @param n The node
+     * @return The number of lines
+     */
+    protected int countChildrenLines(JavaNode n, int current) {
+        for(;n!=null;n=(JavaNode) n.getNextSibling()) {
+            current += n.nlAfter;   
+        }
+        return current;
+    }
 }

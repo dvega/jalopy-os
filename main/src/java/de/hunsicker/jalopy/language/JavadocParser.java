@@ -99,6 +99,8 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
     /** File to load the inline Javadoc tag definitions from. */
     //private final static File INLINE_TAGS = new File(System.getProperty("user.home")+ File.separator + ".jalopy" + File.separator + "inline.tags");
     private JavaNodeFactory _factory = null;
+
+    private  Recognizer recognizer = null;;
     {
         loadTokenTypeInfo();
         loadTagInfo(true);
@@ -108,7 +110,7 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
      *
      * @param tokenBuf DOCUMENT ME!
      */
-    public JavadocParser(TokenBuffer tokenBuf,JavaNodeFactory factory)
+    public JavadocParser(TokenBuffer tokenBuf, JavaNodeFactory factory)
     {
         this(tokenBuf, 1,factory);
     }
@@ -472,7 +474,9 @@ public class JavadocParser extends InternalJavadocParser implements Parser{
     */
    public void reportError(RecognitionException ex)
    {
-      Object args[]  = { getFilename(), new Integer(ex.line), new Integer(ex.column), ex.getMessage() };
+       Integer line = new Integer((recognizer!=null?recognizer.getStartLine():0) +ex.getLine());
+       Integer column = new Integer((recognizer!=null?recognizer.getStartColumn():0) +ex.getColumn());
+      Object args[] = { getFilename(), line, column, ex.getMessage() };
       _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, ex);
    }
 
@@ -559,6 +563,12 @@ public void parse() throws RecognitionException, TokenStreamException {
 		
 	}
 	internalParse();
+}
+
+
+public void setRecognizer(Recognizer recognizer2) {
+    this.recognizer = recognizer2;
+    _lexer.setRecognizer(recognizer2);
 }
 
 }

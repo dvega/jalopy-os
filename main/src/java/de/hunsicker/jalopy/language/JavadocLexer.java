@@ -67,7 +67,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
         }
         
     }
-    
+    Recognizer recognizer = null;
     /**
      * Creates a new JavadocLexer object. Use {@link #setInputBuffer(Reader)}
      * to set up the input buffer.
@@ -136,6 +136,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
             _logger.l7dlog(Level.FATAL, "PARSER_ERROR", args, null);
         }
     }
+   
 
    /**
     * Reports the given error.
@@ -144,7 +145,9 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
     */
    public void reportError(RecognitionException ex)
    {
-      Object args[] = { getFilename(), new Integer(getLine()), new Integer(getColumn()), ex.getMessage() };
+       Integer line = new Integer((recognizer!=null?recognizer.getStartLine():0) +getLine());
+       Integer column = new Integer((recognizer!=null?recognizer.getStartColumn():0) +getColumn());
+      Object args[] = { getFilename(), line, column, ex.getMessage() };
       _logger.l7dlog(Level.ERROR, "PARSER_ERROR" , args, ex);
    }
 
@@ -155,7 +158,9 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
     */
    public void reportError(String message)
    {
-      Object args[]  = { getFilename(), new Integer(getLine()), new Integer(getColumn()), message };
+       Integer line = new Integer((recognizer!=null?recognizer.getStartLine():0) +getLine());
+       Integer column = new Integer((recognizer!=null?recognizer.getStartColumn():0) +getColumn());
+      Object args[] = { getFilename(), line, column, message };
       _logger.l7dlog(Level.ERROR, "PARSER_ERROR", args, null);
    }
 
@@ -589,6 +594,10 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
         {
             this.saveConsumedInput = true;
         }
+    }
+    public void setRecognizer(Recognizer recognizer2) {
+        this.recognizer = recognizer2;
+        
     }
 
     /**

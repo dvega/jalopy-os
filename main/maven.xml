@@ -25,6 +25,19 @@
     </ant:fileset>
     <ant:mapper type="regexp" from="^(.*)\.orig$$" to="\1"/>
   </ant:move>
+  
+  </postGoal>
+
+  <postGoal name="prejar:jar">
+    <echo message="Updateing resource ${date}" />
+    <replaceregexp file="${maven.build.dest}/de/hunsicker/jalopy/swing/resources/version.properties" match="@@@JALOPY_VERSION@@@" 
+                   replace="${jalopy.currentVersion}" byline="true"/>
+    <replaceregexp file="${maven.build.dest}/de/hunsicker/jalopy/swing/resources/version.properties" match="@@@BUILD_DATE@@@" 
+                   replace="${date}" byline="true"/>
+  </postGoal>
+  <postGoal name="clean">
+    <echo message="Removing ${maven.antlr.target.dir}" />
+    <ant:delete dir="${maven.antlr.target.dir}" /> 
   </postGoal>
 
   <postGoal name="dist:prepare-bin-filesystem">

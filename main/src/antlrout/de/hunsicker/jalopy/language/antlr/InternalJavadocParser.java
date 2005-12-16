@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "java.doc.g" -> "InternalJavadocParser.java"$
+// $ANTLR 2.7.5 (20050128): "java.doc.g" -> "InternalJavadocParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
@@ -86,6 +86,16 @@ public abstract class InternalJavadocParser extends antlr.LLkParser       implem
 
     /** Indicates a standard Javadoc tag. */
     protected final static String TYPE_STANDARD = "TAG_";
+    
+    /**
+     * To satisfy antlr
+     * 
+     * @param ex
+     * @param set
+     */
+	public void recover(RecognitionException ex, BitSet set) {
+        
+    }
 
 
 protected InternalJavadocParser(TokenBuffer tokenBuf, int k) {
@@ -134,40 +144,40 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			match(JAVADOC_OPEN);
 			{
-			_loop3:
+			_loop452:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop3;
+					break _loop452;
 				}
 				
 			} while (true);
 			}
 			{
-			_loop5:
+			_loop454:
 			do {
 				if ((LA(1)==TAG)) {
 					standard_tag();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop5;
+					break _loop454;
 				}
 				
 			} while (true);
 			}
 			{
-			_loop7:
+			_loop456:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop7;
+					break _loop456;
 				}
 				
 			} while (true);
@@ -178,8 +188,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
+				recover(ex,_tokenSet_1);
 			} else {
 			  throw ex;
 			}
@@ -260,6 +269,15 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				body_content_AST = (AST)currentAST.root;
 				break;
 			}
+			case TAG_OR_AT:
+			{
+				AST tmp4_AST = null;
+				tmp4_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp4_AST);
+				match(TAG_OR_AT);
+				body_content_AST = (AST)currentAST.root;
+				break;
+			}
 			default:
 			{
 				throw new NoViableAltException(LT(1), getFilename());
@@ -269,8 +287,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -296,7 +313,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				setTagType(tag_AST, TYPE_STANDARD);
 			}
 			{
-			_loop176:
+			_loop625:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
@@ -307,7 +324,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop176;
+					break _loop625;
 				}
 				
 			} while (true);
@@ -318,8 +335,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_5);
+				recover(ex,_tokenSet_5);
 			} else {
 			  throw ex;
 			}
@@ -379,8 +395,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -398,9 +413,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case RCURLY:
 			{
-				AST tmp4_AST = null;
-				tmp4_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp4_AST);
+				AST tmp5_AST = null;
+				tmp5_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp5_AST);
 				match(RCURLY);
 				text_AST = (AST)currentAST.root;
 				break;
@@ -436,27 +451,27 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case COMMENT:
 			{
-				AST tmp5_AST = null;
-				tmp5_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp5_AST);
+				AST tmp6_AST = null;
+				tmp6_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp6_AST);
 				match(COMMENT);
 				text_AST = (AST)currentAST.root;
 				break;
 			}
 			case PCDATA:
 			{
-				AST tmp6_AST = null;
-				tmp6_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp6_AST);
+				AST tmp7_AST = null;
+				tmp7_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp7_AST);
 				match(PCDATA);
 				text_AST = (AST)currentAST.root;
 				break;
 			}
 			default:
-				boolean synPredMatched18 = false;
+				boolean synPredMatched467 = false;
 				if (((LA(1)==LCURLY))) {
-					int _m18 = mark();
-					synPredMatched18 = true;
+					int _m467 = mark();
+					synPredMatched467 = true;
 					inputState.guessing++;
 					try {
 						{
@@ -465,20 +480,20 @@ public InternalJavadocParser(ParserSharedInputState state) {
 						}
 					}
 					catch (RecognitionException pe) {
-						synPredMatched18 = false;
+						synPredMatched467 = false;
 					}
-					rewind(_m18);
+					rewind(_m467);
 					inputState.guessing--;
 				}
-				if ( synPredMatched18 ) {
+				if ( synPredMatched467 ) {
 					inline_tag();
 					astFactory.addASTChild(currentAST, returnAST);
 					text_AST = (AST)currentAST.root;
 				}
 				else if ((LA(1)==LCURLY)) {
-					AST tmp7_AST = null;
-					tmp7_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp7_AST);
+					AST tmp8_AST = null;
+					tmp8_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp8_AST);
 					match(LCURLY);
 					text_AST = (AST)currentAST.root;
 				}
@@ -490,8 +505,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -553,9 +567,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case HR:
 			{
-				AST tmp8_AST = null;
-				tmp8_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp8_AST);
+				AST tmp9_AST = null;
+				tmp9_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp9_AST);
 				match(HR);
 				block_AST = (AST)currentAST.root;
 				break;
@@ -576,8 +590,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_7);
+				recover(ex,_tokenSet_7);
 			} else {
 			  throw ex;
 			}
@@ -592,36 +605,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST address_AST = null;
 		
 		try {      // for error handling
-			AST tmp9_AST = null;
-			tmp9_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp9_AST);
+			AST tmp10_AST = null;
+			tmp10_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp10_AST);
 			match(OADDRESS);
 			{
-			_loop30:
+			_loop479:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp10_AST = null;
-					tmp10_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp10_AST);
+					AST tmp11_AST = null;
+					tmp11_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp11_AST);
 					match(PCDATA);
 				}
 				else {
-					break _loop30;
+					break _loop479;
 				}
 				
 			} while (true);
 			}
-			AST tmp11_AST = null;
-			tmp11_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp11_AST);
+			AST tmp12_AST = null;
+			tmp12_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp12_AST);
 			match(CADDRESS);
 			address_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -688,8 +700,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -704,23 +715,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h1_AST = null;
 		
 		try {      // for error handling
-			AST tmp12_AST = null;
-			tmp12_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp12_AST);
+			AST tmp13_AST = null;
+			tmp13_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp13_AST);
 			match(OH1);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp13_AST = null;
-			tmp13_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp13_AST);
+			AST tmp14_AST = null;
+			tmp14_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp14_AST);
 			match(CH1);
 			h1_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -735,23 +745,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h2_AST = null;
 		
 		try {      // for error handling
-			AST tmp14_AST = null;
-			tmp14_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp14_AST);
+			AST tmp15_AST = null;
+			tmp15_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp15_AST);
 			match(OH2);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp15_AST = null;
-			tmp15_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp15_AST);
+			AST tmp16_AST = null;
+			tmp16_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp16_AST);
 			match(CH2);
 			h2_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -766,23 +775,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h3_AST = null;
 		
 		try {      // for error handling
-			AST tmp16_AST = null;
-			tmp16_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp16_AST);
+			AST tmp17_AST = null;
+			tmp17_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp17_AST);
 			match(OH3);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp17_AST = null;
-			tmp17_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp17_AST);
+			AST tmp18_AST = null;
+			tmp18_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp18_AST);
 			match(CH3);
 			h3_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -797,23 +805,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h4_AST = null;
 		
 		try {      // for error handling
-			AST tmp18_AST = null;
-			tmp18_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp18_AST);
+			AST tmp19_AST = null;
+			tmp19_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp19_AST);
 			match(OH4);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp19_AST = null;
-			tmp19_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp19_AST);
+			AST tmp20_AST = null;
+			tmp20_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp20_AST);
 			match(CH4);
 			h4_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -828,23 +835,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h5_AST = null;
 		
 		try {      // for error handling
-			AST tmp20_AST = null;
-			tmp20_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp20_AST);
+			AST tmp21_AST = null;
+			tmp21_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp21_AST);
 			match(OH5);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp21_AST = null;
-			tmp21_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp21_AST);
+			AST tmp22_AST = null;
+			tmp22_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp22_AST);
 			match(CH5);
 			h5_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -859,23 +865,22 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST h6_AST = null;
 		
 		try {      // for error handling
-			AST tmp22_AST = null;
-			tmp22_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp22_AST);
+			AST tmp23_AST = null;
+			tmp23_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp23_AST);
 			match(OH6);
 			heading_content();
 			astFactory.addASTChild(currentAST, returnAST);
-			AST tmp23_AST = null;
-			tmp23_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp23_AST);
+			AST tmp24_AST = null;
+			tmp24_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp24_AST);
 			match(CH6);
 			h6_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -890,12 +895,12 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST paragraph_AST = null;
 		
 		try {      // for error handling
-			AST tmp24_AST = null;
-			tmp24_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp24_AST);
+			AST tmp25_AST = null;
+			tmp25_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp25_AST);
 			match(OPARA);
 			{
-			_loop33:
+			_loop482:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
@@ -926,7 +931,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop33;
+					break _loop482;
 				}
 				
 			} while (true);
@@ -947,6 +952,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			case CTD:
 			case JAVADOC_CLOSE:
 			case AT:
+			case TAG_OR_AT:
 			case HR:
 			case IMG:
 			case BR:
@@ -1072,8 +1078,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1088,17 +1093,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST preformatted_AST = null;
 		
 		try {      // for error handling
-			AST tmp26_AST = null;
-			tmp26_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp26_AST);
+			AST tmp27_AST = null;
+			tmp27_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp27_AST);
 			match(PRE);
 			preformatted_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1113,34 +1117,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST div_AST = null;
 		
 		try {      // for error handling
-			AST tmp27_AST = null;
-			tmp27_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp27_AST);
+			AST tmp28_AST = null;
+			tmp28_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp28_AST);
 			match(ODIV);
 			{
-			_loop76:
+			_loop525:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop76;
+					break _loop525;
 				}
 				
 			} while (true);
 			}
-			AST tmp28_AST = null;
-			tmp28_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp28_AST);
+			AST tmp29_AST = null;
+			tmp29_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp29_AST);
 			match(CDIV);
 			div_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1155,34 +1158,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST center_AST = null;
 		
 		try {      // for error handling
-			AST tmp29_AST = null;
-			tmp29_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp29_AST);
+			AST tmp30_AST = null;
+			tmp30_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp30_AST);
 			match(OCENTER);
 			{
-			_loop79:
+			_loop528:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop79;
+					break _loop528;
 				}
 				
 			} while (true);
 			}
-			AST tmp30_AST = null;
-			tmp30_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp30_AST);
+			AST tmp31_AST = null;
+			tmp31_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp31_AST);
 			match(CCENTER);
 			center_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1197,34 +1199,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST blockquote_AST = null;
 		
 		try {      // for error handling
-			AST tmp31_AST = null;
-			tmp31_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp31_AST);
+			AST tmp32_AST = null;
+			tmp32_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp32_AST);
 			match(OBQUOTE);
 			{
-			_loop82:
+			_loop531:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop82;
+					break _loop531;
 				}
 				
 			} while (true);
 			}
-			AST tmp32_AST = null;
-			tmp32_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp32_AST);
+			AST tmp33_AST = null;
+			tmp33_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp33_AST);
 			match(CBQUOTE);
 			blockquote_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1239,9 +1240,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST table_AST = null;
 		
 		try {      // for error handling
-			AST tmp33_AST = null;
-			tmp33_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp33_AST);
+			AST tmp34_AST = null;
+			tmp34_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp34_AST);
 			match(OTABLE);
 			{
 			switch ( LA(1)) {
@@ -1263,33 +1264,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			}
 			{
-			_loop87:
+			_loop536:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp34_AST = null;
-					tmp34_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp34_AST);
+					AST tmp35_AST = null;
+					tmp35_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp35_AST);
 					match(PCDATA);
 				}
 				else {
-					break _loop87;
+					break _loop536;
 				}
 				
 			} while (true);
 			}
 			{
-			int _cnt89=0;
-			_loop89:
+			int _cnt538=0;
+			_loop538:
 			do {
 				if ((LA(1)==O_TR)) {
 					tr();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt89>=1 ) { break _loop89; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt538>=1 ) { break _loop538; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt89++;
+				_cnt538++;
 			} while (true);
 			}
 			match(CTABLE);
@@ -1298,8 +1299,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1387,8 +1387,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1403,36 +1402,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST teletype_AST = null;
 		
 		try {      // for error handling
-			AST tmp36_AST = null;
-			tmp36_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp36_AST);
+			AST tmp37_AST = null;
+			tmp37_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp37_AST);
 			match(OTTYPE);
 			{
-			int _cnt113=0;
-			_loop113:
+			int _cnt562=0;
+			_loop562:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt113>=1 ) { break _loop113; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt562>=1 ) { break _loop562; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt113++;
+				_cnt562++;
 			} while (true);
 			}
-			AST tmp37_AST = null;
-			tmp37_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp37_AST);
+			AST tmp38_AST = null;
+			tmp38_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp38_AST);
 			match(CTTYPE);
 			teletype_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1447,36 +1445,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST italic_AST = null;
 		
 		try {      // for error handling
-			AST tmp38_AST = null;
-			tmp38_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp38_AST);
+			AST tmp39_AST = null;
+			tmp39_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp39_AST);
 			match(OITALIC);
 			{
-			int _cnt116=0;
-			_loop116:
+			int _cnt565=0;
+			_loop565:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt116>=1 ) { break _loop116; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt565>=1 ) { break _loop565; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt116++;
+				_cnt565++;
 			} while (true);
 			}
-			AST tmp39_AST = null;
-			tmp39_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp39_AST);
+			AST tmp40_AST = null;
+			tmp40_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp40_AST);
 			match(CITALIC);
 			italic_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1491,36 +1488,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST bold_AST = null;
 		
 		try {      // for error handling
-			AST tmp40_AST = null;
-			tmp40_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp40_AST);
+			AST tmp41_AST = null;
+			tmp41_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp41_AST);
 			match(OBOLD);
 			{
-			int _cnt119=0;
-			_loop119:
+			int _cnt568=0;
+			_loop568:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt119>=1 ) { break _loop119; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt568>=1 ) { break _loop568; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt119++;
+				_cnt568++;
 			} while (true);
 			}
-			AST tmp41_AST = null;
-			tmp41_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp41_AST);
+			AST tmp42_AST = null;
+			tmp42_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp42_AST);
 			match(CBOLD);
 			bold_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1535,36 +1531,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST underline_AST = null;
 		
 		try {      // for error handling
-			AST tmp42_AST = null;
-			tmp42_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp42_AST);
+			AST tmp43_AST = null;
+			tmp43_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp43_AST);
 			match(OUNDER);
 			{
-			int _cnt125=0;
-			_loop125:
+			int _cnt574=0;
+			_loop574:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt125>=1 ) { break _loop125; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt574>=1 ) { break _loop574; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt125++;
+				_cnt574++;
 			} while (true);
 			}
-			AST tmp43_AST = null;
-			tmp43_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp43_AST);
+			AST tmp44_AST = null;
+			tmp44_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp44_AST);
 			match(CUNDER);
 			underline_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1579,36 +1574,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST strike_AST = null;
 		
 		try {      // for error handling
-			AST tmp44_AST = null;
-			tmp44_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp44_AST);
+			AST tmp45_AST = null;
+			tmp45_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp45_AST);
 			match(OSTRIKE);
 			{
-			int _cnt128=0;
-			_loop128:
+			int _cnt577=0;
+			_loop577:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt128>=1 ) { break _loop128; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt577>=1 ) { break _loop577; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt128++;
+				_cnt577++;
 			} while (true);
 			}
-			AST tmp45_AST = null;
-			tmp45_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp45_AST);
+			AST tmp46_AST = null;
+			tmp46_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp46_AST);
 			match(CSTRIKE);
 			strike_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1623,36 +1617,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST big_AST = null;
 		
 		try {      // for error handling
-			AST tmp46_AST = null;
-			tmp46_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp46_AST);
+			AST tmp47_AST = null;
+			tmp47_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp47_AST);
 			match(OBIG);
 			{
-			int _cnt131=0;
-			_loop131:
+			int _cnt580=0;
+			_loop580:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt131>=1 ) { break _loop131; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt580>=1 ) { break _loop580; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt131++;
+				_cnt580++;
 			} while (true);
 			}
-			AST tmp47_AST = null;
-			tmp47_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp47_AST);
+			AST tmp48_AST = null;
+			tmp48_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp48_AST);
 			match(CBIG);
 			big_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1667,36 +1660,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST small_AST = null;
 		
 		try {      // for error handling
-			AST tmp48_AST = null;
-			tmp48_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp48_AST);
+			AST tmp49_AST = null;
+			tmp49_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp49_AST);
 			match(OSMALL);
 			{
-			int _cnt134=0;
-			_loop134:
+			int _cnt583=0;
+			_loop583:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt134>=1 ) { break _loop134; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt583>=1 ) { break _loop583; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt134++;
+				_cnt583++;
 			} while (true);
 			}
-			AST tmp49_AST = null;
-			tmp49_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp49_AST);
+			AST tmp50_AST = null;
+			tmp50_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp50_AST);
 			match(CSMALL);
 			small_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1711,36 +1703,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST subscript_AST = null;
 		
 		try {      // for error handling
-			AST tmp50_AST = null;
-			tmp50_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp50_AST);
+			AST tmp51_AST = null;
+			tmp51_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp51_AST);
 			match(OSUB);
 			{
-			int _cnt137=0;
-			_loop137:
+			int _cnt586=0;
+			_loop586:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt137>=1 ) { break _loop137; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt586>=1 ) { break _loop586; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt137++;
+				_cnt586++;
 			} while (true);
 			}
-			AST tmp51_AST = null;
-			tmp51_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp51_AST);
+			AST tmp52_AST = null;
+			tmp52_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp52_AST);
 			match(CSUB);
 			subscript_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1755,36 +1746,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST superscript_AST = null;
 		
 		try {      // for error handling
-			AST tmp52_AST = null;
-			tmp52_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp52_AST);
+			AST tmp53_AST = null;
+			tmp53_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp53_AST);
 			match(OSUP);
 			{
-			int _cnt140=0;
-			_loop140:
+			int _cnt589=0;
+			_loop589:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt140>=1 ) { break _loop140; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt589>=1 ) { break _loop589; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt140++;
+				_cnt589++;
 			} while (true);
 			}
-			AST tmp53_AST = null;
-			tmp53_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp53_AST);
+			AST tmp54_AST = null;
+			tmp54_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp54_AST);
 			match(CSUP);
 			superscript_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1872,8 +1862,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1888,36 +1877,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST emphasize_AST = null;
 		
 		try {      // for error handling
-			AST tmp54_AST = null;
-			tmp54_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp54_AST);
+			AST tmp55_AST = null;
+			tmp55_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp55_AST);
 			match(OEM);
 			{
-			int _cnt143=0;
-			_loop143:
+			int _cnt592=0;
+			_loop592:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt143>=1 ) { break _loop143; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt592>=1 ) { break _loop592; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt143++;
+				_cnt592++;
 			} while (true);
 			}
-			AST tmp55_AST = null;
-			tmp55_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp55_AST);
+			AST tmp56_AST = null;
+			tmp56_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp56_AST);
 			match(CEM);
 			emphasize_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1932,36 +1920,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST strong_AST = null;
 		
 		try {      // for error handling
-			AST tmp56_AST = null;
-			tmp56_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp56_AST);
+			AST tmp57_AST = null;
+			tmp57_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp57_AST);
 			match(OSTRONG);
 			{
-			int _cnt146=0;
-			_loop146:
+			int _cnt595=0;
+			_loop595:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt146>=1 ) { break _loop146; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt595>=1 ) { break _loop595; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt146++;
+				_cnt595++;
 			} while (true);
 			}
-			AST tmp57_AST = null;
-			tmp57_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp57_AST);
+			AST tmp58_AST = null;
+			tmp58_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp58_AST);
 			match(CSTRONG);
 			strong_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1976,36 +1963,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST definition_AST = null;
 		
 		try {      // for error handling
-			AST tmp58_AST = null;
-			tmp58_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp58_AST);
+			AST tmp59_AST = null;
+			tmp59_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp59_AST);
 			match(ODFN);
 			{
-			int _cnt149=0;
-			_loop149:
+			int _cnt598=0;
+			_loop598:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt149>=1 ) { break _loop149; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt598>=1 ) { break _loop598; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt149++;
+				_cnt598++;
 			} while (true);
 			}
-			AST tmp59_AST = null;
-			tmp59_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp59_AST);
+			AST tmp60_AST = null;
+			tmp60_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp60_AST);
 			match(CDFN);
 			definition_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2020,36 +2006,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST code_AST = null;
 		
 		try {      // for error handling
-			AST tmp60_AST = null;
-			tmp60_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp60_AST);
+			AST tmp61_AST = null;
+			tmp61_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp61_AST);
 			match(OCODE);
 			{
-			int _cnt122=0;
-			_loop122:
+			int _cnt571=0;
+			_loop571:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt122>=1 ) { break _loop122; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt571>=1 ) { break _loop571; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt122++;
+				_cnt571++;
 			} while (true);
 			}
-			AST tmp61_AST = null;
-			tmp61_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp61_AST);
+			AST tmp62_AST = null;
+			tmp62_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp62_AST);
 			match(CCODE);
 			code_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2064,36 +2049,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST sample_AST = null;
 		
 		try {      // for error handling
-			AST tmp62_AST = null;
-			tmp62_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp62_AST);
+			AST tmp63_AST = null;
+			tmp63_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp63_AST);
 			match(OSAMP);
 			{
-			int _cnt152=0;
-			_loop152:
+			int _cnt601=0;
+			_loop601:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt152>=1 ) { break _loop152; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt601>=1 ) { break _loop601; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt152++;
+				_cnt601++;
 			} while (true);
 			}
-			AST tmp63_AST = null;
-			tmp63_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp63_AST);
+			AST tmp64_AST = null;
+			tmp64_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp64_AST);
 			match(CSAMP);
 			sample_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2108,36 +2092,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST keyboard_AST = null;
 		
 		try {      // for error handling
-			AST tmp64_AST = null;
-			tmp64_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp64_AST);
+			AST tmp65_AST = null;
+			tmp65_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp65_AST);
 			match(OKBD);
 			{
-			int _cnt155=0;
-			_loop155:
+			int _cnt604=0;
+			_loop604:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt155>=1 ) { break _loop155; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt604>=1 ) { break _loop604; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt155++;
+				_cnt604++;
 			} while (true);
 			}
-			AST tmp65_AST = null;
-			tmp65_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp65_AST);
+			AST tmp66_AST = null;
+			tmp66_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp66_AST);
 			match(CKBD);
 			keyboard_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2152,36 +2135,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST variable_AST = null;
 		
 		try {      // for error handling
-			AST tmp66_AST = null;
-			tmp66_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp66_AST);
+			AST tmp67_AST = null;
+			tmp67_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp67_AST);
 			match(OVAR);
 			{
-			int _cnt158=0;
-			_loop158:
+			int _cnt607=0;
+			_loop607:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt158>=1 ) { break _loop158; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt607>=1 ) { break _loop607; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt158++;
+				_cnt607++;
 			} while (true);
 			}
-			AST tmp67_AST = null;
-			tmp67_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp67_AST);
+			AST tmp68_AST = null;
+			tmp68_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp68_AST);
 			match(CVAR);
 			variable_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2196,36 +2178,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST citation_AST = null;
 		
 		try {      // for error handling
-			AST tmp68_AST = null;
-			tmp68_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp68_AST);
+			AST tmp69_AST = null;
+			tmp69_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp69_AST);
 			match(OCITE);
 			{
-			int _cnt161=0;
-			_loop161:
+			int _cnt610=0;
+			_loop610:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt161>=1 ) { break _loop161; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt610>=1 ) { break _loop610; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt161++;
+				_cnt610++;
 			} while (true);
 			}
-			AST tmp69_AST = null;
-			tmp69_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp69_AST);
+			AST tmp70_AST = null;
+			tmp70_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp70_AST);
 			match(CCITE);
 			citation_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2240,36 +2221,35 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST acronym_AST = null;
 		
 		try {      // for error handling
-			AST tmp70_AST = null;
-			tmp70_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp70_AST);
+			AST tmp71_AST = null;
+			tmp71_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp71_AST);
 			match(OACRO);
 			{
-			int _cnt164=0;
-			_loop164:
+			int _cnt613=0;
+			_loop613:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt164>=1 ) { break _loop164; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt613>=1 ) { break _loop613; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt164++;
+				_cnt613++;
 			} while (true);
 			}
-			AST tmp71_AST = null;
-			tmp71_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp71_AST);
+			AST tmp72_AST = null;
+			tmp72_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp72_AST);
 			match(CACRO);
 			acronym_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2294,9 +2274,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case IMG:
 			{
-				AST tmp72_AST = null;
-				tmp72_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp72_AST);
+				AST tmp73_AST = null;
+				tmp73_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp73_AST);
 				match(IMG);
 				special_AST = (AST)currentAST.root;
 				break;
@@ -2310,9 +2290,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case BR:
 			{
-				AST tmp73_AST = null;
-				tmp73_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp73_AST);
+				AST tmp74_AST = null;
+				tmp74_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp74_AST);
 				match(BR);
 				special_AST = (AST)currentAST.root;
 				break;
@@ -2333,8 +2313,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2349,34 +2328,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST anchor_AST = null;
 		
 		try {      // for error handling
-			AST tmp74_AST = null;
-			tmp74_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp74_AST);
+			AST tmp75_AST = null;
+			tmp75_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp75_AST);
 			match(OANCHOR);
 			{
-			_loop168:
+			_loop617:
 			do {
 				if ((_tokenSet_11.member(LA(1)))) {
 					anchor_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop168;
+					break _loop617;
 				}
 				
 			} while (true);
 			}
-			AST tmp75_AST = null;
-			tmp75_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp75_AST);
+			AST tmp76_AST = null;
+			tmp76_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp76_AST);
 			match(CANCHOR);
 			anchor_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2391,34 +2369,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST font_dfn_AST = null;
 		
 		try {      // for error handling
-			AST tmp76_AST = null;
-			tmp76_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp76_AST);
+			AST tmp77_AST = null;
+			tmp77_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp77_AST);
 			match(OFONT);
 			{
-			_loop172:
+			_loop621:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop172;
+					break _loop621;
 				}
 				
 			} while (true);
 			}
-			AST tmp77_AST = null;
-			tmp77_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp77_AST);
+			AST tmp78_AST = null;
+			tmp78_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp78_AST);
 			match(CFONT);
 			font_dfn_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2433,17 +2410,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST typedclass_AST = null;
 		
 		try {      // for error handling
-			AST tmp78_AST = null;
-			tmp78_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp78_AST);
+			AST tmp79_AST = null;
+			tmp79_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp79_AST);
 			match(TYPEDCLASS);
 			typedclass_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2509,8 +2485,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2536,16 +2511,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				setTagType(tag_AST, TYPE_INLINE);
 			}
 			{
-			_loop179:
+			_loop628:
 			do {
 				if ((_tokenSet_12.member(LA(1)))) {
-					AST tmp80_AST = null;
-					tmp80_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp80_AST);
+					AST tmp81_AST = null;
+					tmp81_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp81_AST);
 					matchNot(RCURLY);
 				}
 				else {
-					break _loop179;
+					break _loop628;
 				}
 				
 			} while (true);
@@ -2556,8 +2531,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2573,7 +2547,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		
 		try {      // for error handling
 			{
-			_loop27:
+			_loop476:
 			do {
 				switch ( LA(1)) {
 				case HR:
@@ -2625,7 +2599,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				default:
 				{
-					break _loop27;
+					break _loop476;
 				}
 				}
 			} while (true);
@@ -2635,8 +2609,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_13);
+				recover(ex,_tokenSet_13);
 			} else {
 			  throw ex;
 			}
@@ -2651,51 +2624,50 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST unordered_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp82_AST = null;
-			tmp82_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp82_AST);
+			AST tmp83_AST = null;
+			tmp83_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp83_AST);
 			match(OULIST);
 			{
-			_loop38:
+			_loop487:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp83_AST = null;
-					tmp83_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp83_AST);
+					AST tmp84_AST = null;
+					tmp84_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp84_AST);
 					match(PCDATA);
 				}
 				else {
-					break _loop38;
+					break _loop487;
 				}
 				
 			} while (true);
 			}
 			{
-			int _cnt40=0;
-			_loop40:
+			int _cnt489=0;
+			_loop489:
 			do {
 				if ((LA(1)==OLITEM)) {
 					list_item();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt40>=1 ) { break _loop40; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt489>=1 ) { break _loop489; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt40++;
+				_cnt489++;
 			} while (true);
 			}
-			AST tmp84_AST = null;
-			tmp84_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp84_AST);
+			AST tmp85_AST = null;
+			tmp85_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp85_AST);
 			match(CULIST);
 			unordered_list_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2710,51 +2682,50 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST ordered_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp85_AST = null;
-			tmp85_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp85_AST);
+			AST tmp86_AST = null;
+			tmp86_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp86_AST);
 			match(OOLIST);
 			{
-			_loop43:
+			_loop492:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp86_AST = null;
-					tmp86_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp86_AST);
+					AST tmp87_AST = null;
+					tmp87_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp87_AST);
 					match(PCDATA);
 				}
 				else {
-					break _loop43;
+					break _loop492;
 				}
 				
 			} while (true);
 			}
 			{
-			int _cnt45=0;
-			_loop45:
+			int _cnt494=0;
+			_loop494:
 			do {
 				if ((LA(1)==OLITEM)) {
 					list_item();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt45>=1 ) { break _loop45; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt494>=1 ) { break _loop494; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt45++;
+				_cnt494++;
 			} while (true);
 			}
-			AST tmp87_AST = null;
-			tmp87_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp87_AST);
+			AST tmp88_AST = null;
+			tmp88_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp88_AST);
 			match(COLIST);
 			ordered_list_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2769,51 +2740,50 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST def_list_AST = null;
 		
 		try {      // for error handling
-			AST tmp88_AST = null;
-			tmp88_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp88_AST);
+			AST tmp89_AST = null;
+			tmp89_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp89_AST);
 			match(ODLIST);
 			{
-			_loop48:
+			_loop497:
 			do {
 				if ((LA(1)==PCDATA)) {
-					AST tmp89_AST = null;
-					tmp89_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp89_AST);
+					AST tmp90_AST = null;
+					tmp90_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp90_AST);
 					match(PCDATA);
 				}
 				else {
-					break _loop48;
+					break _loop497;
 				}
 				
 			} while (true);
 			}
 			{
-			int _cnt50=0;
-			_loop50:
+			int _cnt499=0;
+			_loop499:
 			do {
 				if ((LA(1)==ODTERM||LA(1)==ODDEF)) {
 					def_list_item();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt50>=1 ) { break _loop50; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt499>=1 ) { break _loop499; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt50++;
+				_cnt499++;
 			} while (true);
 			}
-			AST tmp90_AST = null;
-			tmp90_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp90_AST);
+			AST tmp91_AST = null;
+			tmp91_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp91_AST);
 			match(CDLIST);
 			def_list_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2828,13 +2798,13 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST list_item_AST = null;
 		
 		try {      // for error handling
-			AST tmp91_AST = null;
-			tmp91_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp91_AST);
+			AST tmp92_AST = null;
+			tmp92_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp92_AST);
 			match(OLITEM);
 			{
-			int _cnt53=0;
-			_loop53:
+			int _cnt502=0;
+			_loop502:
 			do {
 				switch ( LA(1)) {
 				case LCURLY:
@@ -2886,31 +2856,31 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				default:
 				{
-					if ( _cnt53>=1 ) { break _loop53; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt502>=1 ) { break _loop502; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				}
-				_cnt53++;
+				_cnt502++;
 			} while (true);
 			}
 			{
 			switch ( LA(1)) {
 			case CLITEM:
 			{
-				AST tmp92_AST = null;
-				tmp92_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp92_AST);
+				AST tmp93_AST = null;
+				tmp93_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp93_AST);
 				match(CLITEM);
 				{
-				_loop56:
+				_loop505:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp93_AST = null;
-						tmp93_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp93_AST);
+						AST tmp94_AST = null;
+						tmp94_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp94_AST);
 						match(PCDATA);
 					}
 					else {
-						break _loop56;
+						break _loop505;
 					}
 					
 				} while (true);
@@ -2936,8 +2906,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
+				recover(ex,_tokenSet_14);
 			} else {
 			  throw ex;
 			}
@@ -2976,8 +2945,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -2992,44 +2960,44 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dt_AST = null;
 		
 		try {      // for error handling
-			AST tmp94_AST = null;
-			tmp94_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp94_AST);
+			AST tmp95_AST = null;
+			tmp95_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp95_AST);
 			match(ODTERM);
 			{
-			int _cnt60=0;
-			_loop60:
+			int _cnt509=0;
+			_loop509:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt60>=1 ) { break _loop60; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt509>=1 ) { break _loop509; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt60++;
+				_cnt509++;
 			} while (true);
 			}
 			{
 			switch ( LA(1)) {
 			case CDTERM:
 			{
-				AST tmp95_AST = null;
-				tmp95_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp95_AST);
+				AST tmp96_AST = null;
+				tmp96_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp96_AST);
 				match(CDTERM);
 				{
-				_loop63:
+				_loop512:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp96_AST = null;
-						tmp96_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp96_AST);
+						AST tmp97_AST = null;
+						tmp97_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp97_AST);
 						match(PCDATA);
 					}
 					else {
-						break _loop63;
+						break _loop512;
 					}
 					
 				} while (true);
@@ -3053,8 +3021,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -3069,13 +3036,13 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dd_AST = null;
 		
 		try {      // for error handling
-			AST tmp97_AST = null;
-			tmp97_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp97_AST);
+			AST tmp98_AST = null;
+			tmp98_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp98_AST);
 			match(ODDEF);
 			{
-			int _cnt66=0;
-			_loop66:
+			int _cnt515=0;
+			_loop515:
 			do {
 				switch ( LA(1)) {
 				case LCURLY:
@@ -3127,31 +3094,31 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				default:
 				{
-					if ( _cnt66>=1 ) { break _loop66; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt515>=1 ) { break _loop515; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				}
-				_cnt66++;
+				_cnt515++;
 			} while (true);
 			}
 			{
 			switch ( LA(1)) {
 			case CDDEF:
 			{
-				AST tmp98_AST = null;
-				tmp98_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp98_AST);
+				AST tmp99_AST = null;
+				tmp99_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp99_AST);
 				match(CDDEF);
 				{
-				_loop69:
+				_loop518:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp99_AST = null;
-						tmp99_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp99_AST);
+						AST tmp100_AST = null;
+						tmp100_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp100_AST);
 						match(PCDATA);
 					}
 					else {
-						break _loop69;
+						break _loop518;
 					}
 					
 				} while (true);
@@ -3175,8 +3142,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -3191,32 +3157,32 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST dir_AST = null;
 		
 		try {      // for error handling
-			AST tmp100_AST = null;
-			tmp100_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp100_AST);
+			AST tmp101_AST = null;
+			tmp101_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp101_AST);
 			match(ODIR);
 			{
-			int _cnt72=0;
-			_loop72:
+			int _cnt521=0;
+			_loop521:
 			do {
 				if ((LA(1)==OLITEM)) {
 					list_item();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					if ( _cnt72>=1 ) { break _loop72; } else {throw new NoViableAltException(LT(1), getFilename());}
+					if ( _cnt521>=1 ) { break _loop521; } else {throw new NoViableAltException(LT(1), getFilename());}
 				}
 				
-				_cnt72++;
+				_cnt521++;
 			} while (true);
 			}
 			{
 			switch ( LA(1)) {
 			case CDIR:
 			{
-				AST tmp101_AST = null;
-				tmp101_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp101_AST);
+				AST tmp102_AST = null;
+				tmp102_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp102_AST);
 				match(CDIR);
 				break;
 			}
@@ -3235,8 +3201,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
+				recover(ex,_tokenSet_1);
 			} else {
 			  throw ex;
 			}
@@ -3251,34 +3216,33 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST caption_AST = null;
 		
 		try {      // for error handling
-			AST tmp102_AST = null;
-			tmp102_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp102_AST);
+			AST tmp103_AST = null;
+			tmp103_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp103_AST);
 			match(OCAP);
 			{
-			_loop92:
+			_loop541:
 			do {
 				if ((_tokenSet_3.member(LA(1)))) {
 					text();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop92;
+					break _loop541;
 				}
 				
 			} while (true);
 			}
-			AST tmp103_AST = null;
-			tmp103_AST = astFactory.create(LT(1));
-			astFactory.addASTChild(currentAST, tmp103_AST);
+			AST tmp104_AST = null;
+			tmp104_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp104_AST);
 			match(CCAP);
 			caption_AST = (AST)currentAST.root;
 		}
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_16);
+				recover(ex,_tokenSet_16);
 			} else {
 			  throw ex;
 			}
@@ -3293,9 +3257,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		AST tr_AST = null;
 		
 		try {      // for error handling
-			AST tmp104_AST = null;
-			tmp104_AST = astFactory.create(LT(1));
-			astFactory.makeASTRoot(currentAST, tmp104_AST);
+			AST tmp105_AST = null;
+			tmp105_AST = astFactory.create(LT(1));
+			astFactory.makeASTRoot(currentAST, tmp105_AST);
 			match(O_TR);
 			{
 			switch ( LA(1)) {
@@ -3307,16 +3271,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			case C_TR:
 			{
 				{
-				_loop96:
+				_loop545:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp105_AST = null;
-						tmp105_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp105_AST);
+						AST tmp106_AST = null;
+						tmp106_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp106_AST);
 						match(PCDATA);
 					}
 					else {
-						break _loop96;
+						break _loop545;
 					}
 					
 				} while (true);
@@ -3325,9 +3289,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case COMMENT:
 			{
-				AST tmp106_AST = null;
-				tmp106_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp106_AST);
+				AST tmp107_AST = null;
+				tmp107_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp107_AST);
 				match(COMMENT);
 				break;
 			}
@@ -3338,14 +3302,14 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			}
 			{
-			_loop98:
+			_loop547:
 			do {
 				if ((LA(1)==OTH||LA(1)==OTD)) {
 					th_or_td();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop98;
+					break _loop547;
 				}
 				
 			} while (true);
@@ -3362,16 +3326,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				case O_TR:
 				{
 					{
-					_loop102:
+					_loop551:
 					do {
 						if ((LA(1)==PCDATA)) {
-							AST tmp108_AST = null;
-							tmp108_AST = astFactory.create(LT(1));
-							astFactory.addASTChild(currentAST, tmp108_AST);
+							AST tmp109_AST = null;
+							tmp109_AST = astFactory.create(LT(1));
+							astFactory.addASTChild(currentAST, tmp109_AST);
 							match(PCDATA);
 						}
 						else {
-							break _loop102;
+							break _loop551;
 						}
 						
 					} while (true);
@@ -3380,9 +3344,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				case COMMENT:
 				{
-					AST tmp109_AST = null;
-					tmp109_AST = astFactory.create(LT(1));
-					astFactory.addASTChild(currentAST, tmp109_AST);
+					AST tmp110_AST = null;
+					tmp110_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp110_AST);
 					match(COMMENT);
 					break;
 				}
@@ -3410,8 +3374,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_17);
+				recover(ex,_tokenSet_17);
 			} else {
 			  throw ex;
 			}
@@ -3430,17 +3393,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case OTH:
 			{
-				AST tmp110_AST = null;
-				tmp110_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp110_AST);
+				AST tmp111_AST = null;
+				tmp111_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp111_AST);
 				match(OTH);
 				break;
 			}
 			case OTD:
 			{
-				AST tmp111_AST = null;
-				tmp111_AST = astFactory.create(LT(1));
-				astFactory.makeASTRoot(currentAST, tmp111_AST);
+				AST tmp112_AST = null;
+				tmp112_AST = astFactory.create(LT(1));
+				astFactory.makeASTRoot(currentAST, tmp112_AST);
 				match(OTD);
 				break;
 			}
@@ -3451,14 +3414,14 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			}
 			{
-			_loop106:
+			_loop555:
 			do {
 				if ((_tokenSet_0.member(LA(1)))) {
 					body_content();
 					astFactory.addASTChild(currentAST, returnAST);
 				}
 				else {
-					break _loop106;
+					break _loop555;
 				}
 				
 			} while (true);
@@ -3487,16 +3450,16 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				}
 				}
 				{
-				_loop110:
+				_loop559:
 				do {
 					if ((LA(1)==PCDATA)) {
-						AST tmp114_AST = null;
-						tmp114_AST = astFactory.create(LT(1));
-						astFactory.addASTChild(currentAST, tmp114_AST);
+						AST tmp115_AST = null;
+						tmp115_AST = astFactory.create(LT(1));
+						astFactory.addASTChild(currentAST, tmp115_AST);
 						match(PCDATA);
 					}
 					else {
-						break _loop110;
+						break _loop559;
 					}
 					
 				} while (true);
@@ -3522,8 +3485,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_18);
+				recover(ex,_tokenSet_18);
 			} else {
 			  throw ex;
 			}
@@ -3571,9 +3533,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			}
 			case PCDATA:
 			{
-				AST tmp115_AST = null;
-				tmp115_AST = astFactory.create(LT(1));
-				astFactory.addASTChild(currentAST, tmp115_AST);
+				AST tmp116_AST = null;
+				tmp116_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp116_AST);
 				match(PCDATA);
 				anchor_content_AST = (AST)currentAST.root;
 				break;
@@ -3587,8 +3549,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_19);
+				recover(ex,_tokenSet_19);
 			} else {
 			  throw ex;
 			}
@@ -3634,6 +3595,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		"JAVADOC_OPEN",
 		"JAVADOC_CLOSE",
 		"AT",
+		"TAG_OR_AT",
 		"HR",
 		"IMG",
 		"BR",
@@ -3731,7 +3693,6 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		"CSTRIKE_OR_CSTRONG",
 		"CSUB_OR_CSUP",
 		"STAR",
-		"TAG_OR_AT",
 		"COMMENT_DATA",
 		"WS",
 		"NEWLINE",
@@ -3752,7 +3713,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	};
 	
 	private static final long[] mk_tokenSet_0() {
-		long[] data = { 6148917039151972736L, 1633305464859055360L, 0L, 0L};
+		long[] data = { -6148909961045868160L, 3266610929718110720L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_0 = new BitSet(mk_tokenSet_0());
@@ -3762,52 +3723,52 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_1 = new BitSet(mk_tokenSet_1());
 	private static final long[] mk_tokenSet_2() {
-		long[] data = { 6148917606087663488L, 1633305464860704512L, 0L, 0L};
+		long[] data = { -6148908844354363520L, 3266610929721409024L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_2 = new BitSet(mk_tokenSet_2());
 	private static final long[] mk_tokenSet_3() {
-		long[] data = { 3710851744128L, 1633305464859000832L, 0L, 0L};
+		long[] data = { 7421703487872L, 3266610929718001664L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_3 = new BitSet(mk_tokenSet_3());
 	private static final long[] mk_tokenSet_4() {
-		long[] data = { 6124895561943351296L, 54528L, 0L, 0L};
+		long[] data = { -6196952949822849024L, 109056L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_4 = new BitSet(mk_tokenSet_4());
 	private static final long[] mk_tokenSet_5() {
-		long[] data = { 6148917606087655808L, 1633305464859055360L, 0L, 0L};
+		long[] data = { -6148908844354371200L, 3266610929718110720L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_5 = new BitSet(mk_tokenSet_5());
 	private static final long[] mk_tokenSet_6() {
-		long[] data = { -36028814198825086L, 4035225266123833279L, 0L, 0L};
+		long[] data = { -72057611217789054L, 8070450532247666559L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_6 = new BitSet(mk_tokenSet_6());
 	private static final long[] mk_tokenSet_7() {
-		long[] data = { -180144002274680958L, 1633305464860704695L, 0L, 0L};
+		long[] data = { -360287987369500798L, 3266610929721409391L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_7 = new BitSet(mk_tokenSet_7());
 	private static final long[] mk_tokenSet_8() {
-		long[] data = { 6052837899185946624L, 0L, 0L};
+		long[] data = { -6341068275337658368L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_8 = new BitSet(mk_tokenSet_8());
 	private static final long[] mk_tokenSet_9() {
-		long[] data = { -36028814198825086L, 1633305464860704695L, 0L, 0L};
+		long[] data = { -72057611217789054L, 3266610929721409391L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_9 = new BitSet(mk_tokenSet_9());
 	private static final long[] mk_tokenSet_10() {
-		long[] data = { -36028814198825086L, 4611686018427256767L, 0L, 0L};
+		long[] data = { -72057611217789054L, 9223372036854513535L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_10 = new BitSet(mk_tokenSet_10());
 	private static final long[] mk_tokenSet_11() {
-		long[] data = { 2199023255552L, 48038396024586240L, 0L, 0L};
+		long[] data = { 4398046511104L, 96076792049172480L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_11 = new BitSet(mk_tokenSet_11());
@@ -3817,37 +3778,37 @@ public InternalJavadocParser(ParserSharedInputState state) {
 	}
 	public static final BitSet _tokenSet_12 = new BitSet(mk_tokenSet_12());
 	private static final long[] mk_tokenSet_13() {
-		long[] data = { 12006666975313920L, 0L, 0L};
+		long[] data = { 24013333950627840L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_13 = new BitSet(mk_tokenSet_13());
 	private static final long[] mk_tokenSet_14() {
-		long[] data = { 2882303761517117442L, 129L, 0L, 0L};
+		long[] data = { 5764607523034234882L, 258L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_14 = new BitSet(mk_tokenSet_14());
 	private static final long[] mk_tokenSet_15() {
-		long[] data = { -9223372036854775808L, 20L, 0L, 0L};
+		long[] data = { 0L, 41L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_15 = new BitSet(mk_tokenSet_15());
 	private static final long[] mk_tokenSet_16() {
-		long[] data = { 2199023255552L, 524288L, 0L, 0L};
+		long[] data = { 4398046511104L, 1048576L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_16 = new BitSet(mk_tokenSet_16());
 	private static final long[] mk_tokenSet_17() {
-		long[] data = { 0L, 589824L, 0L, 0L};
+		long[] data = { 0L, 1179648L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_17 = new BitSet(mk_tokenSet_17());
 	private static final long[] mk_tokenSet_18() {
-		long[] data = { 2560L, 1638400L, 0L, 0L};
+		long[] data = { 2560L, 3276800L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_18 = new BitSet(mk_tokenSet_18());
 	private static final long[] mk_tokenSet_19() {
-		long[] data = { 2199023255552L, 624499148328009728L, 0L, 0L};
+		long[] data = { 4398046511104L, 1248998296656019456L, 0L, 0L};
 		return data;
 	}
 	public static final BitSet _tokenSet_19 = new BitSet(mk_tokenSet_19());

@@ -556,7 +556,8 @@ public abstract class AbstractPlugin
                     }
 
                     // only update the editor view if no errors showed up
-                    if (getState() != Jalopy.State.ERROR)
+                    // and the content has changed
+                    if (getState() != Jalopy.State.ERROR && !content.equals(textBuf.toString()))
                     {
                         try
                         {

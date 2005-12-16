@@ -1,44 +1,149 @@
 <document>
   <properties>
     <title>Changes</title>
-    <author email="notzippy@users.sf.net"></author> 
+    <author email="notzippy@users.sf.net"></author>
   </properties>
   <body>
-
-    <release version="1.5b3" date="in CVS">
-      <action dev="notzippy" type="update">
-        Correct export xml problem
-      </action>              
-      <action dev="notzippy" type="fix" issue="1335114">
-        <item name="Enum not handled correctly" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1335114&group_id=45216&atid=442212"/>
-      </action>              
-      <action dev="notzippy" type="fix" issue="1335107">
-        <item name=" Generics causes loss of whitespace" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1335107"/>
-      </action>              
-      <action dev="notzippy" type="fix" issue="1328270">
-        <item name=" XML export is incorrect" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1328270"/>
-      </action>              
-      <action dev="notzippy" type="fix" issue="1328270">
-        <item name=" XML export is incorrect" href="https://sourceforge.net/tracker/index.php?func=detail&group_id=45216&atid=442212&aid=1328270"/>
-      </action>              
-
-      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">
-        <item name=" Patch to add missing break" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1029009&group_id=45216&atid=442214"/>
-      </action>              
-      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">
-        <item name=" Patch for possible npe due to bad logic" href="https://sourceforge.net/tracker/index.php?func=detail&aid=1029007&group_id=45216&atid=442214"/>
-      </action>              
+    <release version="1.5rc1" date="in CVS">
+<!-- Features -->
+      <action dev="notzippy" type="add" issue="1368820">
+        <![CDATA[
+              JavaDoc environment variables enhancement request
+        ]]>
+      </action>
+      <action dev="notzippy" type="add" issue="1353722">
+        <![CDATA[
+              Mark all parameters as final
+        ]]>
+      </action>
+      <action dev="notzippy" type="add" issue="1126198">
+        <![CDATA[
+             Sort methods based on the entire signature
+        ]]>
+      </action>
+     
+<!-- patches -->
+      <action dev="notzippy" type="add" issue="1366116">
+        <![CDATA[
+             Feature request #1353722
+        ]]>
+      </action>
+      <action dev="notzippy" type="add" issue="995889">
+        <![CDATA[
+               	  Add $date$ and $className$ env vars
+        ]]>
+      </action>
+<!-- Bugs -->
+      <action dev="notzippy" type="fix" issue="1380638">
+        <![CDATA[
+            Parser or printer sometimes skips comments
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1379652">
+        <![CDATA[
+             	  Does not handle specific generics case
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1377229">
+        <![CDATA[
+            Jalopy output goes between 2 different forms
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1377092">
+        <![CDATA[
+            Class<?> incorrectly formatted
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1370180">
+        <![CDATA[
+           OutOfMemory Error (memory leaks)
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1368828">
+        <![CDATA[
+           Formatting a second time removes class JavaDoc elements
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1368813">
+        <![CDATA[
+            Bad parsing with email addresses in JavaDoc
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1364194">
+        <![CDATA[
+            Failure of Jalopy Printer
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1363728">
+        <![CDATA[
+           Footer always deleted...
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1363116">
+        <![CDATA[
+           Can't handle .class after square brackets
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1362699">
+        <![CDATA[
+           Jalopy removes @author tags from javadoc
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1352367">
+        <![CDATA[
+            JEdit does not Detect Plugin
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1339021">
+        <![CDATA[
+          enum formatting munges whitespace
+        ]]>
+      </action>
+          
     </release>
-
+    <release version="1.5b5" date="Nov 18 2005">
+      <action dev="notzippy" type="update">Correct export xml problem</action>
+      <action dev="notzippy" type="fix">Parameters wrapping to early Spaces where being counted twice when parameters where being wrapped.</action>
+      <action dev="notzippy" type="fix" issue="1346698">
+        <![CDATA[
+         Formatting succeeded then failed
+        ]]>
+</action>
+      <action dev="notzippy" type="fix" issue="1346640">
+        <![CDATA[
+          No space before the method name (when using Generics)
+          
+        ]]>
+</action>
+      <action dev="notzippy" type="fix" issue="1343796">
+        <![CDATA[
+                  Space after comma doesn't work for Generics
+        ]]>
+</action>
+      <action dev="notzippy" type="fix" issue="1339021">
+        <![CDATA[
+                  enum formatting munges whitespace
+        ]]>
+</action>
+      <action dev="notzippy" type="fix" issue="1339008">
+        <![CDATA[
+                  Generic in Javadoc causes parser error
+        ]]>
+</action>
+    </release>
+    <release version="1.5b3" date="Oct 28 2005">
+      <action dev="notzippy" type="update">Correct export xml problem</action>
+      <action dev="notzippy" type="fix" issue="1335114">Enum not handled correctly</action>
+      <action dev="notzippy" type="fix" issue="1335107">Generics causes loss of whitespace</action>
+      <action dev="notzippy" type="fix" issue="1328270">XML export is incorrect</action>
+      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">Patch to add missing break</action>
+      <action dev="notzippy" type="fix" issue="1328270" due-to="dbrosius">Patch for possible npe due to bad logic</action>
+    </release>
     <release version="1.5b2" date="2005-08-05">
-      <action dev="notzippy" type="update">
-        Corrected error with abstract methods
-      </action>              
+      <action dev="notzippy" type="update">Corrected error with abstract methods</action>
     </release>
     <release version="1.5b1" date="2005-06-05">
-      <action dev="notzippy" type="add">
-        Major upgrade to be compatible with Java 5 (1.5)
-      </action>              
+      <action dev="notzippy" type="add">Major upgrade to be compatible with Java 5 (1.5)</action>
     </release>
   </body>
 </document>

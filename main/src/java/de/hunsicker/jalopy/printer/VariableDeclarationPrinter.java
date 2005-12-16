@@ -24,7 +24,7 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
  * @version $Revision$
  */
 final class VariableDeclarationPrinter
-    extends BasicDeclarationPrinter
+extends BasicDeclarationPrinter
 {
     //~ Static variables/initializers ----------------------------------------------------
 
@@ -225,7 +225,6 @@ final class VariableDeclarationPrinter
                             ConventionDefaults.CHUNKS_BY_BLANK_LINES))
                     {
                     	// Count hidden blank lines by adding up the newlines between the 2 nodes
-                    	
                     	int totalLines = countChildrenLines((JavaNode)n.getPreviousSibling().getFirstChild(),0);
                 		if (totalLines-1 > maxLinesBetween) {
                 			return true;
@@ -240,19 +239,6 @@ final class VariableDeclarationPrinter
         return false;
     }
 
-
-    /**
-     * Counts the number of blank lines following a node
-     * 
-	 * @param n The node
-	 * @return The number of lines
-	 */
-	private int countChildrenLines(JavaNode n, int current) {
-		for(;n!=null;n=(JavaNode) n.getNextSibling()) {
-			current += n.nlAfter;	
-		}
-		return current;
-	}
 
 	/**
      * Determines whether the node needs special wrapping (for long string literal

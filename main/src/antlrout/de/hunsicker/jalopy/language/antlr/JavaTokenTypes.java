@@ -1,4 +1,4 @@
-// $ANTLR 2.7.4: "java15.g" -> "InternalJavaLexer.java"$
+// $ANTLR 2.7.5 (20050128): "java15.g" -> "InternalJavaLexer.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 

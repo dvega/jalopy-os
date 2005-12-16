@@ -142,6 +142,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         JavadocLexer lexer = new JavadocLexer(factory);
         _javadocParser = (JavadocParser)lexer.getParser();
         _recognizer = new Recognizer(_javadocParser, lexer);
+        _javadocParser.setRecognizer(_recognizer);
 
         _parser = new JavaParser(this);
         _parser.setASTFactory(factory.getJavaNodeFactory());   

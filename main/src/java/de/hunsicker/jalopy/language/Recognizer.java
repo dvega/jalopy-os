@@ -54,6 +54,10 @@ public class Recognizer
     /** Indicates that formatting currently takes place. */
     boolean running;
 
+    private int _startColumn;
+
+    private int _startLine;
+
     //~ Constructors ---------------------------------------------------------------------
 
     /**
@@ -217,6 +221,8 @@ public class Recognizer
 
         this.finished = false;
         this.running = true;
+        _startLine = this.lexer.getLine();
+        _startColumn = this.lexer.getColumn();
         this.lexer.setInputBuffer(in);
         this.lexer.setFilename(filename);
         this.parser.setTokenBuffer(new TokenBuffer(this.lexer));
@@ -339,5 +345,27 @@ public class Recognizer
         {
             super(cause);
         }
+    }
+
+    
+    public int getStartColumn() {
+    
+        return _startColumn;
+    }
+
+
+
+    
+    public int getStartLine() {
+    
+        return _startLine;
+    }
+
+
+    
+    public void set_startLine(int line) {
+    
+        _startLine = line;
+    
     }
 }

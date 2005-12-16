@@ -497,10 +497,10 @@ final class AssignmentPrinter
 
                                 if (maxLinesBetween > 0)
                                 {
-                                    if (
-                                        (n.getStartLine()
-                                        - n.getPreviousSibling().getStartLine() - 1) >= maxLinesBetween)
-                                    {
+                                    // Count hidden blank lines by adding up the newlines between the 2 nodes
+                                    
+                                    int totalLines = countChildrenLines((JavaNode)n.getPreviousSibling().getFirstChild(),0);
+                                    if (totalLines-1 > maxLinesBetween) {
                                         return true;
                                     }
                                 }
@@ -520,10 +520,10 @@ final class AssignmentPrinter
                                 {
                                     if (maxLinesBetween > 0)
                                     {
-                                        if (
-                                            (n.getStartLine()
-                                            - n.getPreviousSibling().getStartLine() - 1) >= maxLinesBetween)
-                                        {
+                                        // Count hidden blank lines by adding up the newlines between the 2 nodes
+                                        
+                                        int totalLines = countChildrenLines((JavaNode)n.getPreviousSibling().getFirstChild(),0);
+                                        if (totalLines-1 > maxLinesBetween) {
                                             return true;
                                         }
                                     }
