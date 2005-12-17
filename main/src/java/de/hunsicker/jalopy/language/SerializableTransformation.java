@@ -11,8 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.language.antlr.JavadocTokenTypes;
+import de.hunsicker.jalopy.language.antlr.Node;
 import de.hunsicker.jalopy.storage.Loggers;
 import de.hunsicker.util.Helper;
 
@@ -343,7 +346,7 @@ LOOP:
              _factory.getExtendedTokenFactory().create(
                 JavaTokenTypes.JAVADOC_COMMENT,
                 "/** Use serialVersionUID for interoperability. */");
-        token.comment = comment;
+        token.setComment(comment);
         serialver.setHiddenBefore(token);
 
         JavaNode objblock =

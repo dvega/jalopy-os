@@ -4,12 +4,14 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import de.hunsicker.jalopy.language.Annotation;
+import de.hunsicker.jalopy.language.Position;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 import antlr.CommonHiddenStreamToken;

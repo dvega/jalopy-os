@@ -4,7 +4,7 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,6 +14,7 @@ import antlr.ASTFactory;
 import antlr.ASTPair;
 import antlr.Token;
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.CompositeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Loggers;
 

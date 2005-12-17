@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -452,7 +453,7 @@ public final class CodeInspector
      */
     private JavaNode getObjectBlock(JavaNode node)
     {
-        JavaNode parent = node.parent;
+        JavaNode parent = node.getParent();
 
         switch (node.getType())
         {

@@ -145,6 +145,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
     */
    public void reportError(RecognitionException ex)
    {
+   	ex.printStackTrace();
        Integer line = new Integer((recognizer!=null?recognizer.getStartLine():0) +getLine());
        Integer column = new Integer((recognizer!=null?recognizer.getStartColumn():0) +getColumn());
       Object args[] = { getFilename(), line, column, ex.getMessage() };
@@ -192,7 +193,7 @@ public class JavadocLexer extends InternalJavadocLexer implements Lexer{
      */
     public void setTokenObjectClass(String clazz)
     {
-        super.setTokenObjectClass("de.hunsicker.jalopy.language.ExtendedToken");
+        super.setTokenObjectClass("de.hunsicker.jalopy.language.antlr.ExtendedToken");
     }
 
     /**

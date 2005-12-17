@@ -4,7 +4,7 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 import antlr.CommonASTWithHiddenTokens;
 import antlr.CommonHiddenStreamToken;
@@ -14,6 +14,7 @@ import antlr.collections.AST;
 
 //J-
 import java.lang.ClassCastException;
+
 //J+
 
 /**

@@ -10,8 +10,8 @@ import java.io.IOException;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;

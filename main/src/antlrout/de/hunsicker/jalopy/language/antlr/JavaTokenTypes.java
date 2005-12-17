@@ -1,8 +1,8 @@
-// $ANTLR 2.7.5 (20050128): "java15.g" -> "InternalJavaLexer.java"$
+// $ANTLR 2.7.2: "java15.g" -> "InternalJavaLexer.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
 
 public interface JavaTokenTypes {

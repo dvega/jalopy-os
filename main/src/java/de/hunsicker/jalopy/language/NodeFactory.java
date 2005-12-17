@@ -10,6 +10,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import de.hunsicker.jalopy.language.antlr.Node;
+
 import antlr.ASTFactory;
 import antlr.Token;
 import antlr.collections.AST;

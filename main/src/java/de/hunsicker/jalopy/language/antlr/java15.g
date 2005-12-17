@@ -2,7 +2,7 @@ header
 {
 package de.hunsicker.jalopy.language.antlr;
 
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
 }
 

@@ -18,8 +18,8 @@ public final class Position
 {
     //~ Instance variables ---------------------------------------------------------------
 
-    int column = 1;
-    int line = 1;
+    public int column = 1;
+    public int line = 1;
 
     //~ Constructors ---------------------------------------------------------------------
 

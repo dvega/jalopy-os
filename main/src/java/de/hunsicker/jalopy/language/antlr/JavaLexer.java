@@ -1,4 +1,4 @@
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 // $ANTLR 2.7.4: "java15.g" -> "JavaLexer.java"$
 
@@ -13,6 +13,12 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.hunsicker.io.FileFormat;
+import de.hunsicker.jalopy.language.CompositeFactory;
+import de.hunsicker.jalopy.language.JavaParser;
+import de.hunsicker.jalopy.language.JavadocLexer;
+import de.hunsicker.jalopy.language.Lexer;
+import de.hunsicker.jalopy.language.Parser;
+import de.hunsicker.jalopy.language.Recognizer;
 import de.hunsicker.jalopy.language.CompositeFactory.ExtendedTokenFactory;
 import de.hunsicker.jalopy.language.antlr.InternalJavaLexer;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
@@ -54,22 +60,22 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
     private Logger _logger = Logger.getLogger("de.hunsicker.jalopy.language.java");
 
     /** Should Javadoc comments be parsed or added AS IS? */
-    boolean parseJavadocComments;
+    public boolean parseJavadocComments;
 
     /** Specifies the Java release version to be compatible with. */
-    int sourceVersion = JDK_1_4;
+    public int sourceVersion = JDK_1_4;
 
     /** Should Javadoc comments be ignored? */
-    boolean removeJavadocComments;
+    public boolean removeJavadocComments;
 
     /** Should multi-line comments be formatted? */
-    boolean formatMLComments;
+    public boolean formatMLComments;
 
     /** Should single-line comments be ignored? */
-    boolean removeSLComments;
+    public boolean removeSLComments;
 
     /** Should multi-line comments be ignored? */
-    boolean removeMLComments;
+    public boolean removeMLComments;
 
     /** The use Java parser. */
     private JavaParser _parser;
@@ -450,7 +456,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
      * @param clazz a qualified class name.
      *
      * @throws IllegalArgumentException if the class is not derived from
-     * {@link de.hunsicker.jalopy.language.ExtendedToken}.
+     * {@link de.hunsicker.jalopy.language.antlr.ExtendedToken}.
      */
     public void setTokenObjectClass(String clazz)
     {
@@ -461,7 +467,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         // changed our method too
         if (clazz.equals("antlr.CommonToken"))
         {
-            clazz = "de.hunsicker.jalopy.language.ExtendedToken";
+            clazz = "de.hunsicker.jalopy.language.antlr.ExtendedToken";
         }
 
         super.setTokenObjectClass(clazz);

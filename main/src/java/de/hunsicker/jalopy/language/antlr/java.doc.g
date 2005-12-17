@@ -990,8 +990,10 @@ PCDATA
         | '\t'    {  replaceTab();
                   }
         | { LA(2) != '*' || (LA(2) == '*' && LA(3) != '*') }? '/' // allow slash
-        | {LA(2) != '@'}? ~('*'|'<'|'{'|'@'|'}'|'\n'|'\r'|'/') 
-        )+
+        | EMAILSTART '@' {// Allow email address
+                       }
+        | ~('*'|'<'|'{'|'@'|'}'|'\n'|'\r'|'/') 
+        )  +
 
         {
             String t = $getText;
@@ -1017,12 +1019,9 @@ PCDATA
         }
     ;
     
-TAG_OR_AT
+TAG
     :   
-        (  
         " @" (LCLETTER)+ {$setType(JavadocTokenTypes.TAG);} // Allowed tag
-        |  (LCLETTER) AT {$setType(JavadocTokenTypes.PCDATA);} // Assumed email
-        )
     ;
 
 
@@ -1189,6 +1188,12 @@ HEXDIGIT
     |   'a'..'f'
     ;
 
+protected 
+EMAILSTART
+    :   '0'..'9'
+    |   'a'..'z' | '\u00DF' .. '\u00FF'
+    |   '_'
+    ;
 protected
 LCLETTER
     :   'a'..'z' | '\u00DF' .. '\u00FF'

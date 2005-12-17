@@ -2,7 +2,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 
 import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;

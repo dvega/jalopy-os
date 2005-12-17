@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hunsicker.jalopy.language.CompositeFactory;
-import de.hunsicker.jalopy.language.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 
 
 /**

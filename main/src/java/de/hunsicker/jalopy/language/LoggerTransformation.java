@@ -9,6 +9,8 @@ package de.hunsicker.jalopy.language;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 import antlr.ASTFactory;

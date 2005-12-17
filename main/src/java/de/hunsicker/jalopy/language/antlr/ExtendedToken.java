@@ -4,7 +4,7 @@
  * This software is distributable under the BSD license. See the terms of the
  * BSD license in the documentation provided with this software.
  */
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 import antlr.CommonHiddenStreamToken;
 
@@ -32,9 +32,9 @@ public abstract class ExtendedToken
     /** Token text. */
     String text;
 
-    int nlAfter = 0;
+    public int nlAfter = 0;
     /** True if attached to a node */
-    boolean attached = false;
+    public boolean attached = false;
 
     //~ Constructors ---------------------------------------------------------------------
 

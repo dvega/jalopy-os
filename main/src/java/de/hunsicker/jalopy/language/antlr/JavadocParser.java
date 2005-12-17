@@ -4,10 +4,15 @@
 // Last edited by:  $Author$ on $Date$
 // © James Richardson International Limited, 2004
 //---------------------------------------------------------------------------
-package de.hunsicker.jalopy.language;
+package de.hunsicker.jalopy.language.antlr;
 
 import java.util.Collection;
+
+import de.hunsicker.jalopy.language.JavadocLexer;
+import de.hunsicker.jalopy.language.Parser;
+import de.hunsicker.jalopy.language.Recognizer;
 import de.hunsicker.jalopy.language.antlr.*;
+
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
 

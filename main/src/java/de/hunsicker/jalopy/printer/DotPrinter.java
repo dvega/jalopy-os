@@ -9,7 +9,7 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 
 import antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -368,10 +368,11 @@ SEEK_FORWARD:
                         if (tester.maxColumn > lineLength || tester.line>1)
                         {
                             out.printNewline();
-                            Marker current=out.state.markers.add(
-                                out.line,
-                                0,true,out
-                                );
+                            Marker current=out.state.markers.add(0,
+                                out.line);
+//                            ,
+//                                0,true,out
+//                                );
 
                             if (continuationIndent)
                             {

@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
 
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.Node;
+
 /**
  * This class creates instances of all the Factories used to generate
  * JavaNodes, Nodes, & Extended Tokens. It is also responsible for maintaining

@@ -9,7 +9,7 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 
 import de.hunsicker.jalopy.language.CompositeFactory;
-import de.hunsicker.jalopy.language.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 
 
 /**

@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -151,7 +153,7 @@ LOOP:
         JavaNode sibling)
     {
         node.setNextSibling(sibling);
-        sibling.prevSibling = node;
+        sibling.setPreviousSibling(node);
         sibling.setNextSibling(null); // don't leave any old pointers left
     }
 
@@ -624,7 +626,7 @@ LOOP:
         JavaNode sibling = (JavaNode) tmp.getNextSibling();
 
         // and link it into the tree
-        sibling.prevSibling = lcurly;
+        sibling.setPreviousSibling(lcurly);
         lcurly.setFirstChild(sibling);
 
         tmp.setNextSibling(null); // don't leave any old pointers set

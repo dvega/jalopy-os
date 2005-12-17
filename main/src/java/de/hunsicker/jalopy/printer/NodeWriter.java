@@ -13,8 +13,8 @@ import java.util.Map;
 
 import antlr.CommonHiddenStreamToken;
 import de.hunsicker.jalopy.language.CompositeFactory;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;

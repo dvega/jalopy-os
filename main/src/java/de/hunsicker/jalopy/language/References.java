@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
@@ -224,7 +225,7 @@ final class References
                         if (assign != null)
                         {
                             System.out.println(
-                                "XXX:" + node.startLine + ":" + node.startColumn
+                                "XXX:" + node.getStartLine() + ":" + node.getStartColumn()
                                 + ": Variable "
                                 + JavaNodeHelper.getFirstChild(
                                     node, JavaTokenTypes.IDENT).getText()
@@ -233,7 +234,7 @@ final class References
                         else
                         {
                             System.out.println(
-                                "XXX:" + node.startLine + ":" + node.startColumn
+                                "XXX:" + node.getStartLine() + ":" + node.getStartColumn()
                                 + ": Variable "
                                 + JavaNodeHelper.getFirstChild(
                                     node, JavaTokenTypes.IDENT).getText()
@@ -255,11 +256,11 @@ final class References
                         {
                             JavaNode usage = (JavaNode) references.get(0);
 
-                            switch (usage.parent.getType())
+                            switch (usage.getParent().getType())
                             {
                                 case JavaTokenTypes.ASSIGN :
 
-                                    switch (usage.prevSibling.getType())
+                                    switch (usage.getPreviousSibling().getType())
                                     {
                                         case JavaTokenTypes.ASSIGN :
 
@@ -271,14 +272,14 @@ final class References
                                             if (Modifier.isPrivate(modifierMask))
                                             {
                                                 System.out.println(
-                                                    "XXX:" + node.startLine + ":"
-                                                    + node.startColumn + ": Variable "
+                                                    "XXX:" + node.getStartLine() + ":"
+                                                    + node.getStartColumn() + ": Variable "
                                                     + JavaNodeHelper.getFirstChild(
                                                         node, JavaTokenTypes.IDENT)
                                                                     .getText()
                                                     + " is assigned but never accessed (assigned at "
-                                                    + usage.startLine + ":"
-                                                    + usage.startColumn + ")");
+                                                    + usage.getStartLine() + ":"
+                                                    + usage.getStartColumn() + ")");
                                             }
 
                                             break;

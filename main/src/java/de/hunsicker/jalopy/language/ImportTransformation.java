@@ -20,6 +20,8 @@ import java.util.StringTokenizer;
 
 import antlr.ASTPair;
 import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -211,7 +213,7 @@ final class ImportTransformation
             // build the package name and update the node text (to make
             // accessing the package name easy)
             String packageName = identifier.substring(0, identifier.length() - 2);
-            importNode.text = packageName;
+            importNode.setText(packageName);
 
             // remove duplicates
             // (note that we compare by JavaNode.equals(JavaNode) so we really
@@ -219,12 +221,12 @@ final class ImportTransformation
             if (_onDemandImports.contains(importNode))
             {
                 _args[0] = _root.getText();
-                _args[1] = new Integer(importNode.startLine);
+                _args[1] = new Integer(importNode.getStartLine());
                 _args[2] = identifier;
                 _args[3] =
                     new Integer(
                         ((JavaNode) _onDemandImports.get(
-                            _onDemandImports.indexOf(importNode))).startLine);
+                            _onDemandImports.indexOf(importNode))).getStartLine());
 
                 Loggers.TRANSFORM.l7dlog(
                     Level.INFO, "TRANS_IMP_REMOVE_DUPLICATE", _args, null);
@@ -237,7 +239,7 @@ final class ImportTransformation
         else // single-type import
         {
             // update the node text (to make accessing the path easy)
-            importNode.text = identifier;
+            importNode.setText(identifier);
 
             // remove duplicates
             // (note that we compare by JavaNode.equals(JavaNode) so we really
@@ -245,12 +247,12 @@ final class ImportTransformation
             if (_singleTypeImports.contains(importNode))
             {
                 _args[0] = _root.getText();
-                _args[1] = new Integer(importNode.startLine);
+                _args[1] = new Integer(importNode.getStartLine());
                 _args[2] = identifier;
                 _args[3] =
                     new Integer(
                         ((JavaNode) _singleTypeImports.get(
-                            _singleTypeImports.indexOf(importNode))).startLine);
+                            _singleTypeImports.indexOf(importNode))).getStartLine());
 
                 Loggers.TRANSFORM.l7dlog(
                     Level.INFO, "TRANS_IMP_REMOVE_DUPLICATE", _args, null);
@@ -418,8 +420,8 @@ final class ImportTransformation
 
         // add the default package (necessary to detect conflicts)
         JavaNode defaultPckg = _factory.create(DEFAULT_PACKAGE, 1, DEFAULT_PACKAGE, 2);
-        defaultPckg.text = _packageName;
-        defaultPckg.type = JavaTokenTypes.IMPORT;
+        defaultPckg.setText(_packageName);
+        defaultPckg.setType(JavaTokenTypes.IMPORT);
         result.add(defaultPckg);
 
         return result;
@@ -547,7 +549,7 @@ final class ImportTransformation
             {
                 JavaNode node = (JavaNode) singleTypeImports.get(i);
 
-                if (node.text.endsWith('.' + (String) identifiers.get(j)))
+                if (node.getText().endsWith('.' + (String) identifiers.get(j)))
                 {
                     result.remove(identifiers.get(j));
                 }
@@ -709,14 +711,14 @@ final class ImportTransformation
 
         // add the default package (needed to detect conflicts)
         JavaNode defaultPackage = (JavaNode) _factory.create(JavaTokenTypes.IMPORT, _packageName);
-        defaultPackage.startLine = DEFAULT_PACKAGE;
+        defaultPackage.setStartLine(DEFAULT_PACKAGE);
         newOnDemandImports.add(defaultPackage);
 
         // add the to-be-collapsed single-type imports
         for (int i = 0, size = singleTypeImports.size(); i < size; i++)
         {
             JavaNode singleType = (JavaNode) singleTypeImports.get(i);
-            String packageName = StringHelper.getPackageName(singleType.text);
+            String packageName = StringHelper.getPackageName(singleType.getText());
 
             // no package name, no collapsing!
             if (EMPTY_STRING.equals(packageName))
@@ -777,8 +779,8 @@ final class ImportTransformation
 
             // build the list with the types of the package library
             // and add it to the types store with all known types
-            List packageTypes = getPackageTypes(path.text);
-            allTypes.put(path.text, packageTypes);
+            List packageTypes = getPackageTypes(path.getText());
+            allTypes.put(path.getText(), packageTypes);
         }
 
         Set conflicts = new HashSet(5);
@@ -826,7 +828,7 @@ final class ImportTransformation
                         && isUsed(type, defaultTypes))
                     {
                         conflicts.add(firstPackageName);
-                        template.text = firstPackageName;
+                        template.setText(firstPackageName);
 
                         int index = 0;
 
@@ -838,7 +840,7 @@ final class ImportTransformation
                             // retain it in the output
                             if (_onDemandImports.contains(template))
                             {
-                                importNode.text = template.text;
+                                importNode.setText(template.getText());
                                 importNode.setNextSibling(null);
                                 importNode.setPreviousSibling(null);
                                 retainedOnDemandImports.add(importNode);
@@ -913,7 +915,7 @@ final class ImportTransformation
 //		new Vector(Arrays.asList(node.text.split("/([.])/" /* NOI18N */)));
         
         // TODO Check to see if this can be better optimized...
-        String identifier = node.text;
+        String identifier = node.getText();
         List parts = new ArrayList(8);
 
         int endOffset = -1;
@@ -1011,11 +1013,11 @@ final class ImportTransformation
                     throw new RuntimeException("" + imp);
             }
 
-            if (report && imports[i].text.endsWith(STAR))
+            if (report && imports[i].getText().endsWith(STAR))
             {
                 _args[0] = filename;
-                _args[1] = new Integer(imports[i].startLine);
-                _args[2] = imports[i].text;
+                _args[1] = new Integer(imports[i].getStartLine());
+                _args[2] = imports[i].getText();
 
                 if (showWarnings)
                 {
@@ -1030,15 +1032,15 @@ final class ImportTransformation
             if (node == null)
             {
                 _root.setFirstChild(imp);
-                imp.parent = (JavaNode) _root;
-                imp.prevSibling = imp.parent;
-                _packageNameNode = imp.prevSibling;
+                imp.setParent((JavaNode) _root);
+                imp.setPreviousSibling(imp.getParent());
+                _packageNameNode = imp.getPreviousSibling();
             }
             else
             {
                 node.setNextSibling(imp);
-                imp.prevSibling = node;
-                imp.parent = _packageNameNode;
+                imp.setPreviousSibling(node);
+                imp.setParent ( _packageNameNode);
             }
 
             node = imp;
@@ -1058,11 +1060,11 @@ final class ImportTransformation
                     throw new RuntimeException("2 " + imp);
             }
 
-            if (report && imports[i].text.endsWith(STAR))
+            if (report && imports[i].getText().endsWith(STAR))
             {
                 _args[0] = filename;
-                _args[1] = new Integer(imports[i].startLine);
-                _args[2] = imports[i].text;
+                _args[1] = new Integer(imports[i].getStartLine());
+                _args[2] = imports[i].getText();
 
                 if (showWarnings)
                 {
@@ -1072,8 +1074,8 @@ final class ImportTransformation
             }
 
             node.setNextSibling(imp);
-            imp.prevSibling = node;
-            imp.parent = node;
+            imp.setPreviousSibling(node);
+            imp.setParent(node);
             node = imp;
         }
 
@@ -1179,16 +1181,16 @@ final class ImportTransformation
 
                 // construct a single-type import out of
                 // the package name from the on-demand import...
-                buf.append(resolvableImport.text);
+                buf.append(resolvableImport.getText());
                 buf.append('.');
 
                 // and the type name found in the source
                 buf.append(unresolvedIdent);
-                template.text = buf.toString();
+                template.setText(buf.toString());
                 buf.setLength(0);
 
                 // check if this single-type is contained in the repository
-                if (Arrays.binarySearch(repository, template.text) > -1)
+                if (Arrays.binarySearch(repository, template.getText()) > -1)
                 {
                     // don't add an already existing declaration
                     if (
@@ -1196,9 +1198,9 @@ final class ImportTransformation
                         && !result.contains(template))
                     {
                         JavaNode node =
-                             (JavaNode) _factory.create(JavaTokenTypes.IMPORT, template.text);
-                        node.startLine = resolvableImport.startLine;
-                        node.parent = resolvableImport.parent;
+                             (JavaNode) _factory.create(JavaTokenTypes.IMPORT, template.getText());
+                        node.setStartLine(resolvableImport.getStartLine());
+                        node.setParent(resolvableImport.getParent());
                         node.setFirstChild(resolvableImport.getFirstChild());
                         node.setNextSibling(resolvableImport.getNextSibling());
                         node.setHiddenBefore(resolvableImport.getHiddenBefore());
@@ -1219,13 +1221,13 @@ final class ImportTransformation
                         else // conflict found
                         {
                             // if either one represents the default package...
-                            if (isDefaultPackage(node.text, defaultPackageName))
+                            if (isDefaultPackage(node.getText(), defaultPackageName))
                             {
                                 // exchange or...
                                 result.remove(other);
                                 result.add(node);
                             }
-                            else if (isDefaultPackage(node.text, defaultPackageName))
+                            else if (isDefaultPackage(node.getText(), defaultPackageName))
                             {
                                 ;
                             }
@@ -1250,15 +1252,15 @@ CHECK:
                         {
                             String type = (String) _qualIdents.get(k);
 
-                            if (node.text.endsWith(type))
+                            if (node.getText().endsWith(type))
                             {
                                 String name =
-                                    node.text.substring(0, node.text.indexOf(type))
+                                    node.getText().substring(0, node.getText().indexOf(type))
                                     + type.substring(0, type.lastIndexOf('.'));
 
                                 if (Arrays.binarySearch(repository, name) > -1)
                                 {
-                                    node.text = name;
+                                    node.setText(name);
 
                                     break CHECK;
                                 }
@@ -1275,15 +1277,15 @@ CHECK:
             JavaNode node = (JavaNode) result.get(i);
 
             // remove the default package we added to check for conflicts
-            if (node.startLine == DEFAULT_PACKAGE)
+            if (node.getStartLine() == DEFAULT_PACKAGE)
             {
                 result.remove(i);
                 size--;
                 i--;
             }
             else if (
-                isLangPackage(node.text)
-                || isDefaultPackage(node.text, defaultPackageName))
+                isLangPackage(node.getText())
+                || isDefaultPackage(node.getText(), defaultPackageName))
             {
                 result.remove(i);
                 size--;
@@ -1292,8 +1294,8 @@ CHECK:
             else
             {
                 _args[0] = _root.getText();
-                _args[1] = new Integer(node.startLine);
-                _args[2] = node.text;
+                _args[1] = new Integer(node.getStartLine());
+                _args[2] = node.getText();
 
                 Loggers.TRANSFORM.l7dlog(
                     Level.INFO, "TRANS_IMP_EXPAND_ON_DEMAND", _args, null);
@@ -1328,18 +1330,18 @@ CHECK:
             JavaNode node = (JavaNode) singleTypeImports.get(i);
 
             // first check: obsolete imports (java.lang && default package)
-            if (isLangPackage(node.text) || isDefaultPackage(node.text, packageName))
+            if (isLangPackage(node.getText()) || isDefaultPackage(node.getText(), packageName))
             {
                 _args[0] = _root.getText();
-                _args[1] = new Integer(node.startLine);
-                _args[2] = node.text;
+                _args[1] = new Integer(node.getStartLine());
+                _args[2] = node.getText();
 
                 Loggers.TRANSFORM.l7dlog(
                     Level.INFO, "TRANS_IMP_REMOVE_OBSOLETE", _args, null);
             }
             else
             {
-                String path = StringHelper.getPackageName(node.text);
+                String path = StringHelper.getPackageName(node.getText());
                 boolean furtherCheck = true;
 CHECK:
 
@@ -1369,7 +1371,7 @@ CHECK:
 
                         // if the import node matches the built name
                         // we know this identifier is used in the source
-                        if (node.text.equals(buf.toString()))
+                        if (node.getText().equals(buf.toString()))
                         {
                             result.add(node);
 
@@ -1384,11 +1386,11 @@ CHECK:
                 if (furtherCheck)
                 {
                     // third check: unused import
-                    if (!unqualIdents.contains(StringHelper.getClassName(node.text)))
+                    if (!unqualIdents.contains(StringHelper.getClassName(node.getText())))
                     {
                         _args[0] = _root.getText();
-                        _args[1] = new Integer(node.startLine);
-                        _args[2] = node.text;
+                        _args[1] = new Integer(node.getStartLine());
+                        _args[2] = node.getText();
 
                         Loggers.TRANSFORM.l7dlog(
                             Level.INFO, "TRANS_IMP_REMOVE_UNUSED", _args, null);
@@ -1421,7 +1423,7 @@ CHECK:
         for (int i = 0, size = onDemandImports.size(); i < size; i++)
         {
             JavaNode node = (JavaNode) onDemandImports.get(i);
-            node.text = node.text + ".*";
+            node.setText(node.getText() + ".*");
             imports.add(node);
         }
 
@@ -1464,8 +1466,8 @@ CHECK:
             JavaNode n1 = (JavaNode) o1;
             JavaNode n2 = (JavaNode) o2;
 
-            int i1 = getIndex(identifiers, n1.text);
-            int i2 = getIndex(identifiers, n2.text);
+            int i1 = getIndex(identifiers, n1.getText());
+            int i2 = getIndex(identifiers, n2.getText());
 
             if (i1 > -1)
             {
@@ -1508,7 +1510,7 @@ CHECK:
                 }
             }
 
-            return n1.text.compareTo(n2.text);
+            return n1.getText().compareTo(n2.getText());
         }
     }
 
@@ -1532,15 +1534,15 @@ CHECK:
             JavaNode n1 = (JavaNode) o1;
             JavaNode n2 = (JavaNode) o2;
 
-            if (n1.startLine == n2.startLine)
+            if (n1.getStartLine() == n2.getStartLine())
             {
-                return n1.text.compareTo(n2.text);
+                return n1.getText().compareTo(n2.getText());
             }
-            if (n1.startLine > n2.startLine)
+            if (n1.getStartLine() > n2.getStartLine())
             {
                 return 1;
             }
-            else if (n1.startLine < n2.startLine)
+            else if (n1.getStartLine() < n2.getStartLine())
             {
                 return -1;
             }
@@ -1578,8 +1580,8 @@ CHECK:
             JavaNode packagePath = (JavaNode) o1;
             JavaNode importNode = (JavaNode) o2;
 
-            return packagePath.text.compareTo(
-                StringHelper.getPackageName(importNode.text));
+            return packagePath.getText().compareTo(
+                StringHelper.getPackageName(importNode.getText()));
         }
     }
 
@@ -1602,7 +1604,7 @@ CHECK:
             JavaNode n1 = (JavaNode) o1;
             JavaNode n2 = (JavaNode) o2;
 
-            return n1.text.compareTo(n2.text);
+            return n1.getText().compareTo(n2.getText());
         }
     }
 }

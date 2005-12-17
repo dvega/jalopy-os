@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
 
 import antlr.CommonAST;
 import antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.Node;
 import de.hunsicker.jalopy.language.TreeWalker;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.language.antlr.JavadocTokenTypes;
+import de.hunsicker.jalopy.language.antlr.Node;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;

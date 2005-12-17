@@ -7,7 +7,7 @@
 package de.hunsicker.jalopy.printer;
 
 import antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
