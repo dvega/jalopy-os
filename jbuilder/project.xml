@@ -2,12 +2,12 @@
 <project>
   <extend>../build/project.xml</extend>
   <pomVersion>1</pomVersion>
-  <name>Console plugin</name>
+  <name>JBuilder plugin</name>
   <description>The jbuilder tool for jalopy</description>
   <artifactId>jalopy-jbuilder</artifactId>
   <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
-  <shortDescription>Console</shortDescription>
+  <shortDescription>JBuilder plugin for jalopy</shortDescription>
   <dependencies>
     <dependency>
       <groupId>${jalopy.groupId}</groupId>

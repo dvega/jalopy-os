@@ -64,6 +64,66 @@ xmlns:ant="jelly:ant" default="jalopy:help">
     value="clean, sourceforge:deploy-dist" />
     <attainGoal name="multiproject:goal" />
   </goal>
+  
+  <!-- Deploys ant sourceforge -->
+  <goal name="jalopy-ant:sf" description="Build and deploy ant to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.ant.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  
+  <!-- Deploys console sourceforge -->
+  <goal name="jalopy-console:sf" description="Build and deploy console to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.console.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys eclipse sourceforge -->
+  <goal name="jalopy-eclipse:sf" description="Build and deploy eclipse to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.eclipse.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jbuilder sourceforge -->
+  <goal name="jalopy-jbuilder:sf" description="Build and deploy jbuilder to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jbuilder.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jdeveloper sourceforge -->
+  <goal name="jalopy-jdeveloper:sf" description="Build and deploy jdeveloper to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jdeveloper.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jedit sourceforge -->
+  <goal name="jalopy-jedit:sf" description="Build and deploy jedit to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jedit.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
 
   <!-- Cleans all projects -->
   <goal name="jalopy-all:clean" description="Clean all jalopy modules">

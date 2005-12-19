@@ -7,7 +7,7 @@
   <artifactId>jalopy-jedit</artifactId>
   <currentVersion>0.2-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
-  <shortDescription>Console</shortDescription>
+  <shortDescription>JEdit plugin</shortDescription>
   <dependencies>
     <dependency>
       <groupId>${jalopy.groupId}</groupId>
