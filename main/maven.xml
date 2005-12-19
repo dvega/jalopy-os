@@ -40,7 +40,11 @@
   </postGoal>
   <postGoal name="clean">
     <echo message="Removing ${maven.antlr.target.dir}" />
-    <ant:delete dir="${maven.antlr.target.dir}" /> 
+    <ant:delete> 
+      <ant:fileset dir="${maven.antlr.target.dir}" >
+        <ant:include name="**/*.java"/>
+      </ant:fileset>
+    </ant:delete> 
   </postGoal>
 
   <postGoal name="dist:prepare-bin-filesystem">
