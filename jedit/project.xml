@@ -5,7 +5,7 @@
   <name>Jedit plugin</name>
   <description>The jedit tool for jalopy</description>
   <artifactId>jalopy-jedit</artifactId>
-  <currentVersion>0.1-${jalopy.currentVersion}</currentVersion>
+  <currentVersion>0.2-${jalopy.currentVersion}</currentVersion>
   <package>*</package>
   <shortDescription>Console</shortDescription>
   <dependencies>

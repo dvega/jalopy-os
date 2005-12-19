@@ -27,7 +27,7 @@ import javax.swing.JMenuItem;
 
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.jalopy.Jalopy;
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.plugin.AbstractPlugin;
 import de.hunsicker.jalopy.plugin.Project;
 import de.hunsicker.jalopy.plugin.StatusBar;
