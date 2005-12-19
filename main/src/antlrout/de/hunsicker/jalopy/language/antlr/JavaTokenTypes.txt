@@ -1,4 +1,4 @@
-// $ANTLR 2.7.2: java15.g -> JavaTokenTypes.txt$
+// $ANTLR 2.7.5 (20050128): java15.g -> JavaTokenTypes.txt$
 Java    // output token vocab name
 JAVADOC_COMMENT=6
 LCURLY=7

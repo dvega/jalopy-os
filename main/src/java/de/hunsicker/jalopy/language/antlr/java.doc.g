@@ -990,7 +990,7 @@ PCDATA
         | '\t'    {  replaceTab();
                   }
         | { LA(2) != '*' || (LA(2) == '*' && LA(3) != '*') }? '/' // allow slash
-        | EMAILSTART '@' {// Allow email address
+        | LCLETTER '@' {// Allow email address
                        }
         | ~('*'|'<'|'{'|'@'|'}'|'\n'|'\r'|'/') 
         )  +
@@ -1021,7 +1021,7 @@ PCDATA
     
 TAG
     :   
-        " @" (LCLETTER)+ {$setType(JavadocTokenTypes.TAG);} // Allowed tag
+        AT (LCLETTER)+ 
     ;
 
 

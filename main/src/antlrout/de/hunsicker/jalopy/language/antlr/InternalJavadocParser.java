@@ -1,4 +1,4 @@
-// $ANTLR 2.7.2: "java.doc.g" -> "InternalJavadocParser.java"$
+// $ANTLR 2.7.5 (20050128): "java.doc.g" -> "InternalJavadocParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
@@ -188,8 +188,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
+				recover(ex,_tokenSet_1);
 			} else {
 			  throw ex;
 			}
@@ -288,8 +287,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -337,8 +335,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_5);
+				recover(ex,_tokenSet_5);
 			} else {
 			  throw ex;
 			}
@@ -398,8 +395,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -509,8 +505,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -595,8 +590,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_7);
+				recover(ex,_tokenSet_7);
 			} else {
 			  throw ex;
 			}
@@ -639,8 +633,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -707,8 +700,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -738,8 +730,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -769,8 +760,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -800,8 +790,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -831,8 +820,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -862,8 +850,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -893,8 +880,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_2);
+				recover(ex,_tokenSet_2);
 			} else {
 			  throw ex;
 			}
@@ -1092,8 +1078,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1117,8 +1102,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1159,8 +1143,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1201,8 +1184,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1243,8 +1225,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1318,8 +1299,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -1407,8 +1387,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1451,8 +1430,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1495,8 +1473,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1539,8 +1516,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1583,8 +1559,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1627,8 +1602,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1671,8 +1645,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1715,8 +1688,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1759,8 +1731,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1803,8 +1774,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1892,8 +1862,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1936,8 +1905,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -1980,8 +1948,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2024,8 +1991,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2068,8 +2034,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2112,8 +2077,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2156,8 +2120,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2200,8 +2163,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2244,8 +2206,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2288,8 +2249,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_10);
+				recover(ex,_tokenSet_10);
 			} else {
 			  throw ex;
 			}
@@ -2353,8 +2313,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2395,8 +2354,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2437,8 +2395,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2462,8 +2419,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2529,8 +2485,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2576,8 +2531,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_6);
+				recover(ex,_tokenSet_6);
 			} else {
 			  throw ex;
 			}
@@ -2655,8 +2609,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_13);
+				recover(ex,_tokenSet_13);
 			} else {
 			  throw ex;
 			}
@@ -2714,8 +2667,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2773,8 +2725,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2832,8 +2783,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_9);
+				recover(ex,_tokenSet_9);
 			} else {
 			  throw ex;
 			}
@@ -2956,8 +2906,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_14);
+				recover(ex,_tokenSet_14);
 			} else {
 			  throw ex;
 			}
@@ -2996,8 +2945,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -3073,8 +3021,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -3195,8 +3142,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_15);
+				recover(ex,_tokenSet_15);
 			} else {
 			  throw ex;
 			}
@@ -3255,8 +3201,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_1);
+				recover(ex,_tokenSet_1);
 			} else {
 			  throw ex;
 			}
@@ -3297,8 +3242,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_16);
+				recover(ex,_tokenSet_16);
 			} else {
 			  throw ex;
 			}
@@ -3430,8 +3374,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_17);
+				recover(ex,_tokenSet_17);
 			} else {
 			  throw ex;
 			}
@@ -3542,8 +3485,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_18);
+				recover(ex,_tokenSet_18);
 			} else {
 			  throw ex;
 			}
@@ -3607,8 +3549,7 @@ public InternalJavadocParser(ParserSharedInputState state) {
 		catch (RecognitionException ex) {
 			if (inputState.guessing==0) {
 				reportError(ex);
-				consume();
-				consumeUntil(_tokenSet_19);
+				recover(ex,_tokenSet_19);
 			} else {
 			  throw ex;
 			}

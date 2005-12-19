@@ -43,10 +43,10 @@ import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
 import de.hunsicker.jalopy.language.CompositeFactory;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.JavaRecognizer;
-import de.hunsicker.jalopy.language.Node;
+import de.hunsicker.jalopy.language.antlr.Node;
 import de.hunsicker.jalopy.language.NodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
@@ -1071,33 +1071,12 @@ public final class Jalopy
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
         finally {
-            cleanupTree(tree);
+            _factory.clear();
         }
         
 
         return formatSuccess;
     }
-
-    private void cleanupTree(JavaNode tree) {
-        // TODO Should this occur here >?
-        _factory.clear();
-    }
-
-    /*
-     * Formats the given Java AST and writes the result to the specified
-     * target.
-     *
-     * @param tree root node of the JavaAST that is to be formatted.
-     *
-     * @since 1.0b8
-     * @see #setOutput(File)
-     * @see #parse
-     * @see #inspect
-     *
-    public void format(JavaNode tree)
-    {
-        format(tree, true);
-    }*/
 
     /**
      * Inspects the (via {@link #setInput(File)}) specified input source for code
@@ -1879,7 +1858,7 @@ public final class Jalopy
         environment.set(
             Environment.Variable.TAB_SIZE.getName(), String.valueOf(indentSize));
         DateFormat df = DateFormat.getDateTimeInstance();
-        environment.set(Environment.Variable.DATE.getName(),df.format(new Date())); 
+        environment.set(Environment.Variable.DATE.getName(),new Date()); 
         String className = file.getName();
         className = className.substring(0, className.length() - 5);
         environment.set(de.hunsicker.jalopy.storage.Environment.Variable.CLASS_NAME.getName(), className);

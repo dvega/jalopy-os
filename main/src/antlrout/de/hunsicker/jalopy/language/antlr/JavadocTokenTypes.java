@@ -1,4 +1,4 @@
-// $ANTLR 2.7.2: "java.doc.g" -> "InternalJavadocParser.java"$
+// $ANTLR 2.7.5 (20050128): "java.doc.g" -> "InternalJavadocParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
