@@ -209,7 +209,7 @@ paragraph
             }
         :   text | list | div | center | blockquote | table | preformatted
         )*
-        (CPARA!)?
+        (CPARA)?
     ;
     exception // for rule
     catch [RecognitionException ex]
@@ -273,7 +273,7 @@ preformatted
     ;
 
 table
-    :   OTABLE^ (caption)? (PCDATA)* (tr)+ CTABLE!
+    :   OTABLE^ (caption)? (PCDATA)* (tr)+ CTABLE
     ;
 
 caption
@@ -281,11 +281,11 @@ caption
     ;
 
 tr
-    :   O_TR^ ((PCDATA)* | COMMENT) (th_or_td)* (C_TR! ((PCDATA)* | COMMENT))?
+    :   O_TR^ ((PCDATA)* | COMMENT) (th_or_td)* (C_TR ((PCDATA)* | COMMENT))?
     ;
 
 th_or_td
-    :   (OTH^ | OTD^) (body_content)* ((CTH! | CTD!) (PCDATA)*)?
+    :   (OTH^ | OTD^) (body_content)* ((CTH | CTD) (PCDATA)*)?
     ;
 
 /* TEXT ELEMENTS */

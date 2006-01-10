@@ -56,6 +56,7 @@ public class HeaderSettingsPage
     private JButton _addButton;
     private JButton _removeButton;
     private JCheckBox _useCheckBox;
+    private JCheckBox _ignoreIfExistsCheckBox;
     private JComboBox _blankLinesAfterComboBox;
     private JComboBox _blankLinesBeforeComboBox;
     private JComboBox _smartModeComboBox;
@@ -98,6 +99,7 @@ public class HeaderSettingsPage
         this.settings.put(
             getBlankLinesAfterKey(), (String) _blankLinesAfterComboBox.getSelectedItem());
         this.settings.putBoolean(getUseKey(), _useCheckBox.isSelected());
+        this.settings.putBoolean(getIgnoreIfExistsKey(), _ignoreIfExistsCheckBox.isSelected());
         this.settings.put(
             getSmartModeKey(), (String) _smartModeComboBox.getSelectedItem());
 
@@ -272,6 +274,19 @@ public class HeaderSettingsPage
 
 
     /**
+     * Returns the settings key to store the setting.
+     *
+     * @return settings key.
+     *
+     * @see de.hunsicker.jalopy.storage.ConventionKeys#HEADER_IGNORE_IF_EXISTS
+     */
+    protected Convention.Key getIgnoreIfExistsKey()
+    {
+        return ConventionKeys.HEADER_IGNORE_IF_EXISTS;
+    }
+
+
+    /**
      * Returns the text for the use label.
      *
      * @return text for use label.
@@ -279,6 +294,17 @@ public class HeaderSettingsPage
     protected String getUseLabel()
     {
         return this.bundle.getString("CHK_USE_HEADER" /* NOI18N */);
+    }
+
+
+    /**
+     * Returns the text for the ignore if exists label.
+     *
+     * @return text for ignore if exists label.
+     */
+    protected String getIgnoreIfExistsLabel()
+    {
+        return this.bundle.getString("CHK_IGNORE_HEADER_IF_EXISTS" /* NOI18N */);
     }
 
 
@@ -338,6 +364,16 @@ public class HeaderSettingsPage
         headerLayout.setConstraints(_useCheckBox, c);
         headerPanel.add(_useCheckBox);
 
+
+        GridBagConstraints c2 = new GridBagConstraints();
+        _ignoreIfExistsCheckBox =
+            new JCheckBox(getIgnoreIfExistsLabel(), this.settings.getBoolean(getIgnoreIfExistsKey(), false));
+        SwingHelper.setConstraints(
+            c, 0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.NORTHWEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        headerLayout.setConstraints(_ignoreIfExistsCheckBox, c);
+        headerPanel.add(_ignoreIfExistsCheckBox);
+        
         int lines =
             this.settings.getInt(
                 getSmartModeKey(), ConventionDefaults.HEADER_SMART_MODE_LINES);

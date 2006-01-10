@@ -96,6 +96,8 @@ CHK_INSERT_EMPTY = Leere Anweisung einfügen
 
 BDR_SPACE_BEFORE = Leerzeichen vor
 CHK_METHOD_PARENTHESES = Klammern nach Deklarationen
+CHK_IGNORE_HEADER_IF_EXISTS = Ignore Header if it already exists
+CHK_IGNORE_FOOTER_IF_EXISTS = Ignore Footer if it already exists
 CHK_BRACES = Geschweiften Klammern
 CHK_METHOD_CALL_PARENTHESES = Klammern nach Aufrufen
 CHK_BRACKETS = Eckigen Klammern

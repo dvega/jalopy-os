@@ -33,100 +33,100 @@ import de.hunsicker.jalopy.storage.Convention.Key;
  */
 public final class ConventionKeys
 {
-	private static class BasicKey {
-		public Convention.Key key = null;
-		public Object defaultValue = null;
-		private Convention convention = Convention.getInstance();
-		
-		public BasicKey(final String name, final Object defaulValue) {
-			key = new Convention.Key(name);
-			this.defaultValue = defaulValue;
-		}
-		public void set(String value) {
-			convention.put(key,value);
-		}
-		public String get() {
-			return convention.get(key,(String)defaultValue);
-		}
-		public void setBoolean(Boolean newValue) {
-			convention.putBoolean(key,newValue.booleanValue());
-		}
-		public boolean getBoolean() {
-			return convention.getBoolean(key,((Boolean)defaultValue).booleanValue());
-		}
-		public void setInt(Integer intValue) {
-			convention.putInt(key,intValue.intValue());
-		}
-		public int getInt() {
-			return convention.getInt(key,((Integer)defaultValue).intValue());
-		}
-	}
+    private static class BasicKey {
+        public Convention.Key key = null;
+        public Object defaultValue = null;
+        private Convention convention = Convention.getInstance();
+        
+        public BasicKey(final String name, final Object defaulValue) {
+            key = new Convention.Key(name);
+            this.defaultValue = defaulValue;
+        }
+        public void set(String value) {
+            convention.put(key,value);
+        }
+        public String get() {
+            return convention.get(key,(String)defaultValue);
+        }
+        public void setBoolean(Boolean newValue) {
+            convention.putBoolean(key,newValue.booleanValue());
+        }
+        public boolean getBoolean() {
+            return convention.getBoolean(key,((Boolean)defaultValue).booleanValue());
+        }
+        public void setInt(Integer intValue) {
+            convention.putInt(key,intValue.intValue());
+        }
+        public int getInt() {
+            return convention.getInt(key,((Integer)defaultValue).intValue());
+        }
+    }
     //~ Static variables/initializers ----------------------------------------------------
-	
-	private static class General extends BasicKey {
-		private static class Compliance extends General{
-			public static Version VERSION = new Version();
-			private static class Version extends Compliance {
-				public Version(){
-					super("version","1.5");
-				}
-			}
-			public Compliance(String name, Object defaultValue) {
-				super("compliance/" + name,defaultValue);
-			}
-		}
-		public General(String name,Object defaultValue) {
-			super("general/" + name,defaultValue);
-		}
-		private static class Locale extends General{
-			public static Country COUNTRY = new Country();
-			public static Language LANGUAGE = new Language();
-			private static class Language extends Locale {
-				public Language() {
-					super("language" , java.util.Locale.US.toString());
-				}
-			}
-			
-			private static class Country extends Locale {
-				public Country() {
-					super("country" , java.util.Locale.US.toString());
-				}
-			}
-			public Locale(String name,Object value) {
-				super("locale/" + name, value);
-			}
-		}
-		private static class access extends BasicKey{
-			public access(String name, Object defaulValue) {
-				super(name, defaulValue);
-				// TODO Auto-generated constructor stub
-			}
+    
+    private static class General extends BasicKey {
+        private static class Compliance extends General{
+            public static Version VERSION = new Version();
+            private static class Version extends Compliance {
+                public Version(){
+                    super("version","1.5");
+                }
+            }
+            public Compliance(String name, Object defaultValue) {
+                super("compliance/" + name,defaultValue);
+            }
+        }
+        public General(String name,Object defaultValue) {
+            super("general/" + name,defaultValue);
+        }
+        private static class Locale extends General{
+            public static Country COUNTRY = new Country();
+            public static Language LANGUAGE = new Language();
+            private static class Language extends Locale {
+                public Language() {
+                    super("language" , java.util.Locale.US.toString());
+                }
+            }
+            
+            private static class Country extends Locale {
+                public Country() {
+                    super("country" , java.util.Locale.US.toString());
+                }
+            }
+            public Locale(String name,Object value) {
+                super("locale/" + name, value);
+            }
+        }
+        private static class access extends BasicKey{
+            public access(String name, Object defaulValue) {
+                super(name, defaulValue);
+                // TODO Auto-generated constructor stub
+            }
 
-			public BasicKey PUBLIC = new BasicKey(key.toString() + "/public",Boolean.FALSE);
-			
-		}
-		private static class style extends General {
+            public BasicKey PUBLIC = new BasicKey(key.toString() + "/public",Boolean.FALSE);
+            
+        }
+        private static class style extends General {
 
-			private class description extends style {
+            private class description extends style {
 
-				public description() {
-					super("description" , "");
-				}
-				
-			}
-			public style(String name, Object defaultValue) {
-				super("style/" + name, defaultValue);
-			}
-		}
-	}
-	
+                public description() {
+                    super("description" , "");
+                }
+                
+            }
+            public style(String name, Object defaultValue) {
+                super("style/" + name, defaultValue);
+            }
+        }
+    }
+    
     /**
      * JDK source compatibility version (<em>String</em>).
      * TODO 
      * @since 1.0b8
      */
     public static final Convention.Key SOURCE_VERSION =
-    	//General.Compliance.VERSION.key;
+        //General.Compliance.VERSION.key;
         new Convention.Key("general/compliance/version");
 
     /**
@@ -135,7 +135,7 @@ public final class ConventionKeys
      * @since 1.0b9
      */
     public static final Convention.Key COUNTRY =
-		//General.Locale.COUNTRY.key;
+        //General.Locale.COUNTRY.key;
         new Convention.Key("general/locale/country");
 
     /**
@@ -144,7 +144,7 @@ public final class ConventionKeys
      * @since 1.0b9
      */
     public static final Convention.Key LANGUAGE =
-		//General.Locale.LANGUAGE.key;
+        //General.Locale.LANGUAGE.key;
         new Convention.Key("general/locale/lanuguage");
 
     /** Description of the code convention (<em>String</em>). */
@@ -993,6 +993,9 @@ public final class ConventionKeys
     /** Insert a footer? (<em>boolean</em>) */
     public static final Convention.Key FOOTER = new Convention.Key("printer/footer/use");
 
+    /** Ignore footer if it exists? (<em>boolean</em>) */
+    public static final Convention.Key FOOTER_IGNORE_IF_EXISTS = new Convention.Key("printer/footer/ignoreIfExists");
+
     /** Identify keys of the footers that are to be deleted (<em>String</em>). */
     public static final Convention.Key FOOTER_KEYS =
         new Convention.Key("printer/footer/keys");
@@ -1017,6 +1020,9 @@ public final class ConventionKeys
 
     /** Insert a header? (<em>boolean</em>) */
     public static final Convention.Key HEADER = new Convention.Key("printer/header/use");
+
+    /** Ignore header if it exists? (<em>boolean</em>) */
+    public static final Convention.Key HEADER_IGNORE_IF_EXISTS = new Convention.Key("printer/header/ignoreIfExists");
 
     /**
      * Number of comments before the first node (an opening curly brace) that should be
@@ -1705,6 +1711,10 @@ public final class ConventionKeys
     /** Add comments like end if and end switch after brace blocks */
     public static final Key BRACE_ADD_COMMENT = 
         new Convention.Key("printer/brace/comment");
+
+    /** */
+    public static final Key COMMENT_JAVADOC_PARSE_DESCRIPTION = 
+        new Convention.Key("printer/comments/javadoc/parseDescription");
 
     //~ Constructors ---------------------------------------------------------------------
 

@@ -940,6 +940,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case CPARA:
 			{
+				AST tmp26_AST = null;
+				tmp26_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp26_AST);
 				match(CPARA);
 				break;
 			}
@@ -1293,6 +1296,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				_cnt538++;
 			} while (true);
 			}
+			AST tmp36_AST = null;
+			tmp36_AST = astFactory.create(LT(1));
+			astFactory.addASTChild(currentAST, tmp36_AST);
 			match(CTABLE);
 			table_AST = (AST)currentAST.root;
 		}
@@ -3318,6 +3324,9 @@ public InternalJavadocParser(ParserSharedInputState state) {
 			switch ( LA(1)) {
 			case C_TR:
 			{
+				AST tmp108_AST = null;
+				tmp108_AST = astFactory.create(LT(1));
+				astFactory.addASTChild(currentAST, tmp108_AST);
 				match(C_TR);
 				{
 				switch ( LA(1)) {
@@ -3435,11 +3444,17 @@ public InternalJavadocParser(ParserSharedInputState state) {
 				switch ( LA(1)) {
 				case CTH:
 				{
+					AST tmp113_AST = null;
+					tmp113_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp113_AST);
 					match(CTH);
 					break;
 				}
 				case CTD:
 				{
+					AST tmp114_AST = null;
+					tmp114_AST = astFactory.create(LT(1));
+					astFactory.addASTChild(currentAST, tmp114_AST);
 					match(CTD);
 					break;
 				}

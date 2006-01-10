@@ -91,6 +91,7 @@ public class JavadocSettingsPage
     JCheckBox _checkDontJavadocIfMlBox;
     private JCheckBox _createInnerCheckBox;
     JCheckBox _parseCheckBox;
+    JCheckBox _parseDescriptionCheckBox;
     JCheckBox _singleLineFieldCommentsCheckBox;
     JCheckBox _braceCommentsCheckBox;
     Pattern _bottomTextPattern;
@@ -159,6 +160,7 @@ public class JavadocSettingsPage
             _checkTagsCheckBox = null;
             _createInnerCheckBox = null;
             _parseCheckBox = null;
+            _parseDescriptionCheckBox = null;
             _templatesContainer.dispose();
             _disposed = true;
         }
@@ -270,6 +272,7 @@ public class JavadocSettingsPage
             _braceCommentsCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_PARSE, _parseCheckBox.isSelected());
+        this.settings.putBoolean(ConventionKeys.COMMENT_JAVADOC_PARSE_DESCRIPTION, _parseDescriptionCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS, _checkTagsCheckBox.isSelected());
         this.settings.putBoolean(
@@ -371,20 +374,25 @@ public class JavadocSettingsPage
             {
                 public void actionPerformed(ActionEvent ev)
                 {
-                    if (_parseCheckBox.isSelected())
-                    {
-                        _checkTagsCheckBox.setEnabled(true);
-                        _checkThrowsTagsCheckBox.setEnabled(true);
-                        _singleLineFieldCommentsCheckBox.setEnabled(true);
-                    }
-                    else
-                    {
-                        _checkTagsCheckBox.setEnabled(false);
-                        _checkThrowsTagsCheckBox.setEnabled(false);
-                        _singleLineFieldCommentsCheckBox.setEnabled(false);
-                    }
+                    _parseDescriptionCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _checkTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _checkThrowsTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _singleLineFieldCommentsCheckBox.setEnabled(_parseCheckBox.isSelected());
                 }
             });
+
+        _parseDescriptionCheckBox =
+            new JCheckBox(
+                "Parse javadoc description",
+                this.settings.getBoolean(
+                    ConventionKeys.COMMENT_JAVADOC_PARSE,
+                    ConventionDefaults.COMMENT_JAVADOC_PARSE));
+        _parseDescriptionCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        generalLayout.setConstraints(_checkTagsCheckBox, c);
+        generalPanel.add(_parseDescriptionCheckBox);
 
         _tableModel = new DataModel();
 
@@ -459,16 +467,9 @@ public class JavadocSettingsPage
         _braceCommentsCheckBox.addActionListener(this.trigger);
         miscPanel.add(_braceCommentsCheckBox);
         
-        if (_parseCheckBox.isSelected())
-        {
-            _checkTagsCheckBox.setEnabled(true);
-            _singleLineFieldCommentsCheckBox.setEnabled(true);
-        }
-        else
-        {
-            _checkTagsCheckBox.setEnabled(false);
-            _singleLineFieldCommentsCheckBox.setEnabled(false);
-        }
+         _checkTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+         _singleLineFieldCommentsCheckBox.setEnabled(_parseCheckBox.isSelected());
+         _parseDescriptionCheckBox.setEnabled(_parseCheckBox.isSelected());
 
         GridBagLayout layout = new GridBagLayout();
         JPanel panel = new JPanel();

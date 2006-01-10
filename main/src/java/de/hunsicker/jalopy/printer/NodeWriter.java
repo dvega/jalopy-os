@@ -165,6 +165,8 @@ public class NodeWriter
     private char[] _indentChars;
     
     private CompositeFactory _factory = null;
+
+    public int javadocIndent = 0;
     
 
 

@@ -86,22 +86,26 @@ final class JavaPrinter
                         ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
             boolean useCommentHistory = (historyPolicy == History.Policy.COMMENT);
             boolean useHeader = AbstractPrinter.settings.getBoolean(ConventionKeys.HEADER, false);
+            boolean ignoreHeaderIfExists = AbstractPrinter.settings.getBoolean(ConventionKeys.HEADER_IGNORE_IF_EXISTS, true);
 
-            if (useHeader || useCommentHistory)
+            if (((useHeader) && ( ! ignoreHeaderIfExists)) || useCommentHistory)
             {
-                removeHeader(node);
+                removeHeader(node, useCommentHistory);
             }
 
             if (useHeader)
             {
-                printHeader(out);
+                if (( ! ignoreHeaderIfExists) || ( ! headerExists(node))) {
+                    printHeader(out);
+                }
             }
 
             boolean useFooter =
                 AbstractPrinter.settings.getBoolean(
                     ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
+            boolean ignoreFooterIfExists = AbstractPrinter.settings.getBoolean(ConventionKeys.FOOTER_IGNORE_IF_EXISTS, true);
 
-            if (useFooter)
+            if (useFooter && ( ! ignoreFooterIfExists))
             {
                 removeFooter(node);
             }
@@ -115,7 +119,9 @@ final class JavaPrinter
 
             if (useFooter)
             {
-                printFooter(out);
+                if (( ! ignoreFooterIfExists) || ( ! footerExists(node))) {
+                    printFooter(out);
+                }
             }
         }
         finally
@@ -413,6 +419,30 @@ final class JavaPrinter
         }
         //((ExtendedToken)comment).setHiddenBefore(null);
     }
+    
+    /**
+     * Checks if the footer exists.
+     * @param root the root node of the tree.
+     * @return true if the Footer comment was found, false if it was not
+     */
+    private boolean footerExists(AST root) 
+    {
+        //This could be enhanced with checking if "footer keys" are here.
+        JavaNode eofNode = getLastElement(root);
+        return eofNode.hasCommentsBefore();
+    }
+    
+    /**
+     * Checks if the header exists.
+     * @param node the root node of the tree.
+     * @return true if the Header comment was found, false if it was not
+     */
+    private boolean headerExists(AST node) 
+    {
+        //This could be enhanced with checking if "header keys" are here.
+        JavaNode first = (JavaNode) node.getFirstChild();
+        return first.hasCommentsBefore();       
+    }
 
 
     /**
@@ -421,15 +451,11 @@ final class JavaPrinter
      *
      * @param node the root node of the tree.
      *
+     * @return true if the Header comment was removed, false if it was not
      * @since 1.0b8
      */
-    private void removeHeader(AST node)
+    private void removeHeader(AST node, boolean useCommentHistory)
     {
-        // TODO Can be removed ?
-//        History.Policy historyPolicy =
-//            History.Policy.valueOf(
-//                AbstractPrinter.settings.get(
-//                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
         JavaNode first = (JavaNode) node.getFirstChild();
         String[] keys = getConventionKeys(ConventionKeys.HEADER_KEYS);
         int smartModeLines =

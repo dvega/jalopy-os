@@ -696,6 +696,8 @@ public final class ConventionDefaults
     /** Add comments after closing braces */
     public static final boolean BRACE_ADD_COMMENT = false;
 
+    public static final boolean JAVADOC_PARSE_DESCRIPTION = true;
+
     //~ Constructors ---------------------------------------------------------------------
 
     /**

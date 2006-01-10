@@ -640,6 +640,7 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
                         {
                             node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
                             ((ExtendedToken)node).comment = comment;
+                            comment.setText(t);
                             
                         }
                         else {
