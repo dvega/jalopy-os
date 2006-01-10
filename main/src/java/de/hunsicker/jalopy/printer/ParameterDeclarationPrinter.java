@@ -62,8 +62,15 @@ final class ParameterDeclarationPrinter
         AST modifier = node.getFirstChild();
 
         if (
+            (AbstractPrinter.settings.getBoolean(
+                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS, 
+                ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS)
+                && ((JavaNode)node).getParent().getParent().getType() == JavaTokenTypes.METHOD_DEF
+                ) ||
+                
             AbstractPrinter.settings.getBoolean(
-                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_PARAMETERS))
+                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, 
+                ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_PARAMETERS))
         {
             boolean  finalAlreadyExists = false;
             for (

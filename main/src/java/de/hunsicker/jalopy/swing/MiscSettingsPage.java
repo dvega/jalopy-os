@@ -61,6 +61,7 @@ public class MiscSettingsPage
     private JCheckBox _arrayBracketsAfterIdentifierCheckBox;
     private JCheckBox _forceCheckBox;
     private JCheckBox _insertFinalModifierCheckBox;
+    private JCheckBox _insertMethodFinalModifierCheckBox;
     private JCheckBox _historyCommentCheckBox;
     JCheckBox _historyFileCheckBox;
     private JCheckBox _insertConditionalCheckBox;
@@ -108,6 +109,9 @@ public class MiscSettingsPage
             ConventionKeys.FORCE_FORMATTING, _forceCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, _insertFinalModifierCheckBox.isSelected());
+        
+        this.settings.putBoolean(
+            ConventionKeys.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS, _insertMethodFinalModifierCheckBox.isSelected());        
         this.settings.putBoolean(
             ConventionKeys.INSERT_TRAILING_NEWLINE,
             _insertTrailingNewlineCheckBox.isSelected());
@@ -627,16 +631,29 @@ public class MiscSettingsPage
         removeLayout.setConstraints(_forceCheckBox, c);
         removePanel.add(_forceCheckBox);
 
+        _insertMethodFinalModifierCheckBox =
+            new JCheckBox(
+                "Insert final for method params",
+                this.settings.getBoolean(
+                    ConventionKeys.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS, ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS));
+        SwingHelper.setConstraints(
+            c, 0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        removeLayout.setConstraints(_insertMethodFinalModifierCheckBox, c);
+        removePanel.add(_insertMethodFinalModifierCheckBox);
+        _insertMethodFinalModifierCheckBox.addActionListener(trigger);
+
         _insertFinalModifierCheckBox =
             new JCheckBox(
                 this.bundle.getString("CHK_INSERT_FINAL_MODIFIER" /* NOI18N */),
                 this.settings.getBoolean(
                     ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_PARAMETERS));
         SwingHelper.setConstraints(
-            c, 0, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         removeLayout.setConstraints(_insertFinalModifierCheckBox, c);
         removePanel.add(_insertFinalModifierCheckBox);
+        _insertFinalModifierCheckBox.addActionListener(trigger);
 
         GridBagLayout layout = new GridBagLayout();
         setLayout(layout);

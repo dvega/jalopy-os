@@ -301,6 +301,9 @@ public final class ConventionDefaults
     public static final boolean INSERT_FINAL_MODIFIER_FOR_PARAMETERS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final boolean HEADER = false;
 
     /** The default value for the key with the same name. */

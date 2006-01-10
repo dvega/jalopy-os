@@ -1015,6 +1015,13 @@ public final class ConventionKeys
      * Should the "final" modifier be added for method parameters?
      * (<em>boolean</em>)
      */
+    public static final Convention.Key INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS =
+        new Convention.Key("printer/misc/method/forceFinalModifier");
+
+    /**
+     * Should the "final" modifier be added for method parameters?
+     * (<em>boolean</em>)
+     */
     public static final Convention.Key INSERT_FINAL_MODIFIER_FOR_PARAMETERS =
         new Convention.Key("printer/misc/forceFinalModifier");
 
