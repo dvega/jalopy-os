@@ -1,5 +1,5 @@
 <!-- This file is extensionman.xml and is located in the root of the jar file -->
-<extensions>
+<extensions xmlns="http://xmlns.oracle.com/jdeveloper/1012/extensions">
   <feature>
     <group name="Jalopy Java Sourfce Code Formatter">
       <description>See http://jalopy.sourceforge.net/ for more information</description>

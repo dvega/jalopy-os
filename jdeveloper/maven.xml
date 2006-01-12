@@ -8,12 +8,11 @@
     <ant:move file="${common.distribution.bin}/extension.xml" tofile="${common.distribution.bin}/META-INF/extension.xml"/>
     <ant:move file="${common.distribution.bin}/jdev-ext.xml" tofile="${common.distribution.bin}/META-INF/jdev-ext.xml"/>
     <ant:move file="${common.distribution.bin}/jal-bsd.xml" tofile="${common.distribution.bin}/META-INF/jal-bsd.xml"/>
- </preGoal>
-
-  <postGoal name="dist:prepare-bin-filesystem">
+ </preGoal>   <!-- Rejar the artifact and add -->
+ <postGoal name="dist:prepare-bin-filesystem">
       <attainGoal name="postdist:prepare-bin-filesystem" />
-      <!-- Rejar the artifact and add -->
-        <jar jarfile="${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}.jar" duplicate="fail" index="false">
+    
+        <jar jarfile="${maven.dist.bin.assembly.dir}/${common.distribution.lib.prefix}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}.jar" duplicate="fail" index="false">
             <fileset dir="${common.distribution.bin}">
                 <include name="META-INF/*.*" />
             </fileset>
@@ -28,7 +27,10 @@
     </ant:move>
     <ant:delete dir="${maven.dist.bin.assembly.dir}/docs" />
     <ant:delete dir="${maven.dist.bin.assembly.dir}/lib" />
+    <ant:echo message="********* Deleteing ${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
+    <ant:delete file="${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
     <ant:delete dir="${maven.dist.bin.assembly.dir}/META-INF" />
  </postGoal>
+
 </project>
 
