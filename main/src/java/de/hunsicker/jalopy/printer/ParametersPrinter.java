@@ -767,18 +767,37 @@ SEARCH:
                          throws IOException {
         int            result = 0;
         TestNodeWriter tester = out.testers.get();
+        AST modifier = null;
+        AST type = null;
 
         for (AST param = node.getFirstChild(); param != null; param = param.getNextSibling()) {
             switch (param.getType()) {
                 case JavaTokenTypes.COMMA:
                     break;
-                default:
-
-                    AST modifier = param.getFirstChild();
+                case JavaTokenTypes.VARIABLE_PARAMETER_DEF:
+                    modifier = param.getFirstChild();
 
                     PrinterFactory.create(modifier, out).print(modifier, tester);
 
-                    AST type = modifier.getNextSibling();
+                    type = modifier.getNextSibling();
+
+                    PrinterFactory.create(type, out).print(type, tester);
+
+                    // +3 for ... and +1 for the space between modifiers and name 
+                    if ((tester.length + 4) > result) {
+                        result = tester.length + 4;
+                    } // end if
+
+                    tester.reset();
+                    break;
+                    
+                default:
+
+                    modifier = param.getFirstChild();
+
+                    PrinterFactory.create(modifier, out).print(modifier, tester);
+
+                    type = modifier.getNextSibling();
 
                     PrinterFactory.create(type, out).print(type, tester);
 

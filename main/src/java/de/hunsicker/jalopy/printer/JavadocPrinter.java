@@ -236,6 +236,7 @@ final class JavadocPrinter extends AbstractPrinter {
             out.printNewline();
         } // end if
         out.javadocIndent = 0;
+        int lineStart = out.line;
 
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText())) {
@@ -322,7 +323,7 @@ final class JavadocPrinter extends AbstractPrinter {
                 ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS)) {
                 printTagSection(node, comment, firstTag, asterix, out);
             } // end if
-
+            
             out.print(bottomText, JavadocTokenTypes.JAVADOC_COMMENT);
         } // end else
     } // end print()
@@ -1081,14 +1082,14 @@ LOOP:
                 if ((x + 1) < lines.length) {
                     out.printNewline();
                     out.print(asterix, JavadocTokenTypes.JAVADOC_COMMENT);
-                    if (length > -1) {
+                    if (length > 0) {
                         out.print(out.getString(length + 1), JavaTokenTypes.WS);
                     } // end if
                 } // end if
             } // end for
         } // end if
-        else {
-            out.print(text, nodeType);
+        else if (lines.length==1){
+            out.print(lines[0], nodeType);
         } // end else
 
         if (newLineAfter) {
@@ -1839,8 +1840,14 @@ SELECTION:
 
         out.printNewline();
         out.print(asterix, JavadocTokenTypes.JAVADOC_COMMENT);
+        AST result = printContent(comment.getFirstChild(), asterix, out);
+        
+        if (!out.newline)
+            out.printNewline();
 
-        return printContent(comment.getFirstChild(), asterix, out);
+        
+
+        return result;
     } // end printDescriptionSection()
 
     /**
@@ -1929,7 +1936,6 @@ SELECTION:
                              throws IOException {
         if (shouldHaveNewlineBefore(tag, last)) {
             if (!out.newline) {
-                out.print(StringHelper.trimTrailing(asterix), JavadocTokenTypes.PCDATA);
                 out.printNewline();
             }
             out.print(StringHelper.trimTrailing(asterix), JavadocTokenTypes.PCDATA);
@@ -2370,8 +2376,10 @@ SELECTION:
                   throws IOException {
         if (tag != null) {
             printNewlineBefore(tag, last, asterix, out);
+            
 
-            out.print(asterix, JavaTokenTypes.JAVADOC_COMMENT);
+            if (out.newline)
+                out.print(asterix, JavaTokenTypes.JAVADOC_COMMENT);
 
             String ident = tag.getText();
 
@@ -2644,7 +2652,7 @@ SELECTION:
              */
 
             // no description found, add missing
-            out.print(asterix, JavadocTokenTypes.PCDATA);
+//            out.print(asterix, JavadocTokenTypes.PCDATA);
             /**
              * @todo parse user specified Javadoc template
              */

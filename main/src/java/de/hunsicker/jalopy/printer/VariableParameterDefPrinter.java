@@ -74,6 +74,7 @@ public class VariableParameterDefPrinter extends AbstractPrinter {
         out.print(DOT,type.getType());
         out.print(DOT,type.getType());
         out.print(DOT,type.getType());
+        out.print(SPACE,type.getType());
         
         for(AST child = type.getNextSibling();child!=null;child = child.getNextSibling()) {
             PrinterFactory.create(child, out).print(child, out);
