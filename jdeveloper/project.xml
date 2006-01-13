@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+  <extend>../build/project.xml</extend>
+  <pomVersion>1</pomVersion>
+  <name>JDeveloper plugin</name>
+  <description>The JDeveloper for jalopy</description>
+  <artifactId>jalopy-jdeveloper</artifactId>
+  <currentVersion>0.2-${jalopy.currentVersion}</currentVersion>
+  <package>*</package>
+  <shortDescription>JDeveloper plugin</shortDescription>
+  <dependencies>
+    <dependency>
+      <groupId>${jalopy.groupId}</groupId>
+      <artifactId>${jalopy.artifactId}</artifactId>
+      <version>${jalopy.currentVersion}</version>
+      <url>http://jalopy.sf.net/</url>
+      <type>jar</type>
+      <properties>
+        <core>true</core>
+      </properties>
+    </dependency>
+    <dependency>
+      <groupId>jdeveloper</groupId>
+      <artifactId>javatools</artifactId>
+      <version>10.1.2</version>
+      <type>jar</type>
+      <url>http://www.oracle.com/technology/products/jdev</url>
+    </dependency>
+    <dependency>
+      <groupId>jdeveloper</groupId>
+      <artifactId>ide</artifactId>
+      <version>10.1.2</version>
+      <type>jar</type>
+      <url>http://www.oracle.com/technology/products/jdev</url>
+    </dependency>
+    <dependency>
+      <groupId>jdeveloper</groupId>
+      <artifactId>jdev</artifactId>
+      <version>10.1.2</version>
+      <type>jar</type>
+      <url>http://www.oracle.com/technology/products/jdev</url>
+    </dependency>
+  </dependencies>
+  <versions>
+    <version>
+      <id>0.1-${jalopy.currentVersion}</id>
+      <name>0.1-${jalopy.currentVersion}</name>
+      <tag>DEV_1_5</tag>
+    </version>
+  </versions>
+  <reports>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-changes-plugin</report>
+  </reports>
+</project>

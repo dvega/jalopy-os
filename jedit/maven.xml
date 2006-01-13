@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant" xmlns:util="jelly:util">
+ <preGoal name="jar:jar">
+  <ant:echo message="Setting version information"/>
+  <attainGoal name="prejar:jar"/>
+    <!-- Move the resources to the distribution folder -->
+    <ant:move todir="${maven.build.dest}">
+      <ant:fileset dir="${common.distribution.bin}">
+        <ant:include name="actions.xml"/>
+        <ant:include name="jalopy.props"/>
+      </ant:fileset>
+    </ant:move>  
+ </preGoal>
+</project>
+

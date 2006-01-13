@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -86,7 +86,7 @@ final class IfElsePrinter
         }
 
         boolean spaceBefore =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN);
 
@@ -106,7 +106,7 @@ final class IfElsePrinter
         AST lparen = node.getFirstChild();
 
         boolean insertBraces =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_INSERT_IF_ELSE,
                 ConventionDefaults.BRACE_INSERT_IF_ELSE);
 
@@ -114,10 +114,10 @@ final class IfElsePrinter
         AST body = rparen.getNextSibling();
 
         boolean leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
         boolean rightBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_RIGHT, ConventionDefaults.BRACE_NEWLINE_RIGHT);
         boolean hasBraces = body.getType() == JavaTokenTypes.SLIST;
 
@@ -127,7 +127,7 @@ final class IfElsePrinter
 
         if (hasBraces)
         {
-            PrinterFactory.create(body).print(body, out);
+            PrinterFactory.create(body, out).print(body, out);
         }
         else // no braces, single statement
         {
@@ -148,7 +148,7 @@ final class IfElsePrinter
                     out.pendingComment = null;
                 }
 
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
                 out.printRightBrace(rightBraceNewline || (next == null));
             }
             else
@@ -157,7 +157,7 @@ final class IfElsePrinter
                     out.printNewline();
 
                 out.indent();
-                PrinterFactory.create(body).print(body, out);
+                PrinterFactory.create(body, out).print(body, out);
                 out.unindent();
             }
         }
@@ -171,7 +171,7 @@ final class IfElsePrinter
             {
                 out.print(
                     out.getString(
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                             ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                     JavaTokenTypes.WS);
@@ -192,7 +192,7 @@ final class IfElsePrinter
                     // either we print a LITERAL_if or LITERAL_else but
                     // we don't care as both will lead to the same result
                     out.last = JavaTokenTypes.LITERAL_if;
-                    PrinterFactory.create(block).print(block, out);
+                    PrinterFactory.create(block, out).print(block, out);
 
                     break;
 
@@ -225,7 +225,7 @@ final class IfElsePrinter
                                 next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_YES, out);
                         }
 
-                        PrinterFactory.create(block).print(block, out);
+                        PrinterFactory.create(block, out).print(block, out);
                         out.printRightBrace();
                     }
                     else
@@ -234,7 +234,7 @@ final class IfElsePrinter
                             next, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
                         out.printNewline();
                         out.indent();
-                        PrinterFactory.create(block).print(block, out);
+                        PrinterFactory.create(block, out).print(block, out);
                         out.unindent();
                     }
             }
@@ -278,9 +278,7 @@ final class IfElsePrinter
         {
             return rcurly.hasCommentsAfter();
         }
-        else
-        {
-            return false;
-        }
+        
+        return false;
     }
 }

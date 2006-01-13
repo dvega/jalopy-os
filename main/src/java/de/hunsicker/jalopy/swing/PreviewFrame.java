@@ -14,6 +14,8 @@ import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,26 +25,40 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
+import javax.swing.tree.TreePath;
 
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.Jalopy;
+import de.hunsicker.jalopy.printer.PrinterFactory;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Loggers;
+import de.hunsicker.jalopy.swing.syntax.DefaultSyntaxDocument;
 import de.hunsicker.jalopy.swing.syntax.SyntaxEditorKit;
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.ResourceBundleFactory;
 
 import org.apache.log4j.Level;
+
+import antlr.CommonASTWithHiddenTokens;
+import antlr.collections.AST;
+import antlr.debug.misc.JTreeASTModel;
+import antlr.debug.misc.JTreeASTPanel;
 
 
 /**
@@ -59,7 +75,7 @@ final class PreviewFrame
     //~ Static variables/initializers ----------------------------------------------------
 
     private static final String EXT_JAVA = ".java" /* NOI18N */;
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -67,23 +83,25 @@ final class PreviewFrame
     boolean customFile;
 
     /** The currently displayed settings page. */
-    private AbstractSettingsPage _page;
+    AbstractSettingsPage _page;
 
     /** Action to close the active file. */
-    private final Action ACTION_FILE_CLOSE = new FileCloseAction();
+    final Action ACTION_FILE_CLOSE = new FileCloseAction();
 
     /** Action to choose and open a new Java source file. */
     private final Action ACTION_FILE_OPEN = new FileOpenAction();
+    
+    private final Action TREE_VIEW_ACTION = new TreeViewAction();
 
     /** Our text area. */
-    private JEditorPane _textArea;
+    JEditorPane _textArea;
 
     /** The Jalopy instance to format the preview files. */
-    private Jalopy _jalopy = new Jalopy();
+    Jalopy _jalopy = new Jalopy();
 
     /** The list of the currently running threads. */
-    private List _threads = new ArrayList(3); // List of <Thread>
-    private ResourceBundle bundle;
+    List _threads = new ArrayList(3); // List of <Thread>
+    ResourceBundle bundle;
 
     /** The associated settings dialog. */
     private Window _dialog;
@@ -123,11 +141,11 @@ final class PreviewFrame
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Creates a new preview frame with the window owner
      *
-     * @param owner DOCUMENT ME!
+     * @param owner The window
      *
-     * @return DOCUMENT ME!
+     * @return The preview frame instance
      */
     public static PreviewFrame create(Window owner)
     {
@@ -166,7 +184,7 @@ final class PreviewFrame
     {
         if (text == null)
         {
-            text = _textArea.getText();
+            text = _textOriginal.getText();
         }
 
         synchronized (_threads)
@@ -192,6 +210,8 @@ final class PreviewFrame
             }
 
             Thread thread = new FormatThread(text);
+            _textOriginal.setText(text);
+            ((DefaultSyntaxDocument)_textOriginal.getDocument()).tokenizeLines();
             _threads.add(thread);
             thread.start();
         }
@@ -207,7 +227,7 @@ final class PreviewFrame
      */
     public String getText()
     {
-        return _textArea.getText();
+        return _textOriginal.getText();
     }
 
 
@@ -223,8 +243,8 @@ final class PreviewFrame
             int screenWidth = screen.width;
             int screenHeight = screen.height;
             int dialogWidth = _dialog.getWidth();
-            int dialogHeight = _dialog.getHeight();
-            int dialogX = _dialog.getX();
+//            int dialogHeight = _dialog.getHeight();
+//            int dialogX = _dialog.getX();
             int dialogY = _dialog.getY();
             int frameWidth = 600;
 
@@ -257,7 +277,7 @@ final class PreviewFrame
      */
     public void update()
     {
-        setText(_textArea.getText());
+        setText(_textOriginal.getText());
     }
 
 
@@ -316,12 +336,19 @@ final class PreviewFrame
         SwingHelper.setMenuText(
             closeFileMenuItem, this.bundle.getString("MNE_CLOSE" /* NOI18N */), true);
         fileMenu.add(closeFileMenuItem);
+        
+        JMenuItem treeViewItem = new JMenuItem(TREE_VIEW_ACTION);
+        SwingHelper.setMenuText(treeViewItem, "Tree view", true);
+        fileMenu.add(treeViewItem);
 
         setJMenuBar(menuBar);
 
         SyntaxEditorKit kit = new SyntaxEditorKit();
+        DefaultSyntaxDocument doc = new DefaultSyntaxDocument();
+        doc.setAsynchronousLoadPriority(-1);
 
         _textArea = new JEditorPane();
+        _textArea.setDocument(doc);
         _textArea.setFont(new Font("Monospaced" /* NOI18N */, Font.PLAIN, 12));
         _textArea.setEditable(false);
         _textArea.setCaretPosition(0);
@@ -330,9 +357,25 @@ final class PreviewFrame
         _textArea.setEditorKit(kit);
 
         JScrollPane scrollPane = new JScrollPane(_textArea);
-        getContentPane().add(scrollPane);
+        JTabbedPane mainTabbedPane = new JTabbedPane();
+        doc = new DefaultSyntaxDocument();
+        doc.setAsynchronousLoadPriority(-1);
+        _textOriginal = new JEditorPane();
+        _textOriginal.setDocument(doc);
+        _textOriginal.setFont(new Font("Monospaced" /* NOI18N */, Font.PLAIN, 12));
+        _textOriginal.setEditable(false);
+        _textOriginal.setCaretPosition(0);
+        _textOriginal.setMargin(new Insets(2, 2, 2, 2));
+        _textOriginal.setOpaque(true);
+        _textOriginal.setEditorKit(new SyntaxEditorKit());
+        
+        mainTabbedPane.add("Original",new JScrollPane(_textOriginal));
+        mainTabbedPane.add("Formatted",scrollPane);
+        
+        
+        getContentPane().add(mainTabbedPane);
     }
-
+    JEditorPane _textOriginal = null;
     //~ Inner Classes --------------------------------------------------------------------
 
     private final class FileCloseAction
@@ -355,6 +398,84 @@ final class PreviewFrame
     }
 
 
+    private final class TreeViewAction extends AbstractAction {
+        public void actionPerformed(ActionEvent ev)
+        {
+            AST root = _jalopy.getRecognizer().getRoot();
+            
+            
+			final JFrame frame = new JFrame("Java AST");
+			frame.setVisible(true);
+			frame.addWindowListener(
+				new WindowAdapter() {
+                   public void windowClosing (WindowEvent e) {
+                       frame.setVisible(false); // hide the Frame
+                       frame.dispose();
+                   }
+		        }
+			);
+			
+			JTreeASTPanel panel = new JTreeASTPanel(new JTreeASTModel(root){
+			    /*
+			    public Object getChild(Object parent, int index) {
+			        if (parent == null) {
+			            return null;
+			        }
+			        AST p = (AST)parent;
+			        AST c = p.getFirstChild();
+			        if (c == null) {
+			            throw new ArrayIndexOutOfBoundsException("node has no children");
+			        }
+			        int i = 0;
+			        while (c != null && i < index) {
+			            c = c.getNextSibling();
+			            i++;
+			        }
+			        System.out.println("Getting child for " + parent +" child num " +i+"Child" +c);
+			        return c;
+			    }
+			    
+			    public int getChildCount(Object parent) {
+			        if (parent == null) {
+			            throw new IllegalArgumentException("root is null");
+			        }
+			        AST p = (AST)parent;
+			        AST c = p.getFirstChild();
+			        int i = 0;
+			        while (c != null) {
+			            c = c.getNextSibling();
+			            i++;
+			        }
+			        System.out.println("Child count for " +p+","+i);
+			        return i;
+			    }
+			    */
+			    
+			}, new TreeSelectionListener() {
+		        public void valueChanged(TreeSelectionEvent event) {
+		            
+		            TreePath path = event.getPath();
+		            System.out.println("Selected: " +"," +
+		                               ((CommonASTWithHiddenTokens) path.getLastPathComponent()).getLine() + ","+
+		                               ((CommonASTWithHiddenTokens) path.getLastPathComponent()).getColumn()
+		                               +"\n\r"+
+		            ((CommonASTWithHiddenTokens) path.getLastPathComponent()).getHiddenBefore()+"\n\r"+
+		            ((CommonASTWithHiddenTokens) path.getLastPathComponent()).getHiddenAfter());
+		            Object elements[] = path.getPath();
+		            for (int i = 0; i < elements.length; i++) {
+		                System.out.print("->" + elements[i].getClass());
+		                
+		            }
+		            System.out.println();
+		            
+		        }});
+			frame.getContentPane().add(panel);
+
+			// System.out.println(t.toStringList());
+	            
+        }
+        
+    }
     private final class FileOpenAction
         extends AbstractAction
     {
@@ -449,7 +570,7 @@ final class PreviewFrame
                 Loggers.IO.setLevel(Level.FATAL);
                 Loggers.PARSER.setLevel(Level.FATAL);
                 Loggers.PARSER_JAVADOC.setLevel(Level.FATAL);
-                Loggers.PRINTER.setLevel(Level.FATAL);
+                Loggers.PRINTER.setLevel(Level.WARN);
                 Loggers.PRINTER_JAVADOC.setLevel(Level.FATAL);
 
                 if (!PreviewFrame.this.customFile)
@@ -488,6 +609,8 @@ final class PreviewFrame
                     // enable Javadoc template insertion only for Javadoc page
                     if (!_page.getCategory().equals("javadoc" /* NOI18N */))
                     {
+                        /*
+                        TODO REMOVE COMMENTS
                         _page.settings.putInt(
                             ConventionKeys.COMMENT_JAVADOC_CLASS_MASK, 0);
                         _page.settings.putInt(
@@ -496,6 +619,7 @@ final class PreviewFrame
                             ConventionKeys.COMMENT_JAVADOC_METHOD_MASK, 0);
                         _page.settings.putInt(
                             ConventionKeys.COMMENT_JAVADOC_VARIABLE_MASK, 0);
+                            */
                     }
 
                     // enable separation comments only for Separation page
@@ -503,8 +627,8 @@ final class PreviewFrame
                         !_page.getPreviewFileName().equals(
                             "separationcomments" /* NOI18N */))
                     {
-                        _page.settings.putBoolean(
-                            ConventionKeys.COMMENT_INSERT_SEPARATOR, false);
+                        //_page.settings.putBoolean(
+                        //    ConventionKeys.COMMENT_INSERT_SEPARATOR, false);
                     }
                 }
 
@@ -526,23 +650,26 @@ final class PreviewFrame
                             String.valueOf(ConventionDefaults.INDENT_SIZE))));
 
                 _jalopy.setForce(true);
-
+                
                 if (this.text.length() > 0)
                 {
                     _jalopy.setInput(this.text, _page.getCategory() + EXT_JAVA);
 
                     final StringBuffer buf = new StringBuffer(this.text.length());
                     _jalopy.setOutput(buf);
+                    _jalopy.setInspect(true);
                     _jalopy.format();
-
+                    
                     SwingUtilities.invokeLater(
                         new Runnable()
                         {
                             public void run()
                             {
                                 int offset = _textArea.getCaretPosition();
-
-                                _textArea.setText(buf.toString());
+                                synchronized (_textArea) {
+                                    _textArea.setText(buf.toString());
+                                    ((DefaultSyntaxDocument)_textArea.getDocument()).tokenizeLines();
+                                }
 
                                 if (_textArea.getDocument().getLength() > offset)
                                 {
@@ -558,7 +685,7 @@ final class PreviewFrame
             }
             catch (Throwable ignored)
             {
-                ;
+                ignored.printStackTrace();
             }
             finally
             {

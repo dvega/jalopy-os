@@ -9,7 +9,9 @@ package de.hunsicker.jalopy.swing;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -19,6 +21,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.swing.EmptyButtonGroup;
@@ -44,6 +47,8 @@ public class WrappingSettingsPage
     private JCheckBox _wrapAfterAssignCheckBox;
     private JCheckBox _wrapAfterChainedCallCheckBox;
     private JCheckBox _wrapAfterCheckBox;
+    private JCheckBox _wrapParamsHardCheckBox;
+    private JCheckBox _wrapParamsDeepCheckBox;
     private JCheckBox _wrapAfterExtendsCheckBox;
     private JCheckBox _wrapAfterImplementsCheckBox;
     private JCheckBox _wrapAfterLeftParenCheckBox;
@@ -52,8 +57,6 @@ public class WrappingSettingsPage
     private JCheckBox _wrapAllImplementsTypesExceedCheckBox;
     private JCheckBox _wrapAllParamIfFirstCheckBox;
     private JCheckBox _wrapAllThrowsTypesIfExceedCheckBox;
-    private JCheckBox _wrapArraysCheckBox;
-    private JCheckBox _wrapAsNeededCheckBox;
     private JCheckBox _wrapBeforeCheckBox;
     private JCheckBox _wrapBeforeExtendsCheckBox;
     private JCheckBox _wrapBeforeImplementsCheckBox;
@@ -62,7 +65,6 @@ public class WrappingSettingsPage
     private JCheckBox _wrapGroupingParenCheckBox;
     private JCheckBox _wrapLabelsCheckBox;
     private JCheckBox _wrapLinesCheckBox;
-    private JComboBox _arraysElementsComboBox;
     private JComboBox _indentDeepComboBox;
     private JComboBox _lineLengthComboBox;
     private JTabbedPane _tabbedPane;
@@ -113,7 +115,7 @@ public class WrappingSettingsPage
     public void updateSettings()
     {
         this.settings.putBoolean(
-            ConventionKeys.LINE_WRAP, _wrapLinesCheckBox.isSelected());
+                                 ConventionKeys.LINE_WRAP, _wrapLinesCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.LINE_WRAP_BEFORE_OPERATOR, _wrapBeforeCheckBox.isSelected());
         this.settings.putBoolean(
@@ -180,46 +182,20 @@ public class WrappingSettingsPage
             ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED,
             _wrapAllThrowsTypesIfExceedCheckBox.isSelected());
 
-        if (_wrapAsNeededCheckBox.isSelected())
-        {
-            this.settings.put(
-                ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,
-                String.valueOf(ConventionDefaults.LINE_WRAP_ARRAY_ELEMENTS));
-        }
-        else if (_wrapArraysCheckBox.isSelected())
-        {
-            this.settings.put(
-                ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,
-                (String) _arraysElementsComboBox.getSelectedItem());
-        }
-        else
-        {
-            this.settings.putInt(
-                ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS, Integer.MAX_VALUE);
-        }
+        this.settings.putBoolean(
+            ConventionKeys.LINE_WRAP_PARAMS_HARD,
+            _wrapParamsHardCheckBox.isSelected());
+        this.settings.putBoolean(
+            ConventionKeys.LINE_WRAP_PARAMS_DEEP,
+            _wrapParamsDeepCheckBox.isSelected());
+
+        arraysPanel.setSettings(ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS);
+
+        enumPanel.setSettings(ConventionKeys.ENUM_LCURLY_NO_NEW_LINE,ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
+
+        annotationPanel.setSettings(ConventionKeys.ANON_LCURLY_NO_NEW_LINE,ConventionKeys.ANON_ALIGN_VALUES_WHEN_EXCEEDS);
+        annotationDefPanel.setSettings(ConventionKeys.ANON_DEF_LCURLY_NO_NEW_LINE,ConventionKeys.ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS);
     }
-
-
-    /**
-     * Returns the value that should be displayed in the combo box.
-     *
-     * @param value the value as stored in the settings.
-     *
-     * @return string value.
-     */
-    private String getWrapValue(int value)
-    {
-        switch (value)
-        {
-            case 0 : // wrap as needed
-            case Integer.MAX_VALUE : // never wrap
-                return "1" /* NOI18N */;
-
-            default :
-                return String.valueOf(value);
-        }
-    }
-
 
     private JPanel createAlwaysPane()
     {
@@ -645,6 +621,38 @@ public class WrappingSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         wrapPolicyPanelLayout.setConstraints(_wrapAfterCheckBox, c);
         wrapPolicyPanel.add(_wrapAfterCheckBox);
+        
+        _wrapParamsHardCheckBox =
+            new JCheckBox(
+                "Deep wrap on params" /* NOI18N */,
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_PARAMS_HARD,
+                    ConventionDefaults.LINE_WRAP_PARAMS_HARD));
+        
+        _wrapParamsHardCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 3, GridBagConstraints.RELATIVE, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapPolicyPanelLayout.setConstraints(_wrapParamsHardCheckBox, c);
+        wrapPolicyPanel.add(_wrapParamsHardCheckBox);
+        _wrapParamsHardCheckBox.addActionListener(new AbstractAction(""){
+            public void actionPerformed(ActionEvent e) {
+                    _wrapParamsDeepCheckBox.setEnabled(_wrapParamsHardCheckBox.isSelected());
+            }
+        });
+        
+        _wrapParamsDeepCheckBox = 
+            new JCheckBox(
+                "When wrap use deep" /* NOI18N */,
+                this.settings.getBoolean(
+                    ConventionKeys.LINE_WRAP_PARAMS_DEEP,
+                    ConventionDefaults.LINE_WRAP_PARAMS_DEEP));
+        _wrapParamsDeepCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 1, 3, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        wrapPolicyPanelLayout.setConstraints(_wrapParamsDeepCheckBox, c);
+        wrapPolicyPanel.add(_wrapParamsDeepCheckBox);
 
         ButtonGroup operatorButtonGroup = new ButtonGroup();
         operatorButtonGroup.add(_wrapBeforeCheckBox);
@@ -679,53 +687,65 @@ public class WrappingSettingsPage
     {
         GridBagConstraints c = new GridBagConstraints();
 
-        JPanel arraysPanel = new JPanel();
-        GridBagLayout arraysPanelLayout = new GridBagLayout();
-        arraysPanel.setLayout(arraysPanelLayout);
-        arraysPanel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createTitledBorder(
-                    this.bundle.getString("BDR_ARRAYS" /* NOI18N */)),
-                BorderFactory.createEmptyBorder(0, 5, 5, 5)));
-
+        //JPanel arraysPanel = new JPanel();
+        
         String[] items = createItemList(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 });
         int arrayElements =
             this.settings.getInt(
                 ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,
                 ConventionDefaults.LINE_WRAP_ARRAY_ELEMENTS);
+        
+        arraysPanel = new ComboPanel(this.bundle.getString("BDR_ARRAYS" /* NOI18N */),
+                                   this.bundle.getString("CHK_WRAP_AS_NEEDED" /* NOI18N */),
+                                   this.bundle.getString("CHK_WRAP_AFTER_ELEMENT" /* NOI18N */),
+                                   this.bundle.getString("CMB_NUMBER" /* NOI18N */),
+                                   arrayElements,
+                                   items,c
+                                   );
+        
+        
+        // Enum area
+      arrayElements =
+      this.settings.getInt(
+          ConventionKeys.ENUM_ALIGN_VALUES_WHEN_EXCEEDS,
+          ConventionDefaults.ENUM_ALIGN_VALUES_WHEN_EXCEEDS);
+      
+        enumPanel = new ComboPanel(this.bundle.getString("LBL_ENUM" /* NOI18N */),
+                                              this.bundle.getString("LBL_LEFT_BRACES_NOT_NEW_LINE" /* NOI18N */),
+                                              this.bundle.getString("LBL_LEFT_BRACES_NEW_LINE" /* NOI18N */),
+                                              this.bundle.getString("CMB_NUMBER" /* NOI18N */),
+                                              arrayElements,
+                                              items,c
+                                              );
 
-        _wrapAsNeededCheckBox =
-            new JCheckBox(
-                this.bundle.getString("CHK_WRAP_AS_NEEDED" /* NOI18N */),
-                arrayElements == 0);
-        _wrapAsNeededCheckBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        arraysPanelLayout.setConstraints(_wrapAsNeededCheckBox, c);
-        arraysPanel.add(_wrapAsNeededCheckBox);
+        // Annotation area
+        arrayElements =
+        this.settings.getInt(
+            ConventionKeys.ANON_ALIGN_VALUES_WHEN_EXCEEDS,
+            ConventionDefaults.ANON_ALIGN_VALUES_WHEN_EXCEEDS);
+        annotationPanel = new ComboPanel(this.bundle.getString("LBL_ANON" /* NOI18N */),
+                                                this.bundle.getString("LBL_LEFT_BRACES_NOT_NEW_LINE" /* NOI18N */),
+                                                this.bundle.getString("LBL_LEFT_BRACES_NEW_LINE" /* NOI18N */),
+                                                this.bundle.getString("CMB_NUMBER" /* NOI18N */),
+                                                arrayElements,
+                                                items,c
+                                                );
 
-        NumberComboBoxPanelCheckBox arrayElementsCheckPanel =
-            new NumberComboBoxPanelCheckBox(
-                this.bundle.getString("CHK_WRAP_AFTER_ELEMENT" /* NOI18N */),
-                (arrayElements < Integer.MAX_VALUE) && (arrayElements > 0),
-                this.bundle.getString("CMB_NUMBER" /* NOI18N */), items,
-                getWrapValue(arrayElements));
-        _wrapArraysCheckBox = arrayElementsCheckPanel.getCheckBox();
-        _wrapArraysCheckBox.addActionListener(this.trigger);
-        _arraysElementsComboBox =
-            arrayElementsCheckPanel.getComboBoxPanel().getComboBox();
-        _arraysElementsComboBox.addActionListener(this.trigger);
-        SwingHelper.setConstraints(
-            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
-            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-        arraysPanelLayout.setConstraints(arrayElementsCheckPanel, c);
-        arraysPanel.add(arrayElementsCheckPanel);
+        // Annotation Definition area
+        arrayElements =
+        this.settings.getInt(
+            ConventionKeys.ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS,
+            ConventionDefaults.ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS);
+        annotationDefPanel = new ComboPanel(this.bundle.getString("LBL_ANON_DEF" /* NOI18N */),
+                                                this.bundle.getString("LBL_LEFT_BRACES_NOT_NEW_LINE" /* NOI18N */),
+                                                this.bundle.getString("LBL_LEFT_BRACES_NEW_LINE" /* NOI18N */),
+                                                this.bundle.getString("CMB_NUMBER" /* NOI18N */),
+                                                arrayElements,
+                                                items,c
+                                                );
 
-        EmptyButtonGroup arrayButtonGroup = new EmptyButtonGroup();
-        arrayButtonGroup.add(_wrapAsNeededCheckBox);
-        arrayButtonGroup.add(_wrapArraysCheckBox);
 
+        // Back to main panel
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
         panel.setLayout(layout);
@@ -740,7 +760,133 @@ public class WrappingSettingsPage
         layout.setConstraints(arraysPanel, c);
         panel.add(arraysPanel);
 
+        c.insets.top = 0;
+        SwingHelper.setConstraints(
+            c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 5, 5);
+        layout.setConstraints(enumPanel, c);
+        panel.add(enumPanel);
+        
+        c.insets.top = 0;
+        SwingHelper.setConstraints(
+           c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+           GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 5, 5);
+       layout.setConstraints(annotationPanel, c);
+       panel.add(annotationPanel);
+
+       c.insets.top = 0;
+       SwingHelper.setConstraints(
+          c, 0, 3, GridBagConstraints.REMAINDER, 1, 1.0, 1.0,
+          GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 5, 5);
+      layout.setConstraints(annotationDefPanel, c);
+      panel.add(annotationDefPanel);
+                               
         return panel;
+    }
+    ComboPanel enumPanel = null;
+    ComboPanel arraysPanel = null;
+    ComboPanel annotationDefPanel = null;
+    ComboPanel annotationPanel = null;
+    class ComboPanel extends JPanel {
+        /**
+         * Sets the settings with the new values
+         * 
+         * @param checkbox
+         * @param combobox
+         */
+        public void setSettings(Convention.Key checkbox, Convention.Key combobox) {
+            if (checkbox == combobox) {
+                if (checkBox.isSelected())
+                {
+                    WrappingSettingsPage.this.settings.put(checkbox,
+                        String.valueOf(0));
+                }
+                
+                else if (ncb.getCheckBox().isSelected())
+                {
+                    WrappingSettingsPage.this.settings.put(
+                        checkbox,
+                        (String) ncb.getComboBoxPanel().getComboBox().getSelectedItem());
+                }
+                else
+                {
+                    WrappingSettingsPage.this.settings.putInt(
+                                                              checkbox, Integer.MAX_VALUE);
+                }
+                
+            }
+            else {
+                if (ncb.getCheckBox().isSelected()) {
+                WrappingSettingsPage.this.settings.put(
+                                                       combobox,(String) ncb.getComboBoxPanel().getComboBox().getSelectedItem());
+            }
+            else
+            {
+                WrappingSettingsPage.this.settings.putInt(
+                                                          combobox, Integer.MAX_VALUE);
+            }
+            WrappingSettingsPage.this.settings.putBoolean(checkbox, checkBox.isSelected());
+            }
+            
+        }
+        JCheckBox checkBox = null;
+        NumberComboBoxPanelCheckBox ncb = null;
+        public JCheckBox getCheckBox() { return checkBox;}
+        public NumberComboBoxPanelCheckBox getNCB() { return ncb;}
+        public ComboPanel(String borderName,String chkBoxName,String ncbName,String comboName,int arrayElements,String[]items, GridBagConstraints c) {
+            GridBagLayout enumPanelLayout = new GridBagLayout();
+            this.setLayout(enumPanelLayout);
+            this.setBorder(
+                BorderFactory.createCompoundBorder(
+                    BorderFactory.createTitledBorder(borderName),
+                    BorderFactory.createEmptyBorder(0, 5, 5, 5)));
+            
+            checkBox = new JCheckBox(chkBoxName,arrayElements == 0 || arrayElements == Integer.MAX_VALUE);
+            checkBox.addActionListener(WrappingSettingsPage.this.trigger);
+            SwingHelper.setConstraints(
+                                       c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                                       GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+            enumPanelLayout.setConstraints(checkBox, c);
+            this.add(checkBox);
+            
+            ncb =
+                new NumberComboBoxPanelCheckBox(
+                                                	ncbName,
+                    (arrayElements < Integer.MAX_VALUE) && (arrayElements > 0),
+                    comboName, items,
+                    getWrapValue(arrayElements));
+            ncb.getCheckBox().addActionListener(WrappingSettingsPage.this.trigger);
+            ncb.getComboBoxPanel().getComboBox().addActionListener(WrappingSettingsPage.this.trigger);
+            SwingHelper.setConstraints(
+                c, 0, 1, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+                GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+            enumPanelLayout.setConstraints(ncb, c);
+            this.add(ncb);
+            EmptyButtonGroup eButtonGroup = new EmptyButtonGroup();
+            
+            eButtonGroup.add(checkBox);
+            eButtonGroup.add(ncb.getCheckBox());        
+            }
+        
+        /**
+         * Returns the value that should be displayed in the combo box.
+         *
+         * @param value the value as stored in the settings.
+         *
+         * @return string value.
+         */
+        private String getWrapValue(int value)
+        {
+            switch (value)
+            {
+                case 0 : // wrap as needed
+                case Integer.MAX_VALUE : // never wrap
+                    return "1" /* NOI18N */;
+
+                default :
+                    return String.valueOf(value);
+            }
+        }
     }
 
 

@@ -9,7 +9,9 @@ package de.hunsicker.jalopy.language;
 import java.util.Comparator;
 import java.util.List;
 
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
+import antlr.collections.AST;
 
 
 /**
@@ -20,7 +22,7 @@ import de.hunsicker.antlr.collections.AST;
  * @version $Revision$
  */
 final class VariableDefNodeComparator
-    implements Comparator
+    extends NodeComparator
 {
     //~ Instance variables ---------------------------------------------------------------
 
@@ -72,8 +74,8 @@ final class VariableDefNodeComparator
         AST node2 = (AST) o2;
         String name1 =
             JavaNodeHelper.getFirstChild(node1, JavaTokenTypes.IDENT).getText();
-        String name2 =
-            JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
+        //String name2 =
+        //    JavaNodeHelper.getFirstChild(node2, JavaTokenTypes.IDENT).getText();
 
         // first make sure we don't introduce forward references
         //
@@ -89,7 +91,7 @@ final class VariableDefNodeComparator
             _searcher.walk(assign);
 
             // if the name of the first node is contained in the second one,
-            if (_searcher.result == _searcher.FOUND)
+            if (_searcher.result == TreeSearcher.FOUND)
             {
                 return -1;
             }
@@ -98,7 +100,7 @@ final class VariableDefNodeComparator
         // now check the accessibility
         int mod1 = JavaNodeModifier.valueOf(node1);
         int mod2 = JavaNodeModifier.valueOf(node2);
-        int result = NodeComparator.compareModifiers(mod1, mod2);
+        int result = compareModifiers(mod1, mod2);
 
         if (result != 0)
         {

@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.util.StringHelper;
@@ -71,13 +71,16 @@ final class ImportPrinter
         trackPosition((JavaNode) node, out);
 
         out.print(IMPORT_SPACE, JavaTokenTypes.LITERAL_import);
+        if (node.getType() == JavaTokenTypes.STATIC_IMPORT) {
+            out.print(STATIC_SPACE, JavaTokenTypes.LITERAL_import);
+        }
 
         AST identifier = node.getFirstChild();
         String name = JavaNodeHelper.getDottedName(identifier);
         out.print(name, JavaTokenTypes.LITERAL_import);
 
         AST semi = identifier.getNextSibling();
-        PrinterFactory.create(semi).print(semi, out);
+        PrinterFactory.create(semi, out).print(semi, out);
 
         AST next = node.getNextSibling();
 
@@ -90,7 +93,7 @@ final class ImportPrinter
                     // grouping of the declarations only makes sense if
                     // sorting is enabled
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.IMPORT_SORT, ConventionDefaults.IMPORT_SORT))
                     {
                         String nextName =
@@ -156,7 +159,7 @@ final class ImportPrinter
     private int getImportDepth(String declaration)
     {
         int defaultGroupingDepth =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.IMPORT_GROUPING_DEPTH,
                 ConventionDefaults.IMPORT_GROUPING_DEPTH);
 
@@ -164,7 +167,7 @@ final class ImportPrinter
         if (defaultGroupingDepth > 0)
         {
             String info =
-                this.settings.get(
+                AbstractPrinter.settings.get(
                     ConventionKeys.IMPORT_GROUPING, ConventionDefaults.IMPORT_GROUPING);
 
             if (info.length() > 0)
@@ -225,7 +228,7 @@ final class ImportPrinter
                 case JavaTokenTypes.SL_COMMENT :
 
                     if (
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE,
                             ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_SINGLE_LINE) <= 0)
                     {
@@ -237,7 +240,7 @@ final class ImportPrinter
                 case JavaTokenTypes.JAVADOC_COMMENT :
 
                     if (
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.BLANK_LINES_BEFORE_COMMENT_JAVADOC,
                             ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_JAVADOC) <= 0)
                     {
@@ -249,7 +252,7 @@ final class ImportPrinter
                 case JavaTokenTypes.ML_COMMENT :
 
                     if (
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE,
                             ConventionDefaults.BLANK_LINES_BEFORE_COMMENT_MULTI_LINE) <= 0)
                     {

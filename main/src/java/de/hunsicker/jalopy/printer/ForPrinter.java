@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -70,7 +70,7 @@ final class ForPrinter
         int offset = 1;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
@@ -84,21 +84,104 @@ final class ForPrinter
         trackPosition((JavaNode) node, out.line, offset, out);
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         Marker marker = out.state.markers.add();
 
-        AST forInit = lparen.getNextSibling();
+        AST forNode = lparen.getNextSibling();
+        AST rparen = forNode.getNextSibling();
+        switch (forNode.getType()) {
+            case JavaTokenTypes.FOR_INIT:
+                rparen = for_init(forNode,out,marker);
+            	break;
+            case JavaTokenTypes.FOR_EACH_CLAUSE:
+                rparen = for_each(forNode,out,marker);
+                break;
+            default :
+                throw new IllegalArgumentException("no viable printer for -- " + forNode);
+                
+        }
+
+        PrinterFactory.create(rparen, out).print(rparen, out);
+
+        out.state.markers.remove(marker);
+
+        if (out.mode == NodeWriter.MODE_DEFAULT)
+        {
+            out.state.paramLevel--;
+            out.state.parenScope.removeFirst();
+        }
+
+        out.last = JavaTokenTypes.LITERAL_for;
+
+        AST body = rparen.getNextSibling();
+
+        switch (body.getType())
+        {
+            case JavaTokenTypes.SLIST :
+                PrinterFactory.create(body, out).print(body, out);
+
+                break;
+
+            default :
+
+                // insert braces manually
+                if (
+                    AbstractPrinter.settings.getBoolean(
+                        ConventionKeys.BRACE_INSERT_FOR,
+                        ConventionDefaults.BRACE_INSERT_FOR))
+                {
+                    out.printLeftBrace(
+                        AbstractPrinter.settings.getBoolean(
+                            ConventionKeys.BRACE_NEWLINE_LEFT,
+                            ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
+                    PrinterFactory.create(body, out).print(body, out);
+                    out.printRightBrace();
+                }
+                else
+                {
+                    out.printNewline();
+                    out.indent();
+                    PrinterFactory.create(body, out).print(body, out);
+                    out.unindent();
+                }
+        }
+
+        // to simplify line wrapping we always indicate braces
+        out.last = JavaTokenTypes.RCURLY;        
+    }
+    /**
+     * Creates the for each node
+     * 
+     * @param forNode
+     * @param out
+     * @param marker
+     */
+    private AST for_each(AST forNode, NodeWriter out, Marker marker) throws IOException{
+                if (out.mode == NodeWriter.MODE_DEFAULT)
+        {
+            out.state.paramLevel++;
+            out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
+        }
+        AST forEachClause = forNode.getFirstChild();
+        AST expresion = forEachClause.getNextSibling();
+        PrinterFactory.create(forEachClause, out).print(forEachClause,out);
+        out.print(SPACE_COLON_SPACE,forEachClause.getType());
+        printChildren(expresion,out);
+        return forNode.getNextSibling();
+    }
+
+        private AST for_init(AST forInit, NodeWriter out, Marker marker) throws IOException {
         AST firstSemi = forInit.getNextSibling();
         AST forCond = firstSemi.getNextSibling();
         AST secondSemi = forCond.getNextSibling();
         AST forIter = secondSemi.getNextSibling();
 
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean indentDeep =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
         boolean firstWrap = false;
 
@@ -108,7 +191,7 @@ final class ForPrinter
             out.state.parenScope.addFirst(new ParenthesesScope(out.state.paramLevel));
 
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
                     ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
@@ -118,21 +201,21 @@ final class ForPrinter
 
                 for (AST c = child; c != null; c = c.getNextSibling())
                 {
-                    PrinterFactory.create(c).print(c, tester);
+                    PrinterFactory.create(c, out).print(c, tester);
                 }
 
                 child = forCond.getFirstChild();
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
                 }
 
                 child = forIter.getFirstChild();
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
                 }
 
                 if ((out.column + tester.length) > lineLength)
@@ -147,16 +230,16 @@ final class ForPrinter
         printForInit(forInit, firstWrap, out);
 
         boolean wrapAll =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                 ConventionDefaults.LINE_WRAP_PARAMS_EXCEED);
         boolean spaceAfterSemi =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_SEMICOLON,
                 ConventionDefaults.SPACE_AFTER_SEMICOLON);
 
         out.continuation =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_BLOCK,
                 ConventionDefaults.INDENT_CONTINUATION_BLOCK);
 
@@ -176,7 +259,7 @@ final class ForPrinter
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
 
                     // add enough space for semis before and after
                     tester.length += (spaceAfterSemi ? 3
@@ -213,7 +296,7 @@ final class ForPrinter
 
                 if (child != null)
                 {
-                    PrinterFactory.create(child).print(child, tester);
+                    PrinterFactory.create(child, out).print(child, tester);
 
                     // add enough space for semis before and parenthesis after
                     tester.length += (spaceAfterSemi ? 5
@@ -238,7 +321,7 @@ final class ForPrinter
 
         if (
             (firstWrap || secondWrap || thirdWrap)
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                 ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
@@ -256,56 +339,9 @@ final class ForPrinter
 
             out.print(EMPTY_STRING, JavaTokenTypes.WS);
         }
+        
+        return forIter.getNextSibling();
 
-        AST rparen = forIter.getNextSibling();
-
-        PrinterFactory.create(rparen).print(rparen, out);
-
-        out.state.markers.remove(marker);
-
-        if (out.mode == out.MODE_DEFAULT)
-        {
-            out.state.paramLevel--;
-            out.state.parenScope.removeFirst();
-        }
-
-        out.last = JavaTokenTypes.LITERAL_for;
-
-        AST body = rparen.getNextSibling();
-
-        switch (body.getType())
-        {
-            case JavaTokenTypes.SLIST :
-                PrinterFactory.create(body).print(body, out);
-
-                break;
-
-            default :
-
-                // insert braces manually
-                if (
-                    this.settings.getBoolean(
-                        ConventionKeys.BRACE_INSERT_FOR,
-                        ConventionDefaults.BRACE_INSERT_FOR))
-                {
-                    out.printLeftBrace(
-                        this.settings.getBoolean(
-                            ConventionKeys.BRACE_NEWLINE_LEFT,
-                            ConventionDefaults.BRACE_NEWLINE_LEFT), NodeWriter.NEWLINE_YES);
-                    PrinterFactory.create(body).print(body, out);
-                    out.printRightBrace();
-                }
-                else
-                {
-                    out.printNewline();
-                    out.indent();
-                    PrinterFactory.create(body).print(body, out);
-                    out.unindent();
-                }
-        }
-
-        // to simplify line wrapping we always indicate braces
-        out.last = JavaTokenTypes.RCURLY;
     }
 
 
@@ -335,7 +371,7 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_SEMICOLON,
                 ConventionDefaults.SPACE_AFTER_SEMICOLON))
         {
@@ -345,7 +381,7 @@ final class ForPrinter
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
     }
 
@@ -354,10 +390,10 @@ final class ForPrinter
      * Prints the initialization part of the for loop.
      *
      * @param node the initialization part node of the loop.
-     * @param wrap DOCUMENT ME!
+     * @param wrap True if should wrap
      * @param out stream to write to.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      */
     private void printForInit(
         AST        node,
@@ -387,7 +423,7 @@ final class ForPrinter
      * @param wrap if <code>true</code> print a newline before the part.
      * @param out stream to write to.
      *
-     * @throws IOException if an I/O error occured.
+     * @throws IOException if an I/O error occurred.
      */
     private void printForIter(
         AST        node,
@@ -408,7 +444,7 @@ final class ForPrinter
             printIndentation(out);
         }
         else if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_SEMICOLON,
                 ConventionDefaults.SPACE_AFTER_SEMICOLON))
         {
@@ -416,7 +452,7 @@ final class ForPrinter
         }
 
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_SEMICOLON);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
@@ -436,7 +472,7 @@ final class ForPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(element).print(element, out);
+                    PrinterFactory.create(element, out).print(element, out);
 
                     break;
             }
@@ -468,14 +504,14 @@ final class ForPrinter
             case JavaTokenTypes.ELIST :
 
                 boolean spaceAfterComma =
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_AFTER_COMMA,
                         ConventionDefaults.SPACE_AFTER_COMMA);
                 String comma = spaceAfterComma ? COMMA_SPACE
                                                : COMMA;
 
                 /**
-                 * @todo is this still valid?
+                 * TODO is this still valid?
                  */
 
                 // don't use ParametersPrinter.java because of the added
@@ -484,7 +520,7 @@ final class ForPrinter
                     AST param = node.getFirstChild(); param != null;
                     param = param.getNextSibling())
                 {
-                    PrinterFactory.create(param).print(param, out);
+                    PrinterFactory.create(param, out).print(param, out);
 
                     /**
                      * @todo space after comma
@@ -503,8 +539,8 @@ final class ForPrinter
 
         if (printType)
         {
-            PrinterFactory.create(modifier).print(modifier, out);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(modifier, out).print(modifier, out);
+            PrinterFactory.create(type, out).print(type, out);
         }
 
         AST identifier = type.getNextSibling();
@@ -516,7 +552,7 @@ final class ForPrinter
             out.print(SPACE, out.last);
         }
 
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST assign = identifier.getNextSibling();
 
@@ -531,7 +567,7 @@ final class ForPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(assign).print(assign, out);
+                    PrinterFactory.create(assign, out).print(assign, out);
 
                     break;
             }
@@ -555,7 +591,7 @@ final class ForPrinter
     {
         AST child = node.getFirstChild();
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         String comma = spaceAfterComma ? COMMA_SPACE
                                        : COMMA;
@@ -588,7 +624,7 @@ final class ForPrinter
                             break;
 
                         default :
-                            PrinterFactory.create(var).print(var, out);
+                            PrinterFactory.create(var, out).print(var, out);
 
                             break;
                     }

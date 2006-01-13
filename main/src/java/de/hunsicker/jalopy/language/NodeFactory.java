@@ -6,9 +6,15 @@
  */
 package de.hunsicker.jalopy.language;
 
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.Token;
-import de.hunsicker.antlr.collections.AST;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Vector;
+
+import de.hunsicker.jalopy.language.antlr.Node;
+
+import antlr.ASTFactory;
+import antlr.Token;
+import antlr.collections.AST;
 
 
 /**
@@ -24,16 +30,19 @@ public class NodeFactory
 
     /** The empty string constant. */
     protected static final String EMPTY_STRING = "" /* NOI18N */.intern();
-
+    private final CompositeFactory compositeFactory;
+    private class NodeImpl extends Node{}
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new NodeFactory object.
      */
-    public NodeFactory()
+    public NodeFactory(CompositeFactory compositeFactory)
     {
+        this.compositeFactory = compositeFactory;
         this.theASTNodeType = "Node" /* NOI18N */;
         this.theASTNodeTypeClass = Node.class;
+        
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -43,13 +52,40 @@ public class NodeFactory
      *
      * @return newly created Node.
      */
+
+    /**
+     * Creates a new empty JavaNode node.
+     *
+     * @return newly created Node.
+     */
     public AST create()
     {
-        Node t = new Node();
-
-        return t;
+        Node node = (Node) compositeFactory.getCached(NodeFactory.class);
+        
+        if (node==null) {
+            node = new NodeImpl();
+            compositeFactory.addCached(NodeFactory.class,node);
+        }
+        
+        return node;
     }
 
+    /** Copy a single node with same Java AST objec type.
+     *  Ignore the tokenType->Class mapping since you know
+     *  the type of the node, t.getClass(), and doing a dup.
+     *
+     *  clone() is not used because we want all AST creation
+     *  to go thru the factory so creation can be
+     *  tracked.  Returns null if t is null.
+     */
+    public AST dup(AST t) {
+        if ( t==null ) {
+            return null;
+        }
+        AST dup_t = create();
+        dup_t.initialize(t);
+        return dup_t;
+    }
 
     /**
      * Creates a new empty Node node.

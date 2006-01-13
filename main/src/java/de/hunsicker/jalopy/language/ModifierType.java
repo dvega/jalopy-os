@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 //J-
 import java.lang.ClassCastException;
+import java.lang.reflect.Modifier;
 //J+
 
 /**
@@ -28,37 +29,37 @@ public class ModifierType
     //~ Static variables/initializers ----------------------------------------------------
 
     /** The bit value for the public modifier. */
-    static final int PUBLIC_INT = 1;
+    static final int PUBLIC_INT = Modifier.PUBLIC; //1;
 
     /** The bit value for the protected  modifier. */
-    static final int PROTECTED_INT = 2;
+    static final int PROTECTED_INT = Modifier.PROTECTED; //2;
 
     /** The bit value for the private modifier. */
-    static final int PRIVATE_INT = 16;
+    static final int PRIVATE_INT = Modifier.PRIVATE;//16;
 
     /** The bit value for the static modifier. */
-    static final int STATIC_INT = 8;
+    static final int STATIC_INT = Modifier.STATIC;//8;
 
     /** The bit value for the final modifier. */
-    static final int FINAL_INT = 32;
+    static final int FINAL_INT = Modifier.FINAL; //32;
 
     /** The bit value for the transient modifier. */
-    static final int TRANSIENT_INT = 64;
+    static final int TRANSIENT_INT = Modifier.TRANSIENT; //64;
 
     /** The bit value for the abstract modifier. */
-    static final int ABSTRACT_INT = 128;
+    static final int ABSTRACT_INT = Modifier.ABSTRACT; //128;
 
     /** The bit value for the native modifier. */
-    static final int NATIVE_INT = 256;
+    static final int NATIVE_INT = Modifier.NATIVE; //256;
 
     /** The bit value for the synchronized modifier. */
-    static final int SYNCHRONIZED_INT = 512;
+    static final int SYNCHRONIZED_INT = Modifier.SYNCHRONIZED; // 512;
 
     /** The bit value for the volatile modifier. */
-    static final int VOLATILE_INT = 1024;
+    static final int VOLATILE_INT = Modifier.VOLATILE;// 1024;
 
     /** The bit value for the strictfp modifier. */
-    static final int STRICTFP_INT = 64;
+    static final int STRICTFP_INT = Modifier.STRICT;//  64;
     private static final String DELIMETER = "|" /* NOI18N */;
 
     /** A string represenation of the current sort order. */
@@ -142,6 +143,8 @@ public class ModifierType
     /** A user-friendly string representation of the type. */
     private final String _name;
 
+    private boolean sortOption =true;
+
     /** The bit value of the type. */
     private final int _key;
 
@@ -196,8 +199,13 @@ public class ModifierType
 
         while (tokens.hasMoreElements())
         {
-            String token = tokens.nextToken();
-            ModifierType type = valueOf(token);
+            String name,token;
+            name = token = tokens.nextToken();
+            
+            if (token.indexOf("=")>-1) {
+                name = token.substring(0,token.indexOf("="));
+            }
+            ModifierType type = valueOf(name);
 
             if (temp.contains(type))
             {
@@ -205,7 +213,14 @@ public class ModifierType
             }
 
             temp.add(type);
-            buf.append(type.toString());
+            if (token.indexOf("=")>-1) {
+                name = token.substring(token.indexOf("=")+1);
+                type.setSort(Boolean.valueOf(name).booleanValue());
+            }
+            else {
+                type.setSort(true);
+            }
+            buf.append(token);
             buf.append(DELIMETER);
         }
 
@@ -227,6 +242,13 @@ public class ModifierType
         _order = Collections.unmodifiableList(temp);
         buf.deleteCharAt(buf.length() - 1);
         _sortOrder = buf.toString();
+    }
+    private void setSort(boolean sortOption) {
+        this.sortOption = sortOption;
+        
+    }
+    public boolean getSort() {
+        return sortOption;
     }
 
 
@@ -299,6 +321,99 @@ public class ModifierType
     {
         return _name;
     }
+    public boolean shouldSort(int mod) {
+        boolean result = true;
+        ModifierType mt = valueOf(mod);
+        while(mt!=null) {
+            result = mt.getSort();
+            mod = mt.getChildModifierType(mod);
+            if (mod>-1)
+                mt = valueOf(mod);
+             else 
+                 mt = null;
+        }
+        return result;
+    }
+    private int getChildModifierType(int mod) {
+        int result = -1;
+        switch (_key) {
+            case FINAL_INT:
+                result = (mod&(FINAL_INT^MASK));
+            break;
+            case STATIC_INT:
+                result = (mod&(STATIC_INT^MASK));
+            break;
+            case ABSTRACT_INT:
+                result = (mod&(ABSTRACT_INT^MASK));
+            break;
+            case SYNCHRONIZED_INT:
+                result = (mod&(SYNCHRONIZED_INT^MASK));
+            break;
+            case TRANSIENT_INT:
+                result = (mod&(TRANSIENT_INT^MASK));
+            break;
+            case VOLATILE_INT:
+                result = (mod&(VOLATILE_INT^MASK));
+            break;
+            case NATIVE_INT:
+                result = (mod&(NATIVE_INT^MASK));
+            break;
+            case STRICTFP_INT:
+                result = (mod&(STRICTFP_INT^MASK));
+            break;
+            case PRIVATE_INT:
+                result = (mod&(PRIVATE_INT^MASK));
+            break;
+            case PUBLIC_INT:
+                result = (mod&(PUBLIC_INT^MASK));
+            break;
+            case PROTECTED_INT:
+                result = (mod&(PROTECTED_INT^MASK));
+            break;
+            default :
+                result = -1;
+            break;
+        }
+        return result;
+    }
+    public static final int MASK           = 0xffffffff;
+    static final public ModifierType valueOf(int mod)
+    {
+        if (Modifier.isFinal(mod)) {
+            return FINAL;
+        }
+        if (Modifier.isStatic(mod)) {
+            return STATIC;
+        }
+        if (Modifier.isAbstract(mod)) {
+            return ABSTRACT;
+        }
+        if (Modifier.isSynchronized(mod)) {
+            return SYNCHRONIZED;
+        }
+        if (Modifier.isTransient(mod)) {
+            return TRANSIENT;
+        }
+        if (Modifier.isVolatile(mod)) {
+            return VOLATILE;
+        }
+        if (Modifier.isNative(mod)) {
+            return NATIVE;
+        }
+        if (Modifier.isStrict(mod)) {
+            return STRICTFP;
+        }
+        if (Modifier.isPublic(mod)) {
+            return PUBLIC;
+        }
+        if (Modifier.isProtected(mod)) {
+            return PROTECTED;
+        }
+        if (Modifier.isPrivate(mod)) {
+            return PRIVATE;
+        }
+        return null;
+    }
 
 
     /**
@@ -310,7 +425,20 @@ public class ModifierType
      *
      * @throws IllegalArgumentException if no valid modifier was given.
      */
-    public static ModifierType valueOf(String name)
+    public static ModifierType valueOf(String name) {
+        boolean value = true;
+        if (name.indexOf("=")>-1) {
+            String svalue = name.substring(name.indexOf("=")+1);
+            value = Boolean.valueOf(svalue).booleanValue();
+            name = name.substring(0,name.indexOf("="));
+        }
+        ModifierType returnValue = valueOfm(name);
+        returnValue.setSort(value);
+        
+        return returnValue;        
+    }
+    
+    private static ModifierType valueOfm(String name)
     {
         if ((name == null) || (name.trim().length() == 0))
         {

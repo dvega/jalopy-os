@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <extend>../build/project.xml</extend>
+    <pomVersion>1</pomVersion>
+    <name>Jalopy-Core</name>
+    <groupId>jalopy</groupId>
+    <shortDescription>A source code beautifier</shortDescription>
+    <description>JALOPY Java Source Code Formatter Beautifier Pretty Printer.</description>
+    <artifactId>jalopy</artifactId>
+    <currentVersion>${jalopy.currentVersion}</currentVersion>
+
+    <package>*</package>
+    <reports>
+        <report>maven-javadoc-plugin</report>
+        <report>maven-changes-plugin</report>
+    </reports>
+  <dependencies>
+    <dependency>
+      <groupId>antlr</groupId>
+      <artifactId>antlr</artifactId>
+      <version>${LIB_VERSION_ANTLR}</version>
+      <type>jar</type>
+      <url>antlr.org</url>
+      <properties>
+        <core>true</core>
+        <unpack>true</unpack>
+      </properties>
+    </dependency>
+  </dependencies>
+  <build>
+    <sourceDirectory>src/java</sourceDirectory>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/resources</directory>
+        <targetPath>/</targetPath>
+      </resource>
+    </resources>
+  </build>
+
+</project>
+

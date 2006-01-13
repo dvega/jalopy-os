@@ -7,6 +7,9 @@
 package de.hunsicker.jalopy.storage;
 
 import java.lang.reflect.Field;
+import java.util.Locale;
+
+import de.hunsicker.jalopy.storage.Convention.Key;
 
 
 /**
@@ -30,14 +33,100 @@ import java.lang.reflect.Field;
  */
 public final class ConventionKeys
 {
+    private static class BasicKey {
+        public Convention.Key key = null;
+        public Object defaultValue = null;
+        private Convention convention = Convention.getInstance();
+        
+        public BasicKey(final String name, final Object defaulValue) {
+            key = new Convention.Key(name);
+            this.defaultValue = defaulValue;
+        }
+        public void set(String value) {
+            convention.put(key,value);
+        }
+        public String get() {
+            return convention.get(key,(String)defaultValue);
+        }
+        public void setBoolean(Boolean newValue) {
+            convention.putBoolean(key,newValue.booleanValue());
+        }
+        public boolean getBoolean() {
+            return convention.getBoolean(key,((Boolean)defaultValue).booleanValue());
+        }
+        public void setInt(Integer intValue) {
+            convention.putInt(key,intValue.intValue());
+        }
+        public int getInt() {
+            return convention.getInt(key,((Integer)defaultValue).intValue());
+        }
+    }
     //~ Static variables/initializers ----------------------------------------------------
+    
+    private static class General extends BasicKey {
+        private static class Compliance extends General{
+            public static Version VERSION = new Version();
+            private static class Version extends Compliance {
+                public Version(){
+                    super("version","1.5");
+                }
+            }
+            public Compliance(String name, Object defaultValue) {
+                super("compliance/" + name,defaultValue);
+            }
+        }
+        public General(String name,Object defaultValue) {
+            super("general/" + name,defaultValue);
+        }
+        private static class Locale extends General{
+            public static Country COUNTRY = new Country();
+            public static Language LANGUAGE = new Language();
+            private static class Language extends Locale {
+                public Language() {
+                    super("language" , java.util.Locale.US.toString());
+                }
+            }
+            
+            private static class Country extends Locale {
+                public Country() {
+                    super("country" , java.util.Locale.US.toString());
+                }
+            }
+            public Locale(String name,Object value) {
+                super("locale/" + name, value);
+            }
+        }
+        private static class access extends BasicKey{
+            public access(String name, Object defaulValue) {
+                super(name, defaulValue);
+                // TODO Auto-generated constructor stub
+            }
 
+            public BasicKey PUBLIC = new BasicKey(key.toString() + "/public",Boolean.FALSE);
+            
+        }
+        private static class style extends General {
+
+            private class description extends style {
+
+                public description() {
+                    super("description" , "");
+                }
+                
+            }
+            public style(String name, Object defaultValue) {
+                super("style/" + name, defaultValue);
+            }
+        }
+    }
+    
     /**
      * JDK source compatibility version (<em>String</em>).
-     *
+     * TODO 
      * @since 1.0b8
      */
     public static final Convention.Key SOURCE_VERSION =
+        //General.Compliance.VERSION.key;
         new Convention.Key("general/compliance/version");
 
     /**
@@ -46,6 +135,7 @@ public final class ConventionKeys
      * @since 1.0b9
      */
     public static final Convention.Key COUNTRY =
+        //General.Locale.COUNTRY.key;
         new Convention.Key("general/locale/country");
 
     /**
@@ -54,6 +144,7 @@ public final class ConventionKeys
      * @since 1.0b9
      */
     public static final Convention.Key LANGUAGE =
+        //General.Locale.LANGUAGE.key;
         new Convention.Key("general/locale/lanuguage");
 
     /** Description of the code convention (<em>String</em>). */
@@ -875,6 +966,10 @@ public final class ConventionKeys
     public static final Convention.Key COMMENT_JAVADOC_INNER_CLASS =
         new Convention.Key("printer/comments/javadoc/check/innerclass");
 
+    /** Dont insert missing Javadoc comments if multiline comment exists (<em>boolean</em>) */
+    public static final Convention.Key DONT_COMMENT_JAVADOC_WHEN_ML =
+        new Convention.Key("printer/comments/javadoc/skip/ifml");
+
     /** Parse Javadoc comments or add AS IS? (<em>boolean</em>) */
     public static final Convention.Key COMMENT_JAVADOC_PARSE =
         new Convention.Key("printer/comments/javadoc/parseComments");
@@ -898,6 +993,9 @@ public final class ConventionKeys
     /** Insert a footer? (<em>boolean</em>) */
     public static final Convention.Key FOOTER = new Convention.Key("printer/footer/use");
 
+    /** Ignore footer if it exists? (<em>boolean</em>) */
+    public static final Convention.Key FOOTER_IGNORE_IF_EXISTS = new Convention.Key("printer/footer/ignoreIfExists");
+
     /** Identify keys of the footers that are to be deleted (<em>String</em>). */
     public static final Convention.Key FOOTER_KEYS =
         new Convention.Key("printer/footer/keys");
@@ -913,8 +1011,25 @@ public final class ConventionKeys
     public static final Convention.Key FORCE_FORMATTING =
         new Convention.Key("printer/misc/forceFormatting");
 
+    /**
+     * Should the "final" modifier be added for method parameters?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS =
+        new Convention.Key("printer/misc/method/forceFinalModifier");
+
+    /**
+     * Should the "final" modifier be added for method parameters?
+     * (<em>boolean</em>)
+     */
+    public static final Convention.Key INSERT_FINAL_MODIFIER_FOR_PARAMETERS =
+        new Convention.Key("printer/misc/forceFinalModifier");
+
     /** Insert a header? (<em>boolean</em>) */
     public static final Convention.Key HEADER = new Convention.Key("printer/header/use");
+
+    /** Ignore header if it exists? (<em>boolean</em>) */
+    public static final Convention.Key HEADER_IGNORE_IF_EXISTS = new Convention.Key("printer/header/ignoreIfExists");
 
     /**
      * Number of comments before the first node (an opening curly brace) that should be
@@ -1164,6 +1279,14 @@ public final class ConventionKeys
     public static final Convention.Key SORT_CLASS =
         new Convention.Key("printer/sorting/declaration/class");
 
+    /** Sort annotation declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_ANNOTATION =
+        new Convention.Key("printer/sorting/declaration/annotation");
+
+    /** Sort enum declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_ENUM =
+        new Convention.Key("printer/sorting/declaration/enum");
+
     /** Sort constructors declarations? (<em>boolean</em>) */
     public static final Convention.Key SORT_CTOR =
         new Convention.Key("printer/sorting/declaration/constructor");
@@ -1175,6 +1298,10 @@ public final class ConventionKeys
     /** Sort methods declarations? (<em>boolean</em>) */
     public static final Convention.Key SORT_METHOD =
         new Convention.Key("printer/sorting/declaration/method");
+    
+    /** Sort method bean declarations? (<em>boolean</em>) */
+    public static final Convention.Key SORT_METHOD_BEAN =
+        new Convention.Key("printer/sorting/declaration/method/bean");
 
     /** Sort modifers? (<em>boolean</em>) */
     public static final Convention.Key SORT_MODIFIERS =
@@ -1294,6 +1421,30 @@ public final class ConventionKeys
      */
     public static final Convention.Key SEPARATOR_INSTANCE_INIT =
         new Convention.Key("printer/comments/separator/text/initializer");
+
+    /**
+     * Separator text for the annotation section (<em>String</em>).
+     *
+     * @since 1.5b1
+     */
+    public static final Convention.Key SEPARATOR_ANNOTATION_INIT =
+        new Convention.Key("printer/comments/separator/text/annotation");
+
+    /**
+     * Separator text for the enumeration section (<em>String</em>).
+     *
+     * @since 1.5b1
+     */
+    public static final Convention.Key SEPARATOR_ENUM_INIT =
+        new Convention.Key("printer/comments/separator/text/enum");
+
+    /**
+     * Separator text for the enumeration constant section (<em>String</em>).
+     *
+     * @since 1.5b4
+     */
+    public static final Convention.Key SEPARATOR_ENUM_CONSTANT_INIT =
+        new Convention.Key("printer/comments/separator/text/enum/constant");
 
     /**
      * Separator text for the constructors section (<em>String</em>).
@@ -1447,7 +1598,54 @@ public final class ConventionKeys
     /** Force wrapping/alignment after given number of array elements (<em>int</em>). */
     public static final Convention.Key LINE_WRAP_ARRAY_ELEMENTS =
         new Convention.Key("printer/wrapping/always/after/arrayElement");
-
+    /**
+     * Enumeration LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ENUM_LCURLY_NO_NEW_LINE =
+        new Convention.Key("printer/wrapping/enum/lcurly/nonewline");
+    
+    /**
+     * Force alignment of wrapping ENUM values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ENUM_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/enum/align/after");
+    
+    /**
+     * Annotation LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_LCURLY_NO_NEW_LINE =
+        new Convention.Key("printer/wrapping/anon/lcurly/newline");
+    
+    /**
+     * Annotation Def LCURLY statrts new line ? (<em>boolean</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_DEF_LCURLY_NO_NEW_LINE =
+        new Convention.Key("printer/wrapping/anondef/lcurly/nonewline");
+    
+    /**
+     * Force alignment of wrapping ANON values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/anon/align/after");
+    
+    /**
+     * Force alignment of wrapping ANON DEF values after a certain amount ? (<em>int</em>)
+     *
+     * @since 1.5
+     */
+    public static final Convention.Key ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS =
+        new Convention.Key("printer/wrapping/anondef/align/after");
+    
     /** Force line wrapping before implements? (<em>boolean</em>) */
     public static final Convention.Key LINE_WRAP_BEFORE_IMPLEMENTS =
         new Convention.Key("printer/wrapping/always/before/implements");
@@ -1492,12 +1690,38 @@ public final class ConventionKeys
         new Convention.Key("printer/wrapping/ondemand/after/parameter");
 
     /**
+     *  If it is better to wrap the parameters deeply then do so 
+     *  (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_PARAMS_HARD =
+        new Convention.Key("printer/wrapping/ondemand/hard/parameter");
+
+    /**
+     *  When wrapping parameters always do it deeply 
+     *  (<em>boolean</em>)
+     *
+     * @since 1.0b9
+     */
+    public static final Convention.Key LINE_WRAP_PARAMS_DEEP =
+        new Convention.Key("printer/wrapping/ondemand/deep/parameter");
+
+    /**
      * Force alignment of throws types for method/ctor declarations? (<em>boolean</em>)
      *
      * @since 1.0b9
      */
     public static final Convention.Key LINE_WRAP_AFTER_TYPES_THROWS_EXCEED =
         new Convention.Key("printer/wrapping/ondemand/after/types/throws");
+
+    /** Add comments like end if and end switch after brace blocks */
+    public static final Key BRACE_ADD_COMMENT = 
+        new Convention.Key("printer/brace/comment");
+
+    /** */
+    public static final Key COMMENT_JAVADOC_PARSE_DESCRIPTION = 
+        new Convention.Key("printer/comments/javadoc/parseDescription");
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -1547,9 +1771,9 @@ public final class ConventionKeys
 
 
     /**
-     * DOCUMENT ME!
+     * Called to dump the keys
      *
-     * @param args DOCUMENT ME!
+     * @param args Args ignored
      */
     public static void main(String[] args)
     {

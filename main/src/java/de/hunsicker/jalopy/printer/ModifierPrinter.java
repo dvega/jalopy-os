@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 
 
 /**

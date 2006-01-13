@@ -38,6 +38,7 @@ import oracle.ide.AddinManager;
 import oracle.ide.ContextMenu;
 import oracle.ide.Ide;
 import oracle.ide.IdeAction;
+import oracle.ide.IdeConstants;
 
 import oracle.ide.addin.Addin;
 import oracle.ide.addin.Context;
@@ -285,7 +286,7 @@ public final class JDevPlugin extends AbstractPlugin implements Addin,
      * @return version for which this Addin was implemented.
      */
     public float ideVersion() {
-        return Ide.IDE_VERSION;
+        return IdeConstants.IDE_VERSION;
     }
 
     /**
@@ -598,7 +599,7 @@ public final class JDevPlugin extends AbstractPlugin implements Addin,
         int index = getIndexOfBuildItem(menu);
 
         if (index != -1) {
-            menu.insert(getFormatMenuItem(contextId, document, multipleSelection),
+            menu.add(getFormatMenuItem(contextId, document, multipleSelection),
                 index + 1);
         } else {
             // add the item to the end of the menu

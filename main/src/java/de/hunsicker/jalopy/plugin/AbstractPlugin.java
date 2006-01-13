@@ -51,7 +51,6 @@ import org.apache.log4j.PatternLayout;
 
 //J- needed only as a workaround for a Javadoc bug
 import java.lang.System;
-import javax.swing.SwingUtilities;
 //J+
 
 /**
@@ -70,7 +69,7 @@ public abstract class AbstractPlugin
     private static final StatusBar DEFAULT_STATUS_BAR = new DummyStatusBar();
 
     /** Cursor to display whilst long-running operations. */
-    private static final Cursor WAIT_CURSOR =
+    static final Cursor WAIT_CURSOR =
         Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
 
     /** The name for ResourceBundle lookup. */
@@ -87,29 +86,29 @@ public abstract class AbstractPlugin
     int offset = 0;
 
     /** The action that was last performed. */
-    private Action _lastAction;
+    Action _lastAction;
 
     /** Holds the currently running action worker. */
-    private ActionWorker _worker;
+    ActionWorker _worker;
 
     /** Stores the original glass pane. */
-    private Component _oldGlassPane;
+    Component _oldGlassPane;
 
     /** Pane to display on top of all other components. */
-    private GlassPane _glassPane;
+    GlassPane _glassPane;
 
     /** Used as a monitor to synchronize processes. */
-    private final Object _lock = new Object();
+    final Object _lock = new Object();
 
     /** Progress monitor for long running operations. */
     private ProgressMonitor _progressMonitor;
-    private final Object[] _args = new Object[3];
+    final Object[] _args = new Object[3];
 
     /** Number of running formatting threads. */
-    private int _threadCount;
+    int _threadCount;
 
     /** When did the worker thread start? */
-    private long _start;
+    long _start;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -447,31 +446,31 @@ public abstract class AbstractPlugin
     /**
      * Configures the given Jalopy instance to meet the current code convention.
      *
-     * @param jalopy Jalopy instance to configure.
+     * @param newJalopy Jalopy instance to configure.
      */
-    private void configureJalopy(Jalopy jalopy)
+    private void configureJalopy(Jalopy newJalopy)
     {
         Convention settings = Convention.getInstance();
         int backupLevel =
             settings.getInt(ConventionKeys.BACKUP_LEVEL, ConventionDefaults.BACKUP_LEVEL);
-        jalopy.setBackup(backupLevel > 0);
-        jalopy.setBackupDirectory(
+        newJalopy.setBackup(backupLevel > 0);
+        newJalopy.setBackupDirectory(
             settings.get(
                 ConventionKeys.BACKUP_DIRECTORY,
                 Convention.getBackupDirectory().getAbsolutePath()));
-        jalopy.setHistoryPolicy(
+        newJalopy.setHistoryPolicy(
             History.Policy.valueOf(
                 settings.get(
                     ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY)));
-        jalopy.setHistoryMethod(
+        newJalopy.setHistoryMethod(
             History.Method.valueOf(
                 settings.get(
                     ConventionKeys.HISTORY_METHOD, ConventionDefaults.HISTORY_METHOD)));
-        jalopy.setInspect(
+        newJalopy.setInspect(
             settings.getBoolean(ConventionKeys.INSPECTOR, ConventionDefaults.INSPECTOR));
-        jalopy.setBackupLevel(backupLevel);
-        jalopy.setFileFormat(getFileFormat());
-        jalopy.setForce(
+        newJalopy.setBackupLevel(backupLevel);
+        newJalopy.setFileFormat(getFileFormat());
+        newJalopy.setForce(
             settings.getBoolean(
                 ConventionKeys.FORCE_FORMATTING, ConventionDefaults.FORCE_FORMATTING));
     }
@@ -481,17 +480,17 @@ public abstract class AbstractPlugin
      * Formats the given file. This method performs the actual work.
      *
      * @param file Java source file.
-     * @param jalopy Jalopy instance to use.
+     * @param newJalopy Jalopy instance to use.
      *
      * @throws IOException if an I/O error occured.
      * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void format(
+    void format(
         ProjectFile  file,
-        final Jalopy jalopy)
+        final Jalopy newJalopy)
       throws IOException, InvocationTargetException
     {
-        jalopy.setEncoding(file.getEncoding());
+        newJalopy.setEncoding(file.getEncoding());
 
         if (_progressMonitor != null)
         {
@@ -523,10 +522,10 @@ public abstract class AbstractPlugin
 
                 if ((content != null) && (content.length() > 0))
                 {
-                    jalopy.setInput(content, file.getFile().getAbsolutePath());
+                    newJalopy.setInput(content, file.getFile().getAbsolutePath());
 
                     List annotations = editor.detachAnnotations();
-                    jalopy.getRecognizer().attachAnnotations(annotations);
+                    newJalopy.getRecognizer().attachAnnotations(annotations);
 
                     try
                     {
@@ -535,7 +534,7 @@ public abstract class AbstractPlugin
                             {
                                 public void run()
                                 {
-                                    jalopy.getRecognizer().setPosition(
+                                    newJalopy.getRecognizer().setPosition(
                                         editor.getLine(), editor.getColumn());
                                 }
                             });
@@ -546,18 +545,19 @@ public abstract class AbstractPlugin
                     }
 
                     final StringBuffer textBuf = new StringBuffer(content.length());
-                    jalopy.setOutput(textBuf);
-                    jalopy.format();
+                    newJalopy.setOutput(textBuf);
+                    newJalopy.format();
 
                     if ((_progressMonitor != null) && _progressMonitor.isCanceled())
                     {
-                        jalopy.getRecognizer().detachAnnotations();
+                        newJalopy.getRecognizer().detachAnnotations();
 
                         return;
                     }
 
                     // only update the editor view if no errors showed up
-                    if (getState() != Jalopy.State.ERROR)
+                    // and the content has changed
+                    if (getState() != Jalopy.State.ERROR && !content.equals(textBuf.toString()))
                     {
                         try
                         {
@@ -568,10 +568,10 @@ public abstract class AbstractPlugin
                                     {
                                         editor.setText(textBuf.toString());
                                         editor.attachAnnotations(
-                                            jalopy.getRecognizer().detachAnnotations());
+                                            newJalopy.getRecognizer().detachAnnotations());
 
                                         Position position =
-                                            jalopy.getRecognizer().getPosition();
+                                            newJalopy.getRecognizer().getPosition();
                                         editor.setCaretPosition(
                                             position.getLine(), position.getColumn());
                                     }
@@ -587,9 +587,9 @@ public abstract class AbstractPlugin
             else // update the physical file
             {
                 File f = file.getFile();
-                jalopy.setInput(f);
-                jalopy.setOutput(f);
-                jalopy.format();
+                newJalopy.setInput(f);
+                newJalopy.setOutput(f);
+                newJalopy.format();
             }
         }
         else
@@ -603,25 +603,25 @@ public abstract class AbstractPlugin
     /**
      * Formats the given files.
      *
-     * @param jalopy the Jalopy instance to use for formatting.
+     * @param newJalopy the Jalopy instance to use for formatting.
      * @param files list with the files to format.
      *
      * @throws IOException if an I/O error occured.
      * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void formatSeveral(
-        Jalopy     jalopy,
+    void formatSeveral(
+        Jalopy     newJalopy,
         Collection files)
       throws IOException, InvocationTargetException
     {
-        formatSeveral(jalopy, files, true);
+        formatSeveral(newJalopy, files, true);
     }
 
 
     /**
      * Formats the given files.
      *
-     * @param jalopy the Jalopy instance to use for formatting.
+     * @param newJalopy the Jalopy instance to use for formatting.
      * @param files list with the files to format.
      * @param checkThreading if <code>true</code> checks whether the user enabled the
      *        multi-threaded execution and if so, uses multiple threads to perform the
@@ -630,8 +630,8 @@ public abstract class AbstractPlugin
      * @throws IOException if an I/O error occured.
      * @throws InvocationTargetException if the updating of an editor window failed.
      */
-    private void formatSeveral(
-        final Jalopy     jalopy,
+    void formatSeveral(
+        final Jalopy     newJalopy,
         final Collection files,
         final boolean    checkThreading)
       throws IOException, InvocationTargetException
@@ -647,7 +647,7 @@ public abstract class AbstractPlugin
                     _progressMonitor = createProgressMonitor();
 
                     _progressMonitor.begin(
-                        ((jalopy == null)
+                        ((newJalopy == null)
                         ? ResourceBundleFactory.getBundle(BUNDLE_NAME).getString(
                             "MSG_INITIALIZATION" /* NOI18N */)
                         : EMPTY_STRING), files.size());
@@ -669,7 +669,7 @@ public abstract class AbstractPlugin
                     }
 
                     ProjectFile file = (ProjectFile) i.next();
-                    format(file, jalopy);
+                    format(file, newJalopy);
 
                     synchronized (_progressMonitor)
                     {
@@ -706,7 +706,7 @@ public abstract class AbstractPlugin
                 }
 
                 Collection rest = workList.subList((numThreads - 1) * amount, size);
-                formatSeveral(jalopy, rest, false);
+                formatSeveral(newJalopy, rest, false);
 
                 try
                 {
@@ -727,7 +727,7 @@ public abstract class AbstractPlugin
     }
 
 
-    private synchronized void hideProgressMonitor()
+    synchronized void hideProgressMonitor()
     {
         if (_progressMonitor != null)
         {
@@ -823,7 +823,7 @@ public abstract class AbstractPlugin
         implements SwingAppender
     {
         /**
-         * DOCUMENT ME!
+         * Default appender for plufins
          *
          * @todo overide format() to add stacktraces
          */
@@ -898,8 +898,8 @@ public abstract class AbstractPlugin
                                 offset = editor.getCaretPosition();
                             }
                         });*/
-                    Jalopy jalopy = getEngine();
-                    format(activeFile, jalopy);
+                    Jalopy newJalopy = getEngine();
+                    format(activeFile, newJalopy);
 
                     // only change if no errors showed up
                     /*if (getState() != Jalopy.State.ERROR)
@@ -927,31 +927,31 @@ public abstract class AbstractPlugin
                                 }
                             });
                     }*/
-                    jalopy.cleanupBackupDirectory();
+                    newJalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_ALL)
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getEngine();
-                    formatSeveral(jalopy, getActiveProject().getAllFiles());
-                    jalopy.cleanupBackupDirectory();
+                    Jalopy newJalopy = getEngine();
+                    formatSeveral(newJalopy, getActiveProject().getAllFiles());
+                    newJalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_SELECTED)
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getEngine();
-                    formatSeveral(jalopy, getActiveProject().getSelectedFiles());
-                    jalopy.cleanupBackupDirectory();
+                    Jalopy newJalopy = getEngine();
+                    formatSeveral(newJalopy, getActiveProject().getSelectedFiles());
+                    newJalopy.cleanupBackupDirectory();
                 }
                 else if (this.action == Action.FORMAT_OPEN)
                 {
                     beforeStart();
 
-                    Jalopy jalopy = getEngine();
-                    formatSeveral(jalopy, getActiveProject().getOpenedFiles());
-                    jalopy.cleanupBackupDirectory();
+                    Jalopy newJalopy = getEngine();
+                    formatSeveral(newJalopy, getActiveProject().getOpenedFiles());
+                    newJalopy.cleanupBackupDirectory();
                 }
             }
 

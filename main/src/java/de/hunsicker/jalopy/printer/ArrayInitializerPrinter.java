@@ -8,10 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -67,18 +66,18 @@ final class ArrayInitializerPrinter
         //   - custom user value : wrap if more than 'value' elements
         //
         int maxElementsPerLine =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_WRAP_ARRAY_ELEMENTS,
                 ConventionDefaults.LINE_WRAP_ARRAY_ELEMENTS);
         boolean wrapAsNeeded = maxElementsPerLine == 0;
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean bracesPadding =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_BRACES, ConventionDefaults.PADDING_BRACES);
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         int numElements = 0; // number of array elements
         int last = out.last;
@@ -124,7 +123,7 @@ final class ArrayInitializerPrinter
                         break;
                 }
 
-                PrinterFactory.create(child).print(child, tester);
+                PrinterFactory.create(child, out).print(child, tester);
 
                 if (wrapAsNeeded && (tester.length > lineLength))
                 {
@@ -142,7 +141,7 @@ final class ArrayInitializerPrinter
                     {
                         if (
                             (out.getIndentLength() != (out.column - 1))
-                            && (this.settings.getBoolean(
+                            && (AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.BRACE_NEWLINE_LEFT,
                                 ConventionDefaults.BRACE_NEWLINE_LEFT)
                             && (((JavaNode) node).getParent().getType() != JavaTokenTypes.ARRAY_INIT)))
@@ -158,7 +157,7 @@ final class ArrayInitializerPrinter
                                 case JavaTokenTypes.ARRAY_DECLARATOR :
 
                                     if (
-                                        this.settings.getBoolean(
+                                        AbstractPrinter.settings.getBoolean(
                                             ConventionKeys.SPACE_BEFORE_BRACES,
                                             ConventionDefaults.SPACE_BEFORE_BRACES))
                                     {
@@ -182,7 +181,7 @@ final class ArrayInitializerPrinter
                     Marker marker = null;
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
                     {
                         if (!out.state.markers.isMarked())
@@ -258,7 +257,7 @@ final class ArrayInitializerPrinter
                                 {
                                     // check if we exceed the line length
                                     tester.reset();
-                                    PrinterFactory.create(child).print(child, tester);
+                                    PrinterFactory.create(child, out).print(child, tester);
 
                                     if (
                                         (!wrapAsNeeded && (count > maxElementsPerLine))
@@ -313,7 +312,7 @@ final class ArrayInitializerPrinter
 
                                 wrapped = false;
 
-                                PrinterFactory.create(child).print(child, out);
+                                PrinterFactory.create(child, out).print(child, out);
 
                                 /*switch (child.getType())
                                 {
@@ -365,7 +364,7 @@ final class ArrayInitializerPrinter
             case JavaTokenTypes.ARRAY_DECLARATOR :
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_BEFORE_BRACES,
                         ConventionDefaults.SPACE_BEFORE_BRACES))
                 {
@@ -443,7 +442,7 @@ final class ArrayInitializerPrinter
                                 bracesPadding = false;
                             }
 
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             if (c.hasCommentsAfter())
                             {
@@ -462,7 +461,7 @@ final class ArrayInitializerPrinter
                             break;
 
                         default :
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             if (child.hasCommentsAfter())
                             {
@@ -568,20 +567,20 @@ final class ArrayInitializerPrinter
      *
      * @since 1.0b8
      */
-    private boolean isMultiArray(AST node)
-    {
-        AST first = node.getFirstChild();
-
-        if ((first != null) && (first.getType() == JavaTokenTypes.ARRAY_INIT))
-        {
-            return true;
-        }
-
-        /*JavaNode n = (JavaNode)node;
-
-        return n.getParent().getType() == JavaTokenTypes.ARRAY_INIT;*/
-        return false;
-    }
+//    TODO private boolean isMultiArray(AST node)
+//    {
+//        AST first = node.getFirstChild();
+//
+//        if ((first != null) && (first.getType() == JavaTokenTypes.ARRAY_INIT))
+//        {
+//            return true;
+//        }
+//
+//        /*JavaNode n = (JavaNode)node;
+//
+//        return n.getParent().getType() == JavaTokenTypes.ARRAY_INIT;*/
+//        return false;
+//    }
 
 
     /**

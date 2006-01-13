@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -67,13 +67,13 @@ final class ConstructorDeclarationPrinter
         super.print(node, out);
 
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         AST identifier = modifiers.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_METHOD_DEF_PAREN,
                 ConventionDefaults.SPACE_BEFORE_METHOD_DEF_PAREN))
         {
@@ -84,13 +84,13 @@ final class ConstructorDeclarationPrinter
         Marker marker = out.state.markers.add(out.line, out.column);
 
         AST lparen = identifier.getNextSibling();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST parameters = lparen.getNextSibling();
-        PrinterFactory.create(parameters).print(parameters, out);
+        PrinterFactory.create(parameters, out).print(parameters, out);
 
         AST rparen = parameters.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         for (
             AST child = rparen.getNextSibling(); child != null;
@@ -104,7 +104,7 @@ final class ConstructorDeclarationPrinter
                     break;
             }
 
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         out.state.newlineBeforeLeftBrace = false;

@@ -65,42 +65,33 @@ public final class IoHelper
             {
                 return file.delete();
             }
-            else
+            if (recursive)
             {
-                if (recursive)
+                File[] files = file.listFiles();
+                boolean success = false;
+
+                for (int i = 0; i < files.length; i++)
                 {
-                    File[] files = file.listFiles();
-                    boolean success = false;
-
-                    for (int i = 0; i < files.length; i++)
+                    if (files[i].isDirectory() && (files[i].list().length != 0))
                     {
-                        if (files[i].isDirectory() && (files[i].list().length != 0))
-                        {
-                            success = delete(files[i], true);
-                        }
-                        else
-                        {
-                            success = files[i].delete();
-                        }
-
-                        if (!success)
-                        {
-                            return false;
-                        }
+                        success = delete(files[i], true);
+                    }
+                    else
+                    {
+                        success = files[i].delete();
                     }
 
-                    return file.delete();
+                    if (!success)
+                    {
+                        return false;
+                    }
                 }
-                else
-                {
-                    return file.delete();
-                }
+
+                return file.delete();
             }
+            return file.delete();
         }
-        else
-        {
-            return false;
-        }
+        return false;
     }
 
 

@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -59,7 +59,7 @@ final class LogicalOperatorPrinter
     {
         super.print(
             node,
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_LOGICAL_OPERATORS,
                 ConventionDefaults.PADDING_LOGICAL_OPERATORS), out);
     }

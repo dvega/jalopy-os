@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -70,7 +70,7 @@ final class TryCatchFinallyPrinter
             switch (child.getType())
             {
                 case JavaTokenTypes.SLIST :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
 
@@ -113,7 +113,7 @@ final class TryCatchFinallyPrinter
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                 JavaTokenTypes.WS);
@@ -122,7 +122,7 @@ final class TryCatchFinallyPrinter
         out.print(CATCH, JavaTokenTypes.LITERAL_catch);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_STATEMENT_PAREN,
                 ConventionDefaults.SPACE_BEFORE_STATEMENT_PAREN))
         {
@@ -130,16 +130,16 @@ final class TryCatchFinallyPrinter
         }
 
         AST lparen = node.getFirstChild();
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         AST parameters = lparen.getNextSibling();
-        PrinterFactory.create(parameters).print(parameters, out);
+        PrinterFactory.create(parameters, out).print(parameters, out);
 
         AST rparen = parameters.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         JavaNode body = (JavaNode) rparen.getNextSibling();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 
 
@@ -164,7 +164,7 @@ final class TryCatchFinallyPrinter
         {
             out.print(
                 out.getString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT_AFTER,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT_AFTER)),
                 JavaTokenTypes.WS);
@@ -174,6 +174,6 @@ final class TryCatchFinallyPrinter
         printCommentsAfter(node, out);
 
         JavaNode body = (JavaNode) node.getFirstChild();
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 }

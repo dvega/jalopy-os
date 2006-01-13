@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  # =========================================================================
+  # Copyright 2003-2005 jalopy Team
+  # 
+  # Licensed under the Apache License, Version 2.0 (the "License");
+  # you may not use this file except in compliance with the License.
+  # You may obtain a copy of the License at
+  #
+  #      http://www.apache.org/licenses/LICENSE-2.0
+  #
+  #  Unless required by applicable law or agreed to in writing, software
+  #  distributed under the License is distributed on an "AS IS" BASIS,
+  #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  #  See the License for the specific language governing permissions and
+  #  limitations under the License.
+  # =========================================================================
+  -->
+<project xmlns:maven="jelly:maven" xmlns:j="jelly:core" xmlns:util="jelly:util"
+xmlns:ant="jelly:ant" default="jalopy:help">
+  <!-- ==================================== -->
+  <!--             build section            -->
+  <!-- ==================================== -->
+  <goal name="jalopy-eclipse:build" description="Build all jalopy modules"
+  prereqs="jalopy-eclipse:clean,jalopy-eclipse:init">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.eclipse.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <attainGoal name="multiproject:goal" />
+    <!--    <attainGoal name="jalopy-eclipse:create-update-dist"/> -->
+  </goal>
+  <goal name="jalopy-console:build" description="Build all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.console.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  <goal name="jalopy-ant:build" description="Build all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.ant.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  <!-- Builds all projects -->
+  <goal name="jalopy-all:build" description="Build all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.site.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  <!-- Packages all projects -->
+  <goal name="jalopy-all:dist" description="Build all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.site.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <attainGoal name="multiproject:dist" />
+  </goal>
+  <!-- Deploys all projects to sourceforge -->
+  <goal name="jalopy-all:sf" description="Build all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.site.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  
+  <!-- Deploys ant sourceforge -->
+  <goal name="jalopy-ant:sf" description="Build and deploy ant to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.ant.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+  
+  <!-- Deploys console sourceforge -->
+  <goal name="jalopy-console:sf" description="Build and deploy console to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.console.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys eclipse sourceforge -->
+  <goal name="jalopy-eclipse:sf" description="Build and deploy eclipse to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.eclipse.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jbuilder sourceforge -->
+  <goal name="jalopy-jbuilder:sf" description="Build and deploy jbuilder to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jbuilder.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jdeveloper sourceforge -->
+  <goal name="jalopy-jdeveloper:sf" description="Build and deploy jdeveloper to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jdeveloper.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Deploys jedit sourceforge -->
+  <goal name="jalopy-jedit:sf" description="Build and deploy jedit to sourceforge">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.jedit.includes}" />
+    <j:set var="maven.multiproject.excludes" value="${jalopy.master.exlude},${maven.multiproject.common.includes}" />
+    <j:set var="goal"
+    value="clean, sourceforge:deploy-dist" />
+    <attainGoal name="multiproject:goal" />
+  </goal>
+
+  <!-- Cleans all projects -->
+  <goal name="jalopy-all:clean" description="Clean all jalopy modules">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.site.includes}" />
+    <attainGoal name="multiproject:clean" />
+    <attainGoal name="clean" />
+  </goal>
+
+  <!-- ==================================== -->
+  <!--            site generation           -->
+  <!-- ==================================== -->
+  <goal name="jalopy-site:build" description="Build jalopy Site"
+  prereqs="jalopy-site:init">
+    <j:set var="maven.multiproject.includes"
+    value="${maven.multiproject.site.includes}" />
+    <attainGoal name="multiproject:site" />
+    <!-- <attainGoal name="jalopy-site:generate-wiki-templates"/> -->
+  </goal>
+  <!-- ==================================== -->
+  <!--   -->
+  <!-- ==================================== -->
+  <goal name="jalopy-eclipse:clean" prereqs="clean:clean">
+    <ant:delete dir="${maven.repo.local}/jalopy/jars" quiet="true" />
+    <ant:delete dir="${maven.repo.local}/jalopy/zips" quiet="true" />
+  </goal>
+  <goal name="jalopy:clean-lib"></goal>
+  <goal name="jalopy-eclipse:init"
+  description="Copy Eclipse plug-ins to maven.repo.local if necessary">
+    <!-- test ECLIPSE_HOME property -->
+    <ant:property environment="env" />
+    <j:set var="eclipseDir" value="${ECLIPSE_HOME}" />
+    <j:if test="${empty eclipseDir}">
+      <ant:fail>The environment variable ECLIPSE_HOME must be set to the directory of the
+      Eclipse installation you plan to use. For example: Unix -- /usr/local/eclipse
+      Windows -- "C:\Program Files\eclipse"</ant:fail>
+    </j:if>
+    <j:if test="${!(empty eclipseDir)}">
+      <ant:copy todir="${maven.repo.local}/eclipse/jars">
+        <ant:fileset dir="${eclipseDir}/plugins">
+          <!--          <ant:include name="*.jar"/>-->
+        </ant:fileset>
+      </ant:copy>
+    </j:if>
+  </goal>
+  <goal name="jalopy-site:init" description="Main initialization goal"
+  prereqs="jalopy-eclipse:init,jalopy-site:quick-init" />
+  <goal name="jalopy-site:quick-init"
+  description="Similar to main initialization goal but does not clean anything" />
+  <!-- ==================================== -->
+  <!--              help section            -->
+  <!-- ==================================== -->
+  <goal name="jalopy:help">
+    <ant:echo>
+      <![CDATA[
+    Below are listed relevant goals in the context of the jalopy project.
+    [Building plugins] ---------------------- 
+    o jalopy-eclipse:build Builds Eclipse plugin. It assumes that you have ECLIPSE_HOME environment variable set. 
+    o jalopy-console:build Builds console plugin. 
+    o jalopy-all:build Builds all plugins. 
+    o jalopy-all:dist Builds all plugins distribution packages. 
+    o jalopy-all:sf Builds all plugins distribution packages and deploys them to source forge. 
+    
+    [Building jalopy site]
+    ------------------------ 
+    o jalopy-site:build Builds whole jalopy site.
+]]>
+</ant:echo>
+  </goal>
+  <!-- Common goals -->
+  <preGoal name="jar:jar">
+    <j:if test="${empty prejarRun}">
+      <attainGoal name="prejar:jar" />
+    </j:if>
+  </preGoal>
+  <goal name="prejar:jar">
+    <j:set var="prejarRun" value="true" />
+    <!-- Copy any resource files in the code to the distribution folder -->
+    <ant:copy todir="${maven.build.dest}">
+      <ant:fileset dir="${basedir}/src/java">
+        <ant:include name="**/*.properties"/>
+        <ant:include name="**/*.txt"/>
+      </ant:fileset>
+    </ant:copy>  
+
+    <ant:echo message="prejar1" />
+    <ant:delete dir="${common.distribution.folder}" />
+    <ant:mkdir dir="${common.distribution.bin}" />
+    <ant:mkdir dir="${common.distribution.source}" />
+    <ant:copy todir="${resource.destination.dir}">
+      <ant:fileset dir="${basedir}/src/resources/" />
+    </ant:copy>
+    <j:forEach var="artifact" items="${pom.artifacts}">
+      <j:set var="dependency" value="${artifact.dependency}" />
+      <j:if test="${dependency.getProperty('core') == 'true'}">
+        <j:if test="${dependency.getProperty('unpack') == 'true'}">
+          <!-- Unjar into classes folder -->
+          <ant:unjar src="${artifact.path}" dest="${maven.build.dest}">
+            <patternset>
+              <exclude name="**/MANIFEST.MF" />
+            </patternset>
+          </ant:unjar>
+        </j:if>
+        <j:if test="${dependency.getProperty('unpack') != 'true'}">
+          <ant:copy file="${artifact.path}"
+          tofile="${common.distribution.bin}${common.distribution.lib.prefix}/${dependency.artifactId}.jar" />
+        </j:if>
+      </j:if>
+    </j:forEach>
+  </goal>
+
+  <postGoal name="dist:prepare-bin-filesystem">
+    <j:if test="${empty postdistrun}">
+      <attainGoal name="postdist:prepare-bin-filesystem" />
+    </j:if>
+  </postGoal>
+  <postGoal name="dist:prepare-src-filesystem">
+    <!-- Copy build files from build folder to src directory -->
+    <ant:copy todir="${maven.dist.src.assembly.dir}/../build">
+      <ant:fileset dir="${basedir}/../build/">
+        <ant:excludes name="**/CVS"/>
+      </ant:fileset>
+    </ant:copy>
+
+    <util:available file="${basedir}/lib">
+      <ant:copy todir="${maven.dist.src.assembly.dir}/lib">
+        <ant:fileset dir="${basedir}/lib" />
+      </ant:copy>
+    </util:available>
+
+    <ant:copy todir="${maven.dist.src.assembly.dir}/../build">
+      <ant:fileset dir="${basedir}/../build/">
+        <ant:excludes name="**/CVS"/>
+      </ant:fileset>
+    </ant:copy>
+  </postGoal>
+
+  <goal name="postdist:prepare-bin-filesystem">
+    <j:set var="postdistrun" value="true" />
+    <ant:echo>
+    +-------------------------------------------------------+ 
+    | Adding files from resource to distribution directory |
+    +-------------------------------------------------------+</ant:echo>
+    <ant:copy todir="${maven.dist.bin.assembly.dir}">
+      <ant:fileset dir="${common.distribution.bin}" />
+    </ant:copy>
+    <ant:move file="${maven.dist.bin.assembly.dir}/${maven.final.name}.jar"
+    tofile="${maven.dist.bin.assembly.dir}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
+  </goal>
+
+<!-- Any extended maven can perform a post-goal event on this-->
+  <goal name="build:theend" prereqs="dist:build">
+    <ant:echo>
+    +-------------------------------------------------------+ 
+    | Build completed                                       |
+    +-------------------------------------------------------+
+    </ant:echo>
+  </goal>
+
+  <!-- Goal for generating manual -->
+  <postGoal name="sdocbook:init">
+    <maven:get plugin="maven-sdocbook-plugin" property="plugin" var="sdocbookPlugin" />
+    <ant:echo message="d ${plugin.dir} "/>
+    <ant:echo message="f ${maven.sdocbook.stylesheets.dir} "/>
+<!--
+     <copy file="${basedir}/sdocbook/manual/manual.xsl"
+         todir="${maven.build.dir}/xsl"/>    
+    <j:set var="maven.sdocbook.html.xsl" value="${maven.build.dir}/xsl/manual.xsl" />
+<ant:echo message="a ${maven.plugin.unpacked.dir}, ${maven.sdocbook.stylesheets.dir}"/>
+<ant:echo message="b ${plugin.dir}/plugin-resources/docbook-xsl-${maven.sdocbook.stylesheets.version}"/>
+-->
+<!--    <replaceregexp file="${maven.sdocbook.html.xsl}" match="@maven.sdocbook.stylesheets.dir@" 
+                   replace="${maven.sdocbook.stylesheets.dir}" byline="true"/>
+    -->                         
+    
+   </postGoal>
+
+<!--
+     ======================================================================== 
+       Verify that the instlaled Maven has compatible versions of dependent  
+       plugins. TODO Validate plugins
+     ======================================================================== 
+  --> <!--
+  <goal name="jalopy:check-plugin-dependencies"> 
+     
+    <maven:get plugin="maven-war-plugin" property="plugin" var="warPlugin" /> 
+    <j:if test="${warPlugin.currentVersion.compareTo('1.7') lt 0}"> 
+      <ant:fail> 
+        Must have WAR plugin v1.7 installed to use this version of the Cactus plugin. 
+        Try: maven plugin:download -DgroupId=maven -DartifactId=maven-war-plugin -Dversion=1.7 
+      </ant:fail> 
+    </j:if> 
+ 
+    <maven:get plugin="maven-ejb-plugin" property="plugin" var="ejbPlugin" /> 
+    <j:if test="${warPlugin.currentVersion.compareTo('1.6') lt 0}"> 
+      <ant:fail> 
+        Must have EJB plugin v1.6 installed to use this version of the Cactus plugin. 
+        Try: maven plugin:download -DgroupId=maven -DartifactId=maven-ejb-plugin -Dversion=1.6 
+      </ant:fail> 
+    </j:if> 
+     
+  </goal> 
+  -->
+</project>

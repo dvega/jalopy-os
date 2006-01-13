@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -73,7 +73,7 @@ final class RelationalOperatorPrinter
             default :
                 super.print(
                     node,
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.PADDING_RELATIONAL_OPERATORS,
                         ConventionDefaults.PADDING_RELATIONAL_OPERATORS), out);
         }

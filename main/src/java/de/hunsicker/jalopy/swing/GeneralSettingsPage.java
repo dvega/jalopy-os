@@ -6,10 +6,7 @@
  */
 package de.hunsicker.jalopy.swing;
 
-import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Window;
@@ -19,21 +16,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
-import de.hunsicker.jalopy.language.JavaRecognizer;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -56,14 +49,15 @@ public class GeneralSettingsPage
     private static final String JDK_1_4 = "JDK 1.4" /* NOI18N */;
     private static final String FILENAME_IMPORT = "import.dat" /* NOI18N */;
     private static final String FILENAME_EXPORT = "export.dat" /* NOI18N */;
+    private static final String JDK_1_5 = "JDK 5.0";
 
     //~ Instance variables ---------------------------------------------------------------
 
-    private final FileFilter FILTER_JAL = new JalopyFilter();
-    private final FileFilter FILTER_XML = new XmlFilter();
-    private JComboBox _compatComboBox;
-    private JTextField _descTextField;
-    private JTextField _nameTextField;
+    final FileFilter FILTER_JAL = new JalopyFilter();
+    final FileFilter FILTER_XML = new XmlFilter();
+    JComboBox _compatComboBox;
+    JTextField _descTextField;
+    JTextField _nameTextField;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -116,11 +110,15 @@ public class GeneralSettingsPage
     {
         if (JDK_1_3.equals(version))
         {
-            return JavaRecognizer.JDK_1_3;
+            return de.hunsicker.jalopy.language.JavaParser.JDK_1_3;
         }
         else if (JDK_1_4.equals(version))
         {
-            return JavaRecognizer.JDK_1_4;
+            return de.hunsicker.jalopy.language.JavaParser.JDK_1_4;
+        }
+        else if (JDK_1_5.equals(version))
+        {
+            return de.hunsicker.jalopy.language.JavaParser.JDK_1_5;
         }
 
         return ConventionDefaults.SOURCE_VERSION;
@@ -136,16 +134,19 @@ public class GeneralSettingsPage
      *
      * @since 1.0b8
      */
-    private String getSourceVersion(int version)
+    String getSourceVersion(int version)
     {
         switch (version)
         {
-            case JavaRecognizer.JDK_1_3 :
+            case de.hunsicker.jalopy.language.JavaParser.JDK_1_3 :
                 return JDK_1_3;
 
-            case JavaRecognizer.JDK_1_4 :
-            default :
+            case de.hunsicker.jalopy.language.JavaParser.JDK_1_4 :
                 return JDK_1_4;
+                
+            case de.hunsicker.jalopy.language.JavaParser.JDK_1_5 :
+            default :
+                return JDK_1_5;
         }
     }
 
@@ -219,7 +220,7 @@ public class GeneralSettingsPage
         int version =
             this.settings.getInt(
                 ConventionKeys.SOURCE_VERSION, ConventionDefaults.SOURCE_VERSION);
-        String[] items = { JDK_1_3, JDK_1_4 };
+        String[] items = { JDK_1_3, JDK_1_4, JDK_1_5 };
         ComboBoxPanel compatComboBoxPanel =
             new ComboBoxPanel(
                 this.bundle.getString("LBL_COMPATIBILITY" /* NOI18N */), items,
@@ -323,14 +324,14 @@ public class GeneralSettingsPage
 
                                 if (location.startsWith("http:" /* NOI18N */))
                                 {
-                                    GeneralSettingsPage.this.settings.importSettings(
+                                    Convention.importSettings(
                                         new URL(location));
                                     GeneralSettingsPage.this.settings.put(
                                         ConventionKeys.STYLE_LOCATION, location);
                                 }
                                 else if (location.startsWith("www." /* NOI18N */))
                                 {
-                                    GeneralSettingsPage.this.settings.importSettings(
+                                    Convention.importSettings(
                                         new URL("http://" /* NOI18N */ + location));
                                     GeneralSettingsPage.this.settings.put(
                                         ConventionKeys.STYLE_LOCATION,
@@ -338,7 +339,7 @@ public class GeneralSettingsPage
                                 }
                                 else
                                 {
-                                    GeneralSettingsPage.this.settings.importSettings(
+                                    Convention.importSettings(
                                         new File(location));
                                 }
 
@@ -493,116 +494,116 @@ public class GeneralSettingsPage
 
     //~ Inner Classes --------------------------------------------------------------------
 
-    private static class AddDialog
-        extends JDialog
-    {
-        String value;
-
-        public AddDialog(
-            Frame  owner,
-            String title,
-            String text)
-        {
-            super(owner);
-            initialize(title, text);
-        }
-
-
-        public AddDialog(
-            Dialog owner,
-            String title,
-            String text)
-        {
-            super(owner);
-            initialize(title, text);
-        }
-
-        private void initialize(
-            String title,
-            String text)
-        {
-            setTitle(title);
-            setModal(true);
-            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-            Container contentPane = getContentPane();
-            GridBagLayout layout = new GridBagLayout();
-            GridBagConstraints c = new GridBagConstraints();
-            contentPane.setLayout(layout);
-
-            JLabel valueLabel = new JLabel(text);
-            c.insets.top = 10;
-            c.insets.left = 5;
-            c.insets.right = 5;
-            SwingHelper.setConstraints(
-                c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-            layout.setConstraints(valueLabel, c);
-            contentPane.add(valueLabel);
-
-            final JTextField valueTextField = new JTextField(20);
-            valueLabel.setLabelFor(valueTextField);
-            c.insets.top = 2;
-            SwingHelper.setConstraints(
-                c, 0, 1, 12, 1, 1.0, 1.0, GridBagConstraints.WEST,
-                GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
-            layout.setConstraints(valueTextField, c);
-            contentPane.add(valueTextField);
-
-            ResourceBundle bundle =
-                ResourceBundle.getBundle("de.hunsicker.jalopy.swing.Bundle" /* NOI18N */);
-
-            final JButton cancelButton =
-                SwingHelper.createButton(bundle.getString("BTN_CANCEL" /* NOI18N */));
-            cancelButton.addActionListener(
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        setVisible(false);
-                        dispose();
-                    }
-                });
-
-            JButton okButton =
-                SwingHelper.createButton(bundle.getString("BTN_OK" /* NOI18N */));
-            okButton.addActionListener(
-                new ActionListener()
-                {
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        setVisible(false);
-
-                        String contents = valueTextField.getText();
-
-                        if (contents.length() == 0)
-                        {
-                            return;
-                        }
-
-                        AddDialog.this.value = contents;
-                        dispose();
-                    }
-                });
-
-            getRootPane().setDefaultButton(okButton);
-
-            c.insets.top = 15;
-            c.insets.bottom = 5;
-            SwingHelper.setConstraints(
-                c, 9, 2, 1, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-                c.insets, 0, 0);
-            layout.setConstraints(okButton, c);
-            contentPane.add(okButton);
-
-            c.insets.left = 0;
-            SwingHelper.setConstraints(
-                c, 11, 2, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE, c.insets, 0, 0);
-            layout.setConstraints(cancelButton, c);
-            contentPane.add(cancelButton);
-        }
-    }
+//    TODO private static class AddDialog
+//        extends JDialog
+//    {
+//        String value;
+//
+//        public AddDialog(
+//            Frame  owner,
+//            String title,
+//            String text)
+//        {
+//            super(owner);
+//            initialize(title, text);
+//        }
+//
+//
+//        public AddDialog(
+//            Dialog owner,
+//            String title,
+//            String text)
+//        {
+//            super(owner);
+//            initialize(title, text);
+//        }
+//
+//        private void initialize(
+//            String title,
+//            String text)
+//        {
+//            setTitle(title);
+//            setModal(true);
+//            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//
+//            Container contentPane = getContentPane();
+//            GridBagLayout layout = new GridBagLayout();
+//            GridBagConstraints c = new GridBagConstraints();
+//            contentPane.setLayout(layout);
+//
+//            JLabel valueLabel = new JLabel(text);
+//            c.insets.top = 10;
+//            c.insets.left = 5;
+//            c.insets.right = 5;
+//            SwingHelper.setConstraints(
+//                c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+//                GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+//            layout.setConstraints(valueLabel, c);
+//            contentPane.add(valueLabel);
+//
+//            final JTextField valueTextField = new JTextField(20);
+//            valueLabel.setLabelFor(valueTextField);
+//            c.insets.top = 2;
+//            SwingHelper.setConstraints(
+//                c, 0, 1, 12, 1, 1.0, 1.0, GridBagConstraints.WEST,
+//                GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+//            layout.setConstraints(valueTextField, c);
+//            contentPane.add(valueTextField);
+//
+//            ResourceBundle bundle =
+//                ResourceBundle.getBundle("de.hunsicker.jalopy.swing.Bundle" /* NOI18N */);
+//
+//            final JButton cancelButton =
+//                SwingHelper.createButton(bundle.getString("BTN_CANCEL" /* NOI18N */));
+//            cancelButton.addActionListener(
+//                new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent e)
+//                    {
+//                        setVisible(false);
+//                        dispose();
+//                    }
+//                });
+//
+//            JButton okButton =
+//                SwingHelper.createButton(bundle.getString("BTN_OK" /* NOI18N */));
+//            okButton.addActionListener(
+//                new ActionListener()
+//                {
+//                    public void actionPerformed(ActionEvent e)
+//                    {
+//                        setVisible(false);
+//
+//                        String contents = valueTextField.getText();
+//
+//                        if (contents.length() == 0)
+//                        {
+//                            return;
+//                        }
+//
+//                        AddDialog.this.value = contents;
+//                        dispose();
+//                    }
+//                });
+//
+//            getRootPane().setDefaultButton(okButton);
+//
+//            c.insets.top = 15;
+//            c.insets.bottom = 5;
+//            SwingHelper.setConstraints(
+//                c, 9, 2, 1, 1, 1.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+//                c.insets, 0, 0);
+//            layout.setConstraints(okButton, c);
+//            contentPane.add(okButton);
+//
+//            c.insets.left = 0;
+//            SwingHelper.setConstraints(
+//                c, 11, 2, GridBagConstraints.REMAINDER, 1, 0.0, 0.0,
+//                GridBagConstraints.WEST, GridBagConstraints.NONE, c.insets, 0, 0);
+//            layout.setConstraints(cancelButton, c);
+//            contentPane.add(cancelButton);
+//        }
+//    }
 
 
     /**

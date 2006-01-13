@@ -9,7 +9,10 @@ package de.hunsicker.jalopy.language;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.Convention;
+
+import antlr.collections.AST;
 
 
 /**
@@ -20,7 +23,7 @@ import de.hunsicker.antlr.collections.AST;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-final class NodeComparator
+class NodeComparator
     implements Comparator
 {
     //~ Static variables/initializers ----------------------------------------------------
@@ -34,6 +37,9 @@ final class NodeComparator
      * account.
      */
     private boolean _beanSorting = true;
+    
+    /** Indicates if modifiers should be sorted */
+    private boolean _modifierSorting = true;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -45,7 +51,9 @@ final class NodeComparator
     }
 
     //~ Methods --------------------------------------------------------------------------
-
+    public void setModifierSorting(boolean modifierSorting) {
+        this._modifierSorting = modifierSorting;
+    }
     /**
      * Sets whether the sorting of method names should take the Java Bean naming
      * convention into account (for METHOD_DEF nodes).
@@ -115,12 +123,12 @@ final class NodeComparator
 
 
     /**
-     * DOCUMENT ME!
+     * Compares the 2 bean names
      *
-     * @param node1 DOCUMENT ME!
-     * @param node2 DOCUMENT ME!
+     * @param node1 THe first node
+     * @param node2 The second node
      *
-     * @return DOCUMENT ME!
+     * @return A positive or negative value of the comparision of the 2 nodes
      */
     protected int compareBeanNames(
         AST node1,
@@ -192,6 +200,30 @@ final class NodeComparator
 
         return compareNames(node1, node2);
     }
+    /**
+     * Compares the two enumeration declaration nodes.
+     *
+     * @param node1 the first ENUM_DEF node.
+     * @param node2 the second  ENUM_DEF node.
+     *
+     * @return a negative integer, zero, or a positive integer as the first node is less
+     *         than, equal to, or greater than the second node.
+     */
+    protected int compareEnum(
+        AST node1,
+        AST node2)
+    {
+        int mod1 = JavaNodeModifier.valueOf(node1);
+        int mod2 = JavaNodeModifier.valueOf(node2);
+        int result = compareModifiers(mod1, mod2);
+
+        if (result != 0)
+        {
+            return result;
+        }
+
+        return compareNames(node1, node2);
+    }
 
 
     /**
@@ -207,8 +239,8 @@ final class NodeComparator
         AST node1,
         AST node2)
     {
-        int mod1 = JavaNodeModifier.valueOf(node1.getFirstChild());
-        int mod2 = JavaNodeModifier.valueOf(node2.getFirstChild());
+        int mod1 = JavaNodeModifier.valueOf(JavaNodeHelper.getFirstChild(node1,JavaTokenTypes.MODIFIERS));
+        int mod2 = JavaNodeModifier.valueOf(JavaNodeHelper.getFirstChild(node2,JavaTokenTypes.MODIFIERS));
         int result = compareModifiers(mod1, mod2);
 
         if (result != 0)
@@ -260,6 +292,7 @@ final class NodeComparator
             {
                 case JavaTokenTypes.METHOD_DEF :
                 case JavaTokenTypes.CTOR_DEF :
+                case JavaTokenTypes.ANNOTATION_DEF :
                     return compareMethod(node1, node2);
 
                 case JavaTokenTypes.VARIABLE_DEF :
@@ -268,107 +301,142 @@ final class NodeComparator
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
                     return compareClass(node1, node2);
-
+                
+                case JavaTokenTypes.ENUM_DEF:
+                    return compareEnum(node1,node2);
+                case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                    return compareNames(node1,node2);
                 // nothing to compare here
                 case JavaTokenTypes.STATIC_INIT :
                 case JavaTokenTypes.INSTANCE_INIT :
                     return 0;
+                
 
                 default :
                     throw new IllegalArgumentException(
-                        "Heck. I don't know about this type -- " + type1);
+                        "Heck. I don't know about this type -- " + type1+ 
+                        node1);
             }
         }
-        else
+        switch (type1)
         {
-            switch (type1)
-            {
-                case JavaTokenTypes.METHOD_DEF :
+            case JavaTokenTypes.METHOD_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.CTOR_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.VARIABLE_DEF :
+            // fall through
+            case JavaTokenTypes.VARIABLE_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                case JavaTokenTypes.CTOR_DEF :
+            case JavaTokenTypes.CTOR_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.CLASS_DEF :
-                    return 1;
+            // fall through
+            case JavaTokenTypes.CLASS_DEF :
+                return 1;
 
-                case JavaTokenTypes.INTERFACE_DEF :
+            case JavaTokenTypes.INTERFACE_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.METHOD_DEF :
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.CTOR_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                        case JavaTokenTypes.INSTANCE_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ENUM_DEF:
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                case JavaTokenTypes.STATIC_INIT :
+            case JavaTokenTypes.ANNOTATION_DEF :
 
-                    switch (type2)
-                    {
-                        default :
-                            return -1;
-                    }
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ENUM_DEF:
+                        return 1;
 
-                // fall through
-                case JavaTokenTypes.INSTANCE_INIT :
+                    default :
+                        return -1;
+                }
+            case JavaTokenTypes.ENUM_DEF :
 
-                    switch (type2)
-                    {
-                        case JavaTokenTypes.VARIABLE_DEF :
-                        case JavaTokenTypes.STATIC_INIT :
-                            return 1;
+                switch (type2)
+                {
+                    case JavaTokenTypes.METHOD_DEF :
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.CTOR_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                    case JavaTokenTypes.INSTANCE_INIT :
+                    case JavaTokenTypes.ANNOTATION_DEF:
+                        return 1;
 
-                        default :
-                            return -1;
-                    }
+                    default :
+                        return -1;
+                }
 
-                // fall through
-                default :
-                    throw new IllegalArgumentException(
-                        "invalid node type given -- " + type1);
-            }
+            // fall through
+            case JavaTokenTypes.STATIC_INIT :
+
+                switch (type2)
+                {
+                    default :
+                        return -1;
+                }
+
+            // fall through
+            case JavaTokenTypes.INSTANCE_INIT :
+
+                switch (type2)
+                {
+                    case JavaTokenTypes.VARIABLE_DEF :
+                    case JavaTokenTypes.STATIC_INIT :
+                        return 1;
+
+                    default :
+                        return -1;
+                }
+
+            // fall through
+            default :
+                throw new IllegalArgumentException(
+                    "invalid node type given -- " + type1);
         }
     }
 
@@ -486,10 +554,33 @@ final class NodeComparator
      * @return a negative integer, zero, or a positive integer as the first mask is less
      *         than, equal to, or greater than the mask.
      */
-    static int compareModifiers(
+    protected int compareModifiers(
         int mod1,
         int mod2)
     {
+        
+        if (!_modifierSorting) {
+            return 0;
+        }
+        
+        ModifierType modifier1 = ModifierType.valueOf(mod1);
+        ModifierType modifier2 = ModifierType.valueOf(mod2);
+        
+        if (modifier1!=null && modifier2!=null) {
+            if (!modifier1.shouldSort(mod1)) {
+                if (modifier2.shouldSort(mod2)) {
+                    return 1;
+                }
+                return 0;
+            }
+            else if (!modifier2.shouldSort(mod2)) {
+                    return -1;
+            }
+        }
+        
+        
+// TODO Add some logic here 
+
         if (Modifier.isPublic(mod1))
         {
             if (!Modifier.isPublic(mod2))
@@ -497,7 +588,7 @@ final class NodeComparator
                 return -1;
             }
         }
-
+        
         if (Modifier.isProtected(mod1))
         {
             if (Modifier.isPublic(mod2))
@@ -637,9 +728,6 @@ final class NodeComparator
         {
             return ident;
         }
-        else
-        {
             return ident.substring(offset + 1);
-        }
     }
 }

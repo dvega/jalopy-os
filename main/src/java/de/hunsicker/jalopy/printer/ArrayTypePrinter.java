@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -62,7 +62,7 @@ final class ArrayTypePrinter
         AST child = node.getFirstChild();
 
         boolean bracketsAfterIdentifier =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ARRAY_BRACKETS_AFTER_IDENT,
                 ConventionDefaults.ARRAY_BRACKETS_AFTER_IDENT);
 
@@ -75,18 +75,18 @@ final class ArrayTypePrinter
                     case JavaTokenTypes.EXPR :
 
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.PADDING_BRACKETS,
                                 ConventionDefaults.PADDING_BRACKETS))
                         {
                             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
                         else
                         {
                             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
                             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
                         }
 
@@ -110,7 +110,7 @@ final class ArrayTypePrinter
                         break;
 
                     default :
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
 
                         if (bracketsAfterIdentifier && canMoveBrackets(node))
                         {
@@ -119,7 +119,7 @@ final class ArrayTypePrinter
                         else
                         {
                             if (
-                                this.settings.getBoolean(
+                                AbstractPrinter.settings.getBoolean(
                                     ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
                                     ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
                             {
@@ -139,7 +139,7 @@ final class ArrayTypePrinter
         else // followed by an ARRAY_INIT
         {
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
                     ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
             {

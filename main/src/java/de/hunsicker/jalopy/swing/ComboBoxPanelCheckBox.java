@@ -24,13 +24,13 @@ import javax.swing.JPanel;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-class ComboBoxPanelCheckBox
+public class ComboBoxPanelCheckBox
     extends JPanel
 {
     //~ Instance variables ---------------------------------------------------------------
 
     /** The combo box panel. */
-    private ComboBoxPanel _combo;
+    ComboBoxPanel _combo;
 
     /** The check box. */
     private JCheckBox _check;

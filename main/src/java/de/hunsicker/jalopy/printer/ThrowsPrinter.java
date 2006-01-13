@@ -8,8 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -59,6 +60,9 @@ final class ThrowsPrinter
         NodeWriter out)
       throws IOException
     {
+        if (((JavaNode)node).hasCommentsBefore()) {
+            printCommentsBefore(node,true,out);
+        }
         AST firstType = node.getFirstChild();
 
         boolean wrappedBefore = false;
@@ -67,28 +71,28 @@ final class ThrowsPrinter
         Marker marker = null;
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         boolean indentDeep =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
         int indentLength = out.getIndentLength();
         int deepIndent =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_DEEP, ConventionDefaults.INDENT_SIZE_DEEP);
         int indentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_THROWS, ConventionDefaults.INDENT_SIZE_THROWS);
         boolean indentCustom = indentSize > -1;
 
         if (
             (out.mode == NodeWriter.MODE_DEFAULT)
             && (out.newline
-            || this.settings.getBoolean(
+            || AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_THROWS,
                 ConventionDefaults.LINE_WRAP_BEFORE_THROWS)
             || (wrapLines
@@ -136,14 +140,14 @@ final class ThrowsPrinter
         }
 
         boolean spaceAfterComma =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         boolean forceWrapping =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS,
                 ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS);
         boolean wrapAll =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED,
                 ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS_EXCEED)
             && (out.mode == NodeWriter.MODE_DEFAULT);
@@ -157,7 +161,7 @@ final class ThrowsPrinter
 
         if (!forceWrapping && wrapAll)
         {
-            PrinterFactory.create(node).print(node, tester);
+            PrinterFactory.create(node, out).print(node, tester);
 
             if ((tester.length - 7 + out.column) > lineLength)
             {
@@ -213,7 +217,7 @@ final class ThrowsPrinter
 
                         if (next != null)
                         {
-                            PrinterFactory.create(next).print(next, tester);
+                            PrinterFactory.create(next, out).print(next, tester);
 
                             if ((tester.length + out.column) > lineLength)
                             {
@@ -251,7 +255,7 @@ final class ThrowsPrinter
                     break;
 
                 default :
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
             }
@@ -276,13 +280,14 @@ final class ThrowsPrinter
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_TREAT_DIFFERENT_IF_WRAPPED,
                 ConventionDefaults.BRACE_TREAT_DIFFERENT_IF_WRAPPED)
             && (wrappedBefore || wrappedAfter || out.state.parametersWrapped))
         {
             out.state.newlineBeforeLeftBrace = true;
         }
+        
     }
 
 
@@ -309,7 +314,7 @@ final class ThrowsPrinter
       throws IOException
     {
         TestNodeWriter tester = out.testers.get();
-        PrinterFactory.create(node).print(node, tester);
+        PrinterFactory.create(node, out).print(node, tester);
 
         Marker marker = out.state.markers.getLast();
 
@@ -362,7 +367,7 @@ final class ThrowsPrinter
 
         try
         {
-            PrinterFactory.create(node).print(node, tester);
+            PrinterFactory.create(node, out).print(node, tester);
 
             if ((out.column + tester.length) > lineLength)
             {
@@ -371,7 +376,7 @@ final class ThrowsPrinter
 
             tester.reset();
 
-            PrinterFactory.create(firstType).print(firstType, tester);
+            PrinterFactory.create(firstType, out).print(firstType, tester);
 
             if ((out.column + 7 + tester.length) > lineLength)
             {

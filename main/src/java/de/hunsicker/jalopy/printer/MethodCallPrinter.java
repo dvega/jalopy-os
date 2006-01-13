@@ -8,10 +8,10 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -95,10 +95,10 @@ final class MethodCallPrinter
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             boolean wrapLines =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
             boolean forceWrappingForChainedCalls =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                     ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
@@ -126,7 +126,7 @@ final class MethodCallPrinter
                         {
                             TestNodeWriter tester = out.testers.get();
                             AST identifier = child.getFirstChild();
-                            PrinterFactory.create(identifier).print(identifier, tester);
+                            PrinterFactory.create(identifier, out).print(identifier, tester);
                             scope.chainOffset = out.column - 1 + tester.length;
                             out.testers.release(tester);
 
@@ -206,6 +206,35 @@ final class MethodCallPrinter
 
                 switch (identifier.getType())
                 {
+                    case JavaTokenTypes.DOT : 
+                        length++;
+                        AST temp = identifier.getFirstChild();
+                        // Count all children
+                        while (temp!=null && temp!=identifier) {
+                            if (temp.getType() == JavaTokenTypes.DOT) {
+                                temp = temp.getFirstChild();
+                                length ++;
+                            }
+                            else {
+                                // Add text length
+                                length += temp.getText().length();
+                                
+                                // If no sibling go back up the chain
+                                if (temp.getNextSibling()==null) {
+                                    while(temp!=identifier) {
+                                        temp = ((JavaNode)temp).getParent();
+                                        if (temp.getNextSibling()!=null) {
+                                            temp = temp.getNextSibling();
+                                            break;
+                                        }
+                                    }
+                                }
+                                else {
+                                    // Assign to next sibling
+                                    temp = temp.getNextSibling();
+                                }
+                            }
+                        }
                     case JavaTokenTypes.IDENT :
                         length = identifier.getText().length();
 
@@ -215,7 +244,7 @@ final class MethodCallPrinter
                         length = identifier.getFirstChild().getText().length();
 
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.SPACE_BEFORE_BRACKETS_TYPES,
                                 ConventionDefaults.SPACE_BEFORE_BRACKETS_TYPES))
                         {
@@ -255,16 +284,17 @@ final class MethodCallPrinter
                     default :
                         throw new RuntimeException("unexpected TYPE, was " + type);
                 }
+                
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
                 {
                     length += 2;
                 }
 
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.SPACE_AFTER_CAST,
                         ConventionDefaults.SPACE_AFTER_CAST))
                 {
@@ -280,10 +310,10 @@ final class MethodCallPrinter
 
         logIssues(node, out);
 
-        PrinterFactory.create(first).print(first, out);
+        PrinterFactory.create(first, out).print(first, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_METHOD_CALL_PAREN,
                 ConventionDefaults.SPACE_BEFORE_METHOD_CALL_PAREN))
         {
@@ -294,7 +324,7 @@ final class MethodCallPrinter
 
         AST elist = first.getNextSibling();
 
-        PrinterFactory.create(elist).print(elist, out);
+        PrinterFactory.create(elist, out).print(elist, out);
 
         // another trick to track inner class definitions
         if (out.last == JavaTokenTypes.CLASS_DEF)
@@ -303,7 +333,7 @@ final class MethodCallPrinter
         }
 
         AST rparen = elist.getNextSibling();
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
         // for the correct blank lines behaviour: we want blank lines
         // after inner classes but not after method calls

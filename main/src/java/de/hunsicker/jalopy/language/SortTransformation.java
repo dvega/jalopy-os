@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -43,14 +45,17 @@ final class SortTransformation
     /** Comparator for VARIABLE_DEF nodes */
     private final VariableDefNodeComparator _variablesComparator =
         new VariableDefNodeComparator();
+    
+    CompositeFactory _factory = null;
 
     //~ Constructors ---------------------------------------------------------------------
 
     /**
      * Creates a new SortTransformation object.
      */
-    public SortTransformation()
+    public SortTransformation(CompositeFactory factory)
     {
+        _factory = factory;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -61,6 +66,17 @@ final class SortTransformation
     public void apply(AST tree)
       throws TransformationException
     {
+        Convention settings = Convention.getInstance();
+        boolean sortModifiers = settings.getBoolean(
+                            ConventionKeys.SORT_MODIFIERS, 
+                            ConventionDefaults.SORT_MODIFIERS);
+        boolean sortBeanNames=
+            settings.getBoolean(ConventionKeys.SORT_METHOD_BEAN, ConventionDefaults.SORT_METHOD_BEAN);
+        
+        _defaultComparator.setBeanSorting(sortBeanNames);
+        _defaultComparator.setModifierSorting(sortModifiers);
+
+        _variablesComparator.setModifierSorting(sortModifiers);
         sort(tree, _defaultComparator);
     }
 
@@ -91,6 +107,8 @@ LOOP:
             {
                 case JavaTokenTypes.CLASS_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
+                    //case JavaTokenTypes.ENUM_DEF:
+                    //case JavaTokenTypes.ANNOTATION_DEF:
                     first = child;
 
                     break LOOP;
@@ -135,7 +153,7 @@ LOOP:
         JavaNode sibling)
     {
         node.setNextSibling(sibling);
-        sibling.prevSibling = node;
+        sibling.setPreviousSibling(node);
         sibling.setNextSibling(null); // don't leave any old pointers left
     }
 
@@ -167,19 +185,19 @@ LOOP:
         if (nodes.size() > 0)
         {
             JavaNode next = (JavaNode) nodes.get(0);
-            addChild((JavaNode) cur, next);
+            addChild(cur, next);
             cur = next;
 
             if (addSeparator)
             {
                 ExtendedToken comment =
-                    new ExtendedToken(JavaTokenTypes.SEPARATOR_COMMENT, EMPTY_STRING);
+                    _factory.getExtendedTokenFactory().create(JavaTokenTypes.SEPARATOR_COMMENT, EMPTY_STRING);
 
                 if (next.hasCommentsBefore())
                 {
                     for (
-                        CommonHiddenStreamToken tok = next.getHiddenBefore();
-                        tok != null; tok = tok.getHiddenBefore())
+                            ExtendedToken tok = (ExtendedToken)next.getHiddenBefore();
+                        tok != null; tok = (ExtendedToken) tok.getHiddenBefore())
                     {
                         if (tok.getHiddenBefore() == null)
                         {
@@ -274,7 +292,33 @@ LOOP:
                                 "Instance initializers"), fillCharacter, indent, maxwidth);
 
                         break;
+                    case JavaTokenTypes.ENUM_DEF :
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ENUM_INIT,
+                                "Enumeration initializers"), fillCharacter, indent, maxwidth);
 
+                        break;
+                        
+                    case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ENUM_CONSTANT_INIT,
+                                "Enumeration constant initializers"), fillCharacter, indent, maxwidth);
+
+                        break;
+                        
+                    case JavaTokenTypes.ANNOTATION_DEF :
+                        fillComment(
+                            comment,
+                            settings.get(
+                                ConventionKeys.SEPARATOR_ANNOTATION_INIT,
+                                "Annotation initializers"), fillCharacter, indent, maxwidth);
+
+                        break;
+                        
                     default :
                         throw new IllegalArgumentException("unexpected type -- " + cur);
                 }
@@ -288,7 +332,7 @@ LOOP:
         for (int i = 1, size = nodes.size(); i < size; i++)
         {
             JavaNode next = (JavaNode) nodes.get(i);
-            addChild((JavaNode) cur, next);
+            addChild(cur, next);
             cur = next;
         }
 
@@ -350,16 +394,27 @@ LOOP:
         switch (node.getType())
         {
             case JavaTokenTypes.CLASS_DEF :
-                lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
-                                   .getNextSibling().getNextSibling();
+                lcurly = (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK);
+//                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
+//                                   .getNextSibling();
 
                 break;
 
             case JavaTokenTypes.INTERFACE_DEF :
                 lcurly =
-                    (JavaNode) node.getFirstChild().getNextSibling().getNextSibling().getNextSibling()
-                                   .getNextSibling();
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
+
+                break;
+            case JavaTokenTypes.ANNOTATION_DEF :
+                lcurly =
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
+            
+            case JavaTokenTypes.ENUM_DEF :
+                lcurly =
+                     (JavaNode) JavaNodeHelper.getFirstChild(node,JavaTokenTypes.OBJBLOCK); 
+                    //node.getFirstChild().getNextSibling().getNextSibling().getNextSibling();
 
                 break;
 
@@ -381,6 +436,8 @@ LOOP:
         List methods = new ArrayList();
         List classes = new ArrayList(3);
         List interfaces = new ArrayList(3);
+        List annotations = new ArrayList(3);
+        List enums = new ArrayList(3);
         List names = new ArrayList(); // type names of all instance variables
 
         AST rcurly = null; // stores the last rcurly
@@ -443,6 +500,16 @@ LOOP:
                     rcurly = child;
 
                     break;
+                case JavaTokenTypes.ANNOTATION_DEF :
+                    annotations.add(child);
+                break;
+
+                case JavaTokenTypes.ENUM_DEF :
+                    enums.add(sortDeclarations(child, comp, level + 1));
+                break;
+                case JavaTokenTypes.ENUM_CONSTANT_DEF :
+                    enums.add(child);
+                break;
 
                 case JavaTokenTypes.SEMI :
                     // it is perfectly valid to use a SEMI and totally
@@ -491,8 +558,20 @@ LOOP:
         {
             Collections.sort(interfaces, comp);
         }
+        if (
+                settings.getBoolean(
+                    ConventionKeys.SORT_ENUM, ConventionDefaults.SORT_ENUM))
+            {
+                Collections.sort(enums, comp);
+            }
+        if (
+                settings.getBoolean(
+                    ConventionKeys.SORT_ANNOTATION, ConventionDefaults.SORT_ANNOTATION))
+            {
+                Collections.sort(annotations, comp);
+            }
 
-        Map nodes = new HashMap(8, 1.0f);
+        Map nodes = new HashMap(10, 1.0f);
         nodes.put(DeclarationType.STATIC_VARIABLE_INIT.getName(), staticStuff);
         nodes.put(DeclarationType.VARIABLE.getName(), variables);
         nodes.put(DeclarationType.INIT.getName(), initializers);
@@ -500,6 +579,8 @@ LOOP:
         nodes.put(DeclarationType.METHOD.getName(), methods);
         nodes.put(DeclarationType.INTERFACE.getName(), interfaces);
         nodes.put(DeclarationType.CLASS.getName(), classes);
+        nodes.put(DeclarationType.ANNOTATION.getName(), annotations);
+        nodes.put(DeclarationType.ENUM.getName(), enums);
 
         boolean addSeparator = false;
 
@@ -524,7 +605,7 @@ LOOP:
             settings.getInt(ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
         int indent =
             settings.getInt(ConventionKeys.INDENT_SIZE, ConventionDefaults.INDENT_SIZE);
-        JavaNode tmp = new JavaNode();
+        JavaNode tmp = (JavaNode) _factory.getJavaNodeFactory().create();
         JavaNode current = tmp;
 
         // add the different declaration groups in the specified order
@@ -532,9 +613,10 @@ LOOP:
             StringTokenizer tokens = new StringTokenizer(sortString, "|");
             tokens.hasMoreTokens();)
         {
+            String nextToken = tokens.nextToken(); 
             current =
                 addSiblings(
-                    (List) nodes.get(tokens.nextToken()), current, addSeparator,
+                    (List) nodes.get(nextToken), current, addSeparator,
                     indent * level, maxwidth);
         }
 
@@ -544,13 +626,23 @@ LOOP:
         JavaNode sibling = (JavaNode) tmp.getNextSibling();
 
         // and link it into the tree
-        sibling.prevSibling = lcurly;
+        sibling.setPreviousSibling(lcurly);
         lcurly.setFirstChild(sibling);
 
         tmp.setNextSibling(null); // don't leave any old pointers set
 
         current.setNextSibling(rcurly);
 
+        staticStuff.clear(); // both variables and initializers
+        variables.clear(); // instance variables
+        initializers.clear(); // instance initializers
+        ctors.clear();
+        methods.clear();
+        classes.clear();
+        interfaces.clear();
+        annotations.clear();
+        enums.clear();
+        names.clear(); // type names of all instance variables
         return node;
     }
 }

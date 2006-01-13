@@ -9,6 +9,9 @@ package de.hunsicker.jalopy.printer;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hunsicker.jalopy.language.CompositeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
+
 
 /**
  * A simple cache to avoid continually creating and destroying new TestNodeWriter
@@ -25,17 +28,19 @@ final class WriterCache
     private final String _originalLineSeparator;
 
     //~ Constructors ---------------------------------------------------------------------
-
+    NodeWriter nodeWriter = null;
+    CompositeFactory _factory = null;
     /**
      * Creates a new WriterCache object.
      *
      * @param writer DOCUMENT ME!
      */
-    public WriterCache(NodeWriter writer)
+    public WriterCache(CompositeFactory factory, NodeWriter writer)
     {
+        _factory = factory;
         _originalLineSeparator = writer.originalLineSeparator;
-
-        TestNodeWriter tester = new TestNodeWriter();
+        nodeWriter = writer;
+        TestNodeWriter tester = new TestNodeWriter(this,factory,nodeWriter);
         tester.originalLineSeparator = _originalLineSeparator;
         _writers.add(tester);
     }
@@ -58,7 +63,7 @@ final class WriterCache
             }
         }
 
-        TestNodeWriter tester = new TestNodeWriter();
+        TestNodeWriter tester = new TestNodeWriter(this,_factory,nodeWriter);
         tester.originalLineSeparator = _originalLineSeparator;
 
         return tester;

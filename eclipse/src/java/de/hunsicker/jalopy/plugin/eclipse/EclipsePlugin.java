@@ -22,7 +22,6 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.jalopy.plugin.StatusBar;
 import de.hunsicker.jalopy.swing.ProgressMonitor;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IStatusLineManager;
@@ -40,6 +39,7 @@ import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.osgi.framework.BundleContext;
 
 
 /**
@@ -58,10 +58,10 @@ public class EclipsePlugin
     public static final String ID = "de.hunsicker.jalopy.plugin.eclipse" /* NOI18N */;
 
     /** The I-Beam text cusor. */
-    private static Cursor _ibeamCursor;
+    protected static Cursor _ibeamCursor;
 
     /** The sole object instance. */
-    private static EclipsePlugin plugin;
+    protected static EclipsePlugin plugin;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -81,9 +81,14 @@ public class EclipsePlugin
      *
      * @param descriptor the Plug-in descriptor.
      */
+    public EclipsePlugin()
+    {
+        plugin = this;
+    }
     public EclipsePlugin(IPluginDescriptor descriptor)
     {
         super(descriptor);
+        files = Collections.EMPTY_LIST;
         plugin = this;
     }
 
@@ -135,34 +140,31 @@ public class EclipsePlugin
         return this.files;
     }
 
-
     /**
-     * DOCUMENT ME!
+     * Called on stop of this plugin 
      *
-     * @throws CoreException DOCUMENT ME!
+     * @param context
+     * @throws Exception If an error occurs
      */
-    public void shutdown()
-      throws CoreException
-    {
-        super.shutdown();
+    public void stop(BundleContext context) throws Exception{
         this.impl = null;
         this.file = null;
         this.files.clear();
         this.files = null;
-        this.plugin = null;
+        EclipsePlugin.plugin = null;
         _ibeamCursor.dispose();
+        super.stop(context);
     }
 
-
     /**
-     * DOCUMENT ME!
+     * Called on start of this plugin
      *
-     * @throws CoreException DOCUMENT ME!
+     * @throws Exception If an error occurs
      */
-    public void startup()
-      throws CoreException
+    public void start(BundleContext context)
+      throws Exception
     {
-        super.startup();
+        super.start(context);
         this.impl = new PluginImpl();
         _ibeamCursor =
             new Cursor(
@@ -170,7 +172,7 @@ public class EclipsePlugin
     }
 
 
-    private IWorkbenchWindow getActiveWorkbenchWindow()
+    protected IWorkbenchWindow getActiveWorkbenchWindow()
     {
         IWorkbenchWindow window = getWorkbench().getActiveWorkbenchWindow();
 
@@ -211,7 +213,7 @@ public class EclipsePlugin
     }
 
 
-    private IStatusLineManager getStatusLine()
+    protected IStatusLineManager getStatusLine()
     {
         IWorkbenchWindow window = plugin.getActiveWorkbenchWindow();
         IWorkbenchPage[] pages = window.getPages();
@@ -547,7 +549,7 @@ public class EclipsePlugin
 
         public void begin(
             final String text,
-            final int    units)
+            final int    aUnits)
         {
             try
             {
@@ -567,7 +569,7 @@ public class EclipsePlugin
                             ProgressMonitorImpl.this.monitor =
                                 ProgressMonitorImpl.this.dialog.getProgressMonitor();
                             ProgressMonitorImpl.this.dialog.open();
-                            ProgressMonitorImpl.this.monitor.beginTask(text, units);
+                            ProgressMonitorImpl.this.monitor.beginTask(text, aUnits);
                         }
                     });
             }

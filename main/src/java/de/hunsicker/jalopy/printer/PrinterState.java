@@ -94,6 +94,7 @@ final class PrinterState
      * aligning.
      */
     int variableOffset = VariableDeclarationPrinter.OFFSET_NONE;
+    boolean smallIndent = false;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -125,5 +126,44 @@ final class PrinterState
             this.parenScope.clear();
             this.markers = null;
         }
+    }
+    
+    public void reset() {
+        if (this.parenScope!=null){
+            //while(this.parenScope.size()>1)
+            //    this.parenScope.removeLast();
+            this.parenScope.clear();
+            this.parenScope.addFirst(new ParenthesesScope(0));
+        }
+        if (this.parentheses!=null){
+            this.parentheses.clear();
+        }
+        if (this.markers!=null){
+            this.markers.reset();
+        }
+        this.wrap=false;
+        this.anonymousInnerClass=false;
+        this.expressionList = false;
+        this.extendsWrappedBefore=false;
+        this.innerClass=false;
+        this.newlineBeforeLeftBrace=false;
+        this.paramList=false;
+        this.parametersWrapped=false;
+        this.wrap=false;
+        this.arrayBrackets=0;
+        this.assignOffset = AssignmentPrinter.OFFSET_NONE;
+        this.paramLevel = 0;
+        this.paramOffset = ParametersPrinter.OFFSET_NONE;
+        this.variableOffset = VariableDeclarationPrinter.OFFSET_NONE;        
+        smallIndent=false;
+
+    }
+    public void reset(PrinterState state) {
+        this.anonymousInnerClass = state.anonymousInnerClass;
+        this.innerClass = state.innerClass;
+        this.newlineBeforeLeftBrace = state.newlineBeforeLeftBrace;
+        this.parametersWrapped=state.parametersWrapped;
+        this.wrap=state.wrap;
+        smallIndent=false;
     }
 }

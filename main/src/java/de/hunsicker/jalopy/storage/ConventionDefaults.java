@@ -6,7 +6,7 @@
  */
 package de.hunsicker.jalopy.storage;
 
-import de.hunsicker.jalopy.language.JavaRecognizer;
+import de.hunsicker.jalopy.language.JavaParser;
 
 import org.apache.log4j.Level;
 
@@ -214,6 +214,9 @@ public final class ConventionDefaults
     public static final boolean COMMENT_JAVADOC_INNER_CLASS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean DONT_COMMENT_JAVADOC_WHEN_ML = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final int COMMENT_JAVADOC_METHOD_MASK = 0;
 
     /** The default value for the key with the same name ("{@value}"). */
@@ -286,13 +289,19 @@ public final class ConventionDefaults
     public static final boolean COMMENT_REMOVE_SINGLE_LINE = false;
 
     /** The default value for the key with the same name ("{@value}"). */
-    public static final int SOURCE_VERSION = JavaRecognizer.JDK_1_4;
+    public static final int SOURCE_VERSION = JavaParser.JDK_1_5;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean FOOTER = false;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean FORCE_FORMATTING = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean INSERT_FINAL_MODIFIER_FOR_PARAMETERS = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean HEADER = false;
@@ -409,6 +418,12 @@ public final class ConventionDefaults
     public static final boolean LINE_WRAP_PARAMS_EXCEED = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean LINE_WRAP_PARAMS_HARD = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean LINE_WRAP_PARAMS_DEEP = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final boolean LINE_WRAP_PAREN_GROUPING = false;
 
     /** The default value for the key with the same name ("{@value}"). */
@@ -471,6 +486,24 @@ public final class ConventionDefaults
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean LINE_WRAP_BEFORE_RIGHT_PAREN = false;
 
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ENUM_LCURLY_NO_NEW_LINE = true;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ENUM_ALIGN_VALUES_WHEN_EXCEEDS = 0;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ANON_LCURLY_NO_NEW_LINE = true;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ANON_ALIGN_VALUES_WHEN_EXCEEDS = 0;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean ANON_DEF_LCURLY_NO_NEW_LINE = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final int ANON_DEF_ALIGN_VALUES_WHEN_EXCEEDS = 0;
+
     /** The default value for the key with the same name. */
     public static final int MSG_PRIORITY_IO = Level.WARN.toInt();
 
@@ -529,6 +562,12 @@ public final class ConventionDefaults
     public static final boolean SORT_CLASS = false;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_ANNOTATION = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_ENUM = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_CTOR = false;
 
     /** The default value for the key with the same name ("{@value}"). */
@@ -536,6 +575,9 @@ public final class ConventionDefaults
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_METHOD = false;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final boolean SORT_METHOD_BEAN = false;
 
     /** The default value for the key with the same name ("{@value}"). */
     public static final boolean SORT_MODIFIERS = false;
@@ -646,7 +688,18 @@ public final class ConventionDefaults
     public static final String SEPARATOR_INTERFACE = "Inner Interfaces" /* NOI18N */;
 
     /** The default value for the key with the same name ("{@value}"). */
+    public static final String SEPARATOR_ENUM_INIT = "Enumerations" /* NOI18N */;
+
+    /** The default value for the key with the same name ("{@value}"). */
+    public static final String SEPARATOR_ANNOTATION_INIT = "Annotations" /* NOI18N */;
+
+    /** The default value for the key with the same name ("{@value}"). */
     public static final String SEPARATOR_CLASS = "Inner Classes" /* NOI18N */;
+
+    /** Add comments after closing braces */
+    public static final boolean BRACE_ADD_COMMENT = false;
+
+    public static final boolean JAVADOC_PARSE_DESCRIPTION = true;
 
     //~ Constructors ---------------------------------------------------------------------
 

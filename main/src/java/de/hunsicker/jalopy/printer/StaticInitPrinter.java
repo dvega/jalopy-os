@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -71,7 +71,7 @@ final class StaticInitPrinter
         out.last = JavaTokenTypes.LITERAL_static;
 
         AST child = node.getFirstChild();
-        PrinterFactory.create(child).print(child, out);
+        PrinterFactory.create(child, out).print(child, out);
         out.last = JavaTokenTypes.STATIC_INIT;
     }
 }

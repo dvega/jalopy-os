@@ -14,7 +14,7 @@ import javax.swing.Icon;
 
 import com.borland.jbuilder.debugger.BreakpointTreeModel;
 import com.borland.jbuilder.node.JBProject;
-import com.borland.primetime.editor.BookmarkManager;
+// import com.borland.primetime.editor.BookmarkManager;
 import com.borland.primetime.editor.EditorDocument;
 import com.borland.primetime.editor.EditorManager;
 import com.borland.primetime.editor.EditorPane;
@@ -33,7 +33,7 @@ import de.hunsicker.jalopy.plugin.ProjectFile;
 
 /**
  * The JBuilder editor implementation.
- *
+ * TODO Fix the bookmark manager
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
@@ -236,8 +236,9 @@ final class JbEditor
             else
             {
                 Bookmark bookmark = (Bookmark) data;
-                BookmarkManager.addBookmark(
-                    pane.calcCaretPosition(annotation.getLine(), 1), bookmark.number, pane);
+                
+//                BookmarkManager.addBookmark(
+//                    pane.calcCaretPosition(annotation.getLine(), 1), bookmark.number, pane);
             }
         }
 
@@ -291,7 +292,7 @@ final class JbEditor
             }
         }
 
-        BookmarkManager.clearBookmarks(Browser.getActiveBrowser(), pane);
+//        BookmarkManager.clearBookmarks(Browser.getActiveBrowser(), pane);
 
         return result;
     }

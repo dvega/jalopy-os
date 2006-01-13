@@ -8,8 +8,12 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.storage.ConventionDefaults;
+import de.hunsicker.jalopy.storage.ConventionKeys;
 
 
 /**
@@ -56,10 +60,37 @@ final class ParameterDeclarationPrinter
       throws IOException
     {
         AST modifier = node.getFirstChild();
-        PrinterFactory.create(modifier).print(modifier, out);
+
+        if (
+            (AbstractPrinter.settings.getBoolean(
+                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS, 
+                ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_METHOD_PARAMETERS)
+                && ((JavaNode)node).getParent().getParent().getType() == JavaTokenTypes.METHOD_DEF
+                ) ||
+                
+            AbstractPrinter.settings.getBoolean(
+                ConventionKeys.INSERT_FINAL_MODIFIER_FOR_PARAMETERS, 
+                ConventionDefaults.INSERT_FINAL_MODIFIER_FOR_PARAMETERS))
+        {
+            boolean  finalAlreadyExists = false;
+            for (
+                AST child = modifier.getFirstChild(); child != null;
+                child = child.getNextSibling())
+            {
+                if (child.getType()==JavaTokenTypes.FINAL) {
+                    finalAlreadyExists = true;
+                    break;
+                }
+            }
+            if (! finalAlreadyExists) {
+                AST finalModifier = out.getJavaNodeFactory().create(JavaTokenTypes.FINAL, "final");
+                modifier.addChild(finalModifier);
+            }
+        }
+        PrinterFactory.create(modifier, out).print(modifier, out);
 
         AST type = modifier.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
 
         // align the parameter
         if (
@@ -75,6 +106,6 @@ final class ParameterDeclarationPrinter
         }
 
         AST identifier = type.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
     }
 }

@@ -69,7 +69,7 @@ public class SettingsDialog
         "de.hunsicker.jalopy.swing.Bundle" /* NOI18N */;
 
     /** A frame that displays the contents of a Java source file. */
-    private static PreviewFrame _previewFrame;
+    static PreviewFrame _previewFrame;
 
     //~ Instance variables ---------------------------------------------------------------
 
@@ -83,7 +83,7 @@ public class SettingsDialog
     private JButton _okButton;
 
     /** The container that contains the tree and page views. */
-    private SettingsContainer _preferencesContainer;
+    SettingsContainer _preferencesContainer;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -177,10 +177,7 @@ public class SettingsDialog
         {
             return c.getHeight();
         }
-        else
-        {
-            return super.getHeight();
-        }
+        return super.getHeight();
     }
 
 
@@ -217,10 +214,7 @@ public class SettingsDialog
         {
             return c.getLocation();
         }
-        else
-        {
-            return super.getLocation();
-        }
+        return super.getLocation();
     }
 
 
@@ -236,10 +230,7 @@ public class SettingsDialog
         {
             return c.getWidth();
         }
-        else
-        {
-            return super.getWidth();
-        }
+        return super.getWidth();
     }
 
 
@@ -255,10 +246,7 @@ public class SettingsDialog
         {
             return c.getX();
         }
-        else
-        {
-            return super.getX();
-        }
+        return super.getX();
     }
 
 
@@ -274,10 +262,7 @@ public class SettingsDialog
         {
             return c.getY();
         }
-        else
-        {
-            return super.getY();
-        }
+        return super.getY();
     }
 
 
@@ -328,7 +313,7 @@ public class SettingsDialog
                     else
                     {
                         frame.dispose();
-                        dialog._previewFrame.dispose();
+                        SettingsDialog._previewFrame.dispose();
                     }
                 }
 
@@ -562,7 +547,7 @@ public class SettingsDialog
      *
      * @return <code>true</code> if the settings were stored sucessfully.
      */
-    private boolean updateSettings()
+    boolean updateSettings()
     {
         try
         {

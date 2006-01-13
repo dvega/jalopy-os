@@ -5,18 +5,16 @@
               id="de.hunsicker.jalopy.plugin.jdeveloper"
               rsbundle-class="de.hunsicker.jalopy.plugin.jdeveloper.JDevExtensionBundle">
   <ex:name rskey="EXTENSION_NAME"/>
-  <ex:version>1.1.5</ex:version>
+  <ex:version>@BUILD.VERSION.JDEV@</ex:version>
   <ex:esdk-version>10</ex:esdk-version>
   <ex:owner rskey="EXTENSION_OWNER"/>
   <ex:dependencies>
     <ex:import version="10.1.3">oracle.jdeveloper</ex:import>
   </ex:dependencies>
   <ex:classpaths>
-    <ex:classpath>${ide.extension.install.home}/lib/jalopy-1.0b11.jar</ex:classpath>
-    <ex:classpath>${ide.extension.install.home}/lib/jalopy-jdeveloper-1.1.4.jar</ex:classpath>
-    <ex:classpath>${ide.extension.install.home}/lib/jdom-1.0b8.jar</ex:classpath>
-    <ex:classpath>${ide.extension.install.home}/lib/log4j-1.2.6.jar</ex:classpath>
-    <ex:classpath>${ide.extension.install.home}/lib/oro-2.0.6.jar</ex:classpath>
+    <ex:classpath>${ide.extension.install.home}/lib/jalopy.jar</ex:classpath>
+    <ex:classpath>${ide.extension.install.home}/lib/jalopy-jdeveloper.jar</ex:classpath>
+    <ex:classpath>${ide.extension.install.home}/lib/log4j.jar</ex:classpath>
   </ex:classpaths>
   <ex:hooks>
     <jdeveloper-hook>

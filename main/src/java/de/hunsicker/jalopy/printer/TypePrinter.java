@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 
 
 /**
@@ -56,6 +56,6 @@ final class TypePrinter
       throws IOException
     {
         AST type = node.getFirstChild();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
     }
 }

@@ -17,6 +17,7 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -29,6 +30,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -40,8 +42,6 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.ImportPolicy;
 import de.hunsicker.swing.EmptyButtonGroup;
 import de.hunsicker.swing.util.SwingHelper;
-
-import org.apache.oro.text.perl.Perl5Util;
 
 
 /**
@@ -58,12 +58,12 @@ public class ImportsSettingsPage
     /** The delimeter for the value pair of an entry. */
     private static final String DELIMETER_ENTRY_PAIR = ":" /* NOI18N */;
     private static final String STAR = "*" /* NOI18N */;
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Instance variables ---------------------------------------------------------------
 
     /** The grouping entries. */
-    private DefaultTableModel _tableModel;
+    DefaultTableModel _tableModel;
 
     /** Enables/disables import statements collapsing. */
     private JCheckBox _collapseCheckBox;
@@ -72,17 +72,17 @@ public class ImportsSettingsPage
     private JCheckBox _expandCheckBox;
 
     /** Enables/disables the grouping functionality. */
-    private JCheckBox _sortImportsCheckBox;
+    JCheckBox _sortImportsCheckBox;
 
     /** Specifies the grouping depth. */
-    private JComboBox _groupingDepthComboBox;
+    JComboBox _groupingDepthComboBox;
 
     /** The table which displays the grouping entries. */
-    private JTable _table;
+    JTable _table;
 
     /** The table to display the values. */
-    private TableList _tableList;
-    private boolean _selectionAllowed = true;
+    TableList _tableList;
+    // TODO private boolean _selectionAllowed = true;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -635,7 +635,7 @@ public class ImportsSettingsPage
         public IntegerEditor(TableList tableList)
         {
             super(tableList, new JTextField());
-            ((JTextField) getComponent()).setHorizontalAlignment(JTextField.RIGHT);
+            ((JTextField) getComponent()).setHorizontalAlignment(SwingConstants.RIGHT);
         }
 
         public boolean isCellEditable(EventObject ev)
@@ -781,10 +781,9 @@ public class ImportsSettingsPage
         public boolean stopCellEditing()
         {
             String s = (String) super.getCellEditorValue();
-            Perl5Util engine = new Perl5Util();
 
             // only allow package/type names
-            if (!engine.match("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
+            if (!Pattern.matches("m/^[a-zA-Z]+(?:.[a-zA-Z]+)*$|\\*/s" /* NOI18N */, s))
             {
                 ((JComponent) getComponent()).setBorder(
                     BorderFactory.createLineBorder(Color.red));

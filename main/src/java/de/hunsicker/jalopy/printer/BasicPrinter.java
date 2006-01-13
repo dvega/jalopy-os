@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 
 
 /**
@@ -56,9 +56,14 @@ class BasicPrinter
         NodeWriter out)
       throws IOException
     {
-        printCommentsBefore(node, out);
+        printCommentsBefore(node, false, out);
 
         int offset = out.print(node.getText(), node.getType());
+        
+        // TODO validate this is ok for all 
+        for(AST child = node.getFirstChild();child!=null;child = child.getNextSibling()) {
+            PrinterFactory.create(child, out).print(child,out);
+        }
 
         trackPosition((JavaNode) node, out.line, offset, out);
 

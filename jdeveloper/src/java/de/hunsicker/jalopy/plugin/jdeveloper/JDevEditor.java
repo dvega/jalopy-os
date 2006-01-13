@@ -16,7 +16,6 @@ import de.hunsicker.jalopy.plugin.Editor;
 import de.hunsicker.jalopy.plugin.ProjectFile;
 import de.hunsicker.util.ChainingRuntimeException;
 
-import oracle.ide.Ide;
 import oracle.ide.cmd.buffer.EditProcessor;
 import oracle.ide.editor.EditorManager;
 import oracle.ide.model.TextNode;
@@ -278,10 +277,8 @@ final class JDevEditor
         {
             return _editor;
         }
-        else
-        {
-            // should never happen
-            throw new IllegalStateException("could not find an editor for " + _node);
-        }
+        
+        // should never happen
+        throw new IllegalStateException("could not find an editor for " + _node);
     }
 }

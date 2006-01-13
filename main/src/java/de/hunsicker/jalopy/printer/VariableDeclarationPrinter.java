@@ -8,10 +8,11 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -23,7 +24,7 @@ import de.hunsicker.jalopy.storage.ConventionKeys;
  * @version $Revision$
  */
 final class VariableDeclarationPrinter
-    extends BasicDeclarationPrinter
+extends BasicDeclarationPrinter
 {
     //~ Static variables/initializers ----------------------------------------------------
 
@@ -63,12 +64,15 @@ final class VariableDeclarationPrinter
       throws IOException
     {
         JavaNode n = (JavaNode) node;
+        boolean isMLaComment = AbstractPrinter.settings.getBoolean(
+                ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+                ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML);
 
-        if (!out.state.anonymousInnerClass && !n.hasJavadocComment())
+        if (!out.state.anonymousInnerClass && !n.hasJavadocComment(isMLaComment))
         {
             if (
                 (!out.state.innerClass
-                || this.settings.getBoolean(
+                || AbstractPrinter.settings.getBoolean(
                     ConventionKeys.COMMENT_JAVADOC_INNER_CLASS,
                     ConventionDefaults.COMMENT_JAVADOC_INNER_CLASS))
                 && !JavaNodeHelper.isLocalVariable(node))
@@ -81,10 +85,10 @@ final class VariableDeclarationPrinter
 
         int last = out.last;
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
         AST type = modifiers.getNextSibling();
-        PrinterFactory.create(type).print(type, out);
+        PrinterFactory.create(type, out).print(type, out);
 
         boolean newChunk = false;
 
@@ -92,8 +96,9 @@ final class VariableDeclarationPrinter
         if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             if (
-                this.settings.getBoolean(
-                    ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS))
+                AbstractPrinter.settings.getBoolean(
+                    ConventionKeys.ALIGN_VAR_IDENTS, ConventionDefaults.ALIGN_VAR_IDENTS)
+                    && !n.hasJavadocComment(isMLaComment))
             {
                 newChunk = alignVariable(node, last, out);
             }
@@ -114,7 +119,7 @@ final class VariableDeclarationPrinter
         out.print(SPACE, JavaTokenTypes.WS);
 
         AST identifier = type.getNextSibling();
-        PrinterFactory.create(identifier).print(identifier, out);
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST assign = identifier.getNextSibling();
 
@@ -128,22 +133,22 @@ final class VariableDeclarationPrinter
                 {
                     case JavaTokenTypes.ASSIGN :
 
-                        if (isLongStringLiteral(assign, out))
-                        {
-                            AssignmentPrinter.getInstance().print(assign, true, out);
-
-                            break;
-                        }
+//                        if (isLongStringLiteral(assign, out))
+//                        {
+//                            AssignmentPrinter.getInstance().print(assign, true, out);
+//
+//                            break;
+//                        }
 
                     default :
-                        PrinterFactory.create(assign).print(assign, out);
+                        PrinterFactory.create(assign, out).print(assign, out);
 
                         break;
                 }
             }
             else
             {
-                PrinterFactory.create(assign).print(assign, out);
+                PrinterFactory.create(assign, out).print(assign, out);
             }
         }
 
@@ -155,7 +160,7 @@ final class VariableDeclarationPrinter
 
             if (semi != null)
             {
-                PrinterFactory.create(semi).print(semi, out);
+                PrinterFactory.create(semi, out).print(semi, out);
             }
         }
 
@@ -192,7 +197,7 @@ final class VariableDeclarationPrinter
         JavaNode n = (JavaNode) node;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.CHUNKS_BY_COMMENTS, ConventionDefaults.CHUNKS_BY_COMMENTS))
         {
             if (n.hasCommentsBefore())
@@ -206,7 +211,7 @@ final class VariableDeclarationPrinter
             case JavaTokenTypes.VARIABLE_DEF :
 
                 int maxLinesBetween =
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.BLANK_LINES_KEEP_UP_TO,
                         ConventionDefaults.BLANK_LINES_KEEP_UP_TO);
 
@@ -215,15 +220,16 @@ final class VariableDeclarationPrinter
                 if (maxLinesBetween > 0)
                 {
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.CHUNKS_BY_BLANK_LINES,
                             ConventionDefaults.CHUNKS_BY_BLANK_LINES))
                     {
-                        if (
-                            (n.getStartLine() - n.getPreviousSibling().getStartLine() - 1) > maxLinesBetween)
-                        {
-                            return true;
-                        }
+                    	// Count hidden blank lines by adding up the newlines between the 2 nodes
+                    	int totalLines = countChildrenLines((JavaNode)n.getPreviousSibling().getFirstChild(),0);
+                		if (totalLines-1 > maxLinesBetween) {
+                			return true;
+                		}
+                    	
                     }
 
                     return false;
@@ -234,7 +240,7 @@ final class VariableDeclarationPrinter
     }
 
 
-    /**
+	/**
      * Determines whether the node needs special wrapping (for long string literal
      * assignments).
      *
@@ -253,7 +259,7 @@ final class VariableDeclarationPrinter
         boolean result = false;
         boolean possible = false;
         int lineLength =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 LOOP: 
         for (AST child = node.getFirstChild(); child != null;
@@ -337,10 +343,12 @@ SEARCH:
 
                                         AST defModifier = def.getFirstChild();
                                         AST defType = defModifier.getNextSibling();
-                                        PrinterFactory.create(defModifier).print(
+                                        PrinterFactory.create(defModifier, out).print(
                                             defModifier, tester);
-                                        PrinterFactory.create(defType).print(
+                                        PrinterFactory.create(defType, out).print(
                                             defType, tester);
+                                        
+                                        
 
                                         /**
                                          * @todo add new max. length setting
@@ -394,7 +402,7 @@ SEARCH:
                 {
                     case JavaTokenTypes.VARIABLE_DEF :
 
-                        if (isNewChunk((JavaNode) next, last))
+                        if (isNewChunk(next, last))
                         {
                             out.state.variableOffset = OFFSET_NONE;
                             result = true;

@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.ResourceBundleFactory;
@@ -57,10 +58,10 @@ public class ErrorDialog
     //~ Instance variables ---------------------------------------------------------------
 
     /** Holds the component with the detailed stacktrace. */
-    private JScrollPane _details;
+    JScrollPane _details;
 
     /** Is the error message or the stacktrace displayed? */
-    private int _status = DETAILS_HIDE;
+    int _status = DETAILS_HIDE;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -182,7 +183,7 @@ public class ErrorDialog
     {
         setTitle(title);
         setResizable(true);
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         final Container pane = getContentPane();
         final GridBagLayout layout = new GridBagLayout();

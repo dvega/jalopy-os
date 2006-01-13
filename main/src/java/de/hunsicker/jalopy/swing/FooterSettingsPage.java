@@ -123,6 +123,15 @@ public class FooterSettingsPage
         return ConventionKeys.FOOTER;
     }
 
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected Convention.Key getIgnoreIfExistsKey()
+    {
+        return ConventionKeys.FOOTER_IGNORE_IF_EXISTS;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -130,5 +139,14 @@ public class FooterSettingsPage
     protected String getUseLabel()
     {
         return this.bundle.getString("CHK_USE_FOOTER" /* NOI18N */);
+    }
+
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected String getIgnoreIfExistsLabel()
+    {
+        return this.bundle.getString("CHK_IGNORE_FOOTER_IF_EXISTS" /* NOI18N */);
     }
 }

@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -61,22 +61,22 @@ final class TypeCastPrinter
         AST type = node.getFirstChild();
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_CAST, ConventionDefaults.PADDING_CAST))
         {
             out.print(LPAREN_SPACE, JavaTokenTypes.LPAREN);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(type, out).print(type, out);
             out.print(SPACE_RPAREN, JavaTokenTypes.RPAREN);
         }
         else
         {
             out.print(LPAREN, JavaTokenTypes.LPAREN);
-            PrinterFactory.create(type).print(type, out);
+            PrinterFactory.create(type, out).print(type, out);
             out.print(RPAREN, JavaTokenTypes.RPAREN);
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_CAST, ConventionDefaults.SPACE_AFTER_CAST))
         {
             out.print(SPACE, out.last);
@@ -85,7 +85,7 @@ final class TypeCastPrinter
         for (AST child = type.getNextSibling(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
     }
 }

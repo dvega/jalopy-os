@@ -30,7 +30,7 @@ class NumberComboBoxEditor
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
+    static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
     //~ Constructors ---------------------------------------------------------------------
 

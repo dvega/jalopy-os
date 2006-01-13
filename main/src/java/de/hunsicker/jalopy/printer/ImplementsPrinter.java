@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -63,18 +63,18 @@ final class ImplementsPrinter
         if (first != null)
         {
             boolean wrapLines =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
                 && (out.mode == NodeWriter.MODE_DEFAULT);
             int lineLength =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
             boolean newlineBefore =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_BEFORE_IMPLEMENTS,
                     ConventionDefaults.LINE_WRAP_BEFORE_IMPLEMENTS);
             int indentSize =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.INDENT_SIZE_IMPLEMENTS,
                     ConventionDefaults.INDENT_SIZE_IMPLEMENTS);
             boolean indentCustom = indentSize > -1;
@@ -111,7 +111,7 @@ final class ImplementsPrinter
             TestNodeWriter tester = null;
 
             boolean wrapAll =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_TYPES_IMPLEMENTS_EXCEED,
                     ConventionDefaults.LINE_WRAP_AFTER_TYPES_IMPLEMENTS_EXCEED)
                 && (out.mode == NodeWriter.MODE_DEFAULT);
@@ -122,7 +122,7 @@ final class ImplementsPrinter
             }
 
             boolean forceWrapping =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_TYPES_IMPLEMENTS,
                     ConventionDefaults.LINE_WRAP_AFTER_TYPES_IMPLEMENTS);
 
@@ -134,7 +134,7 @@ final class ImplementsPrinter
                 }
                 else
                 {
-                    PrinterFactory.create(node).print(node, tester);
+                    PrinterFactory.create(node, out).print(node, tester);
 
                     if ((tester.length - 11 + out.column) > lineLength)
                     {
@@ -146,10 +146,10 @@ final class ImplementsPrinter
             }
 
             boolean indentDeep =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
             String comma =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA)
                 ? COMMA_SPACE
                 : COMMA;
@@ -160,7 +160,7 @@ final class ImplementsPrinter
 
             for (AST child = first; child != null; child = child.getNextSibling())
             {
-                PrinterFactory.create(child).print(child, out);
+                PrinterFactory.create(child, out).print(child, out);
 
                 AST next = child.getNextSibling();
 
@@ -194,7 +194,7 @@ final class ImplementsPrinter
                     }
                     else if (wrapLines)
                     {
-                        PrinterFactory.create(next).print(next, tester);
+                        PrinterFactory.create(next, out).print(next, tester);
 
                         if ((tester.length + out.column + comma.length()) > lineLength)
                         {
@@ -268,7 +268,7 @@ final class ImplementsPrinter
 
             if (
                 !out.state.newlineBeforeLeftBrace
-                && this.settings.getBoolean(
+                && AbstractPrinter.settings.getBoolean(
                     ConventionKeys.BRACE_TREAT_DIFFERENT_IF_WRAPPED,
                     ConventionDefaults.BRACE_TREAT_DIFFERENT_IF_WRAPPED)
                 && (wrappedBefore || wrappedAfter))

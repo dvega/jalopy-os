@@ -20,10 +20,6 @@ import de.hunsicker.util.ResourceBundleFactory;
 class CountLabel
     extends JLabel
 {
-    //~ Static variables/initializers ----------------------------------------------------
-
-    private static final String EMPTY_STRING = "" /* NOI18N */.intern();
-
     //~ Instance variables ---------------------------------------------------------------
 
     /** Used to construct the label text. */
@@ -94,9 +90,9 @@ class CountLabel
 
 
     /**
-     * DOCUMENT ME!
+     * Sets the text
      *
-     * @param text DOCUMENT ME!
+     * @param text The new text
      */
     public final void setText(String text)
     {

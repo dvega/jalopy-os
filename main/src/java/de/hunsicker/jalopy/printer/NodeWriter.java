@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.CommonHiddenStreamToken;
+import de.hunsicker.jalopy.language.CompositeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -55,7 +57,7 @@ public class NodeWriter
     static final int MODE_TEST = 2;
     private static final String LCURLY = "{" /* NOI18N */.intern();
     private static final String RCURLY = "}" /* NOI18N */.intern();
-    private static final String SEMI = ";" /* NOI18N */.intern();
+    // TODO private static final String SEMI = ";" /* NOI18N */.intern();
     private static final String TAB = "\t" /* NOI18N */.intern();
     private static final String EMPTY_STRING = "" /* NOI18N */.intern();
 
@@ -89,6 +91,11 @@ public class NodeWriter
      * Indicates whether we're at the beginning of a new line (<code>column == 1</code>).
      */
     protected boolean newline = true;
+    
+    /** Indicates that the line following this is a new line
+     * Used for printing commas in blocks without white space after the new line 
+     */
+    protected boolean nextNewline = false;
 
     /** Should tabs only be used to print leading indentation? */
     protected boolean useLeadingTabs;
@@ -156,6 +163,12 @@ public class NodeWriter
 
     /** Used to generate the indent string. */
     private char[] _indentChars;
+    
+    private CompositeFactory _factory = null;
+
+    public int javadocIndent = 0;
+    
+
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -170,59 +183,68 @@ public class NodeWriter
      */
     public NodeWriter(
         Writer out,
+        CompositeFactory factory,
         String filename,
         Map    issues,
         String lineSeparator,
         String originalLineSeparator)
     {
-        this();
+        this(factory);
         this.filename = filename;
         this.issues = issues;
         this.lineSeparator = lineSeparator;
         this.originalLineSeparator = originalLineSeparator;
-        this.testers = new WriterCache(this);
+        this.testers = new WriterCache(factory,this);
         _out = out;
+    }
+    
+    public CompositeFactory getCompositeFactory() {
+        return _factory;
+    }
+    public JavaNodeFactory getJavaNodeFactory() {
+        return _factory.getJavaNodeFactory();
     }
 
 
     /**
      * Creates a new NodeWriter object.
      */
-    protected NodeWriter()
+    protected NodeWriter(CompositeFactory factory)
     {
         this.state = new PrinterState(this);
+        this._factory = factory;
         this.lineSeparator = File.separator;
         this.settings = Convention.getInstance();
         this.indentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE, ConventionDefaults.INDENT_SIZE);
         this.insertTrailingEmpty =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INSERT_TRAILING_NEWLINE,
                 ConventionDefaults.INSERT_TRAILING_NEWLINE);
         this.continuationIndentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_CONTINUATION,
                 ConventionDefaults.INDENT_SIZE_CONTINUATION);
         this.leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
         this.leftBraceIndent =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_BRACE_LEFT,
                 ConventionDefaults.INDENT_SIZE_BRACE_LEFT);
         this.leadingIndentSize =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.INDENT_SIZE_LEADING, ConventionDefaults.INDENT_SIZE_LEADING);
         this.useTabs =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_WITH_TABS, ConventionDefaults.INDENT_WITH_TABS);
         this.useLeadingTabs =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_WITH_TABS_ONLY_LEADING,
                 ConventionDefaults.INDENT_WITH_TABS_ONLY_LEADING);
         this.footer =
-            this.settings.getBoolean(ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
+            AbstractPrinter.settings.getBoolean(ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
         _indentChars = new char[150];
 
         for (int i = 0; i < _indentChars.length; i++)
@@ -861,7 +883,7 @@ public class NodeWriter
             StringBuffer buf = new StringBuffer(getIndentSize() + 1);
             buf.append(
                 generateIndentString(
-                    this.settings.getInt(
+                    AbstractPrinter.settings.getInt(
                         ConventionKeys.INDENT_SIZE_BRACE_RIGHT,
                         ConventionDefaults.INDENT_SIZE_BRACE_RIGHT)));
             buf.append(RCURLY);

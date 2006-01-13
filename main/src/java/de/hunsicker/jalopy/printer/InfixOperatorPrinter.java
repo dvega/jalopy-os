@@ -9,9 +9,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -157,7 +157,7 @@ ITERATE:
         }
 
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
         boolean wrap = false; // actually perform line wrapping
 
@@ -174,7 +174,7 @@ ITERATE:
         else
         {
             boolean insertParentheses =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
                     ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS);
 
@@ -187,7 +187,7 @@ ITERATE:
                     {
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(lhs);
+                            addParentheses(lhs, out);
                             lhsLeftParen = lhs.getPreviousSibling();
                             lhsRightParen = lhs.getNextSibling();
                         }
@@ -209,7 +209,7 @@ ITERATE:
                     {
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(rhs);
+                            addParentheses(rhs, out);
                             rhsLeftParen = rhs.getPreviousSibling();
                             rhsRightParen = rhs.getNextSibling();
                         }
@@ -271,7 +271,7 @@ ITERATE:
     {
         if (lhsLeftParen == null)
         {
-            PrinterFactory.create(lhs).print(lhs, out);
+            PrinterFactory.create(lhs, out).print(lhs, out);
         }
         else
         {
@@ -280,7 +280,7 @@ ITERATE:
 
         boolean continuation = out.continuation;
         boolean continuationIndent =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
 
@@ -309,7 +309,7 @@ ITERATE:
         }
 
         boolean wrapBeforeOperator =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
                 ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR);
         boolean commentAfter = operator.hasCommentsAfter();
@@ -363,7 +363,7 @@ ITERATE:
                         if (!wrapped)
                         {
                             TestNodeWriter tester = out.testers.get();
-                            PrinterFactory.create(rhs).print(rhs, tester);
+                            PrinterFactory.create(rhs, out).print(rhs, tester);
                             wrapped =
                                 performWrap(
                                     tester.length + ((rhsLeftParen != null) ? 2
@@ -387,7 +387,7 @@ ITERATE:
                 if (!wrapped)
                 {
                     TestNodeWriter tester = out.testers.get();
-                    PrinterFactory.create(rhs).print(rhs, tester);
+                    PrinterFactory.create(rhs, out).print(rhs, tester);
                     wrapped =
                         performWrap(
                             tester.length + ((rhsLeftParen != null) ? 2
@@ -427,7 +427,7 @@ ITERATE:
 
         if (rhsLeftParen == null)
         {
-            PrinterFactory.create(rhs).print(rhs, out);
+            PrinterFactory.create(rhs, out).print(rhs, out);
         }
         else
         {

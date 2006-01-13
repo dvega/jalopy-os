@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 
 
 /**
@@ -55,6 +55,7 @@ final class SkipPrinter
         NodeWriter out)
       throws IOException
     {
+        printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
         printCommentsAfter(node, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out);
     }
 }

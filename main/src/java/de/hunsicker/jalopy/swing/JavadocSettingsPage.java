@@ -7,7 +7,6 @@
 package de.hunsicker.jalopy.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -25,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -47,20 +47,12 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.swing.util.SwingHelper;
 import de.hunsicker.util.StringHelper;
-
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
 
 
 /**
@@ -94,46 +86,41 @@ public class JavadocSettingsPage
     private AddRemoveList _inlineTagsList;
     private AddRemoveList _standardTagsList;
     private DataModel _tableModel;
-    private JCheckBox _checkTagsCheckBox;
-    private JCheckBox _checkThrowsTagsCheckBox;
+    JCheckBox _checkTagsCheckBox;
+    JCheckBox _checkThrowsTagsCheckBox;
+    JCheckBox _checkDontJavadocIfMlBox;
     private JCheckBox _createInnerCheckBox;
-    private JCheckBox _parseCheckBox;
-    private JCheckBox _singleLineFieldCommentsCheckBox;
-    private final PatternMatcher _matcher = new Perl5Matcher();
-    private Pattern _bottomTextPattern;
-    private Pattern _exceptionPattern;
-    private Pattern _paramPattern;
-    private Pattern _returnPattern;
-    private Pattern _tagNamePattern;
-    private Pattern _templatePattern;
-    private Pattern _topTextPattern;
-    private TemplateContainer _templatesContainer;
-    private boolean _disposed;
+    JCheckBox _parseCheckBox;
+    JCheckBox _parseDescriptionCheckBox;
+    JCheckBox _singleLineFieldCommentsCheckBox;
+    JCheckBox _braceCommentsCheckBox;
+    Pattern _bottomTextPattern;
+    Pattern _exceptionPattern;
+    Pattern _paramPattern;
+    Pattern _returnPattern;
+    Pattern _tagNamePattern;
+    Pattern _templatePattern;
+    Pattern _topTextPattern;
+    TemplateContainer _templatesContainer;
+    boolean _disposed;
     {
-        PatternCompiler compiler = new Perl5Compiler();
+        //PatternCompiler compiler = new Perl5Compiler();
 
-        try
-        {
-            _tagNamePattern = compiler.compile("@[a-zA-Z]+" /* NOI18N */);
+            _tagNamePattern = Pattern.compile("@[a-zA-Z]+" /* NOI18N */);
             _topTextPattern =
-                compiler.compile(
+				Pattern.compile(
                     "\\/\\*\\*(?:.*)+\\n\\s*\\*\\s*(.*)(?:\\n)*" /* NOI18N */);
             _paramPattern =
-                compiler.compile(
-                    "\\s*\\*\\s*@param\\s+\\$paramType\\$\\s+(?:.+)" /* NOI18N */);
+				Pattern.compile(
+                    "\\s*\\*\\s*@param\\s+\\$paramType\\$.*" /*\\s+(?:.+) NOI18N */);
             _returnPattern =
-                compiler.compile("\\s*\\*\\s*@return\\s+(?:.+)" /* NOI18N */);
+				Pattern.compile("\\s*\\*\\s*@return.*" /*\\s+(?:.+) NOI18N */);
             _exceptionPattern =
-                compiler.compile(
-                    "\\s*\\*\\s*@(?:throws|exception)\\s+\\$exceptionType\\$\\s+(?:.+)" /* NOI18N */);
-            _bottomTextPattern = compiler.compile("\\s*(?:\\*)+/" /* NOI18N */);
+				Pattern.compile(
+                    "\\s*\\*\\s*@(?:throws|exception)\\s+\\$exceptionType\\$.*" /*\\s+(?:.+) NOI18N */);
+            _bottomTextPattern = Pattern.compile("\\s*(?:\\*)+/" /* NOI18N */);
             _templatePattern =
-                compiler.compile("\\/\\*\\*[^*]*\\*+([^//*][^*]*\\*+)*\\/" /* NOI18N */);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+				Pattern.compile("\\/\\*\\*[^*]*\\*+([^//*][^*]*\\*+)*\\/" /* NOI18N */);
     }
 
     //~ Constructors ---------------------------------------------------------------------
@@ -173,6 +160,7 @@ public class JavadocSettingsPage
             _checkTagsCheckBox = null;
             _createInnerCheckBox = null;
             _parseCheckBox = null;
+            _parseDescriptionCheckBox = null;
             _templatesContainer.dispose();
             _disposed = true;
         }
@@ -280,12 +268,20 @@ public class JavadocSettingsPage
             ConventionKeys.COMMENT_JAVADOC_FIELDS_SHORT,
             _singleLineFieldCommentsCheckBox.isSelected());
         this.settings.putBoolean(
+            ConventionKeys.BRACE_ADD_COMMENT,
+            _braceCommentsCheckBox.isSelected());
+        this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_PARSE, _parseCheckBox.isSelected());
+        this.settings.putBoolean(ConventionKeys.COMMENT_JAVADOC_PARSE_DESCRIPTION, _parseDescriptionCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS, _checkTagsCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_CHECK_TAGS_THROWS,
             _checkThrowsTagsCheckBox.isSelected());
+        this.settings.putBoolean(
+            ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+            _checkDontJavadocIfMlBox.isSelected());
+        
         this.settings.putBoolean(
             ConventionKeys.COMMENT_JAVADOC_INNER_CLASS, _createInnerCheckBox.isSelected());
         this.settings.put(
@@ -330,10 +326,21 @@ public class JavadocSettingsPage
                     ConventionDefaults.COMMENT_JAVADOC_PARSE));
         _parseCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(
-            c, 0, 0, GridBagConstraints.REMAINDER, 1, 1.0, 0.0, GridBagConstraints.WEST,
+            c, 0, 0, GridBagConstraints.RELATIVE, 1, 1.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         generalLayout.setConstraints(_parseCheckBox, c);
         generalPanel.add(_parseCheckBox);
+        _checkDontJavadocIfMlBox =
+            new JCheckBox("Dont addd if ML",
+                this.settings.getBoolean(
+                    ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
+                    ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML));
+        _checkDontJavadocIfMlBox.setToolTipText(this.bundle.getString("DONT_COMMENT_JAVADOC_WHEN_ML" /* NOI18N */));
+        SwingHelper.setConstraints(
+            c, 1, 0, GridBagConstraints.REMAINDER, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        generalLayout.setConstraints(_checkDontJavadocIfMlBox, c);
+        generalPanel.add(_checkDontJavadocIfMlBox);
 
         _checkTagsCheckBox =
             new JCheckBox(
@@ -360,26 +367,32 @@ public class JavadocSettingsPage
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         generalLayout.setConstraints(_checkThrowsTagsCheckBox, c);
         generalPanel.add(_checkThrowsTagsCheckBox);
+        
 
         _parseCheckBox.addActionListener(
             new ActionListener()
             {
                 public void actionPerformed(ActionEvent ev)
                 {
-                    if (_parseCheckBox.isSelected())
-                    {
-                        _checkTagsCheckBox.setEnabled(true);
-                        _checkThrowsTagsCheckBox.setEnabled(true);
-                        _singleLineFieldCommentsCheckBox.setEnabled(true);
-                    }
-                    else
-                    {
-                        _checkTagsCheckBox.setEnabled(false);
-                        _checkThrowsTagsCheckBox.setEnabled(false);
-                        _singleLineFieldCommentsCheckBox.setEnabled(false);
-                    }
+                    _parseDescriptionCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _checkTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _checkThrowsTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+                    _singleLineFieldCommentsCheckBox.setEnabled(_parseCheckBox.isSelected());
                 }
             });
+
+        _parseDescriptionCheckBox =
+            new JCheckBox(
+                "Parse javadoc description",
+                this.settings.getBoolean(
+                    ConventionKeys.COMMENT_JAVADOC_PARSE,
+                    ConventionDefaults.COMMENT_JAVADOC_PARSE));
+        _parseDescriptionCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 0, 1, 1, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        generalLayout.setConstraints(_checkTagsCheckBox, c);
+        generalPanel.add(_parseDescriptionCheckBox);
 
         _tableModel = new DataModel();
 
@@ -445,16 +458,18 @@ public class JavadocSettingsPage
         _singleLineFieldCommentsCheckBox.addActionListener(this.trigger);
         miscPanel.add(_singleLineFieldCommentsCheckBox);
 
-        if (_parseCheckBox.isSelected())
-        {
-            _checkTagsCheckBox.setEnabled(true);
-            _singleLineFieldCommentsCheckBox.setEnabled(true);
-        }
-        else
-        {
-            _checkTagsCheckBox.setEnabled(false);
-            _singleLineFieldCommentsCheckBox.setEnabled(false);
-        }
+        _braceCommentsCheckBox =
+            new JCheckBox(
+                "Add comments after closing braces",
+                this.settings.getBoolean(
+                    ConventionKeys.BRACE_ADD_COMMENT,
+                    ConventionDefaults.BRACE_ADD_COMMENT));
+        _braceCommentsCheckBox.addActionListener(this.trigger);
+        miscPanel.add(_braceCommentsCheckBox);
+        
+         _checkTagsCheckBox.setEnabled(_parseCheckBox.isSelected());
+         _singleLineFieldCommentsCheckBox.setEnabled(_parseCheckBox.isSelected());
+         _parseDescriptionCheckBox.setEnabled(_parseCheckBox.isSelected());
 
         GridBagLayout layout = new GridBagLayout();
         JPanel panel = new JPanel();
@@ -778,20 +793,20 @@ public class JavadocSettingsPage
      *
      * @param table table to initialize
      */
-    private void initializeColumnSizes(JTable table)
-    {
-        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
-
-        for (int i = 1; i < 5; i++)
-        {
-            TableColumn column = table.getColumnModel().getColumn(i);
-            Component comp =
-                headerRenderer.getTableCellRendererComponent(
-                    null, column.getHeaderValue(), false, false, 0, 0);
-            int headerWidth = comp.getPreferredSize().width;
-            column.setPreferredWidth(headerWidth);
-        }
-    }
+// TODO    private void initializeColumnSizes(JTable table)
+//    {
+//        TableCellRenderer headerRenderer = table.getTableHeader().getDefaultRenderer();
+//
+//        for (int i = 1; i < 5; i++)
+//        {
+//            TableColumn column = table.getColumnModel().getColumn(i);
+//            Component comp =
+//                headerRenderer.getTableCellRendererComponent(
+//                    null, column.getHeaderValue(), false, false, 0, 0);
+//            int headerWidth = comp.getPreferredSize().width;
+//            column.setPreferredWidth(headerWidth);
+//        }
+//    }
 
     //~ Inner Interfaces -----------------------------------------------------------------
 
@@ -926,9 +941,9 @@ public class JavadocSettingsPage
         {
             String topText = this.topTextArea.getText();
 
-            if (!_matcher.matches(topText, _topTextPattern))
+            if (!_topTextPattern.matcher(topText).matches())
             {
-                Object[] args = { _topTextPattern.getPattern() };
+                Object[] args = { _topTextPattern.pattern() };
 
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
@@ -943,9 +958,9 @@ public class JavadocSettingsPage
 
             String parameterText = this.parameterTextArea.getText();
 
-            if (!_matcher.matches(parameterText, _paramPattern))
+            if (!_paramPattern.matcher(parameterText).matches())
             {
-                Object[] args = { _paramPattern.getPattern() };
+                Object[] args = { _paramPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -959,9 +974,9 @@ public class JavadocSettingsPage
 
             String exceptionText = this.exceptionTextArea.getText();
 
-            if (!_matcher.matches(exceptionText, _exceptionPattern))
+            if (!_exceptionPattern.matcher(exceptionText).matches())
             {
-                Object[] args = { _exceptionPattern.getPattern() };
+                Object[] args = { _exceptionPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -975,9 +990,9 @@ public class JavadocSettingsPage
 
             String bottomText = this.bottomTextArea.getText();
 
-            if (!_matcher.matches(bottomText, _bottomTextPattern))
+            if (!_bottomTextPattern.matcher(bottomText).matches())
             {
-                Object[] args = { _bottomTextPattern.getPattern() };
+                Object[] args = { _bottomTextPattern.pattern() };
 
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
@@ -1129,10 +1144,7 @@ public class JavadocSettingsPage
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+            return true;
         }
 
 
@@ -1207,9 +1219,9 @@ public class JavadocSettingsPage
             DefaultListModel model = (DefaultListModel) ev.getSource();
             String name = (String) model.get(ev.getIndex0());
 
-            if (!_matcher.matches(name, _tagNamePattern))
+            if (!_tagNamePattern.matcher(name).matches())
             {
-                Object[] args = { name, _tagNamePattern.getPattern() };
+                Object[] args = { name, _tagNamePattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(JavadocSettingsPage.this),
                     MessageFormat.format(
@@ -1297,9 +1309,9 @@ public class JavadocSettingsPage
 
             String returnText = this.returnTextArea.getText();
 
-            if (!_matcher.matches(returnText, _returnPattern))
+            if (!_returnPattern.matcher(returnText).matches())
             {
-                Object[] args = { _returnPattern.getPattern() };
+                Object[] args = { _returnPattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(this),
                     MessageFormat.format(
@@ -1409,9 +1421,9 @@ public class JavadocSettingsPage
         {
             String text = this.textArea.getText();
 
-            if (!_matcher.matches(text, _templatePattern))
+            if (!_templatePattern.matcher(text).matches())
             {
-                Object[] args = { _templatePattern.getPattern() };
+                Object[] args = { _templatePattern.pattern() };
                 JOptionPane.showMessageDialog(
                     SwingUtilities.windowForComponent(SimpleTemplatePanel.this),
                     MessageFormat.format(
@@ -1469,15 +1481,15 @@ public class JavadocSettingsPage
         /**
          * Removes the current panel from the container and add the given panel.
          *
-         * @param name name of the panel.
+         * @param newName name of the panel.
          */
-        public void switchPanels(String name)
+        public void switchPanels(String newName)
         {
             remove(0);
 
-            JPanel panel = getTemplatePanel(name);
+            JPanel panel = getTemplatePanel(newName);
             add(panel, BorderLayout.CENTER);
-            this.name = name;
+            this.name = newName;
         }
 
 
@@ -1505,72 +1517,72 @@ public class JavadocSettingsPage
         /**
          * Returns the template panel for the given name.
          *
-         * @param name name of the template panel.
+         * @param newName name of the template panel.
          *
          * @return the template panel for the given name.
          *
          * @throws IllegalArgumentException DOCUMENT ME!
          */
-        private JPanel getTemplatePanel(String name)
+        private JPanel getTemplatePanel(String newName)
         {
-            if (this.panels.containsKey(name))
+            if (this.panels.containsKey(newName))
             {
-                return (JPanel) this.panels.get(name);
+                return (JPanel) this.panels.get(newName);
             }
 
-            if (TPL_CLASS.equals(name))
+            if (TPL_CLASS.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_INTERFACE.equals(name))
+            else if (TPL_INTERFACE.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_CTOR.equals(name))
+            else if (TPL_CTOR.equals(newName))
             {
                 CtorTemplatePanel panel = new CtorTemplatePanel();
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_METHOD.equals(name))
+            else if (TPL_METHOD.equals(newName))
             {
                 MethodTemplatePanel panel = new MethodTemplatePanel();
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
-            else if (TPL_FIELD.equals(name))
+            else if (TPL_FIELD.equals(newName))
             {
                 SimpleTemplatePanel panel =
                     new SimpleTemplatePanel(
-                        name,
+                        newName,
                         JavadocSettingsPage.this.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE));
-                this.panels.put(name, panel);
+                this.panels.put(newName, panel);
 
                 return panel;
             }
 
             // should never happen
-            throw new IllegalArgumentException("unknown template name -- " + name);
+            throw new IllegalArgumentException("unknown template name -- " + newName);
         }
     }
 }

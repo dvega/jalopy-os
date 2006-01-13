@@ -29,7 +29,7 @@ public abstract class AbstractSettingsPage
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    /** DOCUMENT ME! */
+    /** The Deliminator */
     protected static final String DELIMETER = "|" /* NOI18N */;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -50,7 +50,7 @@ public abstract class AbstractSettingsPage
      * Our container. May be <code>null</code> if the code convention pages are directly
      * embedded into a Java appplication.
      */
-    private SettingsContainer _container;
+    SettingsContainer _container;
 
     /** The category of the page. */
     private String _category;
@@ -224,7 +224,7 @@ public abstract class AbstractSettingsPage
      *
      * @since 1.0b8
      */
-    String getPreviewFileName()
+    protected String getPreviewFileName()
     {
         return _category;
     }

@@ -8,10 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -49,7 +48,7 @@ abstract class BlockStatementPrinter
         {
             // if no newline will be printed after labels
             if (
-                !this.settings.getBoolean(
+                !AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_LABEL,
                     ConventionDefaults.LINE_WRAP_AFTER_LABEL))
             {
@@ -70,7 +69,7 @@ abstract class BlockStatementPrinter
      * Prints the expression list starting with the given node; the left parenthesis.
      *
      * @param lparen a LPAREN node.
-     * @param insertBraces DOCUMENT ME!
+     * @param insertBraces Flag
      * @param out stream to write to.
      *
      * @return the RPAREN node of the expression list.
@@ -85,7 +84,7 @@ abstract class BlockStatementPrinter
         NodeWriter out)
       throws IOException
     {
-        PrinterFactory.create(lparen).print(lparen, out);
+        PrinterFactory.create(lparen, out).print(lparen, out);
 
         Marker marker = out.state.markers.add();
         TestNodeWriter tester = null;
@@ -102,18 +101,18 @@ abstract class BlockStatementPrinter
             out.state.parenScope.addFirst(scope);
 
             int lineLength =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_LEFT_PAREN,
                     ConventionDefaults.LINE_WRAP_AFTER_LEFT_PAREN))
             {
                 if (!out.newline)
                 {
                     tester = out.testers.get();
-                    PrinterFactory.create(expr).print(expr, tester);
+                    PrinterFactory.create(expr, out).print(expr, tester);
 
                     if ((out.column + tester.length) > lineLength)
                     {
@@ -122,7 +121,7 @@ abstract class BlockStatementPrinter
                         wrapped = true;
 
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                                 ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                         {
@@ -138,7 +137,7 @@ abstract class BlockStatementPrinter
                     wrapped = true;
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                             ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                     {
@@ -147,19 +146,19 @@ abstract class BlockStatementPrinter
                 }
 
                 tester = out.testers.get();
-                PrinterFactory.create(expr).print(expr, tester);
+                PrinterFactory.create(expr, out).print(expr, tester);
             }
 
             if (tester == null)
             {
                 tester = out.testers.get();
-                PrinterFactory.create(expr).print(expr, tester);
+                PrinterFactory.create(expr, out).print(expr, tester);
             }
 
             if (!wrapped && ((tester.length + out.column) > lineLength))
             {
                 if (
-                    this.settings.getBoolean(
+                    AbstractPrinter.settings.getBoolean(
                         ConventionKeys.LINE_WRAP_PARAMS_EXCEED,
                         ConventionDefaults.LINE_WRAP_PARAMS_EXCEED))
                 {
@@ -174,18 +173,18 @@ abstract class BlockStatementPrinter
 
         // use continuation indentation within the parentheses?
         out.continuation =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_BLOCK,
                 ConventionDefaults.INDENT_CONTINUATION_BLOCK);
 
-        PrinterFactory.create(expr).print(expr, out);
+        PrinterFactory.create(expr, out).print(expr, out);
 
         out.continuation = false;
         out.state.wrap = false;
 
         if (
             wrapped
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_RIGHT_PAREN,
                 ConventionDefaults.LINE_WRAP_BEFORE_RIGHT_PAREN))
         {
@@ -195,7 +194,7 @@ abstract class BlockStatementPrinter
             }
 
             if (
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
             {
                 printIndentation(-1, out);
@@ -212,10 +211,8 @@ abstract class BlockStatementPrinter
 
         boolean hasBraces = (body.getType() == JavaTokenTypes.SLIST);
         boolean leftBraceNewline =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.BRACE_NEWLINE_LEFT, ConventionDefaults.BRACE_NEWLINE_LEFT);
-
-        CommonHiddenStreamToken pendingComment = null;
 
         if (!hasBraces && insertBraces && !leftBraceNewline)
         {
@@ -227,9 +224,9 @@ abstract class BlockStatementPrinter
             }
         }
 
-        PrinterFactory.create(rparen).print(rparen, out);
+        PrinterFactory.create(rparen, out).print(rparen, out);
 
-        if (out.mode == out.MODE_DEFAULT)
+        if (out.mode == NodeWriter.MODE_DEFAULT)
         {
             out.state.expressionList = false;
             out.state.paramLevel--;

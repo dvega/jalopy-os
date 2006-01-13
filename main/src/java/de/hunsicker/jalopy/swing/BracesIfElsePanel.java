@@ -64,7 +64,7 @@ class BracesIfElsePanel
     //~ Methods --------------------------------------------------------------------------
 
     /**
-     * DOCUMENT ME!
+     * Empty
      */
     public void updateSettings()
     {

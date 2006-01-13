@@ -6,25 +6,13 @@
  */
 package de.hunsicker.jalopy.storage;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-
-import de.hunsicker.util.ChainingRuntimeException;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.MatchResult;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.PatternMatcherInput;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.oro.text.regex.StringSubstitution;
-import org.apache.oro.text.regex.Substitution;
-import org.apache.oro.text.regex.Util;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Provides access to global and local environment variables (key/value pairs).
@@ -46,23 +34,16 @@ public final class Environment
     private static final String DELIMETER = "|";
 
     /** The compiler to create pattern objects. */
-    private static final PatternCompiler REGEXP_COMPILER = new Perl5Compiler();
+    //private static final PatternCompiler REGEXP_COMPILER = new Perl5Compiler();
 
     /** The pattern to search for variables . */
     private static Pattern _variablesPattern;
 
     static
     {
-        try
-        {
-            _variablesPattern =
-                REGEXP_COMPILER.compile(
-                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+)\\$", Perl5Compiler.READ_ONLY_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            throw new ChainingRuntimeException(ex);
-        }
+            _variablesPattern = 
+                Pattern.compile(
+                    "\\$([a-zA-Z_][a-zA-Z0-9_.]+):?(.*?)\\$");
     }
 
     private static final Environment INSTANCE = new Environment(true);
@@ -70,7 +51,7 @@ public final class Environment
     //~ Instance variables ---------------------------------------------------------------
 
     /** The pattern matcher. */
-    private final PatternMatcher _matcher = new Perl5Matcher();
+    private final Matcher _matcher = _variablesPattern.matcher("");
 
     /** The current environment variables. */
     private Map _variables; // Map of <String:String>
@@ -80,7 +61,7 @@ public final class Environment
     /**
      * Creates a new Environment object.
      *
-     * @param initial DOCUMENT ME!
+     * @param initial True if initial
      */
     private Environment(boolean initial)
     {
@@ -151,22 +132,32 @@ public final class Environment
      */
     public String interpolate(String str)
     {
-        PatternMatcherInput input = new PatternMatcherInput(str);
         Map keys = new HashMap(10);
+        
+        _matcher.reset(str);
 
         // map all found variable expressions with their environment variable
-        while (_matcher.contains(input, _variablesPattern))
+        while (_matcher.find()) 
         {
-            MatchResult result = _matcher.getMatch();
-            String value = (String) _variables.get(result.group(1));
+            String result = _matcher.group(1);
+            String pattern = _matcher.group(2);
+            String value = null; 
+            Variable variable = (Variable) variableMap.get(result);
+            if (variable!=null) {
+                value = variable.format(_variables.get(result),pattern);
+            }
+            else{
+                value = (String) _variables.get(result);
+            }
+                
 
             // the value has to be set in order to be substituted
             if ((value != null) && (value.length() > 0))
             {
-                keys.put(result.group(0), value);
+                keys.put("\\$" + result + (pattern.length() == 0 ? "" : ":" + pattern)  + "\\$", value);
             }
         }
-
+        
         // and finally interpolate them
         for (Iterator i = keys.entrySet().iterator(); i.hasNext();)
         {
@@ -174,29 +165,13 @@ public final class Environment
 
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
-
-            Substitution substitution = new StringSubstitution(value);
-            Pattern pattern = null;
-
-            try
-            {
-                /**
-                 * @todo use a cache
-                 */
-                pattern = REGEXP_COMPILER.compile(Perl5Compiler.quotemeta(key));
-            }
-            catch (MalformedPatternException ex)
-            {
-                continue;
-            }
-
-            str = Util.substitute(
-                    _matcher, pattern, substitution, str, Util.SUBSTITUTE_ALL);
+            
+            str = str.replaceAll(key,value);
+            
         }
-
-        return str;
+        
+    return str;
     }
-
 
     /**
      * Sets the given variable to the given value.
@@ -209,7 +184,7 @@ public final class Environment
      */
     public void set(
         String variable,
-        String value)
+        Object value)
     {
         _variables.put(variable, value);
     }
@@ -238,13 +213,31 @@ public final class Environment
     {
         _variables.remove(variable);
     }
+    
+    private static final Map variableMap = getVariableMap();
+    
+    private static Map getVariableMap() {
+        Map vMap = new HashMap(10);
+        vMap.put(Variable.FILE.getName(), Variable.FILE);
+        vMap.put(Variable.FILE_NAME.getName(), Variable.FILE_NAME);
+        vMap.put(Variable.FILE_FORMAT.getName(), Variable.FILE_FORMAT);
+        vMap.put(Variable.TAB_SIZE.getName(), Variable.TAB_SIZE);
+        vMap.put(Variable.CONVENTION.getName(), Variable.CONVENTION);
+        vMap.put(Variable.PACKAGE.getName(), Variable.PACKAGE);
+        vMap.put(Variable.TYPE_PARAM.getName(), Variable.TYPE_PARAM);
+        vMap.put(Variable.TYPE_EXCEPTION.getName(), Variable.TYPE_EXCEPTION);
+        vMap.put(Variable.TYPE_OBJECT.getName(), Variable.TYPE_OBJECT);
+        vMap.put(Variable.CLASS_NAME.getName(), Variable.CLASS_NAME);
+        vMap.put(Variable.DATE.getName(), Variable.DATE);
+        return vMap;
+    }
 
     //~ Inner Classes --------------------------------------------------------------------
 
     /**
      * Represents a local environment variable.
      */
-    public static final class Variable
+    public static class Variable
     {
         /** Defines the variable &quot;file&quot;. */
         public static final Variable FILE = new Variable("file");
@@ -272,6 +265,20 @@ public final class Environment
 
         /** Defines the variable &quot;objectType&quot;. */
         public static final Variable TYPE_OBJECT = new Variable("objectType");
+        
+        /** The date variable you can specify a pattern following the date like $date:dd/mmmm$ as long as it follows the simple date format rules */
+        public static final Variable DATE = new Variable("date"){
+        public String format(Object value, String pattern) {
+            if (pattern == null || pattern.trim().length()==0) {
+                return new SimpleDateFormat().format(value);
+            }
+            return new SimpleDateFormat(pattern).format(value);
+        }
+            
+        };
+        
+        /** The class name variable */
+        public static final Variable CLASS_NAME = new Variable("className");
         String name;
         int hashCode;
 
@@ -306,6 +313,10 @@ public final class Environment
 
             return false;
         }
+        
+        public String format(Object value, String pattern) {
+            return value.toString();
+        }
 
 
         public int hashCode()
@@ -326,4 +337,5 @@ public final class Environment
             return this.name;
         }
     }
+
 }

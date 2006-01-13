@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -76,10 +76,10 @@ final class LabelStatementPrinter
       throws IOException
     {
         boolean indentLabel =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_LABEL, ConventionDefaults.INDENT_LABEL);
         boolean lineWrapLabel =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_LABEL,
                 ConventionDefaults.LINE_WRAP_AFTER_LABEL);
         AST identifier = node.getFirstChild();
@@ -99,7 +99,7 @@ final class LabelStatementPrinter
         {
             printCommentsBefore(node, out);
             logIssues(node, out);
-            PrinterFactory.create(identifier).print(identifier, out);
+            PrinterFactory.create(identifier, out).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
             commentAfter =
                 printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out);
@@ -112,7 +112,7 @@ final class LabelStatementPrinter
             out.setIndentLevel(0);
             printCommentsBefore(node, out);
             logIssues(node, out);
-            PrinterFactory.create(identifier).print(identifier, out);
+            PrinterFactory.create(identifier, out).print(identifier, out);
             out.print(COLON_SPACE, JavaTokenTypes.LABELED_STAT);
 
             if (!printCommentsAfter(node, NodeWriter.NEWLINE_NO, newlineAfter, out))
@@ -141,6 +141,6 @@ final class LabelStatementPrinter
             out.printNewline();
         }
 
-        PrinterFactory.create(body).print(body, out);
+        PrinterFactory.create(body, out).print(body, out);
     }
 }

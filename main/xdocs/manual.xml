@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<document>
+<body> 
+<section name="Overview">
+<p>
+Jalopy is a source code formatter for the Sun Java programming language. It
+layouts any valid Java source code according to some widely configurable rules;
+to meet a certain coding style without putting a formatting burden on individual
+developers.
+</p>
+</section>
+<section name="TRIEMAX Jalopy">
+TRIEMAX Software announced a new release of the commercial
+successor which provides enhanced functionality and improved stability.
+<a href="http://www.triemax.com/" target="_top" style="font-size: 90%;">Learn more »»</a>
+</section>
+
+<section name="Jalopy's functionality">
+
+<p>
+With Jalopy you will be able to transform any foreign coding style to your
+own liking, without any browbeating or bloodletting.
+</p>
+<p>
+Jalopy's functionality covers:
+</p>
+<div class="blockquote"><blockquote class="blockquote"><table class="simplelist" summary="Simple list" border="0"><tbody><tr><td>
+- <a href="http://jalopy.sourceforge.net/braces.html" target="_top">Brace style transformation</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/whitespace.html" target="_top">Fine-grained white space settings</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/indentation.html" target="_top">Indentation</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/wrapping.html" target="_top">Intelligent line wrapping</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/separation.html" target="_top">Code separation</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/javadoc.html#javadoc-generation" target="_top">Javadoc auto-generation</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/header.html" target="_top">Header/Footer templates</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/plugin-console.html" target="_top">Powerful command-line interface</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/api/index.html" target="_top">Client API</a>
+</td></tr><tr><td>
+- <a href="http://jalopy.sourceforge.net/plugins.html" target="_top">Several Plug-ins</a>
+</td></tr></tbody></table></blockquote></div>
+<p>
+Jalopy is
+"<span class="bold"><b><a href="http://opensource.org/docs/certification_mark.php" target="_top">OSI Certified Open Source Software</a></b></span>",
+released under a <a href="http://jalopy.sourceforge.net/license-bsd.html" target="_top">BSD License</a>. Please
+refer to <a href="http://jalopy.sourceforge.net/dependencies.html" target="_top">Appendix A</a> for the license terms of the
+accompanying 3rd party libraries and the different <a href="http://jalopy.sourceforge.net/part-plugins.html" target="_top">Plug-in chapters</a>
+for the license terms of the provided Plug-ins.
+</p>
+</section>
+</body>
+</document>

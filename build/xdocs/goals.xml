@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+  <properties>
+    <title>Jalopy Goals</title>
+    <author />
+  </properties>
+  <body>
+    <section name="Primary Goals">
+      <div id="documentContent">
+        <table>
+          <tr>
+            <th>Goal</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Update jalopy to be compatiable with Java 5</td>
+            <td>Java 5 adds new grammer enhancements which causes
+            jalopy to fail. The hope is that this new version will
+            be entirly compatiable with java 5.</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+    <section name="Secondary Goals">
+      <div id="documentContent">
+        <p>The following are a series of secondary goals in no
+        particular order</p>
+        <table>
+          <tr>
+            <th>Goal</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Change build process to Maven</td>
+            <td>Maven provides an excellent way to control
+            artifacts which Jalopy depends on, while maintaining
+            most of the ant capabilities. The following projects
+            can now be built using maven. Jalopy-core,
+            Jalopy-Eclipse, Jalopy-Console, Jalopy-Ant</td>
+          </tr>
+          <tr>
+            <td>Modify jalopy printer classes to perform a natural
+            inheritence order.</td>
+            <td>The jalopy printers should be more uniform. There
+            are a lot of similarites between various code
+            renderings like the method, enum, enumdef and
+            annotation printer. It would be nice if all these
+            meshed a little better together</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+  </body>
+</document>

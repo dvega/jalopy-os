@@ -6,6 +6,7 @@
  */
 package de.hunsicker.jalopy.language;
 
+
 /**
  * A class that wraps some application specific annotation data. It can be used to track
  * the position information for things like debugger breakpoints, erroneous lines, and

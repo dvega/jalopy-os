@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:j="jelly:core" 
+         xmlns:ant="jelly:ant"
+         xmlns:antlr="jelly:antlr"
+         xmlns:util="jelly:util">
+
+ <!-- Goals to ensure the antlr code is compiled -->
+  <preGoal name="java:compile">
+  <ant:copy file="${basedir}/src/java/de/hunsicker/jalopy/language/antlr/CommonTokenTypes.txt" 
+            tofile="${maven.antlr.target.dir}/de/hunsicker/jalopy/language/antlr/CommonTokenTypes.txt"/>
+<!--            
+  <ant:move todir="${maven.antlr.src.dir}" >
+    <ant:fileset dir="${maven.antlr.src.dir}" >
+      <ant:exclude name="*.orig"/>
+      <ant:include name="*.java"/>
+    </ant:fileset>
+    <ant:mapper type="glob" from="*" to="*.orig"/>
+  </ant:move>
+  -->
+  </preGoal>
+
+ <!-- Goals to ensure the renamed files get renamed back -->
+  <postGoal name="java:compile">
+  <!--
+  <ant:move todir="${maven.antlr.src.dir}" >
+    <ant:fileset dir="${maven.antlr.src.dir}" >
+      <ant:include name="*.orig"/>
+    </ant:fileset>
+    <ant:mapper type="regexp" from="^(.*)\.orig$$" to="\1"/>
+  </ant:move>
+  -->
+  </postGoal>
+
+  <postGoal name="prejar:jar">
+    <echo message="Updateing resource ${date}" />
+    <replaceregexp file="${maven.build.dest}/de/hunsicker/jalopy/swing/resources/version.properties" match="@@@JALOPY_VERSION@@@" 
+                   replace="${jalopy.currentVersion}" byline="true"/>
+    <replaceregexp file="${maven.build.dest}/de/hunsicker/jalopy/swing/resources/version.properties" match="@@@BUILD_DATE@@@" 
+                   replace="${date}" byline="true"/>
+  </postGoal>
+  <postGoal name="clean">
+    <echo message="Removing ${maven.antlr.target.dir}" />
+    <ant:delete> 
+      <ant:fileset dir="${maven.antlr.target.dir}" >
+        <ant:include name="**/*.java"/>
+      </ant:fileset>
+    </ant:delete> 
+  </postGoal>
+
+  <postGoal name="dist:prepare-bin-filesystem">
+    <attainGoal name="jar:install"/>
+  </postGoal>
+</project>

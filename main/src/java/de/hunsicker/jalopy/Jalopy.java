@@ -12,19 +12,27 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -34,9 +42,13 @@ import de.hunsicker.io.FileBackup;
 import de.hunsicker.io.FileFormat;
 import de.hunsicker.io.IoHelper;
 import de.hunsicker.jalopy.language.CodeInspector;
-import de.hunsicker.jalopy.language.JavaNode;
+import de.hunsicker.jalopy.language.CompositeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.JavaRecognizer;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.Node;
+import de.hunsicker.jalopy.language.NodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.printer.NodeWriter;
 import de.hunsicker.jalopy.printer.PrinterFactory;
 import de.hunsicker.jalopy.storage.Convention;
@@ -48,6 +60,7 @@ import de.hunsicker.util.Version;
 
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
+import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
 
@@ -225,7 +238,7 @@ public final class Jalopy
     private final SpyAppender _spy;
 
     /** Run status. */
-    private State _state = State.UNDEFINED;
+    State _state = State.UNDEFINED;
 
     /**
      * The encoding to use for formatting. If <code>null</code> the platform's default
@@ -277,6 +290,8 @@ public final class Jalopy
 
     /** Holds the number of milliseconds used for transforming. */
     private long _timeTransforming;
+    
+    private static CompositeFactory _factory=null;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -287,7 +302,10 @@ public final class Jalopy
     {
         initConventionDefaults();
         _issues = new HashMap(30);
-        _recognizer = new JavaRecognizer();
+        if (_factory == null) {
+            _factory = new CompositeFactory();
+        }
+        _recognizer = new JavaRecognizer(_factory);
         _inspector = new CodeInspector(_issues);
         _spy = new SpyAppender();
         Loggers.ALL.addAppender(_spy);
@@ -306,7 +324,7 @@ public final class Jalopy
     public static void setConvention(File file)
       throws IOException
     {
-        Convention.getInstance().importSettings(file);
+        Convention.importSettings(file);
     }
 
 
@@ -320,7 +338,7 @@ public final class Jalopy
     public static void setConvention(URL url)
       throws IOException
     {
-        Convention.getInstance().importSettings(url);
+        Convention.importSettings(url);
     }
 
 
@@ -909,7 +927,7 @@ public final class Jalopy
     public void setInput(File input)
       throws FileNotFoundException
     {
-        _inputReader = new BufferedReader(new FileReader(input));
+        _inputReader = getBufferedReader(input, _encoding);
         _inputFile = input.getAbsoluteFile();
         _inputFileChecksum = null;
 
@@ -996,7 +1014,12 @@ public final class Jalopy
      */
     public boolean format()
     {
+        return format(true);
+    }    
+    public boolean format(boolean runCleanup)
+    {
         JavaNode tree = null;
+        boolean formatSuccess = false;
 
         if (!hasInput())
         {
@@ -1026,47 +1049,34 @@ public final class Jalopy
 
                     return false;
                 }
-                else
-                {
+                    
                     /**
                      * @todo we need to reset the line info for the recognizer!!!
                      */
-                }
             }
             else
             {
                 tree = _tree;
             }
+            formatSuccess = format(tree, _packageName, _inputFileFormat, false);
         }
         catch (Throwable ex)
         {
             _state = State.ERROR;
+            ex.printStackTrace();
             _args[0] = _inputFile;
             _args[1] =
                 (ex.getMessage() == null) ? ex.getClass().getName()
                                           : ex.getMessage();
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
+        finally {
+            _factory.clear();
+        }
+        
 
-        return format(tree, _packageName, _inputFileFormat, false);
+        return formatSuccess;
     }
-
-
-    /*
-     * Formats the given Java AST and writes the result to the specified
-     * target.
-     *
-     * @param tree root node of the JavaAST that is to be formatted.
-     *
-     * @since 1.0b8
-     * @see #setOutput(File)
-     * @see #parse
-     * @see #inspect
-     *
-    public void format(JavaNode tree)
-    {
-        format(tree, true);
-    }*/
 
     /**
      * Inspects the (via {@link #setInput(File)}) specified input source for code
@@ -1199,7 +1209,7 @@ public final class Jalopy
                 case FILE_WRITER :
                     _args[0] = _inputFile;
                     Loggers.IO.l7dlog(Level.INFO, "FILE_PARSE" /* NOI18N */, _args, null);
-                    _recognizer.parse(_inputFile);
+                    _recognizer.parse(_inputReader, _inputFile.getAbsolutePath());
 
                     break;
 
@@ -1267,6 +1277,7 @@ public final class Jalopy
 
             return tree;
         }
+        
         finally
         {
             cleanupRecognizer();
@@ -1384,7 +1395,6 @@ public final class Jalopy
                 // now set the encoding to use by Jalopy
                 System.setProperty("file.encoding" /* NOI18N */, _encoding);
             }
-
             if (_inspect)
             {
                 inspect(tree);
@@ -1392,6 +1402,29 @@ public final class Jalopy
 
             // it seems ok to print the AST
             print(tree, packageName, format);
+
+            if (_inspect)
+            {
+                Object issues[] = new Object[6];
+                for(Iterator i = _issues.entrySet().iterator();i.hasNext();) {
+                    Entry entry = (Entry) i.next();
+                    JavaNode node = (JavaNode) entry.getKey();
+                    while (node!=null && node.getParent()!=null && node.newLine==0) {
+                        node = node.getParent();
+                    }
+                    Object message = entry.getValue();
+            issues[0] = _inputFile.getAbsolutePath();
+            issues[1] = new Integer(node.newLine);
+            issues[2] = new Integer(node.newColumn);
+            issues[3] = message.toString();
+            issues[4] = new Integer(node.getStartLine());
+            issues[5] = node;
+            Loggers.PRINTER.l7dlog(
+                Level.WARN, "CODE_INSPECTOR", issues, null);
+                }
+                
+                
+            }
 
             if (_state == State.ERROR)
             {
@@ -1448,6 +1481,7 @@ public final class Jalopy
         }
         catch (Throwable ex)
         {
+            ex.printStackTrace();
             _state = State.ERROR;
             _args[0] = _inputFile;
             _args[1] =
@@ -1508,6 +1542,8 @@ public final class Jalopy
      *
      * @since 1.0b8
      */
+    /*
+    // TODO Appears unused
     private boolean hasOutput()
     {
         switch (_mode)
@@ -1530,7 +1566,7 @@ public final class Jalopy
         return false;
     }
 
-
+*/
     /**
      * Extracts the version information out of the package manifest.
      *
@@ -1613,13 +1649,10 @@ public final class Jalopy
             {
                 throw new IOException("could not create target directory -- " + buf);
             }
-            else
-            {
                 if (Loggers.IO.isDebugEnabled())
                 {
                     Loggers.IO.debug("directory " + test + " created");
                 }
-            }
         }
 
         buf.append(File.separator);
@@ -1729,7 +1762,7 @@ public final class Jalopy
 
             try
             {
-                in = new BufferedReader(new FileReader(_inputFile));
+                in = getBufferedReader(_inputFile, _encoding);
 
                 String line = in.readLine().trim();
                 in.close();
@@ -1824,6 +1857,12 @@ public final class Jalopy
         environment.set(Environment.Variable.FILE_FORMAT.getName(), fileFormat);
         environment.set(
             Environment.Variable.TAB_SIZE.getName(), String.valueOf(indentSize));
+        DateFormat df = DateFormat.getDateTimeInstance();
+        environment.set(Environment.Variable.DATE.getName(),new Date()); 
+        String className = file.getName();
+        className = className.substring(0, className.length() - 5);
+        environment.set(de.hunsicker.jalopy.storage.Environment.Variable.CLASS_NAME.getName(), className);
+        
     }
 
 
@@ -1845,10 +1884,7 @@ public final class Jalopy
             {
                 return true;
             }
-            else
-            {
                 return file.canWrite();
-            }
         }
 
         return false;
@@ -2154,7 +2190,7 @@ public final class Jalopy
 
                 if (!isChecksum())
                 {
-                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    _outputWriter = getBufferedWriter(_outputFile, _encoding);
                 }
 
                 break;
@@ -2186,7 +2222,7 @@ public final class Jalopy
                     return;
                 }
 
-                _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                _outputWriter = getBufferedWriter(_outputFile, _encoding);
 
             // fall through
             case STRING_STRING :
@@ -2201,6 +2237,7 @@ public final class Jalopy
                 throw new IllegalStateException(
                     "both input source and output target has to be specified");
         }
+        
 
         _now = System.currentTimeMillis();
 
@@ -2221,7 +2258,7 @@ public final class Jalopy
 
         NodeWriter out =
             new NodeWriter(
-                outputWriter, _inputFile.getAbsolutePath(), _issues,
+                outputWriter,_factory, _inputFile.getAbsolutePath(), _issues,
                 getLineSeparator(_outputFileFormat, format), format.toString());
 
         out.setTracking(_recognizer.hasAnnotations() || _recognizer.hasPosition());
@@ -2245,7 +2282,7 @@ public final class Jalopy
                                            : _inputFile) + ":0:0:print");
 
                 start = System.currentTimeMillis();
-                PrinterFactory.create(tree).print(tree, out);
+                PrinterFactory.create(tree, out).print(tree, out);
 
                 if (!isChecksum())
                 {
@@ -2259,7 +2296,7 @@ public final class Jalopy
             }
             else
             {
-                PrinterFactory.create(tree).print(tree, out);
+                PrinterFactory.create(tree, out).print(tree, out);
             }
 
             if (isChecksum())
@@ -2278,7 +2315,8 @@ public final class Jalopy
                         _backupFile = createBackup(packageName);
                     }
 
-                    _outputWriter = new BufferedWriter(new FileWriter(_outputFile));
+                    _outputWriter = getBufferedWriter(_outputFile, _encoding);
+
                     checksumWriter.writeTo(_outputWriter);
                 }
                 else
@@ -2317,6 +2355,64 @@ public final class Jalopy
                 }
             }
         }
+    }
+
+
+    /**
+     * Return a buffered reader from <code>file</code> using <code>encoding</code>. If 
+     * the encoding is <code>null</code>, then the default encoding will be used.
+     *
+     * @param file input file
+     * @param encoding file character encoding
+     * @return a buffered reader 
+     */
+    private static BufferedReader getBufferedReader(File file, String encoding)
+      throws FileNotFoundException
+    {
+        BufferedReader reader;
+
+        try 
+        {
+            if (encoding != null) 
+            {
+                reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), encoding));
+            }
+            else 
+            {
+                reader = new BufferedReader(new FileReader(file));
+            }
+        }
+        catch (UnsupportedEncodingException e) {
+            throw new FileNotFoundException("Unsupported encoding " + encoding);
+        }
+        
+        return reader;
+    }
+
+
+    /**
+     * Return a buffered writer to <code>file</code> using <code>encoding</code>. If 
+     * the encoding is <code>null</code>, then the default encoding will be used.
+     *
+     * @param file output file
+     * @param encoding file character encoding
+     * @return a buffered writer 
+     */
+    private static BufferedWriter getBufferedWriter(File file, String encoding)
+      throws IOException
+    {
+        BufferedWriter writer;
+
+        if (encoding != null) 
+        {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), encoding));
+        }
+        else 
+        {
+            writer = new BufferedWriter(new FileWriter(file));
+        }
+        
+        return writer;
     }
 
 
@@ -2444,7 +2540,7 @@ public final class Jalopy
         {
             switch (ev.getLevel().toInt())
             {
-                case Level.WARN_INT :
+                case Priority.WARN_INT :
 
                     if (_state != State.ERROR)
                     {
@@ -2453,8 +2549,8 @@ public final class Jalopy
 
                     break;
 
-                case Level.ERROR_INT :
-                case Level.FATAL_INT :
+                case Priority.ERROR_INT :
+                case Priority.FATAL_INT :
                     _state = State.ERROR;
 
                     break;
@@ -2485,3 +2581,4 @@ public final class Jalopy
         }
     }
 }
+

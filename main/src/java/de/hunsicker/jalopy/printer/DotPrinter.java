@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -68,10 +68,10 @@ final class DotPrinter
              * @todo add switch to disable wrapping along dots alltogether
              */
             boolean wrapLines =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP);
             boolean forceWrappingForChainedCalls =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                     ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL);
 
@@ -94,7 +94,7 @@ final class DotPrinter
      * @param call the parent of the DOT node, a METHOD_CALL node.
      * @param lastCall the last METHOD_CALL node of the chain (but the first METHOD_CALL
      *        code of the AST tree!).
-     * @param testers DOCUMENT ME!
+     * @param testers The testers
      *
      * @return the length of the chained method call.
      *
@@ -103,6 +103,7 @@ final class DotPrinter
      * @since 1.0b8
      */
     private int getLengthOfChainedCall(
+                                       NodeWriter out,
         AST         dot,
         JavaNode    call,
         AST         lastCall,
@@ -110,16 +111,17 @@ final class DotPrinter
       throws IOException
     {
         TestNodeWriter tester = testers.get();
+        tester.reset(out,false);
 
         if (lastCall != call)
         {
             AST elist = dot.getNextSibling();
-            PrinterFactory.create(elist).print(elist, tester);
+            PrinterFactory.create(elist, tester).print(elist, tester);
         }
         else
         {
             AST elist = lastCall.getFirstChild().getNextSibling();
-            PrinterFactory.create(elist).print(elist, tester);
+            PrinterFactory.create(elist, tester).print(elist, tester);
         }
 
         AST child = dot.getFirstChild();
@@ -129,19 +131,22 @@ final class DotPrinter
             case JavaTokenTypes.METHOD_CALL :
 
                 AST next = child.getNextSibling();
-                PrinterFactory.create(next).print(next, tester);
+                PrinterFactory.create(next, tester).print(next, tester);
 
                 break;
 
             default : // means the last node in the AST (but the first call in
                       // the chain)
-                PrinterFactory.create(child).print(child, tester);
+                PrinterFactory.create(child, tester).print(child, tester);
 
                 break;
         }
 
         // add +1 for the dot
-        int result = tester.length + 1;
+        int result = tester.maxColumn + 1;
+        if (tester.line>1) {
+            result = -1;
+        }
 
         testers.release(tester);
 
@@ -166,17 +171,17 @@ final class DotPrinter
         NodeWriter out)
       throws IOException
     {
-        ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();
 
         boolean continuationIndent =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR);
 
         // was a chained call detected in the current scope?
         // (the detection happens in MethodCallPrinter.java)
-        if (scope.chainCall != null)
+        if (out.state.parenScope.size()>0 &&  ((ParenthesesScope) out.state.parenScope.getFirst()).chainCall != null)
         {
+            ParenthesesScope scope = (ParenthesesScope) out.state.parenScope.getFirst();
             JavaNode parent = ((JavaNode) node).getParent();
 
             switch (parent.getType())
@@ -185,7 +190,7 @@ final class DotPrinter
                 case JavaTokenTypes.METHOD_CALL :
 
                     boolean align =
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.ALIGN_METHOD_CALL_CHAINS,
                             ConventionDefaults.ALIGN_METHOD_CALL_CHAINS);
 
@@ -193,7 +198,7 @@ final class DotPrinter
                     {
                         // force wrap after each call?
                         if (
-                            this.settings.getBoolean(
+                            AbstractPrinter.settings.getBoolean(
                                 ConventionKeys.LINE_WRAP_AFTER_CHAINED_METHOD_CALL,
                                 ConventionDefaults.LINE_WRAP_AFTER_CHAINED_METHOD_CALL))
                         {
@@ -229,7 +234,7 @@ final class DotPrinter
                         else
                         {
                             int lineLength =
-                                this.settings.getInt(
+                                AbstractPrinter.settings.getInt(
                                     ConventionKeys.LINE_LENGTH,
                                     ConventionDefaults.LINE_LENGTH);
 
@@ -252,15 +257,16 @@ final class DotPrinter
                             AST first = MethodCallPrinter.getLastMethodCall(parent);
 
                             // if this is the last node in the chain
-                            if (first == parent)
+                            if (first == parent && false)
                             {
                                 AST c = node.getFirstChild().getNextSibling();
 
                                 TestNodeWriter tester = out.testers.get();
-                                PrinterFactory.create(c).print(c, tester);
+                                tester.reset(out,false);
+                                PrinterFactory.create(c, tester).print(c, tester);
 
                                 // and it does not exceed the line length
-                                if ((out.column + tester.length) < lineLength)
+                                if (tester.maxColumn < lineLength && tester.line==1)
                                 {
                                     out.testers.release(tester);
 
@@ -272,11 +278,11 @@ final class DotPrinter
                             }
 
                             int length =
-                                getLengthOfChainedCall(node, parent, first, out.testers);
+                                getLengthOfChainedCall(out, node, parent, first, out.testers);
 
                             // if this chain element would exceed the maximal
                             // line length, perform wrapping
-                            if ((out.column + length) > lineLength)
+                            if (( length > lineLength || length<-1))
                             {
                                 if (continuationIndent)
                                 {
@@ -294,7 +300,7 @@ final class DotPrinter
             }
         }
         else if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_BEFORE_OPERATOR,
                 ConventionDefaults.LINE_WRAP_BEFORE_OPERATOR))
         {
@@ -306,7 +312,7 @@ final class DotPrinter
                 case JavaTokenTypes.METHOD_CALL : // last link of the chain (first in the tree)
 
                     int lineLength =
-                        this.settings.getInt(
+                        AbstractPrinter.settings.getInt(
                             ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH);
 
                     if ((out.column + 1) > lineLength)
@@ -328,7 +334,7 @@ final class DotPrinter
                         {
                             case JavaTokenTypes.LPAREN :
 SEEK_FORWARD: 
-                                for (AST child = n; n != null; n = n.getNextSibling())
+                                for (; n != null; n = n.getNextSibling())
                                 {
                                     switch (n.getType())
                                     {
@@ -348,12 +354,25 @@ SEEK_FORWARD:
                         }
 
                         TestNodeWriter tester = out.testers.get();
+                        tester.reset(out, false);
+                        
+                        PrinterFactory.create(n, tester).print(n, tester);
+                        /*
+                        TODO Figure out why this consumes so much memory
+                        n = node.getNextSibling();
+                        if (n!=null) {
+                            PrinterFactory.create(n, tester).print(n, tester);
+                        }
+                        */
 
-                        PrinterFactory.create(n).print(n, tester);
-
-                        if ((out.column + 1 + tester.length) > lineLength)
+                        if (tester.maxColumn > lineLength || tester.line>1)
                         {
                             out.printNewline();
+                            Marker current=out.state.markers.add(0,
+                                out.line);
+//                            ,
+//                                0,true,out
+//                                );
 
                             if (continuationIndent)
                             {
@@ -403,7 +422,7 @@ SEEK_FORWARD:
         else if (
             out.continuation
             || (!out.continuation
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_CONTINUATION_OPERATOR,
                 ConventionDefaults.INDENT_CONTINUATION_OPERATOR)))
         {

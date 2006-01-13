@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -61,7 +61,7 @@ final class IndexOperatorPrinter
         AST expr = printLeftHandSide(node, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_BEFORE_BRACKETS,
                 ConventionDefaults.SPACE_BEFORE_BRACKETS))
         {
@@ -69,17 +69,17 @@ final class IndexOperatorPrinter
         }
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_BRACKETS, ConventionDefaults.PADDING_BRACKETS))
         {
             out.print(BRACKET_LEFT_SPACE, JavaTokenTypes.LBRACK);
-            PrinterFactory.create(expr).print(expr, out);
+            PrinterFactory.create(expr, out).print(expr, out);
             out.print(SPACE_BRACKET_RIGHT, JavaTokenTypes.RBRACK);
         }
         else
         {
             out.print(BRACKET_LEFT, JavaTokenTypes.LBRACK);
-            PrinterFactory.create(expr).print(expr, out);
+            PrinterFactory.create(expr, out).print(expr, out);
             out.print(BRACKET_RIGHT, JavaTokenTypes.RBRACK);
         }
 

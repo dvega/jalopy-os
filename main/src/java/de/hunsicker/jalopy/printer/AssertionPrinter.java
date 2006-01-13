@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -60,7 +60,7 @@ final class AssertionPrinter
         out.print(ASSERT_SPACE, JavaTokenTypes.LITERAL_assert);
 
         AST condition = node.getFirstChild();
-        PrinterFactory.create(condition).print(condition, out);
+        PrinterFactory.create(condition, out).print(condition, out);
 
         AST next = condition.getNextSibling();
 
@@ -69,16 +69,16 @@ final class AssertionPrinter
             // print the message expression
             case JavaTokenTypes.EXPR :
                 out.print(SPACE_COLON_SPACE, JavaTokenTypes.COLON);
-                PrinterFactory.create(next).print(next, out);
+                PrinterFactory.create(next, out).print(next, out);
 
                 AST semi = next.getNextSibling();
-                PrinterFactory.create(semi).print(semi, out);
+                PrinterFactory.create(semi, out).print(semi, out);
 
                 break;
 
             // print the delimiting semi
             case JavaTokenTypes.SEMI :
-                PrinterFactory.create(next).print(next, out);
+                PrinterFactory.create(next, out).print(next, out);
 
                 break;
 

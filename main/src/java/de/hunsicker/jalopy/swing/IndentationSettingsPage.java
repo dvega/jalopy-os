@@ -54,8 +54,8 @@ public class IndentationSettingsPage
     private JCheckBox _indentFirstColumnCheckBox;
     private JCheckBox _indentImplementsCheckBox;
     private JCheckBox _indentLabelsCheckBox;
-    private JCheckBox _indentMethodCallCheckBox;
-    private JCheckBox _indentParametersCheckBox;
+//TODO    private JCheckBox _indentMethodCallCheckBox;
+//TODO    private JCheckBox _indentParametersCheckBox;
     private JCheckBox _indentThrowsCheckBox;
     private JCheckBox _indentUsingLeadingTabsCheckBox;
     private JCheckBox _indentUsingTabsCheckBox;

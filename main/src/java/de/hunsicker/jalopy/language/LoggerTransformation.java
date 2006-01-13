@@ -9,8 +9,12 @@ package de.hunsicker.jalopy.language;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hunsicker.antlr.ASTFactory;
-import de.hunsicker.antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
+import antlr.ASTFactory;
+import antlr.collections.AST;
 
 
 /**
@@ -36,12 +40,15 @@ final class LoggerTransformation
     private static final String LEVEL_DEBUG = "Level.DEBUG";
     private static final String LOCALIZED_LOG = "l7dlog";
     private static final String PRIORITY_DEBUG = "Priority.DEBUG";
-    private static final ASTFactory AST_FACTORY = new JavaNodeFactory();
 
     //~ Instance variables ---------------------------------------------------------------
 
     private List _calls = new ArrayList(50); // List of <JavaNode>
+    private JavaNodeFactory _factory;
 
+    public LoggerTransformation(JavaNodeFactory factory) {
+        _factory = factory;
+    }
     //~ Methods --------------------------------------------------------------------------
 
     /**
@@ -250,27 +257,27 @@ final class LoggerTransformation
      */
     private JavaNode createConditional(AST name)
     {
-        AST qualifiedName = AST_FACTORY.create(JavaTokenTypes.DOT);
-        qualifiedName.addChild(AST_FACTORY.dupTree(name));
+        AST qualifiedName = _factory.create(JavaTokenTypes.DOT);
+        qualifiedName.addChild(_factory.dupTree(name));
 
         /**
          * @todo make name configurable
          */
-        AST methodName = AST_FACTORY.create(JavaTokenTypes.IDENT, "isDebugEnabled");
+        AST methodName = _factory.create(JavaTokenTypes.IDENT, "isDebugEnabled");
         qualifiedName.addChild(methodName);
 
-        AST methodCall = AST_FACTORY.create(JavaTokenTypes.METHOD_CALL);
+        AST methodCall = _factory.create(JavaTokenTypes.METHOD_CALL);
         methodCall.addChild(qualifiedName);
-        methodCall.addChild(AST_FACTORY.create(JavaTokenTypes.ELIST));
-        methodCall.addChild(AST_FACTORY.create(JavaTokenTypes.RPAREN));
+        methodCall.addChild(_factory.create(JavaTokenTypes.ELIST));
+        methodCall.addChild(_factory.create(JavaTokenTypes.RPAREN));
 
-        AST expr = AST_FACTORY.create(JavaTokenTypes.EXPR);
+        AST expr = _factory.create(JavaTokenTypes.EXPR);
         expr.addChild(methodCall);
 
-        AST ifNode = AST_FACTORY.create(JavaTokenTypes.LITERAL_if);
-        ifNode.addChild(AST_FACTORY.create(JavaTokenTypes.LPAREN));
+        AST ifNode = _factory.create(JavaTokenTypes.LITERAL_if);
+        ifNode.addChild(_factory.create(JavaTokenTypes.LPAREN));
         ifNode.addChild(expr);
-        ifNode.addChild(AST_FACTORY.create(JavaTokenTypes.RPAREN));
+        ifNode.addChild(_factory.create(JavaTokenTypes.RPAREN));
 
         return (JavaNode) ifNode;
     }

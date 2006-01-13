@@ -8,7 +8,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
+import antlr.collections.AST;
 
 
 /**
@@ -58,7 +58,7 @@ final class PostfixOperatorPrinter
         for (AST child = node.getFirstChild(); child != null;
             child = child.getNextSibling())
         {
-            PrinterFactory.create(child).print(child, out);
+            PrinterFactory.create(child, out).print(child, out);
         }
 
         out.print(node.getText(), node.getType());

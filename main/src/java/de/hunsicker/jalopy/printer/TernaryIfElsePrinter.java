@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -187,11 +187,11 @@ final class TernaryIfElsePrinter
       throws IOException
     {
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         boolean wrapBeforeColon =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_VALUES,
                 ConventionDefaults.ALIGN_TERNARY_VALUES);
 
@@ -217,11 +217,11 @@ final class TernaryIfElsePrinter
             TestNodeWriter tester = out.testers.get();
 
             AST thirdOp = getNextOperand(colon.getNextSibling());
-            PrinterFactory.create(thirdOp).print(thirdOp, tester);
+            PrinterFactory.create(thirdOp, out).print(thirdOp, tester);
 
             // only wrap and align if necessary
             if (
-                (tester.length + out.column) > this.settings.getInt(
+                (tester.length + out.column) > AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
@@ -299,7 +299,7 @@ final class TernaryIfElsePrinter
             {
                 case JavaTokenTypes.LPAREN :
                     parentheses = true;
-                    PrinterFactory.create(child).print(child, out);
+                    PrinterFactory.create(child, out).print(child, out);
 
                     break;
 
@@ -307,10 +307,10 @@ final class TernaryIfElsePrinter
 
                     if (parentheses || (node.getFirstChild() == child))
                     {
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
                     }
                     else if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.INSERT_EXPRESSION_PARENTHESIS,
                             ConventionDefaults.INSERT_EXPRESSION_PARENTHESIS)
                         && needParentheses((JavaNode) child))
@@ -319,27 +319,27 @@ final class TernaryIfElsePrinter
 
                         if (out.mode == NodeWriter.MODE_DEFAULT)
                         {
-                            addParentheses(operator);
+                            addParentheses(operator, out);
 
                             AST leftParen = operator.getPreviousSibling();
-                            PrinterFactory.create(leftParen).print(leftParen, out);
+                            PrinterFactory.create(leftParen, out).print(leftParen, out);
 
                             //AST rightParen = operator.getNextSibling();
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             //printWithParentheses(operator,leftParen, rightParen, out);
                         }
                         else
                         {
                             out.print(LPAREN, out.last);
-                            PrinterFactory.create(child).print(child, out);
+                            PrinterFactory.create(child, out).print(child, out);
 
                             //out.print(RPAREN, out.last);
                         }
                     }
                     else
                     {
-                        PrinterFactory.create(child).print(child, out);
+                        PrinterFactory.create(child, out).print(child, out);
                     }
 
                     for (
@@ -349,7 +349,7 @@ final class TernaryIfElsePrinter
                         switch (child.getType())
                         {
                             case JavaTokenTypes.RPAREN :
-                                PrinterFactory.create(child).print(child, out);
+                                PrinterFactory.create(child, out).print(child, out);
 
                                 break;
 
@@ -389,11 +389,11 @@ final class TernaryIfElsePrinter
       throws IOException
     {
         boolean wrapLines =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP, ConventionDefaults.LINE_WRAP)
             && (out.mode == NodeWriter.MODE_DEFAULT);
         boolean wrapBeforeQuestion =
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_EXPRESSION,
                 ConventionDefaults.ALIGN_TERNARY_EXPRESSION);
 
@@ -411,12 +411,12 @@ final class TernaryIfElsePrinter
             TestNodeWriter tester = out.testers.get();
 
             AST secondOp = getNextOperand(secondOperand);
-            PrinterFactory.create(secondOp).print(secondOp, tester);
+            PrinterFactory.create(secondOp, out).print(secondOp, tester);
 
             // wrap and align if necessary (+3 for the colon between the
             // second and third operator)
             if (
-                (tester.length + out.column + 3) > this.settings.getInt(
+                (tester.length + out.column + 3) > AbstractPrinter.settings.getInt(
                     ConventionKeys.LINE_LENGTH, ConventionDefaults.LINE_LENGTH))
             {
                 out.printNewline();
@@ -437,7 +437,7 @@ final class TernaryIfElsePrinter
         Marker marker = null;
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.ALIGN_TERNARY_OPERATOR,
                 ConventionDefaults.ALIGN_TERNARY_OPERATOR)
             && (wrapLines || wrapBeforeQuestion))

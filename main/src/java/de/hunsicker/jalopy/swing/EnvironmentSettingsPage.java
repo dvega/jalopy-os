@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -40,15 +42,6 @@ import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 import de.hunsicker.jalopy.storage.Environment;
 import de.hunsicker.swing.util.SwingHelper;
-import de.hunsicker.util.ChainingRuntimeException;
-
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternCompiler;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Compiler;
-import org.apache.oro.text.regex.Perl5Matcher;
-
 
 /**
  * Settings page for the Jalopy printer environment settings.
@@ -62,41 +55,33 @@ public class EnvironmentSettingsPage
     //~ Static variables/initializers ----------------------------------------------------
 
     /** Used to track user actions (additions/removals). */
-    private static Map _changes = new HashMap(); // Map of <ListEntry>:<Object>
+    static Map _changes = new HashMap(); // Map of <ListEntry>:<Object>
 
     /** Indicates an addition to the list. */
-    private static final Object ACTION_ADD = new Object();
+    static final Object ACTION_ADD = new Object();
 
     /** Indicates a removal from the list. */
-    private static final Object ACTION_REMOVE = new Object();
+    static final Object ACTION_REMOVE = new Object();
     private static final char DELIM_PAIR = '^';
     private static final String EMPTY_STRING = "".intern(); /* NOI18N */
 
     /** The pattern to validate variables . */
-    private static Pattern _variablesPattern;
+//     static Pattern _variablesPattern;
 
     /** The pattern matcher. */
-    private static final PatternMatcher _matcher = new Perl5Matcher();
-
+    static final Matcher  _matcher = Pattern.compile(
+    "[a-zA-Z_][a-zA-Z0-9_]*").matcher("a");
+/*
     static
     {
-        PatternCompiler compiler = new Perl5Compiler();
+		
 
-        try
-        {
-            _variablesPattern =
-                compiler.compile(
-                    "[a-zA-Z_][a-zA-Z0-9_]*" /* NOI18N */, Perl5Compiler.READ_ONLY_MASK);
-        }
-        catch (MalformedPatternException ex)
-        {
-            throw new ChainingRuntimeException(ex);
-        }
+			Pattern  compiler = Pattern.compile(
+                    "[a-zA-Z_][a-zA-Z0-9_]*");
     }
+	*/
 
-    //~ Instance variables ---------------------------------------------------------------
-
-    private AddRemoveList _variablesList;
+    AddRemoveList _variablesList;
     private JButton _addButton;
     private JButton _removeButton;
     private JTabbedPane _tabs;
@@ -365,10 +350,10 @@ public class EnvironmentSettingsPage
             }
 
             private void initialize(
-                String title,
-                String text)
+                String newTitle,
+                String newText)
             {
-                setTitle(title);
+                setTitle(newTitle);
                 setModal(true);
                 setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -458,10 +443,10 @@ public class EnvironmentSettingsPage
                                 return;
                             }
 
-                            if (!_matcher.matches(variable, _variablesPattern))
+                            if (!_matcher.reset(variable).matches())
                             {
                                 Object[] args =
-                                { variable, _variablesPattern.getPattern() };
+                                { variable, _matcher.pattern() };
                                 JOptionPane.showMessageDialog(
                                     AddDialog.this,
                                     MessageFormat.format(

@@ -8,8 +8,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -63,14 +63,17 @@ final class PackagePrinter
 
         out.print(PACKAGE_SPACE, JavaTokenTypes.LITERAL_package);
 
-        AST identifier = node.getFirstChild();
-        PrinterFactory.create(identifier).print(identifier, out);
+        AST annotations = node.getFirstChild();
+        PrinterFactory.create(annotations, out).print(annotations, out);
+        
+        AST identifier = annotations.getNextSibling();
+        PrinterFactory.create(identifier, out).print(identifier, out);
 
         AST semi = identifier.getNextSibling();
-        PrinterFactory.create(semi).print(semi, out);
+        PrinterFactory.create(semi, out).print(semi, out);
 
         out.printBlankLines(
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.BLANK_LINES_AFTER_PACKAGE,
                 ConventionDefaults.BLANK_LINES_AFTER_PACKAGE));
         out.last = JavaTokenTypes.PACKAGE_DEF;

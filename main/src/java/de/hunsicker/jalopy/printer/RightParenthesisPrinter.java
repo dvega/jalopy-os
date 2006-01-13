@@ -9,8 +9,8 @@ package de.hunsicker.jalopy.printer;
 import java.io.IOException;
 import java.util.List;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
 
@@ -63,7 +63,7 @@ final class RightParenthesisPrinter
     {
         if (
             (out.mode == NodeWriter.MODE_DEFAULT)
-            && this.settings.getBoolean(
+            && AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_PAREN_GROUPING,
                 ConventionDefaults.LINE_WRAP_PAREN_GROUPING))
         {
@@ -78,7 +78,7 @@ final class RightParenthesisPrinter
                     out.printNewline();
 
                     if (
-                        this.settings.getBoolean(
+                        AbstractPrinter.settings.getBoolean(
                             ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP))
                     {
                         out.state.markers.remove(out.state.markers.getLast());
@@ -99,7 +99,7 @@ final class RightParenthesisPrinter
         printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
 
         if (
-            this.settings.getBoolean(
+            AbstractPrinter.settings.getBoolean(
                 ConventionKeys.PADDING_PAREN, ConventionDefaults.PADDING_PAREN))
         {
             out.print(SPACE_RPAREN, JavaTokenTypes.RPAREN);

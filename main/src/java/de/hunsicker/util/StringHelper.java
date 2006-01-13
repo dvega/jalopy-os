@@ -65,10 +65,7 @@ public final class StringHelper
         {
             return qualifiedName.substring(lastDot + 1);
         }
-        else
-        {
-            return qualifiedName;
-        }
+        return qualifiedName;
     }
 
 
@@ -517,10 +514,7 @@ public final class StringHelper
         {
             return str.substring(0, index);
         }
-        else
-        {
-            return str;
-        }
+        return str;
     }
 
 
@@ -883,10 +877,7 @@ WIDTHCHECK:
                     {
                         return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
             }
         }
 

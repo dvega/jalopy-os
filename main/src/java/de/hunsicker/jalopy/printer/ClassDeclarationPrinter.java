@@ -8,9 +8,9 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import antlr.collections.AST;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 
 /**
@@ -67,21 +67,32 @@ final class ClassDeclarationPrinter
 
         // print the modifiers
         AST modifiers = node.getFirstChild();
-        PrinterFactory.create(modifiers).print(modifiers, out);
+        PrinterFactory.create(modifiers, out).print(modifiers, out);
 
+        /*
+        // TODO Verify this
         AST keyword = modifiers.getNextSibling();
 
         printCommentsBefore(keyword, NodeWriter.NEWLINE_NO, out);
-
+*/
         out.print(CLASS_SPACE, JavaTokenTypes.LITERAL_class);
-
+/*
         if (printCommentsAfter(keyword, NodeWriter.NEWLINE_NO, NodeWriter.NEWLINE_NO, out))
         {
             if (!out.newline)
                 out.print(SPACE, JavaTokenTypes.WS);
         }
-
         AST identifier = keyword.getNextSibling();
+*/
+        for(AST child = modifiers.getNextSibling();child!=null;child = child.getNextSibling()) {
+            if (child.getType() == JavaTokenTypes.OBJBLOCK) {
+                out.state.extendsWrappedBefore = false;
+                out.last = JavaTokenTypes.LITERAL_class;
+            }
+            PrinterFactory.create(child, out).print(child, out);
+        }
+        /*
+        AST identifier = modifiers.getNextSibling();
         PrinterFactory.create(identifier).print(identifier, out);
 
         AST extendsClause = identifier.getNextSibling();
@@ -96,7 +107,7 @@ final class ClassDeclarationPrinter
 
         AST objblock = implementsClause.getNextSibling();
         PrinterFactory.create(objblock).print(objblock, out);
-
+        */
         out.state.innerClass = false;
         out.last = JavaTokenTypes.CLASS_DEF;
     }

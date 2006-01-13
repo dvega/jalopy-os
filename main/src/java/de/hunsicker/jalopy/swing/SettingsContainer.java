@@ -53,7 +53,7 @@ import de.hunsicker.util.ResourceBundleFactory;
  * @author <a href="http://jalopy.sf.net/contact.html">Marco Hunsicker</a>
  * @version $Revision$
  */
-final class SettingsContainer
+public final class SettingsContainer
     extends JPanel
 {
     //~ Static variables/initializers ----------------------------------------------------
@@ -67,22 +67,22 @@ final class SettingsContainer
     //~ Instance variables ---------------------------------------------------------------
 
     /** Holds the currently displayed settings page. */
-    private AbstractSettingsPage _curSettingsPanel;
+    AbstractSettingsPage _curSettingsPanel;
 
     /** The code convention settings. */
-    private Convention _settings;
+    // TODO private Convention _settings;
 
     /** Used to display the title of the current settings page. */
-    private JLabel _titleLabel;
+    JLabel _titleLabel;
 
     /** Panel to add the active settings page. */
-    private JPanel _settingsPanel;
+    JPanel _settingsPanel;
 
     /** The used tree to select the different settings pages. */
-    private JTree _tree;
+    JTree _tree;
 
     /** Holds all property pages that have been displayed. */
-    private Map _panels = new HashMap(10); // Map of <String>:<AbstractSettingsPage>
+    Map _panels = new HashMap(10); // Map of <String>:<AbstractSettingsPage>
 
     /** Associates preview file names and their contents. */
     private Map _previews = new HashMap(); // Map of <String>:<String>
@@ -352,6 +352,26 @@ final class SettingsContainer
     {
         if ((_previewFrame != null) && (node != null))
         {
+            if (node.toString().equalsIgnoreCase("general")) {
+                _previewFrame.setCurrentPage(_curSettingsPanel);
+
+                String text = loadPreview("general");
+
+                if (text != null)
+                {
+                    _previewFrame.setText(text);
+
+                    if (!_previewFrame.isVisible())
+                    {
+                        _previewFrame.setVisible(true);
+                    }
+                }
+                else
+                {
+                    _previewFrame.setText(EMPTY_STRING);
+                }
+            }
+            else 
             if (!((DefaultMutableTreeNode) node.getParent()).isRoot())
             {
                 // only if the user did not choose to display a custom file, we
@@ -440,8 +460,14 @@ final class SettingsContainer
 
         try
         {
+            if (name.equalsIgnoreCase("general")) {
+            s = getClass().getResourceAsStream(
+                    "allTest.javatpl" /* NOI18N */    );
+            }
+            else {
             s = getClass().getResourceAsStream(
                     "resources/" /* NOI18N */ + name + ".java.tpl" /* NOI18N */    );
+            }
 
             if (s != null)
             {
@@ -534,7 +560,7 @@ final class SettingsContainer
     }
 
 
-    private String getTitle(DefaultMutableTreeNode node)
+    String getTitle(DefaultMutableTreeNode node)
     {
         TreeNode[] path = node.getPath();
         StringBuffer buf = new StringBuffer(30);
@@ -559,7 +585,8 @@ final class SettingsContainer
      */
     private void initialize()
     {
-        _settings = Convention.getInstance();
+        // TODO _settings = 
+        Convention.getInstance();
 
         List supported = new ArrayList(3);
         supported.add("javax." /* NOI18N */);
@@ -649,14 +676,13 @@ final class SettingsContainer
      *
      * @return the indicated settings panel.
      */
-    private AbstractSettingsPage loadPanel(SettingsNodeInfo info)
+    AbstractSettingsPage loadPanel(SettingsNodeInfo info)
     {
         try
         {
             Class[] params = { SettingsContainer.class };
             Constructor c = info.getPanelClass().getDeclaredConstructor(params);
             Object[] args = { this };
-
             AbstractSettingsPage panel = (AbstractSettingsPage) c.newInstance(args);
 
             panel.setTitle(info.title);

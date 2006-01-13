@@ -90,7 +90,7 @@ public class MethodType
     private final String _name;
 
     /** The bit value of the method type. */
-    private final int _key;
+    //TODO private final int _key;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -105,7 +105,7 @@ public class MethodType
         int    key)
     {
         _name = name;
-        _key = key;
+        // TODO _key = key;
     }
 
     //~ Methods --------------------------------------------------------------------------
@@ -204,8 +204,8 @@ public class MethodType
 
         if (other instanceof MethodType)
         {
-            int thisIndex = this.order.indexOf(this);
-            int otherIndex = this.order.indexOf(other);
+            int thisIndex = MethodType.order.indexOf(this);
+            int otherIndex = MethodType.order.indexOf(other);
 
             if (thisIndex > otherIndex)
             {

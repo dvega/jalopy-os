@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import de.hunsicker.antlr.CommonHiddenStreamToken;
-import de.hunsicker.antlr.collections.AST;
-import de.hunsicker.jalopy.language.JavaNode;
+import antlr.CommonHiddenStreamToken;
+import antlr.collections.AST;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
-import de.hunsicker.jalopy.language.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaNode;
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.Convention;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -74,33 +75,37 @@ final class JavaPrinter
     {
         out.environment.set(
             Environment.Variable.CONVENTION.getName(),
-            this.settings.get(
+            AbstractPrinter.settings.get(
                 ConventionKeys.CONVENTION_NAME, ConventionDefaults.CONVENTION_NAME));
 
         try
         {
             History.Policy historyPolicy =
                 History.Policy.valueOf(
-                    this.settings.get(
+                    AbstractPrinter.settings.get(
                         ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
             boolean useCommentHistory = (historyPolicy == History.Policy.COMMENT);
-            boolean useHeader = this.settings.getBoolean(ConventionKeys.HEADER, false);
+            boolean useHeader = AbstractPrinter.settings.getBoolean(ConventionKeys.HEADER, false);
+            boolean ignoreHeaderIfExists = AbstractPrinter.settings.getBoolean(ConventionKeys.HEADER_IGNORE_IF_EXISTS, true);
 
-            if (useHeader || useCommentHistory)
+            if (((useHeader) && ( ! ignoreHeaderIfExists)) || useCommentHistory)
             {
-                removeHeader(node);
+                removeHeader(node, useCommentHistory);
             }
 
             if (useHeader)
             {
-                printHeader(out);
+                if (( ! ignoreHeaderIfExists) || ( ! headerExists(node))) {
+                    printHeader(out);
+                }
             }
 
             boolean useFooter =
-                this.settings.getBoolean(
+                AbstractPrinter.settings.getBoolean(
                     ConventionKeys.FOOTER, ConventionDefaults.FOOTER);
+            boolean ignoreFooterIfExists = AbstractPrinter.settings.getBoolean(ConventionKeys.FOOTER_IGNORE_IF_EXISTS, true);
 
-            if (useFooter)
+            if (useFooter && ( ! ignoreFooterIfExists))
             {
                 removeFooter(node);
             }
@@ -109,12 +114,14 @@ final class JavaPrinter
                 AST child = node.getFirstChild(); child != null;
                 child = child.getNextSibling())
             {
-                PrinterFactory.create(child).print(child, out);
+                PrinterFactory.create(child, out).print(child, out);
             }
 
             if (useFooter)
             {
-                printFooter(out);
+                if (( ! ignoreFooterIfExists) || ( ! footerExists(node))) {
+                    printFooter(out);
+                }
             }
         }
         finally
@@ -134,7 +141,7 @@ final class JavaPrinter
     private String[] getConventionKeys(Convention.Key key)
     {
         List keys = new ArrayList();
-        String str = this.settings.get(key, EMPTY_STRING);
+        String str = AbstractPrinter.settings.get(key, EMPTY_STRING);
 
         for (
             StringTokenizer tokens = new StringTokenizer(str, DELIMETER);
@@ -194,13 +201,14 @@ final class JavaPrinter
                         break;
 
                     case JavaTokenTypes.SEMI :
+                    case JavaTokenTypes.EOF :
                         return (JavaNode) declaration;
 
                     case JavaTokenTypes.PACKAGE_DEF :
                     case JavaTokenTypes.IMPORT :
 
                         /**
-                         * @todo implement
+                         * TODO implement ??
                          */
                         return (JavaNode) declaration;
                 }
@@ -223,7 +231,7 @@ final class JavaPrinter
     {
         String text =
             out.environment.interpolate(
-                this.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
+                AbstractPrinter.settings.get(ConventionKeys.FOOTER_TEXT, EMPTY_STRING));
         String[] footer = StringHelper.split(text, DELIMETER);
 
         if (footer.length > 0)
@@ -241,7 +249,7 @@ final class JavaPrinter
             }
 
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_BEFORE_FOOTER,
                     ConventionDefaults.BLANK_LINES_BEFORE_FOOTER));
 
@@ -256,7 +264,7 @@ final class JavaPrinter
             }
 
             int blankLinesAfter =
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_AFTER_FOOTER,
                     ConventionDefaults.BLANK_LINES_AFTER_FOOTER);
 
@@ -285,13 +293,13 @@ final class JavaPrinter
     {
         String text =
             out.environment.interpolate(
-                this.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
+                AbstractPrinter.settings.get(ConventionKeys.HEADER_TEXT, EMPTY_STRING));
         String[] header = StringHelper.split(text, DELIMETER);
 
         if (header.length > 0)
         {
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_BEFORE_HEADER,
                     ConventionDefaults.BLANK_LINES_BEFORE_HEADER));
 
@@ -302,7 +310,7 @@ final class JavaPrinter
             }
 
             out.printBlankLines(
-                this.settings.getInt(
+                AbstractPrinter.settings.getInt(
                     ConventionKeys.BLANK_LINES_AFTER_HEADER,
                     ConventionDefaults.BLANK_LINES_AFTER_HEADER));
 
@@ -312,7 +320,8 @@ final class JavaPrinter
 
 
     /**
-     * Removes the footer.
+     * Removes the footer. The footer is actually the JavaTokenTyps.EOF node.
+     * Comments are actually before this node not after it.
      *
      * @param root the root node of the Java AST.
      *
@@ -320,19 +329,19 @@ final class JavaPrinter
      */
     private void removeFooter(AST root)
     {
-        JavaNode rcurly = getLastElement(root);
+        JavaNode eofNode = getLastElement(root);
 
-        if (rcurly.hasCommentsAfter())
+        if (eofNode.hasCommentsBefore())
         {
             String[] keys = getConventionKeys(ConventionKeys.FOOTER_KEYS);
             int count = 0;
             int smartModeLines =
-                this.settings.getInt(ConventionKeys.FOOTER_SMART_MODE_LINES, 0);
+                AbstractPrinter.settings.getInt(ConventionKeys.FOOTER_SMART_MODE_LINES, 0);
             boolean smartMode = smartModeLines > 0;
 
             for (
-                CommonHiddenStreamToken comment = rcurly.getHiddenAfter();
-                comment != null; comment = comment.getHiddenAfter())
+                CommonHiddenStreamToken comment = eofNode.getHiddenBefore();
+                comment != null; comment = comment.getHiddenBefore())
             {
                 switch (comment.getType())
                 {
@@ -342,7 +351,7 @@ final class JavaPrinter
 
                         if (smartMode && (count < smartModeLines))
                         {
-                            removeFooterComment(comment, rcurly);
+                            removeFooterComment(comment, eofNode);
                         }
 
                         count++;
@@ -355,7 +364,7 @@ final class JavaPrinter
                         {
                             if (comment.getText().indexOf(keys[j]) > -1)
                             {
-                                removeFooterComment(comment, rcurly);
+                                removeFooterComment(comment, eofNode);
                             }
                         }
 
@@ -381,35 +390,58 @@ final class JavaPrinter
 
         if (after != null)
         {
-            after.setHiddenBefore(before);
+            ((ExtendedToken)after).setHiddenBefore(before);
 
             if (before != null)
             {
-                before.setHiddenAfter(after);
+                ((ExtendedToken)before).setHiddenAfter(after);
             }
             else
             {
                 // we've just removed the first comment after the RCURLY so add
                 // the following as the new starting one
-                node.setHiddenAfter(after);
+                node.setHiddenBefore(after);
             }
         }
         else if ((before != null) && (comment != node.getHiddenAfter()))
         {
-            before.setHiddenAfter(after);
+            ((ExtendedToken)before).setHiddenAfter(after);
 
             if (after != null)
             {
-                after.setHiddenBefore(before);
+                ((ExtendedToken)after).setHiddenBefore(before);
             }
         }
         else
         {
             // it was the first comment
-            node.setHiddenAfter(null);
+            node.setHiddenBefore(null);
         }
-
-        comment.setHiddenBefore(null);
+        //((ExtendedToken)comment).setHiddenBefore(null);
+    }
+    
+    /**
+     * Checks if the footer exists.
+     * @param root the root node of the tree.
+     * @return true if the Footer comment was found, false if it was not
+     */
+    private boolean footerExists(AST root) 
+    {
+        //This could be enhanced with checking if "footer keys" are here.
+        JavaNode eofNode = getLastElement(root);
+        return eofNode.hasCommentsBefore();
+    }
+    
+    /**
+     * Checks if the header exists.
+     * @param node the root node of the tree.
+     * @return true if the Header comment was found, false if it was not
+     */
+    private boolean headerExists(AST node) 
+    {
+        //This could be enhanced with checking if "header keys" are here.
+        JavaNode first = (JavaNode) node.getFirstChild();
+        return first.hasCommentsBefore();       
     }
 
 
@@ -419,18 +451,15 @@ final class JavaPrinter
      *
      * @param node the root node of the tree.
      *
+     * @return true if the Header comment was removed, false if it was not
      * @since 1.0b8
      */
-    private void removeHeader(AST node)
+    private void removeHeader(AST node, boolean useCommentHistory)
     {
-        History.Policy historyPolicy =
-            History.Policy.valueOf(
-                this.settings.get(
-                    ConventionKeys.HISTORY_POLICY, ConventionDefaults.HISTORY_POLICY));
         JavaNode first = (JavaNode) node.getFirstChild();
         String[] keys = getConventionKeys(ConventionKeys.HEADER_KEYS);
         int smartModeLines =
-            this.settings.getInt(
+            AbstractPrinter.settings.getInt(
                 ConventionKeys.HEADER_SMART_MODE_LINES,
                 ConventionDefaults.HEADER_SMART_MODE_LINES);
         boolean smartMode = (smartModeLines > 0);
@@ -466,7 +495,7 @@ final class JavaPrinter
                         case JavaTokenTypes.SL_COMMENT :
 
                             /**
-                             * @todo this isn't really fool-proof?
+                             * TODO this isn't really fool-proof?
                              */
                             if (comment.getText().indexOf('%') > -1)
                             {
@@ -504,20 +533,20 @@ final class JavaPrinter
 
         if (after != null)
         {
-            after.setHiddenBefore(before);
+            ((ExtendedToken)after).setHiddenBefore(before);
 
             if (before != null)
             {
-                before.setHiddenAfter(after);
+                ((ExtendedToken)before).setHiddenAfter(after);
             }
         }
         else if (before != null)
         {
-            before.setHiddenAfter(after);
+            ((ExtendedToken)before).setHiddenAfter(after);
 
             if (after != null)
             {
-                after.setHiddenBefore(before);
+                ((ExtendedToken)after).setHiddenBefore(before);
             }
         }
         else

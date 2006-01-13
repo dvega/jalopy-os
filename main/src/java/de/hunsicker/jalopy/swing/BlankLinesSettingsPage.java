@@ -46,9 +46,9 @@ public class BlankLinesSettingsPage
 
     private JCheckBox _blankLinesAfterLeftCurlyCheckBox;
     private JCheckBox _blankLinesBeforeRightCurlyCheckBox;
-    private JCheckBox _chunksByBlankLinesCheckBox;
+    JCheckBox _chunksByBlankLinesCheckBox;
     private JCheckBox _chunksByCommentsCheckBox;
-    private JCheckBox _keepBlankLinesCheckBox;
+    JCheckBox _keepBlankLinesCheckBox;
     private JCheckBox _separatorCheckBox;
     private JCheckBox _separatorRecursiveCheckBox;
     private JComboBox _blankLinesAfterLeftCurlyComboBox;
@@ -74,6 +74,8 @@ public class BlankLinesSettingsPage
     private JTextField _constructorTextField;
     private JTextField _instanceInitTextField;
     private JTextField _instanceVarTextField;
+    private JTextField _enumVarTextField;
+    private JTextField _annotationVarTextField;
     private JTextField _interfaceTextField;
     private JTextField _methodTextField;
     private JTextField _staticVarInitTextField;
@@ -176,6 +178,10 @@ public class BlankLinesSettingsPage
             ConventionKeys.SEPARATOR_STATIC_VAR_INIT, _staticVarInitTextField.getText());
         this.settings.put(
             ConventionKeys.SEPARATOR_INSTANCE_VAR, _instanceVarTextField.getText());
+        this.settings.put(
+            ConventionKeys.SEPARATOR_ENUM_INIT, _enumVarTextField.getText());
+        this.settings.put(
+            ConventionKeys.SEPARATOR_ANNOTATION_INIT, _annotationVarTextField.getText());
         this.settings.put(
             ConventionKeys.SEPARATOR_INSTANCE_INIT, _instanceInitTextField.getText());
         this.settings.put(ConventionKeys.SEPARATOR_CTOR, _constructorTextField.getText());
@@ -407,7 +413,43 @@ public class BlankLinesSettingsPage
             GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         textPanelLayout.setConstraints(_classTextField, c);
         textPanel.add(_classTextField);
+        
+        JLabel enumLabel = new JLabel("Enumeration");
+        SwingHelper.setConstraints(
+            c, 0, 7, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(enumLabel, c);
+        textPanel.add(enumLabel);
+        _enumVarTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_ENUM_INIT, ConventionDefaults.SEPARATOR_ENUM_INIT),
+                30);
+        SwingHelper.setConstraints(
+            c, 1, 7, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_enumVarTextField, c);
+        textPanel.add(_enumVarTextField);
 
+        
+        JLabel anontationLabel = new JLabel("Annotation");
+        SwingHelper.setConstraints(
+            c, 0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            c.insets, 0, 0);
+        textPanelLayout.setConstraints(anontationLabel, c);
+        textPanel.add(anontationLabel);
+        _annotationVarTextField =
+            new JTextField(
+                this.settings.get(
+                    ConventionKeys.SEPARATOR_ANNOTATION_INIT, ConventionDefaults.SEPARATOR_ANNOTATION_INIT),
+                30);
+        SwingHelper.setConstraints(
+            c, 1, 8, GridBagConstraints.REMAINDER, 1, 1.0, 0.0,
+            GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        textPanelLayout.setConstraints(_annotationVarTextField, c);
+        textPanel.add(_annotationVarTextField);
+
+        
         JPanel characterPanel = new JPanel();
         GridBagLayout characterPanelLayout = new GridBagLayout();
         characterPanel.setLayout(characterPanelLayout);

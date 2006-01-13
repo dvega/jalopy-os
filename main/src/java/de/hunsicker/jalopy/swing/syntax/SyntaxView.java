@@ -51,7 +51,7 @@ public final class SyntaxView
 {
     //~ Static variables/initializers ----------------------------------------------------
 
-    static final short TAG_WIDTH = 0;
+    static final short TAG_WIDTH = 10;
     static final int BREAKPOINT_OFFSET = TAG_WIDTH + 2;
 
     //~ Instance variables ---------------------------------------------------------------
@@ -124,7 +124,8 @@ public final class SyntaxView
 
             g.setColor(def);
 
-            //drawLineNumber(g, lineIndex + 1, x, y);
+            drawLineNumber(g, lineIndex + 1, x, y);
+            
             // if no tokenMarker just paint as plain text
             if (tokenMarker == null)
             {
@@ -150,13 +151,13 @@ public final class SyntaxView
      * method
      *
      * @param a DOCUMENT ME!
-     * @param line DOCUMENT ME!
+     * @param aline DOCUMENT ME!
      *
      * @return DOCUMENT ME!
      */
     public Rectangle lineToRect(
         Shape a,
-        int   line)
+        int   aline)
     {
         Rectangle r = null;
 
@@ -164,7 +165,7 @@ public final class SyntaxView
         {
             Rectangle alloc = a.getBounds();
             r = new Rectangle(
-                    alloc.x, alloc.y + (line * metrics.getHeight()), alloc.width,
+                    alloc.x, alloc.y + (aline * metrics.getHeight()), alloc.width,
                     metrics.getHeight());
         }
 
@@ -204,8 +205,8 @@ public final class SyntaxView
         // determine span from the start of the line
         int tabBase = lineArea.x + TAG_WIDTH + 2;
 
-        Element line = map.getElement(lineIndex);
-        int p0 = line.getStartOffset();
+        Element eLine = map.getElement(lineIndex);
+        int p0 = eLine.getStartOffset();
         Segment buffer = getLineBuffer();
         doc.getText(p0, pos - p0, buffer);
 
@@ -329,17 +330,17 @@ public final class SyntaxView
                 return getEndOffset() - 1;
             }
 
-            Element line = map.getElement(lineIndex);
+            Element eLine = map.getElement(lineIndex);
 
             if (x < alloc.x)
             {
                 // point is to the left of the line
-                return line.getStartOffset();
+                return eLine.getStartOffset();
             }
             else if (x > (alloc.x + alloc.width))
             {
                 // point is to the right of the line
-                return line.getEndOffset() - 1;
+                return eLine.getEndOffset() - 1;
             }
             else
             {
@@ -347,8 +348,8 @@ public final class SyntaxView
                 try
                 {
                     Segment buffer = getLineBuffer();
-                    int p0 = line.getStartOffset();
-                    int p1 = line.getEndOffset() - 1;
+                    int p0 = eLine.getStartOffset();
+                    int p1 = eLine.getEndOffset() - 1;
                     doc.getText(p0, p1 - p0, buffer);
 
                     // add Moe breakpoint offset area width
@@ -384,10 +385,10 @@ public final class SyntaxView
     /**
      * Draw the line number in front of the line
      *
-     * @param g DOCUMENT ME!
-     * @param lineNumber DOCUMENT ME!
-     * @param x DOCUMENT ME!
-     * @param y DOCUMENT ME!
+     * @param g The graphics object
+     * @param lineNumber the line number
+     * @param x The x coordinate
+     * @param y The Y coordinate
      */
     private void drawLineNumber(
         Graphics g,

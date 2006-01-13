@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:j="jelly:core" xmlns:ant="jelly:ant">
+ <preGoal name="jar:jar">
+  <ant:echo message="Setting version information"/>
+  <attainGoal name="prejar:jar"/>
+    <replaceregexp file="${common.distribution.bin}/extension.xml" match="@BUILD.VERSION.JDEV@" 
+                   replace="${pom.currentVersion}" byline="true"/>
+    <ant:move file="${common.distribution.bin}/extension.xml" tofile="${common.distribution.bin}/META-INF/extension.xml"/>
+    <ant:move file="${common.distribution.bin}/jdev-ext.xml" tofile="${common.distribution.bin}/META-INF/jdev-ext.xml"/>
+    <ant:move file="${common.distribution.bin}/jal-bsd.xml" tofile="${common.distribution.bin}/META-INF/jal-bsd.xml"/>
+ </preGoal>   <!-- Rejar the artifact and add -->
+ <postGoal name="dist:prepare-bin-filesystem">
+      <attainGoal name="postdist:prepare-bin-filesystem" />
+    
+        <jar jarfile="${maven.dist.bin.assembly.dir}/${common.distribution.lib.prefix}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}.jar" duplicate="fail" index="false">
+            <fileset dir="${common.distribution.bin}">
+                <include name="META-INF/*.*" />
+            </fileset>
+            <zipfileset src="${maven.dist.bin.assembly.dir}${common.distribution.lib.prefix}/${pom.artifactId}.jar" casesensitive="false"/>
+          </jar>
+
+    <ant:move dir="${maven.dist.bin.assembly.dir}" todir="${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}">
+            <ant:fileset dir="${maven.dist.bin.assembly.dir}">
+                <ant:include name="docs/*.*" />
+                <ant:include name="lib/*.*" />
+            </ant:fileset>
+    </ant:move>
+    <ant:delete dir="${maven.dist.bin.assembly.dir}/docs" />
+    <ant:delete dir="${maven.dist.bin.assembly.dir}/lib" />
+    <ant:echo message="********* Deleteing ${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
+    <ant:delete file="${maven.dist.bin.assembly.dir}/de.hunsicker.jalopy.plugin.jdeveloper.${pom.currentVersion}${common.distribution.lib.prefix}/${pom.artifactId}.jar" />
+    <ant:delete dir="${maven.dist.bin.assembly.dir}/META-INF" />
+ </postGoal>
+
+</project>
+
