@@ -237,6 +237,9 @@ final class JavadocPrinter extends AbstractPrinter {
         } // end if
         out.javadocIndent = 0;
         int lineStart = out.line;
+        boolean reformatComment = node.getType() == JavaTokenTypes.CLASS_DEF ||
+                                  node.getType() == JavaTokenTypes.VARIABLE_DEF ||
+                                  node.getType() == JavaTokenTypes.METHOD_DEF;
 
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText())) {
@@ -265,15 +268,21 @@ final class JavadocPrinter extends AbstractPrinter {
         // output Javadoc comment as multi-comment
         else if (!AbstractPrinter.settings.getBoolean(
             ConventionKeys.COMMENT_JAVADOC_PARSE,
-            ConventionDefaults.COMMENT_JAVADOC_PARSE)) {
+            ConventionDefaults.COMMENT_JAVADOC_PARSE) || !reformatComment) {
             String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
 
-            for (int i = 0, size = lines.length - 1; i < size; i++) {
-                out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
-                out.printNewline();
+            for (int i = 0; i < lines.length; i++) {
+                
+                if (lines[i].trim().startsWith("*")) {
+                    out.print(" " + lines[i].trim(), JavadocTokenTypes.JAVADOC_COMMENT);
+                }
+                else {
+                    out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
+                }
+                if (i+1!=lines.length)
+                    out.printNewline();
             } // end for
 
-            out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
         } // end else if
         else {
             out.print(getTopString(node.getType()), JavadocTokenTypes.JAVADOC_COMMENT);

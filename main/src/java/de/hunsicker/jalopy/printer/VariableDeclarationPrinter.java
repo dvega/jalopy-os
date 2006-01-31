@@ -117,6 +117,13 @@ extends BasicDeclarationPrinter
         }
 
         out.print(SPACE, JavaTokenTypes.WS);
+        /*
+        // TODO Determine if this is neccesary
+        if (newChunk)
+        {
+            out.state.assignOffset = AssignmentPrinter.OFFSET_NONE;
+        }
+        */
 
         AST identifier = type.getNextSibling();
         PrinterFactory.create(identifier, out).print(identifier, out);
@@ -164,10 +171,6 @@ extends BasicDeclarationPrinter
             }
         }
 
-        if (newChunk)
-        {
-            out.state.assignOffset = AssignmentPrinter.OFFSET_NONE;
-        }
 
         // if we've printed an anonymous inner class we don't adjust the type
         // to get the right behaviour for the newline handling

@@ -651,6 +651,10 @@ public final class ConventionKeys
     public static final Convention.Key ALIGN_VAR_ASSIGNS =
         new Convention.Key("printer/alignment/variableAssignment");
 
+    /** Specifies whether variable deceleration assignments should be aligned (<em>boolean</em>). */
+    public static final Convention.Key ALIGN_VAR_DECL_ASSIGNS =
+        new Convention.Key("printer/alignment/variableDeclAssignment");
+
     /** Specifies whether variable identifiers should be aligned (<em>boolean</em>). */
     public static final Convention.Key ALIGN_VAR_IDENTS =
         new Convention.Key("printer/alignment/variableIdentifier");

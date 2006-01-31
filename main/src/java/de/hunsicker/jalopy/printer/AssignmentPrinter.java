@@ -108,6 +108,12 @@ final class AssignmentPrinter
         boolean indentStandard =
             !AbstractPrinter.settings.getBoolean(
                 ConventionKeys.INDENT_DEEP, ConventionDefaults.INDENT_DEEP);
+        
+        boolean alignVarAssigns = AbstractPrinter.settings.getBoolean(
+                            ConventionKeys.ALIGN_VAR_DECL_ASSIGNS,
+                            AbstractPrinter.settings.getBoolean(
+                            ConventionKeys.ALIGN_VAR_ASSIGNS,
+                            ConventionDefaults.ALIGN_VAR_ASSIGNS));
 
         AST expr = node.getFirstChild();
 
@@ -119,9 +125,7 @@ final class AssignmentPrinter
 
                 if (
                     !wrapAfterAssign
-                    && AbstractPrinter.settings.getBoolean(
-                        ConventionKeys.ALIGN_VAR_ASSIGNS,
-                        ConventionDefaults.ALIGN_VAR_ASSIGNS) && 
+                    && alignVarAssigns && 
                         !((JavaNode)node).getParent().hasJavadocComment(AbstractPrinter.settings.getBoolean(
                 ConventionKeys.DONT_COMMENT_JAVADOC_WHEN_ML,
                 ConventionDefaults.DONT_COMMENT_JAVADOC_WHEN_ML)))
@@ -296,6 +300,9 @@ final class AssignmentPrinter
         }
         else // assignment expression
         {
+            alignVarAssigns = AbstractPrinter.settings.getBoolean(
+                            ConventionKeys.ALIGN_VAR_ASSIGNS,
+                            ConventionDefaults.ALIGN_VAR_ASSIGNS);
             AST rhs = printLeftHandSide(node, out);
 
             if (out.mode == NodeWriter.MODE_DEFAULT)
@@ -338,10 +345,7 @@ final class AssignmentPrinter
                 }
                 else
                 {
-                    if (
-                        AbstractPrinter.settings.getBoolean(
-                            ConventionKeys.ALIGN_VAR_ASSIGNS,
-                            ConventionDefaults.ALIGN_VAR_ASSIGNS))
+                    if (alignVarAssigns)
                     {
                         JavaNode parent = ((JavaNode) node).getParent();
 

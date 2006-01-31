@@ -171,21 +171,19 @@ final class ThrowsPrinter
             tester.reset();
         }
 
+        boolean newline = false;
         for (AST child = firstType; child != null; child = child.getNextSibling())
         {
+            newline = false;
             switch (child.getType())
             {
                 case JavaTokenTypes.COMMA :
                     out.print(COMMA, JavaTokenTypes.COMMA);
 
-                    if (spaceAfterComma)
-                    {
-                        out.print(SPACE, JavaTokenTypes.WS);
-                    }
-
                     if (forceWrapping)
                     {
                         out.printNewline();
+                        newline = true;
 
                         if (!wrappedAfter)
                         {
@@ -222,6 +220,7 @@ final class ThrowsPrinter
                             if ((tester.length + out.column) > lineLength)
                             {
                                 out.printNewline();
+                                newline = true;
 
                                 if (!wrappedAfter)
                                 {
@@ -251,6 +250,11 @@ final class ThrowsPrinter
                             tester.reset();
                         }
                     }
+                    if (spaceAfterComma && !newline)
+                    {
+                        out.print("@", JavaTokenTypes.WS);
+                    }
+
 
                     break;
 

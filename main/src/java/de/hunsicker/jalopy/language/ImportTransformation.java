@@ -218,15 +218,18 @@ final class ImportTransformation
             // remove duplicates
             // (note that we compare by JavaNode.equals(JavaNode) so we really
             // only compare the text of the two nodes!)
-            if (_onDemandImports.contains(importNode))
+            boolean contains = false;
+            JavaNode dup = null;
+            for(Iterator i = _onDemandImports.iterator();i.hasNext() && !contains;) {
+                dup = (JavaNode) i.next();
+                contains = dup.getText().equals(importNode.getText());
+            }
+            if (contains)
             {
                 _args[0] = _root.getText();
                 _args[1] = new Integer(importNode.getStartLine());
                 _args[2] = identifier;
-                _args[3] =
-                    new Integer(
-                        ((JavaNode) _onDemandImports.get(
-                            _onDemandImports.indexOf(importNode))).getStartLine());
+                _args[3] = new Integer(dup.getStartLine());
 
                 Loggers.TRANSFORM.l7dlog(
                     Level.INFO, "TRANS_IMP_REMOVE_DUPLICATE", _args, null);

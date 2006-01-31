@@ -1537,7 +1537,7 @@ SEARCH:
             _settings.getBoolean(
                 ConventionKeys.TIP_ADHERE_TO_NAMING_CONVENTION, false))
         {
-            String name = JavaNodeHelper.getDottedName(node.getFirstChild());
+            String name = JavaNodeHelper.getDottedName(JavaNodeHelper.getFirstChild(node, JavaTokenTypes.DOT));
             Pattern pattern =
                 getPattern(
                     _settings.get(

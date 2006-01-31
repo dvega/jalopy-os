@@ -43,6 +43,7 @@ public class IndentationSettingsPage
 
     //private JCheckBox _indentContinuationTernaryCheckBox;
     private JCheckBox _alignAssignmentsCheckBox;
+    private JCheckBox _alignDeclAssignmentsCheckBox;
     private JCheckBox _alignMethodCallChainsCheckBox;
     private JCheckBox _alignMethodDefParamsCheckBox;
     private JCheckBox _alignTernaryOperatorCheckBox;
@@ -147,6 +148,8 @@ public class IndentationSettingsPage
             ConventionKeys.ALIGN_VAR_IDENTS, _alignVariablesCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.ALIGN_VAR_ASSIGNS, _alignAssignmentsCheckBox.isSelected());
+        this.settings.putBoolean(
+            ConventionKeys.ALIGN_VAR_DECL_ASSIGNS, _alignDeclAssignmentsCheckBox.isSelected());
         this.settings.putBoolean(
             ConventionKeys.ALIGN_PARAMS_METHOD_DEF,
             _alignMethodDefParamsCheckBox.isSelected());
@@ -592,10 +595,25 @@ public class IndentationSettingsPage
                     ConventionDefaults.ALIGN_TERNARY_OPERATOR));
         _alignTernaryOperatorCheckBox.addActionListener(this.trigger);
         SwingHelper.setConstraints(
-            c, 0, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            c, 0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
         alignPanelLayout.setConstraints(_alignTernaryOperatorCheckBox, c);
         alignPanel.add(_alignTernaryOperatorCheckBox);
+        
+        _alignDeclAssignmentsCheckBox =
+            new JCheckBox(
+                "Align Declaration Assignment",
+                this.settings.getBoolean(
+                    ConventionKeys.ALIGN_VAR_DECL_ASSIGNS, this.settings.getBoolean(
+                            ConventionKeys.ALIGN_VAR_ASSIGNS,
+                            ConventionDefaults.ALIGN_VAR_ASSIGNS)));
+        _alignDeclAssignmentsCheckBox.addActionListener(this.trigger);
+        SwingHelper.setConstraints(
+            c, 1, 2, GridBagConstraints.REMAINDER, 1, 1.0, 1.0, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, c.insets, 0, 0);
+        alignPanelLayout.setConstraints(_alignDeclAssignmentsCheckBox, c);
+        alignPanel.add(_alignDeclAssignmentsCheckBox);
+
 
         JPanel panel = new JPanel();
         GridBagLayout layout = new GridBagLayout();
