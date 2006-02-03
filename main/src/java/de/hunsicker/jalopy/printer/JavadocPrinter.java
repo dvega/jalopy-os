@@ -19,12 +19,17 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Level;
 
 import antlr.CommonAST;
+import antlr.Token;
 import antlr.collections.AST;
 
 import de.hunsicker.jalopy.language.JavaNodeHelper;
+import de.hunsicker.jalopy.language.Recognizer;
 import de.hunsicker.jalopy.language.TreeWalker;
+import de.hunsicker.jalopy.language.antlr.ExtendedToken;
+import de.hunsicker.jalopy.language.antlr.JavaLexer;
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+import de.hunsicker.jalopy.language.antlr.JavadocParser;
 import de.hunsicker.jalopy.language.antlr.JavadocTokenTypes;
 import de.hunsicker.jalopy.language.antlr.Node;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
@@ -241,6 +246,9 @@ final class JavadocPrinter extends AbstractPrinter {
                                   node.getType() == JavaTokenTypes.VARIABLE_DEF ||
                                   node.getType() == JavaTokenTypes.METHOD_DEF;
 
+        boolean formatJavadoc = AbstractPrinter.settings.getBoolean(
+            ConventionKeys.COMMENT_JAVADOC_PARSE,
+            ConventionDefaults.COMMENT_JAVADOC_PARSE);
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText())) {
             String[] lines = StringHelper.split(comment.getFirstChild().getText(), DELIMETER);
@@ -264,13 +272,15 @@ final class JavadocPrinter extends AbstractPrinter {
                     null);
             } // end if
         } // end if
-
+        else if (!reformatComment) {
+            int currentIndent = out.indentLevel;
+            out.indentLevel=0;
+            out.print(comment.getText(), comment.getType());
+            out.indentLevel = currentIndent;
+        }
         // output Javadoc comment as multi-comment
-        else if (!AbstractPrinter.settings.getBoolean(
-            ConventionKeys.COMMENT_JAVADOC_PARSE,
-            ConventionDefaults.COMMENT_JAVADOC_PARSE) || !reformatComment) {
+        else if (!formatJavadoc) {
             String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
-
             for (int i = 0; i < lines.length; i++) {
                 
                 if (lines[i].trim().startsWith("*")) {
@@ -285,6 +295,26 @@ final class JavadocPrinter extends AbstractPrinter {
 
         } // end else if
         else {
+            // The javadoc hasnt been parsed so...
+            Recognizer _recognizer = out.getCompositeFactory().getRecognizer();
+                        String t = comment.getText();
+                        _recognizer.setLine(node.getLine());
+                        _recognizer.setColumn(node.getColumn());
+                        _recognizer.parse(t, out.filename);
+                        comment = _recognizer.getParseTree();
+
+//                        // ignore empty comments
+//                        if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
+//                        {
+//                            node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
+//                            ((ExtendedToken)node).comment = comment;
+//                            comment.setText(t);
+//                            
+//                        }
+//                        else {
+//                            return; //node.setType(Token.SKIP);
+//                        }
+            
             out.print(getTopString(node.getType()), JavadocTokenTypes.JAVADOC_COMMENT);
 
             String bottomText  = getBottomString(node.getType());

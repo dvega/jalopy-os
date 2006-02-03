@@ -2,23 +2,37 @@ package de.hunsicker.jalopy.swing;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.*;
+import java.util.*;
 
 /**
 * The <code>Source.java</code>
 * class a@b.com allows...
 *
+ * @param <K1> The k
+ * @param <K2> THe v
+ 
 * @author=<a href="mailto:me@noway.com">me</a>
 * @version $Revision$, $date$
 * <br>Copyright © 2005, SH
-*/
-public class AllTest {
-    private Class<?> type;
+ */
+
+public class AllTest<K1, K2, V>
+ implements java.lang.Iterable<V> {
+     private Class<?> type;
     /**
      * This is a test
      * 
-     * @param tmpObject the temp object
      */
     public void test1(Class tmpObject,Class[] panelParams, URL u) {
+/** require (nLevel >= 1) && (nLevel <= 4);
+* TypeMapUtilities.isValidType(nType);
+* TypeMapUtilities.isValidGroup(nGroup);
+**/
+   /**
+ * This comment 
+ * Should not be changed
+ */
         try {
 java.lang.reflect.Constructor tmpConst =
 (java.lang.reflect.Constructor) 
@@ -30,6 +44,12 @@ u
          .openConnection();
         } catch(Exception e) {}
     }
+    /**
+     * has
+     *
+     * @param <K> The k
+     * @param <V> THe v
+     */
 public static <K, V> Map<K, V> newSynchronizedMap() {
 return Collections.synchronizedMap(util.<K,V>newMap());
 }    

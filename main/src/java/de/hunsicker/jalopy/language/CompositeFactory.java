@@ -20,6 +20,7 @@ public class CompositeFactory {
     private JavaNodeFactory javaNodeFactory = null;
     private NodeFactory nodeFactory  = null;
     private ExtendedTokenFactory extendedTokenFactory = null;
+    
     public class ExtendedTokenFactory {
         private final CompositeFactory compositeFactory;
         private class ExtendedTokenImpl extends ExtendedToken{
@@ -47,6 +48,7 @@ public class CompositeFactory {
     }
     private final Map cacheMap;
     private final Map reuseMap;
+    private Recognizer recognizer;
     public CompositeFactory() {
         this.cacheMap = new HashMap();
         this.reuseMap = new HashMap();
@@ -126,6 +128,15 @@ public class CompositeFactory {
             }
         }
         
+    }
+    public void setJavadocRecognizer(Recognizer recognizer) {
+        this.recognizer = recognizer;
+        // TODO Auto-generated method stub
+        
+    }
+    
+    public Recognizer getRecognizer() {
+        return recognizer;
     }
     
 }

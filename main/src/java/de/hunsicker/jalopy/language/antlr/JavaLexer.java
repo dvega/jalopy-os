@@ -149,9 +149,10 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
         _javadocParser = (JavadocParser)lexer.getParser();
         _recognizer = new Recognizer(_javadocParser, lexer);
         _javadocParser.setRecognizer(_recognizer);
+        factory.setJavadocRecognizer(_recognizer);
 
         _parser = new JavaParser(this);
-        _parser.setASTFactory(factory.getJavaNodeFactory());   
+        _parser.setASTFactory(factory.getJavaNodeFactory());
     }
 
     /**
@@ -627,30 +628,44 @@ public class JavaLexer extends InternalJavaLexer implements Lexer
                 // feature as much as I do (and explictly enabled it)
                 if (this.parseJavadocComments)
                 {
-                    try
-                    {
-                        String t = node.getText();
-                        _recognizer.setLine(node.getLine());
-                        _recognizer.setColumn(node.getColumn());
-                        _recognizer.parse(t, getFilename());
-                        Node comment = (Node)_recognizer.getParseTree();
+                    String t = node.getText();
 
-                        // ignore empty comments
-                        if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
-                        {
-                            node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
-                            ((ExtendedToken)node).comment = comment;
-                            comment.setText(t);
-                            
-                        }
-                        else {
-                            node.setType(Token.SKIP);
-                        }
-                    }
-                    catch (IOException ex)
+                    if (t.indexOf('\t') > -1)
                     {
-                        throw new TokenStreamIOException(ex);
+                        t = StringHelper.replace(t, "\t", StringHelper.repeat(SPACE, getTabSize()));
                     }
+                    // TODO Decide if this is required...
+                    //t = removeLeadingWhitespace(t, node.getColumn() -1, _lineSeparator);
+                    node.setText(t);
+                    
+                    Node comment = (Node) _factory.getJavaNodeFactory().create(JAVADOC_COMMENT);
+                    comment.setText(t);
+                    node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
+                    ((ExtendedToken)node).comment = comment;
+//                    try
+//                    {
+//                        String t = node.getText();
+//                        _recognizer.setLine(node.getLine());
+//                        _recognizer.setColumn(node.getColumn());
+//                        _recognizer.parse(t, getFilename());
+//                        Node comment = (Node)_recognizer.getParseTree();
+//
+//                        // ignore empty comments
+//                        if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
+//                        {
+//                            node = _factory.getExtendedTokenFactory().create(JavaTokenTypes.JAVADOC_COMMENT, t);
+//                            ((ExtendedToken)node).comment = comment;
+//                            comment.setText(t);
+//                            
+//                        }
+//                        else {
+//                            node.setType(Token.SKIP);
+//                        }
+//                    }
+//                    catch (IOException ex)
+//                    {
+//                        throw new TokenStreamIOException(ex);
+//                    }
                 }
                 else
                 {

@@ -947,7 +947,7 @@ PRE
     ;
     
 TYPEDCLASS
-    :   "<" LCLETTER '>'
+    :   "<" LCLETTER (DIGIT)? '>'
     ;
 
 
