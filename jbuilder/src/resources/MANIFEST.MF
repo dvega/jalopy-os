@@ -1,0 +1,9 @@
+OpenTools-Core: de.hunsicker.jalopy.plugin.jbuilder.BuildHandler de.hunsicker.jalopy.plugin.jbuilder.OldBuildHandler
+OpenTools-UI: de.hunsicker.jalopy.plugin.jbuilder.JbPlugin
+
+Name: de/hunsicker/jalopy/plugin/jbuilder/
+Specification-Title: Jalopy Java Source Code Formatter
+Specification-Version: 0.6
+Specification-Vendor: Marco Hunsicker
+Implementation-Title: de.hunsicker.jalopy.plugin.jbuilder
+Implementation-URL: http://jalopy.sf.net/
