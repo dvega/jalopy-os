@@ -6,6 +6,17 @@
   <body>
     <release version="1.5rc1" date="in CVS">
 <!-- Features -->
+      <action dev="jgrillon" type="add" issue="1384979">
+        <![CDATA[
+                	  handling the header
+        ]]>
+      </action>
+      <action dev="notzippy" type="add" issue="1403623">
+        <![CDATA[
+               [Java1.5] space between varargs declaration
+        ]]>
+      </action>
+      
       <action dev="notzippy" type="add" issue="1368820">
         <![CDATA[
               JavaDoc environment variables enhancement request
@@ -23,6 +34,18 @@
       </action>
      
 <!-- patches -->
+  	  
+      <action dev="jgrillon" type="add" issue="1387112">
+        <![CDATA[
+                 Feature request 1384979 : ignore header/footer if it exists
+        ]]>
+      </action>
+  	  
+      <action dev="notzippy" type="add" issue="1309702">
+        <![CDATA[
+                 	  JDev 10.1.3 support
+        ]]>
+      </action>
       <action dev="notzippy" type="add" issue="1366116">
         <![CDATA[
              Feature request #1353722
@@ -34,6 +57,52 @@
         ]]>
       </action>
 <!-- Bugs -->
+      <action dev="notzippy" type="fix" issue="1426169">
+        <![CDATA[
+              	  incorrect manifest
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1422550">
+        <![CDATA[
+             Format of Template Comments
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1417845">
+        <![CDATA[
+             Trailing whitespace added after throw types
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1417510">
+        <![CDATA[
+              	  Formats Javadoc Comments within a Method
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1415018">
+        <![CDATA[
+              	  nullpointerexception when using code inspector
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1412683">
+        <![CDATA[
+            jalopy with change format to dos
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1408275">
+        <![CDATA[
+             Jalopy doesn't remove double import statements anymore
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1391112">
+        <![CDATA[
+              	  final parameter setting affecting catch and 1.5 loops
+        ]]>
+      </action>
+      <action dev="notzippy" type="fix" issue="1387520">
+        <![CDATA[
+             JavaDoc parsing and formating problems
+        ]]>
+      </action>
+
       <action dev="notzippy" type="fix" issue="1380638">
         <![CDATA[
             Parser or printer sometimes skips comments

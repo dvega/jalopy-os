@@ -154,20 +154,21 @@ xmlns:ant="jelly:ant" default="jalopy:help">
   <goal name="jalopy-eclipse:init"
   description="Copy Eclipse plug-ins to maven.repo.local if necessary">
     <!-- test ECLIPSE_HOME property -->
+    <!--
     <ant:property environment="env" />
     <j:set var="eclipseDir" value="${ECLIPSE_HOME}" />
     <j:if test="${empty eclipseDir}">
       <ant:fail>The environment variable ECLIPSE_HOME must be set to the directory of the
-      Eclipse installation you plan to use. For example: Unix -- /usr/local/eclipse
-      Windows -- "C:\Program Files\eclipse"</ant:fail>
+      Eclipse installation you plan to use. For example: Unix  /usr/local/eclipse
+      Windows  "C:\Program Files\eclipse"</ant:fail>
     </j:if>
     <j:if test="${!(empty eclipseDir)}">
       <ant:copy todir="${maven.repo.local}/eclipse/jars">
         <ant:fileset dir="${eclipseDir}/plugins">
-          <!--          <ant:include name="*.jar"/>-->
         </ant:fileset>
       </ant:copy>
     </j:if>
+    -->
   </goal>
   <goal name="jalopy-site:init" description="Main initialization goal"
   prereqs="jalopy-eclipse:init,jalopy-site:quick-init" />
