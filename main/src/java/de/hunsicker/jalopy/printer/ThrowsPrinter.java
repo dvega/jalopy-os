@@ -143,7 +143,7 @@ final class ThrowsPrinter
             AbstractPrinter.settings.getBoolean(
                 ConventionKeys.SPACE_AFTER_COMMA, ConventionDefaults.SPACE_AFTER_COMMA);
         boolean forceWrapping =
-            AbstractPrinter.settings.getBoolean(
+             AbstractPrinter.settings.getBoolean(
                 ConventionKeys.LINE_WRAP_AFTER_TYPES_THROWS,
                 ConventionDefaults.LINE_WRAP_AFTER_TYPES_THROWS);
         boolean wrapAll =
@@ -252,7 +252,7 @@ final class ThrowsPrinter
                     }
                     if (spaceAfterComma && !newline)
                     {
-                        out.print("@", JavaTokenTypes.WS);
+                        out.print(" ", JavaTokenTypes.WS);
                     }
 
 
