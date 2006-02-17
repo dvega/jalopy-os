@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<document>
+<body> 
+<section name="Installation">
+<p>
+The Plug-in comes either as a single <tt class="filename">.zip</tt> or compressed <tt class="filename">.tar</tt> file.
+Unzipping either one of these files into a directory of your choice (referred
+to as <i class="replaceable"><tt>&lt;INST_DIR&gt;</tt></i>) will produce three
+subdirectories <tt class="filename">/bin</tt>, <tt class="filename">/docs</tt> and
+<tt class="filename">/lib</tt>.
+
+</p><p>
+</p><table class="shade" bgcolor="#e0e0e0" border="0"><tbody><tr><td><pre class="screen">..
+  bin/       contains wrapper scripts for different platforms
+  docs/      contains the documentation
+  lib/       contains all necessary libraries
+</pre></td></tr></tbody></table><p>
+</p><p>
+Wrapper scripts are provided for the common platforms, so you may want to add
+the <tt class="filename">/bin</tt> folder to your path. If your platform
+is not covered you should make use of the <tt class="option">-jar</tt> option of the
+Java application launcher (the <span><b class="command">java -jar</b></span> command), since
+this requires no classpath manipulation. If you don't want to use the
+<tt class="option">-jar</tt> option, you have to add the <tt class="filename">.jar</tt>
+
+files as usual to your classpath.
+</p><p>
+For the Unix Bash shell, this means can be achieved using
+</p><table class="shade" bgcolor="#e0e0e0" border="0"><tbody><tr><td><pre class="synopsis">export CLASSPATH=${CLASSPATH}:<i class="replaceable"><tt>&lt;INST_DIR&gt;</tt></i>/lib/jalopy-console-<i class="replaceable"><tt>&lt;version&gt;</tt></i>.jar
+</pre></td></tr></tbody></table><p>
+For Windows, use something like
+</p><table class="shade" bgcolor="#e0e0e0" border="0"><tbody><tr><td><pre class="synopsis">set CLASSPATH=%CLASSPATH%;<i class="replaceable"><tt>&lt;INST_DIR&gt;</tt></i>\lib\jalopy-console-<i class="replaceable"><tt>&lt;version&gt;</tt></i>.jar
+</pre></td></tr></tbody></table><p>
+Refer to your system documentation on how to apply these changes more permanently.
+
+</p>
+</section>
+</body>
+</document>
