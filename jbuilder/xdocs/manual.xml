@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?> 
+<document>
+<body> 
+<section name="Installation">
+<p>
+The Plug-in comes either as a single <tt class="filename">.zip</tt> or compressed <tt class="filename">.tar</tt> file.
+Unzipping either one of these files into a directory of your choice (referred
+to as <i class="replaceable"><tt>&lt;INST_DIR&gt;</tt></i>) will produce two
+subdirectories <tt class="filename">/docs</tt> and <tt class="filename">/lib</tt>.
+</p><p>
+
+</p><table class="shade" bgcolor="#e0e0e0" border="0"><tbody><tr><td><pre class="screen">..
+  docs/      contains documentation
+  lib/       contains all necessary libraries
+</pre></td></tr></tbody></table><p>
+</p><p>
+Remove all files from any prior Jalopy version from
+your JBuilder extension directory (<tt class="filename">/lib/ext</tt>).
+</p><p>
+Further installation is simple: just copy all files from your
+<tt class="filename"><i class="replaceable"><tt>&lt;INST_DIR&gt;</tt></i>/lib</tt> folder
+into the <tt class="filename">/lib/ext</tt> directory of your JBuilder distribution.
+JBuilder will then need to be restarted before Jalopy begins working.
+</p>
+</section>
+</body>
+</document>

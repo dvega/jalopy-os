@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="jalopy">
+
+  <title>jalopy</title>  
+
+  <body>
+
+    <menu name="Jalopy core">
+      <item name="Home"            href="/index.html"/>
+      <item name="Installation"    href="/manual.html"/>
+    </menu>
+  </body>
+</project>
