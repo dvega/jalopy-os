@@ -445,7 +445,7 @@ public final class JavaRecognizer extends Recognizer
                         {
                            p.setHiddenAfter(next);
 
-                           if(p == monitored)
+                           if(p == monitored || p.attached)
                            {
                               next.attached = true;
                            }
@@ -491,12 +491,12 @@ public final class JavaRecognizer extends Recognizer
                         monitored.nlAfter = new StringTokenizer(next.getText(),
                               "\n").countTokens();
 
-                        if(monitored.nlAfter > 4)
-                        {
-                           int x = 2;
-                           x++;
-                           System.out.println(monitored);
-                        }
+//                        if(monitored.nlAfter > 4)
+//                        {
+//                           int x = 2;
+//                           x++;
+//                           System.out.println(monitored);
+//                        }
 
                         // Check the attach before flag
                         if(!attachBefore)

@@ -1072,6 +1072,7 @@ public final class Jalopy
         }
         finally {
             _factory.clear();
+            cleanup();
         }
         
 

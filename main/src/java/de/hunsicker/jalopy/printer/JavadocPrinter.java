@@ -64,23 +64,23 @@ final class JavadocPrinter extends AbstractPrinter {
     /** The empty String array. */
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
-    /**TODO DOCUMENT ME!*/
+    /** The remove tag obsolete key */
     private static final String KEY_TAG_REMOVE_OBSOLETE = "TAG_REMOVE_OBSOLETE" /* NOI18N */;
 
-    /**TODO DOCUMENT ME!*/
+    /** The add tag missing key */
     private static final String KEY_TAG_ADD_MISSING = "TAG_ADD_MISSING" /* NOI18N */;
 
-    /**TODO DOCUMENT ME!*/
+    /** The tag misspelled key  */
     private static final String KEY_TAG_MISSPELLED_NAME = "TAG_MISSPELLED_NAME" /* NOI18N */;
 
-    /**TODO DOCUMENT ME!*/
+    /** The geenrate comment key */
     private static final String KEY_GENERATE_COMMENT = "GENERATE_COMMENT" /* NOI18N */;
 
     // TODO private static final String TAG_OPARA = "<p>" /* NOI18N */;
-    /**TODO DOCUMENT ME!*/
+    /** The close paragraph key */
     private static final String TAG_CPARA = "</p>" /* NOI18N */;
 
-    /**TODO DOCUMENT ME!*/
+    /** The pattern for keys */
     protected static Pattern _pattern = Pattern.compile(
         "(?: )*([a-zA-z0-9_.]*)\\s*(.*)" /* NOI18N */);
 
@@ -94,34 +94,35 @@ final class JavadocPrinter extends AbstractPrinter {
 
     /**
      * The break iterator
+     *
      * @version 1.0
-      */
+     */
     private static class BreakIterator {
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private static final int WHITESPACE = 1;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private static final int BREAK = 2;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         public static final int DONE = -10;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private static final String TAG_BREAK = "<br>" /* NOI18N */;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private static final String TAG_BREAK_WELL = "<br/>" /* NOI18N */;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         int _type;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private String _text;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private int _end = -1;
 
-        /**TODO DOCUMENT ME!*/
+        /** TODO DOCUMENT ME! */
         private int _pos = -1;
 
         /**
@@ -146,7 +147,7 @@ final class JavadocPrinter extends AbstractPrinter {
          */
         public int next() {
             _type = WHITESPACE;
-            _pos  = _text.indexOf(' ', _end + 1);
+            _pos = _text.indexOf(' ', _end + 1);
 
             if (_pos > -1) {
                 int tab = _text.indexOf('\t', _end + 1);
@@ -162,7 +163,7 @@ final class JavadocPrinter extends AbstractPrinter {
                 } // end if
 
                 if ((br > -1) && (br < _pos)) {
-                    _pos  = br;
+                    _pos = br;
                     _type = BREAK;
                 } // end if
             } // end if
@@ -181,8 +182,8 @@ final class JavadocPrinter extends AbstractPrinter {
          */
         public void reset() {
             _text = null;
-            _end  = -1;
-            _pos  = -1;
+            _end = -1;
+            _pos = -1;
         } // end reset()
 
         /**
@@ -210,8 +211,8 @@ final class JavadocPrinter extends AbstractPrinter {
     } // end getInstance()
 
     /**
-     * This method is <strong>NOT</strong> implemented. Use {@link #print(AST,AST,NodeWriter)}
-     * instead.
+     * This method is <strong>NOT</strong> implemented. Use {@link
+     * #print(AST,AST,NodeWriter)} instead.
      *
      * @param node node to print.
      * @param out stream to print to.
@@ -241,14 +242,25 @@ final class JavadocPrinter extends AbstractPrinter {
             out.printNewline();
         } // end if
         out.javadocIndent = 0;
-        int lineStart = out.line;
-        boolean reformatComment = node.getType() == JavaTokenTypes.CLASS_DEF ||
-                                  node.getType() == JavaTokenTypes.VARIABLE_DEF ||
-                                  node.getType() == JavaTokenTypes.METHOD_DEF;
+
+        JavaNode parentParent = null;
+
+        parentParent = ((JavaNode)node).getParent();
+        if (parentParent != null) {
+            parentParent = parentParent.getParent();
+        } // end if
+
+        boolean reformatComment = (node.getType() == JavaTokenTypes.CLASS_DEF) ||
+                                  ((node.getType() == JavaTokenTypes.VARIABLE_DEF) &&
+                                  ((parentParent.getType() == JavaTokenTypes.CLASS_DEF) ||
+                                  (parentParent.getType() == JavaTokenTypes.INTERFACE_DEF))) ||
+                                  (node.getType() == JavaTokenTypes.METHOD_DEF) ||
+                                  (node.getType() == JavaTokenTypes.CTOR_DEF);
 
         boolean formatJavadoc = AbstractPrinter.settings.getBoolean(
             ConventionKeys.COMMENT_JAVADOC_PARSE,
             ConventionDefaults.COMMENT_JAVADOC_PARSE);
+
         // output an auto-generated comment
         if (BasicDeclarationPrinter.GENERATED_COMMENT.equals(comment.getText())) {
             String[] lines = StringHelper.split(comment.getFirstChild().getText(), DELIMETER);
@@ -274,34 +286,37 @@ final class JavadocPrinter extends AbstractPrinter {
         } // end if
         else if (!reformatComment) {
             int currentIndent = out.indentLevel;
-            out.indentLevel=0;
+
+            out.indentLevel = 0;
             out.print(comment.getText(), comment.getType());
             out.indentLevel = currentIndent;
-        }
+        } // end else if
+
         // output Javadoc comment as multi-comment
         else if (!formatJavadoc) {
             String[] lines = StringHelper.split(comment.getText(), out.originalLineSeparator);
+
             for (int i = 0; i < lines.length; i++) {
-                
                 if (lines[i].trim().startsWith("*")) {
                     out.print(" " + lines[i].trim(), JavadocTokenTypes.JAVADOC_COMMENT);
-                }
+                } // end if
                 else {
                     out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
-                }
-                if (i+1!=lines.length)
+                } // end else
+                if ((i + 1) != lines.length) {
                     out.printNewline();
+                }
             } // end for
-
         } // end else if
         else {
             // The javadoc hasnt been parsed so...
             Recognizer _recognizer = out.getCompositeFactory().getRecognizer();
-                        String t = comment.getText();
-                        _recognizer.setLine(node.getLine());
-                        _recognizer.setColumn(node.getColumn());
-                        _recognizer.parse(t, out.filename);
-                        comment = _recognizer.getParseTree();
+            String     t           = comment.getText();
+
+            _recognizer.setLine(node.getLine());
+            _recognizer.setColumn(node.getColumn());
+            _recognizer.parse(t, out.filename);
+            comment = _recognizer.getParseTree();
 
 //                        // ignore empty comments
 //                        if (comment != JavadocParser.EMPTY_JAVADOC_COMMENT)
@@ -314,42 +329,43 @@ final class JavadocPrinter extends AbstractPrinter {
 //                        else {
 //                            return; //node.setType(Token.SKIP);
 //                        }
-            
             out.print(getTopString(node.getType()), JavadocTokenTypes.JAVADOC_COMMENT);
 
-            String bottomText  = getBottomString(node.getType());
-            String asterix = bottomText.substring(0, bottomText.indexOf('*') + 1);
+            String bottomText = getBottomString(node.getType());
+            String asterix    = bottomText.substring(0, bottomText.indexOf('*') + 1);
 
             asterix = getAsterix();
 
-            AST    firstTag    = null;
+            AST    firstTag   = null;
             String commentText = comment.getText();
 
             if (!AbstractPrinter.settings.getBoolean(
-            ConventionKeys.COMMENT_JAVADOC_PARSE_DESCRIPTION,
-            ConventionDefaults.JAVADOC_PARSE_DESCRIPTION)) {
+                ConventionKeys.COMMENT_JAVADOC_PARSE_DESCRIPTION,
+                ConventionDefaults.JAVADOC_PARSE_DESCRIPTION)) {
                 TestNodeWriter dummy = out.testers.get();
 
                 firstTag = printDescriptionSection(node, comment, asterix, dummy);
-                if (firstTag!=EMPTY_NODE) {
-                    commentText = commentText.substring(1, commentText.indexOf(firstTag.getText()));
-                }
+                if (firstTag != EMPTY_NODE) {
+                    commentText = commentText.substring(
+                        1,
+                        commentText.indexOf(firstTag.getText()));
+                } // end if
                 out.testers.release(dummy);
 
                 String[] lines = StringHelper.split(commentText, out.originalLineSeparator);
 
-                if (lines.length==1) {
-                    lines[0] = lines[0].substring(3,lines[0].length()-2);
+                if (lines.length == 1) {
+                    lines[0] = lines[0].substring(3, lines[0].length() - 2);
                     out.print(lines[0], JavadocTokenTypes.JAVADOC_COMMENT);
-                }
-                else if (lines.length>0) {
+                } // end if
+                else if (lines.length > 0) {
                     lines[0] = lines[0].substring(3);
-                
+
                     for (int i = 0, size = lines.length - 1; i < size; i++) {
                         out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
                         out.printNewline();
                     } // end for
-                }
+                } // end else if
             } // end if
             else {
                 firstTag = printDescriptionSection(node, comment, asterix, out);
@@ -362,14 +378,14 @@ final class JavadocPrinter extends AbstractPrinter {
                 ConventionDefaults.COMMENT_JAVADOC_CHECK_TAGS)) {
                 printTagSection(node, comment, firstTag, asterix, out);
             } // end if
-            
+
             out.print(bottomText, JavadocTokenTypes.JAVADOC_COMMENT);
         } // end else
     } // end print()
 
     /**
-     * Returns all valid type names for the given node found as a sibling of the given node
-     * (i.e. all exception or parameter types depending on the node).
+     * Returns all valid type names for the given node found as a sibling of the given
+     * node (i.e. all exception or parameter types depending on the node).
      *
      * @param node node to search. Either of type METHOD_DEF or CTOR_DEF.
      * @param type type of the node to return the identifiers for. Either PARAMETERS or
@@ -427,7 +443,7 @@ final class JavadocPrinter extends AbstractPrinter {
                     } // end for
                 } // end if
 
-                /**
+/**
                  * @todo make this user configurable
                  */
 
@@ -538,8 +554,8 @@ final class JavadocPrinter extends AbstractPrinter {
     } // end appendTypeNames()
 
     /**
-     * Checks whether the given METHOD_DEF node contains a return tag or not and adds one if
-     * necessary.
+     * Checks whether the given METHOD_DEF node contains a return tag or not and adds
+     * one if necessary.
      *
      * @param node a METHOD_DEF node.
      * @param returnNode the found returnNode, may be <code>null</code>.
@@ -574,7 +590,7 @@ LOOP:
                 out.state.args[2] = new Integer(out.column);
                 out.state.args[3] = "@return" /* NOI18N */;
                 out.state.args[4] = new Integer(((Node)returnNode).getStartLine());
-                returnNode        = null;
+                returnNode = null;
                 Loggers.PRINTER_JAVADOC.l7dlog(
                     Level.WARN,
                     KEY_TAG_REMOVE_OBSOLETE,
@@ -597,8 +613,8 @@ LOOP:
     } // end checkReturnTag()
 
     /**
-     * Makes sure that the tag names matches the parameter names of the node. Updates the
-     * given list as it adds missing or removes obsolete tags.
+     * Makes sure that the tag names matches the parameter names of the node. Updates
+     * the given list as it adds missing or removes obsolete tags.
      *
      * @param node node the comment belongs to.
      * @param tags tags to print.
@@ -641,8 +657,8 @@ LOOP:
 
             if (tag.getFirstChild() != null) {
                 String description = tag.getFirstChild().getText().trim();
-                String name   = null;
-                int    offset = -1;
+                String name        = null;
+                int    offset      = -1;
 
                 // determine the first word of the description: the parameter name
                 if ((offset = description.indexOf(' ')) > -1) {
@@ -686,7 +702,7 @@ LOOP:
 
         // either we have too many or too less tags
         if (validNames.size() != tags.size()) {
-            /**
+/**
              * @todo the situation here can be ambigious if we have an obsolete tag AND a
              *       misspelled or missing name in which case we could end up renaming an
              *       obsolete tag name but deleting the misspelled or missing name tag Maybe
@@ -891,7 +907,7 @@ LOOP:
             } // end if
             else {
                 oldName = text;
-                offset  = text.length();
+                offset = text.length();
             } // end else
 
             String match   = getMatch(oldName, validNames);
@@ -899,7 +915,7 @@ LOOP:
 
             if (match != null) {
                 newName = match;
-                index   = validNames.indexOf(match);
+                index = validNames.indexOf(match);
             } // end if
             else {
                 newName = (String)validNames.get(index);
@@ -924,10 +940,9 @@ LOOP:
         } // end if
         else {
             String newName = (String)validNames.get(index);
-            String text = SPACE + newName;
-            Node   c    = (Node)out.getJavaNodeFactory().create(
-                JavadocTokenTypes.PCDATA,
-                text);
+            String text    = SPACE + newName;
+            Node   c       = (Node)out.getJavaNodeFactory()
+                                      .create(JavadocTokenTypes.PCDATA, text);
 
             wrongTag.setFirstChild(c);
         } // end else
@@ -1037,13 +1052,13 @@ LOOP:
         } // end else
         if (nodeType < 0) {
             nodeType = node.getType();
-        }
+        } // end if
         switch (nodeType) {
             case JavadocTokenTypes.OTD:
             case JavadocTokenTypes.OTH:
                 if (!out.newline) {
                     newLine = true;
-                }
+                } // end if
                 out.javadocIndent++;
                 length += out.indentSize;
                 break;
@@ -1059,7 +1074,7 @@ LOOP:
             case JavadocTokenTypes.O_TR:
                 if (!out.newline) {
                     newLine = true;
-                }
+                } // end if
                 break;
             case JavadocTokenTypes.OTABLE:
             case JavadocTokenTypes.OOLIST:
@@ -1067,7 +1082,7 @@ LOOP:
                 out.javadocIndent++;
                 if (!out.newline) {
                     newLine = true;
-                }
+                } // end if
                 break;
             case JavadocTokenTypes.COLIST:
             case JavadocTokenTypes.CULIST:
@@ -1075,7 +1090,7 @@ LOOP:
             case JavadocTokenTypes.CTABLE:
                 if (!out.newline) {
                     newLine = true;
-                }
+                } // end if
                 out.javadocIndent--;
                 length -= out.indentSize;
                 newLineAfter = true;
@@ -1085,11 +1100,10 @@ LOOP:
                 length -= out.indentSize;
                 out.javadocIndent--;
                 break;
-                
             case JavadocTokenTypes.C_TR:
                 if (!out.newline) {
                     newLine = true;
-                }
+                } // end if
                 break;
         } // end switch
 
@@ -1127,9 +1141,9 @@ LOOP:
                 } // end if
             } // end for
         } // end if
-        else if (lines.length==1){
+        else if (lines.length == 1) {
             out.print(lines[0], nodeType);
-        } // end else
+        } // end else if
 
         if (newLineAfter) {
             out.printNewline();
@@ -1144,7 +1158,7 @@ LOOP:
      * @since 1.0b8
      */
     private String getAsterix() {
-        String text = AbstractPrinter.settings.get(
+        String text        = AbstractPrinter.settings.get(
             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM,
             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_PARAM);
         int    asterix     = text.indexOf('*');
@@ -1205,7 +1219,7 @@ LOOP:
                 return " */";
             } // end case
             case JavaTokenTypes.INTERFACE_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).trim();
                 int    offset = text.lastIndexOf(DELIMETER);
@@ -1240,8 +1254,8 @@ LOOP:
     } // end getEmptySlotCount()
 
     /**
-     * Searchs the given list for a string similiar to the given string. The match is kind of
-     * 'fuzzy' as the strings must not be exactly similar.
+     * Searchs the given list for a string similiar to the given string. The match is
+     * kind of 'fuzzy' as the strings must not be exactly similar.
      *
      * @param string the string to match.
      * @param list list with strings to match against.
@@ -1267,7 +1281,7 @@ LOOP:
 
             double similarity = lcs.getPercentage();
 
-            /**
+/**
              * @todo evaluate whether this is appropriate
              */
             if (similarity > 75.0) {
@@ -1279,8 +1293,8 @@ LOOP:
     } // end getMatch()
 
     /**
-     * Returns the index of the next empty slot in the given list. An empty slot has a value
-     * of <code>null</code>.
+     * Returns the index of the next empty slot in the given list. An empty slot has a
+     * value of <code>null</code>.
      *
      * @param list list to search.
      *
@@ -1419,7 +1433,7 @@ LOOP:
                 switch (node.getType()) {
                     case JavaTokenTypes.METHOD_DEF:
 
-                        String text = AbstractPrinter.settings.get(
+                        String text   = AbstractPrinter.settings.get(
                             ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN,
                             ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_RETURN);
                         int    offset = text.indexOf('*');
@@ -1450,7 +1464,7 @@ LOOP:
     private String getTopString(int type) {
         switch (type) {
             case JavaTokenTypes.METHOD_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_METHOD_TOP);
                 int    offset = text.indexOf(DELIMETER);
@@ -1461,7 +1475,7 @@ LOOP:
                 return text;
             } // end case
             case JavaTokenTypes.CTOR_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_TOP);
                 int    offset = text.indexOf(DELIMETER);
@@ -1472,7 +1486,7 @@ LOOP:
                 return text;
             } // end case
             case JavaTokenTypes.VARIABLE_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_VARIABLE,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_VARIABLE).trim();
                 int    offset = text.indexOf(DELIMETER);
@@ -1483,7 +1497,7 @@ LOOP:
                 return "/**";
             } // end case
             case JavaTokenTypes.CLASS_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).trim();
                 int    offset = text.indexOf(DELIMETER);
@@ -1494,7 +1508,7 @@ LOOP:
                 return "/**";
             } // end case
             case JavaTokenTypes.INTERFACE_DEF: {
-                String text = AbstractPrinter.settings.get(
+                String text   = AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
                     ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).trim();
                 int    offset = text.indexOf(DELIMETER);
@@ -1510,8 +1524,8 @@ LOOP:
     } // end getTopString()
 
     /**
-     * Determines whether the description for the given Javadoc comment starts with the
-     * inheritDoc in-line tag.
+     * Determines whether the description for the given Javadoc comment starts with
+     * the inheritDoc in-line tag.
      *
      * @param comment a Javadoc comment.
      *
@@ -1831,7 +1845,7 @@ SELECTION:
                         printList(child, asterix, out);
                         break SELECTION;
 
-                    /**
+/**
                      * @todo center and div
                      */
                     default:
@@ -1879,12 +1893,12 @@ SELECTION:
 
         out.printNewline();
         out.print(asterix, JavadocTokenTypes.JAVADOC_COMMENT);
-        AST result = printContent(comment.getFirstChild(), asterix, out);
-        
-        if (!out.newline)
-            out.printNewline();
 
-        
+        AST result = printContent(comment.getFirstChild(), asterix, out);
+
+        if (!out.newline) {
+            out.printNewline();
+        }
 
         return result;
     } // end printDescriptionSection()
@@ -1907,7 +1921,7 @@ SELECTION:
             node = printText(node.getFirstChild(), asterix, out);
             if (node != EMPTY_NODE) {
                 generalPrint(out, node, node.getText(), asterix);
-            }
+            } // end if
         } // end if
         out.last = JavadocTokenTypes.CH1;
     } // end printHeading()
@@ -1935,7 +1949,8 @@ SELECTION:
     } // end printList()
 
     /**
-     * Prints out the given list item (either a list item, definition term or definition).
+     * Prints out the given list item (either a list item, definition term or
+     * definition).
      *
      * @param node node to print
      * @param asterix leading asterix.
@@ -1976,7 +1991,7 @@ SELECTION:
         if (shouldHaveNewlineBefore(tag, last)) {
             if (!out.newline) {
                 out.printNewline();
-            }
+            } // end if
             out.print(StringHelper.trimTrailing(asterix), JavadocTokenTypes.PCDATA);
             out.printNewline();
         } // end if
@@ -2152,7 +2167,7 @@ SELECTION:
 
         if (!out.newline) {
             out.printNewline();
-        }
+        } // end if
     } // end printParagraph()
 
     /**
@@ -2415,10 +2430,10 @@ SELECTION:
                   throws IOException {
         if (tag != null) {
             printNewlineBefore(tag, last, asterix, out);
-            
 
-            if (out.newline)
+            if (out.newline) {
                 out.print(asterix, JavaTokenTypes.JAVADOC_COMMENT);
+            }
 
             String ident = tag.getText();
 
@@ -2538,7 +2553,7 @@ SELECTION:
             } // end if
 
             int      length = name.length();
-            String[] lines = split(description.trim(), maxwidth - length - 1, 0, true);
+            String[] lines  = split(description.trim(), maxwidth - length - 1, 0, true);
 
             for (int i = 0, size = lines.length - 1; i < size; i++) {
                 out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
@@ -2550,7 +2565,7 @@ SELECTION:
             out.print(lines[lines.length - 1], JavadocTokenTypes.JAVADOC_COMMENT);
         } // end if
 
-        /**
+/**
          * @todo add semantic check
          */
     } // end printTagDescription()
@@ -2686,13 +2701,13 @@ SELECTION:
 
         // insert description if missing
         else if (checkTags) {
-            /**
+/**
              * @todo log info/warning
              */
 
             // no description found, add missing
 //            out.print(asterix, JavadocTokenTypes.PCDATA);
-            /**
+/**
              * @todo parse user specified Javadoc template
              */
             out.print("DOCUMENT ME!", JavadocTokenTypes.PCDATA);
@@ -2717,17 +2732,13 @@ SELECTION:
                 if (checkTags) {
                     boolean tagPresent = returnTag != null;
 
-                    returnTag      = checkReturnTag(node, returnTag, out);
+                    returnTag = checkReturnTag(node, returnTag, out);
                     returnTagAdded = !tagPresent && (returnTag != null);
                 } // end if
 
             // fall through
-            case JavaTokenTypes.CTOR_DEF:last = printTag(
-                    serialDataTag,
-                    asterix,
-                    maxwidth,
-                    last,
-                    out);
+            case JavaTokenTypes.CTOR_DEF:
+                last = printTag(serialDataTag, asterix, maxwidth, last, out);
 
             // Fall through
             case JavaTokenTypes.CLASS_DEF:
@@ -3080,9 +3091,9 @@ LOOP:
                            char   character) {
         if (character > -1) {
             int  startOffset = 0;
-            int  endOffset = -1;
-            int  sepLength = delim.length();
-            List lines     = new ArrayList(15);
+            int  endOffset   = -1;
+            int  sepLength   = delim.length();
+            List lines       = new ArrayList(15);
 
             while ((endOffset = str.indexOf(delim, startOffset)) > -1) {
                 String line = str.substring(startOffset, endOffset);
@@ -3197,8 +3208,8 @@ MOVE_FORWARD:
                         } // end else
                     } // end else
 
-                    lineStart   = prevStart;
-                    prevStart   = 0;
+                    lineStart = prevStart;
+                    prevStart = 0;
                     columnStart = 0;
                 } // end do
                 while (lineStart < str.length());
