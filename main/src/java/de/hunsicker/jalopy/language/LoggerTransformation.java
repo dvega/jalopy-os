@@ -14,6 +14,7 @@ import de.hunsicker.jalopy.language.antlr.JavaNodeFactory;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 import antlr.ASTFactory;
+import antlr.CommonHiddenStreamToken;
 import antlr.collections.AST;
 
 
@@ -78,7 +79,7 @@ final class LoggerTransformation
                         {
                             JavaNode expr = ((JavaNode) node).getParent();
 
-                            if (!isEnclosed(expr))
+                            if (!isEnclosed(expr,firstPart))
                             {
                                 addConditional(expr, firstPart);
                             }
@@ -189,21 +190,48 @@ final class LoggerTransformation
      *
      * @return <code>true</code> if an enclosing conditional expression could be found.
      */
-    private boolean isEnclosed(JavaNode expr)
+    private boolean isEnclosed(JavaNode expr, AST loggerName)
     {
         JavaNode parent = expr.getParent();
 
         switch (parent.getType())
         {
             case JavaTokenTypes.LITERAL_if :
-                return true;
+                // Pull out expression list and check to see if logger variable
+                // exists in expression list
+                return hasLogger(parent,loggerName);
+                
 
             case JavaTokenTypes.SLIST :
-                return isEnclosed(parent);
+                return isEnclosed(parent, loggerName);
 
             default :
                 return false;
         }
+    }
+    private boolean hasLogger(AST ifExpression, AST logger) {
+        boolean result = false;
+        boolean qe = false;
+        AST child = ifExpression.getFirstChild();
+        if (child!=null)
+        for(AST next = child;next!=null && !result && !qe;) {
+            switch (next.getType()) {
+                case JavaTokenTypes.IDENT :
+                    result = next.getText().equals(logger.getText());
+                    break;
+                case JavaTokenTypes.RPAREN:
+                    qe = true;
+                    break;
+                default :
+                    result = hasLogger(next,logger);
+                    break;
+                
+                
+            }
+            
+            next = next.getNextSibling();
+        }
+        return result;
     }
 
 
@@ -257,8 +285,10 @@ final class LoggerTransformation
      */
     private JavaNode createConditional(AST name)
     {
-        AST qualifiedName = _factory.create(JavaTokenTypes.DOT);
+        JavaNode qualifiedName = (JavaNode) _factory.create(JavaTokenTypes.DOT);
         qualifiedName.addChild(_factory.dupTree(name));
+        ((JavaNode)qualifiedName.getFirstChild()).setHiddenBefore(null);
+        ((JavaNode)qualifiedName.getFirstChild()).setHiddenAfter(null);
 
         /**
          * @todo make name configurable
@@ -274,11 +304,11 @@ final class LoggerTransformation
         AST expr = _factory.create(JavaTokenTypes.EXPR);
         expr.addChild(methodCall);
 
-        AST ifNode = _factory.create(JavaTokenTypes.LITERAL_if);
+        JavaNode ifNode = (JavaNode) _factory.create(JavaTokenTypes.LITERAL_if);
         ifNode.addChild(_factory.create(JavaTokenTypes.LPAREN));
         ifNode.addChild(expr);
         ifNode.addChild(_factory.create(JavaTokenTypes.RPAREN));
-
-        return (JavaNode) ifNode;
+        
+        return ifNode;
     }
 }
