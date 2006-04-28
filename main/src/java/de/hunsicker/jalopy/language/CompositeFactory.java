@@ -131,7 +131,6 @@ public class CompositeFactory {
     }
     public void setJavadocRecognizer(Recognizer recognizer) {
         this.recognizer = recognizer;
-        // TODO Auto-generated method stub
         
     }
     

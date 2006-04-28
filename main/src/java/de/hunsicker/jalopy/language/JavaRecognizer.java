@@ -596,6 +596,9 @@ public final class JavaRecognizer extends Recognizer
       catch(RecognitionException ex)
       {
          ex.printStackTrace();
+         if (ex.getCause()!=null) {
+             ex.getCause().printStackTrace();
+         }
          throw new ParseException(ex);
       }
       catch(TokenStreamRecognitionException ex)

@@ -291,7 +291,7 @@ public final class Jalopy
     /** Holds the number of milliseconds used for transforming. */
     private long _timeTransforming;
     
-    private static CompositeFactory _factory=null;
+    private CompositeFactory _factory=null;
 
     //~ Constructors ---------------------------------------------------------------------
 
@@ -302,9 +302,8 @@ public final class Jalopy
     {
         initConventionDefaults();
         _issues = new HashMap(30);
-        if (_factory == null) {
-            _factory = new CompositeFactory();
-        }
+        _factory = new CompositeFactory();
+        
         _recognizer = new JavaRecognizer(_factory);
         _inspector = new CodeInspector(_issues);
         _spy = new SpyAppender();
@@ -1071,6 +1070,7 @@ public final class Jalopy
             Loggers.IO.l7dlog(Level.ERROR, "UNKNOWN_ERROR" /* NOI18N */, _args, ex);
         }
         finally {
+            //todo add togglable 
             _factory.clear();
             cleanup();
         }

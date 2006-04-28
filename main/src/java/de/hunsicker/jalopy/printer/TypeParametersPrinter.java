@@ -75,6 +75,12 @@ public class TypeParametersPrinter extends AbstractPrinter {
                     out.print(SUPER_SPACE,child.getType());
                 	processTypeArguement(child,out,true);
             	break;
+                
+                case JavaTokenTypes.BAND:
+                    out.print(SPACE,child.getType());
+                    out.print(child.getText(),child.getType());
+                    out.print(SPACE,child.getType());
+                break;
             	
             	default :
             	    PrinterFactory.create(child, out).print(child,out);

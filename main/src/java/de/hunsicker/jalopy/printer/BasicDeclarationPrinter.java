@@ -81,7 +81,7 @@ abstract class BasicDeclarationPrinter
         String t =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CLASS,
-                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).replaceAll("\\*/", "");
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CLASS).replaceAll("\\*/", "").trim();
         StringBuffer buf = new StringBuffer(t);
         
         String bottomText =
@@ -102,10 +102,10 @@ abstract class BasicDeclarationPrinter
                 out.environment);
         }
 
-        
-        buf.append(AbstractPrinter.settings.get(
+        String bottom =AbstractPrinter.settings.get(
                     ConventionKeys.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM,
-                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM));
+                    ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_CTOR_BOTTOM);
+        buf.append(bottom);
 
         Node text = (Node) out.getJavaNodeFactory().create(JavadocTokenTypes.PCDATA, out.environment.interpolate(buf.toString()));
         Node comment = (Node) out.getJavaNodeFactory().create(JavaTokenTypes.JAVADOC_COMMENT, GENERATED_COMMENT);
@@ -214,7 +214,7 @@ abstract class BasicDeclarationPrinter
         String t =
             AbstractPrinter.settings.get(
                 ConventionKeys.COMMENT_JAVADOC_TEMPLATE_INTERFACE,
-                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).replaceAll("\\*/", "");
+                ConventionDefaults.COMMENT_JAVADOC_TEMPLATE_INTERFACE).replaceAll("\\*/", "").trim();
         StringBuffer buf = new StringBuffer(t);
         
         String bottomText =
