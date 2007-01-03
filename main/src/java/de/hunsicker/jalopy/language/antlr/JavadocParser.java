@@ -1,9 +1,3 @@
-//---------------------------------------------------------------------------
-// Filename:        $Source$
-// Revision:        $Revision$
-// Last edited by:  $Author$ on $Date$
-// © James Richardson International Limited, 2004
-//---------------------------------------------------------------------------
 package de.hunsicker.jalopy.language.antlr;
 
 import java.util.Collection;
