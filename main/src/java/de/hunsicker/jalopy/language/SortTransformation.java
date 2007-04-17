@@ -438,6 +438,7 @@ LOOP:
         List interfaces = new ArrayList(3);
         List annotations = new ArrayList(3);
         List enums = new ArrayList(3);
+        List enumdef = new ArrayList(3);
         List names = new ArrayList(); // type names of all instance variables
 
         AST rcurly = null; // stores the last rcurly
@@ -508,7 +509,7 @@ LOOP:
                     enums.add(sortDeclarations(child, comp, level + 1));
                 break;
                 case JavaTokenTypes.ENUM_CONSTANT_DEF :
-                    enums.add(child);
+                    enumdef.add(child);
                 break;
 
                 case JavaTokenTypes.SEMI :
@@ -571,16 +572,16 @@ LOOP:
                 Collections.sort(annotations, comp);
             }
 
-        Map nodes = new HashMap(10, 1.0f);
-        nodes.put(DeclarationType.STATIC_VARIABLE_INIT.getName(), staticStuff);
-        nodes.put(DeclarationType.VARIABLE.getName(), variables);
-        nodes.put(DeclarationType.INIT.getName(), initializers);
-        nodes.put(DeclarationType.CTOR.getName(), ctors);
-        nodes.put(DeclarationType.METHOD.getName(), methods);
-        nodes.put(DeclarationType.INTERFACE.getName(), interfaces);
-        nodes.put(DeclarationType.CLASS.getName(), classes);
-        nodes.put(DeclarationType.ANNOTATION.getName(), annotations);
-        nodes.put(DeclarationType.ENUM.getName(), enums);
+        Map nodemap = new HashMap(10, 1.0f);
+        nodemap.put(DeclarationType.STATIC_VARIABLE_INIT.getName(), staticStuff);
+        nodemap.put(DeclarationType.VARIABLE.getName(), variables);
+        nodemap.put(DeclarationType.INIT.getName(), initializers);
+        nodemap.put(DeclarationType.CTOR.getName(), ctors);
+        nodemap.put(DeclarationType.METHOD.getName(), methods);
+        nodemap.put(DeclarationType.INTERFACE.getName(), interfaces);
+        nodemap.put(DeclarationType.CLASS.getName(), classes);
+        nodemap.put(DeclarationType.ANNOTATION.getName(), annotations);
+        nodemap.put(DeclarationType.ENUM.getName(), enums);
 
         boolean addSeparator = false;
 
@@ -609,6 +610,14 @@ LOOP:
         JavaNode current = tmp;
 
         // add the different declaration groups in the specified order
+        if (!enumdef.isEmpty()) {
+            // Add in any enumeration definitions first
+            current =
+                addSiblings(
+                    enumdef, current, addSeparator,
+                    indent * level, maxwidth);
+            
+        } // end if
         for (
             StringTokenizer tokens = new StringTokenizer(sortString, "|");
             tokens.hasMoreTokens();)
@@ -616,7 +625,7 @@ LOOP:
             String nextToken = tokens.nextToken(); 
             current =
                 addSiblings(
-                    (List) nodes.get(nextToken), current, addSeparator,
+                    (List) nodemap.get(nextToken), current, addSeparator,
                     indent * level, maxwidth);
         }
 
@@ -641,6 +650,7 @@ LOOP:
         classes.clear();
         interfaces.clear();
         annotations.clear();
+        enumdef.clear();
         enums.clear();
         names.clear(); // type names of all instance variables
         return node;

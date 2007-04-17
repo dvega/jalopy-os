@@ -1071,7 +1071,7 @@ public final class Jalopy
         }
         finally {
             //todo add togglable 
-            _factory.clear();
+            //_factory.clear();
             cleanup();
         }
         

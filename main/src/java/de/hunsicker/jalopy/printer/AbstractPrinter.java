@@ -1343,6 +1343,7 @@ OUTER:
                 }
 ///CLOVER:ON
 
+                case JavaTokenTypes.ENUM_DEF :
                 case JavaTokenTypes.INTERFACE_DEF :
                 {
                     JavaNode prev = node.getPreviousSibling();

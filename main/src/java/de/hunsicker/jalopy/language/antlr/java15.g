@@ -4,6 +4,8 @@ package de.hunsicker.jalopy.language.antlr;
 
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
+import de.hunsicker.util.StringHelper;
+
 }
 
 /** Java 1.5 Recognizer
@@ -1776,6 +1778,35 @@ WS	:	(	' '
 		{ // _ttype = Token.SKIP; 
     }
 	;
+	
+protected SPECIAL_COMMENT
+{ int column = getColumn()-1; }
+:
+
+"//J-"
+
+(
+        options {
+            generateAmbigWarnings=false;
+            greedy=false;
+        }
+    :   '\r' ('\n')? {newline();}
+    |   '\n'         {newline();}
+    |   .
+    )*
+
+
+  "//J+"
+
+  {
+    String t = $getText;
+    // Token tok = new ExtendedToken(JavaTokenTypes.SPECIAL_COMMENT, StringHelper.leftPad(t, t.length()+column));
+    Token tok = makeToken(JavaTokenTypes.SPECIAL_COMMENT);
+    tok.setText(StringHelper.leftPad(t, t.length()+column));
+
+    $setToken(tok);
+  }
+;
 
 protected SEPARATOR_COMMENT
 : "//~" (~('\n'|'\r') {if (LA(1) == EOF_CHAR) break;} )*
@@ -1797,9 +1828,9 @@ COMMENT
         options {
             // ANTLR does it right by consuming input as soon as possible
             generateAmbigWarnings=false;
-			// TODO spec:SPECIAL_COMMENT {$setToken(spec);} |
         }:
 
+		spec:SPECIAL_COMMENT {$setToken(spec);} |
         sep:SEPARATOR_COMMENT {$setToken(sep); } |
         sl:SL_COMMENT {$setToken(sl); }
     )

@@ -337,7 +337,7 @@ final class JavadocPrinter extends AbstractPrinter {
             asterix = getAsterix();
 
             AST    firstTag   = null;
-            String commentText = comment.getText();
+            String commentText = t;
 
             if (!AbstractPrinter.settings.getBoolean(
                 ConventionKeys.COMMENT_JAVADOC_PARSE_DESCRIPTION,
@@ -345,24 +345,32 @@ final class JavadocPrinter extends AbstractPrinter {
                 TestNodeWriter dummy = out.testers.get();
 
                 firstTag = printDescriptionSection(node, comment, asterix, dummy);
-                if (firstTag != EMPTY_NODE) {
+                boolean hasFirstTag = firstTag != EMPTY_NODE; 
+                if (hasFirstTag) {
                     commentText = commentText.substring(
-                        1,
+                        0,
                         commentText.indexOf(firstTag.getText()));
                 } // end if
                 out.testers.release(dummy);
 
                 String[] lines = StringHelper.split(commentText, out.originalLineSeparator);
-
+                
                 if (lines.length == 1) {
                     lines[0] = lines[0].substring(3, lines[0].length() - 2);
                     out.print(lines[0], JavadocTokenTypes.JAVADOC_COMMENT);
                 } // end if
                 else if (lines.length > 0) {
                     lines[0] = lines[0].substring(3);
-
-                    for (int i = 0, size = lines.length - 1; i < size; i++) {
-                        out.print(lines[i], JavadocTokenTypes.JAVADOC_COMMENT);
+                    int i=0;
+                    if (!out.newline) {
+                        out.printNewline();
+                    }
+                    for (int size = lines.length - 1; (i < size ) ; i++) {
+                        String newline = " " + lines[i].trim();
+                        
+                        if (size-1==i && newline.endsWith("*") || newline.length()==1)
+                            continue;
+                        out.print(newline, JavadocTokenTypes.JAVADOC_COMMENT);
                         out.printNewline();
                     } // end for
                 } // end else if

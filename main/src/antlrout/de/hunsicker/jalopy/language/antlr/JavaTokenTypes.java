@@ -1,9 +1,11 @@
-// $ANTLR 2.7.5 (20050128): "java15.g" -> "InternalJavaLexer.java"$
+// $ANTLR 2.7.6 (2005-12-22): "java15.g" -> "InternalJavaLexer.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
+import de.hunsicker.util.StringHelper;
+
 
 public interface JavaTokenTypes {
 	int EOF = 1;

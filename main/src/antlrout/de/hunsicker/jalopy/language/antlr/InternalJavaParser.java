@@ -1,9 +1,11 @@
-// $ANTLR 2.7.5 (20050128): "java15.g" -> "InternalJavaParser.java"$
+// $ANTLR 2.7.6 (2005-12-22): "java15.g" -> "InternalJavaParser.java"$
 
 package de.hunsicker.jalopy.language.antlr;
 
 import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.JavaNodeHelper;
+import de.hunsicker.util.StringHelper;
+
 
 import antlr.TokenBuffer;
 import antlr.TokenStreamException;
@@ -263,7 +265,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synPredMatched4 = false;
 			}
 			rewind(_m4);
-			inputState.guessing--;
+inputState.guessing--;
 		}
 		if ( synPredMatched4 ) {
 			packageDefinition();
@@ -1342,7 +1344,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synPredMatched30 = false;
 			}
 			rewind(_m30);
-			inputState.guessing--;
+inputState.guessing--;
 		}
 		if ( synPredMatched30 ) {
 			typeArgumentBounds();
@@ -3977,7 +3979,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synPredMatched178 = false;
 			}
 			rewind(_m178);
-			inputState.guessing--;
+inputState.guessing--;
 		}
 		if ( synPredMatched178 ) {
 			parameterDeclaration();
@@ -4000,7 +4002,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 						synPredMatched181 = false;
 					}
 					rewind(_m181);
-					inputState.guessing--;
+inputState.guessing--;
 				}
 				if ( synPredMatched181 ) {
 					JavaNode tmp98_AST = null;
@@ -4683,7 +4685,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 					synPredMatched197 = false;
 				}
 				rewind(_m197);
-				inputState.guessing--;
+inputState.guessing--;
 			}
 			if ( synPredMatched197 ) {
 				declaration();
@@ -5268,7 +5270,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synPredMatched208 = false;
 			}
 			rewind(_m208);
-			inputState.guessing--;
+inputState.guessing--;
 		}
 		if ( synPredMatched208 ) {
 			traditionalForClause();
@@ -5456,7 +5458,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 				synPredMatched222 = false;
 			}
 			rewind(_m222);
-			inputState.guessing--;
+inputState.guessing--;
 		}
 		if ( synPredMatched222 ) {
 			declaration();
@@ -6665,7 +6667,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 					synPredMatched282 = false;
 				}
 				rewind(_m282);
-				inputState.guessing--;
+inputState.guessing--;
 			}
 			if ( synPredMatched282 ) {
 				lpb = LT(1);
@@ -6699,7 +6701,7 @@ public InternalJavaParser(ParserSharedInputState state) {
 						synPredMatched284 = false;
 					}
 					rewind(_m284);
-					inputState.guessing--;
+inputState.guessing--;
 				}
 				if ( synPredMatched284 ) {
 					lp = LT(1);
