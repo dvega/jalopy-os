@@ -61,11 +61,11 @@ final class PackagePrinter
         logIssues(node, out);
         printCommentsBefore(node, NodeWriter.NEWLINE_NO, out);
 
-        out.print(PACKAGE_SPACE, JavaTokenTypes.LITERAL_package);
-
         AST annotations = node.getFirstChild();
         PrinterFactory.create(annotations, out).print(annotations, out);
         
+        out.print(PACKAGE_SPACE, JavaTokenTypes.LITERAL_package);
+
         AST identifier = annotations.getNextSibling();
         PrinterFactory.create(identifier, out).print(identifier, out);
 

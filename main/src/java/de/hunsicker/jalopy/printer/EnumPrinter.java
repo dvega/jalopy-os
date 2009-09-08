@@ -2,6 +2,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 
 import antlr.collections.AST;
@@ -48,7 +49,7 @@ public class EnumPrinter extends BasicDeclarationPrinter {
         out.state.innerClass = (out.getIndentLength() > 0);
          
 
-        // TODO addCommentIfNeeded((JavaNode)node, out);
+        addCommentIfNeeded((JavaNode)node, out);
 
         printCommentsBefore(node, out);
 

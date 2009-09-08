@@ -356,9 +356,8 @@ SEARCH:
                                         /**
                                          * @todo add new max. length setting
                                          */
-                                        if (tester.length > length)
-                                        {
-                                            length = tester.length;
+                                        if((tester.column - 1) > length) { 
+                                            length = tester.column -1; 
                                         }
 
                                         if (

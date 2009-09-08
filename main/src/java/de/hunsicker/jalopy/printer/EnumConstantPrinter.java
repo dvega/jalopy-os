@@ -2,6 +2,7 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import de.hunsicker.jalopy.language.antlr.JavaNode;
 import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
 import de.hunsicker.jalopy.storage.ConventionDefaults;
 import de.hunsicker.jalopy.storage.ConventionKeys;
@@ -12,7 +13,7 @@ import antlr.collections.AST;
 /**
  * The EnumConstant printer 
  */
-public class EnumConstantPrinter extends BasicPrinter {
+public class EnumConstantPrinter extends BasicDeclarationPrinter {
     /** Singleton. */
     private static final Printer INSTANCE = new EnumConstantPrinter();
 
@@ -55,6 +56,8 @@ public class EnumConstantPrinter extends BasicPrinter {
             out.printNewline();
         }
         out.testers.release(tester);
+        
+        addCommentIfNeeded((JavaNode)node, out);
         printCommentsBefore(node,false,out);
         printChildren(node,out);
         AST next = node.getNextSibling();

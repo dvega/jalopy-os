@@ -1,3 +1,7 @@
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://test...",
+elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package test;
+
 public class Javadoc
 {
     public int aPublicField = 1;
@@ -7,7 +11,28 @@ public class Javadoc
 
     /** A Javadoc comment for a field.*/
     private int _count;
+    
+    public enum Test {
+        FOO("foo"),
+        /** Bar */
+        BAR("bar");
+        Test(String a) {
+            
+        }
+    }
+    /**
+     * Commented ENUM
+     */
+    public enum Test1 {
+        FOO("foo"),
+        /** Bar */
+        BAR("bar");
+        Test(String a) {
+            
+        }
+    }
 
+    
     public Javadoc(int param)
     {
     }

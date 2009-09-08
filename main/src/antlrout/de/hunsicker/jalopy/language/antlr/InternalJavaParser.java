@@ -3539,6 +3539,7 @@ inputState.guessing--;
 		if ( inputState.guessing==0 ) {
 			enumConstant_AST = (JavaNode)currentAST.root;
 			enumConstant_AST = (JavaNode)astFactory.make( (new ASTArray(7)).add((JavaNode)astFactory.create(ENUM_CONSTANT_DEF,"ENUM_CONSTANT_DEF")).add(an_AST).add(i_AST).add(lp_AST).add(a_AST).add(rp_AST).add(b_AST));
+                    attachStuff(new JavaNode[] {enumConstant_AST});
 			currentAST.root = enumConstant_AST;
 			currentAST.child = enumConstant_AST!=null &&enumConstant_AST.getFirstChild()!=null ?
 				enumConstant_AST.getFirstChild() : enumConstant_AST;

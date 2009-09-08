@@ -251,9 +251,12 @@ final class JavadocPrinter extends AbstractPrinter {
         } // end if
 
         boolean reformatComment = (node.getType() == JavaTokenTypes.CLASS_DEF) ||
+                                (node.getType()==JavaTokenTypes.ENUM_CONSTANT_DEF) ||
+                                (node.getType()==JavaTokenTypes.ENUM_DEF) ||
                                   ((node.getType() == JavaTokenTypes.VARIABLE_DEF) &&
                                   ((parentParent.getType() == JavaTokenTypes.CLASS_DEF) ||
-                                  (parentParent.getType() == JavaTokenTypes.INTERFACE_DEF))) ||
+                                  (parentParent.getType() == JavaTokenTypes.INTERFACE_DEF) ||
+                                  (parentParent.getType() == JavaTokenTypes.ENUM_DEF))) ||
                                   (node.getType() == JavaTokenTypes.METHOD_DEF) ||
                                   (node.getType() == JavaTokenTypes.CTOR_DEF);
 
@@ -1887,6 +1890,7 @@ SELECTION:
         // check if we only have a description that fits in one line
         switch (node.getType()) {
             case JavaTokenTypes.VARIABLE_DEF:
+            case JavaTokenTypes.ENUM_CONSTANT_DEF:
                 if (AbstractPrinter.settings.getBoolean(
                     ConventionKeys.COMMENT_JAVADOC_FIELDS_SHORT,
                     ConventionDefaults.COMMENT_JAVADOC_FIELDS_SHORT)) {

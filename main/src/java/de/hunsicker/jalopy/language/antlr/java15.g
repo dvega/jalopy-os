@@ -715,7 +715,9 @@ enumConstant!
 			rp:RPAREN
 		)?
 		( b:enumConstantBlock )?
-		{#enumConstant = #([ENUM_CONSTANT_DEF, "ENUM_CONSTANT_DEF"], an, i, lp,a,rp, b);}
+		{#enumConstant = #([ENUM_CONSTANT_DEF, "ENUM_CONSTANT_DEF"], an, i, lp,a,rp, b);
+      attachStuff(new JavaNode[] {#enumConstant});
+		}
 	;
 
 //The class-like body of an enum constant

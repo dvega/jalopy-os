@@ -186,6 +186,7 @@ public final class JavaNodeModifier
                 break;
 
             case JavaTokenTypes.LITERAL_public :
+            case JavaTokenTypes.ENUM_CONSTANT_DEF:
                 return Modifier.PUBLIC;
 
             case JavaTokenTypes.LITERAL_protected :

@@ -537,9 +537,30 @@ protected void attachStuff(JavaNode[] nodes) {
             case JavaTokenTypes.CLASS_DEF:
             case JavaTokenTypes.INTERFACE_DEF:
             case JavaTokenTypes.VARIABLE_DEF:
-            case JavaTokenTypes.ANNOTATION_DEF:
             case JavaTokenTypes.ENUM_DEF:
-            	attachStuffBefore(node,nodes[1],nodes[2]);
+            case JavaTokenTypes.ANNOTATION_DEF:
+                attachStuffBefore(node,nodes[1],nodes[2]);
+            break;
+            case JavaTokenTypes.ENUM_CONSTANT_DEF:
+                JavaNode t = (JavaNode)node.getFirstChild();
+                if (t!=null) {
+                    if (t.getHiddenBefore() != null)
+                    {
+                        node.setHiddenBefore(t.getHiddenBefore());
+                        t.setHiddenBefore(null);
+                    }
+                    t = (JavaNode) t.getNextSibling();
+                    if (t!=null) {
+                        if (t.getHiddenBefore() != null)
+                        {
+                            node.setHiddenBefore(t.getHiddenBefore());
+                            t.setHiddenBefore(null);
+                        }
+                    }
+                }
+                
+                
+                
             break;
             case JavaTokenTypes.METHOD_DEF:
                 attachStuffBefore(node,nodes[1],nodes[2]);

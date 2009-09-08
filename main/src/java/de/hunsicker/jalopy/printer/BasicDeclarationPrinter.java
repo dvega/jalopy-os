@@ -158,6 +158,7 @@ abstract class BasicDeclarationPrinter
                 break;
 
             case JavaTokenTypes.VARIABLE_DEF :
+            case JavaTokenTypes.ENUM_CONSTANT_DEF :
 
                 if (
                     isEnabled(
@@ -184,6 +185,7 @@ abstract class BasicDeclarationPrinter
                 break;
 
             case JavaTokenTypes.INTERFACE_DEF :
+            case JavaTokenTypes.ENUM_DEF :
 
                 if (
                     isEnabled(

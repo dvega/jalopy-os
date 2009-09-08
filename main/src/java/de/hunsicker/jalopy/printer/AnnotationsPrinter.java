@@ -2,6 +2,8 @@ package de.hunsicker.jalopy.printer;
 
 import java.io.IOException;
 
+import de.hunsicker.jalopy.language.antlr.JavaTokenTypes;
+
 import antlr.collections.AST;
 
 
@@ -37,8 +39,13 @@ public class AnnotationsPrinter extends AbstractPrinter {
      * @throws IOException
      */
     public void print(AST node, NodeWriter out) throws IOException {
-        // TODO Complete annotations implementation
-
+        AST anotations = node.getFirstChild();
+        
+        if (anotations!=null) {
+            // modifiers = modifiers.getFirstChild();
+            PrinterFactory.create(anotations, out).print(anotations, out);
+        }
+        
     }
 
 }
