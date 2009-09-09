@@ -35,6 +35,14 @@ public class Javadoc
     
     public Javadoc(int param)
     {
+      //J-
+      String a = "This " +
+                 "section should remain " +
+                 "unformated";
+      //J+    
+      String a = "This " +
+                 "section should be " +
+                 "formated";
     }
 
     public String aMethodfoo(int              param1, 
