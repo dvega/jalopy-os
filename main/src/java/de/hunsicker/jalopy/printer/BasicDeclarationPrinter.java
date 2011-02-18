@@ -617,7 +617,7 @@ abstract class BasicDeclarationPrinter
                 switch (child.getType())
                 {
                     case JavaTokenTypes.PARAMETER_DEF :
-    
+                    case JavaTokenTypes.VARIABLE_PARAMETER_DEF:
                         String type =
                             JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT).getText();
                         environment.set(Environment.Variable.TYPE_PARAM.getName(), type);

@@ -429,6 +429,7 @@ final class JavadocPrinter extends AbstractPrinter {
                      child != null; child = child.getNextSibling()) {
                     switch (child.getType()) {
                         case JavaTokenTypes.PARAMETER_DEF:
+                        case JavaTokenTypes.VARIABLE_PARAMETER_DEF:
                             names.add(
                                 JavaNodeHelper.getFirstChild(child, JavaTokenTypes.IDENT)
                                               .getText());
